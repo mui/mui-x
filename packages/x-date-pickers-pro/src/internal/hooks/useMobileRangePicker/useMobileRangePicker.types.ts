@@ -48,7 +48,11 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
+  textField?: SlotComponentProps<
+    typeof TextField,
+    {},
+    { position?: 'start' | 'end' } & Record<string, any>
+  >;
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -73,7 +77,7 @@ export interface UseMobileRangePickerProps<
       MobileRangePickerAdditionalViewProps
     > {
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: UncapitalizeObjectKeys<UseMobileRangePickerSlotsComponent<TDate, TView>>;

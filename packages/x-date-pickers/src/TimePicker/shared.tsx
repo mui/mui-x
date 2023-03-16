@@ -38,7 +38,12 @@ export interface BaseTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
     BaseCommonTimePickerProps<TDate> {
   /**
-   * Overrideable components.
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true on desktop, false on mobile
+   */
+  ampmInClock?: boolean;
+  /**
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -50,7 +55,7 @@ export interface BaseTimePickerProps<TDate>
    */
   componentsProps?: BaseTimePickerSlotsComponentsProps;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseTimePickerSlotsComponent<TDate>>;

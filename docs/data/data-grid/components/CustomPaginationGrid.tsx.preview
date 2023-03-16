@@ -1,7 +1,7 @@
 <DataGrid
   pagination
-  components={{
-    Pagination: CustomPagination,
+  slots={{
+    pagination: CustomPagination,
   }}
   {...data}
   initialState={{

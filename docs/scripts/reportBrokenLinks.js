@@ -43,7 +43,7 @@ function getPageUrlFromLink(link) {
 const usedLinks = { ...usedLinksCore, ...usedLinksX };
 const availableLinks = { ...availableLinksCore, ...availableLinksX };
 
-const removeUnsuportedHash = (link) => {
+const removeUnsupportedHash = (link) => {
   const doNotSupportAnchors = UNSUPPORTED_ANCHORS_PATHS.some((unsupportedPath) =>
     link.includes(unsupportedPath),
   );
@@ -53,7 +53,7 @@ const removeUnsuportedHash = (link) => {
 write('Broken links found by `yarn docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
-  .filter((link) => !availableLinks[removeUnsuportedHash(link)])
+  .filter((link) => !availableLinks[removeUnsupportedHash(link)])
   // unstyled sections are added by scripts (can not be found in markdown)
   .filter((link) => !link.includes('#unstyled'))
   .filter((link) => UNSUPPORTED_PATHS.every((unsupportedPath) => !link.includes(unsupportedPath)))

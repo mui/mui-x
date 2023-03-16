@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -63,7 +62,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(screen.queryByRole('menu')).to.equal(null);
       act(() => apiRef.current.showColumnMenu('brand'));
       clock.runToLast();
-      const menu = screen.queryByRole('menu');
+      const menu = screen.getByRole('menu');
       expect(menu.id).to.match(/:r[0-9a-z]+:/);
       expect(menu.getAttribute('aria-labelledby')).to.match(/:r[0-9a-z]+:/);
     });
@@ -94,7 +93,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should allow to resize columns with the mouse', () => {
       render(<Test columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
@@ -126,7 +125,7 @@ describe('<DataGridPro /> - Columns', () => {
     it('should call onColumnResize during resizing', () => {
       const onColumnResize = spy();
       render(<Test onColumnResize={onColumnResize} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
@@ -139,7 +138,7 @@ describe('<DataGridPro /> - Columns', () => {
     it('should call onColumnWidthChange after resizing', () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
@@ -188,7 +187,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -245,7 +244,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -268,7 +267,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 50, buttons: 1 });
@@ -308,7 +307,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -330,7 +329,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(0).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 200 });
         fireEvent.mouseMove(separator, { clientX: 100, buttons: 1 });

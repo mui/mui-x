@@ -47,7 +47,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
 
   return (
     <div className={classes.root}>
-      <rootProps.components.BaseIconButton
+      <rootProps.slots.baseIconButton
         ref={iconButtonRef}
         tabIndex={-1}
         className={classes.button}
@@ -59,10 +59,10 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
         aria-haspopup="true"
         aria-controls={columnMenuId}
         id={columnMenuButtonId}
-        {...rootProps.componentsProps?.baseIconButton}
+        {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.components.ColumnMenuIcon fontSize="small" />
-      </rootProps.components.BaseIconButton>
+        <rootProps.slots.columnMenuIcon fontSize="small" />
+      </rootProps.slots.baseIconButton>
     </div>
   );
 });

@@ -2,10 +2,10 @@
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
-The filters can be modified through the grid interface in several ways:
+The filters can be modified through the data grid interface in several ways:
 
 - By opening the column menu and clicking the _Filter_ menu item.
-- By clicking the _Filters_ button in the grid toolbar (if enabled).
+- By clicking the _Filters_ button in the data grid toolbar (if enabled).
 
 Each column type has its own filter operators.
 The demo below lets you explore all the operators for each built-in column type.
@@ -30,7 +30,7 @@ The following demo lets you filter the rows according to several criteria at the
 
 ### One filter per column [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `componentsProps.filterPanel`.
+You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `slotProps.filterPanel`.
 
 #### Use cases
 
@@ -41,7 +41,13 @@ This demo implements a basic use case to prevent showing multiple filters for on
 
 {{"demo": "DisableMultiFiltersDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass filters to the grid
+### Disable action buttons [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` or `disableRemoveAllButton` to `componentsProps.filterPanel`.
+
+{{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Pass filters to the Data Grid
 
 ### Structure of the model
 
@@ -64,7 +70,7 @@ Some operators do not need any value (for instance the `isEmpty` operator of the
 
 #### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-The `logicOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
+The `logicOperator` tells the data grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
 ```ts
 // Example 1: get rows with rating > 4 OR isAdmin = true
@@ -86,7 +92,7 @@ const filterModel: GridFilterModel = {
 };
 ```
 
-If no `logicOperator` is provided, the grid will use `GridLogicOperator.Or` by default.
+If no `logicOperator` is provided, the data grid will use `GridLogicOperator.Or` by default.
 
 ### Initialize the filters
 
@@ -157,7 +163,7 @@ Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
 | Column type    | Function                         |
-| -------------- | -------------------------------- |
+| :------------- | :------------------------------- |
 | `string`       | `getGridStringOperators()`       |
 | `number`       | `getGridNumericOperators()`      |
 | `boolean`      | `getGridBooleanOperators()`      |
@@ -174,7 +180,7 @@ A custom operator is defined by creating a `GridFilterOperator` object.
 This object has to be added to the `filterOperators` attribute of the `GridColDef`.
 
 The main part of an operator is the `getApplyFilterFn` function.
-When applying the filters, the grid will call this function with the filter item and the column on which the item must be applied.
+When applying the filters, the data grid will call this function with the filter item and the column on which the item must be applied.
 This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
 ```ts
@@ -275,7 +281,7 @@ In the demo below, the `rating` column reuses the numeric operators but the rati
 
 ### Custom column types
 
-When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
+When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the data grid will reuse the operators from the type that was extended.
 The filter operators can then be edited just like on a regular column.
 
 ```ts
@@ -339,6 +345,25 @@ To enable it, you can add the `<GridToolbarQuickFilter />` component to your cus
 By default, the quick filter considers the input as a list of values separated by space and keeps only rows that contain all the values.
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Initialize the quick filter values
+
+The quick filter values can be initialized by setting the `filter.filterModel.quickFilterValues` property of the `initialState` prop.
+
+```tsx
+<DataGrid
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [],
+        quickFilterValues: ['quick', 'filter'],
+      },
+    },
+  }}
+/>
+```
+
+{{"demo": "QuickFilteringInitialize.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Custom filtering logic
 
@@ -413,8 +438,10 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 ## apiRef
 
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the data grid.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

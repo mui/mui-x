@@ -161,12 +161,11 @@ export function useViews<TValue, TView extends unknown>({
   );
 
   const setFinalValue = useEventCallback((value: TValue) => {
-    // TODO: find a proper solution 
+    // TODO: find a proper solution
     goToNextView();
     setTimeout(() => {
       onChange(value, 'finish');
     }, 0);
-
   });
 
   const handleFocusedViewChange = useEventCallback((viewToFocus: TView, hasFocus: boolean) => {

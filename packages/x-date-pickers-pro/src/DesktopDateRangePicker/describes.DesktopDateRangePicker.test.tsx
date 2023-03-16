@@ -6,6 +6,7 @@ import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
 } from 'test/utils/pickers-utils';
 
@@ -15,7 +16,11 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
   });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({
+    clock,
+    render,
+    Component: DesktopDateRangePicker,
+  });
 
   describeRangeValidation(DesktopDateRangePicker, () => ({
     render,
@@ -39,12 +44,14 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     ],
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {
-      const textBoxes = screen.getAllByRole('textbox');
+      const textBoxes: HTMLInputElement[] = screen.getAllByRole('textbox');
       expectedValues.forEach((value, index) => {
-        const expectedValueStr =
-          value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
+        const input = textBoxes[index];
         // TODO: Support single range input
-        expectInputValue(textBoxes[index], expectedValueStr, true);
+        if (!value) {
+          expectInputPlaceholder(input, 'MM/DD/YYYY');
+        }
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '', true);
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
@@ -60,11 +67,11 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       if (isOpened) {
         userEvent.mousePress(
           screen.getAllByRole('gridcell', {
-            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]),
+            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        const input = screen.getAllByRole('textbox')[0];
+        const input = screen.getAllByRole<HTMLInputElement>('textbox')[0];
         clickOnInput(input, 9, 11); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }

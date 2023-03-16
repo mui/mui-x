@@ -21,7 +21,7 @@ const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'filterOperators',
 ] as const;
 
-type WrappableColumnProperty = typeof AGGREGATION_WRAPPABLE_PROPERTIES[number];
+type WrappableColumnProperty = (typeof AGGREGATION_WRAPPABLE_PROPERTIES)[number];
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties?: {

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
 
 interface DemoGridProps {
   children: React.ReactNode;
   components: string[];
+  sx?: SxProps<Theme>;
 }
 
 type PickersGridChildComponentType =
@@ -64,7 +66,7 @@ export function DemoItem(props: DemoItemProps) {
   let sx: StackProps['sx'];
 
   if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
-    spacing = 2;
+    spacing = 1.5;
     sx = {
       [`& .${textFieldClasses.root}`]: {
         flexGrow: 1,
@@ -84,9 +86,8 @@ export function DemoItem(props: DemoItemProps) {
 }
 
 export function DemoContainer(props: DemoGridProps) {
-  const { children, components } = props;
+  const { children, components, sx: sxProp } = props;
 
-  const childrenCount = components.length;
   const childrenTypes = new Set<PickersGridChildComponentType>();
   const childrenSupportedSections = new Set<PickersSupportedSections>();
 
@@ -105,32 +106,41 @@ export function DemoContainer(props: DemoGridProps) {
 
   let direction: StackProps['direction'];
   let spacing: StackProps['spacing'];
-  let sx: StackProps['sx'];
+  let sx: StackProps['sx'] = {
+    overflow: 'auto',
+    // Add padding as overflow can hide the outline text field label.
+    pt: 1,
+    ...sxProp,
+  };
 
   if (
-    childrenCount > 2 ||
+    components.length > 2 ||
     childrenTypes.has('multi-input-range-field') ||
     childrenTypes.has('single-input-range-field') ||
-    childrenTypes.has('multi-panel-UI-view')
+    childrenTypes.has('multi-panel-UI-view') ||
+    childrenTypes.has('UI-view') ||
+    childrenSupportedSections.has('date-time')
   ) {
     direction = 'column';
     spacing = getSpacing('column');
-  } else if (childrenTypes.has('UI-view')) {
-    direction = { xs: 'column', xl: 'row' };
-    spacing = { xs: getSpacing('column'), xl: getSpacing('row') };
   } else {
     direction = { xs: 'column', lg: 'row' };
     spacing = { xs: getSpacing('column'), lg: getSpacing('row') };
   }
 
   if (childrenTypes.has('UI-view')) {
-    sx = null;
+    // noop
   } else if (childrenTypes.has('single-input-range-field')) {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 400 } };
+    sx = {
+      ...sx,
+      [`& > .${textFieldClasses.root}`]: {
+        minWidth: { xs: 300, md: 400 },
+      },
+    };
   } else if (childrenSupportedSections.has('date-time')) {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 256 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 270 } };
   } else {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
   }
 
   return (

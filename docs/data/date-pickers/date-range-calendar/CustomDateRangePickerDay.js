@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -37,10 +38,12 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(
 export default function CustomDateRangePickerDay() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateRangeCalendar
-        defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-        slots={{ day: DateRangePickerDay }}
-      />
+      <DemoContainer components={['DateRangeCalendar']}>
+        <DateRangeCalendar
+          defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
+          slots={{ day: DateRangePickerDay }}
+        />
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

@@ -43,9 +43,9 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       .replaceWith((path) => j.identifier(renamedSelectors[path.node.name]));
 
     // Rename the usage of renamed event literals
-    // - useGridApiEventHandler('selectionChange', handleEvent);
+    // - useGridApiEventHandler(apiRef, 'selectionChange', handleEvent);
     // - apiRef.current.subscribeEvent('selectionChange', handleEvent);
-    // + useGridApiEventHandler('rowSelectionChange', handleEvent);
+    // + useGridApiEventHandler(apiRef, 'rowSelectionChange', handleEvent);
     // + apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
     root
       .find(j.CallExpression)

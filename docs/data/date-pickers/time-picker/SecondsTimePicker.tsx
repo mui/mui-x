@@ -13,14 +13,14 @@ export default function SecondsTimePicker() {
           label="Hours, minutes and seconds"
           views={['hours', 'minutes', 'seconds']}
           format="HH:mm:ss"
-          defaultValue={dayjs('2022-04-07T15:30:10')}
+          defaultValue={dayjs('2022-04-17T15:30:10')}
         />
         <TimePicker
           label="Minutes and seconds"
           views={['minutes', 'seconds']}
           openTo="minutes"
           format="mm:ss"
-          defaultValue={dayjs('2022-04-07T15:30:10')}
+          defaultValue={dayjs('2022-04-17T15:30:10')}
         />
       </DemoContainer>
     </LocalizationProvider>

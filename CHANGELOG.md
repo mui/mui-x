@@ -3,6 +3,246 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.1
+
+_Mar 9, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve French (fr-FR) locale (#8122) @MaherSamiGMC
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.1` / `@mui/x-data-grid-pro@v6.0.1` / `@mui/x-data-grid-premium@v6.0.1`
+
+#### Changes
+
+- [DataGrid] Fix `MenuProps.onClose` being overridden for single select edit component (#8174) @rohitnatesh
+- [DataGrid] Simplify `buildPrintWindow` (#8142) @oliviertassinari
+- [l10n] Improve French (fr-FR) locale (#8122) @MaherSamiGMC
+
+### `@mui/x-date-pickers@v6.0.1` / `@mui/x-date-pickers-pro@v6.0.1`
+
+#### Changes
+
+- [pickers] Add a runtime warning when a `renderInput` prop is passed to a picker (#8183) @flaviendelangle
+- [pickers] Don't pass `ownerState` to the `inputAdornment` slot (#8165) @flaviendelangle
+
+### Docs
+
+- [docs] Fix a typo in the migration guide (#8152) @flaviendelangle
+- [docs] Fix package version used in CodeSandbox demos (#8125) @cherniavskii
+- [docs] Fix typos across codebase (#8126) @stavares843
+- [docs] Improve Data Grid quick filter documentation (#8109) @MBilalShafi
+- [docs] Improve link from npm to docs (#8141) @oliviertassinari
+- [docs] Remove test sections (#8177) @m4theushw
+
+### Core
+
+- [core] Upgrade monorepo (#8162) @m4theushw
+
+## 6.0.0
+
+_Mar 3, 2023_
+
+We're happy to announce the first v6 stable release! 🎉🚀
+
+This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
+Head over to the [what's new](https://mui.com/x/whats-new/) page to check the highlighted new features.
+
+Migration guides are available with a complete list of the breaking changes:
+
+- [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/)
+- [Date Pickers](https://mui.com/x/migration/migration-pickers-v5/)
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 The row pinning is no longer experimental (#8055) @MBilalShafi
+
+  You can now use the row pinning without the `experimentalFeatures.rowPinning` flag enabled.
+
+  ```diff
+   <DataGridPro
+  -  experimentalFeatures={{ rowPinning: true }}
+   />
+  ```
+- ⚡️ Improved grid performance by rows and cells memoization (#7846) @m4theushw
+- ✨ Fields have a distinct visual state when empty (#8069) @LukasTy
+- 🌍 Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
+- 🌍 Improve Arabic (ar-SD) locale (#8100) @atf98
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0` / `@mui/x-data-grid-pro@v6.0.0` / `@mui/x-data-grid-premium@v6.0.0`
+
+#### Breaking changes
+
+- The `componentsProps` and `slotProps` props are now typed for better DX
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot. You can use the new `focusedCell` and `tabbableCell` props instead. For the editing state, use the API methods.
+  The flag `experimentalFeatures.rowPinning` is no longer needed.
+
+#### Changes
+
+- [DataGrid] Add typing for `componentsProps` (#7968) @MBilalShafi
+- [DataGrid] Allow multiple modules' augmentation (#8098) @MBilalShafi
+- [DataGrid] Extract `BaseInputLabel` slot (#8068) @cherniavskii
+- [DataGrid] Extract `BaseSelectOption` slot (#8072) @cherniavskii
+- [DataGrid] Make possible to memoize rows and cells (#7846) @m4theushw
+- [DataGrid] Register `getLocaleText` synchronously (#8029) @m4theushw
+- [DataGrid] Start extracting material slots to a separate directory (#8004) @cherniavskii
+- [DataGrid] Use `styled` from system (#8032) @siriwatknp
+- [DataGridPro] Improve typing for `getColumnForNewFilter` method (#8043) @MBilalShafi
+- [DataGridPro] Remove row pinning from experimental features (#8055) @MBilalShafi
+- [l10n] Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
+- [l10n] Improve Arabic (ar-SD) locale (#8100) @atf98
+
+### `@mui/x-date-pickers@v6.0.0` / `@mui/x-date-pickers-pro@v6.0.0`
+
+#### Breaking changes
+
+On desktop, `DateTimePicker` shows the am/pm controls in the toolbar instead of the clock by default.
+It can be overridden by specifying `ampmInClock` prop.
+
+#### Changes
+
+- [DateRangePicker] Generalize the highlight between months (#8079) @alexfauquette
+- [fields] Clean the order of the tokens in the `formatTokenMap` of each adapter (#8112) @flaviendelangle
+- [fields] Implement empty visual state (#8069) @LukasTy
+- [fields] Replace `sectionOrder` state with a memoized variable (#8090) @flaviendelangle
+- [pickers] Add support for UTC on `moment` adapter (#8031) @flaviendelangle
+- [pickers] Document and deprecate `onClose` callback on static pickers (#8021) @LukasTy
+- [pickers] Fix am/pm buttons position and responsiveness (#5149) @alexfauquette
+- [pickers] Fix layout `sx` propagation (#8064) @alexfauquette
+- [pickers] Increase `moment` peer dependency minimum version (#8046) @oliviertassinari
+- [pickers] Remove `WrapperVariantContext` (#8088) @LukasTy
+- [pickers] Stop using `WrapperVariantContext` in `Clock` (#8083) @LukasTy
+
+### Docs
+
+- [docs] Add `aggregation` experimental flag removal to the migration guide (#8056) @MBilalShafi
+- [docs] Add expansion state behavioral change to v6 migration guide (#8108) @MBilalShafi
+- [docs] Change default date from 4th of April to 17th of April for readability (#8089) @flaviendelangle
+- [docs] Clarify the MIT license restriction for grid pagination (#8045) @arunkp
+- [docs] Fix typo replacing "bellow" by "below" (#8080) @TheBox193
+- [docs] Link `API object` in the `apiRef` sections (#8106) @MBilalShafi
+- [docs] Link to demonstrations in the interfaces API docs (#8028) @cherniavskii
+- [docs] Remove the `@next` tag from installation instructions (#8102) @cherniavskii
+- [docs] Start enforcing consistency in documentation vocabulary (#6871) @alexfauquette
+- [docs] Update accessibility guidelines (#7970) @oliviertassinari
+- [docs] Update the DataGrid demo to leverage the latest features (#7863) @joserodolfofreitas
+- [docs] Update migration guide for stable release (#8092) @joserodolfofreitas
+
+### Core
+
+- [core] Add modified docs page links in the PR (#7848) @alexfauquette
+- [core] Add test on value timezone (#7867) @alexfauquette
+- [core] Bump monorepo (#8006) @LukasTy
+- [core] Change default branch back to `master` (#8081) @m4theushw
+- [core] Upgrade monorepo (#8115) @MBilalShafi
+- [core] Mention the use of Support key as an alternative to the OrderID (#6968) @joserodolfofreitas
+- [test] Fix flaky tests (#8097) @cherniavskii
+
+## 6.0.0-beta.5
+
+_Feb 23, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Add web worker support for Excel export (#7770) @m4theushw
+- 🎁 Add a button to remove all filters on the data grid filter panel (#7326) @MBilalShafi
+- ⚙️ Allow to customize options label and value in the data grid `singleSelect` column (#7684) @m4theushw
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-beta.5` / `@mui/x-data-grid-pro@v6.0.0-beta.5` / `@mui/x-data-grid-premium@v6.0.0-beta.5`
+
+#### Changes
+
+- [DataGrid] Allow to customize label and value for `singleSelect` (#7684) @m4theushw
+- [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7964) @lolaignatova
+- [DataGrid] Introduce `slots` and deprecate `components` (#7882) @MBilalShafi
+- [DataGridPro] Add `Remove All` option in filter panel (#7326) @MBilalShafi
+- [DataGridPremium] Add web worker support for Excel export (#7770) @m4theushw
+
+### `@mui/x-date-pickers@v6.0.0-beta.5` / `@mui/x-date-pickers-pro@v6.0.0-beta.5`
+
+#### Breaking changes
+
+- The `MuiDateSectionName` type was renamed to `FieldSectionType`
+
+#### Changes
+
+- [fields] Fix multi input range fields validation when uncontrolled (#8002) @LukasTy
+- [fields] Fix single input time range fields slot props (#7988) @LukasTy
+- [fields] Make the `ArrowUp` / `ArrowDown` edition only impact the active section (#7993) @flaviendelangle
+- [fields] Fix single input range fields clearing (#7995) @flaviendelangle
+- [fields] Clean the section object (#8009) @flaviendelangle
+- [pickers] Fix `textField` slot `error` prop propagation (#7987) @LukasTy
+
+### `@mui/x-codemod@v6.0.0-beta.5`
+
+#### Changes
+
+- [codemod] Add `apiRef.current.getRowIndex` to `DataGrid` renaming codemod (#8001) @MBilalShafi
+
+### Docs
+
+- [docs] Fine tune range fields demos (#7992) @LukasTy
+- [docs] Fix a few scroll issues on mobile (#7900) @oliviertassinari
+- [docs] Fix inconsistency in the data grid migration guide (#7963) @MBilalShafi
+
+### Core
+
+- [core] Fix `moment` locale on adapter tests (#8020) @flaviendelangle
+- [test] Support all adapters on the field tests about the formats (#7996) @flaviendelangle
+
+## 6.0.0-beta.4
+
+_Feb 16, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Improve grid performance by reducing rerenders (#7857) @cherniavskii
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-beta.4` / `@mui/x-data-grid-pro@v6.0.0-beta.4` / `@mui/x-data-grid-premium@v6.0.0-beta.4`
+
+#### Changes
+
+- [DataGrid] Add interface for `singleSelect` column (#7685) @m4theushw
+- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7733) @Vivek-Prajapatii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7857) @cherniavskii
+- [DataGridPro] Change cursor when dragging a column (#7725) @sai6855
+- [DataGridPremium] Fix `leafField` to have correct focus value (#7950) @MBilalShafi
+
+### `@mui/x-date-pickers@v6.0.0-beta.4` / `@mui/x-date-pickers-pro@v6.0.0-beta.4`
+
+#### Changes
+
+- [DateRangePicker] Fix slide transition by avoiding useless component re-rendering (#7874) @LukasTy
+- [fields] Support Backspace key on `Android` (#7842) @flaviendelangle
+- [fields] Support escaped characters on `Luxon` (#7888) @flaviendelangle
+- [pickers] Prepare new pickers for custom fields (#7806) @flaviendelangle
+
+### `@mui/x-codemod@v6.0.0-beta.4`
+
+#### Changes
+
+- [codemod] Fix import path (#7952) @LukasTy
+
+### Docs
+
+- [docs] Add an info callout specifying the current state of desktop time view (#7933) @LukasTy
+- [docs] Add missing param in `useGridApiEventHandler` examples (#7939) @flaviendelangle
+- [docs] Fix markdown table alignments (#7898) @oliviertassinari
+- [docs] Improve `DataGrid` migration guide (#7861) @MBilalShafi
+- [docs] Update `LocalizationProvider` `dateAdapter` with a link to the doc (#7872) @LukasTy
+
+### Core
+
+- [core] Run editing field tests on all major adapters (#7868) @flaviendelangle
+
 ## 6.0.0-beta.3
 
 _Feb 9, 2023_
@@ -189,17 +429,17 @@ We encourage you to try out this version, packed with improvements, bug fixes, a
 
 **Data Grid**
 
-- [Access to the API Object in the community version](https://next.mui.com/x/react-data-grid/api-object/)
-- [Improved column menu](https://next.mui.com/x/react-data-grid/column-menu/)
-- [Cell selection range](https://next.mui.com/x/react-data-grid/cell-selection/) (Premium)
+- [Access to the API Object in the community version](https://mui.com/x/react-data-grid/api-object/)
+- [Improved column menu](https://mui.com/x/react-data-grid/column-menu/)
+- [Cell selection range](https://mui.com/x/react-data-grid/cell-selection/) (Premium)
 
 **Date and Time pickers**
 
-- [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
-- [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
-- [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/) (Pro)
+- [Fields: the new default input for pickers](https://mui.com/x/react-date-pickers/fields/).
+- [Improved layout customization](https://mui.com/x/react-date-pickers/custom-layout/)
+- [Edit date ranges with drag and drop](https://mui.com/x/react-date-pickers/date-range-calendar/) (Pro)
 
-You can check the migration guides for the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/) in the documentation.
+You can check the migration guides for the [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://mui.com/x/migration/migration-pickers-v5/) in the documentation.
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible.
 
@@ -346,7 +586,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
    // Same for all the other pickers with an `Unstable_` prefix
   ```
 
-  If you were still using the legacy picker (`DatePicker`, `DesktopDatePicker`, ...), please take a look at our [migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#picker-components) for detailed explanations on how to start using the new ones.
+  If you were still using the legacy picker (`DatePicker`, `DesktopDatePicker`, ...), please take a look at our [migration guide](https://mui.com/x/migration/migration-pickers-v5/#picker-components) for detailed explanations on how to start using the new ones.
 
 - The fields components are no longer unstable
 
@@ -777,7 +1017,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   return <DataGrid apiRef={apiRef} {...other} />;
   ```
 
-  See [the documentation](https://next.mui.com/x/react-data-grid/api-object/) for more information.
+  See [the documentation](https://mui.com/x/react-data-grid/api-object/) for more information.
 
 - 🎁 The `DataGridPremium` now supports cell selection:
 
@@ -785,7 +1025,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   <DataGridPremium unstable_cellSelection />
   ```
 
-  See [the documentation](https://next.mui.com/x/react-data-grid/selection/#cell-selection) for more information
+  See [the documentation](https://mui.com/x/react-data-grid/cell-selection/) for more information
 
 - 🌍 Support the Right To Left orientation on the fields components
 - 📚 Documentation improvements
@@ -1046,7 +1286,7 @@ _Nov 24, 2022_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce the v6 pickers, built on top of the field components [DatePicker](https://next.mui.com/x/react-date-pickers/date-picker/), [TimePicker](https://next.mui.com/x/react-date-pickers/time-picker/), [DateTimePicker](https://next.mui.com/x/react-date-pickers/date-time-picker/), [DateRangePicker](https://next.mui.com/x/react-date-pickers/date-range-picker/).
+- 🎁 Introduce the v6 pickers, built on top of the field components [DatePicker](https://mui.com/x/react-date-pickers/date-picker/), [TimePicker](https://mui.com/x/react-date-pickers/time-picker/), [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/), [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/).
 
   The old (legacy) components will be removed at the end of the v6 beta.
 
@@ -1417,7 +1657,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   The renamed props are the following:
 
   | Old name                   | New name                      |
-  | -------------------------- | ----------------------------- |
+  | :------------------------- | :---------------------------- |
   | `selectionModel`           | `rowSelectionModel`           |
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
@@ -1536,20 +1776,20 @@ _Oct 13, 2022_
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌚️ New components to edit date and time with <kbd>keyboard</kbd>—without using any modal or dropdown UI.
-  Please check out our [documentation](https://next.mui.com/x/react-date-pickers/fields/) to discover those new components.
+  Please check out our [documentation](https://mui.com/x/react-date-pickers/fields/) to discover those new components.
 
-  - [`DateField`](https://next.mui.com/x/react-date-pickers/date-field/) to edit date
-  - [`TimeField`](https://next.mui.com/x/react-date-pickers/time-field/) to edit time
-  - [`DateTimeField`](https://next.mui.com/x/react-date-pickers/date-time-field/) to edit date and time
-  - [`MultiInputDateRangeField` / `SingleInputDateRangeField`](https://next.mui.com/x/react-date-pickers/date-range-field/) to edit date range
-  - [`MultiInputTimeRangeField`](https://next.mui.com/x/react-date-pickers/time-range-field/) to edit time range with two inputs
-  - [`MultiInputDateTimeRangeField`](https://next.mui.com/x/react-date-pickers/date-time-range-field/) to edit date and time range with two inputs
+  - [`DateField`](https://mui.com/x/react-date-pickers/date-field/) to edit date
+  - [`TimeField`](https://mui.com/x/react-date-pickers/time-field/) to edit time
+  - [`DateTimeField`](https://mui.com/x/react-date-pickers/date-time-field/) to edit date and time
+  - [`MultiInputDateRangeField` / `SingleInputDateRangeField`](https://mui.com/x/react-date-pickers/date-range-field/) to edit date range
+  - [`MultiInputTimeRangeField`](https://mui.com/x/react-date-pickers/time-range-field/) to edit time range with two inputs
+  - [`MultiInputDateTimeRangeField`](https://mui.com/x/react-date-pickers/date-time-range-field/) to edit date and time range with two inputs
 
   ⚠️ These components are unstable.
   They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 
 - 📝 Allow to limit to one filter per column for `DataGridPro` and `DataGridPremium` (#6333) @MBilalShafi
-- 📚 New [page describing the validation props on each picker](https://next.mui.com/x/react-date-pickers/validation/) (#6064) @flaviendelangle
+- 📚 New [page describing the validation props on each picker](https://mui.com/x/react-date-pickers/validation/) (#6064) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -1570,14 +1810,14 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   For users that didn't migrate to the new editing API in v5, additional work may be needed because the new API is not equivalent to the legacy API. Although, some migration steps are available to help in this task.
 
   - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
-  - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://next.mui.com/x/react-data-grid/editing/#persistence) section about the topic.
-  - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+  - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+  - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
   - The following API methods were removed:
     - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
     - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
     - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
     - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
-    - Use the [`cellModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
+    - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
 
 #### Changes
 
@@ -1978,7 +2218,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
    />
   ```
 
-  You can find more information about this new API on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
+  You can find more information about this new API on our [documentation](https://mui.com/x/react-data-grid/column-visibility/).
 
 - The `GridEvents` enum is now a TypeScript type.
 
@@ -2004,7 +2244,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   You can now use the `localText` prop available on all picker components:
 
   | Removed prop                 | Property in the new `localText` prop                                              |
-  | ---------------------------- | --------------------------------------------------------------------------------- |
+  | :--------------------------- | :-------------------------------------------------------------------------------- |
   | `endText`                    | `end`                                                                             |
   | `getClockLabelText`          | `clockLabelText`                                                                  |
   | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
@@ -2028,7 +2268,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
    />
   ```
 
-You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://next.mui.com/x/react-date-pickers/localization/)
+You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://mui.com/x/react-date-pickers/localization/)
 
 - The deprecated `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`:
 
@@ -2131,6 +2371,50 @@ You can find more information about the new api, including how to set those tran
 - [test] Hide the date on the print regression test (#6120) @flaviendelangle
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
+
+## 5.17.25
+
+_Feb 23, 2023_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.25` / `@mui/x-data-grid-pro@v5.17.25` / `@mui/x-data-grid-premium@v5.17.25`
+
+#### Changes
+
+- [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7757) @lolaignatova
+
+### `@mui/x-date-pickers@v5.0.20` / `@mui/x-date-pickers-pro@v5.0.20`
+
+#### Changes
+
+- [DateTimePicker] Ensure toolbar `viewType` is correctly updated (#7942) @LukasTy
+
+## 5.17.24
+
+_Feb 16, 2023_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Hungarian (hu-HU) locale
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.24` / `@mui/x-data-grid-pro@v5.17.24` / `@mui/x-data-grid-premium@v5.17.24`
+
+#### Changes
+
+- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7897) @Vivek-Prajapatii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7945) @cherniavskii
+- [DataGridPro] Change cursor when dragging a column (#7878) @sai6855
+- [DataGridPremium] Fix `leafField` to have correct focus value (#7959) @MBilalShafi
+
+### `@mui/x-date-pickers@v5.0.19` / `@mui/x-date-pickers-pro@v5.0.19`
+
+#### Changes
+
+- [l10n] Add Hungarian (hu-HU) locale (#7796) @noherczeg
 
 ## 5.17.23
 
@@ -2583,7 +2867,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 - [CalendarPicker] Don't move to closest enabled date when `props.date` contains a disabled date (#6537) @flaviendelangle
 - [DateRangePicker] Fix calendar day outside of month layout shifting on hover (pick #6448) (#6538) @alexfauquette
-- [pickers] Fix typescript issues (#6510) @flaviendelangle
+- [pickers] Fix Typescript issues (#6510) @flaviendelangle
 
 ### Docs
 
@@ -2729,7 +3013,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### Core
 
-- [core] Update to typescript 4.8.3 (#6136) @flaviendelangle
+- [core] Update to Typescript 4.8.3 (#6136) @flaviendelangle
 - [core] Update RFC template (#6100) @bytasv
 
 ## 5.17.2
@@ -2798,7 +3082,7 @@ _Sep 2, 2022_
 
 🎉 We are excited to finally introduce a stable release (v5.0.0) for the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages!
 
-If you are still using picker components from the `lab`, take a look at the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
+If you are still using picker components from the `lab`, take a look at the [migration guide](https://mui.com/x/migration/migration-pickers-lab/).
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2938,7 +3222,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when commiting value (#5756) @m4theushw
+- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when committing value (#5756) @m4theushw
 - [DataGrid] Fix `GridOverlays` bypassing pointer events (#5674) @philjones88
 
 ### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@v5.0.0-beta.6`
@@ -2982,7 +3266,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Catch errors if rows freezing is not supported (#5711) @cherniavskii
-- [DataGrid] Preserve cell mode when entering edit mode while commiting (#5686) @m4theushw
+- [DataGrid] Preserve cell mode when entering edit mode while committing (#5686) @m4theushw
 - [DataGridPremium] Let quick filter search in row grouping children (#5701) @alexfauquette
 
 ### `@mui/x-date-pickers@v5.0.0-beta.5` / `@mui/x-date-picker-pro@5.0.0-beta.5`
@@ -3849,7 +4133,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
   Date and time picker components have been moved to the MUI X repository.
   They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
-  For more information, you can read the [blog article](https://mui.com/blog/lab-date-pickers-to-mui-x/) and the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
+  For more information, you can read the [blog article](https://mui.com/blog/lab-date-pickers-to-mui-x/) and the [migration guide](https://mui.com/x/migration/migration-pickers-lab/).
 
 - 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
 - ✨ Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
@@ -3909,7 +4193,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Remove dead code (#4283) @oliviertassinari
 - [core] Rename the "pre-processing" concept "pipe-processing" (#4261) @flaviendelangle
 - [core] Reuse previous state when updating the columns prop (#4229) @m4theushw
-- [core] Fix Argos flakyness for pickers tests (#4312) @flaviendelangle
+- [core] Fix Argos flakiness for pickers tests (#4312) @flaviendelangle
 
 ## 5.7.0
 
@@ -4045,7 +4329,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   Here are the new names and the modifications needed to get the same information with the new selectors.
 
   | Old name                        | New name                                  |
-  | ------------------------------- | ----------------------------------------- |
+  | :------------------------------ | :---------------------------------------- |
   | `allGridColumnsFieldsSelector`  | `gridColumnFieldsSelector`                |
   | `allGridColumnsSelector`        | `gridColumnDefinitionsSelector`           |
   | `visibleGridColumnsSelector`    | `gridVisibleColumnDefinitionsSelector`    |
@@ -5459,7 +5743,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - [docs] Add section for controlled selection and server-side pagination (#2602) @DanailH
 - [docs] Fix Algolia search (#2655) @oliviertassinari
-- [docs] Improve the seach results relevance (#2656) @oliviertassinari
+- [docs] Improve the search results relevance (#2656) @oliviertassinari
 - [docs] Update installation instructions (#2663) @m4theushw
 
 ### Core
@@ -6497,7 +6781,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - 💅 Add `columnHeader`, `row` and `cell` to the `classes` prop (#1660) @DanailH
 - ✅ Add the `isRowSelectable` prop to disable selection on certain rows (#1659) @m4theushw
 
-  See the documentation for [more details](https://mui.com/x/react-data-grid/selection/#disable-selection-on-certain-rows).
+  See the documentation for [more details](https://v4.mui.com/components/data-grid/selection/#disable-selection-on-certain-rows).
 
 - ⚡️ Add new icon slot to be displayed when the column is unsorted (#1415) @m4theushw
 - ⚙ Improve consistency of the API to prepare for the first beta release
@@ -6823,7 +7107,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
    }
   ```
 
-- [DataGrid] Upgrade mininum supported version of React to 17.0.0 (#1410) @m4theushw
+- [DataGrid] Upgrade minimum supported version of React to 17.0.0 (#1410) @m4theushw
 
 #### Changes
 
@@ -6953,7 +7237,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [docs] Add demo page (#1147) @DanailH
 - [docs] Fix typo in localization.md (#1155) @michael-martin-al
-- [docs] Improve the desciption of the individual packages (#1139) @oliviertassinari
+- [docs] Improve the description of the individual packages (#1139) @oliviertassinari
 - [docs] Fix rendering docs to solve custom pagination issue (#1159) @consDev
 
 ### Core
@@ -7025,7 +7309,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - 📍 Add support for default locales (#983) @DanailH
   We have built the infrastructure to support around 100 [default locales](https://mui.com/x/react-data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material UI by opening a pull request.
 - 🎁 Add new `selectionModel` prop (#986) @dtassone
-  The prop can be used to control the selected rows in the data grid. [See the docs](https://mui.com/x/react-data-grid/selection/#controlled-selection).
+  The prop can be used to control the selected rows in the data grid. [See the docs](https://v4.mui.com/components/data-grid/selection/#controlled-selection).
 - 💅 Add support for default props from theme (#1019) @DanailH
 - 🙌 Fix scrollbar size on windows (#1061) @dtassone
 - 🐛 Polish existing features, fix 9 issues.
@@ -7130,7 +7414,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Fix footer visual regression (#932) @dtassone
 - [DataGrid] Fix strict mode issue with apiRef (#933) @dtassone
 - [DataGrid] Work on the accessibility of the column menu (#900) @zj9495
-- [DataGrid] Fix timing guarentee (#981) @oliviertassinari
+- [DataGrid] Fix timing guarantee (#981) @oliviertassinari
 - [DataGrid] Fix unstable footer height (#937) @oliviertassinari
 - [DataGrid] Fix usage of the prop-types API (#955) @oliviertassinari
 - [DataGrid] Fix duplicate aria-label (#953) @oliviertassinari

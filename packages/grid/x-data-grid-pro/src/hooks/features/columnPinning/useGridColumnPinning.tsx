@@ -65,8 +65,8 @@ export const useGridColumnPinning = (
     | 'initialState'
     | 'pinnedColumns'
     | 'onPinnedColumnsChange'
-    | 'componentsProps'
-    | 'components'
+    | 'slotProps'
+    | 'slots'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);

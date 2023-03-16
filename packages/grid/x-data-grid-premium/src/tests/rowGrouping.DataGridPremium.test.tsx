@@ -1,10 +1,10 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
+  getCell,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -658,7 +658,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
   });
 
-  describe('prop: groupingColDef when groupingColumMode = "single"', () => {
+  describe('prop: groupingColDef when groupingColumnMode = "single"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -814,6 +814,33 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           'Custom leaf',
         ]);
       });
+
+      // See https://github.com/mui/mui-x/issues/7949
+      it('should correctly pass `hasFocus` to `renderCell` defined on the leafColDef', () => {
+        const renderIdCell = spy((params) => `Focused: ${params.hasFocus}`);
+
+        render(
+          <Test
+            columns={[
+              {
+                field: 'id',
+                type: 'number',
+                renderCell: renderIdCell,
+              },
+              {
+                field: 'category1',
+              },
+            ]}
+            initialState={{ rowGrouping: { model: ['category1'] } }}
+            groupingColDef={{ leafField: 'id' }}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        userEvent.mousePress(getCell(1, 0));
+        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
+        expect(getCell(1, 0)).to.have.text('Focused: true');
+      });
     });
 
     describe('prop: groupColDef.headerName', () => {
@@ -967,7 +994,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
   });
 
-  describe('prop: groupingColDef when groupingColumMode = "multiple"', () => {
+  describe('prop: groupingColDef when groupingColumnMode = "multiple"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -1564,7 +1591,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItem = screen.queryByRole('menuitem', { name: 'Group by category1' });
+      const menuItem = screen.getByRole('menuitem', { name: 'Group by category1' });
       fireEvent.click(menuItem);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category1']);
     });
@@ -1610,7 +1637,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItem = screen.queryByRole('menuitem', { name: 'Stop grouping by category1' });
+      const menuItem = screen.getByRole('menuitem', { name: 'Stop grouping by category1' });
       fireEvent.click(menuItem);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
     });
@@ -1641,7 +1668,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category1__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory1 = screen.queryByRole('menuitem', {
+      const menuItemCategory1 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category1',
       });
       fireEvent.click(menuItemCategory1);
@@ -1654,7 +1681,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category2__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory2 = screen.queryByRole('menuitem', {
+      const menuItemCategory2 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category2',
       });
       fireEvent.click(menuItemCategory2);
@@ -1686,12 +1713,12 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory1 = screen.queryByRole('menuitem', {
+      const menuItemCategory1 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category1',
       });
       fireEvent.click(menuItemCategory1);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2']);
-      const menuItemCategory2 = screen.queryByRole('menuitem', {
+      const menuItemCategory2 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category2',
       });
       fireEvent.click(menuItemCategory2);
@@ -2224,7 +2251,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 
-      it('should manage link operator OR accros group and leaf columns', () => {
+      it('should manage link operator OR across group and leaf columns', () => {
         render(
           <Test
             initialState={{

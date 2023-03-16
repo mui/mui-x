@@ -35,7 +35,11 @@ const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TimeClockProps<any> }>({});
+})<{ ownerState: TimeClockProps<any> }>({
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+});
 
 const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
@@ -51,7 +55,6 @@ type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-// TODO v6: Drop the `showViewSwitcher` prop with the legacy pickers
 /**
  *
  * API:
@@ -340,6 +343,21 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       ownerState={ownerState}
       {...other}
     >
+      <Clock<TDate>
+        autoFocus={autoFocus}
+        ampmInClock={ampmInClock && views.includes('hours')}
+        value={value}
+        type={view}
+        ampm={ampm}
+        minutesStep={minutesStep}
+        isTimeDisabled={isTimeDisabled}
+        meridiemMode={meridiemMode}
+        handleMeridiemChange={handleMeridiemChange}
+        selectedId={selectedId}
+        disabled={disabled}
+        readOnly={readOnly}
+        {...viewProps}
+      />
       {showViewSwitcher && (
         <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
@@ -356,22 +374,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           ownerState={ownerState}
         />
       )}
-
-      <Clock<TDate>
-        autoFocus={autoFocus}
-        ampmInClock={ampmInClock && views.includes('hours')}
-        value={value}
-        type={view}
-        ampm={ampm}
-        minutesStep={minutesStep}
-        isTimeDisabled={isTimeDisabled}
-        meridiemMode={meridiemMode}
-        handleMeridiemChange={handleMeridiemChange}
-        selectedId={selectedId}
-        disabled={disabled}
-        readOnly={readOnly}
-        {...viewProps}
-      />
     </TimeClockRoot>
   );
 }) as TimeClockComponent;
@@ -401,7 +403,7 @@ TimeClock.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -496,7 +498,7 @@ TimeClock.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
