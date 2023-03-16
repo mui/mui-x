@@ -2921,6 +2921,13 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-10.0.1.tgz#2f4f65bb08bc368ac39c96da7b2f09140b26851b"
   integrity sha512-/fvYntiO1GeICvqbQ3doGDIP97vWmvFt83GKguJ6prmQM2iXZfFcq6YE8KteFyRtX2/h5Hf91BYvPodJKFYv5Q==
 
+"@types/moment-hijri@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/moment-hijri/-/moment-hijri-2.1.0.tgz#ac79f3d97d74bf10afe6631cd33c19ad3f329d56"
+  integrity sha512-2+jaCpPqiwcrejg8oCex7jITtRDjcQIu8s7GAY7uVlDoAaq3LiyLDoe1l9EiWZRCECahtdUDmdZHHS5THRC/hA==
+  dependencies:
+    moment ">=2.14.0"
+
 "@types/node@*", "@types/node@>= 8", "@types/node@>=10.0.0", "@types/node@^18.15.3":
   version "18.15.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.3.tgz#f0b991c32cfc6a4e7f3399d6cb4b8cf9a0315014"
@@ -10089,7 +10096,7 @@ moment-timezone@^0.5.21:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.22.2, moment@^2.24.0, moment@^2.29.4:
+"moment@>= 2.9.0", moment@>=2.14.0, moment@^2.22.2, moment@^2.24.0, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==

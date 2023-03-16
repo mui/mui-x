@@ -33,29 +33,39 @@ The single input range fields are not supported on the range pickers yet (you ca
 
 ## Advanced
 
+### What is a section?
+
+In the field components, the date is divided into several sections, each one responsible for the edition of a date token.
+For example, if the format passed to the field is `MM/DD/YYYY`, the field will create 3 sections:
+
+- A `month` section for the token `MM`
+- A `day` section for the token `DD`
+- A `year` section for the token `YYYY`
+
+Those sections are independent, pressing <kbd class="key">ArrowUp</kbd> while focusing the `day` section will add one day to the date, but it will never change the month or the year.
+
 ### When is `onChange` called?
 
 The field components have an internal state to update the visible value.
 
-It will only call the `onChange` callback when all the sections of the modified date are filled.
+It will only call the `onChange` callback when:
 
-#### On single element fields
+- the user fills one section of an empty input. The value equals `Invalid date`.
+- the user completes all sections of an input. The value reflects the input.
+- the user cleans one section of a completed input. The value equals `Invalid date`.
+- the user cleans all sections of an input. The value equals `null`.
 
-On a single date field (`DateField` / `DateTimeField` / `TimeField`),
-`onChange` will be called if all the sections are filled.
-
-In the example below, `onChange` will not be fired until the date is fully completed:
+In the example below, `onChange` will be called when any of the conditions are triggered:
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
 #### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-On a date range field (`SingleInputDateRangeField` / `MultiInputDateRangeField`),
-`onChange` will be called if all the sections of the date you modified are filled,
-even if some sections of the other date are not filled.
+On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
+`onChange` will be called if the date you are modifying is matching one of the condition above,
+even if the other date does not.
 
-In the demo below, changing the value of a start date section will fire `onChange` even if the end date is empty.
-But changing the value of an end date section will not fire `onChange` until the end date is fully completed:
+In the example below, changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
@@ -64,7 +74,7 @@ But changing the value of an end date section will not fire `onChange` until the
 The `onChange` callback received a 2nd parameter containing the validation error associated to the current value.
 If you only want to update your state when the value is valid, you can ignore any `onChange` call with a non-null `validationError`.
 
-In the example below, `onChange` will only be fired if the date is valid and its year is 2022:
+In the example below, `onChange` will only be called if the date is valid and its year is 2022:
 
 {{"demo": "LifeCycleIgnoreInvalidValue.js"}}
 
