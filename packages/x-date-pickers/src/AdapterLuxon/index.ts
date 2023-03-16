@@ -65,7 +65,7 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<
       );
     }
     // Extract escaped section to avoid entending them
-    const longFormatRegexp = /''|'(''|[^'])+('|$)|[a-z]*/g;
+    const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
     return (
       format
         .match(longFormatRegexp)!
