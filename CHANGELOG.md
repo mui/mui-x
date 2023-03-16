@@ -54,7 +54,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 ### Core
 
 - [core] Regen api docs (#8220) @flaviendelangle
-- [core] remove duplicated `/` (#8223) @alexfauquette
+- [core] Remove duplicated `/` (#8223) @alexfauquette
 
 ## 6.0.1
 
