@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FieldRef } from '@mui/x-date-pickers';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { UseFieldResponse } from '@mui/x-date-pickers/internals';
 import { RangeFieldSection } from '../../models/fields';
 

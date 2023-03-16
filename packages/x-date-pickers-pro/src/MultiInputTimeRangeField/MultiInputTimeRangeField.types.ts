@@ -3,7 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { FieldRef } from '@mui/x-date-pickers';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseTimeRangeFieldDefaultizedProps,
