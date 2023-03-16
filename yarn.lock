@@ -3162,10 +3162,10 @@
     prop-types "^15.5.10"
     react-use-measure "^2.0.4"
 
-"@visx/axis@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@visx/axis/-/axis-3.0.1.tgz#b80883e0d22d77d377ce11fa9b13cc621dc2684b"
-  integrity sha512-ozi7DaEe4afsMHTQsG8jKt4ag0t9Z4wQJhHMYbmrYF4iP6BsQUpFUCf2rgnLo5fM0CEEoZXN0vc6ZhvYzp1ZYg==
+"@visx/axis@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@visx/axis/-/axis-3.1.0.tgz#775b221e5abfdec25304c607eeae8cda1a8bade6"
+  integrity sha512-JDj/1VYx0JO0pHFtwoFtYcnqdoZFh/dpHImEl169S5nTslSFlIoNTXA/ekpBP6ELkEZ59gmF1X5k29x6MFBwCA==
   dependencies:
     "@types/react" "*"
     "@visx/group" "3.0.0"
@@ -3251,13 +3251,13 @@
   resolved "https://registry.yarnpkg.com/@visx/point/-/point-3.0.1.tgz#77587ddaabf6f3023f09f8a0ce33a2c27c9d64c8"
   integrity sha512-S5WOBMgEP2xHcgs3A2BFB2vwzrk0tMmn3PGZAbQJ+lu4HlnalDP72klUnxLTH8xclNNvpUHtHM5eLIJXyHx6Pw==
 
-"@visx/react-spring@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@visx/react-spring/-/react-spring-3.0.1.tgz#fce2c76d38a20e57ec144f6fa9a0e5691770d0b1"
-  integrity sha512-ulZ3joychoO1cxbtawAg1M8yMowIH70pcjbb2kRZivFlaxRW3zbYWnBjOio5uLl8YNS/3TsDVr9fH736Z0k8Aw==
+"@visx/react-spring@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@visx/react-spring/-/react-spring-3.1.0.tgz#dad4770e74a3880da862cac104bad61e466cee01"
+  integrity sha512-8GHfXvJwnscGgf5UVCMeKw8Genq+cllcQJ8T6aAe1uC2ttYa2InmRIPsJEoA7VDLcxNIJgvw1bRd22QrgT9LtA==
   dependencies:
     "@types/react" "*"
-    "@visx/axis" "3.0.1"
+    "@visx/axis" "3.1.0"
     "@visx/grid" "3.0.1"
     "@visx/scale" "3.0.0"
     "@visx/text" "3.0.0"
@@ -3338,19 +3338,19 @@
     d3-voronoi "^1.1.2"
     prop-types "^15.6.1"
 
-"@visx/xychart@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@visx/xychart/-/xychart-3.0.1.tgz#106a574c11c6e7568b2a5446d9b74ccc8f2d8174"
-  integrity sha512-tx4Vs1iKTPVgEu857CNMxj28Hr98ly8/a0prv2SlkmeV5JsWnEh4KEEufR+13UWVuSzsLq8Jval3XMwTC/uyxw==
+"@visx/xychart@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@visx/xychart/-/xychart-3.1.0.tgz#94c4646a975301b8ab24d9ee1b1651ce3e0b6784"
+  integrity sha512-s7NOgYGL83KICTwkSoo0g88ORZemCxp3MgIr3z4z6zm6ypKhArRRqXqPrmkoRfnx53kitzmpisH71lncymz0XA==
   dependencies:
     "@types/lodash" "^4.14.172"
     "@types/react" "*"
     "@visx/annotation" "3.0.1"
-    "@visx/axis" "3.0.1"
+    "@visx/axis" "3.1.0"
     "@visx/event" "3.0.1"
     "@visx/glyph" "3.0.0"
     "@visx/grid" "3.0.1"
-    "@visx/react-spring" "3.0.1"
+    "@visx/react-spring" "3.1.0"
     "@visx/responsive" "3.0.0"
     "@visx/scale" "3.0.0"
     "@visx/shape" "3.0.0"
