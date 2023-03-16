@@ -1,12 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { GridStateColDef } from '../../models/colDef/gridColDef';
-import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridStateColDef, useGridPrivateApiContext } from '@mui/x-data-grid/internals';
+import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid';
 import { GridGenericColumnHeaderFilterItem } from './GridGenericColumnHeaderFilterItem';
+import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -18,7 +16,7 @@ interface GridColumnHeaderItemProps {
 
 type OwnerState = GridColumnHeaderItemProps & {
   showRightBorder: boolean;
-  classes?: DataGridProcessedProps['classes'];
+  classes?: DataGridProProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

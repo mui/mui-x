@@ -21,12 +21,16 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-export type { UseGridColumnHeadersProps } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export type {
+  UseGridColumnHeadersProps,
+  GetHeadersParams,
+} from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
+export { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 export {
   useGridColumnGrouping,

@@ -62,7 +62,7 @@ export interface UseGridColumnHeadersProps {
   hasOtherElementInTabSequence: boolean;
 }
 
-interface GetHeadersParams {
+export interface GetHeadersParams {
   renderContext: GridRenderContext | null;
   minFirstColumn?: number;
   maxLastColumn?: number;
@@ -470,6 +470,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   return {
     renderContext,
     getColumnHeaders,
+    getColumnsToRender,
     getColumnGroupHeaders,
     isDragging: !!dragCol,
     getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
@@ -477,5 +478,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       ref: handleInnerRef,
       role: 'rowgroup',
     }),
+    headerHeight,
   };
 };

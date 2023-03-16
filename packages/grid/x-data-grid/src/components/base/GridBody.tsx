@@ -36,17 +36,10 @@ interface GridBodyProps {
       disableVirtualization: boolean;
     }
   >;
-  ColumnHeadersFilterComponent?: React.JSXElementConstructor<
-    React.HTMLAttributes<HTMLDivElement> & {
-      ref: React.Ref<HTMLDivElement>;
-      innerRef: React.Ref<HTMLDivElement>;
-    }
-  >;
 }
 
 function GridBody(props: GridBodyProps) {
-  const { children, VirtualScrollerComponent, ColumnHeadersProps, 
-    ColumnHeadersFilterComponent } = props;
+  const { children, VirtualScrollerComponent, ColumnHeadersProps } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
 
@@ -110,8 +103,6 @@ function GridBody(props: GridBodyProps) {
 
   const columnHeadersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
-  const columnHeadersFilterRef = React.useRef<HTMLDivElement>(null);
-  const columnsContainerFilterRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.register('private', {
@@ -148,12 +139,6 @@ function GridBody(props: GridBodyProps) {
         hasOtherElementInTabSequence={hasOtherElementInTabSequence}
         {...ColumnHeadersProps}
       />
-      {ColumnHeadersFilterComponent ? (
-        <ColumnHeadersFilterComponent
-          ref={columnHeadersFilterRef}
-          innerRef={columnsContainerFilterRef}
-        />
-      ) : null}
       <GridAutoSizer
         nonce={rootProps.nonce}
         disableHeight={rootProps.autoHeight}

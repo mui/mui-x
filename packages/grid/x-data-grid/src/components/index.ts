@@ -12,7 +12,6 @@ export * from './GridApiContext';
 export * from './GridAutoSizer';
 export * from './GridFooter';
 export * from './GridHeader';
-export * from './DataGridColumnHeadersFilter';
 export * from './GridLoadingOverlay';
 export * from './GridNoRowsOverlay';
 export * from './GridPagination';

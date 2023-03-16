@@ -11,17 +11,16 @@ import {
   useGridApiEventHandler,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
-import {
-  GridBaseColumnHeaders,
-  GridColumnHeadersInner,
-  useGridColumnHeaders,
-  UseGridColumnHeadersProps,
-} from '@mui/x-data-grid/internals';
+import { GridBaseColumnHeaders, GridColumnHeadersInner } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPinnedPosition, GridPinnedColumns } from '../hooks/features/columnPinning';
 import { filterColumns } from './DataGridProVirtualScroller';
+import {
+  useGridColumnHeaders,
+  UseGridColumnHeadersProProps,
+} from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 type OwnerState = DataGridProProcessedProps & {
   leftPinnedColumns: GridPinnedColumns['left'];
@@ -112,7 +111,7 @@ GridColumnHeadersPinnedColumnHeaders.propTypes = {
 
 interface DataGridProColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    Omit<UseGridColumnHeadersProps, 'innerRef'> {
+    Omit<UseGridColumnHeadersProProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
   pinnedColumns: GridPinnedColumns;
 }
@@ -176,6 +175,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       getRootProps,
       getInnerProps,
       getColumnHeaders,
+      getColumnFilters,
       getColumnGroupHeaders,
     } = useGridColumnHeaders({
       innerRef,
@@ -253,6 +253,11 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               },
               { disableReorder: true },
             )}
+            {getColumnFilters({
+              renderContext: leftRenderContext,
+              minFirstColumn: leftRenderContext.firstColumnIndex,
+              maxLastColumn: leftRenderContext.lastColumnIndex,
+            })}
           </GridColumnHeadersPinnedColumnHeaders>
         )}
 
@@ -263,6 +268,11 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
             maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
           })}
           {getColumnHeaders({
+            renderContext,
+            minFirstColumn: leftPinnedColumns.length,
+            maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
+          })}
+          {getColumnFilters({
             renderContext,
             minFirstColumn: leftPinnedColumns.length,
             maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
@@ -292,6 +302,11 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               },
               { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
             )}
+            {getColumnFilters({
+              renderContext: rightRenderContext,
+              minFirstColumn: rightRenderContext.firstColumnIndex,
+              maxLastColumn: rightRenderContext.lastColumnIndex,
+            })}
           </GridColumnHeadersPinnedColumnHeaders>
         )}
       </GridBaseColumnHeaders>

@@ -116,6 +116,11 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    */
   disableChildrenSorting: boolean;
   /**
+   * If `true`, the header filtering is disabled.
+   * @default false
+   */
+  disableHeaderFiltering: boolean;
+  /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {number | string} The height in pixels or "auto" to use the content height.

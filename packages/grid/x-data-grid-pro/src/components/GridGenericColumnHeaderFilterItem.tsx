@@ -4,16 +4,14 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
-import { GridFilterItem } from '../../models/gridFilterItem';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import {
+  GridFilterItem,
+  useGridSelector,
   gridFilterActiveItemsLookupSelector,
   gridFilterModelSelector,
-} from '../../hooks/features/filter/gridFilterSelector';
-
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridStateColDef } from '../../models/colDef/gridColDef';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+  useGridApiContext,
+} from '@mui/x-data-grid';
+import { GridStateColDef } from '@mui/x-data-grid/internals';
 
 interface GridGenericColumnHeaderItemProps
   extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
@@ -30,10 +28,9 @@ interface GridGenericColumnHeaderItemProps
   label: string;
   colType: string;
   field: string;
-  draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
 }
 
-const SYMBOL_MAPPING = {
+const SYMBOL_MAPPING: { [key: string]: string } = {
   contains: '∋',
   equals: '=',
   '=': '=',
@@ -72,7 +69,6 @@ function GridGenericColumnHeaderFilterItem(props: GridGenericColumnHeaderItemPro
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
   const currentColumn = field ? apiRef.current.getColumn(field) : null;
   const operator = currentColumn?.filterOperators![0] ?? null;
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
@@ -102,20 +98,16 @@ function GridGenericColumnHeaderFilterItem(props: GridGenericColumnHeaderItemPro
           field,
           operator: operator.value,
         };
-        if (rootProps.signature === 'DataGrid') {
-          apiRef.current.upsertFilterItems([item]);
-        } else {
-          if (filterModel.items.length > 0) {
-            apiRef.current.upsertFilterItems(filterModel.items.filter((i) => i.field !== field));
-          }
-          apiRef.current.upsertFilterItems([
-            ...filterModel.items.filter(({ field: colField }) => colField !== item.field),
-            item,
-          ]);
+        if (filterModel.items.length > 0) {
+          apiRef.current.upsertFilterItems(filterModel.items.filter((i) => i.field !== field));
         }
+        apiRef.current.upsertFilterItems([
+          ...filterModel.items.filter(({ field: colField }) => colField !== item.field),
+          item,
+        ]);
       }
     },
-    [apiRef, field, filterModel.items, operator, rootProps.signature],
+    [apiRef, field, filterModel.items, operator],
   );
 
   return (
@@ -147,8 +139,7 @@ function GridGenericColumnHeaderFilterItem(props: GridGenericColumnHeaderItemPro
                       label !== 'Filter' ? (
                         <InputAdornment position="start">
                           {operator?.value
-                            ? /* @ts-expect-error TODO: resolve */
-                              SYMBOL_MAPPING[operator.value]
+                            ? SYMBOL_MAPPING[operator.value]
                             : operator.value ?? operator.value}
                         </InputAdornment>
                       ) : null
