@@ -453,11 +453,6 @@ export const splitFormatIntoSections = <TDate>(
       return null;
     }
 
-    const expandedToken = utils.expandFormat(token);
-    if (expandedToken !== token) {
-      return expandedToken;
-    }
-
     const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
     const sectionValue = date == null ? '' : utils.formatByString(date, token);
 
@@ -482,19 +477,38 @@ export const splitFormatIntoSections = <TDate>(
     return null;
   };
 
-  const splitFormat = (token: string) => {
-    const escapedParts = getEscapedPartsFromFormat(utils, token);
+  const splitFormat = (inputFormat: string) => {
+    let formatExpensionOverflow = 10;
+    let prevFormat = inputFormat;
+    let nextFormat = utils.expandFormat(inputFormat);
+    while (nextFormat !== prevFormat) {
+      prevFormat = nextFormat;
+      nextFormat = utils.expandFormat(prevFormat);
+      formatExpensionOverflow -= 1;
+      if (formatExpensionOverflow < 0) {
+        throw new Error(
+          'MUI: The format exmpension seems to be  enter in an infint loop. Please open an issue with the format pased to the picker component',
+        );
+      }
+    }
+
+    const expandedFormat = nextFormat;
+    const escapedParts = getEscapedPartsFromFormat(utils, expandedFormat);
+
+    // This RegExp test if the begining of a string correspond to a supported token
+    const isTokenStartRegExp = new RegExp(`^(${Object.keys(utils.formatTokenMap).join('|')})`);
+
     let currentTokenValue = '';
 
-    for (let i = 0; i < token.length; i += 1) {
+    for (let i = 0; i < expandedFormat.length; i += 1) {
       const escapedPartOfCurrentChar = escapedParts.find(
         (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
       );
 
-      const char = token[i];
+      const char = expandedFormat[i];
       const isEscapedChar = escapedPartOfCurrentChar != null;
-
-      if (!isEscapedChar && char.match(/([A-Za-z]+)/)) {
+      const potentialToken = `${currentTokenValue}${expandedFormat.slice(i)}`;
+      if (!isEscapedChar && char.match(/([A-Za-z]+)/) && isTokenStartRegExp.test(potentialToken)) {
         currentTokenValue += char;
       } else {
         // If we are on the opening or closing character of an escaped part of the format,
@@ -504,10 +518,7 @@ export const splitFormatIntoSections = <TDate>(
           escapedPartOfCurrentChar?.end === i;
 
         if (!isEscapeBoundary) {
-          const expandedToken = commitToken(currentTokenValue);
-          if (expandedToken != null) {
-            splitFormat(expandedToken);
-          }
+          commitToken(currentTokenValue);
 
           currentTokenValue = '';
           if (sections.length === 0) {
@@ -519,10 +530,7 @@ export const splitFormatIntoSections = <TDate>(
       }
     }
 
-    const expandedToken = commitToken(currentTokenValue);
-    if (expandedToken != null) {
-      splitFormat(expandedToken);
-    }
+    commitToken(currentTokenValue);
   };
 
   splitFormat(format);
