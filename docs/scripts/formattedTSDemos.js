@@ -107,6 +107,7 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
           'colDef',
           'row',
           'selectedDay',
+          'hoveredDay',
           'day',
         ];
         if (propsToNotResolve.includes(name)) {

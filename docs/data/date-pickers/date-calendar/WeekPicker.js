@@ -11,49 +11,53 @@ import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 dayjs.extend(isBetweenPlugin);
 
 const CustomPickersDay = styled(PickersDay, {
-  shouldForwardProp: (prop) =>
-    prop !== 'dayIsBetween' && prop !== 'isFirstDay' && prop !== 'isLastDay',
-})(({ theme, dayIsBetween, isFirstDay, isLastDay }) => ({
-  ...(dayIsBetween && {
+  shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
+})(({ theme, isSelected, isHovered, day }) => ({
+  ...((isSelected || isHovered) && {
     borderRadius: 0,
+  }),
+  ...(isSelected && {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
     '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: theme.palette.primary.main,
     },
   }),
-  ...(isFirstDay && {
+  ...(isHovered && {
+    backgroundColor: theme.palette.primary.light,
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.primary.light,
+    },
+  }),
+  ...(day.day() === 0 && {
     borderTopLeftRadius: '50%',
     borderBottomLeftRadius: '50%',
   }),
-  ...(isLastDay && {
+  ...(day.day() === 6 && {
     borderTopRightRadius: '50%',
     borderBottomRightRadius: '50%',
   }),
 }));
 
-function Day(props) {
-  const { day, selectedDay, ...other } = props;
-
-  if (selectedDay == null) {
-    return <PickersDay day={day} {...other} />;
+const isInSameWeek = (dayA, dayB) => {
+  if (dayB == null) {
+    return false;
   }
 
-  const start = selectedDay.startOf('week');
-  const end = selectedDay.endOf('week');
+  return dayA.isSame(dayB, 'week');
+};
 
-  const dayIsBetween = day.isBetween(start, end, null, '[]');
-  const isFirstDay = day.isSame(start, 'day');
-  const isLastDay = day.isSame(end, 'day');
+function Day(props) {
+  const { day, selectedDay, hoveredDay, ...other } = props;
 
   return (
     <CustomPickersDay
       {...other}
       day={day}
       disableMargin
-      dayIsBetween={dayIsBetween}
-      isFirstDay={isFirstDay}
-      isLastDay={isLastDay}
+      selected={false}
+      isSelected={isInSameWeek(day, selectedDay)}
+      isHovered={isInSameWeek(day, hoveredDay)}
     />
   );
 }
@@ -63,10 +67,12 @@ Day.propTypes = {
    * The date to show.
    */
   day: PropTypes.object.isRequired,
+  hoveredDay: PropTypes.object,
   selectedDay: PropTypes.object,
 };
 
-export default function CustomDay() {
+export default function WeekPicker() {
+  const [hoveredDay, setHoveredDay] = React.useState(null);
   const [value, setValue] = React.useState(dayjs('2022-04-17'));
 
   return (
@@ -74,11 +80,15 @@ export default function CustomDay() {
       <DateCalendar
         value={value}
         onChange={(newValue) => setValue(newValue)}
+        showDaysOutsideCurrentMonth
         slots={{ day: Day }}
         slotProps={{
-          day: {
+          day: (ownerState) => ({
             selectedDay: value,
-          },
+            hoveredDay,
+            onMouseEnter: () => setHoveredDay(ownerState.day),
+            onMouseLeave: () => setHoveredDay(null),
+          }),
         }}
       />
     </LocalizationProvider>
