@@ -99,7 +99,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     },
   );
 
-  const { view, setFinalValue, setValueAndGoToNextView } = useViews<TDate | null, ClockTimeView>({
+  const { view, setValueAndGoToNextView, setView } = useViews<TDate | null, ClockTimeView>({
     view: inView,
     views,
     openTo,
@@ -227,7 +227,6 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
 
   const buildViewProps = React.useCallback(
     (viewToBuild: ClockTimeView): DesktopTimeClockSectionViewProps<number> => {
-      const lastView = views[views.length - 1];
       switch (viewToBuild) {
         case 'hours': {
           const handleHoursChange = (hours: number | MeridiemEnum) => {
@@ -235,10 +234,16 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
               return;
             }
             const valueWithMeridiem = convertValueToMeridiem(hours, meridiemMode, ampm);
-            setValueAndGoToNextView(
-              utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
-              'finish',
-            );
+            // ensure that the current view is the one we are changing
+            // this allows to keep selecting the same view multiple times
+            setView('hours');
+            // delay until next tick to ensure the view update has been synced (if needed)
+            setTimeout(() => {
+              setValueAndGoToNextView(
+                utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
+                'finish',
+              );
+            }, 0);
           };
           return {
             onChange: handleHoursChange,
@@ -258,11 +263,10 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             if (typeof minutes !== 'number') {
               return;
             }
-            if (utils.isValid(value) && lastView === 'minutes') {
-              setFinalValue(utils.setMinutes(selectedTimeOrMidnight, minutes));
-            } else {
+            setView('minutes');
+            setTimeout(() => {
               setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
-            }
+            }, 0);
           };
 
           return {
@@ -283,11 +287,10 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             if (typeof seconds !== 'number') {
               return;
             }
-            if (utils.isValid(value) && lastView === 'seconds') {
-              setFinalValue(utils.setSeconds(selectedTimeOrMidnight, seconds));
-            } else {
+            setView('seconds');
+            setTimeout(() => {
               setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, seconds), 'finish');
-            }
+            }, 0);
           };
 
           return {
@@ -306,7 +309,6 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       }
     },
     [
-      views,
       now,
       value,
       ampm,
@@ -314,10 +316,10 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       meridiemMode,
       setValueAndGoToNextView,
       selectedTimeOrMidnight,
+      setView,
       disabled,
       isTimeDisabled,
       timeStep,
-      setFinalValue,
     ],
   );
 
