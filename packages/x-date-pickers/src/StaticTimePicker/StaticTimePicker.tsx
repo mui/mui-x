@@ -29,6 +29,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
+    digital: null,
     ...defaultizedProps.viewRenderers,
   };
 
