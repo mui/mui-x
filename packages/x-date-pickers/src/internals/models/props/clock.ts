@@ -22,7 +22,7 @@ export interface BaseClockProps<TDate, TView extends unknown = TimeView> {
    */
   sx?: SxProps<Theme>;
   /**
-   * Set to `true` if focus should be moved to time digital picker.
+   * If `true`, the view is focused during the first mount.
    */
   autoFocus?: boolean;
   /**

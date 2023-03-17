@@ -32,7 +32,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DigitalClockProps<any> }>({
   overflowY: 'auto',
-  width: '100%'
+  width: '100%',
 });
 
 const DigitalClockList = styled(MenuList, {
