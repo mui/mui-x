@@ -102,7 +102,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
-- The `error` and `onError` props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html). The `components.ErrorOverlay` slot was also removed.
+- The `error` and `onError` props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary). The `components.ErrorOverlay` slot was also removed.
 
 ### State access
 
@@ -177,7 +177,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
-- The `componentError` event was removed. Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
+- The `componentError` event was removed. Use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) to catch errors thrown during rendering.
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 - The `cellFocusIn` and `cellFocusOut` events are internal now. Use `componentsProps.cell.onFocus` and `componentsProps.cell.onBlur` props instead.
 
