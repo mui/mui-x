@@ -119,8 +119,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (!selectedItem) {
       return;
     }
-    // make sure the selected item is focused (possibly instead of the wrapper - MenuList)
-    selectedItem.focus();
+    if (autoFocus) {
+      // make sure the selected item is focused (possibly instead of the wrapper - MenuList)
+      selectedItem.focus();
+    }
     // Taken from useScroll in x-data-grid, but vertically centered
     const offsetHeight = selectedItem.offsetHeight;
     const offsetTop = selectedItem.offsetTop;
@@ -136,7 +138,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     }
 
     containerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
-  }, [ref]);
+  }, [autoFocus, ref]);
 
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
