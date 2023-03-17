@@ -35,14 +35,17 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   name: 'MuiDesktopTimeClockSection',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DesktopTimeClockSectionProps<any> }>({
-  paddingRight: 12,
-  width: 44,
+})<{ ownerState: DesktopTimeClockSectionProps<any> }>(({ theme }) => ({
+  paddingRight: 18,
+  width: 40,
   overflow: 'hidden',
-  '&:focus-within, &:hover': {
+  '&:hover': {
     overflowY: 'auto',
   },
-});
+  '&:not(:first-child)': {
+    borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
+  },
+}));
 
 const DesktopTimeClockSectionItem = styled(MenuItem, {
   name: 'MuiDesktopTimeClockSection',
@@ -51,8 +54,10 @@ const DesktopTimeClockSectionItem = styled(MenuItem, {
 })({
   flexDirection: 'column',
   padding: 8,
+  margin: '0 2px',
   // setting item width higher than the wrapper to avoid scrollbar shifting
-  width: 50,
+  width: 54,
+  justifyContent: 'center',
 });
 
 type DesktopTimeClockSectionComponent = <TValue>(
