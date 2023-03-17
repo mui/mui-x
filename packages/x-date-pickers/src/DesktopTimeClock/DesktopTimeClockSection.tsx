@@ -19,6 +19,7 @@ export interface DesktopTimeClockSectionProps<TValue> {
   classes?: Partial<DesktopTimeClockSectionClasses>;
   items: DesktopTimeClockSectionOption<TValue>[];
   onChange: (value: TValue) => void;
+  active?: boolean;
 }
 
 const useUtilityClasses = (ownerState: DesktopTimeClockSectionProps<any>) => {
@@ -79,17 +80,43 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
     name: 'MuiDesktopTimeClockSection',
   });
 
-  const { autoFocus, onChange, className, disabled, readOnly, items, ...other } = props;
+  const { autoFocus, onChange, className, disabled, readOnly, items, active, ...other } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+
+  React.useEffect(() => {
+    if (containerRef.current === null) {
+      return;
+    }
+    const selectedItem = containerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+    if (!selectedItem) {
+      return;
+    }
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = selectedItem.offsetHeight;
+    const offsetTop = selectedItem.offsetTop;
+
+    const clientHeight = containerRef.current.clientHeight;
+    const scrollTop = containerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // item already visible
+      return;
+    }
+
+    containerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [active, autoFocus, ref]);
 
   return (
     <DesktopTimeClockSectionRoot
       ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      autoFocus={autoFocus}
+      autoFocusItem={autoFocus && active}
+      variant="selectedMenu"
       {...other}
     >
       {items.map((option) => (

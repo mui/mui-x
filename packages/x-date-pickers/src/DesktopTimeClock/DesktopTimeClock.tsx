@@ -353,7 +353,8 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
           key={timeView}
           items={viewOptions.items}
           onChange={viewOptions.onChange}
-          autoFocus={autoFocus ?? view === timeView}
+          active={view === timeView}
+          autoFocus={autoFocus}
           disabled={disabled}
           readOnly={readOnly}
         />
