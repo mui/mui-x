@@ -37,8 +37,7 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: DesktopTimeClockSectionProps<any> }>(({ theme }) => ({
-  paddingRight: 18,
-  width: 40,
+  width: 56,
   overflow: 'hidden',
   '&:hover': {
     overflowY: 'auto',
@@ -55,9 +54,9 @@ const DesktopTimeClockSectionItem = styled(MenuItem, {
 })({
   flexDirection: 'column',
   padding: 8,
-  margin: '0 2px',
+  margin: '0 3px',
   // setting item width higher than the wrapper to avoid scrollbar shifting
-  width: 54,
+  width: 50,
   justifyContent: 'center',
 });
 
