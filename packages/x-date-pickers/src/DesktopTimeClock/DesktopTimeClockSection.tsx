@@ -42,7 +42,7 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   '&:hover': {
     overflowY: 'auto',
   },
-  '&:not(:first-child)': {
+  '&:not(:first-of-type)': {
     borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
