@@ -98,11 +98,9 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 _Mar 3, 2023_
 
-We're happy to announce the first v6 stable release! 🎉🚀
+We're excited to [announce the first v6 stable release](https://mui.com/blog/mui-x-v6/)! 🎉🚀
 
 This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
-Head over to the [what's new](https://mui.com/x/whats-new/) page to check the highlighted new features.
-
 Migration guides are available with a complete list of the breaking changes:
 
 - [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/)
