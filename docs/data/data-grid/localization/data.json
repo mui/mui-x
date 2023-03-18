@@ -147,7 +147,7 @@
     "languageTag": "fa-IR",
     "importName": "faIR",
     "localeName": "Persian",
-    "missingKeysCount": 2,
+    "missingKeysCount": 0,
     "totalKeysCount": 94,
     "githubLink": "https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/locales/faIR.ts/"
   },

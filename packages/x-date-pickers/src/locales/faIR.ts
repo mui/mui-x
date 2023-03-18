@@ -44,8 +44,8 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'عدد هفته',
   calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: weekNumber => `هفته ${weekNumber}`,
-  calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberAriaLabelText: (weekNumber) => `هفته ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -62,10 +62,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'انتخاب ساعت',
 
   // Field section placeholders
-  fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
-  fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
