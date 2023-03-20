@@ -334,9 +334,11 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
-      if (inputRef.current!.selectionStart !== 0 || inputRef.current!.selectionEnd !== 0) {
-        // Ensure input selection range is in sync with component selection indexes
-        inputRef.current!.setSelectionRange(0, 0);
+      if (inputRef.current!.scrollLeft) {
+        // Ensure that input content is not marked as selected.
+        // setting selection range to 0 causes issues in Safari.
+        // https://bugs.webkit.org/show_bug.cgi?id=224425
+        inputRef.current!.scrollLeft = 0;
       }
       return;
     }
