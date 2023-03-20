@@ -222,6 +222,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFocusColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFocusColumnHeaderSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",

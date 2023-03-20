@@ -312,4 +312,4 @@ GridFilterPanel.propTypes = {
   ]),
 } as any;
 
-export { GridFilterPanel };
+export { GridFilterPanel, getGridFilter };

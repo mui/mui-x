@@ -253,6 +253,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               },
               { disableReorder: true },
             )}
+
             {getColumnFilters({
               renderContext: leftRenderContext,
               minFirstColumn: leftRenderContext.firstColumnIndex,
@@ -302,6 +303,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
               },
               { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
             )}
+
             {getColumnFilters({
               renderContext: rightRenderContext,
               minFirstColumn: rightRenderContext.firstColumnIndex,

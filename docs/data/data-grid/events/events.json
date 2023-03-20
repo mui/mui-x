@@ -113,6 +113,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "columnHeaderFilterKeyDown",
+    "description": "Fired when a key is pressed in a column header filter. It&#39;s mapped do the <code>keydown</code> DOM event.",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnHeaderKeyDown",
     "description": "Fired when a key is pressed in a column header. It&#39;s mapped do the <code>keydown</code> DOM event.",
     "params": "GridColumnHeaderParams",

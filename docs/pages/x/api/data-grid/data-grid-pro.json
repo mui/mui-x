@@ -54,6 +54,7 @@
     "disableColumnResize": { "type": { "name": "bool" } },
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
+    "disableHeaderFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsFiltering": { "type": { "name": "bool" } },
     "disableMultipleColumnsSorting": { "type": { "name": "bool" } },
     "disableMultipleRowSelection": { "type": { "name": "bool" } },

@@ -43,4 +43,10 @@ export interface GridFocusPrivateApi {
     field: string,
     direction: 'below' | 'right' | 'left',
   ) => void;
+  /**
+   * Sets the focus to the column header filter at the given `field`.
+   * @param {string} field The column field.
+   * @param {string} event The event that triggers the action.
+   */
+  setColumnHeaderFilterFocus: (field: string, event?: MuiBaseEvent) => void;
 }

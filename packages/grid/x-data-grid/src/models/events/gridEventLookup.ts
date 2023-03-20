@@ -126,6 +126,13 @@ export interface GridColumnHeaderEventLookup {
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
+   * Fired when a key is pressed in a column header filter. It's mapped do the `keydown` DOM event.
+   */
+  columnHeaderFilterKeyDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
    * Fired when a column header gains focus.
    * @ignore - do not document.
    */

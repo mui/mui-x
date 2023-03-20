@@ -9,7 +9,6 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
-  DataGridColumnHeadersFilter,
   useGridSelector,
   gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
@@ -37,7 +36,6 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridHeader />
         <GridBody
-          ColumnHeadersFilterComponent={DataGridColumnHeadersFilter}
           VirtualScrollerComponent={DataGridProVirtualScroller}
           ColumnHeadersProps={{ pinnedColumns }}
         >
@@ -231,6 +229,11 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   disableDensitySelector: PropTypes.bool,
+  /**
+   * If `true`, the header filtering is disabled.
+   * @default false
+   */
+  disableHeaderFiltering: PropTypes.bool,
   /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false

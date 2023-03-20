@@ -408,9 +408,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
         const headerInfo: HeaderInfo = {
           groupId,
-          width: columnFields
-            .map((field) => apiRef.current.getColumn(field).computedWidth)
-            .reduce((acc, val) => acc + val, 0),
+          width: columnFields.reduce(
+            (acc, field) => acc + apiRef.current.getColumn(field).computedWidth,
+            0,
+          ),
           fields: columnFields,
           colIndex: columnIndex,
           hasFocus,

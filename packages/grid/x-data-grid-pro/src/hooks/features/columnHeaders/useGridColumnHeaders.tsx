@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { useGridRootProps } from '@mui/x-data-grid';
+import {
+  useGridRootProps,
+  gridFocusColumnHeaderFilterSelector,
+  useGridSelector,
+} from '@mui/x-data-grid';
 import { styled } from '@mui/system';
 import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
@@ -32,6 +36,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const totalHeaderHeight =
     getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) + rootProps.columnHeaderHeight;
 
+  const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
+
   const getColumnFilters = (params?: GetHeadersParams, other = {}) => {
     if (rootProps.disableHeaderFiltering) {
       return null;
@@ -51,7 +57,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const columnIndex = firstColumnToRender + i;
 
-      // TODO: Fix `tabIndex` and `focus`
+      const hasFocus = columnHeaderFilterFocus?.field === colDef.field;
+
+      // TODO: Fix `tabIndex`
       const tabIndex = -1;
 
       filters.push(
@@ -60,7 +68,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           headerHeight={headerHeight}
           colDef={colDef}
           colIndex={columnIndex}
-          hasFocus={false}
+          hasFocus={hasFocus}
           tabIndex={tabIndex}
           {...other}
         />,

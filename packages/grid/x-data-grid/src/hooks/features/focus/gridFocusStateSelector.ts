@@ -14,6 +14,11 @@ export const gridFocusColumnHeaderSelector = createSelector(
   (focusState: GridFocusState) => focusState.columnHeader,
 );
 
+export const gridFocusColumnHeaderFilterSelector = createSelector(
+  gridFocusStateSelector,
+  (focusState: GridFocusState) => focusState.columnHeaderFilter,
+);
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_gridFocusColumnGroupHeaderSelector = createSelector(
   gridFocusStateSelector,

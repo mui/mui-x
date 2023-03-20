@@ -138,6 +138,16 @@ export const useGridKeyboardNavigation = (
     [apiRef, logger],
   );
 
+  const goToHeaderFilter = React.useCallback(
+    (colIndex: number, event: React.SyntheticEvent<Element>) => {
+      logger.debug(`Navigating to header filter col ${colIndex}`);
+      apiRef.current.scrollToIndexes({ colIndex });
+      const field = apiRef.current.getVisibleColumns()[colIndex].field;
+      apiRef.current.setColumnHeaderFilterFocus(field, event);
+    },
+    [apiRef, logger],
+  );
+
   const goToGroupHeader = React.useCallback(
     (colIndex: number, depth: number, event: React.SyntheticEvent<Element>) => {
       logger.debug(`Navigating to header col ${colIndex}`);
@@ -150,7 +160,7 @@ export const useGridKeyboardNavigation = (
 
   const getRowIdFromIndex = React.useCallback(
     (rowIndex: number) => {
-      return currentPageRows[rowIndex].id;
+      return currentPageRows?.[rowIndex].id;
     },
     [currentPageRows],
   );
@@ -186,7 +196,8 @@ export const useGridKeyboardNavigation = (
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
-            goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
+            // goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
+            goToHeaderFilter(colIndexBefore, event);
           }
           break;
         }
@@ -272,11 +283,134 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       currentPageRows.length,
+      goToHeaderFilter,
       theme.direction,
-      goToCell,
-      getRowIdFromIndex,
       goToHeader,
       goToGroupHeader,
+      goToCell,
+      getRowIdFromIndex,
+    ],
+  );
+
+  const handleColumnHeaderFilterKeyDown = React.useCallback<
+    GridEventListener<'columnHeaderFilterKeyDown'>
+  >(
+    (params, event) => {
+      // const headerTitleNode = event.currentTarget.querySelector(
+      //   `.${gridClasses.columnHeaderTitleContainerContent}`,
+      // );
+      // const isFromInsideContent =
+      //   !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
+
+      // if (isFromInsideContent && params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+      //   // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
+      //   // There is one exception for the checkBoxHeader
+      //   return;
+      // }
+
+      const dimensions = apiRef.current.getRootDimensions();
+      if (!dimensions) {
+        return;
+      }
+
+      const viewportPageSize = apiRef.current.getViewportPageSize();
+      const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
+      const firstRowIndexInPage = 0;
+      const lastRowIndexInPage = currentPageRows.length - 1;
+      const firstColIndex = 0;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      let shouldPreventDefault = true;
+
+      switch (event.key) {
+        case 'ArrowDown': {
+          const rowId = getRowIdFromIndex(firstRowIndexInPage);
+          if (firstRowIndexInPage !== null && rowId != null) {
+            goToCell(colIndexBefore, rowId);
+          }
+          break;
+        }
+
+        case 'ArrowRight': {
+          const rightColIndex = getRightColumnIndex({
+            currentColIndex: colIndexBefore,
+            firstColIndex,
+            lastColIndex,
+            direction: theme.direction,
+          });
+
+          if (rightColIndex !== null) {
+            goToHeaderFilter(rightColIndex, event);
+          }
+
+          break;
+        }
+
+        case 'ArrowLeft': {
+          const leftColIndex = getLeftColumnIndex({
+            currentColIndex: colIndexBefore,
+            firstColIndex,
+            lastColIndex,
+            direction: theme.direction,
+          });
+          if (leftColIndex !== null) {
+            goToHeaderFilter(leftColIndex, event);
+          }
+          break;
+        }
+
+        case 'ArrowUp': {
+          goToHeader(colIndexBefore, event);
+          break;
+        }
+
+        case 'PageDown': {
+          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
+            goToCell(
+              colIndexBefore,
+              getRowIdFromIndex(
+                Math.min(firstRowIndexInPage + viewportPageSize, lastRowIndexInPage),
+              ),
+            );
+          }
+          break;
+        }
+
+        case 'Home': {
+          goToHeaderFilter(firstColIndex, event);
+          break;
+        }
+
+        case 'End': {
+          goToHeaderFilter(lastColIndex, event);
+          break;
+        }
+
+        case 'Enter': {
+          break;
+        }
+
+        case ' ': {
+          // prevent Space event from scrolling
+          break;
+        }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
+      }
+    },
+    [
+      apiRef,
+      currentPageRows.length,
+      goToHeaderFilter,
+      theme.direction,
+      goToHeader,
+      goToCell,
+      getRowIdFromIndex,
     ],
   );
 
@@ -441,7 +575,7 @@ export const useGridKeyboardNavigation = (
           if (rowIndexBefore > firstRowIndexInPage) {
             goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore - 1));
           } else {
-            goToHeader(colIndexBefore, event);
+            goToHeaderFilter(colIndexBefore, event);
           }
           break;
         }
@@ -556,10 +690,19 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPageRows, theme.direction, getRowIdFromIndex, goToCell, goToHeader],
+    [
+      apiRef,
+      currentPageRows,
+      theme.direction,
+      goToCell,
+      getRowIdFromIndex,
+      goToHeaderFilter,
+      goToHeader,
+    ],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, 'columnHeaderFilterKeyDown', handleColumnHeaderFilterKeyDown);
   useGridApiEventHandler(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 };
