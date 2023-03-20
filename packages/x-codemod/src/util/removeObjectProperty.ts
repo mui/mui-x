@@ -1,5 +1,8 @@
 import type { Collection, JSCodeshift, JSXAttribute } from 'jscodeshift';
 
+const getAttributeName = (attribute: JSXAttribute): string =>
+  attribute.name.type === 'JSXIdentifier' ? attribute.name.name : attribute.name.name.name;
+
 interface RemoveObjectPropertyArgs {
   root: Collection<any>;
   componentsNames: string[];
@@ -39,8 +42,8 @@ export default function removeObjectProperty({
     })
     .forEach((element) => {
       const targetAttribute = element.value.openingElement.attributes
-        ?.filter((attribute): attribute is JSXAttribute => attribute.type !== 'JSXAttribute')
-        .find((attribute) => attribute.name.name === propName);
+        ?.filter((attribute): attribute is JSXAttribute => attribute.type === 'JSXAttribute')
+        ?.find((attribute) => getAttributeName(attribute) === propName);
       if (!targetAttribute) {
         return;
       }
