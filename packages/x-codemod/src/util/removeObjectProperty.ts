@@ -32,7 +32,7 @@ export default function removeObjectProperty({
     })
     .forEach((element) => {
       const targetAttribute = (element.value.openingElement.attributes as any).find(
-        (attribute) => attribute.name.name === propName,
+        (attribute) => attribute?.name?.name === propName,
       );
       if (!targetAttribute) {
         return;
