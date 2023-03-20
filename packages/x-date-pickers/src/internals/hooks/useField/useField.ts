@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import { useTheme } from '@mui/material/styles';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -12,7 +13,7 @@ import {
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.types';
-import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
+import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
@@ -37,7 +38,6 @@ export const useField = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
-    sectionOrder,
     sectionsValueBoundaries,
   } = useFieldState(params);
 
@@ -70,6 +70,12 @@ export const useField = <
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const theme = useTheme();
+
+  const sectionOrder = React.useMemo(
+    () => getSectionOrder(state.sections, theme.direction === 'rtl'),
+    [theme.direction, state.sections],
+  );
 
   const syncSelectionFromDOM = () => {
     if (readOnly) {
