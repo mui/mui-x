@@ -346,6 +346,25 @@ By default, the quick filter considers the input as a list of values separated b
 
 {{"demo": "QuickFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Initialize the quick filter values
+
+The quick filter values can be initialized by setting the `filter.filterModel.quickFilterValues` property of the `initialState` prop.
+
+```tsx
+<DataGrid
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [],
+        quickFilterValues: ['quick', 'filter'],
+      },
+    },
+  }}
+/>
+```
+
+{{"demo": "QuickFilteringInitialize.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
@@ -418,6 +437,8 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## apiRef
+
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the data grid.

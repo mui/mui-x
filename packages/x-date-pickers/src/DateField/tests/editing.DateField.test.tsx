@@ -275,7 +275,28 @@ describe('<DateField /> - Editing', () => {
           });
         });
 
-        it('should only call `onChange` when clearing the last section', () => {
+        it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
+          const handleChange = spy();
+
+          render(
+            <DateField
+              format={adapter.formats.monthAndYear}
+              defaultValue={null}
+              onChange={handleChange}
+            />,
+          );
+
+          const input = getTextbox();
+          clickOnInput(input, 1);
+
+          // Select all sections
+          userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(0);
+        });
+
+        it('should call `onChange` when clearing the first and last section', () => {
           const handleChange = spy();
 
           render(
@@ -290,13 +311,36 @@ describe('<DateField /> - Editing', () => {
           selectSection(input, 0);
 
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(0);
+          expect(handleChange.callCount).to.equal(1);
+          expect(handleChange.lastCall.args[1].validationError).to.equal('invalidDate');
 
           userEvent.keyPress(input, { key: 'ArrowRight' });
 
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(1);
+          expect(handleChange.callCount).to.equal(2);
           expect(handleChange.lastCall.firstArg).to.equal(null);
+          expect(handleChange.lastCall.args[1].validationError).to.equal(null);
+        });
+
+        it('should not call `onChange` if the section is already empty', () => {
+          const handleChange = spy();
+
+          render(
+            <DateField
+              format={adapter.formats.monthAndYear}
+              defaultValue={adapter.date()}
+              onChange={handleChange}
+            />,
+          );
+
+          const input = getTextbox();
+          selectSection(input, 0);
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(1);
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(1);
         });
       },
     );
@@ -418,6 +462,22 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: '1' },
           { value: '1', expected: '11' },
           { value: '2', expected: '2' },
+        ],
+      });
+    });
+
+    it('should support day with letter suffix', function test() {
+      // Luxon don't have any day format with a letter suffix
+      if (adapterName === 'luxon') {
+        this.skip();
+      }
+
+      testFieldChange({
+        format: adapterName === 'date-fns' ? 'do' : 'Do',
+        keyStrokes: [
+          { value: '1', expected: '1st' },
+          { value: '2', expected: '12th' },
+          { value: '2', expected: '2nd' },
         ],
       });
     });
@@ -679,7 +739,7 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, 'MM / DD / YYYY');
       firePasteEvent(input, '12');
 
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.callCount).to.equal(1);
       expectInputValue(input, '12 / DD / YYYY');
     });
 
@@ -828,6 +888,19 @@ describe('<DateField /> - Editing', () => {
       });
     },
   );
+
+  describeAdapters('Editing from the outside', DateField, ({ adapter, render, clickOnInput }) => {
+    it('should be able to reset the value from the outside', () => {
+      const { setProps } = render(<DateField value={adapter.date(new Date(2022, 10, 23))} />);
+      const input = getTextbox();
+      expectInputValue(input, '11 / 23 / 2022');
+
+      setProps({ value: null });
+
+      clickOnInput(input, 0);
+      expectInputValue(input, 'MM / DD / YYYY');
+    });
+  });
 
   describeAdapters('Android editing', DateField, ({ adapter, render, clickOnInput }) => {
     let originalUserAgent: string = '';

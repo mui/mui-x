@@ -159,6 +159,8 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 ## apiRef
 
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+
 {{"demo": "DetailPanelApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API

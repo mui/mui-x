@@ -5,7 +5,6 @@ import {
   unstable_useId as useId,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
@@ -235,9 +234,9 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? true;
-    const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
 
     const baseInputLabelProps = rootProps.slotProps?.baseInputLabel || {};
+    const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
@@ -428,9 +427,14 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             {...rootProps.slotProps?.baseSelect}
           >
             {logicOperators.map((logicOperator) => (
-              <OptionComponent key={logicOperator.toString()} value={logicOperator.toString()}>
+              <rootProps.slots.baseSelectOption
+                {...baseSelectOptionProps}
+                native={isBaseSelectNative}
+                key={logicOperator.toString()}
+                value={logicOperator.toString()}
+              >
                 {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
-              </OptionComponent>
+              </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>
         </FilterFormLogicOperatorInput>
@@ -463,9 +467,14 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             {...rootProps.slotProps?.baseSelect}
           >
             {sortedFilteredColumns.map((col) => (
-              <OptionComponent key={col.field} value={col.field}>
+              <rootProps.slots.baseSelectOption
+                {...baseSelectOptionProps}
+                native={isBaseSelectNative}
+                key={col.field}
+                value={col.field}
+              >
                 {getColumnLabel(col)}
-              </OptionComponent>
+              </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>
         </FilterFormColumnInput>
@@ -499,12 +508,17 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             {...rootProps.slotProps?.baseSelect}
           >
             {currentColumn?.filterOperators?.map((operator) => (
-              <OptionComponent key={operator.value} value={operator.value}>
+              <rootProps.slots.baseSelectOption
+                {...baseSelectOptionProps}
+                native={isBaseSelectNative}
+                key={operator.value}
+                value={operator.value}
+              >
                 {operator.label ||
                   apiRef.current.getLocaleText(
                     `filterOperator${capitalize(operator.value)}` as 'filterOperatorContains',
                   )}
-              </OptionComponent>
+              </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>
         </FilterFormOperatorInput>

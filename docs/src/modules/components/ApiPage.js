@@ -232,6 +232,9 @@ export default function ApiPage(props) {
     packages,
   } = pageContent;
 
+  const defaultPropsLink = '/material-ui/customization/theme-components/#default-props';
+  const styleOverridesLink = '/material-ui/customization/theme-components/#global-style-overrides';
+
   const {
     componentDescription,
     componentDescriptionToc = [],
@@ -355,10 +358,10 @@ export default function ApiPage(props) {
             <Heading hash="component-name" />
             <span
               dangerouslySetInnerHTML={{
-                __html: t('api-docs.styleOverrides').replace(
-                  /{{componentStyles\.name}}/,
-                  componentStyles.name,
-                ),
+                __html: t('api-docs.styleOverrides')
+                  .replace(/{{componentStyles\.name}}/, componentStyles.name)
+                  .replace(/{{defaultPropsLink}}/, defaultPropsLink)
+                  .replace(/{{styleOverridesLink}}/, styleOverridesLink),
               }}
             />
           </React.Fragment>

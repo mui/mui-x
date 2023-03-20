@@ -166,7 +166,7 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     } else {
       // Blur event
       setFocusedView(
-        (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view swiching
+        (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view switching
       );
     }
 
