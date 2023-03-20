@@ -156,14 +156,13 @@ function GridBody(props: GridBodyProps) {
         hasOtherElementInTabSequence={hasOtherElementInTabSequence}
         {...ColumnHeadersProps}
       />
-      {/*
-          The content is only rendered with dimensions because the lazy-loading
-          hook is listening to `renderedRowsIntervalChange`, but only does
-          something if the dimensions are also available. If the event is published
-          without having dimensions, `onFetchRows` won't be called during mount.
-         */}
       {hasDimensions && (
         <VirtualScrollerComponent
+          // The content is only rendered after dimensions are computed because
+          // the lazy-loading hook is listening to `renderedRowsIntervalChange`,
+          // but only does something if the dimensions are also available.
+          // If this event is published while dimensions haven't been computed,
+          // the `onFetchRows` prop won't be called during mount.
           ref={virtualScrollerRef}
           disableVirtualization={isVirtualizationDisabled}
         />
