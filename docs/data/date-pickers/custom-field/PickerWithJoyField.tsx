@@ -5,13 +5,10 @@ import { blue, grey } from '@mui/material/colors';
 import {
   Experimental_CssVarsProvider as CssVarsProvider,
   experimental_extendTheme as extendMuiTheme,
-  shouldSkipGeneratingVar as muiShouldSkipGeneratingVar,
+  useTheme,
+  useColorScheme,
 } from '@mui/material/styles';
-import {
-  extendTheme as extendJoyTheme,
-  shouldSkipGeneratingVar as joyShouldSkipGeneratingVar,
-  styled,
-} from '@mui/joy/styles';
+import { extendTheme as extendJoyTheme, styled } from '@mui/joy/styles';
 import { useSlotProps } from '@mui/base/utils';
 import Input, { InputProps } from '@mui/joy/Input';
 import Stack, { StackProps } from '@mui/joy/Stack';
@@ -127,8 +124,6 @@ const mergedTheme = {
   },
 } as unknown as ReturnType<typeof extendMuiTheme>;
 
-mergedTheme.shouldSkipGeneratingVar = (keys) =>
-  joyShouldSkipGeneratingVar(keys) || muiShouldSkipGeneratingVar(keys);
 mergedTheme.generateCssVars = (colorScheme) => ({
   css: {
     ...joyTheme.generateCssVars(colorScheme).css,
@@ -206,7 +201,7 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
     slot: 'Separator',
     overridesResolver: (props, styles) => styles.separator,
   },
-)({});
+)({ marginTop: '25px' });
 
 interface JoyMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs>,
@@ -310,9 +305,25 @@ function JoyDatePicker(props: DatePickerProps<Dayjs>) {
   return <DatePicker slots={{ field: JoyDateField, ...props.slots }} {...props} />;
 }
 
+/**
+ * This component is for syncing the MUI docs's mode with this demo.
+ * You might not need this component in your project.
+ */
+function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
+  const { setMode } = useColorScheme();
+  React.useEffect(() => {
+    setMode(mode);
+  }, [mode, setMode]);
+  return null;
+}
+
 export default function PickerWithJoyField() {
+  const {
+    palette: { mode },
+  } = useTheme();
   return (
     <CssVarsProvider theme={mergedTheme}>
+      <SyncThemeMode mode={mode} />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack spacing={2} sx={{ width: 400 }}>
           <JoyDatePicker />
