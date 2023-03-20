@@ -23,7 +23,7 @@ import {
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
-import { BaseMultiInputFieldProps } from '../../models/fields';
+import { BaseMultiInputFieldProps, RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -68,6 +68,7 @@ export const useDesktopRangePicker = <
     DateRange<TDate>,
     TDate,
     TView,
+    RangeFieldSection,
     TExternalProps,
     DesktopRangePickerAdditionalViewProps
   >({
@@ -111,6 +112,7 @@ export const useDesktopRangePicker = <
   const Field = slots.field;
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
+    RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -128,14 +130,22 @@ export const useDesktopRangePicker = <
     ownerState: props,
   });
 
-  const slotsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slots'] = {
+  const slotsForField: BaseMultiInputFieldProps<
+    DateRange<TDate>,
+    RangeFieldSection,
+    unknown
+  >['slots'] = {
     textField: slots.textField,
     root: slots.fieldRoot,
     separator: slots.fieldSeparator,
     ...fieldProps.slots,
   };
 
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
+  const slotPropsForField: BaseMultiInputFieldProps<
+    DateRange<TDate>,
+    RangeFieldSection,
+    unknown
+  >['slotProps'] & {
     separator: any;
   } = {
     ...fieldProps.slotProps,

@@ -9,6 +9,7 @@ export type {
   FieldSelectedSections,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  FieldRef,
 } from './useField.types';
 export {
   splitFormatIntoSections,
