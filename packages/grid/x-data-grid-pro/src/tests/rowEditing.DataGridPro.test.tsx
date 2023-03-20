@@ -879,6 +879,16 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(listener.callCount).to.equal(1);
       });
 
+      it('should not call startRowEditMode if space is pressed', () => {
+        render(<TestCase autoHeight />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStart', listener);
+        const cell = getCell(0, 1);
+        userEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: ' ' });
+        expect(listener.callCount).to.equal(0);
+      });
+
       it(`should call startRowEditMode if ctrl+V is pressed`, () => {
         render(<TestCase />);
         const listener = spy();

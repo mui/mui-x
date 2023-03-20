@@ -47,6 +47,7 @@
     "slotProps": "The props used for each component slot.",
     "slots": "Overridable component slots.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
+    "unstableFieldRef": "The ref object used to imperatively interact with the field.",
     "value": "The selected value. Used when the component is controlled.",
     "variant": "The variant to use."
   },

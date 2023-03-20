@@ -15,20 +15,18 @@ import {
 import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { getActiveElement } from '../../utils/utils';
 
 export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
   const utils = useUtils<TDate>();
-  if (!utils.formatTokenMap) {
-    throw new Error('This adapter is not compatible with the field components');
-  }
 
   const {
     state,
@@ -53,7 +51,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false },
+    internalProps: { readOnly = false, unstableFieldRef },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -74,6 +72,10 @@ export const useField = <
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const syncSelectionFromDOM = () => {
+    if (readOnly) {
+      setSelectedSections(null);
+      return;
+    }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     const nextSectionIndex =
       browserStartIndex <= state.sections[0].startInInput
@@ -110,7 +112,7 @@ export const useField = <
         return;
       }
 
-      if (selectedSectionIndexes != null) {
+      if (selectedSectionIndexes != null || readOnly) {
         return;
       }
 
@@ -332,6 +334,10 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
+      if (inputRef.current!.selectionStart !== 0 || inputRef.current!.selectionEnd !== 0) {
+        // Ensure input selection range is in sync with component selection indexes
+        inputRef.current!.setSelectionRange(0, 0);
+      }
       return;
     }
 
@@ -407,10 +413,30 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
-  const inputHasFocus = inputRef.current && inputRef.current === document.activeElement;
+  const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder =
     !inputHasFocus &&
     (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
+
+  React.useImperativeHandle(unstableFieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: () => {
+      const browserStartIndex = inputRef.current!.selectionStart ?? 0;
+      const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
+      if (browserStartIndex === 0 && browserEndIndex === 0) {
+        return null;
+      }
+
+      const nextSectionIndex =
+        browserStartIndex <= state.sections[0].startInInput
+          ? 1 // Special case if browser index is in invisible characters at the beginning.
+          : state.sections.findIndex(
+              (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+            );
+      return nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+    },
+    setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
+  }));
 
   return {
     placeholder: state.placeholder,

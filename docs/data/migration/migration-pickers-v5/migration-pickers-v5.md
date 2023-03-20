@@ -129,6 +129,10 @@ const theme = createTheme({
 });
 ```
 
+:::success
+If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
+:::
+
 ### Remove the keyboard view
 
 The picker components no longer have a keyboard view to render the input inside the modal on mobile.
@@ -426,7 +430,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  renderInput={(inputProps) => <TextField {...props} variant="outlined" />}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' } }}
    />
 
    <DateRangePicker
@@ -437,7 +441,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} variant="outlined" />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' } }}
    />
   ```
 
@@ -452,7 +456,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ fieldSeparator: { children: 'to' }}
+  +  componentsProps={{ fieldSeparator: { children: 'to' } }}
    />
   ```
 
@@ -476,8 +480,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -  showToolbar
   +  componentsProps={{
   +    toolbar: {
-  +      toolbarPlaceholder: "__",
-  +      toolbarFormat: "DD / MM / YYYY",
+  +      toolbarPlaceholder: '__',
+  +      toolbarFormat: 'DD / MM / YYYY',
   +      hidden: false,
   +    }
   +  }}
@@ -489,7 +493,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  toolbarTitle="Title"
-  +  localeText={{ toolbarTitle: "Title" }}
+  +  localeText={{ toolbarTitle: 'Title' }}
    />
   ```
 
@@ -656,7 +660,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PopperProps={{ onClick: handleClick }}
-  +  componentsProps={{ popper: { onClick: handleClick }}}
+  +  componentsProps={{ popper: { onClick: handleClick } }}
    />
   ```
 
@@ -689,7 +693,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' }}}
+  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' } }}
    />
   ```
 
@@ -700,7 +704,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  TrapFocusProps={{ isEnabled: () => false }}
-  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
+  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false } }}
    />
   ```
 
@@ -791,7 +795,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  InputProps={{ color: 'primary' }}
-  +  componentsProps={{ textField: { InputProps: { color: 'primary' }}}}
+  +  componentsProps={{ textField: { InputProps: { color: 'primary' } } }}
    />
   ```
 
@@ -802,7 +806,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  InputAdornmentProps={{ position: 'start' }}
-  +  componentsProps={{ inputAdornment: { position: 'start' }}}
+  +  componentsProps={{ inputAdornment: { position: 'start' } }}
    />
   ```
 
@@ -813,7 +817,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  OpenPickerButtonProps={{ ref: buttonRef }}
-  +  componentsProps={{ openPickerButton: { ref: buttonRef }}}
+  +  componentsProps={{ openPickerButton: { ref: buttonRef } }}
    />
   ```
 

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import type { UseFieldInternalProps } from '../hooks/useField';
+import type { FieldSection, UseFieldInternalProps } from '../hooks/useField';
 
-export interface BaseFieldProps<TValue, TError>
-  extends Omit<UseFieldInternalProps<TValue, TError>, 'format'> {
+export interface BaseFieldProps<TValue, TSection extends FieldSection, TError>
+  extends Omit<UseFieldInternalProps<TValue, TSection, TError>, 'format'> {
   className?: string;
   format?: string;
   disabled?: boolean;
@@ -15,7 +15,8 @@ export interface BaseFieldProps<TValue, TError>
  * Props the single input field can receive when used inside a picker.
  * Only contains what the MUI component are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
-export interface BaseSingleInputFieldProps<TValue, TError> extends BaseFieldProps<TValue, TError> {
+export interface BaseSingleInputFieldProps<TValue, TSection extends FieldSection, TError>
+  extends BaseFieldProps<TValue, TSection, TError> {
   label?: React.ReactNode;
   id?: string;
   InputProps?: {

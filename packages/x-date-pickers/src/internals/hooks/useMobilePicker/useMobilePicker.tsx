@@ -12,6 +12,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
+import { FieldSection } from '../useField';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -53,7 +54,7 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
+  } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     props,
     inputRef: internalInputRef,
     valueManager,
@@ -66,6 +67,7 @@ export const useMobilePicker = <
   const Field = slots.field;
   const fieldProps: BaseSingleInputFieldProps<
     TDate | null,
+    FieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -93,7 +95,7 @@ export const useMobilePicker = <
     'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
   };
 
-  const slotsForField: BaseSingleInputFieldProps<TDate, unknown>['slots'] = {
+  const slotsForField: BaseSingleInputFieldProps<TDate, FieldSection, unknown>['slots'] = {
     textField: slots.textField,
     ...fieldProps.slots,
   };

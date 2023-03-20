@@ -10,7 +10,7 @@ If the row or column index is not present, the data grid will not do any movemen
 
 The following demo explores the usage of this API:
 
-{{"demo": "ScrollPlayground.js", "bg": true}}
+{{"demo": "ScrollPlayground.js", "bg": "inline"}}
 
 ## apiRef
 

@@ -34,22 +34,29 @@ export const singleItemFieldValueManager: FieldValueManager<
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
-    addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
+  getSectionsFromValue: (utils, localeText, prevSections, date, format) => {
+    const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
+
+    if (shouldReUsePrevDateSections) {
+      return prevSections;
+    }
+
+    return addPositionPropertiesToSections(
+      splitFormatIntoSections(utils, localeText, format, date),
+    );
+  },
   getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
   getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
     activeDate: state.value,
     referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => {
-      return {
-        value: newActiveDate,
-        referenceValue:
-          newActiveDate == null || !utils.isValid(newActiveDate)
-            ? state.referenceValue
-            : newActiveDate,
-      };
-    },
+    getNewValueFromNewActiveDate: (newActiveDate) => ({
+      value: newActiveDate,
+      referenceValue:
+        newActiveDate == null || !utils.isValid(newActiveDate)
+          ? state.referenceValue
+          : newActiveDate,
+    }),
   }),
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
