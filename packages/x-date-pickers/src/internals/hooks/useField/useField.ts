@@ -72,6 +72,10 @@ export const useField = <
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const syncSelectionFromDOM = () => {
+    if (readOnly) {
+      setSelectedSections(null);
+      return;
+    }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     const nextSectionIndex =
       browserStartIndex <= state.sections[0].startInInput
@@ -108,7 +112,7 @@ export const useField = <
         return;
       }
 
-      if (selectedSectionIndexes != null) {
+      if (selectedSectionIndexes != null || readOnly) {
         return;
       }
 
@@ -330,6 +334,10 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
+      if (inputRef.current!.selectionStart !== 0 || inputRef.current!.selectionEnd !== 0) {
+        // Ensure input selection range is in sync with component selection indexes
+        inputRef.current!.setSelectionRange(0, 0);
+      }
       return;
     }
 
