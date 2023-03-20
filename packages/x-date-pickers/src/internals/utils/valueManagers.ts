@@ -34,16 +34,14 @@ export const singleItemFieldValueManager: FieldValueManager<
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, localeText, prevSections, date, format) => {
+  getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
     const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
 
     if (shouldReUsePrevDateSections) {
       return prevSections;
     }
 
-    return addPositionPropertiesToSections(
-      splitFormatIntoSections(utils, localeText, format, date),
-    );
+    return addPositionPropertiesToSections(getSectionsFromDate(date));
   },
   getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
   getActiveDateSections: (sections) => sections,
