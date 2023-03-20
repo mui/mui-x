@@ -1801,7 +1801,7 @@
   version "5.11.12"
   resolved "https://github.com/mui/material-ui.git#aff4ec6a8d5d4e9526a3b81123fdca4f0ddb666a"
 
-"@mui/private-theming@^5.11.12", "@mui/private-theming@^5.11.13":
+"@mui/private-theming@^5.11.13":
   version "5.11.13"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.11.13.tgz#7841acc7e0d85e3aad223b1a0fad11be9349ef01"
   integrity sha512-PJnYNKzW5LIx3R+Zsp6WZVPs6w5sEKJ7mgLNnUXuYB1zo5aX71FVLtV7geyPXRcaN2tsoRNK7h444ED0t7cIjA==
@@ -1820,16 +1820,16 @@
     csstype "^3.1.1"
     prop-types "^15.8.1"
 
-"@mui/styles@^5.11.12":
-  version "5.11.12"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.11.12.tgz#ae1c86b360649e661e2d0c3f15ded4dc08e758c3"
-  integrity sha512-rhymjGAVOKPYfe80p0a5qq5Anfzy8Qlnrmcfba+gRLwbnWZpF1wheasb2IeEHmV/QoPTbk0+tbb1Ej94XCA5CA==
+"@mui/styles@^5.11.13":
+  version "5.11.13"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.11.13.tgz#f211c994a79fff4a4cf7897f617b2a0f7bdff445"
+  integrity sha512-7NQTTdl8Z54qQBRPLi4cR9LG8tvXQdQE0kVEYVYc5A3e+IFH6xfGzNCNa0X4zz0f9JGaS8e6kK3YYOS2+KyJHg==
   dependencies:
     "@babel/runtime" "^7.21.0"
     "@emotion/hash" "^0.9.0"
-    "@mui/private-theming" "^5.11.12"
+    "@mui/private-theming" "^5.11.13"
     "@mui/types" "^7.2.3"
-    "@mui/utils" "^5.11.12"
+    "@mui/utils" "^5.11.13"
     clsx "^1.2.1"
     csstype "^3.1.1"
     hoist-non-react-statics "^3.3.2"
@@ -1861,7 +1861,7 @@
   version "7.2.3"
   resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types#2526c52203f38222aa3dac17ebf63502adb771bd"
 
-"@mui/utils@^5.11.12", "@mui/utils@^5.11.13":
+"@mui/utils@^5.11.13":
   version "5.11.13"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.11.13.tgz#8d7317f221e8973200764820fa7f2a622dbc7150"
   integrity sha512-5ltA58MM9euOuUcnvwFJqpLdEugc9XFsRR8Gt4zZNb31XzMfSKJPR4eumulyhsOTK1rWf7K4D63NKFPfX0AxqA==
