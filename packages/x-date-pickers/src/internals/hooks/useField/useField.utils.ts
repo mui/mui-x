@@ -477,63 +477,61 @@ export const splitFormatIntoSections = <TDate>(
     return null;
   };
 
-  const splitFormat = (inputFormat: string) => {
-    let formatExpensionOverflow = 10;
-    let prevFormat = inputFormat;
-    let nextFormat = utils.expandFormat(inputFormat);
-    while (nextFormat !== prevFormat) {
-      prevFormat = nextFormat;
-      nextFormat = utils.expandFormat(prevFormat);
-      formatExpensionOverflow -= 1;
-      if (formatExpensionOverflow < 0) {
-        throw new Error(
-          'MUI: The format exmpension seems to be  enter in an infint loop. Please open an issue with the format pased to the picker component',
-        );
-      }
-    }
-
-    const expandedFormat = nextFormat;
-    const escapedParts = getEscapedPartsFromFormat(utils, expandedFormat);
-
-    // This RegExp test if the begining of a string correspond to a supported token
-    const isTokenStartRegExp = new RegExp(`^(${Object.keys(utils.formatTokenMap).join('|')})`);
-
-    let currentTokenValue = '';
-
-    for (let i = 0; i < expandedFormat.length; i += 1) {
-      const escapedPartOfCurrentChar = escapedParts.find(
-        (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
+  // Expand the provided format
+  let formatExpensionOverflow = 10;
+  let prevFormat = format;
+  let nextFormat = utils.expandFormat(format);
+  while (nextFormat !== prevFormat) {
+    prevFormat = nextFormat;
+    nextFormat = utils.expandFormat(prevFormat);
+    formatExpensionOverflow -= 1;
+    if (formatExpensionOverflow < 0) {
+      throw new Error(
+        'MUI: The format exmpension seems to be  enter in an infint loop. Please open an issue with the format passed to the picker component',
       );
+    }
+  }
+  const expandedFormat = nextFormat;
 
-      const char = expandedFormat[i];
-      const isEscapedChar = escapedPartOfCurrentChar != null;
-      const potentialToken = `${currentTokenValue}${expandedFormat.slice(i)}`;
-      if (!isEscapedChar && char.match(/([A-Za-z]+)/) && isTokenStartRegExp.test(potentialToken)) {
-        currentTokenValue += char;
-      } else {
-        // If we are on the opening or closing character of an escaped part of the format,
-        // Then we ignore this character.
-        const isEscapeBoundary =
-          (isEscapedChar && escapedPartOfCurrentChar?.start === i) ||
-          escapedPartOfCurrentChar?.end === i;
+  // Get start/end indexes of escaped sections
+  const escapedParts = getEscapedPartsFromFormat(utils, expandedFormat);
 
-        if (!isEscapeBoundary) {
-          commitToken(currentTokenValue);
+  // This RegExp test if the begining of a string correspond to a supported token
+  const isTokenStartRegExp = new RegExp(`^(${Object.keys(utils.formatTokenMap).join('|')})`);
 
-          currentTokenValue = '';
-          if (sections.length === 0) {
-            startSeparator += char;
-          } else {
-            sections[sections.length - 1].endSeparator += char;
-          }
+  let currentTokenValue = '';
+
+  for (let i = 0; i < expandedFormat.length; i += 1) {
+    const escapedPartOfCurrentChar = escapedParts.find(
+      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
+    );
+
+    const char = expandedFormat[i];
+    const isEscapedChar = escapedPartOfCurrentChar != null;
+    const potentialToken = `${currentTokenValue}${expandedFormat.slice(i)}`;
+    if (!isEscapedChar && char.match(/([A-Za-z]+)/) && isTokenStartRegExp.test(potentialToken)) {
+      currentTokenValue += char;
+    } else {
+      // If we are on the opening or closing character of an escaped part of the format,
+      // Then we ignore this character.
+      const isEscapeBoundary =
+        (isEscapedChar && escapedPartOfCurrentChar?.start === i) ||
+        escapedPartOfCurrentChar?.end === i;
+
+      if (!isEscapeBoundary) {
+        commitToken(currentTokenValue);
+
+        currentTokenValue = '';
+        if (sections.length === 0) {
+          startSeparator += char;
+        } else {
+          sections[sections.length - 1].endSeparator += char;
         }
       }
     }
+  }
 
-    commitToken(currentTokenValue);
-  };
-
-  splitFormat(format);
+  commitToken(currentTokenValue);
 
   return sections.map((section) => {
     const cleanSeparator = (separator: string) => {
