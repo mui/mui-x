@@ -313,17 +313,12 @@ export const usePickerValue = <
   const utils = useUtils<TDate>();
   const adapter = useLocalizationContext<TDate>();
 
-  const [rawValue, setValue] = useControlled({
+  const [value, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
     name: 'usePickerValue',
     state: 'value',
   });
-
-  const value = React.useMemo(
-    () => valueManager.cleanValue(utils, rawValue),
-    [valueManager, utils, rawValue],
-  );
 
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
@@ -417,8 +412,6 @@ export const usePickerValue = <
     setDate({
       value: valueManager.emptyValue,
       action: 'acceptAndClose',
-      // force `onChange` in cases like input (value) === `Invalid date`
-      forceOnChangeCall: !valueManager.areValuesEqual(utils, value as any, valueManager.emptyValue),
     });
   });
 
@@ -427,8 +420,6 @@ export const usePickerValue = <
     setDate({
       value: dateState.draft,
       action: 'acceptAndClose',
-      // force `onChange` in cases like input (value) === `Invalid date`
-      forceOnChangeCall: !valueManager.areValuesEqual(utils, dateState.committed, dateState.draft),
     });
   });
 
@@ -512,8 +503,13 @@ export const usePickerValue = <
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
+  const viewValue = React.useMemo(
+    () => valueManager.cleanValue(utils, dateState.draft),
+    [utils, valueManager, dateState.draft],
+  );
+
   const viewResponse: UsePickerValueViewsResponse<TValue> = {
-    value: dateState.draft,
+    value: viewValue,
     onChange: handleChange,
     onClose: handleClose,
     open: isOpen,
@@ -533,7 +529,7 @@ export const usePickerValue = <
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     ...actions,
-    value: dateState.draft,
+    value: viewValue,
     onChange: handleChangeAndCommit,
     isValid,
   };
