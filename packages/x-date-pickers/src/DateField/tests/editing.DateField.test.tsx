@@ -889,6 +889,19 @@ describe('<DateField /> - Editing', () => {
     },
   );
 
+  describeAdapters('Editing from the outside', DateField, ({ adapter, render, clickOnInput }) => {
+    it('should be able to reset the value from the outside', () => {
+      const { setProps } = render(<DateField value={adapter.date(new Date(2022, 10, 23))} />);
+      const input = getTextbox();
+      expectInputValue(input, '11 / 23 / 2022');
+
+      setProps({ value: null });
+
+      clickOnInput(input, 0);
+      expectInputValue(input, 'MM / DD / YYYY');
+    });
+  });
+
   describeAdapters('Android editing', DateField, ({ adapter, render, clickOnInput }) => {
     let originalUserAgent: string = '';
 

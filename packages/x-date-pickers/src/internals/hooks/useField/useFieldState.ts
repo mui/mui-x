@@ -371,7 +371,7 @@ export const useFieldState = <
       const sections = fieldValueManager.getSectionsFromValue(
         utils,
         localeText,
-        state.sections,
+        null,
         valueFromTheOutside,
         format,
       );
