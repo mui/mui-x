@@ -37,32 +37,34 @@ const series = [
 
 export default function CompositionResponsive() {
   return (
-    <ResponsiveChartContainer series={series} width={500} height={500}>
-      <CartesianContextProvider
-        xAxis={[
-          {
-            id: 'years',
-            data: [2010, 2011, 2012, 2013, 2014],
-            scaleName: 'band',
-          },
-        ]}
-        yAxis={[
-          {
-            id: 'eco',
-            scaleName: 'linear',
-          },
-          {
-            id: 'pib',
-            scaleName: 'log',
-          },
-        ]}
-      >
-        <BarPlot />
-        <LinePlot />
-        <XAxis label="Years" position="bottom" axisId="years" />
-        <YAxis label="Results" position="left" axisId="eco" />
-        <YAxis label="PIB" position="right" axisId="pib" />
-      </CartesianContextProvider>
-    </ResponsiveChartContainer>
+    <div style={{ width: '100%', height: '500px' }}>
+      <ResponsiveChartContainer series={series} width={500} height={500}>
+        <CartesianContextProvider
+          xAxis={[
+            {
+              id: 'years',
+              data: [2010, 2011, 2012, 2013, 2014],
+              scaleName: 'band',
+            },
+          ]}
+          yAxis={[
+            {
+              id: 'eco',
+              scaleName: 'linear',
+            },
+            {
+              id: 'pib',
+              scaleName: 'log',
+            },
+          ]}
+        >
+          <BarPlot />
+          <LinePlot />
+          <XAxis label="Years" position="bottom" axisId="years" />
+          <YAxis label="Results" position="left" axisId="eco" />
+          <YAxis label="PIB" position="right" axisId="pib" />
+        </CartesianContextProvider>
+      </ResponsiveChartContainer>
+    </div>
   );
 }

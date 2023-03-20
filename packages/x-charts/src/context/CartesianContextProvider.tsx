@@ -15,6 +15,7 @@ import { getScale } from '../hooks/useScale';
 import { AxisConfig, AxisDefaultized, Scales } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
 
 export type CartesianContextProviderProps = {
   xAxis?: AxisConfig[];
@@ -66,7 +67,7 @@ export function CartesianContextProvider({
     [
       ...(xAxis ?? []),
       {
-        id: 'DEFAULT_X_AXIS_KEY',
+        id: DEFAULT_X_AXIS_KEY,
         scaleName: 'linear' as Scales,
       },
     ].forEach((axis) => {
@@ -111,7 +112,7 @@ export function CartesianContextProvider({
     [
       ...(yAxis ?? []),
       {
-        id: 'DEFAULT_Y_AXIS_KEY',
+        id: DEFAULT_Y_AXIS_KEY,
         scaleName: 'linear' as Scales,
       },
     ].forEach((axis) => {

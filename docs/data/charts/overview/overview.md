@@ -15,7 +15,28 @@ title: Charts - Overview
 Please open an issue to ask for it, explaining which need it solves.
 :::
 
-## Combining different charts
+## Display charts
+
+Charts can be rendered in two ways.
+With a single component or by composition of sub components.
+
+### Single charts
+
+For common use case, single component is the recomended way.
+
+You have to provide the `series` props.
+The `width` and `height` if the component is not responsive.
+
+{{"demo": "SimpleCharts.js", "bg": "inline"}}
+
+### Multiple charts
+
+To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` and `<CartesianContextProvider />` wrappers.
+
+Inside those wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<ScatterPlot />`)
+
+
+{{"demo": "Combining.js", "bg": "inline"}}
 
 ## Axis management
 

@@ -47,7 +47,7 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
   const { series, yAxis } = params;
 
   return Object.keys(series)
-    .filter((seriesId) => series[seriesId].xAxisKey === yAxis.id)
+    .filter((seriesId) => series[seriesId].yAxisKey === yAxis.id)
     .reduce(
       (acc: NUllableExtremum, seriesId) => {
         const seriesMinMax = series[seriesId].data.reduce(
