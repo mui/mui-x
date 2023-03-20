@@ -34,6 +34,12 @@ const columns: GridColDef[] = [
 
 {{"demo": "RenderHeaderGrid.js", "bg": "inline"}}
 
+## Sticky column header
+
+You can make the column header sticky when the page is scrolled:
+
+{{"demo": "StickyColumnHeader.js", "bg": "inline"}}
+
 ## Styling header
 
 You can check the [styling header](/x/react-data-grid/style/#styling-column-headers) section for more information.
