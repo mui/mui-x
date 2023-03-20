@@ -21,7 +21,7 @@ You can use `slotProps.shortcuts` to customize this prop. For example to add a s
 
 ```jsx
 <DatePicker
-  componentsProps={{
+  slotProps={{
     shortcuts: {
       items: [
         {

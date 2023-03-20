@@ -47,7 +47,7 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'حذف همه',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLogicOperator: 'عملگر منطقی',
   filterPanelOperator: 'عملگرها',
@@ -80,7 +80,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'فهرست',
   columnMenuShowColumns: 'نمایش ستون‌ها',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'مدیریت ستون‌ها',
   columnMenuFilter: 'فیلتر',
   columnMenuHideColumn: 'مخفی',
   columnMenuUnsort: 'نامرتب‌کردن',

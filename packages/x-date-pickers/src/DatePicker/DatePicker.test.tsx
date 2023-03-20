@@ -7,6 +7,7 @@ import {
   openPicker,
   stubMatchMedia,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -26,7 +27,7 @@ describe('<DatePicker />', () => {
   describe('rendering', () => {
     it('should handle controlled `onChange` in desktop mode', () => {
       render(<DatePicker />);
-      const input: HTMLInputElement = screen.getByRole('textbox');
+      const input = getTextbox();
 
       fireEvent.change(input, { target: { value: '02/22/2022' } });
       expectInputValue(input, '02 / 22 / 2022');
