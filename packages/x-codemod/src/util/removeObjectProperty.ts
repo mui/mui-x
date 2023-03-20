@@ -1,4 +1,4 @@
-import type { Collection, JSCodeshift } from 'jscodeshift';
+import type { Collection, JSCodeshift, JSXAttribute } from 'jscodeshift';
 
 interface RemoveObjectPropertyArgs {
   root: Collection<any>;
@@ -28,12 +28,19 @@ export default function removeObjectProperty({
   root
     .find(j.JSXElement)
     .filter((path) => {
-      return componentsNames.includes((path.value.openingElement.name as any).name);
+      switch (path.value.openingElement.name.type) {
+        case 'JSXNamespacedName':
+          return componentsNames.includes(path.value.openingElement.name.name.name);
+        case 'JSXIdentifier':
+          return componentsNames.includes(path.value.openingElement.name.name);
+        default:
+          return false;
+      }
     })
     .forEach((element) => {
-      const targetAttribute = (element.value.openingElement.attributes as any).find(
-        (attribute) => attribute?.name?.name === propName,
-      );
+      const targetAttribute = element.value.openingElement.attributes
+        ?.filter((attribute): attribute is JSXAttribute => attribute.type !== 'JSXAttribute')
+        .find((attribute) => attribute.name.name === propName);
       if (!targetAttribute) {
         return;
       }
