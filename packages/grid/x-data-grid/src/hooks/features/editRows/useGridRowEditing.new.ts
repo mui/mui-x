@@ -206,6 +206,13 @@ export const useGridRowEditing = (
           if (reason) {
             event.preventDefault(); // Prevent going to the next element in the tab sequence
           }
+
+          if (!reason) {
+            event.preventDefault();
+            const index = columnFields.findIndex((field) => field === params.field);
+            const nextFieldToFocus = columnFields[event.shiftKey ? index - 1 : index + 1];
+            apiRef.current.setCellFocus(params.id, nextFieldToFocus);
+          }
         }
 
         if (reason) {
