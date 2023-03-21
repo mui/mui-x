@@ -283,20 +283,21 @@ export const useFieldState = <
      * 2. Try to build a valid date from the new section value
      */
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
-    const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
+    let newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
     let newActiveDate = getDateFromDateSections(utils, activeDateSections);
 
     // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.
     // We can try to set the day to the maximum boundary.
     if (!utils.isValid(newActiveDate)) {
-      const cleanSections = clampDaySectionIfPossible(
+      const clampedSections = clampDaySectionIfPossible(
         utils,
         activeDateSections,
         sectionsValueBoundaries,
       );
-      if (cleanSections != null) {
-        newActiveDate = getDateFromDateSections(utils, cleanSections);
+      if (clampedSections != null) {
+        newSections = clampedSections;
+        newActiveDate = getDateFromDateSections(utils, clampedSections);
       }
     }
 
@@ -341,8 +342,6 @@ export const useFieldState = <
 
   React.useEffect(() => {
     if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
-      const sections = getSectionsFromValue(valueFromTheOutside, state.sections);
-
       setState((prevState) => ({
         ...prevState,
         value: valueFromTheOutside,
@@ -351,7 +350,7 @@ export const useFieldState = <
           valueFromTheOutside,
           prevState.referenceValue,
         ),
-        sections,
+        sections: getSectionsFromValue(valueFromTheOutside),
       }));
     }
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps

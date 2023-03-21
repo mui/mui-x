@@ -800,7 +800,7 @@ export const clampDaySectionIfPossible = <TDate, TSection extends FieldSection>(
     sections.every((section) => section.type === 'weekDay' || section.value !== '') &&
     sections.some((section) => section.type === 'day');
 
-  if (canClamp) {
+  if (!canClamp) {
     return null;
   }
 
