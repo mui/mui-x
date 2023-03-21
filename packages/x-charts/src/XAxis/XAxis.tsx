@@ -54,7 +54,7 @@ export interface XAxisProps {
   tickSize?: number;
 }
 
-function XAxis(props: XAxisProps) {
+export function XAxis(props: XAxisProps) {
   const {
     position = 'bottom',
     axisId = DEFAULT_X_AXIS_KEY,
@@ -121,5 +121,3 @@ function XAxis(props: XAxisProps) {
     </g>
   );
 }
-
-export default XAxis;

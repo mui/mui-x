@@ -1,7 +1,7 @@
 import * as React from 'react';
-import LinePlot from './LinePlot';
-import XAxis from '../XAxis/XAxis';
-import YAxis from '../YAxis/YAxis';
+import { LinePlot } from './LinePlot';
+import { XAxis } from '../XAxis/XAxis';
+import { YAxis } from '../YAxis/YAxis';
 import {
   SeriesContextProvider,
   SeriesContextProviderProps,
@@ -55,5 +55,3 @@ export function LineChart(
     </DrawingProvider>
   );
 }
-
-export default LineChart;

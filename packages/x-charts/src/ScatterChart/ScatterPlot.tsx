@@ -1,11 +1,11 @@
 import * as React from 'react';
-import Scatter from './Scatter';
+import { Scatter } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ScatterSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
 
-function ScatterPlot() {
+export function ScatterPlot() {
   const seriesData = React.useContext(SeriesContext).scatter;
   const axisData = React.useContext(CartesianContext);
 
@@ -50,5 +50,3 @@ function ScatterPlot() {
     </React.Fragment>
   );
 }
-
-export default ScatterPlot;

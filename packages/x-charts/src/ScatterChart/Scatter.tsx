@@ -9,7 +9,7 @@ export interface ScatterProps {
   markerSize: number;
 }
 
-function Scatter(props: ScatterProps) {
+export function Scatter(props: ScatterProps) {
   const { data, xDataToSvg, yDataToSvg, markerSize } = props;
 
   const xScale = React.useCallback((value: any) => xDataToSvg?.(value) ?? value, [xDataToSvg]);
@@ -30,5 +30,3 @@ function Scatter(props: ScatterProps) {
     </g>
   );
 }
-
-export default Scatter;

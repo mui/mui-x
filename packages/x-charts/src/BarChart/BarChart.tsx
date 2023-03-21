@@ -1,7 +1,7 @@
 import * as React from 'react';
-import BarPlot from './BarPlot';
-import XAxis from '../XAxis/XAxis';
-import YAxis from '../YAxis/YAxis';
+import { BarPlot } from './BarPlot';
+import { XAxis } from '../XAxis/XAxis';
+import { YAxis } from '../YAxis/YAxis';
 import {
   SeriesContextProvider,
   SeriesContextProviderProps,
@@ -55,5 +55,3 @@ export function BarChart(
     </DrawingProvider>
   );
 }
-
-export default BarChart;

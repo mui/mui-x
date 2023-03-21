@@ -54,7 +54,7 @@ export interface YAxisProps {
   tickSize?: number;
 }
 
-function YAxis(props: YAxisProps) {
+export function YAxis(props: YAxisProps) {
   const {
     position = 'left',
     axisId = DEFAULT_Y_AXIS_KEY,
@@ -122,5 +122,3 @@ function YAxis(props: YAxisProps) {
     </g>
   );
 }
-
-export default YAxis;

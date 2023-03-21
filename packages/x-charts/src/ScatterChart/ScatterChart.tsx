@@ -1,7 +1,7 @@
 import * as React from 'react';
-import ScatterPlot from './ScatterPlot';
-import XAxis from '../XAxis/XAxis';
-import YAxis from '../YAxis/YAxis';
+import { ScatterPlot } from './ScatterPlot';
+import { XAxis } from '../XAxis/XAxis';
+import { YAxis } from '../YAxis/YAxis';
 import {
   SeriesContextProvider,
   SeriesContextProviderProps,
@@ -15,7 +15,7 @@ import Surface from '../Surface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
 import { LayoutConfig } from '../models/layout';
 
-function ScatterChart(
+export function ScatterChart(
   props: Omit<
     LayoutConfig & SeriesContextProviderProps & CartesianContextProviderProps,
     'children'
@@ -55,5 +55,3 @@ function ScatterChart(
     </DrawingProvider>
   );
 }
-
-export default ScatterChart;
