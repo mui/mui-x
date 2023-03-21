@@ -283,12 +283,16 @@ export const useFieldState = <
      * 2. Try to build a valid date from the new section value
      */
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
-    let newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
+    const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
     let newActiveDate = getDateFromDateSections(utils, activeDateSections);
+    let shouldRegenSections = false;
 
-    // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.
-    // We can try to set the day to the maximum boundary.
+    /**
+     * If the date is invalid,
+     * Then we can try to clamp the day section to see if that produces a valid date.
+     * This can be useful if the month has fewer days than the day value currently provided.
+     */
     if (!utils.isValid(newActiveDate)) {
       const clampedSections = clampDaySectionIfPossible(
         utils,
@@ -296,7 +300,7 @@ export const useFieldState = <
         sectionsValueBoundaries,
       );
       if (clampedSections != null) {
-        newSections = clampedSections;
+        shouldRegenSections = true;
         newActiveDate = getDateFromDateSections(utils, clampedSections);
       }
     }
@@ -304,6 +308,11 @@ export const useFieldState = <
     let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
 
+    /**
+     * If the new date is valid,
+     * Then we merge the value of the modified sections into the reference date.
+     * This makes sure that we don't lose some information of the initial date (like the time on a date field).
+     */
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
@@ -323,16 +332,24 @@ export const useFieldState = <
     }
 
     /**
+     * If the value has been modified (to clamp the day).
+     * Then we need to re-generate the sections to make sure they also have this change.
+     */
+    const sections = shouldRegenSections
+      ? getSectionsFromValue(values.value, state.sections)
+      : newSections;
+
+    /**
      * Publish or update the internal state with the new value and sections.
      */
     if (shouldPublish) {
-      return publishValue({ ...values, sections: newSections });
+      return publishValue({ ...values, sections });
     }
 
     return setState((prevState) => ({
       ...prevState,
       ...values,
-      sections: newSections,
+      sections,
       tempValueStrAndroid: null,
     }));
   };
