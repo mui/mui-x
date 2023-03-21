@@ -14,7 +14,7 @@ export interface YAxisProps {
    */
   axisId?: string;
   /**
-   * If true, the axia line is disabled.
+   * If true, the axis line is disabled.
    * @default false
    */
   disableLine?: boolean;

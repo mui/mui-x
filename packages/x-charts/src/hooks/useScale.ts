@@ -16,7 +16,7 @@ import type {
   ScaleTime,
   ScaleLinear,
 } from 'd3-scale';
-import { Scales } from '../models/axis';
+import { ScaleName } from '../models/axis';
 
 export type D3Scale =
   | ScaleBand<any>
@@ -26,8 +26,8 @@ export type D3Scale =
   | ScaleTime<any, any>
   | ScaleLinear<any, any>;
 
-export function getScale(scaleType: Scales | undefined): D3Scale {
-  switch (scaleType) {
+export function getScale(scaleName: ScaleName | undefined): D3Scale {
+  switch (scaleName) {
     case 'band':
       return scaleBand();
     case 'log':

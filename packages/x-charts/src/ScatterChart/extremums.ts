@@ -10,10 +10,10 @@ type GetExtremumParamsY = {
   yAxis: AxisConfig;
 };
 
-type NUllableExtremum = [number, number] | [null, null];
-type GetExtremumResult = NUllableExtremum;
+type NullableExtremum = [number, number] | [null, null];
+type GetExtremumResult = NullableExtremum;
 
-const mergeMinMax = (acc: NUllableExtremum, val: NUllableExtremum): NUllableExtremum => {
+const mergeMinMax = (acc: NullableExtremum, val: NullableExtremum): NullableExtremum => {
   if (acc[0] === null || acc[1] === null) {
     return val;
   }
@@ -29,17 +29,17 @@ export const getExtremumX = (params: GetExtremumParamsX): GetExtremumResult => {
   return Object.keys(series)
     .filter((seriesId) => series[seriesId].xAxisKey === xAxis.id)
     .reduce(
-      (acc: NUllableExtremum, seriesId) => {
+      (acc: NullableExtremum, seriesId) => {
         const seriesMinMax = series[seriesId].data.reduce(
-          (accSeries: NUllableExtremum, { x }) => {
-            const val = [x, x] as NUllableExtremum;
+          (accSeries: NullableExtremum, { x }) => {
+            const val = [x, x] as NullableExtremum;
             return mergeMinMax(accSeries, val);
           },
           [null, null],
         );
         return mergeMinMax(acc, seriesMinMax);
       },
-      [null, null] as NUllableExtremum,
+      [null, null] as NullableExtremum,
     );
 };
 
@@ -49,16 +49,16 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
   return Object.keys(series)
     .filter((seriesId) => series[seriesId].yAxisKey === yAxis.id)
     .reduce(
-      (acc: NUllableExtremum, seriesId) => {
+      (acc: NullableExtremum, seriesId) => {
         const seriesMinMax = series[seriesId].data.reduce(
-          (accSeries: NUllableExtremum, { y }) => {
-            const val = [y, y] as NUllableExtremum;
+          (accSeries: NullableExtremum, { y }) => {
+            const val = [y, y] as NullableExtremum;
             return mergeMinMax(accSeries, val);
           },
           [null, null],
         );
         return mergeMinMax(acc, seriesMinMax);
       },
-      [null, null] as NUllableExtremum,
+      [null, null] as NullableExtremum,
     );
 };

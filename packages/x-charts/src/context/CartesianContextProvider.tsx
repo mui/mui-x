@@ -12,7 +12,7 @@ import {
   getExtremumY as getLineExtremumY,
 } from '../LineChart/extremums';
 import { getScale } from '../hooks/useScale';
-import { AxisConfig, AxisDefaultized, Scales } from '../models/axis';
+import { AxisConfig, AxisDefaultized, ScaleName } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
@@ -68,7 +68,7 @@ export function CartesianContextProvider({
       ...(xAxis ?? []),
       {
         id: DEFAULT_X_AXIS_KEY,
-        scaleName: 'linear' as Scales,
+        scaleName: 'linear' as ScaleName,
       },
     ].forEach((axis) => {
       const [minData, maxData] = (
@@ -97,7 +97,7 @@ export function CartesianContextProvider({
         [null, null],
       );
 
-      const scaleName = axis.scaleName ?? ('linea' as Scales);
+      const scaleName = axis.scaleName ?? ('linear' as ScaleName);
       completedXAxis[axis.id] = {
         ...axis,
         scaleName,
@@ -113,7 +113,7 @@ export function CartesianContextProvider({
       ...(yAxis ?? []),
       {
         id: DEFAULT_Y_AXIS_KEY,
-        scaleName: 'linear' as Scales,
+        scaleName: 'linear' as ScaleName,
       },
     ].forEach((axis) => {
       const [minData, maxData] = (
@@ -143,7 +143,7 @@ export function CartesianContextProvider({
         [null, null],
       );
 
-      const scaleName = axis.scaleName ?? ('linea' as Scales);
+      const scaleName = axis.scaleName ?? ('linear' as ScaleName);
       completedYAxis[axis.id] = {
         ...axis,
         scaleName,

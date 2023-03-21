@@ -10,7 +10,7 @@ type StackableSeries = { [id: string]: BarSeriesType } | { [id: string]: LineSer
 type FormatterParams = { series: StackableSeries; seriesOrder: string[] };
 
 /**
- * Takes a set of series and group their ids
+ * Takes a set of series and groups their ids
  * @param series the object of all bars series
  * @returns an array of array of ids grouped by stacking groups
  */
