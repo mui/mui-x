@@ -13,3 +13,15 @@ title: Charts - Scatter
 >
 > 💬 To have a solution that meets your needs, leave a comment on the [same issue](https://github.com/mui/mui-x/issues/7922).
 > If you already have a use case for this component, or if you are facing a pain-point with your current solution.
+
+## Basic demo
+
+{{"demo": "BasicScatterChart.js", "bg": "inline"}}
+
+## Customizing axis
+
+{{"demo": "ScatterChartAxis.js", "bg": "inline"}}
+
+## Composition
+
+{{"demo": "Composition.js", "bg": "inline"}}
