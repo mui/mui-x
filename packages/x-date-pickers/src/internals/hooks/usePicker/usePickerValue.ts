@@ -130,12 +130,6 @@ interface UsePickerValueAction<DraftValue, TError> {
    */
   skipOnChangeCall?: boolean;
   /**
-   * If `true`, force firing the `onChange` callback
-   * This field takes precedence over `skipOnChangeCall`
-   * @default false
-   */
-  forceOnChangeCall?: boolean;
-  /**
    * Context passed from a deeper component (a field or a calendar).
    */
   contextFromField?: FieldChangeHandlerContext<TError>;
@@ -362,9 +356,8 @@ export const usePickerValue = <
     });
 
     if (
-      params.forceOnChangeCall ||
-      (!params.skipOnChangeCall &&
-        !valueManager.areValuesEqual(utils, dateState.committed, params.value))
+      !params.skipOnChangeCall &&
+      !valueManager.areValuesEqual(utils, dateState.committed, params.value)
     ) {
       setValue(params.value);
 
