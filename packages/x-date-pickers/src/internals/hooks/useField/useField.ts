@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import { useTheme } from '@mui/material/styles';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -12,7 +13,7 @@ import {
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.types';
-import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
+import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
@@ -37,7 +38,6 @@ export const useField = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
-    sectionOrder,
     sectionsValueBoundaries,
     placeholder,
   } = useFieldState(params);
@@ -71,6 +71,12 @@ export const useField = <
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const theme = useTheme();
+
+  const sectionOrder = React.useMemo(
+    () => getSectionOrder(state.sections, theme.direction === 'rtl'),
+    [theme.direction, state.sections],
+  );
 
   const syncSelectionFromDOM = () => {
     if (readOnly) {
@@ -335,9 +341,11 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
-      if (inputRef.current!.selectionStart !== 0 || inputRef.current!.selectionEnd !== 0) {
-        // Ensure input selection range is in sync with component selection indexes
-        inputRef.current!.setSelectionRange(0, 0);
+      if (inputRef.current!.scrollLeft) {
+        // Ensure that input content is not marked as selected.
+        // setting selection range to 0 causes issues in Safari.
+        // https://bugs.webkit.org/show_bug.cgi?id=224425
+        inputRef.current!.scrollLeft = 0;
       }
       return;
     }
@@ -416,8 +424,7 @@ export const useField = <
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder =
-    !inputHasFocus &&
-    (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
+    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
 
   React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,

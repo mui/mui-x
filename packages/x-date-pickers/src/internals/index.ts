@@ -56,8 +56,6 @@ export {
   useField,
   createDateStrForInputFromSections,
   addPositionPropertiesToSections,
-  splitFormatIntoSections,
-  getSectionOrder,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
@@ -131,7 +129,7 @@ export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { DateOrTimeView, DateView, TimeView } from './models/views';
 export type { WrapperVariant } from './models/common';
 
-export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
+export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
