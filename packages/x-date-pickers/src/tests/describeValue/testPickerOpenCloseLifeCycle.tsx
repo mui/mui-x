@@ -84,7 +84,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
     });
 
-    it('should not select any field section after closing on mobile', () => {
+    it('should not select input content after closing on mobile', () => {
       if (pickerParams.variant !== 'mobile') {
         return;
       }
@@ -98,8 +98,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       } else {
         textbox = getTextbox();
       }
-      expect(textbox.selectionStart).to.be.equal(0);
-      expect(textbox.selectionEnd).to.be.equal(0);
+      expect(textbox.scrollLeft).to.be.equal(0);
     });
 
     it('should call onChange, onClose and onAccept when selecting a value and `props.closeOnSelect` is true', () => {
