@@ -27,7 +27,7 @@
     "languageTag": "nl-NL",
     "importName": "nlNL",
     "localeName": "Dutch",
-    "missingKeysCount": 16,
+    "missingKeysCount": 8,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/-/packages/x-date-pickers/src/locales/nlNL.ts/"
   },
