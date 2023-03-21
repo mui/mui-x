@@ -1607,6 +1607,11 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@juggle/resize-observer@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
+  integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
+
 "@lerna/child-process@6.5.1":
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/@lerna/child-process/-/child-process-6.5.1.tgz#da9161ba00e8d67fa7241a709703e5cc5e4a5e5e"
@@ -1861,7 +1866,7 @@
   version "7.2.3"
   resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types#2526c52203f38222aa3dac17ebf63502adb771bd"
 
-"@mui/utils@^5.11.13":
+"@mui/utils@^5.11.13", "@mui/utils@^5.11.2":
   version "5.11.13"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.11.13.tgz#8d7317f221e8973200764820fa7f2a622dbc7150"
   integrity sha512-5ltA58MM9euOuUcnvwFJqpLdEugc9XFsRR8Gt4zZNb31XzMfSKJPR4eumulyhsOTK1rWf7K4D63NKFPfX0AxqA==
@@ -1881,6 +1886,14 @@
     clsx "^1.1.1"
     prop-types "^15.7.2"
     reselect "^4.0.0"
+
+"@mui/x-license-pro@6.0.0-beta.0":
+  version "6.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-6.0.0-beta.0.tgz#5de3c033907970076b5fa5949f8337e5d7c3d8d7"
+  integrity sha512-mHqMcKm1icYBkqqm4OymQwyfXTjp3CQrqHbz3fPvGh+cDfOOs/wtPFhB7mytKnNE0yGbSPVxDRNZidrlHBZnDg==
+  dependencies:
+    "@babel/runtime" "^7.20.7"
+    "@mui/utils" "^5.11.2"
 
 "@next/env@13.2.4":
   version "13.2.4"
@@ -5520,6 +5533,13 @@ d3-array@2, d3-array@^2.6.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-3.2.1.tgz#39331ea706f5709417d31bbb6ec152e0328b39b3"
   integrity sha512-gUY/qeHq/yNqqoCKNq4vtpFLdoCdvyNpWoC/KNjhGbhDuQpAM9sIQQKkXSNpXa9h5KySs/gzm7R88WkUutgwWQ==
+  dependencies:
+    internmap "1 - 2"
+
+d3-array@^3.2.2:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-3.2.3.tgz#39f1f4954e4a09ff69ac597c2d61906b04e84740"
+  integrity sha512-JRHwbQQ84XuAESWhvIPaUV4/1UYTBOLiOPGWqgFDHZS1D5QN9c57FbH3QpEnQMYiOXNzKUQyGTZf+EVO7RT5TQ==
   dependencies:
     internmap "1 - 2"
 
