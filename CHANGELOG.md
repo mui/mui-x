@@ -98,11 +98,9 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 _Mar 3, 2023_
 
-We're happy to announce the first v6 stable release! 🎉🚀
+We're excited to [announce the first v6 stable release](https://mui.com/blog/mui-x-v6/)! 🎉🚀
 
 This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
-Head over to the [what's new](https://mui.com/x/whats-new/) page to check the highlighted new features.
-
 Migration guides are available with a complete list of the breaking changes:
 
 - [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/)
@@ -556,14 +554,14 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   ```
 
 - The `error` and `onError` props were removed - the grid no longer catches errors during rendering.
-  To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
+  To catch errors that happen during rendering use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
 
 - The `components.ErrorOverlay` slot was removed.
 
 - The `GridErrorOverlay` component was removed.
 
 - The `componentError` event was removed.
-  Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
+  Use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) to catch errors thrown during rendering.
 
 - The `apiRef.current.showError` method was removed.
   The UI for errors is no longer handled by the grid.

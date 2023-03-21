@@ -3,12 +3,11 @@ import type { DateValidationError } from '../hooks/validation/useDateValidation'
 import type { TimeValidationError } from '../hooks/validation/useTimeValidation';
 import type { DateTimeValidationError } from '../hooks/validation/useDateTimeValidation';
 import type { FieldSection, FieldValueManager } from '../hooks/useField';
-import { replaceInvalidDateByNull } from './date-utils';
+import { areDatesEqual, replaceInvalidDateByNull } from './date-utils';
 import {
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
   splitFormatIntoSections,
-  getSectionOrder,
 } from '../hooks/useField/useField.utils';
 
 export type SingleItemPickerValueManager<
@@ -21,7 +20,7 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
   cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+  areValuesEqual: areDatesEqual,
   isSameError: (a, b) => a === b,
   defaultErrorState: null,
 };
@@ -61,6 +60,4 @@ export const singleItemFieldValueManager: FieldValueManager<
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
   hasError: (error) => error != null,
-  getSectionOrder: (utils, localeText, format, isRTL) =>
-    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
 };
