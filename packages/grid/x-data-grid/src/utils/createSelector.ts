@@ -52,11 +52,11 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
     const isApiRef = !!stateOrApiRef.current;
-    const cacheKey = isApiRef ? stateOrApiRef.current.instanceId : instanceId ?? 'default';
+    const cacheKey = isApiRef ? stateOrApiRef.current.instanceId : instanceId ?? { id: 'default' };
     const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
-      if (cacheKey === 'default') {
+      if (cacheKey.id === 'default') {
         missingInstanceIdWarning();
       }
     }
