@@ -4,6 +4,10 @@
 
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
+## Introduction
+
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+
 ## Start using the new release
 
 In `package.json`, change the version of the date pickers package to `latest` or `^6.0.0`.

@@ -68,6 +68,9 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
+    autoFocus,
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
@@ -90,6 +93,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
+    additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
@@ -147,7 +151,9 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     startTextFieldProps,
     endTextFieldProps,
     startInputRef: startTextFieldProps.inputRef,
+    unstableStartFieldRef,
     endInputRef: endTextFieldProps.inputRef,
+    unstableEndFieldRef,
   });
 
   return (
@@ -189,6 +195,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
+  autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
    * Overridable components.
@@ -381,6 +388,8 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

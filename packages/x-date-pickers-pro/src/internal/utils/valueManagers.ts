@@ -5,7 +5,7 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
-  getSectionOrder,
+  areDatesEqual,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
@@ -28,7 +28,8 @@ export const rangeValueManager: RangePickerValueManager = {
   getTodayValue: (utils) => [utils.date()!, utils.date()!],
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
+  areValuesEqual: (utils, a, b) =>
+    areDatesEqual(utils, a[0], b[0]) && areDatesEqual(utils, a[1], b[1]),
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
   defaultErrorState: [null, null],
 };
@@ -142,15 +143,4 @@ export const rangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
-  getSectionOrder: (utils, localeText, format, isRTL) => {
-    const splitedFormat = splitFormatIntoSections(utils, localeText, format, null);
-    return getSectionOrder(
-      [
-        ...splitedFormat.slice(0, splitedFormat.length - 1),
-        { ...splitedFormat[splitedFormat.length - 1], endSeparator: ' – ' },
-        ...splitedFormat,
-      ],
-      isRTL,
-    );
-  },
 };

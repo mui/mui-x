@@ -5,6 +5,7 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import {
   FieldChangeHandlerContext,
+  FieldSection,
   FieldSelectedSections,
   UseFieldInternalProps,
 } from '../useField';
@@ -129,12 +130,6 @@ interface UsePickerValueAction<DraftValue, TError> {
    */
   skipOnChangeCall?: boolean;
   /**
-   * If `true`, force firing the `onChange` callback
-   * This field takes precedence over `skipOnChangeCall`
-   * @default false
-   */
-  forceOnChangeCall?: boolean;
-  /**
    * Context passed from a deeper component (a field or a calendar).
    */
   contextFromField?: FieldChangeHandlerContext<TError>;
@@ -183,9 +178,9 @@ export interface UsePickerValueBaseProps<TValue, TError> {
 /**
  * Props used to handle the value of non-static pickers.
  */
-export interface UsePickerValueNonStaticProps<TValue>
+export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSection>
   extends Pick<
-    UseFieldInternalProps<TValue, unknown>,
+    UseFieldInternalProps<TValue, TSection, unknown>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
@@ -213,14 +208,15 @@ export interface UsePickerValueNonStaticProps<TValue>
 /**
  * Props used to handle the value of the pickers.
  */
-export interface UsePickerValueProps<TValue, TError>
+export interface UsePickerValueProps<TValue, TSection extends FieldSection, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
-    UsePickerValueNonStaticProps<TValue> {}
+    UsePickerValueNonStaticProps<TValue, TSection> {}
 
 export interface UsePickerValueParams<
   TValue,
   TDate,
-  TExternalProps extends UsePickerValueProps<TValue, any>,
+  TSection extends FieldSection,
+  TExternalProps extends UsePickerValueProps<TValue, TSection, any>,
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
@@ -243,9 +239,9 @@ export interface UsePickerValueActions {
   onClose: () => void;
 }
 
-type UsePickerValueFieldResponse<TValue, TError> = Required<
+type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
   Pick<
-    UseFieldInternalProps<TValue, TError>,
+    UseFieldInternalProps<TValue, TSection, TError>,
     'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
   >
 >;
@@ -270,11 +266,11 @@ export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActi
   isValid: (value: TValue) => boolean;
 }
 
-export interface UsePickerValueResponse<TValue, TError> {
+export interface UsePickerValueResponse<TValue, TSection extends FieldSection, TError> {
   open: boolean;
   actions: UsePickerValueActions;
   viewProps: UsePickerValueViewsResponse<TValue>;
-  fieldProps: UsePickerValueFieldResponse<TValue, TError>;
+  fieldProps: UsePickerValueFieldResponse<TValue, TSection, TError>;
   layoutProps: UsePickerValueLayoutResponse<TValue>;
 }
 
@@ -284,14 +280,16 @@ export interface UsePickerValueResponse<TValue, TError> {
 export const usePickerValue = <
   TValue,
   TDate,
-  TExternalProps extends UsePickerValueProps<TValue, any>,
+  TSection extends FieldSection,
+  TExternalProps extends UsePickerValueProps<TValue, TSection, any>,
 >({
   props,
   valueManager,
   wrapperVariant,
   validator,
-}: UsePickerValueParams<TValue, TDate, TExternalProps>): UsePickerValueResponse<
+}: UsePickerValueParams<TValue, TDate, TSection, TExternalProps>): UsePickerValueResponse<
   TValue,
+  TSection,
   InferError<TExternalProps>
 > => {
   type TError = InferError<TExternalProps>;
@@ -309,17 +307,12 @@ export const usePickerValue = <
   const utils = useUtils<TDate>();
   const adapter = useLocalizationContext<TDate>();
 
-  const [rawValue, setValue] = useControlled({
+  const [value, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
     name: 'usePickerValue',
     state: 'value',
   });
-
-  const value = React.useMemo(
-    () => valueManager.cleanValue(utils, rawValue),
-    [valueManager, utils, rawValue],
-  );
 
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
@@ -363,9 +356,8 @@ export const usePickerValue = <
     });
 
     if (
-      params.forceOnChangeCall ||
-      (!params.skipOnChangeCall &&
-        !valueManager.areValuesEqual(utils, dateState.committed, params.value))
+      !params.skipOnChangeCall &&
+      !valueManager.areValuesEqual(utils, dateState.committed, params.value)
     ) {
       setValue(params.value);
 
@@ -413,8 +405,6 @@ export const usePickerValue = <
     setDate({
       value: valueManager.emptyValue,
       action: 'acceptAndClose',
-      // force `onChange` in cases like input (value) === `Invalid date`
-      forceOnChangeCall: !valueManager.areValuesEqual(utils, value as any, valueManager.emptyValue),
     });
   });
 
@@ -423,8 +413,6 @@ export const usePickerValue = <
     setDate({
       value: dateState.draft,
       action: 'acceptAndClose',
-      // force `onChange` in cases like input (value) === `Invalid date`
-      forceOnChangeCall: !valueManager.areValuesEqual(utils, dateState.committed, dateState.draft),
     });
   });
 
@@ -501,15 +489,20 @@ export const usePickerValue = <
     onClose: handleClose,
   };
 
-  const fieldResponse: UsePickerValueFieldResponse<TValue, TError> = {
+  const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
     value: dateState.draft,
     onChange: handleChangeAndCommit,
     selectedSections,
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
+  const viewValue = React.useMemo(
+    () => valueManager.cleanValue(utils, dateState.draft),
+    [utils, valueManager, dateState.draft],
+  );
+
   const viewResponse: UsePickerValueViewsResponse<TValue> = {
-    value: dateState.draft,
+    value: viewValue,
     onChange: handleChange,
     onClose: handleClose,
     open: isOpen,
@@ -529,7 +522,7 @@ export const usePickerValue = <
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     ...actions,
-    value: dateState.draft,
+    value: viewValue,
     onChange: handleChangeAndCommit,
     isValid,
   };

@@ -9,7 +9,7 @@ export interface UseFieldParams<
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 > {
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
@@ -25,7 +25,7 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TError> {
+export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -76,6 +76,29 @@ export interface UseFieldInternalProps<TValue, TError> {
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+}
+
+export interface FieldRef<TSection extends FieldSection> {
+  /**
+   * Returns the sections of the current value.
+   * @returns {TSection[]} The sections of the current value.
+   */
+  getSections: () => TSection[];
+  /**
+   * Returns the index of the active section (the first focused section).
+   * If no section is active, returns `null`.
+   * @returns {number | null} The index of the active section.
+   */
+  getActiveSectionIndex: () => number | null;
+  /**
+   * Updates the selected sections.
+   * @param {FieldSelectedSections} selectedSections The sections to select.
+   */
+  setSelectedSections: (selectedSections: FieldSelectedSections) => void;
 }
 
 export interface UseFieldForwardedProps {
@@ -248,7 +271,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {PickersLocaleText<TDate>} localeText The localization object to generate the placeholders.
-   * @param {TSection[] | null} prevSections The last section list stored in state.
+   * @param {TSection[] | null} sections The sections to use as a fallback if a date is null or invalid.
    * @param {TValue} value The current value to generate sections from.
    * @param {string} format The date format.
    * @returns {TSection[]}  The new section list.
@@ -256,7 +279,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
     localeText: PickersLocaleText<TDate>,
-    prevSections: TSection[] | null,
+    sections: TSection[] | null,
     value: TValue,
     format: string,
   ) => TSection[];
@@ -325,21 +348,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {boolean} `true` if the current error is not empty.
    */
   hasError: (error: TError) => boolean;
-  /**
-   * Return a description of sections display order. This description is useful in RTL mode.
-   * @template TDate
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @param {PickersLocaleText<TDate>} localeText The translation object.
-   * @param {string} format The format from which sections are computed.
-   * @param {boolean} isRTL Is the field in right-to-left orientation.
-   * @returns {SectionOrdering} The description of sections order from left to right.
-   */
-  getSectionOrder: (
-    utils: MuiPickersAdapter<TDate>,
-    localeText: PickersLocaleText<TDate>,
-    format: string,
-    isRTL: boolean,
-  ) => SectionOrdering;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {

@@ -13,6 +13,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
+import { FieldSection } from '../useField';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -58,7 +59,7 @@ export const useDesktopPicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
+  } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     props,
     inputRef: internalInputRef,
     valueManager,
@@ -96,6 +97,7 @@ export const useDesktopPicker = <
   const Field = slots.field;
   const fieldProps: BaseSingleInputFieldProps<
     TDate | null,
+    FieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -129,7 +131,7 @@ export const useDesktopPicker = <
     };
   }
 
-  const slotsForField: BaseSingleInputFieldProps<TDate | null, unknown>['slots'] = {
+  const slotsForField: BaseSingleInputFieldProps<TDate | null, FieldSection, unknown>['slots'] = {
     textField: slots.textField,
     ...fieldProps.slots,
   };

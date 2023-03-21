@@ -2,6 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import { useTheme } from '@mui/material/styles';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -12,7 +13,7 @@ import {
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.types';
-import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
+import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
@@ -22,7 +23,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -37,7 +38,6 @@ export const useField = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
-    sectionOrder,
     sectionsValueBoundaries,
   } = useFieldState(params);
 
@@ -51,7 +51,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false },
+    internalProps: { readOnly = false, unstableFieldRef },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -70,8 +70,18 @@ export const useField = <
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const theme = useTheme();
+
+  const sectionOrder = React.useMemo(
+    () => getSectionOrder(state.sections, theme.direction === 'rtl'),
+    [theme.direction, state.sections],
+  );
 
   const syncSelectionFromDOM = () => {
+    if (readOnly) {
+      setSelectedSections(null);
+      return;
+    }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     const nextSectionIndex =
       browserStartIndex <= state.sections[0].startInInput
@@ -108,7 +118,7 @@ export const useField = <
         return;
       }
 
-      if (selectedSectionIndexes != null) {
+      if (selectedSectionIndexes != null || readOnly) {
         return;
       }
 
@@ -330,6 +340,12 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
+      if (inputRef.current!.scrollLeft) {
+        // Ensure that input content is not marked as selected.
+        // setting selection range to 0 causes issues in Safari.
+        // https://bugs.webkit.org/show_bug.cgi?id=224425
+        inputRef.current!.scrollLeft = 0;
+      }
       return;
     }
 
@@ -407,8 +423,27 @@ export const useField = <
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder =
-    !inputHasFocus &&
-    (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
+    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
+
+  React.useImperativeHandle(unstableFieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: () => {
+      const browserStartIndex = inputRef.current!.selectionStart ?? 0;
+      const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
+      if (browserStartIndex === 0 && browserEndIndex === 0) {
+        return null;
+      }
+
+      const nextSectionIndex =
+        browserStartIndex <= state.sections[0].startInInput
+          ? 1 // Special case if browser index is in invisible characters at the beginning.
+          : state.sections.findIndex(
+              (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+            );
+      return nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+    },
+    setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
+  }));
 
   return {
     placeholder: state.placeholder,

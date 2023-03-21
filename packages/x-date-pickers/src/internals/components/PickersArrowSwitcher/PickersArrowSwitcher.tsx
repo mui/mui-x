@@ -108,7 +108,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     elementType: PreviousIconButton,
     externalSlotProps: slotProps?.previousIconButton ?? componentsProps?.previousIconButton,
     additionalProps: {
-      size: 'small',
+      size: 'medium',
       title: leftProps.label,
       'aria-label': leftProps.label,
       disabled: leftProps.isDisabled,
@@ -125,7 +125,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     elementType: NextIconButton,
     externalSlotProps: slotProps?.nextIconButton ?? componentsProps?.nextIconButton,
     additionalProps: {
-      size: 'small',
+      size: 'medium',
       title: rightProps.label,
       'aria-label': rightProps.label,
       disabled: rightProps.isDisabled,
@@ -141,6 +141,9 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
     externalSlotProps: slotProps?.leftArrowIcon ?? componentsProps?.leftArrowIcon,
+    additionalProps: {
+      fontSize: 'inherit',
+    },
     ownerState: undefined,
   });
 
@@ -149,6 +152,9 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
     externalSlotProps: slotProps?.rightArrowIcon ?? componentsProps?.rightArrowIcon,
+    additionalProps: {
+      fontSize: 'inherit',
+    },
     ownerState: undefined,
   });
 
