@@ -4,16 +4,13 @@ import { D3Scale } from '../hooks/useScale';
 
 export interface ScatterProps {
   data: ScatterSeriesType['data'];
-  xDataToSvg?: D3Scale;
-  yDataToSvg?: D3Scale;
+  xScale: D3Scale;
+  yScale: D3Scale;
   markerSize: number;
 }
 
 export function Scatter(props: ScatterProps) {
-  const { data, xDataToSvg, yDataToSvg, markerSize } = props;
-
-  const xScale = React.useCallback((value: any) => xDataToSvg?.(value) ?? value, [xDataToSvg]);
-  const yScale = React.useCallback((value: any) => yDataToSvg?.(value) ?? value, [yDataToSvg]);
+  const { data, xScale, yScale, markerSize } = props;
 
   return (
     <g>
@@ -23,7 +20,7 @@ export function Scatter(props: ScatterProps) {
           cx={0}
           cy={0}
           r={markerSize}
-          transform={`translate(${xScale(x)}, ${yScale(y)})`}
+          transform={`translate(${xScale(x as number)}, ${yScale(y as number)})`}
           fill="red"
         />
       ))}
