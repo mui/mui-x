@@ -19,7 +19,7 @@
     "languageTag": "bg-BG",
     "importName": "bgBG",
     "localeName": "Bulgarian",
-    "missingKeysCount": 15,
+    "missingKeysCount": 7,
     "totalKeysCount": 94,
     "githubLink": "https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/locales/bgBG.ts/"
   },
