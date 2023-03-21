@@ -21,9 +21,9 @@ title: Charts - Bars
 You can mix all charts together by using composition. The basic structure should be
 
 ```jsx
-// Provide data ane layout
+// Provide data and layout
 <ChartContainer series={series} width={500} height={500}>
-  // If plots are in cartesian coordiante, provide the axis
+  // If plots are in cartesian coordinates, provide the axis
   <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
     // Add the components to render (even your custom ones)
     <BarPlot />
