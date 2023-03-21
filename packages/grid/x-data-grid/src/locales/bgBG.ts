@@ -139,7 +139,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Свиване',
 
   // Row reordering text
-   rowReorderingHeaderName: 'Подредба на редове',
+  rowReorderingHeaderName: 'Подредба на редове',
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',
