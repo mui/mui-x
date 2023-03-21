@@ -253,9 +253,6 @@ const DateRangePickerDayDay = styled(PickersDay, {
   '& > *': {
     transform: 'scale(0.9)',
   },
-  ...(!ownerState.selected && {
-    backgroundColor: 'transparent',
-  }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),

@@ -131,8 +131,8 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   height: DAY_SIZE,
   borderRadius: '50%',
   padding: 0,
-  // background required here to prevent collides with the other days when animating with transition group
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+  // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
+  backgroundColor: 'transparent',
   color: (theme.vars || theme).palette.text.primary,
   '@media (pointer: fine)': {
     '&:hover': {
