@@ -100,6 +100,7 @@ interface UsePickerValueState<TValue> {
    * Date that will be used if the picker tries to reset its value
    */
   resetFallback: TValue;
+  isDefaultValue: boolean;
 }
 
 type PickerValueActionType =
@@ -133,6 +134,7 @@ interface UsePickerValueAction<DraftValue, TError> {
    * Context passed from a deeper component (a field or a calendar).
    */
   contextFromField?: FieldChangeHandlerContext<TError>;
+  isDefaultValue?: boolean;
 }
 
 /**
@@ -327,6 +329,7 @@ export const usePickerValue = <
     committed: value,
     draft: value,
     resetFallback: value,
+    isDefaultValue: inValue === undefined && defaultValue !== undefined,
   }));
 
   useValidation(
@@ -339,15 +342,27 @@ export const usePickerValue = <
   const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
     setDateState((prev) => {
       switch (params.action) {
-        case 'setAll':
+        case 'setAll': {
+          return {
+            ...prev,
+            draft: params.value,
+            committed: params.value,
+            resetFallback: params.value,
+          };
+        }
         case 'acceptAndClose': {
-          return { draft: params.value, committed: params.value, resetFallback: params.value };
+          return {
+            draft: params.value,
+            committed: params.value,
+            resetFallback: params.value,
+            isDefaultValue: false,
+          };
         }
         case 'setCommitted': {
-          return { ...prev, draft: params.value, committed: params.value };
+          return { ...prev, draft: params.value, committed: params.value, isDefaultValue: false };
         }
         case 'setDraft': {
-          return { ...prev, draft: params.value };
+          return { ...prev, draft: params.value, isDefaultValue: false };
         }
         default: {
           return prev;
@@ -377,11 +392,14 @@ export const usePickerValue = <
       }
     }
 
+    const isDefaultValue = params.isDefaultValue ?? dateState.isDefaultValue;
+
     if (params.action === 'acceptAndClose') {
       setIsOpen(false);
       if (
         onAcceptProp &&
-        !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value)
+        (isDefaultValue ||
+          !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value))
       ) {
         onAcceptProp(params.value);
       }

@@ -147,7 +147,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           onAccept={onAccept}
           onClose={onClose}
           open
-          defaultValue={values[0]}
+          value={values[0]}
           closeOnSelect
         />,
       );

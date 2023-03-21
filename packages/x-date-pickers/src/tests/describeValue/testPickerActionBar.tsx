@@ -136,7 +136,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(0);
+        expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
       });
     });
@@ -166,6 +166,54 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         userEvent.mousePress(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(1); // The accepted value as already been committed, don't call onChange again
         expect(onAccept.callCount).to.equal(1);
+        expect(onClose.callCount).to.equal(1);
+      });
+
+      it('should call onClose and onAccept when validating the default value', () => {
+        const onChange = spy();
+        const onAccept = spy();
+        const onClose = spy();
+
+        render(
+          <ElementToTest
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            open
+            defaultValue={values[0]}
+            componentsProps={{ actionBar: { actions: ['accept'] } }}
+            closeOnSelect={false}
+          />,
+        );
+
+        // Accept the modifications
+        userEvent.mousePress(screen.getByText(/ok/i));
+        expect(onChange.callCount).to.equal(0); // The accepted value as already been committed, don't call onChange
+        expect(onAccept.callCount).to.equal(1);
+        expect(onClose.callCount).to.equal(1);
+      });
+
+      it('should call onClose but not onAccept when validating an already validated value', () => {
+        const onChange = spy();
+        const onAccept = spy();
+        const onClose = spy();
+
+        render(
+          <ElementToTest
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            open
+            value={values[0]}
+            componentsProps={{ actionBar: { actions: ['accept'] } }}
+            closeOnSelect={false}
+          />,
+        );
+
+        // Accept the modifications
+        userEvent.mousePress(screen.getByText(/ok/i));
+        expect(onChange.callCount).to.equal(0);
+        expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
       });
     });
