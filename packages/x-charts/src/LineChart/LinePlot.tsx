@@ -4,7 +4,7 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
-function LinePlot() {
+export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -91,5 +91,3 @@ function LinePlot() {
     </React.Fragment>
   );
 }
-
-export default LinePlot;

@@ -1,2 +1,2 @@
-export { default as LinePlot } from './LinePlot';
-export { default as LineChart } from './LineChart';
+export { LinePlot } from './LinePlot';
+export { LineChart } from './LineChart';
