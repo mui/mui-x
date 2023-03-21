@@ -40,8 +40,8 @@ export function ScatterPlot() {
         return (
           <Scatter
             key={id}
-            xDataToSvg={xScale}
-            yDataToSvg={yScale}
+            xScale={xScale}
+            yScale={yScale}
             markerSize={markerSize ?? 2}
             data={data}
           />
