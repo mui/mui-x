@@ -4,8 +4,8 @@ import { DrawingProvider } from '@mui/x-charts/context/DrawingProvider';
 import { SeriesContextProvider } from '@mui/x-charts/context/SeriesContextProvider';
 import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
 import Surface from '@mui/x-charts/Surface';
-import { XAxis } from '@mui/x-charts/XAxis/XAxis';
-import { YAxis } from '@mui/x-charts/YAxis/YAxis';
+import { XAxis } from '@mui/x-charts/XAxis';
+import { YAxis } from '@mui/x-charts/YAxis';
 
 // Components that could be exported
 function ChartContainer({ width, height, series, margin, children }) {

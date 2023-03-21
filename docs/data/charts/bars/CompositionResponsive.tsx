@@ -4,8 +4,8 @@ import { LinePlot } from '@mui/x-charts/LineChart';
 import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
 import { AllSeriesType } from '@mui/x-charts/models';
 import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
-import { XAxis } from '@mui/x-charts/XAxis/XAxis';
-import { YAxis } from '@mui/x-charts/YAxis/YAxis';
+import { XAxis } from '@mui/x-charts/XAxis';
+import { YAxis } from '@mui/x-charts/YAxis';
 
 const series = [
   {

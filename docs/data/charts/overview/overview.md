@@ -18,11 +18,11 @@ Please open an issue to ask for it, explaining which need it solves.
 ## Display charts
 
 Charts can be rendered in two ways.
-With a single component or by composition of sub components.
+With a single component or by composing sub components.
 
 ### Single charts
 
-For common use case, single component is the recomended way.
+For common use case, single component is the recommended way.
 
 You have to provide the `series` props.
 The `width` and `height` if the component is not responsive.
