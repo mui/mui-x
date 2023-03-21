@@ -24,6 +24,8 @@ import {
   MultiInputFieldSlotTextFieldProps,
   BaseSingleInputFieldProps,
   DateValidationError,
+  RangeFieldSection,
+  FieldSection,
 } from '@mui/x-date-pickers-pro';
 
 interface BrowserFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -67,7 +69,11 @@ const BrowserField = React.forwardRef(
 
 interface BrowserMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs>,
-    BaseMultiInputFieldProps<DateRange<Dayjs>, DateRangeValidationError> {}
+    BaseMultiInputFieldProps<
+      DateRange<Dayjs>,
+      RangeFieldSection,
+      DateRangeValidationError
+    > {}
 
 type BrowserMultiInputDateRangeFieldComponent = ((
   props: BrowserMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -150,7 +156,7 @@ function BrowserDateRangePicker(props: DateRangePickerProps<Dayjs>) {
 
 interface BrowserDateFieldProps
   extends UseDateFieldProps<Dayjs>,
-    BaseSingleInputFieldProps<Dayjs | null, DateValidationError> {}
+    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {}
 
 function BrowserDateField(props: BrowserDateFieldProps) {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;

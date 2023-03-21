@@ -166,7 +166,7 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
     slot: 'Separator',
     overridesResolver: (props, styles) => styles.separator,
   },
-)({});
+)({ marginTop: '25px' });
 
 const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   const {
@@ -265,6 +265,11 @@ function JoyDatePicker(props) {
   return <DatePicker slots={{ field: JoyDateField, ...props.slots }} {...props} />;
 }
 
+/**
+ * This component is for syncing the MUI docs's mode with this demo.
+ * You might not need this component in your project.
+ */
+
 JoyDatePicker.propTypes = {
   /**
    * Overridable component slots.
@@ -273,10 +278,6 @@ JoyDatePicker.propTypes = {
   slots: PropTypes.any,
 };
 
-/**
- * This component is for syncing the MUI docs's mode with this demo.
- * You might not need this component in your project.
- */
 function SyncThemeMode({ mode }) {
   const { setMode } = useColorScheme();
   React.useEffect(() => {
@@ -284,10 +285,6 @@ function SyncThemeMode({ mode }) {
   }, [mode, setMode]);
   return null;
 }
-
-SyncThemeMode.propTypes = {
-  mode: PropTypes.string,
-};
 
 export default function PickerWithJoyField() {
   const {

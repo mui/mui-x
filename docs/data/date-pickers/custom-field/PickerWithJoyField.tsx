@@ -35,6 +35,8 @@ import {
   MultiInputFieldSlotTextFieldProps,
   BaseSingleInputFieldProps,
   DateValidationError,
+  RangeFieldSection,
+  FieldSection,
 } from '@mui/x-date-pickers-pro';
 
 const muiTheme = extendMuiTheme();
@@ -205,7 +207,11 @@ const MultiInputJoyDateRangeFieldSeparator = styled(
 
 interface JoyMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs>,
-    BaseMultiInputFieldProps<DateRange<Dayjs>, DateRangeValidationError> {}
+    BaseMultiInputFieldProps<
+      DateRange<Dayjs>,
+      RangeFieldSection,
+      DateRangeValidationError
+    > {}
 
 type JoyMultiInputDateRangeFieldComponent = ((
   props: JoyMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
@@ -288,7 +294,7 @@ function JoyDateRangePicker(props: DateRangePickerProps<Dayjs>) {
 
 interface JoyDateFieldProps
   extends UseDateFieldProps<Dayjs>,
-    BaseSingleInputFieldProps<Dayjs | null, DateValidationError> {}
+    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {}
 
 function JoyDateField(props: JoyDateFieldProps) {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;

@@ -1,4 +1,5 @@
 <CssVarsProvider theme={mergedTheme}>
+  <SyncThemeMode mode={mode} />
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Stack spacing={2} sx={{ width: 400 }}>
       <JoyDatePicker />

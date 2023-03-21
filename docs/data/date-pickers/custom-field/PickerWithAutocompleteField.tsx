@@ -7,11 +7,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { UseDateFieldProps } from '@mui/x-date-pickers/DateField';
-import { BaseSingleInputFieldProps, DateValidationError } from '@mui/x-date-pickers';
+import {
+  BaseSingleInputFieldProps,
+  DateValidationError,
+  FieldSection,
+} from '@mui/x-date-pickers';
 
 interface AutoCompleteFieldProps
   extends UseDateFieldProps<Dayjs>,
-    BaseSingleInputFieldProps<Dayjs | null, DateValidationError> {
+    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {
   options?: Dayjs[];
 }
 
