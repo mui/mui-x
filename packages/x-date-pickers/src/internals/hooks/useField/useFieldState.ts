@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import useControlled from '@mui/utils/useControlled';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
@@ -50,8 +49,6 @@ export const useFieldState = <
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const adapter = useLocalizationContext<TDate>();
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
 
   const {
     valueManager,
@@ -73,11 +70,6 @@ export const useFieldState = <
   const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
 
   const sectionsValueBoundaries = React.useMemo(() => getSectionsBoundaries<TDate>(utils), [utils]);
-
-  const sectionOrder = React.useMemo(
-    () => fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
-    [fieldValueManager, format, isRTL, localeText, utils],
-  );
 
   const placeholder = React.useMemo(
     () =>
@@ -414,7 +406,6 @@ export const useFieldState = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
-    sectionOrder,
     sectionsValueBoundaries,
   };
 };
