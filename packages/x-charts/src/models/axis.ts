@@ -7,7 +7,7 @@ import type {
   ScaleLinear,
 } from 'd3-scale';
 
-export type Scales = 'linear' | 'band' | 'log' | 'point' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = 'linear' | 'band' | 'log' | 'point' | 'pow' | 'sqrt' | 'time' | 'utc';
 
 export type AxisScaleMapping =
   | {
@@ -37,7 +37,7 @@ export type AxisScaleMapping =
 
 export type AxisConfig = {
   id: string;
-  scaleName?: Scales;
+  scaleName?: ScaleName;
   min?: number;
   max?: number;
   data?: any[];
