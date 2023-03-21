@@ -1866,7 +1866,7 @@
   version "7.2.3"
   resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types#2526c52203f38222aa3dac17ebf63502adb771bd"
 
-"@mui/utils@^5.11.13", "@mui/utils@^5.11.2":
+"@mui/utils@^5.11.13":
   version "5.11.13"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.11.13.tgz#8d7317f221e8973200764820fa7f2a622dbc7150"
   integrity sha512-5ltA58MM9euOuUcnvwFJqpLdEugc9XFsRR8Gt4zZNb31XzMfSKJPR4eumulyhsOTK1rWf7K4D63NKFPfX0AxqA==
@@ -1886,14 +1886,6 @@
     clsx "^1.1.1"
     prop-types "^15.7.2"
     reselect "^4.0.0"
-
-"@mui/x-license-pro@6.0.0-beta.0":
-  version "6.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-license-pro/-/x-license-pro-6.0.0-beta.0.tgz#5de3c033907970076b5fa5949f8337e5d7c3d8d7"
-  integrity sha512-mHqMcKm1icYBkqqm4OymQwyfXTjp3CQrqHbz3fPvGh+cDfOOs/wtPFhB7mytKnNE0yGbSPVxDRNZidrlHBZnDg==
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@mui/utils" "^5.11.2"
 
 "@next/env@13.2.4":
   version "13.2.4"
