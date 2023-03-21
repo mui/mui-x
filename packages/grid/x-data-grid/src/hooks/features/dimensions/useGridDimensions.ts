@@ -236,7 +236,6 @@ export function useGridDimensions(
     const newHeight = height - paddingTop - paddingBottom;
     const newWidth = width - paddingLeft - paddingRight;
 
-    // If `autoHeight` is enabled, ignore height changes
     const hasHeightChanged = newHeight !== previousSize.current?.height;
     const hasWidthChanged = newWidth !== previousSize.current?.width;
 
