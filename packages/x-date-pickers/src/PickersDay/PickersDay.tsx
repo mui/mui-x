@@ -137,14 +137,14 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   '@media (pointer: fine)': {
     '&:hover': {
       backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-        : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
     },
   },
   '&:focus': {
     backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
