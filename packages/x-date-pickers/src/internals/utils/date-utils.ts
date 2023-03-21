@@ -101,3 +101,11 @@ export const applyDefaultDate = <TDate>(
 
   return value;
 };
+
+export const areDatesEqual = <TDate>(utils: MuiPickersAdapter<TDate>, a: TDate, b: TDate) => {
+  if (!utils.isValid(a) && a != null && !utils.isValid(b) && b != null) {
+    return true;
+  }
+
+  return utils.isEqual(a, b);
+};

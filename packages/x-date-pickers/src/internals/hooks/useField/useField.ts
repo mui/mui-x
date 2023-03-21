@@ -423,8 +423,7 @@ export const useField = <
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder =
-    !inputHasFocus &&
-    (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
+    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
 
   React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,
