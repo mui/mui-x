@@ -1,0 +1,9 @@
+<AutocompleteDatePicker
+  label="Pick a date"
+  options={[
+    today,
+    today.add(1, 'day'),
+    today.add(4, 'day'),
+    today.add(5, 'day'),
+  ]}
+/>
