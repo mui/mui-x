@@ -28,7 +28,10 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
 import { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey } from '../../../utils/keyboardUtils';
-import { gridColumnFieldsSelector } from '../columns/gridColumnsSelector';
+import {
+  gridColumnFieldsSelector,
+  gridVisibleColumnFieldsSelector,
+} from '../columns/gridColumnsSelector';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { buildWarning } from '../../../utils/warning';
 import { gridRowsDataRowIdToIdLookupSelector } from '../rows/gridRowsSelector';
@@ -188,8 +191,10 @@ export const useGridRowEditing = (
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
         } else if (event.key === 'Tab') {
-          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) =>
-            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
+          const columnFields = gridColumnFieldsSelector(apiRef).filter(
+            (field) =>
+              apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)) &&
+              gridVisibleColumnFieldsSelector(apiRef).includes(field),
           );
 
           if (event.shiftKey) {
