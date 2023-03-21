@@ -58,11 +58,11 @@ export const useGridScroll = (
   const theme = useTheme();
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersElementRef!;
+  const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
   const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
-      const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
       const totalRowCount = gridRowCountSelector(apiRef);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const scrollToHeader = params.rowIndex == null;
@@ -146,12 +146,11 @@ export const useGridScroll = (
 
       return false;
     },
-    [logger, apiRef, props.pagination, visibleSortedRows],
+    [logger, apiRef, virtualScrollerRef, props.pagination, visibleSortedRows],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(
     (params: Partial<GridScrollParams>) => {
-      const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
       if (virtualScrollerRef.current && params.left != null && colRef.current) {
         const direction = theme.direction === 'rtl' ? -1 : 1;
         colRef.current.scrollLeft = params.left;
@@ -164,11 +163,10 @@ export const useGridScroll = (
       }
       logger.debug(`Scrolling, updating container, and viewport`);
     },
-    [apiRef, theme.direction, colRef, logger],
+    [virtualScrollerRef, theme.direction, colRef, logger],
   );
 
   const getScrollPosition = React.useCallback<GridScrollApi['getScrollPosition']>(() => {
-    const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
     if (!virtualScrollerRef?.current) {
       return { top: 0, left: 0 };
     }
@@ -176,7 +174,7 @@ export const useGridScroll = (
       top: virtualScrollerRef.current.scrollTop,
       left: virtualScrollerRef.current.scrollLeft,
     };
-  }, [apiRef]);
+  }, [virtualScrollerRef]);
 
   const scrollApi: GridScrollApi = {
     scroll,
