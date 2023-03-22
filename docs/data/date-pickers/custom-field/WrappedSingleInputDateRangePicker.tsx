@@ -12,7 +12,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 type FieldComponent = (<TDate>(
   props: SingleInputDateRangeFieldProps<TDate> &
     React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { isSingleInput?: boolean };
+) => JSX.Element) & { fieldType?: string };
 
 const WrappedSingleInputDateRangeField = React.forwardRef(
   (
@@ -23,7 +23,7 @@ const WrappedSingleInputDateRangeField = React.forwardRef(
   },
 ) as FieldComponent;
 
-WrappedSingleInputDateRangeField.isSingleInput = true;
+WrappedSingleInputDateRangeField.fieldType = 'single-input';
 
 export default function WrappedSingleInputDateRangePicker() {
   return (

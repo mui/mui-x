@@ -10,7 +10,7 @@ const WrappedSingleInputDateRangeField = React.forwardRef((props, ref) => {
   return <SingleInputDateRangeField size="small" {...props} ref={ref} />;
 });
 
-WrappedSingleInputDateRangeField.isSingleInput = true;
+WrappedSingleInputDateRangeField.fieldType = 'single-input';
 
 export default function WrappedSingleInputDateRangePicker() {
   return (

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldRef } from '@mui/x-date-pickers';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { RangePosition } from '../models/range';
 import { RangeFieldSection } from '../models/fields';
 
@@ -48,14 +48,8 @@ export const useRangePosition = (props: UseRangePositionProps): UseRangePosition
     }
 
     const sections = singleInputFieldRef.current.getSections();
-    const activeSectionIndex = singleInputFieldRef.current?.getActiveSectionIndex();
-    const domRangePosition =
-      activeSectionIndex == null || activeSectionIndex < sections.length / 2 ? 'start' : 'end';
-
-    if (domRangePosition !== newRangePosition) {
-      const targetActiveSectionIndex = newRangePosition === 'start' ? 0 : sections.length / 2;
-      singleInputFieldRef.current.setSelectedSections(targetActiveSectionIndex);
-    }
+    const targetActiveSectionIndex = newRangePosition === 'start' ? 0 : sections.length / 2;
+    singleInputFieldRef.current.setSelectedSections(targetActiveSectionIndex);
   };
 
   const handleRangePositionChange = useEventCallback((newRangePosition: RangePosition) => {

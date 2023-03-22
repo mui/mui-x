@@ -23,6 +23,17 @@ You can use the `fieldSeparator` slot to pass custom props to the `Typography` r
 
 {{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
 
+### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
+
+{{"demo": "SingleInputDateRangePicker.js"}}
+
+If you want to create a wrapper around the field, make sure to set the `fieldType` static property to `'single-input'`.
+Otherwise, the picker won't know your field is a single input one and use the multi input event listeners:
+
+{{"demo": "WrappedSingleInputDateRangePicker.js", "defaultCodeOpen": false}}
+
 ## Commonly used custom field
 
 ### Using another input

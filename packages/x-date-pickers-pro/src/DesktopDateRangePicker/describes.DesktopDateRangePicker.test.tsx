@@ -9,7 +9,7 @@ import {
   expectInputPlaceholder,
   expectInputValue,
 } from 'test/utils/pickers-utils';
-import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

@@ -100,7 +100,7 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldType = (Field as any).isSingleInput ? 'single-input' : 'multi-input';
+  const fieldType = (Field as any).fieldType ?? 'multi-input';
 
   const fieldProps: BaseFieldProps<
     DateRange<TDate>,

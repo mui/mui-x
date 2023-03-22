@@ -175,7 +175,7 @@ DesktopDateRangePicker.propTypes = {
   format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
-   * Will be ignored on multi input pickers.
+   * Ignored if the field has several inputs.
    */
   inputRef: PropTypes.oneOfType([
     PropTypes.func,
@@ -185,7 +185,7 @@ DesktopDateRangePicker.propTypes = {
   ]),
   /**
    * The label content.
-   * Will be ignored on multi input pickers.
+   * Ignored if the field has several inputs.
    */
   label: PropTypes.node,
   /**

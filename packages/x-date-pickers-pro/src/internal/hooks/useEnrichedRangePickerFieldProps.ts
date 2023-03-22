@@ -9,7 +9,7 @@ import {
   BaseSingleInputFieldProps,
   PickersInputLocaleText,
   FieldSelectedSections,
-} from '@mui/x-date-pickers';
+} from '@mui/x-date-pickers/models';
 import {
   BaseFieldProps,
   DateOrTimeView,
@@ -19,6 +19,7 @@ import {
   WrapperVariant,
   UncapitalizeObjectKeys,
   UsePickerProps,
+  getActiveElement,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
@@ -267,7 +268,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
   }, [rangePosition, open]);
 
   const updateRangePosition = () => {
-    if (!singleInputFieldRef.current) {
+    if (!singleInputFieldRef.current || inputRef.current !== getActiveElement(document)) {
       return;
     }
 
@@ -330,11 +331,20 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
 export const useEnrichedRangePickerFieldProps = <TDate, TView extends DateOrTimeView, TError>(
   params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TError>,
 ) => {
+  /* eslint-disable react-hooks/rules-of-hooks */
+  if (process.env.NODE_ENV !== 'production') {
+    const fieldTypeRef = React.useRef(params.fieldType);
+    if (params.fieldType !== fieldTypeRef.current) {
+      console.error(
+        'Should not switch between a multi input field and a single input field on a range picker.',
+      );
+    }
+  }
+
   if (params.fieldType === 'multi-input') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useMultiInputFieldSlotProps(params);
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   return useSingleInputFieldSlotProps(params);
+  /* eslint-enable react-hooks/rules-of-hooks */
 };

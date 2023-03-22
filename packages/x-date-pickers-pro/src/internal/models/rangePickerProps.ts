@@ -7,12 +7,12 @@ import * as React from 'react';
 export interface BaseRangeNonStaticPickerProps {
   /**
    * The label content.
-   * Will be ignored on multi input pickers.
+   * Ignored if the field has several inputs.
    */
   label?: React.ReactNode;
   /**
    * Pass a ref to the `input` element.
-   * Will be ignored on multi input pickers.
+   * Ignored if the field has several inputs.
    */
   inputRef?: React.Ref<HTMLInputElement>;
 }
