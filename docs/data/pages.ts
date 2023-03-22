@@ -1,6 +1,9 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
-const isPreview = process.env.NODE_ENV === 'development';
+const isPreview =
+  process.env.NODE_ENV === 'development' ||
+  process.env.CONTEXT === 'deploy-preview' ||
+  process.env.CONTEXT === 'branch-deploy';
 
 const pages: MuiPage[] = [
   {
