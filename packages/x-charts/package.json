@@ -4,7 +4,7 @@
   "description": "The community edition of the charts components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },

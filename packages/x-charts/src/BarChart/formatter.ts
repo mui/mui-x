@@ -23,7 +23,7 @@ const formatter = (params: FormatterParams): FormatterResult => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 
-  // Create a data set with format addapted to d3
+  // Create a data set with format adapted to d3
   const d3Dataset: { [id: string]: number }[] = [];
   seriesOrder.forEach((id) => {
     series[id].data.forEach((value, index) => {

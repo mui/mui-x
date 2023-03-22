@@ -33,7 +33,7 @@ The `width` and `height` if the component is not responsive.
 
 To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` and `<CartesianContextProvider />` wrappers.
 
-Inside those wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<ScatterPlot />`)
+Inside those wrappers, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<ScatterPlot />`)
 
 {{"demo": "Combining.js", "bg": "inline"}}
 
