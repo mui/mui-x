@@ -363,7 +363,11 @@ export const useField = <
       selectionStart !== inputRef.current!.selectionStart ||
       selectionEnd !== inputRef.current!.selectionEnd
     ) {
+      // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
+      const currentScrollTop = inputRef.current!.scrollTop;
       inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      // Even reading this variable seems to do the trick, but also setting it just to make use of it
+      inputRef.current!.scrollTop = currentScrollTop;
     }
   });
 
