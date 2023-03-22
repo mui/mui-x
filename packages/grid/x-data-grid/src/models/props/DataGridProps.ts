@@ -43,6 +43,10 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * If `true`, the users will be able to scroll the grid horizontally when the cursor is over the column headers.
+   */
+  scrollOverColumnHeaders: boolean;
 }
 
 /**

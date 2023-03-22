@@ -77,7 +77,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, lazyLoading?: bool, scrollOverColumnHeaders?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {

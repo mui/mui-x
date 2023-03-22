@@ -112,6 +112,35 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
   }, [apiRef]);
 
+  const scrollOverColumnHeaders = rootProps.experimentalFeatures?.scrollOverColumnHeaders;
+  React.useEffect(() => {
+    if (!scrollOverColumnHeaders) {
+      // TODO: uncomment before merging
+      // return undefined;
+    }
+    const rootElement = innerRef?.current;
+    if (!rootElement) {
+      return undefined;
+    }
+
+    const callback = (event: WheelEvent) => {
+      const virtualScroller = apiRef.current.virtualScrollerRef?.current;
+      if (!virtualScroller) {
+        return;
+      }
+
+      if (event.deltaX !== 0) {
+        event.preventDefault();
+        virtualScroller.scrollLeft += event.deltaX;
+      }
+    };
+    rootElement.addEventListener('wheel', callback);
+
+    return () => {
+      rootElement.removeEventListener('wheel', callback);
+    };
+  }, [innerRef, apiRef, scrollOverColumnHeaders]);
+
   // memoize `getFirstColumnIndexToRender`, since it's called on scroll
   const getFirstColumnIndexToRenderRef = React.useRef<typeof getFirstColumnIndexToRender>(
     defaultMemoize(getFirstColumnIndexToRender, {

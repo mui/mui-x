@@ -47,7 +47,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, scrollOverColumnHeaders?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
