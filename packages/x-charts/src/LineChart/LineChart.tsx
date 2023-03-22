@@ -12,7 +12,7 @@ import {
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
 import Surface from '../Surface';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { LayoutConfig } from '../models/layout';
 
 export function LineChart(
