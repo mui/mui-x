@@ -57,7 +57,7 @@ export const rangeFieldValueManager: FieldValueManager<
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
+  getSectionsFromValue: (utils, [start, end], fallbackSections, isRTL, getSectionsFromDate) => {
     const separatedFallbackSections =
       fallbackSections == null
         ? { startDate: null, endDate: null }
@@ -91,17 +91,20 @@ export const rangeFieldValueManager: FieldValueManager<
       });
     };
 
-    return addPositionPropertiesToSections<RangeFieldSection>([
-      ...getSections(start, separatedFallbackSections.startDate, 'start'),
-      ...getSections(end, separatedFallbackSections.endDate, 'end'),
-    ]);
+    return addPositionPropertiesToSections<RangeFieldSection>(
+      [
+        ...getSections(start, separatedFallbackSections.startDate, 'start'),
+        ...getSections(end, separatedFallbackSections.endDate, 'end'),
+      ],
+      isRTL,
+    );
   },
-  getValueStrFromSections: (sections) => {
+  getValueStrFromSections: (sections, isRTL) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForInputFromSections([
-      ...dateRangeSections.startDate,
-      ...dateRangeSections.endDate,
-    ]);
+    return createDateStrForInputFromSections(
+      [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      isRTL,
+    );
   },
   getActiveDateSections: (sections, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
