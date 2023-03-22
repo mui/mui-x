@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
+import { DateView } from '../models';
 
 const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation

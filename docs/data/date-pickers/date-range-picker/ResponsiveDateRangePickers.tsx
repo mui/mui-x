@@ -7,7 +7,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
-import { pickersLayoutClasses } from '@mui/x-date-pickers';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 
 export default function ResponsiveDateRangePickers() {
   return (

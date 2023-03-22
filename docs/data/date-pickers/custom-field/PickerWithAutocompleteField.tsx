@@ -11,7 +11,7 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
-} from '@mui/x-date-pickers';
+} from '@mui/x-date-pickers/models';
 
 interface AutoCompleteFieldProps
   extends UseDateFieldProps<Dayjs>,

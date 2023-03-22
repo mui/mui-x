@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useControlled as useControlled } from '@mui/utils';
 import type { PickerSelectionState } from './usePicker';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeView } from '../../models';
 import { MakeOptional } from '../models/helpers';
 
 export type PickerOnChangeFn<TDate> = (

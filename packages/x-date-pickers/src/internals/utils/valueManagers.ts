@@ -1,8 +1,11 @@
 import type { PickerValueManager } from '../hooks/usePicker';
-import type { DateValidationError } from '../hooks/validation/useDateValidation';
-import type { TimeValidationError } from '../hooks/validation/useTimeValidation';
-import type { DateTimeValidationError } from '../hooks/validation/useDateTimeValidation';
-import type { FieldSection, FieldValueManager } from '../hooks/useField';
+import {
+  DateValidationError,
+  TimeValidationError,
+  DateTimeValidationError,
+  FieldSection,
+} from '../../models';
+import type { FieldValueManager } from '../hooks/useField';
 import { areDatesEqual, replaceInvalidDateByNull } from './date-utils';
 import {
   addPositionPropertiesToSections,

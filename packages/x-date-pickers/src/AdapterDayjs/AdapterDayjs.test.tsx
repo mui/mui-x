@@ -16,7 +16,7 @@ import {
 } from 'test/utils/pickers-utils';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro';
 
 dayjs.extend(utc);

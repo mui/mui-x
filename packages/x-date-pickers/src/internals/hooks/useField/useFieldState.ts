@@ -2,13 +2,11 @@ import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
-  FieldSection,
   UseFieldForwardedProps,
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldState,
   FieldSelectedSectionsIndexes,
-  FieldSelectedSections,
   FieldChangeHandlerContext,
 } from './useField.types';
 import {
@@ -21,6 +19,7 @@ import {
   getDateFromDateSections,
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
+import { FieldSection, FieldSelectedSections } from '../../../models';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {
   /**
