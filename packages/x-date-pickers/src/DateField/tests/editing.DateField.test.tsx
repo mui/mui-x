@@ -803,6 +803,7 @@ describe('<DateField /> - Editing', () => {
 
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
         userEvent.keyPress(input, { key: 'Backspace' });
+        userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '1 / DD / YYYY' } }); // Press "1"
         expectInputValue(input, adapterName === 'luxon' ? '1 / DD / YYYY' : '01 / DD / YYYY');
