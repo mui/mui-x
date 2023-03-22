@@ -42,7 +42,7 @@
     "directory": "packages/grid/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.13",
+    "@babel/runtime": "^7.21.0",
     "@mui/utils": "^5.11.13",
     "@mui/x-data-grid": "6.0.2",
     "@mui/x-license-pro": "6.0.2",
