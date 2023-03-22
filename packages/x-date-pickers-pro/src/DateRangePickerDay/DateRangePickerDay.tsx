@@ -169,8 +169,8 @@ const DateRangePickerDayRoot = styled('div', {
           borderRadius: 0,
           color: (theme.vars || theme).palette.primary.contrastText,
           backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
-            : alpha(theme.palette.primary.light, 0.6),
+            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+            : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
           '&:first-of-type': startBorderStyle,
           '&:last-of-type': endBorderStyle,
         }),
@@ -247,7 +247,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ],
 })<{
   ownerState: OwnerState;
-}>(({ theme, ownerState }) => ({
+}>(({ ownerState }) => ({
   // Required to overlap preview border
   transform: 'scale(1.1)',
   '& > *': {
@@ -255,9 +255,9 @@ const DateRangePickerDayDay = styled(PickersDay, {
   },
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
-      color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
+      opacity: 0.7,
       [`&.${pickersDayClasses.dayOutsideMonth}`]: {
-        color: alpha(theme.palette.getContrastText(theme.palette.primary.light), 0.4),
+        opacity: 0.4,
       },
     }),
   ...(ownerState.draggable && {
