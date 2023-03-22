@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DEFAULT_Y_AXIS_KEY } from '../const';
+import { DEFAULT_Y_AXIS_KEY } from '../constants';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';

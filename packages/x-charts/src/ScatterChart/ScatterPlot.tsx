@@ -3,7 +3,7 @@ import { Scatter } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ScatterSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 
 export function ScatterPlot() {
   const seriesData = React.useContext(SeriesContext).scatter;
