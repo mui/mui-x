@@ -6,11 +6,11 @@ import useTicks from '../hooks/useTicks';
 
 export interface XAxisProps {
   /**
-   * Position of the axis
+   * Position of the axis.
    */
   position?: 'top' | 'bottom';
   /**
-   * Id of the axis to render
+   * Id of the axis to render.
    */
   axisId?: string;
   /**

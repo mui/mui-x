@@ -19,7 +19,7 @@ export type FormatterResult = {
   stackingGroups: string[][];
 };
 
-// For now it's a copy past of bar charts formatter, but maybe will deverge latter
+// For now it's a copy past of bar charts formatter, but maybe will diverge later
 const formatter = (params: FormatterParams): FormatterResult => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
