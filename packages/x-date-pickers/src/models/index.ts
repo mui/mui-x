@@ -4,4 +4,3 @@ export type { FieldSectionType } from '../internals/models/muiPickersAdapter';
 export type { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 export type { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
-export type { PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';

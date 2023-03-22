@@ -5,11 +5,8 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  BaseSingleInputFieldProps,
-  PickersInputLocaleText,
-  FieldSelectedSections,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
   DateOrTimeView,
