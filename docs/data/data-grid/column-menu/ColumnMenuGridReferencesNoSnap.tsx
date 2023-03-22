@@ -1,10 +1,9 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridRenderCellParams } from '@mui/x-data-grid-premium';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-const getPlanProps = (plan) => {
+const getPlanProps = (plan: string) => {
   switch (plan.toLowerCase()) {
     case 'premium':
       return {
@@ -23,7 +22,7 @@ const getPlanProps = (plan) => {
   }
 };
 
-function PlanIcon(props) {
+function PlanIcon(props: { plan?: string }) {
   if (!props.plan) {
     return null;
   }
@@ -38,11 +37,7 @@ function PlanIcon(props) {
   );
 }
 
-PlanIcon.propTypes = {
-  plan: PropTypes.string,
-};
-
-function ComponentTag(props) {
+function ComponentTag(props: { value?: string; plan?: string }) {
   if (!props.value) {
     return null;
   }
@@ -71,17 +66,12 @@ function ComponentTag(props) {
   );
 }
 
-ComponentTag.propTypes = {
-  plan: PropTypes.string,
-  value: PropTypes.string,
-};
-
 const columns = [
   {
     field: 'slot',
     headerName: 'Component',
     width: 240,
-    renderCell: (params) => (
+    renderCell: (params: GridRenderCellParams<any, string>) => (
       <ComponentTag value={params.value} plan={params.row.plan} />
     ),
   },
@@ -89,7 +79,9 @@ const columns = [
     field: 'defaultComponent',
     headerName: 'Default Component',
     width: 300,
-    renderCell: (params) => <ComponentTag value={params.value} />,
+    renderCell: (params: GridRenderCellParams<any, string>) => (
+      <ComponentTag value={params.value} />
+    ),
   },
   { field: 'displayOrder', headerName: 'Display Order', width: 140, type: 'number' },
 ];
@@ -139,7 +131,7 @@ const rows = [
   },
 ];
 
-export default function ColumnMenuGridReferences() {
+export default function ColumnMenuGridReferencesNoSnap() {
   return (
     <div style={{ width: '100%' }}>
       <DataGridPremium

@@ -90,13 +90,6 @@ Otherwise, the picker won't know your field is a single input one and will pass 
 
 {{"demo": "WrappedSingleInputDateRangePicker.js", "defaultCodeOpen": false}}
 
-### Custom input component
-
-You can customize the rendering of the input with the `TextField` component slot.
-Make sure to spread `inputProps` correctly to the custom input component.
-
-{{"demo": "CustomInputs.js"}}
-
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)

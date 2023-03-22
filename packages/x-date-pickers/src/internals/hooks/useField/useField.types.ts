@@ -348,21 +348,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {boolean} `true` if the current error is not empty.
    */
   hasError: (error: TError) => boolean;
-  /**
-   * Return a description of sections display order. This description is useful in RTL mode.
-   * @template TDate
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @param {PickersLocaleText<TDate>} localeText The translation object.
-   * @param {string} format The format from which sections are computed.
-   * @param {boolean} isRTL Is the field in right-to-left orientation.
-   * @returns {SectionOrdering} The description of sections order from left to right.
-   */
-  getSectionOrder: (
-    utils: MuiPickersAdapter<TDate>,
-    localeText: PickersLocaleText<TDate>,
-    format: string,
-    isRTL: boolean,
-  ) => SectionOrdering;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {
