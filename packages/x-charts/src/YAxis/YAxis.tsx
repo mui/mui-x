@@ -6,11 +6,11 @@ import useTicks from '../hooks/useTicks';
 
 export interface YAxisProps {
   /**
-   * Position of the axis
+   * Position of the axis.
    */
   position?: 'left' | 'right';
   /**
-   * Id of the axis to render
+   * Id of the axis to render.
    */
   axisId?: string;
   /**
