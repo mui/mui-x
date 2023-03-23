@@ -191,10 +191,9 @@ export const useGridRowEditing = (
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
         } else if (event.key === 'Tab') {
-          const columnFields = gridColumnFieldsSelector(apiRef).filter(
-            (field) =>
-              apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)) &&
-              gridVisibleColumnFieldsSelector(apiRef).includes(field),
+          const columnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) =>
+            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
+          );
           );
 
           if (event.shiftKey) {
