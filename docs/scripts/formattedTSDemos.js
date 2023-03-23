@@ -108,6 +108,8 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
           'row',
           'selectedDay',
           'day',
+          'defaultValue',
+          'value',
         ];
         if (propsToNotResolve.includes(name)) {
           return false;

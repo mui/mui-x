@@ -53,9 +53,10 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldProps extends {}>({
   endTextFieldProps,
   endInputRef,
   unstableEndFieldRef,
-}: UseMultiInputTimeRangeFieldParams<TDate, TTextFieldProps>): UseMultiInputRangeFieldResponse<
-  TTextFieldProps & UseTimeFieldProps<TDate>
-> => {
+}: UseMultiInputTimeRangeFieldParams<
+  TDate,
+  TTextFieldProps
+>): UseMultiInputRangeFieldResponse<TTextFieldProps> => {
   const sharedProps = useDefaultizedTimeRangeFieldProps<TDate, UseTimeFieldProps<TDate>>(
     inSharedProps,
   );

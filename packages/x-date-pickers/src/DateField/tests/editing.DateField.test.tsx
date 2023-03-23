@@ -803,6 +803,7 @@ describe('<DateField /> - Editing', () => {
 
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
         userEvent.keyPress(input, { key: 'Backspace' });
+        userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '1 / DD / YYYY' } }); // Press "1"
         expectInputValue(input, adapterName === 'luxon' ? '1 / DD / YYYY' : '01 / DD / YYYY');
@@ -981,6 +982,22 @@ describe('<DateField /> - Editing', () => {
       });
 
       expectInputValue(input, 'June 2022');
+    });
+  });
+
+  describeAdapters('Select all', DateField, ({ adapterName, render, clickOnInput }) => {
+    it('should edit the 1st section when all sections are selected', () => {
+      render(<DateField />);
+      const input = getTextbox();
+      clickOnInput(input, 0);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      // When all sections are selected, the value only contains the key pressed
+      fireEvent.change(input, { target: { value: '9' } });
+
+      expectInputValue(input, adapterName === 'luxon' ? '9 / DD / YYYY' : '09 / DD / YYYY');
     });
   });
 });
