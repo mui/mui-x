@@ -164,7 +164,7 @@ At some point, the mobile pickers should have a prop allowing to have an editabl
 
 The `shouldDisableTime` prop signature has been changed.
 Previously it did receive `value` as a `number` of hours, minutes, or seconds. Now it will receive the date object (based on the used adapter).
-This will allow more powerful usage and will enable the introduction of different time selection views.
+This will allow more powerful usage and will be compatible with the future digital time selection view.
 
 Either rename the prop to the newly added, but deprecated `shouldDisableClock` or refactor usage to account for the change in prop type.
 The codemod will take care of renaming the prop to keep the existing functionality but feel free to update to the new `shouldDisableTime` prop on your own.
