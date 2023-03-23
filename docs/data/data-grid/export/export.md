@@ -390,12 +390,9 @@ setupExcelExportWebWorker({
 
 ## 🚧 Clipboard [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-:::warning
-This feature isn't implemented yet. It's coming.
+### Pasting data
 
-👍 Upvote [issue #199](https://github.com/mui/mui-x/issues/199) if you want to see it land faster.
-You will be able to copy and paste items to and from the data grid using the system clipboard.
-:::
+{{"demo": "ClipboardImport.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## apiRef
 

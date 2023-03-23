@@ -73,8 +73,10 @@ const parseCellStringValue = (value: string, colDef: GridColDef) => {
 
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridPremiumProcessedProps, 'pagination' | 'paginationMode' | 'onRowPaste'>,
 ): void => {
+  const onRowPaste = props.onRowPaste;
+
   const handlePaste = React.useCallback(
     async (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
@@ -107,9 +109,11 @@ export const useGridClipboardImport = (
       const cellSelectionModelKeys = Object.keys(cellSelectionModel);
 
       if (cellSelectionModel && cellSelectionModelKeys.length > 0) {
+        const rowsToEmit: [newRow: GridValidRowModel, oldRow: GridValidRowModel][] = [];
         const rowUpdates: GridValidRowModel[] = [];
         cellSelectionModelKeys.forEach((rowId, rowIndex) => {
-          const row: GridValidRowModel = { id: rowId };
+          const targetRow = apiRef.current.getRow(rowId);
+          const row: GridValidRowModel = { ...targetRow };
           const rowDataString = rowsData[isSingleValuePasted ? 0 : rowIndex];
           const hasRowData = isSingleValuePasted ? true : rowDataString !== undefined;
           if (!hasRowData) {
@@ -130,8 +134,15 @@ export const useGridClipboardImport = (
             }
           });
           rowUpdates.push(row);
+          rowsToEmit.push([row, targetRow]);
         });
         apiRef.current.updateRows(rowUpdates);
+
+        rowsToEmit.forEach((payload) => {
+          if (typeof onRowPaste === 'function') {
+            onRowPaste(...payload);
+          }
+        });
         return;
       }
 
@@ -159,6 +170,7 @@ export const useGridClipboardImport = (
       });
 
       const rowsToUpdate: GridValidRowModel[] = [];
+      const rowsToEmit: [newRow: GridValidRowModel, oldRow: GridValidRowModel][] = [];
       rowsData.forEach((rowData, index) => {
         const parsedData = rowData.split('\t');
         const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
@@ -168,8 +180,7 @@ export const useGridClipboardImport = (
           return;
         }
 
-        // TODO: `id` field isn't gonna work with `getRowId`
-        const newRow: GridValidRowModel = { id: targetRow.id };
+        const newRow: GridValidRowModel = { ...targetRow.model };
         const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
         for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
           const field = visibleColumnFields[i];
@@ -182,11 +193,17 @@ export const useGridClipboardImport = (
         }
 
         rowsToUpdate.push(newRow);
+        rowsToEmit.push([newRow, targetRow.model]);
       });
 
       apiRef.current.updateRows(rowsToUpdate);
+      rowsToEmit.forEach((payload) => {
+        if (typeof onRowPaste === 'function') {
+          onRowPaste(...payload);
+        }
+      });
     },
-    [apiRef, props.pagination, props.paginationMode],
+    [apiRef, props.pagination, props.paginationMode, onRowPaste],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);

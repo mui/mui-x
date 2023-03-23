@@ -1,0 +1,11 @@
+<div style={{ height: 400 }}>
+  <DataGridPremium
+    rowSelection={false}
+    unstable_cellSelection
+    {...data}
+    // getRowId={(row) => row.rowId}
+    onRowPaste={(newRow) => {
+      updateRow(newRow);
+    }}
+  />
+</div>
