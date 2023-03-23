@@ -271,7 +271,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
    * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
-   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the returns the sections of the given date.
+   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
