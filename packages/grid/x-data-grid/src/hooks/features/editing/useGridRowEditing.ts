@@ -194,7 +194,6 @@ export const useGridRowEditing = (
           const columnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) =>
             apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
           );
-          );
 
           if (event.shiftKey) {
             if (params.field === columnFields[0]) {
