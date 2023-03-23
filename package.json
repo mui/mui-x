@@ -60,8 +60,8 @@
     "install:codesandbox": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn install --ignore-engines",
     "release:changelog": "node scripts/releaseChangelog.mjs",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
-    "release:build": "lerna run --parallel --scope \"@mui/*\" build",
-    "release:publish": "lerna publish from-package --dist-tag latest --contents build",
+    "release:build": "lerna run --parallel --no-private --scope \"@mui/*\" build",
+    "release:publish": "lerna publish from-package --no-private --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
     "release:tag": "node scripts/releaseTag.mjs"
   },
