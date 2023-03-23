@@ -9,6 +9,7 @@ _Mar 23, 2023_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
+- 🌍 Improve Bulgarian (bg-BG), Persian (fa-IR), Polish (pl-PL), and Dutch (nl-NL) locales
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -20,7 +21,6 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGridPro] Fix column reorder glitches (#8335) @cherniavskii
 - [l10n] Improve Bulgarian (bg-BG) locale (#8315) @todevmilen
 - [l10n] Improve Persian (fa-IR) locale (#8268) @fakhamatia
-- [l10n] Improve Polish (pl-PL) locale (#8344) @drmats
 - [l10n] improve Dutch (nl-NL) locale (#8317) @developenguin
 
 ### `@mui/x-date-pickers@v6.0.3` / `@mui/x-date-pickers-pro@v6.0.3`
@@ -35,6 +35,9 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [fields] New prop `unstableFieldRef` to imperatively interact with the selected sections (#8235) @flaviendelangle
 - [pickers] Align date calendar colors (#8318) @LukasTy
 - [pickers] Support invalid dates from the field (#8298) @flaviendelangle
+- [l10n] Improve Persian (fa-IR) locale (#8268) @fakhamatia
+- [l10n] Improve Polish (pl-PL) locale (#8344) @drmats
+- [l10n] improve Dutch (nl-NL) locale (#8317) @developenguin
 
 ### Docs
 
@@ -45,6 +48,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [docs] Give an incentive to upgrade (#8269) @oliviertassinari
 - [docs] Improve contrast on data grid navigation (#8239) @oliviertassinari
 - [docs] Update shortcuts page to use slotProps (#8288) @dcorb
+- [docs] Explain the `shouldDisableTime` migration in more depth (#8348) @LukasTy
 
 ### Core
 
