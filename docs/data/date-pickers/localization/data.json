@@ -123,7 +123,7 @@
     "languageTag": "pl-PL",
     "importName": "plPL",
     "localeName": "Polish",
-    "missingKeysCount": 16,
+    "missingKeysCount": 8,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/-/packages/x-date-pickers/src/locales/plPL.ts/"
   },
