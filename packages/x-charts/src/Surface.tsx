@@ -15,7 +15,10 @@ export interface SurfaceProps {
   children?: React.ReactNode;
 }
 
-export default function Surface(props: SurfaceProps) {
+export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Surface(
+  props: SurfaceProps,
+  ref,
+) {
   const { children, width, height, viewBox, className, ...other } = props;
   const svgView = viewBox || { width, height, x: 0, y: 0 };
 
@@ -24,6 +27,7 @@ export default function Surface(props: SurfaceProps) {
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
+      ref={ref}
       {...other}
     >
       <title>{props.title}</title>
@@ -31,4 +35,4 @@ export default function Surface(props: SurfaceProps) {
       {children}
     </svg>
   );
-}
+});

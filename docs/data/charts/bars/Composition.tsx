@@ -6,6 +6,7 @@ import { AllSeriesType } from '@mui/x-charts/models';
 import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
 import { XAxis } from '@mui/x-charts/XAxis';
 import { YAxis } from '@mui/x-charts/YAxis';
+import { Tooltip } from '@mui/x-charts/Tooltip';
 
 const series = [
   {
@@ -62,6 +63,7 @@ export default function Composition() {
         <XAxis label="Years" position="bottom" axisId="years" />
         <YAxis label="Results" position="left" axisId="eco" />
         <YAxis label="PIB" position="right" axisId="pib" />
+        <Tooltip />
       </CartesianContextProvider>
     </ChartContainer>
   );

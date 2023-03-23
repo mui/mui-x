@@ -3,7 +3,7 @@ import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { DrawingProvider } from '@mui/x-charts/context/DrawingProvider';
 import { SeriesContextProvider } from '@mui/x-charts/context/SeriesContextProvider';
 import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
-import Surface from '@mui/x-charts/Surface';
+import {Surface} from '@mui/x-charts/Surface';
 import { XAxis } from '@mui/x-charts/XAxis';
 import { YAxis } from '@mui/x-charts/YAxis';
 

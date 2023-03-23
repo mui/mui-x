@@ -6,7 +6,7 @@ import {
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { LayoutConfig } from '../models/layout';
-import Surface from '../Surface';
+import {Surface} from '../Surface';
 
 const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, number] => {
   const ref = React.useRef<HTMLDivElement>(null);

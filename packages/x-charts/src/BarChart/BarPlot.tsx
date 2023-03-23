@@ -3,10 +3,12 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { BarSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../hooks/useScale';
+import { useTooltipItemProps } from '../hooks/useTooltipItemProps';
 
 export function BarPlot() {
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
+  const getItempProps = useTooltipItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -68,6 +70,7 @@ export function BarPlot() {
                   width={barWidth}
                   fill={color}
                   rx="5px"
+                  {...getItempProps({ seriesType: 'bar', seriesId, dataIndex })}
                 />
               );
             });
