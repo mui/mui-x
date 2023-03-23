@@ -26,12 +26,12 @@ export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeat
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @deprecated Use the `slots` prop instead.
    */
   components?: Partial<GridPremiumSlotsComponent>;
   /**
-   * Overrideable components.
+   * Overridable components.
    */
   slots?: Partial<UncapitalizedGridPremiumSlotsComponent>;
 }
@@ -154,11 +154,16 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   unstable_cellSelectionModel?: GridCellSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple cells changes.
-   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   unstable_onCellSelectionModelChange?: (
     cellSelectionModel: GridCellSelectionModel,
     details: GridCallbackDetails,
   ) => void;
+  /**
+   * Callback fired when the state of the Excel export changes.
+   * @param {string} inProgress Indicates if the task is in progress.
+   */
+  onExcelExportStateChange?: (inProgress: 'pending' | 'finished') => void;
 }

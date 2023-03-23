@@ -9,10 +9,10 @@ import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
+import { FieldSection } from '../useField';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -54,7 +54,7 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
+  } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     props,
     inputRef: internalInputRef,
     valueManager,
@@ -67,6 +67,7 @@ export const useMobilePicker = <
   const Field = slots.field;
   const fieldProps: BaseSingleInputFieldProps<
     TDate | null,
+    FieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -94,7 +95,7 @@ export const useMobilePicker = <
     'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
   };
 
-  const slotsForField: BaseSingleInputFieldProps<TDate, unknown>['slots'] = {
+  const slotsForField: BaseSingleInputFieldProps<TDate, FieldSection, unknown>['slots'] = {
     textField: slots.textField,
     ...fieldProps.slots,
   };
@@ -125,19 +126,17 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="mobile">
-        <Field
-          {...fieldProps}
-          slots={slotsForField}
-          slotProps={slotProps}
-          inputRef={handleInputRef}
-        />
-        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </WrapperVariantContext.Provider>
+      <Field
+        {...fieldProps}
+        slots={slotsForField}
+        slotProps={slotProps}
+        inputRef={handleInputRef}
+      />
+      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersModalDialog>
     </LocalizationProvider>
   );
 

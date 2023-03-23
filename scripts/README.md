@@ -38,7 +38,6 @@ The following steps must be proposed as a pull request.
 - [ ] Build the packages: `yarn release:build`.
 - [ ] Release the versions on npm: `yarn release:publish` (you need your 2FA device).
 - [ ] Push the newly created tag: `yarn release:tag`.
-- [ ] If `@mui/x-codemod` has been released, set the pre-release package `tag` to `latest` with: `npm dist-tag add @mui/x-codemod@<released_version> latest`.
 
 ### Publish the documentation
 
@@ -46,12 +45,14 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 
 - [ ] Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
 
+<!-- #default-branch-switch -->
+
 ```sh
-git push upstream next:docs-next -f
+git push upstream master:docs-v6 -f
 ```
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v5)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v5` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v6)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v6` deployment.
 
 ### Publish GitHub release
 

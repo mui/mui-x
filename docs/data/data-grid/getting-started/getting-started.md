@@ -6,10 +6,6 @@
 
 Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
-:::warning
-Note we're using the `next` tag to download the latest v6 **beta** version.
-:::
-
 {{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
 The grid package has a peer dependency on `@mui/material`.
@@ -141,7 +137,7 @@ Please pay attention to the license.
 
 The component comes [in different plans](https://mui.com/pricing/):
 
-- **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+- **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://www.tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 - **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 - **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 

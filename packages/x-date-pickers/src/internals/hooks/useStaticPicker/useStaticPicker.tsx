@@ -5,9 +5,9 @@ import { DateOrTimeView } from '../../models/views';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
+import { FieldSection } from '../useField';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -37,6 +37,7 @@ export const useStaticPicker = <
     TDate | null,
     TDate,
     TView,
+    FieldSection,
     TExternalProps,
     {}
   >({
@@ -52,19 +53,22 @@ export const useStaticPicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <Layout
-          {...layoutProps}
-          {...slotProps?.layout}
-          slots={slots}
-          slotProps={slotProps}
-          sx={sx}
-          className={clsx(className, slotProps?.layout?.className)}
-          ref={ref}
-        >
-          {renderCurrentView()}
-        </Layout>
-      </WrapperVariantContext.Provider>
+      <Layout
+        {...layoutProps}
+        {...slotProps?.layout}
+        slots={slots}
+        slotProps={slotProps}
+        sx={[
+          ...(Array.isArray(sx) ? sx : [sx]),
+          ...(Array.isArray(slotProps?.layout?.sx)
+            ? slotProps!.layout!.sx
+            : [slotProps?.layout?.sx]),
+        ]}
+        className={clsx(className, slotProps?.layout?.className)}
+        ref={ref}
+      >
+        {renderCurrentView()}
+      </Layout>
     </LocalizationProvider>
   );
 

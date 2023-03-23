@@ -14,7 +14,9 @@
     "focusVisibleClassName": "This prop can help identify which element has keyboard focus. The class name will be applied when the element gains the focus through keyboard interaction. It&#39;s a polyfill for the <a href=\"https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo\">CSS :focus-visible selector</a>. The rationale for using this feature <a href=\"https://github.com/WICG/focus-visible/blob/HEAD/explainer.md\">is explained here</a>. A <a href=\"https://github.com/WICG/focus-visible\">polyfill can be used</a> to apply a <code>focus-visible</code> class to other components if needed.",
     "isEndOfHighlighting": "Set to <code>true</code> if the <code>day</code> is the end of a highlighted date range.",
     "isEndOfPreviewing": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range.",
+    "isFirstVisibleCell": "If <code>true</code>, day is the first visible cell of the month. Either the first day of the month or the first day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
     "isHighlighting": "Set to <code>true</code> if the <code>day</code> is in a highlighted date range.",
+    "isLastVisibleCell": "If <code>true</code>, day is the last visible cell of the month. Either the last day of the month or the last day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
     "isPreviewing": "Set to <code>true</code> if the <code>day</code> is in a preview date range.",
     "isStartOfHighlighting": "Set to <code>true</code> if the <code>day</code> is the start of a highlighted date range.",
     "isStartOfPreviewing": "Set to <code>true</code> if the <code>day</code> is the end of a previewing date range.",
@@ -33,7 +35,7 @@
     "rangeIntervalDayHighlight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>isHighlighting=true</code> and <code>outsideCurrentMonth=false</code>"
+      "conditions": "<code>isHighlighting=true</code>"
     },
     "rangeIntervalDayHighlightStart": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
@@ -52,17 +54,45 @@
     "rangeIntervalDayPreview": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>isPreviewing=true</code> and <code>outsideCurrentMonth=false</code>"
+      "conditions": "<code>isPreviewing=true</code>"
     },
     "rangeIntervalDayPreviewStart": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>isStartOfPreviewing=true</code> or <code>day</code> is the start of the month"
+      "conditions": "<code>isStartOfPreviewing=true</code>"
     },
     "rangeIntervalDayPreviewEnd": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "<code>isEndOfPreviewing=true</code> or <code>day</code> is the end of the month"
+      "conditions": "<code>isEndOfPreviewing=true</code>"
+    },
+    "outsideCurrentMonth": {
+      "description": "Styles applied to the root element if `outsideCurrentMonth=true`"
+    },
+    "startOfMonth": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the start of the month"
+    },
+    "endOfMonth": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the end of the month"
+    },
+    "firstVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the first visible cell of the month"
+    },
+    "lastVisibleCell": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "<code>day</code> is the last visible cell of the month"
+    },
+    "hiddenDayFiller": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "it is an empty cell used to fill the week"
     },
     "day": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the day element" },
     "dayOutsideRangeInterval": {

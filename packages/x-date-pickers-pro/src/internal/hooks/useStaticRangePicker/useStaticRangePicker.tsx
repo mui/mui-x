@@ -9,7 +9,6 @@ import {
 import {
   DateOrTimeView,
   usePicker,
-  WrapperVariantContext,
   DIALOG_WIDTH,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
@@ -19,6 +18,7 @@ import {
 } from './useStaticRangePicker.types';
 import { DateRange } from '../../models/range';
 import { useRangePosition } from '../useRangePosition';
+import { RangeFieldSection } from '../../models/fields';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -48,6 +48,7 @@ export const useStaticRangePicker = <
     DateRange<TDate>,
     TDate,
     TView,
+    RangeFieldSection,
     TExternalProps,
     {}
   >({
@@ -74,19 +75,22 @@ export const useStaticRangePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <Layout
-          {...layoutProps}
-          {...slotProps?.layout}
-          slots={slots}
-          slotProps={slotPropsForLayout}
-          sx={sx}
-          className={clsx(className, slotProps?.layout?.className)}
-          ref={ref}
-        >
-          {renderCurrentView()}
-        </Layout>
-      </WrapperVariantContext.Provider>
+      <Layout
+        {...layoutProps}
+        {...slotProps?.layout}
+        slots={slots}
+        slotProps={slotPropsForLayout}
+        sx={[
+          ...(Array.isArray(sx) ? sx : [sx]),
+          ...(Array.isArray(slotProps?.layout?.sx)
+            ? slotProps!.layout!.sx
+            : [slotProps?.layout?.sx]),
+        ]}
+        className={clsx(className, slotProps?.layout?.className)}
+        ref={ref}
+      >
+        {renderCurrentView()}
+      </Layout>
     </LocalizationProvider>
   );
 

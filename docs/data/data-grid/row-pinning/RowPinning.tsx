@@ -42,12 +42,7 @@ const pinnedRows: GridPinnedRowsProp = {
 export default function RowPinning() {
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <DataGridPro
-        columns={columns}
-        rows={rows}
-        pinnedRows={pinnedRows}
-        experimentalFeatures={{ rowPinning: true }}
-      />
+      <DataGridPro columns={columns} rows={rows} pinnedRows={pinnedRows} />
     </div>
   );
 }

@@ -21,7 +21,7 @@ export type UncapitalizeObjectKeys<T extends object> = {
 
 export interface SlotsAndSlotProps<TSlots extends object, TSlotProps> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -33,7 +33,7 @@ export interface SlotsAndSlotProps<TSlots extends object, TSlotProps> {
    */
   componentsProps?: TSlotProps;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<TSlots>;

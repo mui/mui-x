@@ -27,7 +27,7 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The component can be uncontrolled or controlled.
 
 {{"demo": "DatePickerValue.js"}}
 
@@ -93,13 +93,6 @@ You can force a specific orientation using the `orientation` prop:
 You can show a helper text with the date format accepted:
 
 {{"demo": "HelperText.js"}}
-
-## Custom input component
-
-You can customize the rendering of the input with the `TextField` component slot.
-Make sure to spread `inputProps` correctly to the custom input component.
-
-{{"demo": "CustomInput.js"}}
 
 ## Validation
 

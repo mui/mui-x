@@ -6,14 +6,17 @@
 
 The most commonly encountered conformance guidelines for accessibility are:
 
-- [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) - Globally accepted standard
-- [ADA](https://www.ada.gov/) - US Department of Justice
-- [Section 508](https://www.section508.gov/) - US federal agencies
+- Globally accepted standard: [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/)
+- US:
+  - [ADA](https://www.ada.gov/) - US Department of Justice
+  - [Section 508](https://www.section508.gov/) - US federal agencies
+- Europe: [EAA](https://ec.europa.eu/social/main.jsp?catId=1202) (European Accessibility Act)
 
-WCAG 2.0 has three levels of conformance: A, AA, and AAA.
-Level AA matches the ADA and Section 508 guidelines, so this is the most common target for organizations to aim for.
+WCAG 2.1 has three levels of conformance: A, AA, and AAA.
+Level AA meet the most commonly encountered conformance guidelines.
+This is the most common target for organizations so what MUI aims to support very well.
 
-The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a grid.
+The [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) provide valuable information on how to optimize the accessibility of a data grid.
 
 ## Density
 

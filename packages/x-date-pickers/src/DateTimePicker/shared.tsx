@@ -70,10 +70,10 @@ export interface BaseDateTimePickerProps<TDate>
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
   /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true on desktop, false on mobile
    */
-  ampm?: boolean;
+  ampmInClock?: boolean;
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
@@ -83,7 +83,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   maxDateTime?: TDate;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -95,7 +95,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseDateTimePickerSlotsComponent<TDate>>;
@@ -129,7 +129,6 @@ type UseDateTimePickerDefaultizedProps<
     | 'views'
     | 'openTo'
     | 'orientation'
-    | 'ampmInClock'
     | 'ampm'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
@@ -176,7 +175,6 @@ export function useDateTimePickerDefaultizedProps<
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
-    ampmInClock: themeProps.ampmInClock ?? true,
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??
@@ -204,7 +202,6 @@ export function useDateTimePickerDefaultizedProps<
       ...slotProps,
       toolbar: {
         ampm,
-        ampmInClock: themeProps.ampmInClock,
         ...slotProps?.toolbar,
       },
     },

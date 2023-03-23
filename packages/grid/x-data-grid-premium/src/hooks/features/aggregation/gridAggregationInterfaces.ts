@@ -36,6 +36,8 @@ export interface GridAggregationGetCellValueParams {
 
 /**
  * Grid aggregation function definition interface.
+ * @demos
+ *   - [Aggregation functions](/x/react-data-grid/aggregation/#aggregation-functions)
  */
 export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
   /**

@@ -47,6 +47,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Verwijderen',
   filterPanelLogicOperator: 'Logische operator',
   filterPanelOperator: 'Operatoren',
@@ -143,12 +144,12 @@ const nlNLGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Rijen hersorteren',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregatie',
+  aggregationFunctionLabelSum: 'som',
+  aggregationFunctionLabelAvg: 'gem',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'grootte',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

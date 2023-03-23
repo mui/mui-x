@@ -27,7 +27,7 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The component can be uncontrolled or controlled.
 
 {{"demo": "DateRangePickerValue.js"}}
 
@@ -78,13 +78,6 @@ This prop will be ignored on the mobile picker.
 To simplify range selection, you can add [shortcuts](/x/react-date-pickers/shortcuts/#range-shortcuts).
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Custom input component
-
-You can customize the rendering of the input with the `TextField` component slot.
-Make sure to spread `inputProps` correctly to the custom input component.
-
-{{"demo": "CustomInputs.js"}}
 
 ## Validation
 
