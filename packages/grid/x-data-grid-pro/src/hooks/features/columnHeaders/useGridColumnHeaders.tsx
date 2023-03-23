@@ -32,14 +32,17 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity(props);
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
+  // TODO: Remove `false ?? ` before merging
+  const disableHeaderFiltering = false ?? !rootProps.experimentalFeatures?.headerFiltering;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
   const totalHeaderHeight =
-    getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) + rootProps.columnHeaderHeight;
+    getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
+    (disableHeaderFiltering ? 0 : rootProps.columnHeaderHeight);
 
   const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
 
   const getColumnFilters = (params?: GetHeadersParams, other = {}) => {
-    if (rootProps.disableHeaderFiltering) {
+    if (disableHeaderFiltering) {
       return null;
     }
 
@@ -91,7 +94,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   return {
     ...otherProps,
     getColumnFilters,
-    getRootProps: rootProps.disableHeaderFiltering
+    getRootProps: disableHeaderFiltering
       ? getRootProps
       : (other = {}) => ({ style: rootStyle, ...other }),
   };

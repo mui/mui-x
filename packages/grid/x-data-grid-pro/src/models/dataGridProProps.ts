@@ -30,6 +30,10 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
+  /**
+   * Enables the data grid filtering on header feature.
+   */
+  headerFiltering: boolean;
 }
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
@@ -115,11 +119,6 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   disableChildrenSorting: boolean;
-  /**
-   * If `true`, the header filtering is disabled.
-   * @default false
-   */
-  disableHeaderFiltering: boolean;
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
