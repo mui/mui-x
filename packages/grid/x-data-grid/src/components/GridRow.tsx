@@ -317,7 +317,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       if (editCellState != null && column.renderEditCell) {
         const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
 
-        const { changeReason, ...editCellStateRest } = editCellState;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
         const params: GridRenderEditCellParams = {
           ...cellParams,
