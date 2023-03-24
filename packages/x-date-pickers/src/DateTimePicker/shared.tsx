@@ -142,7 +142,6 @@ export function useDateTimePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
-  isDesktop?: boolean,
 ): Omit<UseDateTimePickerDefaultizedProps<TDate, Props>, 'components' | 'componentsProps'> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -168,7 +167,7 @@ export function useDateTimePickerDefaultizedProps<
 
   const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
-  const shouldRenderDigital = isDesktop && (24 * 60) / timeStep <= renderAsDigitalThreshold;
+  const shouldRenderDigital = (24 * 60) / timeStep <= renderAsDigitalThreshold;
   return {
     ...themeProps,
     ...applyDefaultViewProps({

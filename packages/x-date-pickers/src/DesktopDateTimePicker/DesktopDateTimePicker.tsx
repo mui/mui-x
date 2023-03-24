@@ -27,7 +27,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DesktopDateTimePickerProps<TDate>
-  >(inProps, 'MuiDesktopDateTimePicker', true);
+  >(inProps, 'MuiDesktopDateTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,

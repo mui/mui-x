@@ -93,7 +93,6 @@ type UseTimePickerDefaultizedProps<
 export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
   props: Props,
   name: string,
-  isDesktop?: boolean,
 ): UseTimePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const themeProps = useThemeProps({
@@ -118,7 +117,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
 
   const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
-  const shouldRenderDigital = isDesktop && (24 * 60) / timeStep <= renderAsDigitalThreshold;
+  const shouldRenderDigital = (24 * 60) / timeStep <= renderAsDigitalThreshold;
   return {
     ...themeProps,
     ampm,
