@@ -52,7 +52,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
     return rep;
   }, [USED_X_AXIS_ID, series]);
 
-  if (!dataIndex) {
+  if (dataIndex == null) {
     return null;
   }
 
