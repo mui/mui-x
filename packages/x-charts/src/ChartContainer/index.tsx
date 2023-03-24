@@ -11,6 +11,7 @@ import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
+import { Highlight } from '../Highlight';
 
 export type ChartContainerProps = LayoutConfig &
   SeriesContextProviderProps &
@@ -27,6 +28,7 @@ export function ChartContainer(props: ChartContainerProps) {
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <InteractionProvider interactionApiRef={interactionApiRef}>
             <Surface width={width} height={height} ref={ref} interactionApiRef={interactionApiRef}>
+              <Highlight />
               {children}
             </Surface>
           </InteractionProvider>

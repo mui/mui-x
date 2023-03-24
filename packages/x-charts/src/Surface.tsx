@@ -107,8 +107,10 @@ const useAxisEvents = (interactionApiRef: React.RefObject<any>) => {
       x: event.nativeEvent.offsetX,
       y: event.nativeEvent.offsetY,
     };
+
     const newStateX = getUpdateX(event.nativeEvent.offsetX);
     const newStateY = getUpdateY(event.nativeEvent.offsetY);
+
     dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
   };
   return { handleMouseOut, handleMouseMove };

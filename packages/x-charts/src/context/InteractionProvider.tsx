@@ -75,19 +75,8 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
       return { ...prevState, item: null };
 
     case 'updateAxis':
-      if (
-        (prevState.axis.x === null && action.data.x !== null) ||
-        (prevState.axis.x !== null && action.data.x === null) ||
-        (prevState.axis.y === null && action.data.y !== null) ||
-        (prevState.axis.y !== null && action.data.y === null) ||
-        prevState.axis.y?.index !== action.data.y?.index ||
-        prevState.axis.y?.value !== action.data.y?.value ||
-        prevState.axis.x?.index !== action.data.x?.index ||
-        prevState.axis.x?.value !== action.data.x?.value
-      ) {
-        return { ...prevState, axis: action.data };
-      }
-      return prevState;
+      return { ...prevState, axis: action.data };
+
     default:
       return prevState;
   }
