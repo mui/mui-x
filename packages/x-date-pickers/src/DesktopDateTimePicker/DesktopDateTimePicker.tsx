@@ -28,15 +28,21 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     TDate,
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
+  const renderAsDigitalThreshold = defaultizedProps.renderAsDigitalThreshold ?? 24;
+  const timeStep = defaultizedProps.timeStep ?? 5;
+  const shouldRenderDigital = (24 * 60) / timeStep <= renderAsDigitalThreshold;
+
+  const renderTimeView = shouldRenderDigital
+    ? renderTimeViewDigitalClock
+    : renderDesktopTimeViewClock;
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
-    hours: renderDesktopTimeViewClock,
-    minutes: renderDesktopTimeViewClock,
-    seconds: renderDesktopTimeViewClock,
-    digital: renderTimeViewDigitalClock,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
   const ampmInClock = defaultizedProps.ampmInClock ?? true;

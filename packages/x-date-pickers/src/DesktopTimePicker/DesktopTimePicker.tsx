@@ -28,11 +28,18 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     'MuiDesktopTimePicker',
   );
 
+  const renderAsDigitalThreshold = defaultizedProps.renderAsDigitalThreshold ?? 24;
+  const timeStep = defaultizedProps.timeStep ?? 5;
+  const shouldRenderDigital = (24 * 60) / timeStep <= renderAsDigitalThreshold;
+
+  const renderTimeView = shouldRenderDigital
+    ? renderTimeViewDigitalClock
+    : renderDesktopTimeViewClock;
+
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
-    hours: renderDesktopTimeViewClock,
-    minutes: renderDesktopTimeViewClock,
-    seconds: renderDesktopTimeViewClock,
-    digital: renderTimeViewDigitalClock,
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
 

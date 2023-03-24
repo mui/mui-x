@@ -10,10 +10,11 @@ import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
-import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
+import { useViews } from '../internals/hooks/useViews';
+import { TimeView } from '../internals/models';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -88,10 +89,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     openTo,
     onViewChange,
     focusedView,
+    onFocusedViewChange,
     className,
     disabled,
     readOnly,
-    views,
+    views = ['hours'],
     ...other
   } = props;
 
@@ -105,12 +107,29 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     default: defaultValue ?? null,
   });
 
-  const handleValueChange = useEventCallback(
-    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
-      setValue(newValue);
-      onChange?.(newValue, selectionState);
-    },
-  );
+  const handleValueChange = useEventCallback((newValue: TDate | null) => {
+    setValue(newValue);
+    onChange?.(newValue, 'finish');
+  });
+
+  const { setView, setValueAndGoToNextView } = useViews<TDate | null, TimeView>({
+    view: inView,
+    views,
+    openTo,
+    onViewChange,
+    onChange: handleValueChange,
+    focusedView,
+    onFocusedViewChange,
+  });
+
+  const handleItemSelect = useEventCallback((newValue: TDate | null) => {
+    // setting view to the last one before setting new value so that the picker would close after selection (if needed)
+    setView(views[views.length - 1]);
+    // delay until next tick to ensure the view update has been synced (if needed)
+    setTimeout(() => {
+      setValueAndGoToNextView(newValue, 'finish');
+    });
+  });
 
   React.useEffect(() => {
     if (containerRef.current === null) {
@@ -175,12 +194,13 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           return false;
         }
 
-        if (shouldDisableClock?.(utils.toJsDate(valueToCheck).getTime(), 'digital')) {
+        // what do we specify here as the view?
+        if (shouldDisableClock?.(utils.toJsDate(valueToCheck).getTime(), 'hours')) {
           return false;
         }
 
         if (shouldDisableTime) {
-          return !shouldDisableTime(valueToCheck, 'digital');
+          return !shouldDisableTime(valueToCheck, 'hours');
         }
 
         return true;
@@ -225,7 +245,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           <DigitalClockItem
             aria-readonly={readOnly}
             key={utils.toISO(option)}
-            onClick={() => !readOnly && handleValueChange(option, 'finish')}
+            onClick={() => !readOnly && handleItemSelect(option)}
             selected={utils.isEqual(option, value)}
             disabled={disabled || isTimeDisabled(option)}
             disableRipple={readOnly}

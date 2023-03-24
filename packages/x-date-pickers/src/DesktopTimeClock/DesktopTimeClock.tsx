@@ -14,7 +14,7 @@ import {
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { TimeView, ClockTimeView } from '../internals/models';
+import { TimeView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDesktopTimeClockUtilityClass } from './desktopTimeClockClasses';
 import { DesktopTimeClockSection } from './DesktopTimeClockSection';
@@ -101,7 +101,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     },
   );
 
-  const { view, setValueAndGoToNextView, setView } = useViews<TDate | null, ClockTimeView>({
+  const { view, setValueAndGoToNextView, setView } = useViews<TDate | null, TimeView>({
     view: inView,
     views,
     openTo,
@@ -230,7 +230,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
   );
 
   const buildViewProps = React.useCallback(
-    (viewToBuild: ClockTimeView): DesktopTimeClockSectionViewProps<number> => {
+    (viewToBuild: TimeView): DesktopTimeClockSectionViewProps<number> => {
       switch (viewToBuild) {
         case 'hours': {
           const handleHoursChange = (hours: number | MeridiemEnum) => {
@@ -333,7 +333,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
   const viewTimeOptions = React.useMemo(() => {
     return views.reduce((result, currentView) => {
       return { ...result, [currentView]: buildViewProps(currentView) };
-    }, {} as Record<ClockTimeView, DesktopTimeClockSectionViewProps<number>>);
+    }, {} as Record<TimeView, DesktopTimeClockSectionViewProps<number>>);
   }, [views, buildViewProps]);
 
   const meridiemOptions = React.useMemo<DesktopTimeClockSectionViewProps<MeridiemEnum>>(

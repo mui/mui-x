@@ -23,12 +23,12 @@ const viewToTab = (view: DateOrTimeView): TabValue => {
   return 'time';
 };
 
-const tabToView = (tab: TabValue, availableViews: readonly DateOrTimeView[]): DateOrTimeView => {
+const tabToView = (tab: TabValue): DateOrTimeView => {
   if (tab === 'date') {
     return 'day';
   }
 
-  return availableViews.includes('hours') ? 'hours' : 'digital';
+  return 'hours';
 };
 
 export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
@@ -89,7 +89,6 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     onViewChange,
     timeIcon = <Time />,
     view,
-    views,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
   } = props;
 
@@ -97,7 +96,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
   const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
-    onViewChange(tabToView(value, views));
+    onViewChange(tabToView(value));
   };
 
   if (hidden) {

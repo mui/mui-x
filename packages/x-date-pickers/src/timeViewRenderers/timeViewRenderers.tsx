@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
-import { ClockTimeView, TimeView } from '../internals';
+import { TimeView } from '../internals';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
 import { DesktopTimeClock, DesktopTimeClockProps } from '../DesktopTimeClock';
@@ -116,7 +116,7 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
     onViewChange={onViewChange}
     focusedView={focusedView}
     onFocusedViewChange={onFocusedViewChange}
-    views={views.filter((v) => v === 'digital')}
+    views={views}
     value={value}
     defaultValue={defaultValue}
     onChange={onChange}
@@ -171,7 +171,7 @@ export const renderDesktopTimeViewClock = <TDate extends unknown>({
   sx,
   autoFocus,
   disableIgnoringDatePartForTimeValidation,
-}: TimeViewRendererProps<ClockTimeView, DesktopTimeClockProps<TDate>>) => (
+}: TimeViewRendererProps<TimeView, DesktopTimeClockProps<TDate>>) => (
   <DesktopTimeClock<TDate>
     view={view}
     onViewChange={onViewChange}
