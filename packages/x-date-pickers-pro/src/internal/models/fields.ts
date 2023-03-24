@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import { BaseFieldProps, FieldSection } from '@mui/x-date-pickers/internals';
+import { BaseFieldProps } from '@mui/x-date-pickers/internals';
+import { FieldSection } from '@mui/x-date-pickers/models';
 
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';

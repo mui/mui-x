@@ -1,14 +1,7 @@
 import { Validator } from './useValidation';
-import {
-  validateDate,
-  DateValidationError,
-  DateComponentValidationProps,
-} from './useDateValidation';
-import {
-  validateTime,
-  TimeValidationError,
-  TimeComponentValidationProps,
-} from './useTimeValidation';
+import { validateDate, DateComponentValidationProps } from './useDateValidation';
+import { validateTime, TimeComponentValidationProps } from './useTimeValidation';
+import { DateTimeValidationError } from '../../../models';
 
 export interface DateTimeComponentValidationProps<TDate>
   extends DateComponentValidationProps<TDate>,
@@ -36,5 +29,3 @@ export const validateDateTime: Validator<
     props,
   });
 };
-
-export type DateTimeValidationError = DateValidationError | TimeValidationError;

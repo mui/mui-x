@@ -7,9 +7,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import {
   BaseFieldProps,
-  DateOrTimeView,
   onSpaceOrEnter,
   useLocaleText,
   UsePickerResponse,

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  DateOrTimeView,
   BasePickerProps,
   UsePickerParams,
   ExportedBaseToolbarProps,
@@ -11,6 +10,7 @@ import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
 import { RangeFieldSection } from '../../models/fields';

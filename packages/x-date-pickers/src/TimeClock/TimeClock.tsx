@@ -14,7 +14,7 @@ import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internal
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { TimeView } from '../internals/models';
+import { TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getTimeClockUtilityClass } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';

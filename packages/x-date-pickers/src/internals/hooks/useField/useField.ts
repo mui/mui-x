@@ -6,7 +6,6 @@ import { useTheme } from '@mui/material/styles';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
-  FieldSection,
   UseFieldParams,
   UseFieldResponse,
   UseFieldForwardedProps,
@@ -17,6 +16,7 @@ import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './u
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
+import { FieldSection } from '../../../models';
 
 export const useField = <
   TValue,
@@ -39,6 +39,7 @@ export const useField = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionsValueBoundaries,
+    placeholder,
   } = useFieldState(params);
 
   const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
@@ -459,7 +460,7 @@ export const useField = <
   }));
 
   return {
-    placeholder: state.placeholder,
+    placeholder,
     autoComplete: 'off',
     ...otherForwardedProps,
     value: shouldShowPlaceholder ? '' : valueStr,

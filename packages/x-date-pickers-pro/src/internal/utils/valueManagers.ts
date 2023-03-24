@@ -2,7 +2,6 @@ import {
   PickerValueManager,
   replaceInvalidDateByNull,
   FieldValueManager,
-  splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
   areDatesEqual,
@@ -58,24 +57,24 @@ export const rangeFieldValueManager: FieldValueManager<
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, localeText, prevSections, [start, end], format) => {
-    const prevDateRangeSections =
-      prevSections == null
+  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
+    const separatedFallbackSections =
+      fallbackSections == null
         ? { startDate: null, endDate: null }
-        : splitDateRangeSections(prevSections);
+        : splitDateRangeSections(fallbackSections);
 
     const getSections = (
       newDate: any | null,
-      prevDateSections: RangeFieldSection[] | null,
+      fallbackDateSections: RangeFieldSection[] | null,
       position: RangePosition,
     ) => {
-      const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!prevDateSections;
+      const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!fallbackDateSections;
 
       if (shouldReUsePrevDateSections) {
-        return prevDateSections;
+        return fallbackDateSections;
       }
 
-      const sections = splitFormatIntoSections(utils, localeText, format, newDate);
+      const sections = getSectionsFromDate(newDate);
       return sections.map((section, sectionIndex) => {
         if (sectionIndex === sections.length - 1 && position === 'start') {
           return {
@@ -93,8 +92,8 @@ export const rangeFieldValueManager: FieldValueManager<
     };
 
     return addPositionPropertiesToSections<RangeFieldSection>([
-      ...getSections(start, prevDateRangeSections.startDate, 'start'),
-      ...getSections(end, prevDateRangeSections.endDate, 'end'),
+      ...getSections(start, separatedFallbackSections.startDate, 'start'),
+      ...getSections(end, separatedFallbackSections.endDate, 'end'),
     ]);
   },
   getValueStrFromSections: (sections) => {

@@ -1,5 +1,4 @@
 import {
-  DateOrTimeView,
   UsePickerParams,
   BasePickerProps,
   PickersModalDialogSlotsComponent,
@@ -11,6 +10,7 @@ import {
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
