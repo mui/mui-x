@@ -3,6 +3,113 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.3
+
+_Mar 23, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Bulgarian (bg-BG), Persian (fa-IR), Polish (pl-PL), and Dutch (nl-NL) locales
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.0.3` / `@mui/x-data-grid-pro@v6.0.3` / `@mui/x-data-grid-premium@v6.0.3`
+
+#### Changes
+
+- [DataGrid] Fix overflow calculation issue in column group headers (#8246) @MBilalShafi
+- [DataGridPro] Fix column reorder glitches (#8335) @cherniavskii
+- [l10n] Improve Bulgarian (bg-BG) locale (#8315) @todevmilen
+- [l10n] Improve Persian (fa-IR) locale (#8268) @fakhamatia
+- [l10n] improve Dutch (nl-NL) locale (#8317) @developenguin
+
+### `@mui/x-date-pickers@v6.0.3` / `@mui/x-date-pickers-pro@v6.0.3`
+
+#### Changes
+
+- [fields] Allow to reset the value from the outside (#8287) @flaviendelangle
+- [fields] Cleanup section order generation (#8290) @flaviendelangle
+- [fields] Fix Safari input selection resetting regression (#8295) @LukasTy
+- [fields] Fix editing when all sections are selected (#8330) @flaviendelangle
+- [fields] Fix iOS browser scroll jumping when entering data (#8328) @LukasTy
+- [fields] New prop `unstableFieldRef` to imperatively interact with the selected sections (#8235) @flaviendelangle
+- [pickers] Align date calendar colors (#8318) @LukasTy
+- [pickers] Support invalid dates from the field (#8298) @flaviendelangle
+- [l10n] Improve Persian (fa-IR) locale (#8268) @fakhamatia
+- [l10n] Improve Polish (pl-PL) locale (#8344) @drmats
+- [l10n] improve Dutch (nl-NL) locale (#8317) @developenguin
+
+### Docs
+
+- [docs] Create examples of pickers with custom fields (#8034) @flaviendelangle
+- [docs] Fix 301 redirections @oliviertassinari
+- [docs] Fix link to React's docs @oliviertassinari
+- [docs] Fix pro license links to point to the same page (#8303) @LukasTy
+- [docs] Give an incentive to upgrade (#8269) @oliviertassinari
+- [docs] Improve contrast on data grid navigation (#8239) @oliviertassinari
+- [docs] Update shortcuts page to use slotProps (#8288) @dcorb
+- [docs] Explain the `shouldDisableTime` migration in more depth (#8348) @LukasTy
+
+### Core
+
+- [core] Remove unused `visx` chart package (#8259) @LukasTy
+- [core] Upgrade monorepo (#8331) @cherniavskii
+- [charts] Project setup (#8308) @alexfauquette
+- [test] Track visual regressions of column menu and filter/column panels (#8095) @cherniavskii
+
+## 6.0.2
+
+_Mar 16, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Fire `onChange` when filling a partial date (#8082) @flaviendelangle
+- 🎁 Support date format like `1st` (`do`) (#8188) @flaviendelangle
+- 🌍 Add Hebrew (he-IL) locale (#8222) @ylarom
+- 🌍 Improve Brazilian Portuguese (pt-BR), German (de-DE), and French (fr-FR) locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.2` / `@mui/x-data-grid-pro@v6.0.2` / `@mui/x-data-grid-premium@v6.0.2`
+
+#### Changes
+
+- [DataGrid] Fix <kbd>Space</kbd> triggering edit mode (#8180) @m4theushw
+- [DataGrid] Remove warning when adding a custom column type (#8227) @m4theushw
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#8198) @JoaoSerafim3001
+
+### `@mui/x-date-pickers@v6.0.2` / `@mui/x-date-pickers-pro@v6.0.2`
+
+#### Changes
+
+- [l10n] Add Hebrew (he-IL) locale (#8222) @ylarom
+- [l10n] Improve German (de-DE) locale (#8204) @sebkasanzew
+- [l10n] Improve French (fr-FR) locale (#8229) @marvinroger
+- [DateRangePicker] Allow overriding `slotProps.textField` (#8201) @LukasTy
+- [fields] Fire `onChange` when filling a partial date (#8082) @flaviendelangle
+- [fields] Fix editing in shadow dom (#8254) @flaviendelangle
+- [fields] Remove the duplicated warning about invalid adapter (#8187) @flaviendelangle
+- [fields] Support date format like `1st` (`do`) (#8188) @flaviendelangle
+- [pickers] Fix to avoid selecting sections on mobile picker field (#8228) @LukasTy
+- [pickers] Inherit previous and next icons size from their parent button (#8218) @flaviendelangle
+
+### Docs
+
+- [docs] Add a warning in the migration guide for people re-enabling the clock on desktop (#8184) @flaviendelangle
+- [docs] Add a warning for `luxon` macro tokens (#8245) @flaviendelangle
+- [docs] Complete pickers customization pages (#8066) @alexfauquette
+- [docs] Fix 301 redirection @oliviertassinari
+- [docs] Fix 404 links to customization Material UI APIs (#8200) @oliviertassinari
+- [docs] Fix `moment-hijri` demo (#8255) @LukasTy
+- [docs] Improve migration diff (#8240) @oliviertassinari
+- [docs] Change **What's new** page url to point to announcement blog post (#8186) @joserodolfofreitas
+- [docs] Resolve 301 in changelog @oliviertassinari
+
+### Core
+
+- [core] Regen api docs (#8220) @flaviendelangle
+- [core] Remove duplicated `/` (#8223) @alexfauquette
+
 ## 6.0.1
 
 _Mar 9, 2023_
@@ -45,11 +152,9 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 _Mar 3, 2023_
 
-We're happy to announce the first v6 stable release! 🎉🚀
+We're excited to [announce the first v6 stable release](https://mui.com/blog/mui-x-v6/)! 🎉🚀
 
 This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
-Head over to the [what's new](https://mui.com/x/whats-new/) page to check the highlighted new features.
-
 Migration guides are available with a complete list of the breaking changes:
 
 - [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/)
@@ -66,6 +171,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   -  experimentalFeatures={{ rowPinning: true }}
    />
   ```
+
 - ⚡️ Improved grid performance by rows and cells memoization (#7846) @m4theushw
 - ✨ Fields have a distinct visual state when empty (#8069) @LukasTy
 - 🌍 Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
@@ -503,14 +609,14 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   ```
 
 - The `error` and `onError` props were removed - the grid no longer catches errors during rendering.
-  To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
+  To catch errors that happen during rendering use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary).
 
 - The `components.ErrorOverlay` slot was removed.
 
 - The `GridErrorOverlay` component was removed.
 
 - The `componentError` event was removed.
-  Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
+  Use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) to catch errors thrown during rendering.
 
 - The `apiRef.current.showError` method was removed.
   The UI for errors is no longer handled by the grid.
