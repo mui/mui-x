@@ -27,16 +27,16 @@ const daDKGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive filtre` : `${count} aktivt filter`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
+  toolbarQuickFilterPlaceholder: 'Søg…',
+  toolbarQuickFilterLabel: 'Søg',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
-  // toolbarExport: 'Export',
+  toolbarExport: 'Eksport',
   toolbarExportLabel: 'Eksporter',
   toolbarExportCSV: 'Download som CSV',
   toolbarExportPrint: 'Print',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Download som Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find kolonne',
@@ -47,7 +47,7 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Fjern alle',
   filterPanelDeleteIconLabel: 'Slet',
   filterPanelLogicOperator: 'Logisk operator',
   filterPanelOperator: 'Operatorer',
@@ -80,7 +80,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Vis Kolonner',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filtre',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Fjern sortering',
@@ -139,15 +139,15 @@ const daDKGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Kollaps',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Omarrangering af rækker',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'gns',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'størrelse',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);
