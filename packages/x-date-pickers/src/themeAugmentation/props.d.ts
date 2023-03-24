@@ -20,7 +20,7 @@ import {
   ExportedCalendarHeaderProps,
   ExportedPickersToolbarTextProps,
 } from '../internals';
-import { DateOrTimeView } from '../internals/models';
+import { DateOrTimeView } from '../models';
 
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';

@@ -1,4 +1,3 @@
-import { DateOrTimeView } from '../../models/views';
 import {
   UsePickerValueParams,
   UsePickerValueProps,
@@ -12,7 +11,7 @@ import {
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
-import { FieldSection } from '../useField';
+import { FieldSection, DateOrTimeView } from '../../../models';
 
 /**
  * Props common to all picker headless implementations.

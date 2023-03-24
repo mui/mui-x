@@ -6,7 +6,6 @@ import {
   UseTimeFieldProps,
 } from '@mui/x-date-pickers/TimeField';
 import {
-  TimeValidationError,
   useLocalizationContext,
   useUtils,
   useValidation,
@@ -14,6 +13,7 @@ import {
   FieldChangeHandlerContext,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
+import { TimeValidationError } from '@mui/x-date-pickers/models';
 import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import {

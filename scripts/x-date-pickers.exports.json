@@ -23,6 +23,7 @@
   { "name": "DateCalendarSlotsComponentsProps", "kind": "Interface" },
   { "name": "DateField", "kind": "Variable" },
   { "name": "DateFieldProps", "kind": "Interface" },
+  { "name": "DateOrTimeView", "kind": "TypeAlias" },
   { "name": "DatePicker", "kind": "Variable" },
   { "name": "DatePickerProps", "kind": "Interface" },
   { "name": "DatePickerSlotsComponents", "kind": "Interface" },

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
-import { TimeView } from '../internals';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
 import { DesktopTimeClock, DesktopTimeClockProps } from '../DesktopTimeClock';
+import { TimeView } from '../models';
 
 const isTimePickerView = (view: TimeView): boolean =>
   view === 'hours' || view === 'minutes' || view === 'seconds';

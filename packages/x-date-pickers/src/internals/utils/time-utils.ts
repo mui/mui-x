@@ -1,4 +1,5 @@
-import { DateOrTimeView, MuiPickersAdapter } from '../models';
+import { MuiPickersAdapter } from '../models';
+import { DateOrTimeView } from '../../models';
 
 export const isTimeView = (view: DateOrTimeView) => ['hours', 'minutes', 'seconds'].includes(view);
 

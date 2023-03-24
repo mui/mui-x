@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldSection, UseFieldInternalProps } from '../internals/hooks/useField';
-import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
+import { DateTimeValidationError, FieldSection } from '../models';
+import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,

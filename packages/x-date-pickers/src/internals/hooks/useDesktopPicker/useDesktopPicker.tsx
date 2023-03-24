@@ -5,15 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import { DateOrTimeView } from '../../models/views';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
-import { FieldSection } from '../useField';
+import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
 
 /**
  * Hook managing all the single-date desktop pickers:

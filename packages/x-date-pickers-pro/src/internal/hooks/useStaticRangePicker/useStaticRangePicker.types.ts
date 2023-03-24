@@ -4,13 +4,13 @@ import {
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
 import {
-  DateOrTimeView,
   BasePickerProps,
   UsePickerParams,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
 import { RangeFieldSection } from '../../models/fields';
