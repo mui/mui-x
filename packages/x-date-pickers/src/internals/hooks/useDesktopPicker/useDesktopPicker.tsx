@@ -112,6 +112,7 @@ export const useDesktopPicker = <
       format,
       label,
       autoFocus: autoFocus && !props.open,
+      focused: open ? true : undefined,
     },
     ownerState: props,
   });
