@@ -63,9 +63,10 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldProps extends {
   endTextFieldProps,
   endInputRef,
   unstableEndFieldRef,
-}: UseMultiInputDateTimeRangeFieldParams<TDate, TTextFieldProps>): UseMultiInputRangeFieldResponse<
-  TTextFieldProps & UseDateTimeFieldProps<TDate>
-> => {
+}: UseMultiInputDateTimeRangeFieldParams<
+  TDate,
+  TTextFieldProps
+>): UseMultiInputRangeFieldResponse<TTextFieldProps> => {
   const sharedProps = useDefaultizedDateTimeRangeFieldProps<TDate, UseDateTimeFieldProps<TDate>>(
     inSharedProps,
   );

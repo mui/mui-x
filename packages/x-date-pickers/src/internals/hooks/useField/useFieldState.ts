@@ -79,7 +79,7 @@ export const useFieldState = <
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
         splitFormatIntoSections(utils, localeText, format, date),
       ),
-    [fieldValueManager, format, localeText, utils, isRTL],
+    [fieldValueManager, format, localeText, isRTL, utils],
   );
 
   const placeholder = React.useMemo(

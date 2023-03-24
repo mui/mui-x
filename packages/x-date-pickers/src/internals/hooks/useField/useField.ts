@@ -192,43 +192,52 @@ export const useField = <
       return;
     }
 
-    const prevValueStr = cleanString(
-      fieldValueManager.getValueStrFromSections(state.sections, isRTL),
-    );
+    let keyPressed: string;
+    if (
+      selectedSectionIndexes.startIndex === 0 &&
+      selectedSectionIndexes.endIndex === state.sections.length - 1
+    ) {
+      keyPressed = cleanValueStr;
+    } else {
+      const prevValueStr = cleanString(
+        fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+      );
 
-    let startOfDiffIndex = -1;
-    let endOfDiffIndex = -1;
-    for (let i = 0; i < prevValueStr.length; i += 1) {
-      if (startOfDiffIndex === -1 && prevValueStr[i] !== cleanValueStr[i]) {
-        startOfDiffIndex = i;
+      let startOfDiffIndex = -1;
+      let endOfDiffIndex = -1;
+      for (let i = 0; i < prevValueStr.length; i += 1) {
+        if (startOfDiffIndex === -1 && prevValueStr[i] !== cleanValueStr[i]) {
+          startOfDiffIndex = i;
+        }
+
+        if (
+          endOfDiffIndex === -1 &&
+          prevValueStr[prevValueStr.length - i - 1] !== cleanValueStr[cleanValueStr.length - i - 1]
+        ) {
+          endOfDiffIndex = i;
+        }
       }
 
-      if (
-        endOfDiffIndex === -1 &&
-        prevValueStr[prevValueStr.length - i - 1] !== cleanValueStr[cleanValueStr.length - i - 1]
-      ) {
-        endOfDiffIndex = i;
+      const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+      const hasDiffOutsideOfActiveSection =
+        startOfDiffIndex < activeSection.start ||
+        prevValueStr.length - endOfDiffIndex - 1 > activeSection.end;
+
+      if (hasDiffOutsideOfActiveSection) {
+        // TODO: Support if the new date is valid
+        return;
       }
+
+      // The active section being selected, the browser has replaced its value with the key pressed by the user.
+      const activeSectionEndRelativeToNewValue =
+        cleanValueStr.length -
+        prevValueStr.length +
+        activeSection.end -
+        cleanString(activeSection.endSeparator || '').length;
+
+      keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
     }
-
-    const activeSection = state.sections[selectedSectionIndexes.startIndex];
-
-    const hasDiffOutsideOfActiveSection =
-      startOfDiffIndex < activeSection.start ||
-      prevValueStr.length - endOfDiffIndex - 1 > activeSection.end;
-
-    if (hasDiffOutsideOfActiveSection) {
-      // TODO: Support if the new date is valid
-      return;
-    }
-
-    // The active section being selected, the browser has replaced its value with the key pressed by the user.
-    const activeSectionEndRelativeToNewValue =
-      cleanValueStr.length -
-      prevValueStr.length +
-      activeSection.end -
-      cleanString(activeSection.endSeparator || '').length;
-    const keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
       setTempAndroidValueStr(valueStr);
@@ -367,7 +376,11 @@ export const useField = <
       selectionStart !== inputRef.current!.selectionStart ||
       selectionEnd !== inputRef.current!.selectionEnd
     ) {
+      // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
+      const currentScrollTop = inputRef.current!.scrollTop;
       inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      // Even reading this variable seems to do the trick, but also setting it just to make use of it
+      inputRef.current!.scrollTop = currentScrollTop;
     }
   });
 

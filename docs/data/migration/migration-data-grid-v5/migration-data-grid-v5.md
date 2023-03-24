@@ -89,13 +89,13 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
-- The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- The `components.Header` slot was removed. Use `components.Toolbar` or `slots.toolbar` slot instead.
 - ✅ The `disableExtendRowFullWidth` prop was removed. Use [`showCellVerticalBorder`](/x/api/data-grid/data-grid/#props) or [`showColumnVerticalBorder`](/x/api/data-grid/data-grid/#props) prop to show or hide right border for cells and header cells respectively.
 - The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
-- ✅ The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
+- ✅ The `onCellFocusOut` prop was removed. Use `slotProps.cell.onBlur` instead:
   ```tsx
   <DataGrid
-    componentsProps={{
+    slotProps={{
       cell: {
         onBlur: (event) => {
           const cellElement = event.currentTarget;
@@ -183,7 +183,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   ```
 - The `componentError` event was removed. Use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) to catch errors thrown during rendering.
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
-- The `cellFocusIn` and `cellFocusOut` events are internal now. Use `componentsProps.cell.onFocus` and `componentsProps.cell.onBlur` props instead.
+- The `cellFocusIn` and `cellFocusOut` events are internal now. Use `slotProps.cell.onFocus` and `slotProps.cell.onBlur` props instead.
 
 :::info
 To know more about the supported events and their signatures, check the [events catalog](https://mui.com/x/react-data-grid/events/#catalog-of-events) page.
@@ -266,7 +266,7 @@ To know more about the supported events and their signatures, check the [events 
 Most of this breaking change is handled by `preset-safe` codemod but some further fixes may be needed:
 
 - If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better API.
-- If you are using Custom Column Menu using `components.ColumnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
+- If you are using Custom Column Menu using `components.ColumnMenu` or `slots.columnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
   :::
 
 ### Rows
