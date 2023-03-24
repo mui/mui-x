@@ -33,7 +33,7 @@ export function ScatterPlot() {
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
-        const { id, xAxisKey, yAxisKey, markerSize, data } = series[seriesId];
+        const { id, xAxisKey, yAxisKey, markerSize } = series[seriesId];
 
         const xScale = xAxis[xAxisKey ?? DEFAULT_X_AXIS_KEY].scale;
         const yScale = yAxis[yAxisKey ?? DEFAULT_Y_AXIS_KEY].scale;
@@ -43,7 +43,7 @@ export function ScatterPlot() {
             xScale={xScale}
             yScale={yScale}
             markerSize={markerSize ?? 2}
-            data={data}
+            series={series[seriesId]}
           />
         );
       })}

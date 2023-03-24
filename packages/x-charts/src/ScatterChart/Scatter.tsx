@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { D3Scale } from '../hooks/useScale';
+import { useTooltipItemProps } from '../hooks/useTooltipItemProps';
 
 export interface ScatterProps {
-  data: ScatterSeriesType['data'];
+  series: ScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
   markerSize: number;
 }
 
 export function Scatter(props: ScatterProps) {
-  const { data, xScale, yScale, markerSize } = props;
+  const { series, xScale, yScale, markerSize } = props;
+  const getItempProps = useTooltipItemProps();
 
   return (
     <g>
-      {data.map(({ x, y, id }) => (
+      {series.data.map(({ x, y, id }, dataIndex) => (
         <circle
           key={id}
           cx={0}
@@ -22,6 +24,7 @@ export function Scatter(props: ScatterProps) {
           r={markerSize}
           transform={`translate(${xScale(x as number)}, ${yScale(y as number)})`}
           fill="red"
+          {...getItempProps({ seriesType: 'scatter', seriesId: series.id, dataIndex })}
         />
       ))}
     </g>

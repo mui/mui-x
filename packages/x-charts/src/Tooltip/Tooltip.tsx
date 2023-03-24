@@ -7,6 +7,8 @@ import { SVGContext } from '../context/DrawingProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../hooks/useScale';
 
+const format = (data) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
+
 function ItemTooltipContent(props: ItemTooltipData) {
   const { seriesId, seriesType, dataIndex } = props;
 
@@ -16,7 +18,7 @@ function ItemTooltipContent(props: ItemTooltipData) {
 
   return (
     <p>
-      {seriesId}: {data}
+      {seriesId}: {format(data)}
     </p>
   );
 }
@@ -43,7 +45,7 @@ function AxisTooltipContent(props: AxisTooltipData) {
     <div>
       {seriesConcerned.map(({ type, id }) => (
         <p key={id}>
-          {id}: {series[type].series[id].data[dataIndex]}
+          {id}: {format(series[type].series[id].data[dataIndex])}
         </p>
       ))}
     </div>
