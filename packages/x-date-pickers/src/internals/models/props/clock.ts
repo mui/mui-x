@@ -1,7 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../../hooks/validation/models';
 import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue';
-import { TimeView } from '../views';
+import { TimeView } from '../../../models';
 import type { ExportedTimeClockProps } from '../../../TimeClock/TimeClock.types';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';

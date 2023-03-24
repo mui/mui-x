@@ -14,12 +14,12 @@ import {
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { TimeView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDesktopTimeClockUtilityClass } from './desktopTimeClockClasses';
 import { DesktopTimeClockSection } from './DesktopTimeClockSection';
 import { DesktopTimeClockProps, DesktopTimeClockSectionViewProps } from './DesktopTimeClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './desktopTimeClock.utils';
+import { TimeView } from '../models';
 
 const useUtilityClasses = (ownerState: DesktopTimeClockProps<any>) => {
   const { classes } = ownerState;
