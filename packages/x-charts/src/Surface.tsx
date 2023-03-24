@@ -3,6 +3,7 @@ import { isBandScale } from './hooks/useScale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './constants';
 import { CartesianContext } from './context/CartesianContextProvider';
 import { InteractionContext } from './context/InteractionProvider';
+import { DrawingContext } from './context/DrawingProvider';
 
 export interface SurfaceProps {
   width: number;
@@ -20,7 +21,7 @@ export interface SurfaceProps {
   children?: React.ReactNode;
 }
 
-const useAxisEvents = (interactionApiRef: React.RefObject<any>) => {
+const useAxisEvents = (interactionApiRef: React.RefObject<any>, { width, height, top, left }) => {
   const { xAxis, yAxis } = React.useContext(CartesianContext);
   const { dispatch } = React.useContext(InteractionContext);
 
@@ -107,7 +108,12 @@ const useAxisEvents = (interactionApiRef: React.RefObject<any>) => {
       x: event.nativeEvent.offsetX,
       y: event.nativeEvent.offsetY,
     };
-
+    const outsideX = event.nativeEvent.offsetX < left || event.nativeEvent.offsetX > left + width;
+    const outsideY = event.nativeEvent.offsetY < top || event.nativeEvent.offsetY > top + height;
+    if (outsideX || outsideY) {
+      dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+      return;
+    }
     const newStateX = getUpdateX(event.nativeEvent.offsetX);
     const newStateY = getUpdateY(event.nativeEvent.offsetY);
 
@@ -121,9 +127,10 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
   ref,
 ) {
   const { children, width, height, viewBox, interactionApiRef, className, ...other } = props;
-  const svgView = viewBox || { width, height, x: 0, y: 0 };
+  const drawingArea = React.useContext(DrawingContext);
+  const svgView = { width, height, x: 0, y: 0, ...viewBox };
 
-  const { handleMouseOut, handleMouseMove } = useAxisEvents(interactionApiRef);
+  const { handleMouseOut, handleMouseMove } = useAxisEvents(interactionApiRef, drawingArea);
 
   return (
     <svg

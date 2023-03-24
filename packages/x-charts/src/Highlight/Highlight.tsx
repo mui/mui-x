@@ -22,7 +22,10 @@ export function Highlight() {
     interactionApi?.listenYAxis(USED_Y_AXIS_ID);
   }, [USED_X_AXIS_ID, USED_Y_AXIS_ID, interactionApi]);
 
-  if (axis.x !== null && isBandScale(xScale)) {
+  if (isBandScale(xScale)) {
+    if (axis.x === null) {
+      return null;
+    }
     const x0 = xScale(axis.x.value)!;
     const w = xScale.bandwidth();
     const y0 = yScale(yScale.domain()[0]);
