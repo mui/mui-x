@@ -7,13 +7,13 @@ import {
   PickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import {
-  DateOrTimeView,
   usePicker,
   PickersModalDialog,
   InferError,
   ExportedBaseToolbarProps,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
 import {
   MobileRangePickerAdditionalViewProps,

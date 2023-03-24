@@ -1,4 +1,4 @@
-import { DateOrTimeView } from '../views';
+import { DateOrTimeView } from '../../../models';
 
 export interface BaseTabsProps<TView extends DateOrTimeView> {
   /**

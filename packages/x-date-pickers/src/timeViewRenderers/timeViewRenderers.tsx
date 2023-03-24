@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TimeClock, TimeClockProps, TimeView } from '../TimeClock';
-import { DateOrTimeView } from '../internals';
+import { TimeClock, TimeClockProps } from '../TimeClock';
+import { DateOrTimeView, TimeView } from '../models';
 
 const isTimePickerView = (view: unknown): view is TimeView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
