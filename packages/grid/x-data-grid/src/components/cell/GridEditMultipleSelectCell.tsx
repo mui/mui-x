@@ -68,7 +68,7 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
     error,
     helperText,
     size,
-    variant = 'standard',
+    variant,
     field,
     row,
     rowNode,
@@ -235,15 +235,13 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
           {...params}
           InputLabelProps={{
             ...params.InputLabelProps,
-            shrink: true,
           }}
           inputRef={focusElementRef}
-          type="multipleSelect"
           {...TextFieldProps}
           {...rootProps.slotProps?.baseTextField}
         />
       )}
-      size="small"
+      fullWidth
       open={open}
       onOpen={handleOpen}
       onClose={handleClose}
