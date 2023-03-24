@@ -10,7 +10,7 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { SVGContext } from '../context/DrawingProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
-const format = (data) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
+const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
 
 function ItemTooltipContent(props: ItemInteractionData) {
   const { seriesId, type, dataIndex } = props;
@@ -39,8 +39,11 @@ function AxisTooltipContent(props: AxisInteractionData) {
   const seriesConcerned = React.useMemo(() => {
     const rep: { type: string; id: string }[] = [];
 
+    // @ts-ignore
     Object.keys(series).forEach((seriesType) => {
-      series[seriesType].seriesOrder.forEach((seriesId) => {
+      // @ts-ignore
+      series[seriesType].seriesOrder.forEach((seriesId: string) => {
+        // @ts-ignore
         if (series[seriesType].series[seriesId].xAxisKey === USED_X_AXIS_ID) {
           rep.push({ type: seriesType, id: seriesId });
         }
@@ -48,10 +51,16 @@ function AxisTooltipContent(props: AxisInteractionData) {
     });
     return rep;
   }, [USED_X_AXIS_ID, series]);
+
+  if (!dataIndex) {
+    return null;
+  }
+
   return (
     <div>
       {seriesConcerned.map(({ type, id }) => (
         <p key={id}>
+          {/* @ts-ignore */}
           {id}: {format(series[type].series[id].data[dataIndex])}
         </p>
       ))}
@@ -59,7 +68,9 @@ function AxisTooltipContent(props: AxisInteractionData) {
   );
 }
 
-export function Tooltip(props) {
+export type TooltipProps = { trigger?: 'item' | 'axis' };
+
+export function Tooltip(props: TooltipProps) {
   const { trigger = 'axis' } = props;
 
   const { item, axis, interactionApi } = React.useContext(InteractionContext);

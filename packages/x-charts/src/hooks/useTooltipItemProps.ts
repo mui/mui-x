@@ -8,10 +8,10 @@ export const useTooltipItemProps = () => {
   const { dispatch } = React.useContext(InteractionContext);
 
   const getItemProps = (data: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier) => {
-    const onMouseEnter = (event) => {
+    const onMouseEnter = (event: React.MouseEvent) => {
       dispatch({
         type: 'enterItem',
-        data: { ...data, target: event?.target },
+        data: { ...data, target: event?.target as SVGElement },
       });
     };
     const onMouseLeave = () => {

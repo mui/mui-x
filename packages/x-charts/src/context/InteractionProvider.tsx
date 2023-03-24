@@ -64,8 +64,9 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
 
     case 'leaveItem':
       if (
-        Object.keys(action.data).some(
-          (key) => key !== 'target' && action.data[key] !== prevState[key],
+        prevState.item === null ||
+        (Object.keys(action.data) as (keyof ItemInteractionData)[]).some(
+          (key) => action.data[key] !== prevState.item![key],
         )
       ) {
         // The item is already something else
