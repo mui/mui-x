@@ -788,11 +788,22 @@ export const mergeDateIntoReferenceDate = <TDate>(
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
-export const clampDaySection = <TDate, TSection extends FieldSection>(
+export const clampDaySectionIfPossible = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   sections: TSection[],
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
 ) => {
+  // We can only clamp the day value if:
+  // 1. if all the sections are filled (except the week day section which can be empty)
+  // 2. there is a day section
+  const canClamp =
+    sections.every((section) => section.type === 'weekDay' || section.value !== '') &&
+    sections.some((section) => section.type === 'day');
+
+  if (!canClamp) {
+    return null;
+  }
+
   // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
   const sectionsForStartOfMonth = sections.map((section) => {
     if (section.type !== 'day') {

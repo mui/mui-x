@@ -56,7 +56,6 @@ export {
   useField,
   createDateStrForInputFromSections,
   addPositionPropertiesToSections,
-  splitFormatIntoSections,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,

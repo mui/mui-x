@@ -2,7 +2,6 @@ import * as React from 'react';
 import { FieldSectionType, MuiPickersAdapter } from '../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
-import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface UseFieldParams<
   TValue,
@@ -270,18 +269,16 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @param {PickersLocaleText<TDate>} localeText The localization object to generate the placeholders.
-   * @param {TSection[] | null} sections The sections to use as a fallback if a date is null or invalid.
    * @param {TValue} value The current value to generate sections from.
-   * @param {string} format The date format.
+   * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
-    localeText: PickersLocaleText<TDate>,
-    sections: TSection[] | null,
     value: TValue,
-    format: string,
+    fallbackSections: TSection[] | null,
+    getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
   ) => TSection[];
   /**
    * Creates the string value to render in the input based on the current section list.
@@ -357,10 +354,6 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
    */
   referenceValue: TValue;
-  /**
-   * A localized format string built from sections.
-   */
-  placeholder: string;
   sections: TSection[];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.

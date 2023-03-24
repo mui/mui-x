@@ -39,6 +39,7 @@ export const useField = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionsValueBoundaries,
+    placeholder,
   } = useFieldState(params);
 
   const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
@@ -459,7 +460,7 @@ export const useField = <
   }));
 
   return {
-    placeholder: state.placeholder,
+    placeholder,
     autoComplete: 'off',
     ...otherForwardedProps,
     value: shouldShowPlaceholder ? '' : valueStr,
