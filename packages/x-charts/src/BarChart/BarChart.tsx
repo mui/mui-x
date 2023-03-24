@@ -2,19 +2,11 @@ import * as React from 'react';
 import { BarPlot } from './BarPlot';
 import { XAxis } from '../XAxis/XAxis';
 import { YAxis } from '../YAxis/YAxis';
-import { SeriesContextProviderProps } from '../context/SeriesContextProvider';
-import { CartesianContextProviderProps } from '../context/CartesianContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { LayoutConfig } from '../models/layout';
-import { ChartContainer } from '../ChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Tooltip } from '../Tooltip';
 
-export function BarChart(
-  props: Omit<
-    LayoutConfig & SeriesContextProviderProps & CartesianContextProviderProps,
-    'children'
-  >,
-) {
+export function BarChart(props: Omit<ChartContainerProps, 'children'>) {
   const { xAxis, yAxis, series, width, height, margin } = props;
 
   return (

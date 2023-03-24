@@ -12,7 +12,7 @@ import {
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
 
-type ChartContainerProps = LayoutConfig &
+export type ChartContainerProps = LayoutConfig &
   SeriesContextProviderProps &
   CartesianContextProviderProps;
 
