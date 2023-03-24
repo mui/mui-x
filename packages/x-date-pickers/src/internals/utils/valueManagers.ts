@@ -42,11 +42,11 @@ export const singleItemFieldValueManager: FieldValueManager<
     return addPositionPropertiesToSections(getSectionsFromDate(date));
   },
   getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
-  getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
-    activeDate: state.value,
-    referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => ({
+    date: state.value,
+    referenceDate: state.referenceValue,
+    getSections: (sections) => sections,
+    getNewValuesFromNewActiveDate: (newActiveDate) => ({
       value: newActiveDate,
       referenceValue:
         newActiveDate == null || !utils.isValid(newActiveDate)
