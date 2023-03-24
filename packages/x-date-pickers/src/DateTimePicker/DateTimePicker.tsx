@@ -284,6 +284,11 @@ DateTimePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
+   * Number of possible time options at which the single column time renderer is used.
+   * @default 24
+   */
+  renderTimeInASingleColumnThreshold: PropTypes.number,
+  /**
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -375,6 +380,11 @@ DateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Number representing the increment of precision at which to display minutes and seconds in digital view.
+   * @default 5
+   */
+  timeStep: PropTypes.number,
   /**
    * The selected value.
    * Used when the component is controlled.
