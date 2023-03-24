@@ -218,13 +218,15 @@ export const useGridColumnReorder = (
 
         const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
         const hasMovedLeft =
-          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT && theme.direction === 'rtl'
+          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT &&
+          (theme.direction === 'rtl'
             ? dragColIndex < targetColIndex
-            : targetColIndex < dragColIndex;
+            : targetColIndex < dragColIndex);
         const hasMovedRight =
-          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && theme.direction === 'rtl'
+          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT &&
+          (theme.direction === 'rtl'
             ? targetColIndex < dragColIndex
-            : dragColIndex < targetColIndex;
+            : dragColIndex < targetColIndex);
 
         if (hasMovedLeft || hasMovedRight) {
           let canBeReordered: boolean;

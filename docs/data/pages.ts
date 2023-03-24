@@ -1,5 +1,10 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
+const isPreview =
+  process.env.NODE_ENV === 'development' ||
+  process.env.CONTEXT === 'deploy-preview' ||
+  process.env.CONTEXT === 'branch-deploy';
+
 const pages: MuiPage[] = [
   {
     pathname: '/blog/mui-x-v6/',
@@ -428,6 +433,27 @@ const pages: MuiPage[] = [
       },
     ],
   },
+  ...(isPreview
+    ? [
+        {
+          pathname: '/x/react-charts-group',
+          title: 'Charts 🚧',
+          icon: 'ChartIcon',
+          children: [
+            { pathname: '/x/react-charts', title: '🚧 Overview' },
+            { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
+            { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
+            { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
+            { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
+            { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
+            { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
+            { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
+            { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
+            { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
+          ],
+        },
+      ]
+    : []),
 ];
 
 export default pages;
