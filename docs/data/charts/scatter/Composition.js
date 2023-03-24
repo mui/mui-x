@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
-import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
 import { XAxis } from '@mui/x-charts/XAxis';
 import { YAxis } from '@mui/x-charts/YAxis';
 
@@ -40,22 +39,19 @@ export default function Composition() {
       ]}
       width={500}
       height={500}
+      yAxis={[
+        {
+          id: 'leftAxis',
+          max: 4,
+          scaleName: 'sqrt',
+        },
+      ]}
     >
-      <CartesianContextProvider
-        yAxis={[
-          {
-            id: 'leftAxis',
-            max: 4,
-            scaleName: 'sqrt',
-          },
-        ]}
-      >
-        <ScatterPlot />
-        <XAxis label="Bottom X axis" position="bottom" />
-        <XAxis label="Top X axis" position="top" />
-        <YAxis label="Left Y axis" position="left" axisId="leftAxis" />
-        <YAxis label="Right Y axis" position="right" />
-      </CartesianContextProvider>
+      <ScatterPlot />
+      <XAxis label="Bottom X axis" position="bottom" />
+      <XAxis label="Top X axis" position="top" />
+      <YAxis label="Left Y axis" position="left" axisId="leftAxis" />
+      <YAxis label="Right Y axis" position="right" />
     </ChartContainer>
   );
 }
