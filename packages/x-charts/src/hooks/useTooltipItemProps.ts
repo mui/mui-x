@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { TooltipContext } from '../context/TooltipProvider';
+import { InteractionContext } from '../context/InteractionProvider';
+import { BarItemIdentifier } from '../models/seriesType/bar';
+import { LineItemIdentifier } from '../models/seriesType/line';
+import { ScatterItemIdentifier } from '../models/seriesType/scatter';
 
 export const useTooltipItemProps = () => {
-  const { trigger, dispatch } = React.useContext(TooltipContext);
+  const { dispatch } = React.useContext(InteractionContext);
 
-  if (trigger === 'axis') {
-    //  The tooltip is based on axis, no need to listen element events
-    return () => {};
-  }
-
-  const getItemProps = ({ seriesType, seriesId, dataIndex }) => {
+  const getItemProps = (data: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier) => {
     const onMouseEnter = (event) => {
-      dispatch({ type: 'enter', data: { seriesType, seriesId, dataIndex, target: event.target } });
+      dispatch({
+        type: 'enterItem',
+        data: { ...data, target: event?.target },
+      });
     };
     const onMouseLeave = () => {
-      dispatch({ type: 'leave', data: { seriesType, seriesId, dataIndex } });
+      dispatch({ type: 'enterItem', data });
     };
     return {
       onMouseEnter,

@@ -3,7 +3,6 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { AllSeriesType } from '@mui/x-charts/models';
-import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
 import { XAxis } from '@mui/x-charts/XAxis';
 import { YAxis } from '@mui/x-charts/YAxis';
 
@@ -37,8 +36,7 @@ const series = [
 
 export default function Combining() {
   return (
-    <ChartContainer series={series} width={500} height={500}>
-      <CartesianContextProvider
+    <ChartContainer series={series} width={500} height={500}
         xAxis={[
           {
             id: 'years',
@@ -62,7 +60,6 @@ export default function Combining() {
         <XAxis label="Years" position="bottom" axisId="years" />
         <YAxis label="Results" position="left" axisId="eco" />
         <YAxis label="PIB" position="right" axisId="pib" />
-      </CartesianContextProvider>
     </ChartContainer>
   );
 }

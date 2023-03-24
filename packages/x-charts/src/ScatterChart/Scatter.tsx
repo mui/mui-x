@@ -12,7 +12,7 @@ export interface ScatterProps {
 
 export function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, markerSize } = props;
-  const getItempProps = useTooltipItemProps();
+  const getItemProps = useTooltipItemProps();
 
   return (
     <g>
@@ -24,7 +24,7 @@ export function Scatter(props: ScatterProps) {
           r={markerSize}
           transform={`translate(${xScale(x as number)}, ${yScale(y as number)})`}
           fill="red"
-          {...getItempProps({ seriesType: 'scatter', seriesId: series.id, dataIndex })}
+          {...getItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
         />
       ))}
     </g>

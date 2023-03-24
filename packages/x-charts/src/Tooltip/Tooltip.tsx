@@ -1,29 +1,36 @@
 import * as React from 'react';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
-import { AxisTooltipData, ItemTooltipData, TooltipContext } from '../context/TooltipProvider';
+import {
+  AxisInteractionData,
+  InteractionContext,
+  ItemInteractionData,
+} from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { SVGContext } from '../context/DrawingProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { isBandScale } from '../hooks/useScale';
 
 const format = (data) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
 
-function ItemTooltipContent(props: ItemTooltipData) {
-  const { seriesId, seriesType, dataIndex } = props;
+function ItemTooltipContent(props: ItemInteractionData) {
+  const { seriesId, type, dataIndex } = props;
 
-  const series = React.useContext(SeriesContext)[seriesType].series[seriesId];
+  const series = React.useContext(SeriesContext)[type]!.series[seriesId];
+
+  if (dataIndex === undefined) {
+    return null;
+  }
 
   const data = series.data[dataIndex];
-
   return (
     <p>
       {seriesId}: {format(data)}
     </p>
   );
 }
-function AxisTooltipContent(props: AxisTooltipData) {
-  const { dataIndex } = props;
+function AxisTooltipContent(props: AxisInteractionData) {
+  const dataIndex = props.x && props.x.index;
+
   const { xAxisIds } = React.useContext(CartesianContext);
   const series = React.useContext(SeriesContext);
 
@@ -52,77 +59,34 @@ function AxisTooltipContent(props: AxisTooltipData) {
   );
 }
 
-export function Tooltip() {
-  const { trigger, data } = React.useContext(TooltipContext);
-  const { xAxis, xAxisIds } = React.useContext(CartesianContext);
+export function Tooltip(props) {
+  const { trigger = 'axis' } = props;
+
+  const { item, axis, interactionApi } = React.useContext(InteractionContext);
+  const { xAxisIds } = React.useContext(CartesianContext);
 
   const svgRef = React.useContext(SVGContext);
-
-  const [dataIndex, setDataIndex] = React.useState<number | null>(null);
-
-  // Use a ref to avoid rerendering on every mousemove event.
-  const mousePosition = React.useRef({
-    x: -1,
-    y: -1,
+  React.useEffect(() => {
+    if (trigger === 'axis') {
+      interactionApi?.listenXAxis(xAxisIds[0]);
+    }
   });
 
-  const USED_X_AXIS_ID = xAxisIds[0];
-
-  React.useEffect(() => {
-    const chart = svgRef.current;
-    if (trigger === 'item' || chart === null) {
-      return () => {};
-    }
-
-    const { scale, data: axisData } = xAxis[USED_X_AXIS_ID];
-    const invert = !isBandScale(scale)
-      ? scale.invert
-      : (x: number) => Math.floor((x - scale.range()[0]) / scale.step());
-
-    const handleMouseOut = () => {
-      mousePosition.current = {
-        x: -1,
-        y: -1,
-      };
-    };
-
-    const handleMouseMove = (event) => {
-      mousePosition.current = {
-        x: event.offsetX,
-        y: event.offsetY,
-      };
-
-      const newDataIndex = invert(event.offsetX);
-      if (newDataIndex < 0 || newDataIndex >= (axisData?.length ?? 0)) {
-        setDataIndex(null);
-      } else {
-        setDataIndex(newDataIndex);
-      }
-    };
-
-    chart.addEventListener('mousemove', handleMouseMove);
-    chart.addEventListener('mouseout', handleMouseOut);
-
-    return () => {
-      chart.removeEventListener('mousemove', handleMouseMove);
-      chart.removeEventListener('mouseout', handleMouseOut);
-    };
-  }, [USED_X_AXIS_ID, svgRef, trigger, xAxis]);
-
-  const popperOpen = data !== null || dataIndex !== null;
+  const displayedData = trigger === 'item' ? item : axis;
+  const popperOpen = displayedData !== null;
 
   return (
     <Popper
       open={popperOpen}
       placement="right-start"
-      anchorEl={(data && data.target) || svgRef.current}
+      anchorEl={(displayedData && (displayedData as any).target) || svgRef.current}
       style={{ padding: '16px', pointerEvents: 'none', top: 0, left: 0, width: 200, height: 500 }}
     >
       <Paper>
         {trigger === 'item' ? (
-          <ItemTooltipContent {...data} />
+          <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
         ) : (
-          <AxisTooltipContent dataIndex={dataIndex} />
+          <AxisTooltipContent {...(displayedData as AxisInteractionData)} />
         )}
       </Paper>
     </Popper>

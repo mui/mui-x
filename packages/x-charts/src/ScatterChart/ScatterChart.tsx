@@ -21,7 +21,7 @@ export function ScatterChart(
   const { xAxis, yAxis, series, width, height, margin } = props;
 
   return (
-    <ChartContainer series={series} width={width} height={height} margin={margin} trigger="item">
+    <ChartContainer series={series} width={width} height={height} margin={margin}>
       <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
         <ScatterPlot />
         <XAxis

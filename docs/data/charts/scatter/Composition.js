@@ -1,24 +1,9 @@
 import * as React from 'react';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { DrawingProvider } from '@mui/x-charts/context/DrawingProvider';
-import { SeriesContextProvider } from '@mui/x-charts/context/SeriesContextProvider';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
-import {Surface} from '@mui/x-charts/Surface';
 import { XAxis } from '@mui/x-charts/XAxis';
 import { YAxis } from '@mui/x-charts/YAxis';
-
-// Components that could be exported
-function ChartContainer({ width, height, series, margin, children }) {
-  return (
-    <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={series}>
-        <Surface width={width} height={height}>
-          {children}
-        </Surface>
-      </SeriesContextProvider>
-    </DrawingProvider>
-  );
-}
 
 export default function Composition() {
   return (
