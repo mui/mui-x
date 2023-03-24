@@ -87,6 +87,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     view: inView,
     openTo,
     onViewChange,
+    focusedView,
     className,
     disabled,
     readOnly,
@@ -119,7 +120,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (!selectedItem) {
       return;
     }
-    if (autoFocus) {
+    if (autoFocus || !!focusedView) {
       // make sure the selected item is focused (possibly instead of the wrapper - MenuList)
       selectedItem.focus();
     }
@@ -138,7 +139,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     }
 
     containerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
-  }, [autoFocus, ref]);
+  }, [autoFocus, focusedView, ref]);
 
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
@@ -219,7 +220,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <DigitalClockList autoFocus={autoFocus}>
+      <DigitalClockList autoFocus={autoFocus || !!focusedView}>
         {timeOptions.map((option) => (
           <DigitalClockItem
             aria-readonly={readOnly}

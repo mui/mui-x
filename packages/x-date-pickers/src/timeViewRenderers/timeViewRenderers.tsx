@@ -10,7 +10,7 @@ const isTimePickerView = (view: TimeView): boolean =>
 
 export type TimeViewRendererProps<
   TView extends unknown,
-  TComponentProps extends BaseClockProps<any, TView>,
+  TComponentProps extends BaseClockProps<any>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;
   onViewChange?: (view: TView) => void;
@@ -20,6 +20,8 @@ export type TimeViewRendererProps<
 export const renderTimeViewClock = <TDate extends unknown>({
   view,
   onViewChange,
+  focusedView,
+  onFocusedViewChange,
   views,
   value,
   defaultValue,
@@ -49,6 +51,8 @@ export const renderTimeViewClock = <TDate extends unknown>({
   <TimeClock<TDate>
     view={view}
     onViewChange={onViewChange}
+    focusedView={focusedView}
+    onFocusedViewChange={onFocusedViewChange}
     views={views.filter(isTimePickerView)}
     value={value}
     defaultValue={defaultValue}
@@ -80,6 +84,8 @@ export const renderTimeViewClock = <TDate extends unknown>({
 export const renderTimeViewDigitalClock = <TDate extends unknown>({
   view,
   onViewChange,
+  focusedView,
+  onFocusedViewChange,
   views,
   value,
   defaultValue,
@@ -101,12 +107,15 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
   readOnly,
   disabled,
   sx,
+  autoFocus,
   disableIgnoringDatePartForTimeValidation,
   timeStep,
 }: TimeViewRendererProps<TimeView, DigitalClockProps<TDate>>) => (
   <DigitalClock<TDate>
     view={view}
     onViewChange={onViewChange}
+    focusedView={focusedView}
+    onFocusedViewChange={onFocusedViewChange}
     views={views.filter((v) => v === 'digital')}
     value={value}
     defaultValue={defaultValue}
@@ -128,7 +137,7 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
     readOnly={readOnly}
     disabled={disabled}
     sx={sx}
-    autoFocus
+    autoFocus={autoFocus}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
     timeStep={timeStep}
   />
@@ -137,6 +146,8 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
 export const renderDesktopTimeViewClock = <TDate extends unknown>({
   view,
   onViewChange,
+  focusedView,
+  onFocusedViewChange,
   views,
   value,
   defaultValue,
@@ -164,6 +175,8 @@ export const renderDesktopTimeViewClock = <TDate extends unknown>({
   <DesktopTimeClock<TDate>
     view={view}
     onViewChange={onViewChange}
+    focusedView={focusedView}
+    onFocusedViewChange={onFocusedViewChange}
     views={views.filter(isTimePickerView)}
     value={value}
     defaultValue={defaultValue}

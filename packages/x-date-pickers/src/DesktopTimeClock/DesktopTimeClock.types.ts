@@ -1,7 +1,6 @@
 import { DesktopTimeClockClasses } from './desktopTimeClockClasses';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
-import { ClockTimeView } from '../internals/models';
 import { DesktopTimeClockSectionProps } from './DesktopTimeClockSection';
 
 export interface DesktopTimeClockSectionOption<TValue> {
@@ -28,7 +27,7 @@ export interface DesktopTimeClockSlotsComponentsProps {}
 
 export interface DesktopTimeClockProps<TDate>
   extends ExportedDesktopTimeClockProps<TDate>,
-    BaseClockProps<TDate, ClockTimeView> {
+    BaseClockProps<TDate> {
   /**
    * Override or extend the styles applied to the component.
    */

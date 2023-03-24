@@ -79,6 +79,8 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     views = ['hours', 'minutes'],
     openTo,
     onViewChange,
+    focusedView,
+    onFocusedViewChange,
     className,
     disabled,
     readOnly,
@@ -105,6 +107,8 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     openTo,
     onViewChange,
     onChange: handleValueChange,
+    focusedView,
+    onFocusedViewChange,
   });
 
   const selectedTimeOrMidnight = React.useMemo(
@@ -237,6 +241,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             // ensure that the current view is the one we are changing
             // this allows to keep selecting the same view multiple times
             setView('hours');
+            onFocusedViewChange?.('minutes', true);
             // delay until next tick to ensure the view update has been synced (if needed)
             setTimeout(() => {
               setValueAndGoToNextView(
@@ -264,6 +269,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
               return;
             }
             setView('minutes');
+            onFocusedViewChange?.('seconds', true);
             setTimeout(() => {
               setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
             }, 0);
@@ -314,9 +320,10 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       ampm,
       utils,
       meridiemMode,
+      setView,
+      onFocusedViewChange,
       setValueAndGoToNextView,
       selectedTimeOrMidnight,
-      setView,
       disabled,
       isTimeDisabled,
       timeStep,
@@ -356,7 +363,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
           items={viewOptions.items}
           onChange={viewOptions.onChange}
           active={view === timeView}
-          autoFocus={autoFocus}
+          autoFocus={autoFocus ?? focusedView === view}
           disabled={disabled}
           readOnly={readOnly}
         />

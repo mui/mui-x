@@ -4,6 +4,7 @@ import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue';
 import { TimeView } from '../views';
 import type { ExportedTimeClockProps } from '../../../TimeClock/TimeClock.types';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
+import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 
 export interface ExportedBaseClockProps<TDate>
   extends TimeValidationProps<TDate>,
@@ -15,16 +16,12 @@ export interface ExportedBaseClockProps<TDate>
   ampm?: boolean;
 }
 
-export interface BaseClockProps<TDate, TView extends unknown = TimeView> {
+export interface BaseClockProps<TDate> extends ExportedUseViewsOptions<TimeView> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /**
-   * If `true`, the view is focused during the first mount.
-   */
-  autoFocus?: boolean;
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -42,25 +39,6 @@ export interface BaseClockProps<TDate, TView extends unknown = TimeView> {
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    */
   onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
-  /**
-   * Controlled open view.
-   */
-  view?: TView;
-  /**
-   * Views displaying digital clock time sections.
-   * @default ['hours', 'minutes']
-   */
-  views?: readonly TView[];
-  /**
-   * Callback fired on view change.
-   * @param {TView} view The new view.
-   */
-  onViewChange?: (view: TView) => void;
-  /**
-   * Initially open view.
-   * @default 'hours'
-   */
-  openTo?: TView;
   /**
    * If `true`, the picker and text field are disabled.
    * @default false

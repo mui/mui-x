@@ -98,6 +98,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     views = ['hours', 'minutes'],
     openTo,
     onViewChange,
+    focusedView,
+    onFocusedViewChange,
     className,
     disabled,
     readOnly,
@@ -124,6 +126,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     openTo,
     onViewChange,
     onChange: handleValueChange,
+    focusedView,
+    onFocusedViewChange,
   });
 
   const selectedTimeOrMidnight = React.useMemo(
@@ -344,7 +348,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       {...other}
     >
       <Clock<TDate>
-        autoFocus={autoFocus}
+        autoFocus={autoFocus ?? !!focusedView}
         ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
         type={view}
