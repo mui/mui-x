@@ -29,8 +29,11 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     TDate,
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
+  const renderTimeInASingleColumnThreshold =
+    defaultizedProps.renderTimeInASingleColumnThreshold ?? 24;
+  const timeStep = defaultizedProps.timeStep ?? 5;
   const shouldRenderTimeInASingleColumn =
-    (24 * 60) / defaultizedProps.timeStep <= defaultizedProps.renderTimeInASingleColumnThreshold;
+    (24 * 60) / timeStep <= renderTimeInASingleColumnThreshold;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderSingleColumnTimeView
@@ -53,6 +56,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     viewRenderers,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
+    timeStep,
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,

@@ -29,8 +29,11 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     'MuiDesktopTimePicker',
   );
 
+  const renderTimeInASingleColumnThreshold =
+    defaultizedProps.renderTimeInASingleColumnThreshold ?? 24;
+  const timeStep = defaultizedProps.timeStep ?? 5;
   const shouldRenderTimeInASingleColumn =
-    (24 * 60) / defaultizedProps.timeStep <= defaultizedProps.renderTimeInASingleColumnThreshold;
+    (24 * 60) / timeStep <= renderTimeInASingleColumnThreshold;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderSingleColumnTimeView
@@ -49,6 +52,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const props = {
     ...defaultizedProps,
     ampmInClock,
+    timeStep,
     viewRenderers,
     slots: {
       field: TimeField,

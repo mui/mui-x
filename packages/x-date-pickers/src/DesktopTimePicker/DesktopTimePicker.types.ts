@@ -11,6 +11,7 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { TimeView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
 
 export interface DesktopTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
@@ -22,7 +23,8 @@ export interface DesktopTimePickerSlotsComponentsProps<TDate>
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate> {
+    DesktopOnlyPickerProps<TDate>,
+    DesktopOnlyTimePickerProps<TDate> {
   /**
    * Overridable components.
    * @default {}

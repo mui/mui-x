@@ -11,6 +11,7 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
 
 export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
@@ -25,7 +26,8 @@ export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
 
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate> {
+    DesktopOnlyPickerProps<TDate>,
+    DesktopOnlyTimePickerProps<TDate> {
   /**
    * Years rendered per row.
    * @default 4

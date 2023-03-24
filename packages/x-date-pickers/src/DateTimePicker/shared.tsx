@@ -34,7 +34,7 @@ import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import { BaseClockProps, BaseCommonTimePickerProps } from '../internals/models/props/clock';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -67,7 +67,7 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
-    BaseCommonTimePickerProps<TDate> {
+    ExportedBaseClockProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
@@ -130,8 +130,6 @@ type UseDateTimePickerDefaultizedProps<
     | 'openTo'
     | 'orientation'
     | 'ampm'
-    | 'timeStep'
-    | 'renderTimeInASingleColumnThreshold'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
   >
@@ -152,8 +150,6 @@ export function useDateTimePickerDefaultizedProps<
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const renderTimeInASingleColumnThreshold = themeProps.renderTimeInASingleColumnThreshold ?? 24;
-  const timeStep = themeProps.timeStep ?? 5;
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -209,7 +205,5 @@ export function useDateTimePickerDefaultizedProps<
         ...slotProps?.toolbar,
       },
     },
-    renderTimeInASingleColumnThreshold,
-    timeStep,
   };
 }

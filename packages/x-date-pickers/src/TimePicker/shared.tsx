@@ -19,7 +19,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import { BaseClockProps, BaseCommonTimePickerProps } from '../internals/models/props/clock';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 
 export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -35,7 +35,7 @@ export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsCompon
 
 export interface BaseTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
-    BaseCommonTimePickerProps<TDate> {
+    ExportedBaseClockProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
@@ -84,14 +84,7 @@ type UseTimePickerDefaultizedProps<
 > = LocalizedComponent<
   TDate,
   Omit<
-    DefaultizedProps<
-      Props,
-      | 'views'
-      | 'openTo'
-      | 'timeStep'
-      | 'renderTimeInASingleColumnThreshold'
-      | keyof BaseTimeValidationProps
-    >,
+    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>,
     'components' | 'componentsProps'
   >
 >;
@@ -107,8 +100,6 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const renderTimeInASingleColumnThreshold = themeProps.renderTimeInASingleColumnThreshold ?? 24;
-  const timeStep = themeProps.timeStep ?? 5;
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -147,7 +138,5 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
         ...slotProps?.toolbar,
       },
     },
-    renderTimeInASingleColumnThreshold,
-    timeStep,
   };
 }

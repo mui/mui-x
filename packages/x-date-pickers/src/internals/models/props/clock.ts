@@ -2,7 +2,6 @@ import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../../hooks/validation/models';
 import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue';
 import { TimeView } from '../../../models';
-import type { ExportedTimeClockProps } from '../../../TimeClock/TimeClock.types';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 
@@ -51,9 +50,7 @@ export interface BaseClockProps<TDate> extends ExportedUseViewsOptions<TimeView>
   readOnly?: boolean;
 }
 
-export interface BaseCommonTimePickerProps<TDate>
-  extends ExportedTimeClockProps<TDate>,
-    ExportedDigitalClockProps<TDate> {
+export interface DesktopOnlyTimePickerProps<TDate> extends ExportedDigitalClockProps<TDate> {
   /**
    * Number of possible time options at which the single column time renderer is used.
    * @default 24

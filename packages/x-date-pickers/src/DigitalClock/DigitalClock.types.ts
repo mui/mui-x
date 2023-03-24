@@ -4,7 +4,7 @@ import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/prop
 
 export interface ExportedDigitalClockProps<TDate> extends ExportedBaseClockProps<TDate> {
   /**
-   * Number representing the increment of precision at which to display minutes and seconds.
+   * Number representing the increment of precision at which to display minutes and seconds in digital view.
    * @default 5
    */
   timeStep?: number;
