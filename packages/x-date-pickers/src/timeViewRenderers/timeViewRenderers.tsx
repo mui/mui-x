@@ -81,7 +81,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   />
 );
 
-export const renderTimeViewDigitalClock = <TDate extends unknown>({
+export const renderSingleColumnTimeView = <TDate extends unknown>({
   view,
   onViewChange,
   focusedView,
@@ -143,7 +143,7 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
   />
 );
 
-export const renderDesktopTimeViewClock = <TDate extends unknown>({
+export const renderMultiColumnTimeView = <TDate extends unknown>({
   view,
   onViewChange,
   focusedView,
@@ -171,6 +171,7 @@ export const renderDesktopTimeViewClock = <TDate extends unknown>({
   sx,
   autoFocus,
   disableIgnoringDatePartForTimeValidation,
+  timeStep,
 }: TimeViewRendererProps<TimeView, DesktopTimeClockProps<TDate>>) => (
   <DesktopTimeClock<TDate>
     view={view}
@@ -200,5 +201,6 @@ export const renderDesktopTimeViewClock = <TDate extends unknown>({
     sx={sx}
     autoFocus={autoFocus}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
+    timeStep={timeStep}
   />
 );

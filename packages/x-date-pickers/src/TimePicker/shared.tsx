@@ -85,7 +85,14 @@ type UseTimePickerDefaultizedProps<
 > = LocalizedComponent<
   TDate,
   Omit<
-    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>,
+    DefaultizedProps<
+      Props,
+      | 'views'
+      | 'openTo'
+      | 'timeStep'
+      | 'renderTimeInASingleColumnThreshold'
+      | keyof BaseTimeValidationProps
+    >,
     'components' | 'componentsProps'
   >
 >;
@@ -101,6 +108,8 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const renderTimeInASingleColumnThreshold = themeProps.renderTimeInASingleColumnThreshold ?? 24;
+  const timeStep = themeProps.timeStep ?? 5;
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -139,5 +148,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
         ...slotProps?.toolbar,
       },
     },
+    renderTimeInASingleColumnThreshold,
+    timeStep,
   };
 }

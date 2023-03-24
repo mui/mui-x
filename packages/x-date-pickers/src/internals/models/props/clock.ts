@@ -55,9 +55,8 @@ export interface BaseCommonTimePickerProps<TDate>
   extends ExportedTimeClockProps<TDate>,
     ExportedDigitalClockProps<TDate> {
   /**
-   * Number of possible time options at which the component uses `digital` view.
-   * Used only in `desktop` mode.
+   * Number of possible time options at which the single column time renderer is used.
    * @default 24
    */
-  renderAsDigitalThreshold?: number;
+  renderTimeInASingleColumnThreshold?: number;
 }

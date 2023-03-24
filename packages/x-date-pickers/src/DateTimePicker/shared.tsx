@@ -131,6 +131,8 @@ type UseDateTimePickerDefaultizedProps<
     | 'openTo'
     | 'orientation'
     | 'ampm'
+    | 'timeStep'
+    | 'renderTimeInASingleColumnThreshold'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
   >
@@ -151,6 +153,8 @@ export function useDateTimePickerDefaultizedProps<
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const renderTimeInASingleColumnThreshold = themeProps.renderTimeInASingleColumnThreshold ?? 24;
+  const timeStep = themeProps.timeStep ?? 5;
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -206,5 +210,7 @@ export function useDateTimePickerDefaultizedProps<
         ...slotProps?.toolbar,
       },
     },
+    renderTimeInASingleColumnThreshold,
+    timeStep,
   };
 }

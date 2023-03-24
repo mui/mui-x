@@ -11,7 +11,7 @@ import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { renderDesktopTimeViewClock, renderTimeViewDigitalClock } from '../timeViewRenderers';
+import { renderMultiColumnTimeView, renderSingleColumnTimeView } from '../timeViewRenderers';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -28,13 +28,12 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     TDate,
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
-  const renderAsDigitalThreshold = defaultizedProps.renderAsDigitalThreshold ?? 24;
-  const timeStep = defaultizedProps.timeStep ?? 5;
-  const shouldRenderDigital = (24 * 60) / timeStep <= renderAsDigitalThreshold;
+  const shouldRenderTimeInASingleColumn =
+    (24 * 60) / defaultizedProps.timeStep <= defaultizedProps.renderTimeInASingleColumnThreshold;
 
-  const renderTimeView = shouldRenderDigital
-    ? renderTimeViewDigitalClock
-    : renderDesktopTimeViewClock;
+  const renderTimeView = shouldRenderTimeInASingleColumn
+    ? renderSingleColumnTimeView
+    : renderMultiColumnTimeView;
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,

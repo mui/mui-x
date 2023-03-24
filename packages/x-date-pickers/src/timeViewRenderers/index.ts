@@ -1,6 +1,6 @@
 export {
   renderTimeViewClock,
-  renderTimeViewDigitalClock,
-  renderDesktopTimeViewClock,
+  renderSingleColumnTimeView,
+  renderMultiColumnTimeView,
 } from './timeViewRenderers';
 export type { TimeViewRendererProps } from './timeViewRenderers';
