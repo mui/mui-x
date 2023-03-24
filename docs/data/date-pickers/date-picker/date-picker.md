@@ -94,13 +94,6 @@ You can show a helper text with the date format accepted:
 
 {{"demo": "HelperText.js"}}
 
-## Custom input component
-
-You can customize the rendering of the input with the `TextField` component slot.
-Make sure to spread `inputProps` correctly to the custom input component.
-
-{{"demo": "CustomInput.js"}}
-
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).

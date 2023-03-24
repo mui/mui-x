@@ -20,7 +20,7 @@ import {
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../../models';
+import { DateRange, RangeFieldSection } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 
@@ -47,19 +47,23 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
   extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   field?: SlotComponentProps<
-    React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
+    React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, unknown>>,
     {},
     unknown
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
+  textField?: SlotComponentProps<
+    typeof TextField,
+    {},
+    { position?: 'start' | 'end' } & Record<string, any>
+  >;
   toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface DesktopRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
     UsePickerViewsNonStaticProps,
     UseRangePositionProps {
   /**
@@ -83,7 +87,7 @@ export interface UseDesktopRangePickerProps<
       DesktopRangePickerAdditionalViewProps
     > {
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: UncapitalizeObjectKeys<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
@@ -105,6 +109,7 @@ export interface UseDesktopRangePickerParams<
       DateRange<TDate>,
       TDate,
       TView,
+      RangeFieldSection,
       TExternalProps,
       DesktopRangePickerAdditionalViewProps
     >,

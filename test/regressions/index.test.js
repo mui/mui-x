@@ -45,7 +45,7 @@ async function main() {
   });
 
   // Wait for all requests to finish.
-  // This should load shared ressources such as fonts.
+  // This should load shared resources such as fonts.
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle0' });
 
   // Simulate portrait mode for date pickers.
@@ -104,6 +104,7 @@ async function main() {
         const pathsToNotWaitForFlagCDN = [
           '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
           '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
+          '/docs-data-grid-filtering/QuickFilteringInitialize', // No content rendered
           '/docs-data-grid-sorting/ExtendedSortComparator', // No flag column
           '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
           '/docs-data-grid-sorting/ServerSortingGrid', // No flag column

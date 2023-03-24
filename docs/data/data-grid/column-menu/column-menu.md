@@ -126,7 +126,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 
 As a reference, here are the column menu `components` along with the default item components and `displayOrder`.
 
-{{"demo": "ColumnMenuGridReferences.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "ColumnMenuGridReferencesNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## Custom menu component
 

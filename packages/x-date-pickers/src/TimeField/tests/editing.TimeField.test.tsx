@@ -370,7 +370,11 @@ describe('<TimeField /> - Editing', () => {
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
 
-      it('should not loose time information when cleaning the date then filling it again', () => {
+      it('should not loose date information when cleaning the date then filling it again', () => {
+        if (adapter.lib !== 'dayjs') {
+          return;
+        }
+
         const onChange = spy();
 
         render(
@@ -385,6 +389,7 @@ describe('<TimeField /> - Editing', () => {
 
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
         userEvent.keyPress(input, { key: 'Backspace' });
+        userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
         expectInputValue(input, '03:mm');

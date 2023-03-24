@@ -95,12 +95,12 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
  */
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @deprecated Use `slots` instead.
    */
   components?: Partial<GridSlotsComponent>;
   /**
-   * Overrideable components.
+   * Overridable components.
    */
   slots?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>>;
   /**
@@ -592,7 +592,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   cellModesModel?: GridCellModesModel;
   /**
    * Callback fired when the `cellModesModel` prop changes.
-   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCellModesModel} cellModesModel Object containing which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange?: (
@@ -605,7 +605,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   rowModesModel?: GridRowModesModel;
   /**
    * Callback fired when the `rowModesModel` prop changes.
-   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
@@ -691,11 +691,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   initialState?: GridInitialStateCommunity;
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps?: GridSlotsComponentsProps;
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
    * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps?: GridSlotsComponentsProps;

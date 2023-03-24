@@ -106,7 +106,7 @@ export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeView>
   ref?: React.Ref<HTMLDivElement>;
   classes?: Partial<PickersLayoutClasses>;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -118,7 +118,7 @@ export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeView>
    */
   componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersLayoutSlotsComponent<TValue, TDate, TView>>;

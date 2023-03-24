@@ -27,6 +27,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Day of the month
   D: 'day',
   DD: 'day',
+  Do: 'day',
 
   // Day of the week
   d: 'weekDay',
