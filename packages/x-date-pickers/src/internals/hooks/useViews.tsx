@@ -110,6 +110,8 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     }
   }
 
+  const previousOpenTo = React.useRef(openTo);
+  const previousViews = React.useRef(views);
   const defaultView = React.useRef(views.includes(openTo!) ? openTo! : views[0]);
   const [view, setView] = useControlled({
     name: 'useViews',
@@ -125,6 +127,17 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     controlled: inFocusedView,
     default: defaultFocusedView.current,
   });
+
+  React.useEffect(() => {
+    // Update the current view when `openTo` or `views` props change
+    if (
+      (previousOpenTo.current && previousOpenTo.current !== openTo) ||
+      (previousViews.current &&
+        previousViews.current.some((previousView) => !views.includes(previousView)))
+    ) {
+      setView(views.includes(openTo!) ? openTo! : views[0]);
+    }
+  }, [openTo, setView, view, views]);
 
   const viewIndex = views.indexOf(view);
   const previousView: TView | null = views[viewIndex - 1] ?? null;
