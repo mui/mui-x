@@ -271,5 +271,42 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Nike', 'Puma']);
       });
     });
+
+    it('should not change row id value', async () => {
+      const columns = [{ field: 'customIdField' }, { field: 'brand' }];
+      const rows = [
+        { customIdField: 0, brand: 'Nike' },
+        { customIdField: 1, brand: 'Adidas' },
+        { customIdField: 2, brand: 'Puma' },
+      ];
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              getRowId={(row) => row.customIdField}
+              rowSelection={false}
+              unstable_cellSelection
+            />
+          </div>
+        );
+      }
+
+      render(<Component />);
+
+      const clipboardData = '0';
+      readText.returns(clipboardData);
+
+      const cell = getCell(1, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+      });
+      expect(getColumnValues(1)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
   });
 });
