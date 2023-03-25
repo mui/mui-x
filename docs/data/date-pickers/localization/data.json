@@ -107,7 +107,7 @@
     "languageTag": "nb-NO",
     "importName": "nbNO",
     "localeName": "Norwegian (bokmål)",
-    "missingKeysCount": 16,
+    "missingKeysCount": 8,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/-/packages/x-date-pickers/src/locales/nbNO.ts/"
   },
