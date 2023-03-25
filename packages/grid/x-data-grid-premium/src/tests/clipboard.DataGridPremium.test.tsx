@@ -6,10 +6,10 @@ import {
   DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, userEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent, act, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub, SinonStub, spy } from 'sinon';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPremium /> - Clipboard', () => {
@@ -232,6 +232,44 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getCell(0, 2)).to.have.text(secondColumnValuesBeforePaste[0]);
       expect(getCell(1, 2)).to.have.text(secondColumnValuesBeforePaste[1]);
       expect(getCell(2, 2)).to.have.text(secondColumnValuesBeforePaste[2]);
+    });
+
+    it('should work well with `getRowId` prop', async () => {
+      const columns = [{ field: 'brand' }];
+      const rows = [
+        { customIdField: 0, brand: 'Nike' },
+        { customIdField: 1, brand: 'Adidas' },
+        { customIdField: 2, brand: 'Puma' },
+      ];
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              getRowId={(row) => row.customIdField}
+              rowSelection={false}
+              unstable_cellSelection
+            />
+          </div>
+        );
+      }
+
+      render(<Component />);
+
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+
+      const clipboardData = 'Nike';
+      readText.returns(clipboardData);
+
+      const cell = getCell(1, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Nike', 'Puma']);
+      });
     });
   });
 });
