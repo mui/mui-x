@@ -1,9 +1,12 @@
 import * as React from 'react';
-import {
+import type {
   GridColDef,
-  gridFocusCellSelector,
+  GridRowId,
   GridSingleSelectColDef,
   GridValidRowModel,
+} from '@mui/x-data-grid';
+import {
+  gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
   useGridNativeEventListener,
 } from '@mui/x-data-grid';
@@ -71,6 +74,79 @@ const parseCellStringValue = (value: string, colDef: GridColDef) => {
   }
 };
 
+// Keeps track of updated rows during clipboard paste
+class CellValueUpdater {
+  rowsToUpdate: {
+    [rowId: GridRowId]: GridValidRowModel;
+  } = {};
+
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+
+  onRowPaste: DataGridPremiumProcessedProps['onRowPaste'];
+
+  constructor({
+    apiRef,
+    onRowPaste,
+  }: {
+    apiRef: React.MutableRefObject<GridPrivateApiPremium>;
+    onRowPaste: DataGridPremiumProcessedProps['onRowPaste'];
+  }) {
+    this.apiRef = apiRef;
+    this.onRowPaste = onRowPaste;
+  }
+
+  updateCell({
+    rowId,
+    field,
+    pastedCellValue,
+  }: {
+    rowId: GridRowId;
+    field: GridColDef['field'];
+    pastedCellValue: string;
+  }) {
+    const apiRef = this.apiRef;
+    const colDef = apiRef.current.getColumn(field);
+    if (!colDef) {
+      return;
+    }
+    if (pastedCellValue === undefined) {
+      return;
+    }
+    const rowToUpdate = this.rowsToUpdate[rowId] || { ...apiRef.current.getRow(rowId) };
+    if (!rowToUpdate) {
+      return;
+    }
+
+    const parsedValue = parseCellStringValue(pastedCellValue, colDef);
+    if (parsedValue === undefined) {
+      return;
+    }
+    rowToUpdate[field] = parsedValue;
+    this.rowsToUpdate[rowId] = rowToUpdate;
+  }
+
+  applyUpdates() {
+    const apiRef = this.apiRef;
+    const rowsToUpdate = this.rowsToUpdate;
+    const rowsToUpdateArr: GridValidRowModel[] = [];
+    const onRowPastePayload: Parameters<NonNullable<typeof this.onRowPaste>>[] = [];
+    Object.keys(rowsToUpdate).forEach((rowId) => {
+      const newRow = rowsToUpdate[rowId];
+      rowsToUpdateArr.push(rowsToUpdate[rowId]);
+      const oldRow = apiRef.current.getRow(rowId);
+      onRowPastePayload.push([newRow, oldRow]);
+    });
+    apiRef.current.updateRows(rowsToUpdateArr);
+
+    // call onRowPaste with the new and old rows
+    onRowPastePayload.forEach((payload) => {
+      if (typeof this.onRowPaste === 'function') {
+        this.onRowPaste(...payload);
+      }
+    });
+  }
+}
+
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<DataGridPremiumProcessedProps, 'pagination' | 'paginationMode' | 'onRowPaste'>,
@@ -109,11 +185,9 @@ export const useGridClipboardImport = (
       const cellSelectionModelKeys = Object.keys(cellSelectionModel);
 
       if (cellSelectionModel && cellSelectionModelKeys.length > 0) {
-        const rowsToEmit: [newRow: GridValidRowModel, oldRow: GridValidRowModel][] = [];
-        const rowUpdates: GridValidRowModel[] = [];
+        const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste });
+
         cellSelectionModelKeys.forEach((rowId, rowIndex) => {
-          const targetRow = apiRef.current.getRow(rowId);
-          const row: GridValidRowModel = { ...targetRow };
           const rowDataString = rowsData[isSingleValuePasted ? 0 : rowIndex];
           const hasRowData = isSingleValuePasted ? true : rowDataString !== undefined;
           if (!hasRowData) {
@@ -121,28 +195,12 @@ export const useGridClipboardImport = (
           }
           const rowData = rowDataString.split('\t');
           Object.keys(cellSelectionModel[rowId]).forEach((field, colIndex) => {
-            const colDef = apiRef.current.getColumn(field);
-            let cellValue: string;
-            if (isSingleValuePasted) {
-              cellValue = rowsData[0];
-            } else {
-              cellValue = rowData[colIndex];
-            }
-            const parsedValue = parseCellStringValue(cellValue, colDef);
-            if (parsedValue !== undefined) {
-              row[field] = parsedValue;
-            }
+            const cellValue = isSingleValuePasted ? rowsData[0] : rowData[colIndex];
+            cellUpdater.updateCell({ rowId, field, pastedCellValue: cellValue });
           });
-          rowUpdates.push(row);
-          rowsToEmit.push([row, targetRow]);
         });
-        apiRef.current.updateRows(rowUpdates);
 
-        rowsToEmit.forEach((payload) => {
-          if (typeof onRowPaste === 'function') {
-            onRowPaste(...payload);
-          }
-        });
+        cellUpdater.applyUpdates();
         return;
       }
 
@@ -169,8 +227,8 @@ export const useGridClipboardImport = (
         paginationMode: props.paginationMode,
       });
 
-      const rowsToUpdate: GridValidRowModel[] = [];
-      const rowsToEmit: [newRow: GridValidRowModel, oldRow: GridValidRowModel][] = [];
+      const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste });
+
       rowsData.forEach((rowData, index) => {
         const parsedData = rowData.split('\t');
         const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
@@ -180,28 +238,16 @@ export const useGridClipboardImport = (
           return;
         }
 
-        const newRow: GridValidRowModel = { ...targetRow.model };
+        const rowId = targetRow.id;
         const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
         for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
           const field = visibleColumnFields[i];
           const stringValue = parsedData[i - selectedFieldIndex];
-          if (typeof stringValue !== 'undefined') {
-            const colDef = apiRef.current.getColumn(field);
-            const parsedValue = parseCellStringValue(stringValue, colDef);
-            newRow[field] = parsedValue;
-          }
-        }
-
-        rowsToUpdate.push(newRow);
-        rowsToEmit.push([newRow, targetRow.model]);
-      });
-
-      apiRef.current.updateRows(rowsToUpdate);
-      rowsToEmit.forEach((payload) => {
-        if (typeof onRowPaste === 'function') {
-          onRowPaste(...payload);
+          cellUpdater.updateCell({ rowId, field, pastedCellValue: stringValue });
         }
       });
+
+      cellUpdater.applyUpdates();
     },
     [apiRef, props.pagination, props.paginationMode, onRowPaste],
   );
