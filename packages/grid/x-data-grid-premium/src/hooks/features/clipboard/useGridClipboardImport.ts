@@ -10,7 +10,7 @@ import {
   gridVisibleColumnFieldsSelector,
   useGridNativeEventListener,
 } from '@mui/x-data-grid';
-import { getVisibleRows } from '@mui/x-data-grid/internals';
+import { getRowIdFromRowModel, getVisibleRows } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
@@ -84,15 +84,20 @@ class CellValueUpdater {
 
   onRowPaste: DataGridPremiumProcessedProps['onRowPaste'];
 
+  getRowId: DataGridPremiumProcessedProps['getRowId'];
+
   constructor({
     apiRef,
     onRowPaste,
+    getRowId,
   }: {
     apiRef: React.MutableRefObject<GridPrivateApiPremium>;
     onRowPaste: DataGridPremiumProcessedProps['onRowPaste'];
+    getRowId: DataGridPremiumProcessedProps['getRowId'];
   }) {
     this.apiRef = apiRef;
     this.onRowPaste = onRowPaste;
+    this.getRowId = getRowId;
   }
 
   updateCell({
@@ -112,8 +117,8 @@ class CellValueUpdater {
     if (pastedCellValue === undefined) {
       return;
     }
-    const rowToUpdate = this.rowsToUpdate[rowId] || { ...apiRef.current.getRow(rowId) };
-    if (!rowToUpdate) {
+    const row = this.rowsToUpdate[rowId] || { ...apiRef.current.getRow(rowId) };
+    if (!row) {
       return;
     }
 
@@ -121,8 +126,14 @@ class CellValueUpdater {
     if (parsedValue === undefined) {
       return;
     }
-    rowToUpdate[field] = parsedValue;
-    this.rowsToUpdate[rowId] = rowToUpdate;
+    const rowCopy = { ...row };
+    rowCopy[field] = parsedValue;
+    const newRowId = getRowIdFromRowModel(rowCopy, this.getRowId);
+    if (String(newRowId) !== String(rowId)) {
+      // We cannot update row id, so this cell value update should be ignored
+      return;
+    }
+    this.rowsToUpdate[rowId] = rowCopy;
   }
 
   applyUpdates() {
@@ -149,9 +160,13 @@ class CellValueUpdater {
 
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'pagination' | 'paginationMode' | 'onRowPaste'>,
+  props: Pick<
+    DataGridPremiumProcessedProps,
+    'pagination' | 'paginationMode' | 'onRowPaste' | 'getRowId'
+  >,
 ): void => {
   const onRowPaste = props.onRowPaste;
+  const getRowId = props.getRowId;
 
   const handlePaste = React.useCallback(
     async (event: KeyboardEvent) => {
@@ -185,7 +200,7 @@ export const useGridClipboardImport = (
       const cellSelectionModelKeys = Object.keys(cellSelectionModel);
 
       if (cellSelectionModel && cellSelectionModelKeys.length > 0) {
-        const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste });
+        const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
 
         cellSelectionModelKeys.forEach((rowId, rowIndex) => {
           const rowDataString = rowsData[isSingleValuePasted ? 0 : rowIndex];
@@ -227,7 +242,7 @@ export const useGridClipboardImport = (
         paginationMode: props.paginationMode,
       });
 
-      const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste });
+      const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
 
       rowsData.forEach((rowData, index) => {
         const parsedData = rowData.split('\t');
@@ -249,7 +264,7 @@ export const useGridClipboardImport = (
 
       cellUpdater.applyUpdates();
     },
-    [apiRef, props.pagination, props.paginationMode, onRowPaste],
+    [apiRef, props.pagination, props.paginationMode, onRowPaste, getRowId],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
