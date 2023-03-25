@@ -6,7 +6,7 @@ import {
   DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, userEvent, act, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub, SinonStub, spy } from 'sinon';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
@@ -149,9 +149,9 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
 
-      await act(() => Promise.resolve());
-
-      expect(getCell(0, 1)).to.have.text(clipboardData);
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text(clipboardData);
+      });
       expect(getCell(0, 2)).to.have.text(clipboardData);
       expect(getCell(1, 1)).to.have.text(clipboardData);
       expect(getCell(1, 2)).to.have.text(clipboardData);
@@ -181,10 +181,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
 
-      await act(() => Promise.resolve());
-
       // selected cells should be updated
-      expect(getCell(0, 1)).to.have.text('01');
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text('01');
+      });
       expect(getCell(0, 2)).to.have.text('02');
       expect(getCell(1, 1)).to.have.text('11');
       expect(getCell(1, 2)).to.have.text('12');
@@ -215,8 +215,6 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
 
-      await act(() => Promise.resolve());
-
       const secondColumnValuesBeforePaste = [
         getCell(0, 2).textContent!,
         getCell(1, 2).textContent!,
@@ -224,7 +222,9 @@ describe('<DataGridPremium /> - Clipboard', () => {
       ];
 
       // selected cells should be updated if there's data in the clipboard
-      expect(getCell(0, 1)).to.have.text('01');
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text('01');
+      });
       expect(getCell(1, 1)).to.have.text('11');
       expect(getCell(2, 1)).to.have.text('21');
 
