@@ -182,7 +182,9 @@ The naming of overridable interfaces uses a pattern like this:
 
 For example, for `columnMenu` slot, the interface name would be `ColumnMenuPropsOverrides`.
 
-This [file](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
+<!-- #default-branch-switch -->
+
+This [file](https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
 
 ```tsx
 // augment the props for `toolbar` slot
