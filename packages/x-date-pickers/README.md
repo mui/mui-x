@@ -54,7 +54,7 @@ After installation completed, you have to set the `dateAdapter` prop of the `Loc
 The supported adapters are exported from `@mui/x-date-pickers`.
 
 ```jsx
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // date-fns
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // or for dayjs

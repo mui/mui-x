@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeView } from '../../models';
 
 type Orientation = 'portrait' | 'landscape';
 

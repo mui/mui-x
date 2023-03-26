@@ -9,7 +9,8 @@ import {
   getTextbox,
 } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
-import { FieldSectionType, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
+import { FieldSectionType } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 

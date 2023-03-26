@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { FieldSectionType, MuiPickersAdapter } from '../../models';
+import { MuiPickersAdapter } from '../../models';
+import { FieldSectionType, FieldSection, FieldSelectedSections } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
-import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface UseFieldParams<
   TValue,
@@ -125,77 +125,6 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
     autoComplete: 'off';
   };
 
-export interface FieldSection {
-  /**
-   * Value of the section, as rendered inside the input.
-   * For example, in the date `May 25, 1995`, the value of the month section is "May".
-   */
-  value: string;
-  /**
-   * Format token used to parse the value of this section from the date object.
-   * For example, in the format `MMMM D, YYYY`, the format of the month section is "MMMM".
-   */
-  format: string;
-  /**
-   * Placeholder rendered when the value of this section is empty.
-   */
-  placeholder: string;
-  /**
-   * Type of the section.
-   */
-  type: FieldSectionType;
-  /**
-   * Type of content of the section.
-   * Will determine if we should apply a digit-based editing or a letter-based editing.
-   */
-  contentType: 'digit' | 'letter';
-  /**
-   * If `true`, the value of this section is supposed to have leading zeroes.
-   * For example, the value `1` should be rendered as "01" instead of "1".
-   */
-  hasLeadingZeros: boolean;
-  /**
-   * If `true`, the section value has been modified since the last time the sections were generated from a valid date.
-   * When we can generate a valid date from the section, we don't directly pass it to `onChange`,
-   * Otherwise, we would lose all the information contained in the original date, things like:
-   * - time if the format does not contain it
-   * - timezone / UTC
-   *
-   * To avoid losing that information, we transfer the values of the modified sections from the newly generated date to the original date.
-   */
-  modified: boolean;
-  /**
-   * Start index of the section in the format
-   */
-  start: number;
-  /**
-   * End index of the section in the format
-   */
-  end: number;
-  /**
-   * Start index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  startInInput: number;
-  /**
-   * End index of the section value in the input.
-   * Takes into account invisible unicode characters such as \u2069 but does not include them
-   */
-  endInInput: number;
-  /**
-   * Separator displayed before the value of the section in the input.
-   * If it contains escaped characters, then it must not have the escaping characters.
-   * For example, on Day.js, the `year` section of the format `YYYY [year]` has an end separator equal to `year` not `[year]`
-   */
-  startSeparator: string;
-  /**
-   * Separator displayed after the value of the section in the input.
-   * If it contains escaped characters, then it must not have the escaping characters.
-   * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
-   */
-  endSeparator: string;
-}
-
 export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
   TSection,
   'start' | 'end' | 'startInInput' | 'endInInput'
@@ -257,31 +186,22 @@ export type FieldSelectedSectionsIndexes = {
   shouldSelectBoundarySelectors?: boolean;
 };
 
-export type FieldSelectedSections =
-  | number
-  | FieldSectionType
-  | null
-  | 'all'
-  | { startIndex: number; endIndex: number };
-
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @param {PickersLocaleText<TDate>} localeText The localization object to generate the placeholders.
-   * @param {TSection[] | null} sections The sections to use as a fallback if a date is null or invalid.
    * @param {TValue} value The current value to generate sections from.
-   * @param {string} format The date format.
+   * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
-    localeText: PickersLocaleText<TDate>,
-    sections: TSection[] | null,
     value: TValue,
-    format: string,
+    fallbackSections: TSection[] | null,
+    getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
   ) => TSection[];
   /**
    * Creates the string value to render in the input based on the current section list.
@@ -357,10 +277,6 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
    */
   referenceValue: TValue;
-  /**
-   * A localized format string built from sections.
-   */
-  placeholder: string;
   sections: TSection[];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.

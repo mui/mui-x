@@ -5,12 +5,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import {
-  DateOrTimeView,
-  PickerViewRendererLookup,
-  useLocaleText,
-  validateDateTime,
-} from '../internals';
+import { PickerViewRendererLookup, useLocaleText, validateDateTime } from '../internals';
+import { DateOrTimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';

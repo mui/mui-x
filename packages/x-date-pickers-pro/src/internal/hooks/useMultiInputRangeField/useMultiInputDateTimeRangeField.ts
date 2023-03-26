@@ -7,7 +7,6 @@ import {
 } from '@mui/x-date-pickers/DateTimeField';
 import {
   applyDefaultDate,
-  DateTimeValidationError,
   useDefaultDates,
   useLocalizationContext,
   useUtils,
@@ -16,6 +15,7 @@ import {
   FieldChangeHandlerContext,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
+import { DateTimeValidationError } from '@mui/x-date-pickers/models';
 import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import type {

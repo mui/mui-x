@@ -8,7 +8,6 @@ import {
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
 import {
-  DateOrTimeView,
   UsePickerParams,
   BasePickerProps,
   PickersPopperSlotsComponent,
@@ -20,6 +19,7 @@ import {
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { DateRange, RangeFieldSection } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
