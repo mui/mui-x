@@ -1,18 +1,24 @@
 import * as React from 'react';
-import type {
+import {
   GridColDef,
   GridRowId,
   GridSingleSelectColDef,
   GridValidRowModel,
-} from '@mui/x-data-grid';
-import {
+  GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
   useGridNativeEventListener,
 } from '@mui/x-data-grid';
 import { getRowIdFromRowModel, getVisibleRows } from '@mui/x-data-grid/internals';
+import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+
+const columnFieldsToExcludeFromPaste = [
+  GRID_CHECKBOX_SELECTION_FIELD,
+  GRID_REORDER_COL_DEF.field,
+  GRID_DETAIL_PANEL_TOGGLE_FIELD,
+];
 
 const stringToBoolean = (value: string) => {
   switch (value.toLowerCase().trim()) {
@@ -219,15 +225,45 @@ export const useGridClipboardImport = (
         return;
       }
 
+      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) => {
+        if (columnFieldsToExcludeFromPaste.includes(field)) {
+          return false;
+        }
+        return true;
+      });
+
       const selectedRows = apiRef.current.getSelectedRows();
 
-      if (selectedRows.size === 1) {
-        // Multiple values are pasted starting from the focused cell
-        // return;
-      }
-
-      if (selectedRows.size > 1) {
+      if (selectedRows.size > 1 && !isSingleValuePasted) {
         // Multiple values are pasted starting from the first and top-most cell
+        const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
+        const pastedRowsDataCount = rowsData.length;
+
+        // There's no guarantee that the selected rows are in the same order as the pasted rows
+        selectedRows.forEach((row, rowId) => {
+          let rowData: string | undefined;
+          if (pastedRowsDataCount === 1) {
+            // If only one row is pasted - paste it to all selected rows
+            rowData = rowsData[0];
+          } else {
+            rowData = rowsData.shift();
+          }
+
+          if (rowData === undefined) {
+            return;
+          }
+
+          rowData.split('\t').forEach((newCellValue, cellIndex) => {
+            cellUpdater.updateCell({
+              rowId,
+              field: visibleColumnFields[cellIndex],
+              pastedCellValue: newCellValue,
+            });
+          });
+        });
+
+        cellUpdater.applyUpdates();
+        return;
       }
 
       const selectedCell = gridFocusCellSelector(apiRef);
@@ -246,7 +282,6 @@ export const useGridClipboardImport = (
 
       rowsData.forEach((rowData, index) => {
         const parsedData = rowData.split('\t');
-        const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
         const targetRow = visibleRows.rows[selectedRowIndex + index];
 
         if (!targetRow) {

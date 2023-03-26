@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DataGridPremium, GridValidRowModel } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import Button from '@mui/material/Button';
 
 const initialRows = [
   {
@@ -196,23 +197,29 @@ const useSessionStorageData = () => {
   }, []);
 
   return {
-    data: { ...data, rows },
+    data: { columns: data.columns, rows },
     updateRow,
   };
 };
 
 export default function ClipboardImport() {
+  const [rowSelection, setRowSelection] = React.useState(false);
   const { data, updateRow } = useSessionStorageData();
 
   return (
     <div style={{ width: '100%' }}>
+      <Button sx={{ mb: 2 }} onClick={() => setRowSelection(!rowSelection)}>
+        Toggle row selection
+      </Button>
       <div style={{ height: 400 }}>
         <DataGridPremium
-          rowSelection={false}
+          rowSelection={rowSelection}
+          checkboxSelection={rowSelection}
           unstable_cellSelection
           {...data}
           // getRowId={(row) => row.rowId}
           onRowPaste={(newRow) => {
+            console.log('onRowPaste', newRow);
             updateRow(newRow);
           }}
         />

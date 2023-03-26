@@ -1,10 +1,15 @@
+<Button sx={{ mb: 2 }} onClick={() => setRowSelection(!rowSelection)}>
+  Toggle row selection
+</Button>
 <div style={{ height: 400 }}>
   <DataGridPremium
-    rowSelection={false}
+    rowSelection={rowSelection}
+    checkboxSelection={rowSelection}
     unstable_cellSelection
     {...data}
     // getRowId={(row) => row.rowId}
     onRowPaste={(newRow) => {
+      console.log('onRowPaste', newRow);
       updateRow(newRow);
     }}
   />
