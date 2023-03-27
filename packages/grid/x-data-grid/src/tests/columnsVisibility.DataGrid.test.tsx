@@ -313,7 +313,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
 
   it('should control columns shown in columns panel using `getTogglableColumns` prop', () => {
     const getTogglableColumns = (cols: GridColDef[]) =>
-    cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
+      cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
     render(
       <TestDataGrid
         slots={{
