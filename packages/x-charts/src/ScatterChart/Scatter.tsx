@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { D3Scale } from '../hooks/useScale';
-import { useTooltipItemProps } from '../hooks/useTooltipItemProps';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 export interface ScatterProps {
   series: ScatterSeriesType;
@@ -12,7 +12,7 @@ export interface ScatterProps {
 
 export function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, markerSize } = props;
-  const getItemProps = useTooltipItemProps();
+  const getItemProps = useInteractionItemProps();
 
   return (
     <g>

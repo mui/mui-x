@@ -4,7 +4,7 @@ import { BarItemIdentifier } from '../models/seriesType/bar';
 import { LineItemIdentifier } from '../models/seriesType/line';
 import { ScatterItemIdentifier } from '../models/seriesType/scatter';
 
-export const useTooltipItemProps = () => {
+export const useInteractionItemProps = () => {
   const { dispatch } = React.useContext(InteractionContext);
 
   const getItemProps = (data: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier) => {
