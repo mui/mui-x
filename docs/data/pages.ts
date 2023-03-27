@@ -70,6 +70,7 @@ const pages: MuiPage[] = [
         ],
       },
       { pathname: '/x/react-data-grid/export' },
+      { pathname: '/x/react-data-grid/clipboard' },
       { pathname: '/x/react-data-grid/components' },
       { pathname: '/x/react-data-grid/style' },
       { pathname: '/x/react-data-grid/localization' },
