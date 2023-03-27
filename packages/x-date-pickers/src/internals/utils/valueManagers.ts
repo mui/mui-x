@@ -35,16 +35,16 @@ export const singleItemFieldValueManager: FieldValueManager<
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
+  getSectionsFromValue: (utils, date, prevSections, isRTL, getSectionsFromDate) => {
     const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
 
     if (shouldReUsePrevDateSections) {
       return prevSections;
     }
 
-    return addPositionPropertiesToSections(getSectionsFromDate(date));
+    return addPositionPropertiesToSections(getSectionsFromDate(date), isRTL);
   },
-  getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
+  getValueStrFromSections: createDateStrForInputFromSections,
   getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
     activeDate: state.value,
