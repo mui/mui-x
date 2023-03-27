@@ -508,6 +508,13 @@ export interface GridEventLookup
     event: React.ChangeEvent<HTMLElement>;
   };
 
+  // Clipboard
+  /**
+   * Fired when the data is copied to the clipboard
+   * @ignore - do not document.
+   */
+  clipboardCopy: { params: string };
+
   // PreferencePanel
   /**
    * Fired when the preference panel is closed.

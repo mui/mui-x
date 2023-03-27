@@ -126,6 +126,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
 
       if (textToCopy) {
         copyToClipboard(textToCopy);
+        apiRef.current.publishEvent('clipboardCopy', textToCopy);
       }
     },
     [apiRef, stringifyCellForClipboard],
