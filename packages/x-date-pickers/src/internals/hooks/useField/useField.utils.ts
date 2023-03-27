@@ -237,31 +237,31 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   return adjustLetterSection();
 };
 
-const getSectionVisibleValue = (
+export const getSectionVisibleValue = (
   section: FieldSectionWithoutPosition,
-  willBeRenderedInInput: boolean,
+  target: 'input-rtl' | 'input-ltr' | 'non-input',
 ) => {
-  const value = section.value || section.placeholder;
+  let value = section.value || section.placeholder;
 
   // In the input, we add an empty character at the end of each section without leading zeros.
   // This makes sure that `onChange` will always be fired.
   // Otherwise, when your input value equals `1/dd/yyyy` (format `M/DD/YYYY` on DayJs),
   // If you press `1`, on the first section, the new value is also `1/dd/yyyy`,
   // So the browser will not fire the input `onChange`.
-  // Adding the ltr mark is not a problem because it's only for digit (which are always ltr)
-  // The \u2068 and \u2069 are cleaned, but not the \u200e to notice that an update with same digit occurs
-  if (
-    willBeRenderedInInput &&
+  const shouldAddInvisibleSpace =
+    ['input-rtl', 'input-ltr'].includes(target) &&
     section.contentType === 'digit' &&
     !section.hasLeadingZeros &&
-    value.length === 1
-  ) {
-    return `\u2068${value}\u200e\u2069`;
+    value.length === 1;
+
+  if (shouldAddInvisibleSpace) {
+    value = `${value}\u200e`;
   }
 
-  if (willBeRenderedInInput) {
-    return `\u2068${value}\u2069`;
+  if (target === 'input-rtl') {
+    value = `\u2068${value}\u2069`;
   }
+
   return value;
 };
 
@@ -270,14 +270,15 @@ export const cleanString = (dirtyString: string) =>
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: FieldSectionWithoutPosition<TSection>[],
+  isRTL: boolean,
 ): TSection[] => {
   let position = 0;
-  let positionInInput = 1;
+  let positionInInput = isRTL ? 1 : 0;
   const newSections: TSection[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
-    const renderedValue = getSectionVisibleValue(section, true);
+    const renderedValue = getSectionVisibleValue(section, isRTL ? 'input-rtl' : 'input-ltr');
     const sectionStr = `${section.startSeparator}${renderedValue}${section.endSeparator}`;
 
     const sectionLength = cleanString(sectionStr).length;
@@ -570,7 +571,7 @@ export const getDateFromDateSections = <TDate>(
     const shouldSkip = shouldSkipWeekDays && section.type === 'weekDay';
     if (!shouldSkip) {
       sectionFormats.push(section.format);
-      sectionValues.push(getSectionVisibleValue(section, false));
+      sectionValues.push(getSectionVisibleValue(section, 'non-input'));
     }
   }
 
@@ -580,18 +581,27 @@ export const getDateFromDateSections = <TDate>(
   return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator);
 };
 
-export const createDateStrForInputFromSections = (sections: FieldSection[]) => {
-  const formattedArray = sections.map(
+export const createDateStrForInputFromSections = (sections: FieldSection[], isRTL: boolean) => {
+  const formattedSections = sections.map(
     (section) =>
-      `${section.startSeparator}${getSectionVisibleValue(section, true)}${section.endSeparator}`,
+      `${section.startSeparator}${getSectionVisibleValue(
+        section,
+        isRTL ? 'input-rtl' : 'input-ltr',
+      )}${section.endSeparator}`,
   );
+
+  const dateStr = formattedSections.join('');
+
+  if (!isRTL) {
+    return dateStr;
+  }
 
   // \u2066: start left-to-right isolation
   // \u2067: start right-to-left isolation
   // \u2068: start first strong character isolation
   // \u2069: pop isolation
   // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
-  return `\u2066${formattedArray.join('')}\u2069`;
+  return `\u2066${dateStr}\u2069`;
 };
 
 export const getSectionsBoundaries = <TDate>(

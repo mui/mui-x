@@ -194,6 +194,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {TValue} value The current value to generate sections from.
    * @param {TSection[] | null} fallbackSections The sections to use as a fallback if a date is null or invalid.
+   * @param {boolean} isRTL `true` if the direction is "right to left".
    * @param {(date: TDate) => FieldSectionWithoutPosition[]} getSectionsFromDate Returns the sections of the given date.
    * @returns {TSection[]}  The new section list.
    */
@@ -201,15 +202,17 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     utils: MuiPickersAdapter<TDate>,
     value: TValue,
     fallbackSections: TSection[] | null,
+    isRTL: boolean,
     getSectionsFromDate: (date: TDate) => FieldSectionWithoutPosition[],
   ) => TSection[];
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
+   * @param {boolean} isRTL `true` is the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[]) => string;
+  getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
   /**
    * Filter the section list to only keep the sections in the same date as the active section.
    * On a single date field does nothing.
