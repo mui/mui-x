@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { PickersInputLocaleText } from '@mui/x-date-pickers';
+import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
-  DateOrTimeView,
   onSpaceOrEnter,
   useLocaleText,
   UsePickerResponse,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import {
   DateRange,
   MultiInputFieldSlotRootProps,

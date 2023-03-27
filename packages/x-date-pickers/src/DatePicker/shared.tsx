@@ -12,15 +12,10 @@ import {
   isYearAndMonthViews,
   isYearOnlyView,
 } from '../internals/utils/views';
-import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
+import { DateValidationError, DateView } from '../models';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import {
-  BaseDateValidationProps,
-  DateView,
-  MuiPickersAdapter,
-  UncapitalizeObjectKeys,
-} from '../internals';
+import { BaseDateValidationProps, MuiPickersAdapter, UncapitalizeObjectKeys } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,

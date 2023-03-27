@@ -32,9 +32,12 @@ function GridColumnHeaderMenu({
     (event: MouseEvent | TouchEvent) => {
       // Prevent triggering the sorting
       event.stopPropagation();
-      apiRef.current.hideColumnMenu();
+
+      if (!target?.contains(event.target as HTMLElement)) {
+        apiRef.current.hideColumnMenu();
+      }
     },
-    [apiRef],
+    [apiRef, target],
   );
 
   if (!target) {

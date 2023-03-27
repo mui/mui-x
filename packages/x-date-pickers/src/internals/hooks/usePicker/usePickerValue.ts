@@ -3,16 +3,12 @@ import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
-import {
-  FieldChangeHandlerContext,
-  FieldSection,
-  FieldSelectedSections,
-  UseFieldInternalProps,
-} from '../useField';
+import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
 import { MuiPickersAdapter } from '../../models/muiPickersAdapter';
+import { FieldSection, FieldSelectedSections } from '../../../models';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**

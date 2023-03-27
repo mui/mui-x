@@ -9,7 +9,7 @@ import {
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateView } from '../internals/models/views';
+import { DateView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface DesktopDatePickerSlotsComponent<TDate>

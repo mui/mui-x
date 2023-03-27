@@ -36,9 +36,9 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
     <GridColumnMenu
       {...props}
-      components={{
-        // Override slot for `ColumnMenuFilterItem`
-        ColumnMenuFilterItem: CustomFilterItem,
+      slots={{
+        // Override slot for `columnMenuFilterItem`
+        columnMenuFilterItem: CustomFilterItem,
       }}
     />
   );

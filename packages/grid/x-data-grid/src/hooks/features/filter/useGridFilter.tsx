@@ -103,7 +103,7 @@ export const useGridFilter = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuFilterItem'];
+      return [...columnMenuItems, 'columnMenuFilterItem'];
     },
     [props.disableColumnFilter],
   );

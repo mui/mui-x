@@ -2,8 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
+import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse } from 'test/utils/pickers-utils';
-import { TimeView } from '@mui/x-date-pickers/internals';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {

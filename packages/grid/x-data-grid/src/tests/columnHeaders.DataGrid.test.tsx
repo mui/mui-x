@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, within, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -50,7 +50,7 @@ describe('<DataGrid /> - Column Headers', () => {
     });
   });
 
-  describe('GridColumnHeaderMenu', () => {
+  describe('Column Menu', () => {
     it('should allow to hide column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -114,6 +114,22 @@ describe('<DataGrid /> - Column Headers', () => {
       clock.runToLast();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+    });
+
+    it('menu icon button should close column menu when already open', async () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+
+      userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.not.equal(null);
+
+      userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.equal(null);
     });
   });
 

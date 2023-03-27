@@ -80,7 +80,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Vis kolonner',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Usorter',

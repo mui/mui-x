@@ -1,14 +1,13 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
+import { useTheme } from '@mui/material/styles';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
-  FieldSection,
   UseFieldForwardedProps,
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldState,
   FieldSelectedSectionsIndexes,
-  FieldSelectedSections,
   FieldChangeHandlerContext,
 } from './useField.types';
 import {
@@ -21,6 +20,7 @@ import {
   getDateFromDateSections,
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
+import { FieldSection, FieldSelectedSections } from '../../../models';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {
   /**
@@ -49,6 +49,8 @@ export const useFieldState = <
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const adapter = useLocalizationContext<TDate>();
+  const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const {
     valueManager,
@@ -73,15 +75,19 @@ export const useFieldState = <
 
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
-      fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
+      fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
         splitFormatIntoSections(utils, localeText, format, date),
       ),
-    [fieldValueManager, format, localeText, utils],
+    [fieldValueManager, format, localeText, isRTL, utils],
   );
 
   const placeholder = React.useMemo(
-    () => fieldValueManager.getValueStrFromSections(getSectionsFromValue(valueManager.emptyValue)),
-    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue],
+    () =>
+      fieldValueManager.getValueStrFromSections(
+        getSectionsFromValue(valueManager.emptyValue),
+        isRTL,
+      ),
+    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue, isRTL],
   );
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
@@ -176,7 +182,7 @@ export const useFieldState = <
       modified: true,
     };
 
-    return addPositionPropertiesToSections<TSection>(newSections);
+    return addPositionPropertiesToSections<TSection>(newSections, isRTL);
   };
 
   const clearValue = () => {
