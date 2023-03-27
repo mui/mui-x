@@ -1,0 +1,11 @@
+<Stack spacing={2}>
+  {renderDateHeader('start')}
+  {renderDateHeader('end')}
+</Stack>
+<SingleInputDateRangeField
+  sx={{ minWidth: 300 }}
+  unstableFieldRef={fieldRef}
+  inputRef={inputRef}
+  selectedSections={selectedSections}
+  onSelectedSectionsChange={setSelectedSections}
+/>

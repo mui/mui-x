@@ -34,9 +34,12 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ...defaultizedProps.viewRenderers,
   };
 
+  const ampmInClock = defaultizedProps.ampmInClock ?? true;
+
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    ampmInClock,
     viewRenderers,
     slots: {
       field: TimeField,
@@ -53,6 +56,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
       }),
       toolbar: {
         hidden: true,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
@@ -80,7 +84,7 @@ DesktopTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -100,7 +104,7 @@ DesktopTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -245,7 +249,7 @@ DesktopTimePicker.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -288,7 +292,7 @@ DesktopTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

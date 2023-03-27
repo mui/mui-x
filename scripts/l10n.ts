@@ -16,7 +16,6 @@ const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
 const L10N_ISSUE_ID = 3211;
 const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
-const MAIN_BRANCH = 'next';
 
 const packagesWithL10n = [
   {
@@ -309,7 +308,7 @@ const generateDocReport = async (
       if (info == null) {
         return;
       }
-      const githubLink = `${SOURCE_CODE_REPO}/blob/${MAIN_BRANCH}/${info.path}/`;
+      const githubLink = `${SOURCE_CODE_REPO}/blob/-/${info.path}/`;
 
       const languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName
         .slice(2)

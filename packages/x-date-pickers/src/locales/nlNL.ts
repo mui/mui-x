@@ -26,10 +26,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Vandaag',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Selecteer datum',
+  dateTimePickerToolbarTitle: 'Selecteer datum & tijd',
+  timePickerToolbarTitle: 'Selecteer tijd',
+  dateRangePickerToolbarTitle: 'Selecteer datumbereik',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -43,10 +43,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} seconden`,
 
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Weeknummer',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

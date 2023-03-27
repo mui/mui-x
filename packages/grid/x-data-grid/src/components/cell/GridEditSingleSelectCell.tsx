@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -68,6 +67,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
+  const { MenuProps, ...otherBaseSelectProps } = rootProps.slotProps?.baseSelect || {};
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -131,8 +131,6 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     setOpen(true);
   };
 
-  const OptionComponent = isSelectNative ? 'option' : MenuItem;
-
   if (!valueOptions || !colDef) {
     return null;
   }
@@ -147,20 +145,26 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       onOpen={handleOpen}
       MenuProps={{
         onClose: handleClose,
+        ...MenuProps,
       }}
       error={error}
       native={isSelectNative}
       fullWidth
       {...other}
-      {...rootProps.slotProps?.baseSelect}
+      {...otherBaseSelectProps}
     >
       {valueOptions.map((valueOption) => {
         const value = getOptionValue(valueOption);
 
         return (
-          <OptionComponent key={value} value={value}>
+          <rootProps.slots.baseSelectOption
+            {...(rootProps.slotProps?.baseSelectOption || {})}
+            native={isSelectNative}
+            key={value}
+            value={value}
+          >
             {getOptionLabel(valueOption)}
-          </OptionComponent>
+          </rootProps.slots.baseSelectOption>
         );
       })}
     </rootProps.slots.baseSelect>

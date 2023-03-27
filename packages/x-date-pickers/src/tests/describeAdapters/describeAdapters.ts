@@ -21,11 +21,12 @@ function innerDescribeAdapters<P extends {}>(
   testRunner: AdapterTestRunner<P>,
 ) {
   ADAPTERS.forEach((adapterName) => {
-    describe(`${title} - adapter: ${adapterName}`, () => {
-      if (adapterName === 'moment') {
-        moment.locale('en');
-      }
+    // TODO: Set locale moment before the 1st test run
+    if (adapterName === 'moment') {
+      moment.locale('en');
+    }
 
+    describe(`${title} - adapter: ${adapterName}`, () => {
       const pickerRendererResponse = createPickerRenderer({
         adapterName,
         clock: 'fake',

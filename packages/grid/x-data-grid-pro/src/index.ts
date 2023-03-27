@@ -31,3 +31,5 @@ export {
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
+
+export { GridColumnHeaders } from './components/GridColumnHeaders';

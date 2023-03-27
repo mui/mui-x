@@ -47,6 +47,7 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'ختم کریں',
   filterPanelLogicOperator: 'لاجک آپریٹر',
   filterPanelOperator: 'آپریٹر',

@@ -3,30 +3,43 @@ import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import getWeek from 'date-fns-jalali/getWeek';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
+  // Year
   y: 'year',
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
+
+  // Month
   M: 'month',
   MM: 'month',
-  MMMM: { sectionName: 'month', contentType: 'letter' },
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  LLL: { sectionName: 'month', contentType: 'letter' },
-  LLLL: { sectionName: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  LLL: { sectionType: 'month', contentType: 'letter' },
+  LLLL: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
   d: 'day',
   dd: 'day',
+
+  // Meridiem
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
+
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
   hh: 'hours',
+
+  // Minutes
   mm: 'minutes',
+
+  // Seconds
   ss: 'seconds',
-  a: 'meridiem',
-  aa: 'meridiem',
-  aaa: 'meridiem',
 };
 
 export class AdapterDateFnsJalali

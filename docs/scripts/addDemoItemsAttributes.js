@@ -73,7 +73,7 @@ export default function transformer(file, api, options) {
         ? j.stringLiteral(children[0])
         : j.jsxExpressionContainer(j.arrayExpression(children.map((c) => j.stringLiteral(c))));
 
-      // Remove pervious prop
+      // Remove previous prop
       j(wrapperPath)
         .find(j.JSXAttribute)
         .filter((attribute) => attribute.node.name.name === propName)

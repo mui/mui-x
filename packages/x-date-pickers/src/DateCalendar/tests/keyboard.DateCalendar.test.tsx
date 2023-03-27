@@ -124,7 +124,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
     });
 
     describe('navigate months', () => {
-      it('should keep focus on arrow when swiching month', () => {
+      it('should keep focus on arrow when switching month', () => {
         render(<DateCalendar />);
 
         const nextMonthButton = screen.getByRole('button', { name: 'Next month' });

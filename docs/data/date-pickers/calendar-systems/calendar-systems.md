@@ -23,7 +23,7 @@ The following demo shows how to use the date-fns plugin:
 
 :::error
 The adapter with `moment-hijri` does not support the new fields components because the date library seems buggy when parsing a month only.
-If you want to help on the support of hijri calendar, please have a look at [this PR](https://github.com/xsoh/moment-hijri/issues/83).
+If you want to help on the support of hijri calendar, please have a look at [this issue](https://github.com/xsoh/moment-hijri/issues/83).
 :::
 
 You can use the `AdapterMomentHijri` adapter, which is based on [moment-hijri](https://www.npmjs.com/package/moment-hijri):
