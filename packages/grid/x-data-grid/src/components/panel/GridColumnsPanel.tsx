@@ -297,6 +297,14 @@ GridColumnsPanel.propTypes = {
   autoFocusSearchField: PropTypes.bool,
   disableHideAllButton: PropTypes.bool,
   disableShowAllButton: PropTypes.bool,
+  /**
+   * Returns the list of togglable columns.
+   * If used, only those columns will be displayed in the panel
+   * which are passed as the return value of the function.
+   * @param {GridColDef[]} columns The `ColDef` list of all columns.
+   * @returns {GridColDef['field'][]} The list of togglable columns' field names.
+   */
+  getTogglableColumns: PropTypes.func,
   searchPredicate: PropTypes.func,
   slotProps: PropTypes.object,
   sort: PropTypes.oneOf(['asc', 'desc']),
