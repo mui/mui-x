@@ -275,6 +275,10 @@ export const useGridClipboardImport = (
         return;
       }
 
+      if (columnFieldsToExcludeFromPaste.includes(selectedCell.field)) {
+        return;
+      }
+
       const selectedRowId = selectedCell.id;
       const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
       const visibleRows = getVisibleRows(apiRef, {
@@ -284,6 +288,7 @@ export const useGridClipboardImport = (
 
       const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
 
+      const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
       rowsData.forEach((rowData, index) => {
         const parsedData = rowData.split('\t');
         const targetRow = visibleRows.rows[selectedRowIndex + index];
@@ -293,7 +298,6 @@ export const useGridClipboardImport = (
         }
 
         const rowId = targetRow.id;
-        const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
         for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
           const field = visibleColumnFields[i];
           const stringValue = parsedData[i - selectedFieldIndex];
