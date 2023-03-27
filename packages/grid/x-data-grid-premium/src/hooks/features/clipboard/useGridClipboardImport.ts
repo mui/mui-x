@@ -153,6 +153,10 @@ class CellValueUpdater {
       const oldRow = apiRef.current.getRow(rowId);
       onRowPastePayload.push([newRow, oldRow]);
     });
+    if (rowsToUpdateArr.length === 0) {
+      return;
+    }
+
     apiRef.current.updateRows(rowsToUpdateArr);
 
     // call onRowPaste with the new and old rows
