@@ -49,7 +49,7 @@ export function Highlight() {
       {axis.y !== null && (
         <path
           d={`M ${xScale(xScale.domain()[0])} ${yScale(axis.y.value)} L ${xScale(
-            xScale.domain().at(-1),
+            xScale.domain().at(-1)!,
           )} ${yScale(axis.y.value)}`}
           stroke="black"
           strokeDasharray="5 2"

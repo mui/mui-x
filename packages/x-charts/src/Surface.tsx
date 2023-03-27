@@ -5,23 +5,25 @@ import { CartesianContext } from './context/CartesianContextProvider';
 import { InteractionContext } from './context/InteractionProvider';
 import { DrawingContext } from './context/DrawingProvider';
 
+type ViewBox = {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+};
 export interface SurfaceProps {
   width: number;
   height: number;
   interactionApiRef: React.RefObject<any>;
-  viewBox?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-  };
+  viewBox?: ViewBox;
   className?: string;
   title?: string;
   desc?: string;
   children?: React.ReactNode;
 }
 
-const useAxisEvents = (interactionApiRef: React.RefObject<any>, { width, height, top, left }) => {
+const useAxisEvents = (interactionApiRef: React.RefObject<any>) => {
+  const { width, height, top, left } = React.useContext(DrawingContext);
   const { xAxis, yAxis } = React.useContext(CartesianContext);
   const { dispatch } = React.useContext(InteractionContext);
 
@@ -127,10 +129,9 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
   ref,
 ) {
   const { children, width, height, viewBox, interactionApiRef, className, ...other } = props;
-  const drawingArea = React.useContext(DrawingContext);
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
 
-  const { handleMouseOut, handleMouseMove } = useAxisEvents(interactionApiRef, drawingArea);
+  const { handleMouseOut, handleMouseMove } = useAxisEvents(interactionApiRef);
 
   return (
     <svg
