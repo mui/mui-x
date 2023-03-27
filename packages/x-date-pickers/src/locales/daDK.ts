@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
+// maps TimeView to its translation
+const timeViews = {
+  hours: 'Timer',
+  minutes: 'Minutter',
+  seconds: 'Sekunder',
+};
+
 const daDKPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Forrige måned',
@@ -32,7 +39,7 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Vælg ${view}. ${
+    `Vælg ${timeViews[view] ?? view}. ${
       time === null
         ? 'Intet tidspunkt valgt'
         : `Valgte tidspunkt er ${adapter.format(time, 'fullTime')}`
@@ -71,7 +78,5 @@ const daDKPickers: Partial<PickersLocaleText<any>> = {
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 };
-
-export const DEFAULT_LOCALE = daDKPickers;
 
 export const daDK = getPickersLocalization(daDKPickers);
