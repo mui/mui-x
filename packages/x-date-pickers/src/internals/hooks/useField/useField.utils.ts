@@ -237,7 +237,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   return adjustLetterSection();
 };
 
-const getSectionVisibleValue = (
+export const getSectionVisibleValue = (
   section: FieldSectionWithoutPosition,
   target: 'input-rtl' | 'input-ltr' | 'non-input',
 ) => {
