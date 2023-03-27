@@ -509,7 +509,7 @@ export const splitFormatIntoSections = <TDate>(
     const char = expandedFormat[i];
     const isEscapedChar = escapedPartOfCurrentChar != null;
     const potentialToken = `${currentTokenValue}${expandedFormat.slice(i)}`;
-    if (!isEscapedChar && isTokenStartRegExp.test(potentialToken)) {
+    if (!isEscapedChar && char.match(/([A-Za-z]+)/) && isTokenStartRegExp.test(potentialToken)) {
       currentTokenValue += char;
     } else {
       // If we are on the opening or closing character of an escaped part of the format,
