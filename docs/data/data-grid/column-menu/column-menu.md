@@ -20,7 +20,7 @@ You can customize the column menu items by passing the `slots` and `slotProps` p
 ### Adding a menu item
 
 To add a new menu item, create a new item slot and pass it to the `slots` prop. In the example below, the new slot is called `columnMenuUserItem` but you can choose any name and it'll be added to the menu automatically.
-You can also set the `displayOrder` (default `100`) or pass new props to the slots using `slotProps` prop.
+You can also set the `displayOrder` (default `100`) or pass new props to the slots using the `slotProps` prop.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
