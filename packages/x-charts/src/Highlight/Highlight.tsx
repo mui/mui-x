@@ -43,6 +43,7 @@ export function Highlight() {
             axis.x.value,
           )} ${yScale(yScale.domain().at(-1))}`}
           stroke="black"
+          strokeDasharray="5 2"
         />
       )}
       {axis.y !== null && (
@@ -51,6 +52,7 @@ export function Highlight() {
             xScale.domain().at(-1),
           )} ${yScale(axis.y.value)}`}
           stroke="black"
+          strokeDasharray="5 2"
         />
       )}
     </React.Fragment>
