@@ -478,16 +478,16 @@ export const splitFormatIntoSections = <TDate>(
   };
 
   // Expand the provided format
-  let formatExpensionOverflow = 10;
+  let formatExpansionOverflow = 10;
   let prevFormat = format;
   let nextFormat = utils.expandFormat(format);
   while (nextFormat !== prevFormat) {
     prevFormat = nextFormat;
     nextFormat = utils.expandFormat(prevFormat);
-    formatExpensionOverflow -= 1;
-    if (formatExpensionOverflow < 0) {
+    formatExpansionOverflow -= 1;
+    if (formatExpansionOverflow < 0) {
       throw new Error(
-        'MUI: The format exmpension seems to be  enter in an infint loop. Please open an issue with the format passed to the picker component',
+        'MUI: The format expansion seems to be  enter in an infinite loop. Please open an issue with the format passed to the picker component',
       );
     }
   }
@@ -496,7 +496,7 @@ export const splitFormatIntoSections = <TDate>(
   // Get start/end indexes of escaped sections
   const escapedParts = getEscapedPartsFromFormat(utils, expandedFormat);
 
-  // This RegExp test if the begining of a string correspond to a supported token
+  // This RegExp test if the beginning of a string correspond to a supported token
   const isTokenStartRegExp = new RegExp(`^(${Object.keys(utils.formatTokenMap).join('|')})`);
 
   let currentTokenValue = '';
