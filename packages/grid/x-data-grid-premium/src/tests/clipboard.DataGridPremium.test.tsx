@@ -354,7 +354,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
       userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
 
-      await waitFor(() => expect(onRowPasteSpy.callCount).to.equal(1));
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Jon', 'John']));
+      expect(onRowPasteSpy.callCount).to.equal(1);
       expect(onRowPasteSpy.args[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
