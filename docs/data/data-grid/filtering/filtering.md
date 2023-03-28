@@ -47,6 +47,23 @@ To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` o
 
 {{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Header filtering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+:::warning
+This feature is experimental, it needs to be explicitly activated using the `headerFiltering` experimental feature flag.
+
+```tsx
+<DataGrid experimentalFeatures={{ headerFiltering: true }} {...otherProps} />
+```
+
+To use header filtering, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
+
+:::
+
+Header filtering adds a new header row using which you can add quick filters to the columns. You can also access the filters added using header filter in the regular filter panel.
+
+{{"demo": "HeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Pass filters to the Data Grid
 
 ### Structure of the model
