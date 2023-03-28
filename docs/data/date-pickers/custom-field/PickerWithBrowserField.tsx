@@ -35,6 +35,9 @@ interface BrowserFieldProps extends React.InputHTMLAttributes<HTMLInputElement> 
     endAdornment?: React.ReactNode;
     startAdornment?: React.ReactNode;
   };
+  error?: boolean;
+  focused?: boolean;
+  ownerState?: any;
 }
 
 type BrowserFieldComponent = ((
@@ -48,6 +51,10 @@ const BrowserField = React.forwardRef(
       id,
       label,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
+      // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
+      error,
+      focused,
+      ownerState,
       ...other
     } = props;
 

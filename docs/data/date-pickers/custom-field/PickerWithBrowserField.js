@@ -18,6 +18,10 @@ const BrowserField = React.forwardRef((props, inputRef) => {
     id,
     label,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
+    // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
+    error,
+    focused,
+    ownerState,
     ...other
   } = props;
 
