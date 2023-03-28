@@ -4,6 +4,7 @@ import {
   useGridApiRef,
   DataGridPremium,
   DataGridPremiumProps,
+  GridColDef,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/monorepo/test/utils';
@@ -307,6 +308,57 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
       });
       expect(getColumnValues(1)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+
+    it('should use valueSetter if the column has one', async () => {
+      const onRowPasteSpy = spy();
+
+      const columns: GridColDef[] = [
+        { field: 'firstName' },
+        { field: 'lastName' },
+        {
+          field: 'fullName',
+          valueGetter: (params) => {
+            return `${params.row.firstName} ${params.row.lastName}`;
+          },
+          valueSetter: (params) => {
+            const [firstName, lastName] = params.value!.toString().split(' ');
+            return { ...params.row, firstName, lastName };
+          },
+        },
+      ];
+      const rows = [
+        { id: 0, firstName: 'Jon', lastName: 'Snow' },
+        { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
+      ];
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              rowSelection={false}
+              onRowPaste={onRowPasteSpy}
+            />
+          </div>
+        );
+      }
+
+      render(<Component />);
+
+      const clipboardData = 'John Doe';
+      readText.returns(clipboardData);
+
+      const cell = getCell(1, 2);
+      cell.focus();
+      userEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+
+      await waitFor(() => expect(onRowPasteSpy.callCount).to.equal(1));
+      expect(onRowPasteSpy.args[0]).to.deep.equal([
+        { id: 1, firstName: 'John', lastName: 'Doe' },
+        { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
+      ]);
     });
   });
 });
