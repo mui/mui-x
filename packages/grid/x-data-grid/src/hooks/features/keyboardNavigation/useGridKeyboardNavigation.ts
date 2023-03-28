@@ -86,7 +86,10 @@ const getRightColumnIndex = ({
  */
 export const useGridKeyboardNavigation = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode' | 'getRowId'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'pagination' | 'paginationMode' | 'getRowId' | 'experimentalFeatures' | 'signature'
+  >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
   const initialCurrentPageRows = useGridVisibleRows(apiRef, props).rows;
@@ -96,6 +99,10 @@ export const useGridKeyboardNavigation = (
     () => enrichPageRowsWithPinnedRows(apiRef, initialCurrentPageRows),
     [apiRef, initialCurrentPageRows],
   );
+
+  const headerFilteringEnabled =
+    // @ts-expect-error // TODO move relevant code to the `DataGridPro`
+    props.signature !== 'DataGrid' && props.experimentalFeatures?.headerFiltering;
 
   /**
    * @param {number} colIndex Index of the column to focus
@@ -196,8 +203,11 @@ export const useGridKeyboardNavigation = (
       switch (event.key) {
         case 'ArrowDown': {
           if (firstRowIndexInPage !== null) {
-            // goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
-            goToHeaderFilter(colIndexBefore, event);
+            if (headerFilteringEnabled) {
+              goToHeaderFilter(colIndexBefore, event);
+            } else {
+              goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
+            }
           }
           break;
         }
@@ -283,12 +293,13 @@ export const useGridKeyboardNavigation = (
     [
       apiRef,
       currentPageRows.length,
+      headerFilteringEnabled,
       goToHeaderFilter,
+      goToCell,
+      getRowIdFromIndex,
       theme.direction,
       goToHeader,
       goToGroupHeader,
-      goToCell,
-      getRowIdFromIndex,
     ],
   );
 
@@ -574,8 +585,10 @@ export const useGridKeyboardNavigation = (
         case 'ArrowUp': {
           if (rowIndexBefore > firstRowIndexInPage) {
             goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore - 1));
-          } else {
+          } else if (headerFilteringEnabled) {
             goToHeaderFilter(colIndexBefore, event);
+          } else {
+            goToHeader(colIndexBefore, event);
           }
           break;
         }
@@ -696,6 +709,7 @@ export const useGridKeyboardNavigation = (
       theme.direction,
       goToCell,
       getRowIdFromIndex,
+      headerFilteringEnabled,
       goToHeaderFilter,
       goToHeader,
     ],

@@ -32,8 +32,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity(props);
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
-  // TODO: Remove `false ?? ` before merging
-  const disableHeaderFiltering = false ?? !rootProps.experimentalFeatures?.headerFiltering;
+  const disableHeaderFiltering = !rootProps.experimentalFeatures?.headerFiltering;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
   const totalHeaderHeight =
     getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
