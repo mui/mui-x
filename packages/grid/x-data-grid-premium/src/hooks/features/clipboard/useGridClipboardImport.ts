@@ -177,14 +177,18 @@ export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'pagination' | 'paginationMode' | 'onRowPaste' | 'getRowId'
+    'pagination' | 'paginationMode' | 'onRowPaste' | 'getRowId' | 'unstable_enableClipboardPaste'
   >,
 ): void => {
   const onRowPaste = props.onRowPaste;
   const getRowId = props.getRowId;
+  const enableClipboardPaste = props.unstable_enableClipboardPaste;
 
   const handlePaste = React.useCallback(
     async (event: KeyboardEvent) => {
+      if (!enableClipboardPaste) {
+        return;
+      }
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
       if (String.fromCharCode(event.keyCode) !== 'V' || !isModifierKeyPressed) {
         return;
@@ -312,7 +316,7 @@ export const useGridClipboardImport = (
 
       cellUpdater.applyUpdates();
     },
-    [apiRef, props.pagination, props.paginationMode, onRowPaste, getRowId],
+    [apiRef, props.pagination, props.paginationMode, onRowPaste, getRowId, enableClipboardPaste],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);

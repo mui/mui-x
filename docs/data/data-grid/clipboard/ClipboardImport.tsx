@@ -222,6 +222,7 @@ export default function ClipboardImport() {
             console.log('onRowPaste', newRow);
             updateRow(newRow);
           }}
+          unstable_enableClipboardPaste
         />
       </div>
     </div>

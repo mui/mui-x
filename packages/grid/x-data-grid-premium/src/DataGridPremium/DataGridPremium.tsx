@@ -926,6 +926,10 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_cellSelectionModel: PropTypes.object,
   /**
+   * If `true`, the grid will allow to paste data from clipboard.
+   */
+  unstable_enableClipboardPaste: PropTypes.bool,
+  /**
    * Callback fired when the selection state of one or multiple cells changes.
    * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
    * @param {GridCallbackDetails} details Additional details for this callback.

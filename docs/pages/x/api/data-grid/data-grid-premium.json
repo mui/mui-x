@@ -254,6 +254,7 @@
     "treeData": { "type": { "name": "bool" } },
     "unstable_cellSelection": { "type": { "name": "bool" } },
     "unstable_cellSelectionModel": { "type": { "name": "object" } },
+    "unstable_enableClipboardPaste": { "type": { "name": "bool" } },
     "unstable_onCellSelectionModelChange": { "type": { "name": "func" } }
   },
   "slots": {

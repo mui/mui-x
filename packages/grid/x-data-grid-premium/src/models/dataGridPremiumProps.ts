@@ -114,6 +114,10 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
+  /**
+   * If `true`, the grid will allow to paste data from clipboard.
+   */
+  unstable_enableClipboardPaste?: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
