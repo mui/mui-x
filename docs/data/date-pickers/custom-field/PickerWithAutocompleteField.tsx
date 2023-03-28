@@ -16,6 +16,9 @@ import {
 interface AutoCompleteFieldProps
   extends UseDateFieldProps<Dayjs>,
     BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {
+  /**
+   * @typescript-to-proptypes-ignore
+   */
   options?: Dayjs[];
 }
 
@@ -96,6 +99,9 @@ function AutocompleteField(props: AutoCompleteFieldProps) {
 }
 
 interface AutocompleteDatePickerProps extends DatePickerProps<Dayjs> {
+  /**
+   * @typescript-to-proptypes-ignore
+   */
   options: Dayjs[];
 }
 
