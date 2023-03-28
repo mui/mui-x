@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
 import { SelectChangeEvent } from '@mui/material/Select';
 import {
   AutocompleteProps,
@@ -68,7 +70,7 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
     error,
     helperText,
     size,
-    variant,
+    variant = 'standard',
     field,
     row,
     rowNode,
@@ -98,6 +100,7 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
   const ref = React.useRef<any>();
   const inputRef = React.useRef<any>();
   const [open, setOpen] = React.useState(initialOpen);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>();
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -109,6 +112,10 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
   if (isMultipleSelectColDef(colDef)) {
     resolvedColumn = colDef;
   }
+
+  const handleRef = React.useCallback((el: HTMLElement | null) => {
+    setAnchorEl(el);
+  }, []);
 
   const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
   const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
@@ -211,44 +218,72 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
   };
 
   return (
-    <rootProps.slots.baseMultipleSelect
-      multiple
-      ref={ref}
-      options={resolvedValueOptions}
-      isOptionEqualToValue={isOptionEqualToValue}
-      filterOptions={filter}
-      value={filteredValues}
-      onChange={handleChange}
-      getOptionLabel={getOptionLabel}
-      renderTags={(value: ValueOptions[], getTagProps: AutocompleteRenderGetTagProps) =>
-        value.map((option, index) => (
-          <Chip
-            variant="outlined"
-            size="small"
-            label={getOptionLabel(option)}
-            {...getTagProps({ index })}
-          />
-        ))
-      }
-      renderInput={(params: AutocompleteRenderInputParams) => (
-        <rootProps.slots.baseTextField
-          {...params}
-          InputLabelProps={{
-            ...params.InputLabelProps,
-          }}
-          inputRef={focusElementRef}
-          {...TextFieldProps}
-          {...rootProps.slotProps?.baseTextField}
-        />
+    <div style={{ position: 'relative', alignSelf: 'flex-start' }}>
+      <div
+        ref={handleRef}
+        style={{
+          height: 1,
+          width: colDef.computedWidth,
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+        }}
+      />
+      {anchorEl && (
+        <Popper open anchorEl={anchorEl} placement="bottom-start">
+          <Paper
+            elevation={1}
+            sx={{
+              p: 1,
+              minWidth: colDef.computedWidth,
+              maxWidth: colDef.computedWidth,
+            }}
+          >
+            <rootProps.slots.baseMultipleSelect
+              multiple
+              ref={ref}
+              options={resolvedValueOptions}
+              isOptionEqualToValue={isOptionEqualToValue}
+              filterOptions={filter}
+              value={filteredValues}
+              onChange={handleChange}
+              getOptionLabel={getOptionLabel}
+              renderTags={(value: ValueOptions[], getTagProps: AutocompleteRenderGetTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    label={getOptionLabel(option)}
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params: AutocompleteRenderInputParams) => (
+                <rootProps.slots.baseTextField
+                  {...params}
+                  InputLabelProps={{
+                    ...params.InputLabelProps,
+                    shrink: true,
+                  }}
+                  inputRef={focusElementRef}
+                  type="multipleSelect"
+                  {...TextFieldProps}
+                  {...rootProps.slotProps?.baseTextField}
+                />
+              )}
+              size="small"
+              fullWidth
+              open={open}
+              onOpen={handleOpen}
+              onClose={handleClose}
+              disableCloseOnSelect
+              {...other}
+              {...rootProps.slotProps?.baseMultipleSelect}
+            />
+          </Paper>
+        </Popper>
       )}
-      fullWidth
-      open={open}
-      onOpen={handleOpen}
-      onClose={handleClose}
-      disableCloseOnSelect
-      {...other}
-      {...rootProps.slotProps?.baseMultipleSelect}
-    />
+    </div>
   );
 }
 
