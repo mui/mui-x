@@ -132,8 +132,13 @@ class CellValueUpdater {
     if (parsedValue === undefined) {
       return;
     }
-    const rowCopy = { ...row };
-    rowCopy[field] = parsedValue;
+
+    let rowCopy = { ...row };
+    if (typeof colDef.valueSetter === 'function') {
+      rowCopy = colDef.valueSetter({ value: parsedValue, row: rowCopy });
+    } else {
+      rowCopy[field] = parsedValue;
+    }
     const newRowId = getRowIdFromRowModel(rowCopy, this.getRowId);
     if (String(newRowId) !== String(rowId)) {
       // We cannot update row id, so this cell value update should be ignored
