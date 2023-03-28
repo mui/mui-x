@@ -22,7 +22,7 @@ import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Filter', () => {
+describe.only('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -357,6 +357,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).not.to.equal(null);
   });
 
   it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
@@ -375,6 +376,7 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).not.to.equal(null);
     expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
   });
 
