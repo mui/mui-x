@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DateIOFormats } from '@date-io/core/IUtils';
 import { useThemeProps } from '@mui/material/styles';
-import { MuiPickersAdapter } from '../internals/models';
+import { AdapterFormats, MuiPickersAdapter } from '../models';
 import { PickersInputLocaleText } from '../locales';
 
 export interface MuiPickersAdapterContextValue<TDate> {
@@ -34,7 +33,7 @@ export interface LocalizationProviderProps<TDate> {
    */
   dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate>;
   /** Formats that are used for any child pickers */
-  dateFormats?: Partial<DateIOFormats>;
+  dateFormats?: Partial<AdapterFormats>;
   /**
    * Date library instance you are using, if it has some global overrides
    * ```jsx

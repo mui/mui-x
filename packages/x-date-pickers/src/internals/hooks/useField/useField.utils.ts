@@ -7,8 +7,7 @@ import {
   FieldSectionWithoutPosition,
   FieldSectionValueBoundaries,
 } from './useField.types';
-import { MuiPickersAdapter } from '../../models';
-import { FieldSectionType, FieldSection } from '../../../models';
+import { FieldSectionType, FieldSection, MuiPickersAdapter } from '../../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(

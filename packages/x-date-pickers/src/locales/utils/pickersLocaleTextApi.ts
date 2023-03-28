@@ -1,5 +1,4 @@
-import { MuiPickersAdapter } from '../../internals/models';
-import { DateView, TimeView } from '../../models';
+import { DateView, TimeView, MuiPickersAdapter } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
