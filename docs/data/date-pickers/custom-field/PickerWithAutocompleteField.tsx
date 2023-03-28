@@ -42,7 +42,13 @@ function AutocompleteField(props: AutoCompleteFieldProps) {
       return nonNullAdornments[0];
     }
 
-    return <Stack direction="row">{nonNullAdornments}</Stack>;
+    return (
+      <Stack direction="row">
+        {nonNullAdornments.map((adornment, index) => (
+          <React.Fragment key={index}>{adornment}</React.Fragment>
+        ))}
+      </Stack>
+    );
   };
 
   return (
