@@ -1,7 +1,9 @@
-<SyncThemeMode mode={mode} />
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <DemoContainer components={['DatePicker', 'DateRangePicker']}>
-    <JoyDatePicker />
-    <JoyDateRangePicker />
-  </DemoContainer>
-</LocalizationProvider>
+<CssVarsProvider theme={mergedTheme}>
+  <SyncThemeMode mode={mode} />
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <DemoContainer components={['DatePicker', 'DateRangePicker']}>
+      <JoyDatePicker />
+      <JoyDateRangePicker />
+    </DemoContainer>
+  </LocalizationProvider>
+</CssVarsProvider>
