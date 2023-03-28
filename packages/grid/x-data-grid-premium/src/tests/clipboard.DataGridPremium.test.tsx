@@ -237,7 +237,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
 
     it('should work well with `getRowId` prop', async () => {
-      const columns = [{ field: 'brand' }];
+      const columns = [{ field: 'brand', editable: true }];
       const rows = [
         { customIdField: 0, brand: 'Nike' },
         { customIdField: 1, brand: 'Adidas' },
@@ -328,6 +328,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
             const [firstName, lastName] = params.value!.toString().split(' ');
             return { ...params.row, firstName, lastName };
           },
+          editable: true,
         },
       ];
       const rows = [
@@ -364,6 +365,55 @@ describe('<DataGridPremium /> - Clipboard', () => {
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
       ]);
+    });
+
+    it('should only paste if the cell is editable', async () => {
+      const rows = [
+        { id: 0, brand: 'Nike', category: 'Shoes', price: '$120', rating: '4.0' },
+        { id: 1, brand: 'Adidas', category: 'Sneakers', price: '$100', rating: '4.2' },
+        { id: 2, brand: 'Puma', category: 'Shoes', price: '$90', rating: '4.9' },
+      ];
+      const columns: GridColDef[] = [
+        { field: 'id' },
+        { field: 'brand', editable: true },
+        { field: 'category', editable: true },
+        { field: 'price', editable: false },
+        { field: 'rating', editable: true },
+      ];
+
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              rowSelection={false}
+              unstable_cellSelection
+              unstable_enableClipboardPaste
+              disableVirtualization
+            />
+          </div>
+        );
+      }
+
+      render(<Component />);
+
+      const clipboardData = ['0', 'Nike', 'Shoes', '$120', '4.0'].join('\t');
+      readText.returns(clipboardData);
+
+      const cell = getCell(1, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(1, 4), { shiftKey: true });
+
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+
+      await waitFor(() => expect(getColumnValues(1)).to.deep.equal(['Nike', 'Nike', 'Puma']));
+      expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
+      expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
+      expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
     });
   });
 });

@@ -171,6 +171,7 @@ const useSessionStorageData = () => {
     dataSet: 'Commodity',
     rowLength: 0,
     maxColumns: 6,
+    editable: true,
   });
 
   const [rows] = React.useState(() => {

@@ -117,7 +117,7 @@ class CellValueUpdater {
   }) {
     const apiRef = this.apiRef;
     const colDef = apiRef.current.getColumn(field);
-    if (!colDef) {
+    if (!colDef || !colDef.editable) {
       return;
     }
     if (pastedCellValue === undefined) {
