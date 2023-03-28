@@ -320,9 +320,7 @@ function JoyDatePicker(props: DatePickerProps<Dayjs>) {
       {...props}
       slots={{ field: JoyDateField, ...props.slots }}
       slotProps={{
-        ...props.slotProps,
         field: {
-          ...props.slotProps?.field,
           formControlSx: {
             flexDirection: 'row',
           },
