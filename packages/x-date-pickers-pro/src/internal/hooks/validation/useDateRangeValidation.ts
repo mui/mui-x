@@ -1,9 +1,5 @@
-import {
-  Validator,
-  DateValidationError,
-  validateDate,
-  BaseDateValidationProps,
-} from '@mui/x-date-pickers/internals';
+import { Validator, validateDate, BaseDateValidationProps } from '@mui/x-date-pickers/internals';
+import { DateValidationError } from '@mui/x-date-pickers/models';
 import { isRangeValid } from '../../utils/date-utils';
 import { DateRange, DayRangeValidationProps } from '../../models';
 

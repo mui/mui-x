@@ -51,7 +51,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
         );
       } else {
         const input = getTextbox();
-        clickOnInput(input, 10); // Update the day
+        clickOnInput(input, 9); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

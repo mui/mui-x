@@ -7,7 +7,6 @@ import {
 } from '@mui/x-date-pickers/DateTimeField';
 import {
   applyDefaultDate,
-  DateTimeValidationError,
   useDefaultDates,
   useLocalizationContext,
   useUtils,
@@ -16,6 +15,7 @@ import {
   FieldChangeHandlerContext,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
+import { DateTimeValidationError } from '@mui/x-date-pickers/models';
 import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import type {
@@ -63,9 +63,10 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldProps extends {
   endTextFieldProps,
   endInputRef,
   unstableEndFieldRef,
-}: UseMultiInputDateTimeRangeFieldParams<TDate, TTextFieldProps>): UseMultiInputRangeFieldResponse<
-  TTextFieldProps & UseDateTimeFieldProps<TDate>
-> => {
+}: UseMultiInputDateTimeRangeFieldParams<
+  TDate,
+  TTextFieldProps
+>): UseMultiInputRangeFieldResponse<TTextFieldProps> => {
   const sharedProps = useDefaultizedDateTimeRangeFieldProps<TDate, UseDateTimeFieldProps<TDate>>(
     inSharedProps,
   );

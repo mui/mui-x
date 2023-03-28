@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TimeView } from '@mui/x-date-pickers/internals';
+import { TimeView } from '../models';
 import { StaticTimePickerProps } from './StaticTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';

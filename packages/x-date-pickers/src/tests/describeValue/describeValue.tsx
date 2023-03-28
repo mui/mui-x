@@ -1,10 +1,7 @@
 import * as React from 'react';
 import createDescribe from '@mui/monorepo/test/utils/createDescribe';
-import {
-  BasePickerInputProps,
-  UsePickerValueNonStaticProps,
-  FieldSection,
-} from '@mui/x-date-pickers/internals';
+import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
+import { FieldSection } from '@mui/x-date-pickers/models';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';

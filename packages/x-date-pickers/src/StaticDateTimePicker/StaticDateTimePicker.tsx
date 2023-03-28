@@ -6,7 +6,7 @@ import { renderTimeViewClock } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView } from '../internals/models';
+import { DateOrTimeView } from '../models';
 import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 

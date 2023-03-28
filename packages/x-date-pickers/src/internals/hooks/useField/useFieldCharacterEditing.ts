@@ -1,8 +1,8 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType } from '../../models/muiPickersAdapter';
+import { FieldSectionType, FieldSection } from '../../../models';
 import { useUtils } from '../useUtils';
-import { FieldSectionsValueBoundaries, FieldSection } from './useField.types';
+import { FieldSectionsValueBoundaries } from './useField.types';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
