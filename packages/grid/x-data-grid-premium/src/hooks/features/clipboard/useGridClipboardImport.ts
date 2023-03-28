@@ -35,7 +35,7 @@ const stringToBoolean = (value: string) => {
       return false;
 
     default:
-      return JSON.parse(value);
+      return undefined;
   }
 };
 
