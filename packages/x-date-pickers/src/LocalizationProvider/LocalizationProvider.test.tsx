@@ -4,7 +4,8 @@ import { spy } from 'sinon';
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocalizationContext } from '@mui/x-date-pickers/internals';
-import { LocalizationProvider, PickersLocaleText } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { PickersLocaleText } from '@mui/x-date-pickers/locales';
 import { AdapterClassToUse } from 'test/utils/pickers-utils';
 
 function ContextListener({

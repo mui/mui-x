@@ -64,10 +64,24 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<
         'Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2',
       );
     }
-    // The returned format can contain `yyyyy` which means year between 4 and 6 digits.
-    // This value is supported by luxon parser but not luxon formatter.
-    // To avoid conflicts, we replace it by 4 digits which is enough for most use-cases.
-    return DateTime.expandFormat(format, { locale: this.locale }).replace('yyyyy', 'yyyy');
+    // Extract escaped section to avoid entending them
+    const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+    return (
+      format
+        .match(longFormatRegexp)!
+        .map((token: string) => {
+          const firstCharacter = token[0];
+          if (firstCharacter === "'") {
+            return token;
+          }
+          return DateTime.expandFormat(token, { locale: this.locale });
+        })
+        .join('')
+        // The returned format can contain `yyyyy` which means year between 4 and 6 digits.
+        // This value is supported by luxon parser but not luxon formatter.
+        // To avoid conflicts, we replace it by 4 digits which is enough for most use-cases.
+        .replace('yyyyy', 'yyyy')
+    );
   };
 
   // Redefined here just to show how it can be written using expandFormat

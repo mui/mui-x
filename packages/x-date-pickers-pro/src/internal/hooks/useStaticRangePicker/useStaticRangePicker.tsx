@@ -6,12 +6,8 @@ import {
   PickersLayout,
   PickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import {
-  DateOrTimeView,
-  usePicker,
-  DIALOG_WIDTH,
-  ExportedBaseToolbarProps,
-} from '@mui/x-date-pickers/internals';
+import { usePicker, DIALOG_WIDTH, ExportedBaseToolbarProps } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
