@@ -5,26 +5,14 @@ import {
 } from 'd3-shape';
 import defaultizeCartesianSeries from '../internals/defaultizeCartesianSeries';
 import { getStackingGroups } from '../internals/stackSeries';
-import { LineSeriesType } from '../models/seriesType';
-
-export type FormatterParams = { series: { [id: string]: LineSeriesType }; seriesOrder: string[] };
-
-export interface StackedLineSeriesType extends LineSeriesType {
-  stackedData: [number, number][];
-}
-
-export type FormatterResult = {
-  series: { [id: string]: StackedLineSeriesType };
-  seriesOrder: string[];
-  stackingGroups: string[][];
-};
+import { ChartSeries, Formatter } from '../models/seriesType/config';
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
-const formatter = (params: FormatterParams): FormatterResult => {
+const formatter: Formatter<'line'> = (params) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 
-  // Create a data set with format addapted to d3
+  // Create a data set with format adapted to d3
   const d3Dataset: { [id: string]: number }[] = [];
   seriesOrder.forEach((id) => {
     series[id].data.forEach((value, index) => {
@@ -36,7 +24,7 @@ const formatter = (params: FormatterParams): FormatterResult => {
     });
   });
 
-  const complettedSeries: FormatterResult['series'] = {};
+  const completedSeries: { [id: string]: ChartSeries<'line'> } = {};
 
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain
@@ -46,14 +34,14 @@ const formatter = (params: FormatterParams): FormatterResult => {
       .offset(d3StackOffsetNone)(d3Dataset);
 
     stackingGroup.forEach((id, index) => {
-      complettedSeries[id] = {
+      completedSeries[id] = {
         ...series[id],
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
       };
     });
   });
 
-  return { seriesOrder, stackingGroups, series: defaultizeCartesianSeries(complettedSeries) };
+  return { seriesOrder, stackingGroups, series: defaultizeCartesianSeries(completedSeries) };
 };
 
 export default formatter;
