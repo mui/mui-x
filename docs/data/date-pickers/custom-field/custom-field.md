@@ -38,7 +38,7 @@ You can manually add an `endAdornment` if you want your range picker to look exa
 
 {{"demo": "SingleInputDateRangePickerWithAdornment.js"}}
 
-:::warning
+:::info
 This adornment is purely decorative, the focus remains on the field when the picker is opened.
 :::
 
