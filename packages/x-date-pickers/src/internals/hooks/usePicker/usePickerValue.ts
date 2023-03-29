@@ -83,55 +83,45 @@ export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
 interface UsePickerValueState<TValue> {
   /**
-   * Date internally used on the picker and displayed in the input.
+   * Date internally used on the views and displayed in the input.
    * It is updated whenever the user modifies a step.
    */
   draft: TValue;
   /**
-   * Last full date provided by the user
-   * It is not updated when validating a step of a multistep picker (e.g. validating the date of a date time picker)
+   * Last value published (e.g: the last value passed to `onChange` if it was defined).
    */
-  committed: TValue;
+  lastPublishedValue: TValue;
   /**
-   * Date that will be used if the picker tries to reset its value
+   * Last value committed (e.g: the last value passed to `onAccept` if it was defined).
    */
-  resetFallback: TValue;
-  isDefaultValue: boolean;
+  lastCommittedValue: TValue;
+  /**
+   * Last value passed with `props.value`.
+   */
+  lastControlledValue: TValue | undefined;
+  hasBeenCommittedSinceMount: boolean;
 }
 
-type PickerValueActionType =
-  /**
-   * Set the draft, committed and accepted dates to the action value
-   * Closes the picker
-   */
-  | 'acceptAndClose'
-  /**
-   * Set the draft, committed and accepted dates to the action value
-   */
-  | 'setAll'
-  /**
-   * Set the draft and committed date to the action value
-   */
-  | 'setCommitted'
-  /**
-   * Set the draft date to the action value
-   */
-  | 'setDraft';
-
-interface UsePickerValueAction<DraftValue, TError> {
-  action: PickerValueActionType;
-  value: DraftValue;
-  /**
-   * If `true`, do not fire the `onChange` callback
-   * @default false
-   */
-  skipOnChangeCall?: boolean;
-  /**
-   * Context passed from a deeper component (a field or a calendar).
-   */
-  contextFromField?: FieldChangeHandlerContext<TError>;
-  isDefaultValue?: boolean;
-}
+type UsePickerValueAction<TValue, TError> =
+  | {
+      action: 'setValueFromView';
+      value: TValue;
+      selectionState: PickerSelectionState;
+    }
+  | {
+      action: 'setValueFromField';
+      value: TValue;
+      context: FieldChangeHandlerContext<TError>;
+    }
+  | {
+      action: 'setValueFromAction';
+      value: TValue;
+      pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
+    }
+  | {
+      action: 'setValueFromOutside';
+      value: TValue;
+    };
 
 /**
  * Props used to handle the value that are common to all pickers.
@@ -305,13 +295,6 @@ export const usePickerValue = <
   const utils = useUtils<TDate>();
   const adapter = useLocalizationContext<TDate>();
 
-  const [value, setValue] = useControlled({
-    controlled: inValue,
-    default: defaultValue ?? valueManager.emptyValue,
-    name: 'usePickerValue',
-    state: 'value',
-  });
-
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
     default: null,
@@ -321,104 +304,131 @@ export const usePickerValue = <
 
   const { isOpen, setIsOpen } = useOpenState(props);
 
-  const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => ({
-    committed: value,
-    draft: value,
-    resetFallback: value,
-    isDefaultValue: inValue === undefined && defaultValue !== undefined,
-  }));
+  const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => {
+    let initialValue: TValue;
+    if (inValue !== undefined) {
+      initialValue = inValue;
+    } else if (defaultValue !== undefined) {
+      initialValue = defaultValue;
+    } else {
+      initialValue = valueManager.emptyValue;
+    }
+
+    return {
+      draft: initialValue,
+      lastPublishedValue: initialValue,
+      lastCommittedValue: initialValue,
+      lastControlledValue: inValue,
+      hasBeenCommittedSinceMount: false,
+    };
+  });
 
   useValidation(
-    { ...props, value },
+    { ...props, value: dateState.draft },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,
   );
 
   const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
-    setDateState((prev) => {
-      switch (params.action) {
-        case 'setAll': {
-          return {
-            ...prev,
-            draft: params.value,
-            committed: params.value,
-            resetFallback: params.value,
-          };
-        }
-        case 'acceptAndClose': {
-          return {
-            draft: params.value,
-            committed: params.value,
-            resetFallback: params.value,
-            isDefaultValue: false,
-          };
-        }
-        case 'setCommitted': {
-          return { ...prev, draft: params.value, committed: params.value, isDefaultValue: false };
-        }
-        case 'setDraft': {
-          return { ...prev, draft: params.value, isDefaultValue: false };
-        }
-        default: {
-          return prev;
-        }
+    const isActionWorthPublishing =
+      ['setValueFromField', 'setValueFromAction'].includes(params.action) ||
+      (params.action === 'setValueFromView' && params.selectionState !== 'shallow');
+    const isEqualToLastPublishedValue = valueManager.areValuesEqual(
+      utils,
+      dateState.lastPublishedValue,
+      params.value,
+    );
+    const isPublished = isActionWorthPublishing && !isEqualToLastPublishedValue;
+
+    const isCurrentValueTheDefaultValue =
+      inValue === undefined && !dateState.hasBeenCommittedSinceMount;
+
+    let isCommitted: boolean = false;
+    if (params.action === 'setValueFromAction') {
+      if (isCurrentValueTheDefaultValue && params.pickerAction === 'accept') {
+        isCommitted = true;
+      } else {
+        isCommitted = !valueManager.areValuesEqual(
+          utils,
+          dateState.lastCommittedValue,
+          params.value,
+        );
       }
-    });
-
-    if (
-      !params.skipOnChangeCall &&
-      !valueManager.areValuesEqual(utils, dateState.committed, params.value)
+    } else if (
+      params.action === 'setValueFromView' &&
+      params.selectionState === 'finish' &&
+      closeOnSelect
     ) {
-      setValue(params.value);
-
-      if (onChange) {
-        const context: PickerChangeHandlerContext<TError> = {
-          validationError:
-            params.contextFromField == null
-              ? validator({
-                  adapter,
-                  value: params.value,
-                  props: { ...props, value: params.value },
-                })
-              : params.contextFromField.validationError,
-        };
-
-        onChange(params.value, context);
+      if (isCurrentValueTheDefaultValue) {
+        isCommitted = true;
+      } else {
+        isCommitted = !valueManager.areValuesEqual(
+          utils,
+          dateState.lastCommittedValue,
+          params.value,
+        );
       }
     }
 
-    const isDefaultValue = params.isDefaultValue ?? dateState.isDefaultValue;
+    setDateState((prev) => ({
+      ...prev,
+      draft: params.value,
+      lastPublishedValue: isPublished ? params.value : prev.lastPublishedValue,
+      lastCommittedValue: isCommitted ? params.value : prev.lastCommittedValue,
+      hasBeenCommittedSinceMount: prev.hasBeenCommittedSinceMount || isCommitted,
+    }));
 
-    if (params.action === 'acceptAndClose') {
+    if (onChange && isPublished) {
+      const validationError =
+        params.action === 'setValueFromField'
+          ? params.context.validationError
+          : validator({
+              adapter,
+              value: params.value,
+              props: { ...props, value: params.value },
+            });
+
+      const context: PickerChangeHandlerContext<TError> = {
+        validationError,
+      };
+
+      onChange(params.value, context);
+    }
+
+    const shouldClose =
+      params.action === 'setValueFromAction' ||
+      (params.action === 'setValueFromView' && params.selectionState === 'finish' && closeOnSelect);
+
+    if (shouldClose) {
       setIsOpen(false);
-      if (
-        onAcceptProp &&
-        (isDefaultValue ||
-          !valueManager.areValuesEqual(utils, dateState.resetFallback, params.value))
-      ) {
-        onAcceptProp(params.value);
-      }
+    }
+
+    if (isCommitted && onAcceptProp) {
+      onAcceptProp(params.value);
     }
   });
 
   React.useEffect(() => {
-    if (isOpen) {
-      // Update all dates in state to equal the current prop value
-      setDate({ action: 'setAll', value, skipOnChangeCall: true });
+    if (isOpen && inValue !== undefined) {
+      setDateState((prev) => ({ ...prev, lastCommittedValue: inValue }));
     }
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Set the draft and committed date to equal the new prop value.
-  if (!valueManager.areValuesEqual(utils, dateState.committed, value)) {
-    setDate({ action: 'setCommitted', value, skipOnChangeCall: true });
+  if (
+    inValue !== undefined &&
+    (dateState.lastControlledValue === undefined ||
+      !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
+  ) {
+    setDateState((prev) => ({ ...prev, lastControlledValue: inValue, draft: inValue }));
   }
 
   const handleClear = useEventCallback(() => {
     // Reset all date in state to the empty value and close picker.
     setDate({
       value: valueManager.emptyValue,
-      action: 'acceptAndClose',
+      action: 'setValueFromAction',
+      pickerAction: 'clear',
     });
   });
 
@@ -426,25 +436,34 @@ export const usePickerValue = <
     // Set all date in state to equal the current draft value and close picker.
     setDate({
       value: dateState.draft,
-      action: 'acceptAndClose',
+      action: 'setValueFromAction',
+      pickerAction: 'accept',
     });
   });
 
   const handleDismiss = useEventCallback(() => {
     // Set all dates in state to equal the last committed date.
     // e.g. Reset the state to the last committed value.
-    setDate({ value: dateState.committed, action: 'acceptAndClose' });
+    setDate({ value: dateState.draft, action: 'setValueFromAction', pickerAction: 'dismiss' });
   });
 
   const handleCancel = useEventCallback(() => {
     // Set all dates in state to equal the last accepted date and close picker.
     // e.g. Reset the state to the last accepted value
-    setDate({ value: dateState.resetFallback, action: 'acceptAndClose' });
+    setDate({
+      value: dateState.lastCommittedValue,
+      action: 'setValueFromAction',
+      pickerAction: 'cancel',
+    });
   });
 
   const handleSetToday = useEventCallback(() => {
     // Set all dates in state to equal today and close picker.
-    setDate({ value: valueManager.getTodayValue(utils), action: 'acceptAndClose' });
+    setDate({
+      value: valueManager.getTodayValue(utils),
+      action: 'setValueFromAction',
+      pickerAction: 'today',
+    });
   });
 
   const handleOpen = useEventCallback(() => setIsOpen(true));
@@ -452,38 +471,13 @@ export const usePickerValue = <
   const handleClose = useEventCallback(() => setIsOpen(false));
 
   const handleChange = useEventCallback(
-    (newDate: TValue, selectionState: PickerSelectionState = 'partial') => {
-      switch (selectionState) {
-        case 'shallow': {
-          // Update the `draft` state but do not fire `onChange`
-          return setDate({ action: 'setDraft', value: newDate, skipOnChangeCall: true });
-        }
-
-        case 'partial': {
-          // Update the `draft` state and fire `onChange`
-          return setDate({ action: 'setDraft', value: newDate });
-        }
-
-        case 'finish': {
-          if (closeOnSelect) {
-            // Set all dates in state to equal the new date and close picker.
-            return setDate({ value: newDate, action: 'acceptAndClose' });
-          }
-
-          // Updates the `committed` state and fire `onChange`
-          return setDate({ value: newDate, action: 'setCommitted' });
-        }
-
-        default: {
-          throw new Error('MUI: Invalid selectionState passed to `onDateChange`');
-        }
-      }
-    },
+    (newValue: TValue, selectionState: PickerSelectionState = 'partial') =>
+      setDate({ action: 'setValueFromView', value: newValue, selectionState }),
   );
 
-  const handleChangeAndCommit = useEventCallback(
-    (newValue: TValue, contextFromField?: FieldChangeHandlerContext<TError>) =>
-      setDate({ action: 'setCommitted', value: newValue, contextFromField }),
+  const handleChangeField = useEventCallback(
+    (newValue: TValue, context: FieldChangeHandlerContext<TError>) =>
+      setDate({ action: 'setValueFromField', value: newValue, context }),
   );
 
   const handleFieldSelectedSectionsChange = useEventCallback(
@@ -505,7 +499,7 @@ export const usePickerValue = <
 
   const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
     value: dateState.draft,
-    onChange: handleChangeAndCommit,
+    onChange: handleChangeField,
     selectedSections,
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
@@ -537,7 +531,7 @@ export const usePickerValue = <
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     ...actions,
     value: viewValue,
-    onChange: handleChangeAndCommit,
+    onChange: handleChange,
     isValid,
   };
 

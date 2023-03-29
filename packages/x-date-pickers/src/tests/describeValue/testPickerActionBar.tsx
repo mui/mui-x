@@ -93,7 +93,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onAccept={onAccept}
             onClose={onClose}
             open
-            defaultValue={values[0]}
+            value={values[0]}
             componentsProps={{ actionBar: { actions: ['cancel'] } }}
             closeOnSelect={false}
           />,
@@ -127,7 +127,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onAccept={onAccept}
             onClose={onClose}
             open
-            defaultValue={values[0]}
+            value={values[0]}
             componentsProps={{ actionBar: { actions: ['cancel'] } }}
             closeOnSelect={false}
           />,
@@ -136,7 +136,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(0);
-        expect(onAccept.callCount).to.equal(1);
+        expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
       });
     });
