@@ -60,15 +60,24 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   const { label, description } = props;
   const rootProps = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
+  const [tooltip, setTooltip] = React.useState('');
 
-  let tooltip = description;
-  if (!tooltip && titleRef?.current && isOverflown(titleRef.current)) {
-    tooltip = label || '';
-  }
+  const handleMouseOver: React.MouseEventHandler<HTMLDivElement> = React.useCallback(() => {
+    if (!description && titleRef.current && isOverflown(titleRef.current)) {
+      setTooltip(label);
+    } else {
+      setTooltip('');
+    }
+  }, [description, label]);
 
   return (
-    <rootProps.slots.baseTooltip title={tooltip} {...rootProps.slotProps?.baseTooltip}>
-      <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
+    <rootProps.slots.baseTooltip
+      title={description || tooltip}
+      {...rootProps.slotProps?.baseTooltip}
+    >
+      <ColumnHeaderInnerTitle onMouseOver={handleMouseOver} ref={titleRef}>
+        {label}
+      </ColumnHeaderInnerTitle>
     </rootProps.slots.baseTooltip>
   );
 }
