@@ -100,7 +100,7 @@ function EditToolbar(props: EditToolbarProps) {
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-  
+
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
