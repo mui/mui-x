@@ -7,7 +7,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 
-const defaultPackageManagers = {
+const defaultPackageManagers: Record<string, string> = {
   yarn: 'yarn add',
   npm: 'npm install',
 };
