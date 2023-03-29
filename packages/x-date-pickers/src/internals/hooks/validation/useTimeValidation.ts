@@ -1,26 +1,11 @@
 import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
 import { Validator } from './useValidation';
-import {
-  BaseTimeValidationProps,
-  CommonDateTimeValidationError,
-  TimeValidationProps,
-} from './models';
+import { BaseTimeValidationProps, TimeValidationProps } from './models';
+import { TimeValidationError } from '../../../models';
 
 export interface TimeComponentValidationProps<TDate>
   extends Required<BaseTimeValidationProps>,
     TimeValidationProps<TDate> {}
-
-export type TimeValidationError =
-  | CommonDateTimeValidationError
-  | 'minutesStep'
-  | 'minTime'
-  | 'maxTime'
-  | 'shouldDisableClock-hours'
-  | 'shouldDisableClock-minutes'
-  | 'shouldDisableClock-seconds'
-  | 'shouldDisableTime-hours'
-  | 'shouldDisableTime-minutes'
-  | 'shouldDisableTime-seconds';
 
 export const validateTime: Validator<
   any | null,

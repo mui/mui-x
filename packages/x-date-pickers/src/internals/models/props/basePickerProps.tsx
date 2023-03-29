@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
-import { DateOrTimeView } from '../views';
+import { DateOrTimeView } from '../../../models';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { MakeOptional } from '../helpers';
@@ -55,10 +55,10 @@ export interface BaseNonStaticPickerProps {
 }
 
 /**
- * Props common to all non-static pickers with a single input.
+ * Props common to all non-range non-static pickers.
  * These props are handled by the headless wrappers.
  */
-export interface BaseSingleInputNonStaticPickerProps {
+export interface BaseNonRangeNonStaticPickerProps {
   /**
    * The label content.
    */

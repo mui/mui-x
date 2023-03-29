@@ -20,7 +20,7 @@ import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
-import { DateView } from '../internals/models';
+import { DateView } from '../models';
 import {
   getPickersCalendarHeaderUtilityClass,
   pickersCalendarHeaderClasses,

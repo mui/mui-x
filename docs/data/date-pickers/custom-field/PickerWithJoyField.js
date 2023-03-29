@@ -16,6 +16,7 @@ import Stack from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -131,11 +132,17 @@ const JoyField = React.forwardRef((props, inputRef) => {
     id,
     label,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
+    formControlSx,
     ...other
   } = props;
 
   return (
-    <FormControl disabled={disabled} id={id} sx={{ flexGrow: 1 }} ref={containerRef}>
+    <FormControl
+      disabled={disabled}
+      id={id}
+      sx={{ flexGrow: 1, ...formControlSx }}
+      ref={containerRef}
+    >
       <FormLabel>{label}</FormLabel>
       <Input
         disabled={disabled}
@@ -160,7 +167,13 @@ const MultiInputJoyDateRangeFieldRoot = styled(
 )({});
 
 const MultiInputJoyDateRangeFieldSeparator = styled(
-  (props) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  (props) => (
+    <FormControl>
+      {/* Ensure that the separator is correctly aligned */}
+      <span />
+      <Typography {...props}>{props.children ?? ' — '}</Typography>
+    </FormControl>
+  ),
   {
     name: 'MuiMultiInputDateRangeField',
     slot: 'Separator',
@@ -262,7 +275,19 @@ JoyDateField.propTypes = {
 };
 
 function JoyDatePicker(props) {
-  return <DatePicker slots={{ field: JoyDateField, ...props.slots }} {...props} />;
+  return (
+    <DatePicker
+      {...props}
+      slots={{ field: JoyDateField, ...props.slots }}
+      slotProps={{
+        field: {
+          formControlSx: {
+            flexDirection: 'row',
+          },
+        },
+      }}
+    />
+  );
 }
 
 /**
@@ -294,10 +319,10 @@ export default function PickerWithJoyField() {
     <CssVarsProvider theme={mergedTheme}>
       <SyncThemeMode mode={mode} />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Stack spacing={2} sx={{ width: 400 }}>
+        <DemoContainer components={['DatePicker', 'DateRangePicker']}>
           <JoyDatePicker />
           <JoyDateRangePicker />
-        </Stack>
+        </DemoContainer>
       </LocalizationProvider>
     </CssVarsProvider>
   );
