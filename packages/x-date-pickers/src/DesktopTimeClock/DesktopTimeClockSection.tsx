@@ -42,6 +42,19 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   '&:hover': {
     overflowY: 'auto',
   },
+  '&::-webkit-scrollbar': {
+    width: 10,
+    height: 10,
+    background: theme.palette.grey[100],
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: theme.palette.grey[400],
+    border: `2px solid ${theme.palette.grey[100]}`,
+    borderRadius: 8,
+    '&:hover': {
+      background: theme.palette.grey[600],
+    },
+  },
   '&:not(:first-of-type)': {
     borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
