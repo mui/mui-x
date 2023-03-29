@@ -199,7 +199,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   formatNumber(numberToFormat: string): string;
   /**
-   * Compute the difference between to dates in the unit provided.
+   * Compute the difference between the two dates in the unit provided.
    * @deprecated  Will be removed in v7.
    * @template TDate
    * @param {TDate} value The reference date.
@@ -210,7 +210,7 @@ export interface MuiPickersAdapter<TDate> {
   getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
   // TODO v7: Type `value` and `comparing` to be `TDate | null`.
   /**
-   * Check if two dates are equal.
+   * Check if the two dates are equal.
    * @param {any} value The reference date.
    * @param {any} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
@@ -225,7 +225,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   isSameDay(value: TDate, comparing: TDate): boolean;
   /**
-   * Check two dates are in the same month.
+   * Check if the two dates are in the same month.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -233,7 +233,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   isSameMonth(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if two dates are in the same year.
+   * Check if the two dates are in the same year.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -241,7 +241,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   isSameYear(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if two dates are in the same hour.
+   * Check if the two dates are at the same hour.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -305,14 +305,14 @@ export interface MuiPickersAdapter<TDate> {
    * @template TDate
    * @param {TDate} value The value to test.
    * @param {[TDate, TDate]} range The range in which the value should be.
-   * @returns {boolean} `true` if the value is withing the provided range.
+   * @returns {boolean} `true` if the value is within the provided range.
    */
   isWithinRange(value: TDate, range: [TDate, TDate]): boolean;
   /**
    * Return the start of the year for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The start if the year of the given date.
+   * @returns {TDate} The start of the year of the given date.
    */
   startOfYear(value: TDate): TDate;
   /**
@@ -526,7 +526,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   getNextMonth(value: TDate): TDate;
   /**
-   * Subtract one month to the given date.
+   * Subtract one month from the given date.
    * @deprecated Use `addMonths(value, -1)`
    * @template TDate
    * @param {TDate} value The given date.
