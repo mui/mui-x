@@ -35,7 +35,7 @@ export interface DateRangePickerToolbarProps<TDate>
       BaseToolbarProps<DateRange<TDate>, 'day'>,
       'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
     >,
-    UseRangePositionResponse {
+    Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
 

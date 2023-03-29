@@ -72,10 +72,11 @@ export const useField = <
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const sectionOrder = React.useMemo(
-    () => getSectionOrder(state.sections, theme.direction === 'rtl'),
-    [theme.direction, state.sections],
+    () => getSectionOrder(state.sections, isRTL),
+    [state.sections, isRTL],
   );
 
   const syncSelectionFromDOM = () => {
@@ -198,7 +199,9 @@ export const useField = <
     ) {
       keyPressed = cleanValueStr;
     } else {
-      const prevValueStr = cleanString(fieldValueManager.getValueStrFromSections(state.sections));
+      const prevValueStr = cleanString(
+        fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+      );
 
       let startOfDiffIndex = -1;
       let endOfDiffIndex = -1;
@@ -419,8 +422,9 @@ export const useField = <
   }, [state.tempValueStrAndroid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
-    () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid],
+    () =>
+      state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid, isRTL],
   );
 
   const inputMode = React.useMemo(() => {

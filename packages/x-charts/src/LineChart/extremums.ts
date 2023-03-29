@@ -1,39 +1,27 @@
-import { AxisConfig } from '../models/axis';
-import { StackedLineSeriesType } from './formatter';
+import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
 
-type GetExtremumParamsX = {
-  series: { [id: string]: StackedLineSeriesType };
-  xAxis: AxisConfig;
-};
-type GetExtremumParamsY = {
-  series: { [id: string]: StackedLineSeriesType };
-  yAxis: AxisConfig;
-};
+export const getExtremumX: ExtremumGetter<'line'> = (params) => {
+  const { axis } = params;
 
-type GetExtremumResult = [number, number] | [null, null];
-
-export const getExtremumX = (params: GetExtremumParamsX): GetExtremumResult => {
-  const { xAxis } = params;
-
-  const minX = Math.min(...(xAxis.data ?? []));
-  const maxX = Math.max(...(xAxis.data ?? []));
+  const minX = Math.min(...(axis.data ?? []));
+  const maxX = Math.max(...(axis.data ?? []));
   return [minX, maxX];
 };
 
-export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
-  const { series, yAxis } = params;
+export const getExtremumY: ExtremumGetter<'line'> = (params) => {
+  const { series, axis } = params;
 
   return Object.keys(series)
-    .filter((seriesId) => series[seriesId].yAxisKey === yAxis.id)
+    .filter((seriesId) => series[seriesId].yAxisKey === axis.id)
     .reduce(
-      (acc: GetExtremumResult, seriesId) => {
+      (acc: ExtremumGetterResult, seriesId) => {
         const isArea = series[seriesId].area !== undefined;
 
         const getValues = isArea
           ? (d: [number, number]) => d
           : (d: [number, number]) => [d[1], d[1]]; // Id area should go from bottom to top, without area should only consider the top
 
-        const [seriesMin, serriesMax] = series[seriesId].stackedData.reduce(
+        const [seriesMin, seriesMax] = series[seriesId].stackedData.reduce(
           (seriesAcc, stackedValue) => {
             const [min, max] = getValues(stackedValue);
             return [Math.min(min, seriesAcc[0]), Math.max(max, seriesAcc[1])];
@@ -42,9 +30,9 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
         );
 
         if (acc[0] === null || acc[1] === null) {
-          return [seriesMin, serriesMax];
+          return [seriesMin, seriesMax];
         }
-        return [Math.min(seriesMin, acc[0]), Math.max(serriesMax, acc[1])];
+        return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];
       },
       [null, null],
     );
