@@ -51,6 +51,7 @@
     "@date-io/dayjs": "^2.16.0",
     "@date-io/hijri": "^2.16.1",
     "@date-io/jalaali": "^2.16.1",
+    "@date-io/js-joda": "^2.16.1",
     "@date-io/luxon": "^2.16.1",
     "@date-io/moment": "^2.16.1",
     "@mui/utils": "^5.11.13",
@@ -62,6 +63,8 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@js-joda/core": "^5.5.2",
+    "@js-joda/locale_en-us": "^4.8.6",
     "@mui/material": "^5.4.1",
     "@mui/system": "^5.4.1",
     "date-fns": "^2.25.0",
@@ -87,6 +90,12 @@
     "@emotion/styled": {
       "optional": true
     },
+    "@js-joda/core": {
+      "optional": true
+    },
+    "@js-joda/locale_en-us": {
+      "optional": true
+    },
     "luxon": {
       "optional": true
     },
@@ -104,6 +113,8 @@
     }
   },
   "devDependencies": {
+    "@js-joda/core": "^5.5.2",
+    "@js-joda/locale_en-us": "^4.8.6",
     "@types/luxon": "^3.2.0",
     "date-fns": "^2.29.3",
     "date-fns-jalali": "^2.13.0-0",
