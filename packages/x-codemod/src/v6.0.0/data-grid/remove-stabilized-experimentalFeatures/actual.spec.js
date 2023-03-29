@@ -6,21 +6,27 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 function App() {
   return (
     <React.Fragment>
-      <DataGrid experimentalFeatures={{ 
-        newEditingApi: true,
-        rowPinning: true
-      }} />
-      <DataGridPro experimentalFeatures={{
-        newEditingApi: true,
-        rowPinning: true,
-      }} />
+      <DataGrid
+        experimentalFeatures={{
+          newEditingApi: true,
+          rowPinning: true,
+        }}
+      />
+      <DataGridPro
+        experimentalFeatures={{
+          newEditingApi: true,
+          rowPinning: true,
+        }}
+      />
       <DataGridPremium
-        experimentalFeatures={{ 
+        experimentalFeatures={{
           newEditingApi: true,
           rowPinning: true,
           columnGrouping: true,
           aggregation: true,
-        }} />
+        }}
+      />
+      <DataGridPro {...props} />
     </React.Fragment>
   );
 }
