@@ -28,7 +28,7 @@ Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> on any 
 
 {{"demo": "BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Editing the entire row
+## Row editing
 
 By default, only one cell can be editable at a time.
 But you can let your user edit all cells in a row simultaneously.
@@ -113,7 +113,7 @@ When a cell is in `edit` mode, the user can stop editing with any of the followi
 ### Listening edit events
 
 The interactions that [start](#start-editing) and [stop](#stop-editing) trigger `'cellEditStart'` and `'cellEditStop'` [events](/x/react-data-grid/events/), respectively.
-For [row editing](#editing-the-entire-row), the events are `'rowEditStart'` and `'rowEditStop'`.
+For [row editing](#row-editing), the events are `'rowEditStart'` and `'rowEditStop'`.
 You can control how these events are handled to customize editing behavior.
 
 For convenience, you can also listen to these events using their respective props:
