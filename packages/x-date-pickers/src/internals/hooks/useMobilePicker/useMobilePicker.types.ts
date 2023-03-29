@@ -4,7 +4,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
-  BaseSingleInputNonStaticPickerProps,
+  BaseNonRangeNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
 import {
   PickersModalDialogSlotsComponent,
@@ -58,7 +58,7 @@ export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOr
 
 export interface MobileOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
-    BaseSingleInputNonStaticPickerProps,
+    BaseNonRangeNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null, FieldSection>,
     UsePickerViewsNonStaticProps {}
 

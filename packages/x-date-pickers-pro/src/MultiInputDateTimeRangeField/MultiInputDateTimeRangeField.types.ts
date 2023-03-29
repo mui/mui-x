@@ -15,8 +15,8 @@ import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRa
 
 export type UseMultiInputDateTimeRangeFieldParams<
   TDate,
-  TTextFieldProps extends {},
-> = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldProps>;
+  TTextFieldSlotProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
 export interface UseMultiInputDateTimeRangeFieldProps<TDate>
   extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef'> {
