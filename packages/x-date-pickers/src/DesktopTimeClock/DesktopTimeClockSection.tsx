@@ -45,14 +45,24 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   '&::-webkit-scrollbar': {
     width: 10,
     height: 10,
-    background: theme.palette.grey[100],
+    background: theme.vars
+      ? theme.vars.palette.AppBar.defaultBg
+      : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800],
   },
   '&::-webkit-scrollbar-thumb': {
-    background: theme.palette.grey[400],
-    border: `2px solid ${theme.palette.grey[100]}`,
+    background: theme.vars
+      ? theme.vars.palette.Chip.defaultBorder
+      : theme.palette.grey[theme.palette.mode === 'light' ? 400 : 600],
+    border: `2px solid ${
+      theme.vars
+        ? theme.vars.palette.AppBar.defaultBg
+        : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800]
+    }`,
     borderRadius: 8,
     '&:hover': {
-      background: theme.palette.grey[600],
+      background: theme.vars
+        ? theme.vars.palette.Chip.defaultIconColor
+        : theme.palette.grey[theme.palette.mode === 'light' ? 600 : 400],
     },
   },
   '&:not(:first-of-type)': {
