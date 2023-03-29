@@ -115,7 +115,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   toJsDate(value: TDate): Date;
   /**
-   * Parses an iso string into a date in the date library format.
+   * Parse an iso string into a date in the date library format.
    * @deprecate Will be removed in v7.
    * @template TDate
    * @param {string} isoString The iso string to parse.
@@ -123,7 +123,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   parseISO(isoString: string): TDate;
   /**
-   * Stringifies a date in the date library format into an ISO string.
+   * Stringify a date in the date library format into an ISO string.
    * @deprecate Will be removed in v7.
    * @template TDate
    * @param {TDate} value The date to stringify.
@@ -131,7 +131,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   toISO(value: TDate): string;
   /**
-   * Parses a string date in a specific format.
+   * Parse a string date in a specific format.
    * @template TDate
    * @param {string} value The string date to parse.
    * @param {string} format The format in which the string date is.
@@ -139,38 +139,38 @@ export interface MuiPickersAdapter<TDate> {
    */
   parse(value: string, format: string): TDate | null;
   /**
-   * Returns the code of the locale currently used by the adapter.
+   * Get the code of the locale currently used by the adapter.
    * @returns {string} The code of the locale.
    */
   getCurrentLocaleCode(): string;
   /**
-   * Returns `true` if the current locale is using 12 hours cycle (i.e: time with meridiem).
+   * Check if the current locale is using 12 hours cycle (i.e: time with meridiem).
    * @returns {boolean} `true` if the current locale is using 12 hours cycle.
    */
   is12HourCycleInCurrentLocale(): boolean;
   /**
-   * Creates a format with no meta-token (e.g: `LLL` or `PP`).
+   * Create a format with no meta-token (e.g: `LLL` or `PP`).
    * @param {string} format The format to expand.
    * @returns {string} The expanded format.
    */
   expandFormat: (format: string) => string;
   /**
-   * Returns user readable format (taking into account localized format tokens), useful to render helper text for input (e.g. placeholder).
+   * Create a user readable format (taking into account localized format tokens), useful to render helper text for input (e.g. placeholder).
    * @deprecated  Will be removed in v7.
    * @param {string} format The format to analyze.
    * @returns {string} The helper text of the given format.
    */
   getFormatHelperText(format: string): string;
   /**
-   * Returns `true` if the date is null.
+   * Check if the date is null.
    * @template TDate
    * @param {TDate | null} value The date to test.
    * @returns {boolean} `true` if the date is null.
    */
   isNull(value: TDate | null): boolean;
+  // TODO v7: Type `value` to be `TDate | null` and make sure the `isValid(null)` returns `false`.
   /**
-   * Returns `true` if the date is valid.
-   * TODO v7: Type `value` to be `TDate | null` and make sure the `isValid(null)` returns `false`.
+   * Check if the date is valid.
    * @param {any} value The value to test.
    * @returns {boolean} `true` if the value is valid.
    */
@@ -199,6 +199,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   formatNumber(numberToFormat: string): string;
   /**
+   * Compute the difference between to dates in the unit provided.
    * @deprecated  Will be removed in v7.
    * @template TDate
    * @param {TDate} value The reference date.
@@ -207,16 +208,16 @@ export interface MuiPickersAdapter<TDate> {
    * @returns {number} The diff between the two dates.
    */
   getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
+  // TODO v7: Type `value` and `comparing` to be `TDate | null`.
   /**
-   * Returns `true` is the two dates are equal.
-   * TODO v7: Type `value` and `comparing` to be `TDate | null`.
+   * Check if two dates are equal.
    * @param {any} value The reference date.
    * @param {any} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
    */
   isEqual(value: any, comparing: any): boolean;
   /**
-   * Returns `true` if the two dates are in the same day.
+   * Check if the two dates are in the same day.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -224,7 +225,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   isSameDay(value: TDate, comparing: TDate): boolean;
   /**
-   * Returns `true` if the two dates are in the same month.
+   * Check two dates are in the same month.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -232,7 +233,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   isSameMonth(value: TDate, comparing: TDate): boolean;
   /**
-   * Returns `true` if the two dates are in the same year.
+   * Check if two dates are in the same year.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -240,7 +241,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   isSameYear(value: TDate, comparing: TDate): boolean;
   /**
-   * Returns `true` if the two dates are in the same hour.
+   * Check if two dates are in the same hour.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -248,25 +249,25 @@ export interface MuiPickersAdapter<TDate> {
    */
   isSameHour(value: TDate, comparing: TDate): boolean;
   /**
-   * Returns `true` if the reference date is after the second date.
+   * Check if the reference date is after the second date.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the reference date is after the second date.
    */
   isAfter(value: TDate, comparing: TDate): boolean;
+  // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
-   * Returns `true` if the day of the reference date is after the day of the second date.
-   * TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
+   * Check if the day of the reference date is after the day of the second date.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the day of the reference date is after the day of the second date.
    */
   isAfterDay(value: TDate, comparing: TDate): boolean;
+  // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
-   * Returns `true` if the year of the reference date is after the year of the second date.
-   * TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
+   * Check if the year of the reference date is after the year of the second date.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -274,25 +275,25 @@ export interface MuiPickersAdapter<TDate> {
    */
   isAfterYear(value: TDate, comparing: TDate): boolean;
   /**
-   * Returns `true` if the reference date is before the second date.
+   * Check if the reference date is before the second date.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the reference date is before the second date.
    */
   isBefore(value: TDate, comparing: TDate): boolean;
+  // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
-   * Returns `true` if the day of the reference date is before the day of the second date.
-   * TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
+   * Check if the day of the reference date is before the day of the second date.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the day of the reference date is before the day of the second date.
    */
   isBeforeDay(value: TDate, comparing: TDate): boolean;
+  // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
-   * Returns `true` if the year of the reference date is before the year of the second date.
-   * TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
+   * Check if the year of the reference date is before the year of the second date.
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -300,7 +301,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   isBeforeYear(value: TDate, comparing: TDate): boolean;
   /**
-   * Returns `true` if the value is withing the provided range.
+   * Check if the value is withing the provided range.
    * @template TDate
    * @param {TDate} value The value to test.
    * @param {[TDate, TDate]} range The range in which the value should be.
@@ -311,56 +312,56 @@ export interface MuiPickersAdapter<TDate> {
    * Return the start of the year for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The start of the year.
+   * @returns {TDate} The start if the year of the given date.
    */
   startOfYear(value: TDate): TDate;
   /**
    * Return the start of the month for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The start of the month.
+   * @returns {TDate} The start of the month of the given date.
    */
   startOfMonth(value: TDate): TDate;
   /**
    * Return the start of the week for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The start of the week.
+   * @returns {TDate} The start of the week of the given date.
    */
   startOfWeek(value: TDate): TDate;
   /**
    * Return the start of the day for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The start of the day.
+   * @returns {TDate} The start of the day of the given date.
    */
   startOfDay(value: TDate): TDate;
   /**
    * Return the end of the year for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The end of the year.
+   * @returns {TDate} The end of the year of the given date.
    */
   endOfYear(value: TDate): TDate;
   /**
    * Return the end of the month for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The end of the month.
+   * @returns {TDate} The end of the month of the given date.
    */
   endOfMonth(value: TDate): TDate;
   /**
    * Return the end of the week for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The end of the week.
+   * @returns {TDate} The end of the week of the given date.
    */
   endOfWeek(value: TDate): TDate;
   /**
    * Return the end of the day for the given date.
    * @template TDate
    * @param {TDate} value The original date.
-   * @returns {TDate} The end of the day.
+   * @returns {TDate} The end of the day of the given date.
    */
   endOfDay(value: TDate): TDate;
   /**
@@ -532,9 +533,9 @@ export interface MuiPickersAdapter<TDate> {
    * @returns {TDate} The new date with one month subtracted.
    */
   getPreviousMonth(value: TDate): TDate;
+  // TODO: Inline the logic in a utility function using `addMonths`, we don't need one method per adapter.
   /**
    * Get an array with all the months in the year of the given date.
-   * TODO: Inline the logic in a utility function using `addMonths`, we don't need one method per adapter.
    * @deprecated Will be removed in v7.
    * @template TDate
    * @param {TDate} value The given date.
@@ -542,7 +543,7 @@ export interface MuiPickersAdapter<TDate> {
    */
   getMonthArray(value: TDate): TDate[];
   /**
-   * Creates a date with the date of the first param and the time of the second param.
+   * Create a date with the date of the first param and the time of the second param.
    * @template TDate
    * @param {TDate} dateParam Param from which we want to get the date.
    * @param {TDate} timeParam Param from which we want to get the time.
@@ -555,10 +556,10 @@ export interface MuiPickersAdapter<TDate> {
    */
   getWeekdays(): string[];
   /**
-   * Creates a nested list with all the days of the month of the given date grouped by week.
+   * Create a nested list with all the days of the month of the given date grouped by week.
    * @template TDate
    * @param {TDate} date The given date.
-   * @returns {TDate[][]} The nested with all the days of the month grouped by week.
+   * @returns {TDate[][]} A nested list with all the days of the month grouped by week.
    */
   getWeekArray(date: TDate): TDate[][];
   /**
@@ -568,9 +569,9 @@ export interface MuiPickersAdapter<TDate> {
    * @returns {number} The number of the week of the given date.
    */
   getWeekNumber: (date: TDate) => number;
+  // TODO v7: Replace with a single range param `[TDate, TDate]`, to be coherent with `isWithingRange`.
   /**
-   * Creates a list with all the years between the start end the end date.
-   * TODO v7: Replace with a single range param `[TDate, TDate]`, to be coherent with `isWithingRange`.
+   * Create a list with all the years between the start end the end date.
    * @template TDate
    * @param {TDate} start The start of the range.
    * @param {TDate} end The end of the range.
