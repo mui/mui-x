@@ -54,10 +54,10 @@ export interface UseViewsOptions<TValue, TView extends unknown> {
   /**
    * Callback fired on focused view change.
    * @template TView
-   * @param {TView} view The new view to focus or not.
+   * @param {TView | null} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
-  onFocusedViewChange?: (view: TView, hasFocus: boolean) => void;
+  onFocusedViewChange?: (view: TView | null, hasFocus: boolean) => void;
 }
 
 export interface ExportedUseViewsOptions<TView extends DateOrTimeView>

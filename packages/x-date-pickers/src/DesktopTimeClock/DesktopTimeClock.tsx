@@ -93,6 +93,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     controlled: valueProp,
     default: defaultValue ?? null,
   });
+  const [focusMeridiem, setFocusMeridiem] = React.useState(false);
 
   const handleValueChange = useEventCallback(
     (newValue: TDate | null, selectionState?: PickerSelectionState) => {
@@ -111,6 +112,11 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     onFocusedViewChange,
   });
 
+  const resolvedFocusedView = React.useMemo(
+    () => (focusMeridiem ? 'meridiem' : focusedView),
+    [focusMeridiem, focusedView],
+  );
+
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
     [value, now, utils],
@@ -120,6 +126,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     selectedTimeOrMidnight,
     ampm,
     setValueAndGoToNextView,
+    'finish',
   );
 
   const isTimeDisabled = React.useCallback(
@@ -241,13 +248,14 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             // ensure that the current view is the one we are changing
             // this allows to keep selecting the same view multiple times
             setView('hours');
-            onFocusedViewChange?.('minutes', true);
             // delay until next tick to ensure the view update has been synced (if needed)
             setTimeout(() => {
+              const isNextViewMeridiem = views.indexOf('hours') + 1 === views.length && ampm;
               setValueAndGoToNextView(
                 utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
-                'finish',
+                isNextViewMeridiem ? 'partial' : 'finish',
               );
+              setFocusMeridiem(isNextViewMeridiem);
             }, 0);
           };
           return {
@@ -269,9 +277,13 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
               return;
             }
             setView('minutes');
-            onFocusedViewChange?.('seconds', true);
             setTimeout(() => {
-              setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
+              const isNextViewMeridiem = views.indexOf('minutes') + 1 === views.length && ampm;
+              setValueAndGoToNextView(
+                utils.setMinutes(selectedTimeOrMidnight, minutes),
+                isNextViewMeridiem ? 'partial' : 'finish',
+              );
+              setFocusMeridiem(isNextViewMeridiem);
             }, 0);
           };
 
@@ -295,7 +307,12 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             }
             setView('seconds');
             setTimeout(() => {
-              setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, seconds), 'finish');
+              const isNextViewMeridiem = views.indexOf('seconds') + 1 === views.length && ampm;
+              setValueAndGoToNextView(
+                utils.setSeconds(selectedTimeOrMidnight, seconds),
+                isNextViewMeridiem ? 'partial' : 'finish',
+              );
+              setFocusMeridiem(isNextViewMeridiem);
             }, 0);
           };
 
@@ -321,9 +338,9 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       utils,
       meridiemMode,
       setView,
-      onFocusedViewChange,
       setValueAndGoToNextView,
       selectedTimeOrMidnight,
+      views,
       disabled,
       isTimeDisabled,
       timeStep,
@@ -382,6 +399,8 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
           items={meridiemOptions.items}
           onChange={meridiemOptions.onChange}
           disabled={disabled}
+          active={resolvedFocusedView === 'meridiem'}
+          autoFocus={resolvedFocusedView === 'meridiem'}
           readOnly={readOnly}
         />
       )}
