@@ -3,7 +3,7 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
-import { DateOrTimeView, MuiPickersAdapter } from '../../models';
+import { MuiPickersAdapter } from '../../models';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -14,7 +14,7 @@ import {
   PickersPopperSlotsComponentsProps,
 } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps } from '../../models/fields';
+import { BaseSingleInputFieldProps, FieldSection, DateOrTimeView } from '../../../models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -33,7 +33,7 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
   /**
    * Component used to enter the date with the keyboard.
    */
-  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, any>>;
+  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, any>>;
   /**
    * Form control with an input to render the value inside the default field.
    * Receives the same props as `@mui/material/TextField`.
@@ -64,9 +64,9 @@ export interface ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView exten
   extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
-    React.ElementType<BaseSingleInputFieldProps<TDate | null, unknown>>,
+    React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, unknown>>,
     {},
-    UsePickerProps<TDate | null, any, any, any, any>
+    UsePickerProps<TDate | null, any, FieldSection, any, any, any>
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   inputAdornment?: Partial<InputAdornmentProps>;
@@ -81,7 +81,7 @@ export interface ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView exten
 export interface DesktopOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
     BaseSingleInputNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerValueNonStaticProps<TDate | null, FieldSection>,
     UsePickerViewsNonStaticProps {
   /**
    * If `true`, the `input` element is focused during the first mount.
@@ -113,7 +113,7 @@ export interface UseDesktopPickerParams<
   TView extends DateOrTimeView,
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
+    UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
     'valueManager' | 'validator'
   > {
   props: TExternalProps;

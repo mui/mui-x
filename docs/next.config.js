@@ -20,6 +20,7 @@ module.exports = withDocsInfra({
     DATE_PICKERS_VERSION: datePickersPkg.version,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
     SLACK_FEEDBACKS_TOKEN: process.env.SLACK_FEEDBACKS_TOKEN,
+    CONTEXT: process.env.CONTEXT,
     // #default-branch-switch
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',

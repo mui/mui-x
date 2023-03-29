@@ -6,18 +6,15 @@ import {
   PickersLayout,
   PickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import {
-  DateOrTimeView,
-  usePicker,
-  DIALOG_WIDTH,
-  ExportedBaseToolbarProps,
-} from '@mui/x-date-pickers/internals';
+import { usePicker, DIALOG_WIDTH, ExportedBaseToolbarProps } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
 import { DateRange } from '../../models/range';
 import { useRangePosition } from '../useRangePosition';
+import { RangeFieldSection } from '../../models/fields';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -47,6 +44,7 @@ export const useStaticRangePicker = <
     DateRange<TDate>,
     TDate,
     TView,
+    RangeFieldSection,
     TExternalProps,
     {}
   >({

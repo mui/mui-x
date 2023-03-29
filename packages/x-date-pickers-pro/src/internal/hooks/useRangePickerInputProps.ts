@@ -1,21 +1,25 @@
 import * as React from 'react';
-import { PickersInputLocaleText } from '@mui/x-date-pickers';
+import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
-  DateOrTimeView,
   onSpaceOrEnter,
   useLocaleText,
   UsePickerResponse,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import {
   DateRange,
   MultiInputFieldSlotRootProps,
   MultiInputFieldSlotTextFieldProps,
+  RangeFieldSection,
   RangePosition,
 } from '../models';
 
 interface UseRangePickerFieldParams<TDate, TView extends DateOrTimeView>
-  extends Pick<UsePickerResponse<DateRange<TDate>, TView, any>, 'open' | 'actions'> {
+  extends Pick<
+    UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
+    'open' | 'actions'
+  > {
   wrapperVariant: WrapperVariant;
   readOnly?: boolean;
   disabled?: boolean;

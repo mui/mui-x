@@ -285,6 +285,10 @@ DateField.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  /**
    * The selected value.
    * Used when the component is controlled.
    */

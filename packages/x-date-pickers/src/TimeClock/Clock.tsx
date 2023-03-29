@@ -12,7 +12,7 @@ import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { getHours, getMinutes } from './shared';
-import { TimeView } from '../internals/models';
+import { TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 
 export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {

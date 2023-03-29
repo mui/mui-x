@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
-import { DateOrTimeView, MuiPickersAdapter } from '../../models';
+import { MuiPickersAdapter } from '../../models';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -12,7 +12,7 @@ import {
   PickersModalDialogSlotsComponentsProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps } from '../../models/fields';
+import { BaseSingleInputFieldProps, FieldSection, DateOrTimeView } from '../../../models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -28,7 +28,7 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
   /**
    * Component used to enter the date with the keyboard.
    */
-  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, any>>;
+  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, any>>;
   /**
    * Form control with an input to render the value inside the default field.
    * Receives the same props as `@mui/material/TextField`.
@@ -41,9 +41,9 @@ export interface ExportedUseMobilePickerSlotsComponentsProps<TDate, TView extend
   extends PickersModalDialogSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
-    React.ElementType<BaseSingleInputFieldProps<TDate | null, unknown>>,
+    React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, unknown>>,
     {},
-    UsePickerProps<TDate | null, any, any, any, any>
+    UsePickerProps<TDate | null, any, FieldSection, any, any, any>
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
@@ -55,7 +55,7 @@ export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOr
 export interface MobileOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
     BaseSingleInputNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerValueNonStaticProps<TDate | null, FieldSection>,
     UsePickerViewsNonStaticProps {}
 
 export interface UseMobilePickerProps<
@@ -82,7 +82,7 @@ export interface UseMobilePickerParams<
   TView extends DateOrTimeView,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
+    UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
     'valueManager' | 'validator'
   > {
   props: TExternalProps;

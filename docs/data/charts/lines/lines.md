@@ -13,3 +13,6 @@ title: Charts - Lines
 >
 > 💬 To have a solution that meets your needs, leave a comment on the [same issue](https://github.com/mui/mui-x/issues/7887).
 > If you already have a use case for this component, or if you are facing a pain-point with your current solution.
+
+{{"demo": "TestLines.js", "bg": "inline"}}
+{{"demo": "TestLinesTime.js", "bg": "inline"}}

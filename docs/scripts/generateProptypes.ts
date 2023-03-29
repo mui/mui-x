@@ -37,6 +37,9 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'rowNode',
         'localeText',
         'columnGroupingModel',
+        'unstableFieldRef',
+        'unstableStartFieldRef',
+        'unstableEndFieldRef',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
