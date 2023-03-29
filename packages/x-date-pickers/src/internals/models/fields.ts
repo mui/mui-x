@@ -8,7 +8,6 @@ export interface BaseFieldProps<TValue, TSection extends FieldSection, TError>
   className?: string;
   format?: string;
   disabled?: boolean;
-  inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
 }
 

@@ -5,13 +5,13 @@ import { RangeFieldSection } from '../../models/fields';
 
 export interface UseMultiInputRangeFieldParams<
   TSharedProps extends {},
-  TTextFieldProps extends {},
+  TTextFieldSlotProps extends {},
 > {
   sharedProps: TSharedProps;
-  startTextFieldProps: TTextFieldProps;
+  startTextFieldProps: TTextFieldSlotProps;
   startInputRef?: React.Ref<HTMLInputElement>;
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
-  endTextFieldProps: TTextFieldProps;
+  endTextFieldProps: TTextFieldSlotProps;
   endInputRef?: React.Ref<HTMLInputElement>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
