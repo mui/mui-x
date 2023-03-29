@@ -323,6 +323,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
               isDisabled: (seconds) => disabled || isTimeDisabled(seconds, 'seconds'),
               resolveLabel: (seconds) => utils.format(utils.setSeconds(now, seconds), 'seconds'),
               timeStep,
+              hasValue: !!value,
             }),
           };
         }
@@ -360,16 +361,16 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
         {
           value: 'am',
           label: utils.getMeridiemText('am'),
-          isSelected: () => meridiemMode === 'am',
+          isSelected: () => !!value && meridiemMode === 'am',
         },
         {
           value: 'pm',
           label: utils.getMeridiemText('pm'),
-          isSelected: () => meridiemMode === 'pm',
+          isSelected: () => !!value && meridiemMode === 'pm',
         },
       ],
     }),
-    [handleMeridiemChange, meridiemMode, utils],
+    [handleMeridiemChange, meridiemMode, utils, value],
   );
 
   const ownerState = props;
