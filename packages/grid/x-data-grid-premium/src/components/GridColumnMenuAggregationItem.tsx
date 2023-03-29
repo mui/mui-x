@@ -1,13 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
-import MenuItem from '@mui/material/MenuItem';
+import MUIMenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import GlobalStyles from '@mui/material/GlobalStyles';
 import { unstable_useId as useId } from '@mui/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -18,12 +20,19 @@ import {
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
+const MenuItem = styled(MUIMenuItem)(() => ({
+  [`&:hover`]: {
+    backgroundColor: 'transparent',
+  },
+}));
+
 function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const id = useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
+  const [menuOpen, setOpen] = React.useState(false);
 
   const availableAggregationFunctions = React.useMemo(
     () =>
@@ -76,6 +85,11 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       <ListItemText>
         <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
           <InputLabel id={`${id}-label`}>{label}</InputLabel>
+          <GlobalStyles
+            styles={() =>
+              menuOpen ? `body { overflow: auto !important; padding-right: 0 !important; }` : ``
+            }
+          />
           <Select
             labelId={`${id}-label`}
             id={`${id}-input`}
@@ -85,6 +99,8 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
             onChange={handleAggregationItemChange}
             onBlur={(e) => e.stopPropagation()}
             fullWidth
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
           >
             <MenuItem value="">...</MenuItem>
             {availableAggregationFunctions.map((aggFunc) => (
