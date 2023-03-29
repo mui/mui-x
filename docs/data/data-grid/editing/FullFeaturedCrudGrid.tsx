@@ -12,26 +12,23 @@ import {
   GridRowModes,
   DataGridPro,
   GridColDef,
-  GridRowParams,
-  MuiEvent,
   GridToolbarContainer,
   GridActionsCellItem,
   GridEventListener,
   GridRowId,
   GridRowModel,
+  GridRowEditStopReasons,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
-  randomUpdatedDate,
   randomId,
 } from '@mui/x-data-grid-generator';
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
-  let random = Math.random() * roles.length;
-  let index = Math.floor(random);
-  return roles[index];
+  const randomIndex = Math.floor(Math.random() * roles.length);
+  return roles[randomIndex];
 };
 
 const initialRows: GridRowsProp = [
@@ -103,9 +100,11 @@ function EditToolbar(props: EditToolbarProps) {
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-
+  
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-    event.defaultMuiPrevented = true;
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
   };
 
   const handleEditClick = (id: GridRowId) => () => {
