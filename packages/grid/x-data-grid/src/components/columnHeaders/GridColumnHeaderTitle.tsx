@@ -62,7 +62,7 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
 
-  const handleMouseOver: React.MouseEventHandler<HTMLDivElement> = React.useCallback(() => {
+  const handleMouseOver = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(() => {
     if (!description && titleRef?.current) {
       const isOver = isOverflown(titleRef.current);
       if (isOver) {
