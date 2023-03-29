@@ -72,8 +72,9 @@ export function CartesianContextProvider({
       acc: ExtremumGetterResult,
       chartType: T,
       axis: AxisConfig,
+      getters: { [T2 in ChartSeriesType]: ExtremumGetter<T2> },
     ): ExtremumGetterResult => {
-      const getter = xExtremumGetters[chartType];
+      const getter = getters[chartType];
       const series = (formattedSeries[chartType]?.series as { [id: string]: ChartSeries<T> }) ?? {};
 
       const [minChartTypeData, maxChartTypeData] = getter({
@@ -100,10 +101,10 @@ export function CartesianContextProvider({
     ) => {
       const charTypes = Object.keys(getters) as ChartSeriesType[];
 
-      return charTypes.reduce((acc, charType) => axisExtremumCallback(acc, charType, axis), [
-        null,
-        null,
-      ] as ExtremumGetterResult);
+      return charTypes.reduce(
+        (acc, charType) => axisExtremumCallback(acc, charType, axis, getters),
+        [null, null] as ExtremumGetterResult,
+      );
     };
 
     const allXAxis: AxisConfig[] = [
