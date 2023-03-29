@@ -2,6 +2,18 @@
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
+## Full-featured CRUD component
+
+The Data Grid can be used to visualize data, but it also allows editing a data set.
+
+The following demo shows a full-featured CRUD (Create, Read, Update, Delete) typically found in enterprise applications.
+
+::: info
+You will find the details of each editing API in the next sections.
+:::
+
+{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Making a column editable
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):
@@ -414,14 +426,6 @@ By design, when changing the value of a cell all `preProcessEditCellProps` callb
 This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
 If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
 :::
-
-### Full-featured CRUD component
-
-Row editing makes it possible to create a full-featured CRUD (Create, Read, Update, Delete) component similar to those found in enterprise applications.
-In the following demo, the typical ways to start and stop editing are all disabled.
-Instead, use the buttons available in each row or in the toolbar.
-
-{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Advanced use cases
 

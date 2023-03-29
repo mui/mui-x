@@ -27,41 +27,48 @@ import {
   randomId,
 } from '@mui/x-data-grid-generator';
 
+const roles = ['Market', 'Finance', 'Development'];
+const randomRole = () => {
+  let random = Math.random() * roles.length;
+  let index = Math.floor(random);
+  return roles[index];
+};
+
 const initialRows: GridRowsProp = [
   {
     id: randomId(),
     name: randomTraderName(),
     age: 25,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 36,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 19,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 28,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 23,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
 ];
 
@@ -96,13 +103,6 @@ function EditToolbar(props: EditToolbarProps) {
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
-
-  const handleRowEditStart = (
-    params: GridRowParams,
-    event: MuiEvent<React.SyntheticEvent>,
-  ) => {
-    event.defaultMuiPrevented = true;
-  };
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     event.defaultMuiPrevented = true;
@@ -144,20 +144,29 @@ export default function FullFeaturedCrudGrid() {
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 180, editable: true },
-    { field: 'age', headerName: 'Age', type: 'number', editable: true },
     {
-      field: 'dateCreated',
-      headerName: 'Date Created',
+      field: 'age',
+      headerName: 'Age',
+      type: 'number',
+      width: 80,
+      align: 'left',
+      headerAlign: 'left',
+      editable: true,
+    },
+    {
+      field: 'joinDate',
+      headerName: 'Join date',
       type: 'date',
       width: 180,
       editable: true,
     },
     {
-      field: 'lastLogin',
-      headerName: 'Last Login',
-      type: 'dateTime',
+      field: 'role',
+      headerName: 'Department',
       width: 220,
       editable: true,
+      type: 'singleSelect',
+      valueOptions: ['Market', 'Finance', 'Development'],
     },
     {
       field: 'actions',
@@ -173,12 +182,15 @@ export default function FullFeaturedCrudGrid() {
             <GridActionsCellItem
               icon={<SaveIcon />}
               label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
               onClick={handleSaveClick(id)}
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
               label="Cancel"
-              className="textPrimary"
+              className="primary"
               onClick={handleCancelClick(id)}
               color="inherit"
             />,
@@ -223,7 +235,6 @@ export default function FullFeaturedCrudGrid() {
         editMode="row"
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         slots={{
