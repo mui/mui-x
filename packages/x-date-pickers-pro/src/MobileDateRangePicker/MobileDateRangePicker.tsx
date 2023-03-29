@@ -174,6 +174,12 @@ MobileDateRangePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Density of the format when rendered in the input.
+   * When "normal", a space will be added before and after every `/` character to make the format more readable.
+   * @default "normal"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'normal']),
+  /**
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */

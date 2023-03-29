@@ -147,6 +147,12 @@ This prop is available on all fields and pickers.
 
 {{"demo": "CustomFieldFormat.js"}}
 
+### Dense field format
+
+If your component must be rendered inside a dense interface, you can make the format more compact using the `formatDensity` prop:
+
+{{"demo": "CompactFieldFormat.js"}}
+
 ### Custom field placeholder
 
 When a section is empty, the fields displays its placeholder instead of an empty value.

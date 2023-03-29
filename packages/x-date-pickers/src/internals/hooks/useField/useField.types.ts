@@ -56,6 +56,12 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    */
   format: string;
   /**
+   * Density of the format when rendered in the input.
+   * When "normal", a space will be added before and after every `/` character to make the format more readable.
+   * @default "normal"
+   */
+  formatDensity?: 'dense' | 'normal';
+  /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
    * @default false

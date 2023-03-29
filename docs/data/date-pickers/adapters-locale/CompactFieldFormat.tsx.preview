@@ -1,0 +1,10 @@
+<DateField
+  label="Date Field"
+  defaultValue={dayjs('2022-04-17')}
+  formatDensity="dense"
+/>
+<DatePicker
+  label="Date Picker"
+  defaultValue={dayjs('2022-04-17')}
+  formatDensity="dense"
+/>

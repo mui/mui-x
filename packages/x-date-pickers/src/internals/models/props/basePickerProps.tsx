@@ -52,6 +52,12 @@ export interface BaseNonStaticPickerProps {
    * Defaults to localized format based on the used `views`.
    */
   format?: string;
+  /**
+   * Density of the format when rendered in the input.
+   * When "normal", a space will be added before and after every `/` character to make the format more readable.
+   * @default "normal"
+   */
+  formatDensity?: 'dense' | 'normal';
 }
 
 /**
