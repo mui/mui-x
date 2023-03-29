@@ -39,7 +39,37 @@ In the example below, changing the value of the start date section will call `on
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
-## When is `onChange` called on views ?
+## When is `onChange` or `onAccept` called on pickers ?
+
+- When the field used [calls `onChange`](/x/react-date-pickers/lifecycle/#when-is-onchange-called-on-fields)
+
+### When the picker closes automatically
+
+On desktop, the picker closes automatically once the last view is completed.
+
+- if you are using the `DatePicker` with the default views (`year`, `month` and `day`), then selecting a day will close the picker
+- if you are using the `TimePicker` with the default views (`hours`, `minutes`), then selecting the minutes will close the picker
+
+:::info
+You don't have to fill all the views for the picker to close automatically.
+For example, on the `DatePicker`, the `year` and `month` views are not in the default workflow since they are before the opening view (`day`),
+so the picker will close even if you never went to those views.
+:::
+
+On mobile, the picker will not automatically close, you have to manually close it using the [action bar buttons](/x/)
+
+### When the picker is manually closed
+
+When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, we call `onAccept` with the last
+
+- if the last view has been completed, we call `onAccept` with the current value.
+- if the last view has not been completed, we call `onAccept` with the last validated value
+
+### When a value is validated using the action bar
+
+The
+
+- , it is called with the
 
 ## Only update when the value is valid
 
