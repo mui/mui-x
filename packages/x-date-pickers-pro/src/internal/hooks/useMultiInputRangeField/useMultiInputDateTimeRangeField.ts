@@ -55,7 +55,7 @@ export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps ext
   } as any;
 };
 
-export const useMultiInputDateTimeRangeField = <TDate, TTextFieldProps extends {}>({
+export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
   startTextFieldProps,
   startInputRef,
@@ -65,8 +65,8 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldProps extends {
   unstableEndFieldRef,
 }: UseMultiInputDateTimeRangeFieldParams<
   TDate,
-  TTextFieldProps
->): UseMultiInputRangeFieldResponse<TTextFieldProps> => {
+  TTextFieldSlotProps
+>): UseMultiInputRangeFieldResponse<TTextFieldSlotProps> => {
   const sharedProps = useDefaultizedDateTimeRangeFieldProps<TDate, UseDateTimeFieldProps<TDate>>(
     inSharedProps,
   );
@@ -120,7 +120,7 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldProps extends {
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldProps> = {
+  const startFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
     error: !!validationError[0],
     ...startTextFieldProps,
     format,
@@ -132,7 +132,7 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldProps extends {
     onChange: handleStartDateChange,
   };
 
-  const endFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldProps> = {
+  const endFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,
@@ -147,12 +147,12 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldProps extends {
   const startDateResponse = useDateTimeField({
     props: startFieldProps,
     inputRef: startInputRef,
-  }) as UseFieldResponse<TTextFieldProps>;
+  }) as UseFieldResponse<TTextFieldSlotProps>;
 
   const endDateResponse = useDateTimeField({
     props: endFieldProps,
     inputRef: endInputRef,
-  }) as UseFieldResponse<TTextFieldProps>;
+  }) as UseFieldResponse<TTextFieldSlotProps>;
 
   return { startDate: startDateResponse, endDate: endDateResponse };
 };

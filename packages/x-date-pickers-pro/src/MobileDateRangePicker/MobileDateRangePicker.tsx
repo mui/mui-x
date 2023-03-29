@@ -174,6 +174,21 @@ MobileDateRangePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Pass a ref to the `input` element.
+   * Ignored if the field has several inputs.
+   */
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  /**
+   * The label content.
+   * Ignored if the field has several inputs.
+   */
+  label: PropTypes.node,
+  /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false

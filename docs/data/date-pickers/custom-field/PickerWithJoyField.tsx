@@ -15,6 +15,7 @@ import Stack, { StackProps } from '@mui/joy/Stack';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography, { TypographyProps } from '@mui/joy/Typography';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
@@ -147,6 +148,7 @@ interface JoyFieldProps extends InputProps {
     endAdornment?: React.ReactNode;
     startAdornment?: React.ReactNode;
   };
+  formControlSx?: InputProps['sx'];
 }
 
 type JoyFieldComponent = ((
@@ -160,6 +162,7 @@ const JoyField = React.forwardRef(
       id,
       label,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
+      formControlSx,
       ...other
     } = props;
 
@@ -167,7 +170,7 @@ const JoyField = React.forwardRef(
       <FormControl
         disabled={disabled}
         id={id}
-        sx={{ flexGrow: 1 }}
+        sx={{ flexGrow: 1, ...formControlSx }}
         ref={containerRef}
       >
         <FormLabel>{label}</FormLabel>
@@ -196,7 +199,11 @@ const MultiInputJoyDateRangeFieldRoot = styled(
 
 const MultiInputJoyDateRangeFieldSeparator = styled(
   (props: TypographyProps) => (
-    <Typography {...props}>{props.children ?? ' — '}</Typography>
+    <FormControl>
+      {/* Ensure that the separator is correctly aligned */}
+      <span />
+      <Typography {...props}>{props.children ?? ' — '}</Typography>
+    </FormControl>
   ),
   {
     name: 'MuiMultiInputDateRangeField',
@@ -308,7 +315,19 @@ function JoyDateField(props: JoyDateFieldProps) {
 }
 
 function JoyDatePicker(props: DatePickerProps<Dayjs>) {
-  return <DatePicker slots={{ field: JoyDateField, ...props.slots }} {...props} />;
+  return (
+    <DatePicker
+      {...props}
+      slots={{ field: JoyDateField, ...props.slots }}
+      slotProps={{
+        field: {
+          formControlSx: {
+            flexDirection: 'row',
+          },
+        } as any,
+      }}
+    />
+  );
 }
 
 /**
@@ -331,10 +350,10 @@ export default function PickerWithJoyField() {
     <CssVarsProvider theme={mergedTheme}>
       <SyncThemeMode mode={mode} />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Stack spacing={2} sx={{ width: 400 }}>
+        <DemoContainer components={['DatePicker', 'DateRangePicker']}>
           <JoyDatePicker />
           <JoyDateRangePicker />
-        </Stack>
+        </DemoContainer>
       </LocalizationProvider>
     </CssVarsProvider>
   );
