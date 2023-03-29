@@ -17,14 +17,14 @@ You will find the details of each editing API in the next sections.
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):
 
+This lets the user edit any cell from the column 'name' but not 'id'.
+
 ```tsx
-<DataGrid columns={[{ field: 'name', editable: true }]} />
+<DataGrid columns={[{ field: 'id' }, { field: 'name', editable: true }]} />
 ```
 
-This lets the user edit any cell from the specified column.
-
 The following demo shows an example of how to make all columns editable.
-Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> in any cell.
+Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> on any cell.
 
 {{"demo": "BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
