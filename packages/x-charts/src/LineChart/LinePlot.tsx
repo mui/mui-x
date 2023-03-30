@@ -31,51 +31,78 @@ export function LinePlot() {
 
   return (
     <React.Fragment>
-      {Object.keys(seriesPerAxis).flatMap((key) => {
-        const [xAxisKey, yAxisKey] = key.split('-');
+      <g>
+        {Object.keys(seriesPerAxis).flatMap((key) => {
+          const [xAxisKey, yAxisKey] = key.split('-');
 
-        const xScale = xAxis[xAxisKey].scale;
-        const yScale = yAxis[yAxisKey].scale;
-        const xData = xAxis[xAxisKey].data;
+          const xScale = xAxis[xAxisKey].scale;
+          const yScale = yAxis[yAxisKey].scale;
+          const xData = xAxis[xAxisKey].data;
 
-        if (xData === undefined) {
-          throw new Error(
-            `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
-          );
-        }
+          if (xData === undefined) {
+            throw new Error(
+              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+            );
+          }
 
-        const linePath = d3Line<{
-          x: any;
-          y: any[];
-        }>()
-          .x((d) => xScale(d.x))
-          .y((d) => yScale(d.y[1]));
+          const areaPath = d3Area<{
+            x: any;
+            y: any[];
+          }>()
+            .x((d) => xScale(d.x))
+            .y0((d) => yScale(d.y[0]))
+            .y1((d) => yScale(d.y[1]));
 
-        const areaPath = d3Area<{
-          x: any;
-          y: any[];
-        }>()
-          .x((d) => xScale(d.x))
-          .y0((d) => yScale(d.y[0]))
-          .y1((d) => yScale(d.y[1]));
+          return stackingGroups.flatMap((groupIds) => {
+            return groupIds.flatMap((seriesId) => {
+              const stackedData = series[seriesId].stackedData;
+              const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
-        return stackingGroups.flatMap((groupIds) => {
-          return groupIds.flatMap((seriesId) => {
-            const stackedData = series[seriesId].stackedData;
-            const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
-
-            return (
-              <React.Fragment key={seriesId}>
-                {!!series[seriesId].area && (
+              return (
+                !!series[seriesId].area && (
                   <path
+                    key={seriesId}
                     d={areaPath(d3Data) || undefined}
                     stroke="none"
                     fill={series[seriesId].area.color ?? series[seriesId].color}
                     fillOpacity={0.8}
                     style={{ pointerEvents: 'none' }}
                   />
-                )}
+                )
+              );
+            });
+          });
+        })}
+      </g>
+      <g>
+        {Object.keys(seriesPerAxis).flatMap((key) => {
+          const [xAxisKey, yAxisKey] = key.split('-');
+
+          const xScale = xAxis[xAxisKey].scale;
+          const yScale = yAxis[yAxisKey].scale;
+          const xData = xAxis[xAxisKey].data;
+
+          if (xData === undefined) {
+            throw new Error(
+              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+            );
+          }
+
+          const linePath = d3Line<{
+            x: any;
+            y: any[];
+          }>()
+            .x((d) => xScale(d.x))
+            .y((d) => yScale(d.y[1]));
+
+          return stackingGroups.flatMap((groupIds) => {
+            return groupIds.flatMap((seriesId) => {
+              const stackedData = series[seriesId].stackedData;
+              const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
+
+              return (
                 <path
+                  key={seriesId}
                   d={linePath(d3Data) || undefined}
                   stroke={series[seriesId].color}
                   strokeWidth={5}
@@ -85,11 +112,11 @@ export function LinePlot() {
                   // transform={`translate(0, ${boundedHeight})`}
                   style={{ pointerEvents: 'none' }}
                 />
-              </React.Fragment>
-            );
+              );
+            });
           });
-        });
-      })}
+        })}
+      </g>
     </React.Fragment>
   );
 }
