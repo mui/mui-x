@@ -2,7 +2,7 @@
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
-## Full-featured CRUD component
+## Full-featured CRUD
 
 The Data Grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
 The following demo shows a full-featured CRUD (Create, Read, Update, Delete) typically found in enterprise applications.
