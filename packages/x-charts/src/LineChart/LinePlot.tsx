@@ -70,9 +70,7 @@ export function LinePlot() {
                   <path
                     d={areaPath(d3Data) || undefined}
                     stroke="none"
-                    fill={
-                      series[seriesId].area.color ?? series[seriesId].color
-                    }
+                    fill={series[seriesId].area.color ?? series[seriesId].color}
                     fillOpacity={0.8}
                     style={{ pointerEvents: 'none' }}
                   />
