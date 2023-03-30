@@ -3,7 +3,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
-import { GridRowId } from '../../../models/gridRows';
+import { serializeCellValue } from '../export/serializers/csvSerializer';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -74,24 +74,6 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
     copyToClipboard(data);
   }, [apiRef]);
 
-  // TODO: move this to the GridColDef to make if configurable?
-  const stringifyCellForClipboard = React.useCallback(
-    (rowId: GridRowId, field: string) => {
-      const cellParams = apiRef.current.getCellParams(rowId, field);
-      let data: string;
-      const columnType = cellParams.colDef.type;
-      if (columnType === 'number') {
-        data = String(cellParams.value);
-      } else if (columnType === 'date' || columnType === 'dateTime') {
-        data = (cellParams.value as Date)?.toString();
-      } else {
-        data = cellParams.formattedValue as any;
-      }
-      return data;
-    },
-    [apiRef],
-  );
-
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey;
@@ -119,7 +101,8 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
         } else {
           const focusedCell = gridFocusCellSelector(apiRef);
           if (focusedCell) {
-            textToCopy = stringifyCellForClipboard(focusedCell.id, focusedCell.field);
+            const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
+            textToCopy = serializeCellValue(cellParams.formattedValue, '\t');
           }
         }
       }
@@ -129,7 +112,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
         apiRef.current.publishEvent('clipboardCopy', textToCopy);
       }
     },
-    [apiRef, stringifyCellForClipboard],
+    [apiRef],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);

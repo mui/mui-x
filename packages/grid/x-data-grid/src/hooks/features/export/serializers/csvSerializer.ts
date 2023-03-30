@@ -4,7 +4,7 @@ import { GridCellParams } from '../../../../models/params/gridCellParams';
 import { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import { buildWarning } from '../../../../utils/warning';
 
-const serializeCellValue = (value: any, delimiterCharacter: string) => {
+export const serializeCellValue = (value: any, delimiterCharacter: string) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
 
