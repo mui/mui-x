@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { line as d3Line, area as d3Area } from 'd3-shape';
+import { color as d3Color } from 'd3-color';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
@@ -64,7 +65,7 @@ export function LinePlot() {
                     key={seriesId}
                     d={areaPath(d3Data) || undefined}
                     stroke="none"
-                    fill={series[seriesId].area.color ?? series[seriesId].color}
+                    fill={d3Color(series[seriesId].area.color ?? series[seriesId].color).brighter(1)}
                     fillOpacity={0.8}
                     style={{ pointerEvents: 'none' }}
                   />
