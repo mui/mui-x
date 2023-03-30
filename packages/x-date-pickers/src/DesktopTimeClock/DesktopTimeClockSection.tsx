@@ -123,7 +123,7 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
     const offsetTop = selectedItem.offsetTop;
 
     containerRef.current.scrollTop = offsetTop;
-  }, [active, ref]);
+  });
 
   return (
     <DesktopTimeClockSectionRoot
