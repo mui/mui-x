@@ -170,7 +170,7 @@ The value returned is used later as an argument on a call to `apiRef.current.upd
 />
 ```
 
-### Server validation
+### Server-side validation
 
 If you need to cancel the save process on `processRowUpdate`—for instance, when a database validation fails, or the user wants to reject the changes—there are two options:
 
