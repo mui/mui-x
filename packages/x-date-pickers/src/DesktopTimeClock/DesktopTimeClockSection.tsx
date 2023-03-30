@@ -38,7 +38,9 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: DesktopTimeClockSectionProps<any> }>(({ theme }) => ({
   width: 56,
+  padding: 0,
   overflow: 'hidden',
+  scrollBehavior: 'smooth',
   '&:hover': {
     overflowY: 'auto',
   },
@@ -68,6 +70,11 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   '&:not(:first-of-type)': {
     borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
+  '&:after': {
+    display: 'block',
+    content: '""',
+    height: 318,
+  },
 }));
 
 const DesktopTimeClockSectionItem = styled(MenuItem, {
@@ -75,10 +82,8 @@ const DesktopTimeClockSectionItem = styled(MenuItem, {
   slot: 'Item',
   overridesResolver: (_, styles) => styles.item,
 })({
-  flexDirection: 'column',
   padding: 8,
-  margin: '0 3px',
-  // setting item width higher than the wrapper to avoid scrollbar shifting
+  marginInline: 3,
   width: 50,
   justifyContent: 'center',
 });
@@ -115,22 +120,10 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
     if (!selectedItem) {
       return;
     }
-    // Taken from useScroll in x-data-grid, but vertically centered
-    const offsetHeight = selectedItem.offsetHeight;
     const offsetTop = selectedItem.offsetTop;
 
-    const clientHeight = containerRef.current.clientHeight;
-    const scrollTop = containerRef.current.scrollTop;
-
-    const elementBottom = offsetTop + offsetHeight;
-
-    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
-      // item already visible
-      return;
-    }
-
-    containerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
-  }, [active, autoFocus, ref]);
+    containerRef.current.scrollTop = offsetTop;
+  }, [active, ref]);
 
   return (
     <DesktopTimeClockSectionRoot

@@ -38,6 +38,7 @@ const DesktopTimeClockRoot = styled(PickerViewRoot, {
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
+  padding: '4px 0',
 });
 
 type DesktopTimeClockComponent = (<TDate>(
