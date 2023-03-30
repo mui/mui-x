@@ -112,32 +112,18 @@ class CellValueUpdater {
     [rowId: GridRowId]: GridValidRowModel;
   } = {};
 
-  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
-
-  processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
-
-  onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
-
-  getRowId: DataGridPremiumProcessedProps['getRowId'];
-
   updateRow: (row: GridRowModel) => void;
 
-  constructor({
-    apiRef,
-    processRowUpdate,
-    onProcessRowUpdateError,
-    getRowId,
-  }: {
+  options: {
     apiRef: React.MutableRefObject<GridPrivateApiPremium>;
     processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
     onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
     getRowId: DataGridPremiumProcessedProps['getRowId'];
-  }) {
-    this.apiRef = apiRef;
-    this.processRowUpdate = processRowUpdate;
-    this.onProcessRowUpdateError = onProcessRowUpdateError;
-    this.getRowId = getRowId;
-    this.updateRow = batchRowUpdates(apiRef.current.updateRows, 50);
+  };
+
+  constructor(options: CellValueUpdater['options']) {
+    this.options = options;
+    this.updateRow = batchRowUpdates(options.apiRef.current.updateRows, 50);
   }
 
   updateCell({
@@ -149,7 +135,7 @@ class CellValueUpdater {
     field: GridColDef['field'];
     pastedCellValue: string;
   }) {
-    const apiRef = this.apiRef;
+    const { apiRef, getRowId } = this.options;
     const colDef = apiRef.current.getColumn(field);
     if (!colDef || !colDef.editable) {
       return;
@@ -173,7 +159,7 @@ class CellValueUpdater {
     } else {
       rowCopy[field] = parsedValue;
     }
-    const newRowId = getRowIdFromRowModel(rowCopy, this.getRowId);
+    const newRowId = getRowIdFromRowModel(rowCopy, getRowId);
     if (String(newRowId) !== String(rowId)) {
       // We cannot update row id, so this cell value update should be ignored
       return;
@@ -182,10 +168,8 @@ class CellValueUpdater {
   }
 
   applyUpdates() {
-    const apiRef = this.apiRef;
+    const { apiRef, processRowUpdate, onProcessRowUpdateError } = this.options;
     const rowsToUpdate = this.rowsToUpdate;
-    const processRowUpdate = this.processRowUpdate;
-    const onProcessRowUpdateError = this.onProcessRowUpdateError;
 
     Object.keys(rowsToUpdate).forEach((rowId) => {
       const newRow = rowsToUpdate[rowId];
