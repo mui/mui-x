@@ -34,6 +34,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: DigitalClockProps<any> }>({
   overflowY: 'auto',
   width: '100%',
+  scrollBehavior: 'smooth',
 });
 
 const DigitalClockList = styled(MenuList, {
@@ -139,10 +140,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (!selectedItem) {
       return;
     }
-    if (autoFocus || !!focusedView) {
-      // make sure the selected item is focused (possibly instead of the wrapper - MenuList)
-      selectedItem.focus();
-    }
     // Taken from useScroll in x-data-grid, but vertically centered
     const offsetHeight = selectedItem.offsetHeight;
     const offsetTop = selectedItem.offsetTop;
@@ -158,7 +155,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     }
 
     containerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
-  }, [autoFocus, focusedView, ref]);
+  });
 
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
@@ -240,7 +237,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <DigitalClockList autoFocus={autoFocus || !!focusedView}>
+      <DigitalClockList autoFocusItem={autoFocus || !!focusedView}>
         {timeOptions.map((option) => (
           <DigitalClockItem
             aria-readonly={readOnly}
