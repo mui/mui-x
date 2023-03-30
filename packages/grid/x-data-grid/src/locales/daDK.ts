@@ -29,7 +29,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Søg…',
   toolbarQuickFilterLabel: 'Søg',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterDeleteIconLabel: 'Ryd',
 
   // Export selector toolbar button text
   toolbarExport: 'Eksport',
@@ -134,7 +134,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Fjern gruppéring efter ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Udvid/kollaps detaljepanel',
   expandDetailPanel: 'Udvid',
   collapseDetailPanel: 'Kollaps',
 

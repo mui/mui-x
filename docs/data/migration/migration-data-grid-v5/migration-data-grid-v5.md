@@ -458,7 +458,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
   ```diff
   -renderCell: (params: GridRenderCellParams<number>) => {
-  +renderCell: (params: GridRenderCellParams<any, any, number>) => {
+  +renderCell: (params: GridRenderCellParams<any, number>) => {
   ```
 
 - The `GridErrorOverlay` component was removed.

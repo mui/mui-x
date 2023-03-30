@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
+import { useTheme } from '@mui/material/styles';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
   UseFieldForwardedProps,
@@ -48,6 +49,8 @@ export const useFieldState = <
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const adapter = useLocalizationContext<TDate>();
+  const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const {
     valueManager,
@@ -72,15 +75,19 @@ export const useFieldState = <
 
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
-      fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, (date) =>
+      fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
         splitFormatIntoSections(utils, localeText, format, date),
       ),
-    [fieldValueManager, format, localeText, utils],
+    [fieldValueManager, format, localeText, isRTL, utils],
   );
 
   const placeholder = React.useMemo(
-    () => fieldValueManager.getValueStrFromSections(getSectionsFromValue(valueManager.emptyValue)),
-    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue],
+    () =>
+      fieldValueManager.getValueStrFromSections(
+        getSectionsFromValue(valueManager.emptyValue),
+        isRTL,
+      ),
+    [fieldValueManager, getSectionsFromValue, valueManager.emptyValue, isRTL],
   );
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
@@ -175,7 +182,7 @@ export const useFieldState = <
       modified: true,
     };
 
-    return addPositionPropertiesToSections<TSection>(newSections);
+    return addPositionPropertiesToSections<TSection>(newSections, isRTL);
   };
 
   const clearValue = () => {
@@ -202,23 +209,19 @@ export const useFieldState = <
     }
 
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
-    const activeDateSections = fieldValueManager.getActiveDateSections(
-      state.sections,
-      activeSection,
-    );
 
-    const nonEmptySectionCountBefore = activeDateSections.filter(
-      (section) => section.value !== '',
-    ).length;
+    const nonEmptySectionCountBefore = activeDateManager
+      .getSections(state.sections)
+      .filter((section) => section.value !== '').length;
     const isTheOnlyNonEmptySection = nonEmptySectionCountBefore === 1;
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
     const newActiveDate = isTheOnlyNonEmptySection ? null : utils.date(new Date(''));
-    const newValues = activeDateManager.getNewValueFromNewActiveDate(newActiveDate);
+    const newValues = activeDateManager.getNewValuesFromNewActiveDate(newActiveDate);
 
     if (
       (newActiveDate != null && !utils.isValid(newActiveDate)) !==
-      (activeDateManager.activeDate != null && !utils.isValid(activeDateManager.activeDate))
+      (activeDateManager.date != null && !utils.isValid(activeDateManager.date))
     ) {
       publishValue({ ...newValues, sections: newSections });
     } else {
@@ -283,8 +286,8 @@ export const useFieldState = <
      */
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
-    const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    let newActiveDate = getDateFromDateSections(utils, activeDateSections);
+    const newActiveDateSections = activeDateManager.getSections(newSections);
+    let newActiveDate = getDateFromDateSections(utils, newActiveDateSections);
     let shouldRegenSections = false;
 
     /**
@@ -295,7 +298,7 @@ export const useFieldState = <
     if (!utils.isValid(newActiveDate)) {
       const clampedSections = clampDaySectionIfPossible(
         utils,
-        activeDateSections,
+        newActiveDateSections,
         sectionsValueBoundaries,
       );
       if (clampedSections != null) {
@@ -316,18 +319,18 @@ export const useFieldState = <
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
         newActiveDate,
-        activeDateSections,
-        activeDateManager.referenceActiveDate,
+        newActiveDateSections,
+        activeDateManager.referenceDate,
         true,
       );
 
-      values = activeDateManager.getNewValueFromNewActiveDate(mergedDate);
+      values = activeDateManager.getNewValuesFromNewActiveDate(mergedDate);
       shouldPublish = true;
     } else {
-      values = activeDateManager.getNewValueFromNewActiveDate(newActiveDate);
+      values = activeDateManager.getNewValuesFromNewActiveDate(newActiveDate);
       shouldPublish =
         (newActiveDate != null && !utils.isValid(newActiveDate)) !==
-        (activeDateManager.activeDate != null && !utils.isValid(activeDateManager.activeDate));
+        (activeDateManager.date != null && !utils.isValid(activeDateManager.date));
     }
 
     /**

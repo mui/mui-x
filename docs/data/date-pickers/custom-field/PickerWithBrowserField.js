@@ -2,9 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSlotProps } from '@mui/base/utils';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -12,14 +12,16 @@ import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } f
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
-const BrowserInput = styled('input')({ flexGrow: 1 });
-
 const BrowserField = React.forwardRef((props, inputRef) => {
   const {
     disabled,
     id,
     label,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
+    // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
+    error,
+    focused,
+    ownerState,
     ...other
   } = props;
 
@@ -30,7 +32,7 @@ const BrowserField = React.forwardRef((props, inputRef) => {
       ref={containerRef}
     >
       {startAdornment}
-      <BrowserInput disabled={disabled} ref={inputRef} {...other} />
+      <input disabled={disabled} ref={inputRef} {...other} />
       {endAdornment}
     </Box>
   );
@@ -146,10 +148,10 @@ BrowserDatePicker.propTypes = {
 export default function PickerWithBrowserField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={{ width: 400 }}>
+      <DemoContainer components={['DatePicker', 'DateRangePicker']}>
         <BrowserDatePicker />
         <BrowserDateRangePicker />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

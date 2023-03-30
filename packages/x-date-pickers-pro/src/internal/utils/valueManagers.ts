@@ -57,7 +57,7 @@ export const rangeFieldValueManager: FieldValueManager<
 
     return [prevReferenceValue[1], value[1]];
   },
-  getSectionsFromValue: (utils, [start, end], fallbackSections, getSectionsFromDate) => {
+  getSectionsFromValue: (utils, [start, end], fallbackSections, isRTL, getSectionsFromDate) => {
     const separatedFallbackSections =
       fallbackSections == null
         ? { startDate: null, endDate: null }
@@ -91,25 +91,20 @@ export const rangeFieldValueManager: FieldValueManager<
       });
     };
 
-    return addPositionPropertiesToSections<RangeFieldSection>([
-      ...getSections(start, separatedFallbackSections.startDate, 'start'),
-      ...getSections(end, separatedFallbackSections.endDate, 'end'),
-    ]);
+    return addPositionPropertiesToSections<RangeFieldSection>(
+      [
+        ...getSections(start, separatedFallbackSections.startDate, 'start'),
+        ...getSections(end, separatedFallbackSections.endDate, 'end'),
+      ],
+      isRTL,
+    );
   },
-  getValueStrFromSections: (sections) => {
+  getValueStrFromSections: (sections, isRTL) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    return createDateStrForInputFromSections([
-      ...dateRangeSections.startDate,
-      ...dateRangeSections.endDate,
-    ]);
-  },
-  getActiveDateSections: (sections, activeSection) => {
-    const index = activeSection.dateName === 'start' ? 0 : 1;
-    const dateRangeSections = splitDateRangeSections(sections);
-
-    return index === 0
-      ? removeLastSeparator(dateRangeSections.startDate)
-      : dateRangeSections.endDate;
+    return createDateStrForInputFromSections(
+      [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      isRTL,
+    );
   },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
     // TODO: Improve because it would not work if the date format has `–` as a separator.
@@ -130,9 +125,17 @@ export const rangeFieldValueManager: FieldValueManager<
       (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<any>;
 
     return {
-      activeDate: state.value[index],
-      referenceActiveDate: state.referenceValue[index],
-      getNewValueFromNewActiveDate: (newActiveDate) => ({
+      date: state.value[index],
+      referenceDate: state.referenceValue[index],
+      getSections: (sections) => {
+        const dateRangeSections = splitDateRangeSections(sections);
+        if (index === 0) {
+          return removeLastSeparator(dateRangeSections.startDate);
+        }
+
+        return dateRangeSections.endDate;
+      },
+      getNewValuesFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
         referenceValue:
           newActiveDate == null || !utils.isValid(newActiveDate)
