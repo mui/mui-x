@@ -23,7 +23,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Prevent reopening column menu when clicking in the button while it is open (#8286) @tanuj-22
 - [DataGrid] Rename `components` by `slots` in column menu API  (#7999) @MBilalShafi
 - [DataGridPremium] Fix aggregation initial state causing issue with quick filter (#8441) @MBilalShafi
-- [l10n] Add Danish (da-DK) locale (#8379) @BossElijah
 - [l10n] Improve Danish (da-DK) locale (#8368) @BossElijah
 - [l10n] Improve Danish (da-DK) locale (#8378) @BossElijah
 - [l10n] Improve Norwegian (nb-NO) locale (#8367) @BossElijah
@@ -44,6 +43,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [pickers] Avoid root imports and move public models to the models folder (#8337) @flaviendelangle
 - [pickers] Update `view` when `views` or `openTo` changes (#8361) @LukasTy
 - [l10n] Improve Norwegian (nb-NO) locale (#8382) @BossElijah
+- [l10n] Add Danish (da-DK) locale (#8379) @BossElijah
+- [l10n] Improve Swedish (sv-SE) locale (#8381) @BossElijah
 
 ### `@mui/x-codemod@v6.0.4`
 
