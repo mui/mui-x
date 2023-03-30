@@ -216,12 +216,10 @@ export const useGridClipboardImport = (
       const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
 
       const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
-      const cellSelectionModelKeys = Object.keys(cellSelectionModel);
-
-      if (cellSelectionModel && cellSelectionModelKeys.length > 0) {
+      if (cellSelectionModel && apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
         const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
 
-        cellSelectionModelKeys.forEach((rowId, rowIndex) => {
+        Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
           const rowDataString = rowsData[isSingleValuePasted ? 0 : rowIndex];
           const hasRowData = isSingleValuePasted ? true : rowDataString !== undefined;
           if (!hasRowData) {
