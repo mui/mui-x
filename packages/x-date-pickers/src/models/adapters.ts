@@ -429,6 +429,7 @@ export interface MuiPickersAdapter<TDate> {
   getYear(value: TDate): number;
   /**
    * Get the month of the given date.
+   * The value is 0-based, in the Gregorian calendar January = 0, February = 1, ...
    * @template TDate
    * @param {TDate} value The given date.
    * @returns {number} The month of the given date.
