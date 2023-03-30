@@ -19,8 +19,6 @@ export const getHourSectionOptions = <TDate>({
   const currentHours = value ? utils.getHours(value) : null;
 
   const result: DesktopTimeClockSectionOption<number>[] = [];
-  const startHour = ampm ? 1 : 0;
-  const endHour = ampm ? 12 : 23;
 
   const isSelected = (hour: number) => {
     if (currentHours === null) {
@@ -38,12 +36,9 @@ export const getHourSectionOptions = <TDate>({
     return currentHours === hour;
   };
 
-  for (let hour = startHour; hour <= endHour; hour += 1) {
+  const endHour = ampm ? 11 : 23;
+  for (let hour = 0; hour <= endHour; hour += 1) {
     let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
-
-    if (hour === 0) {
-      label = '00';
-    }
 
     label = utils.formatNumber(label);
 
