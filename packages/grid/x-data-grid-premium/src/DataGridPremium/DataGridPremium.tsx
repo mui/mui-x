@@ -707,7 +707,6 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOrderChange: PropTypes.func,
-  onRowPaste: PropTypes.func,
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].

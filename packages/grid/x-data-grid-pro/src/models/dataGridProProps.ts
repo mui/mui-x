@@ -241,6 +241,4 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Rows data to pin on top or bottom.
    */
   pinnedRows?: GridPinnedRowsProp<R>;
-
-  onRowPaste?: (newRow: R, oldRow: R) => void;
 }

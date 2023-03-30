@@ -314,7 +314,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
 
     it('should use valueSetter if the column has one', async () => {
-      const onRowPasteSpy = spy();
+      const processRowUpdateSpy = spy((newRow) => newRow);
 
       const columns: GridColDef[] = [
         { field: 'firstName' },
@@ -342,7 +342,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               columns={columns}
               rows={rows}
               rowSelection={false}
-              onRowPaste={onRowPasteSpy}
+              processRowUpdate={processRowUpdateSpy}
               unstable_enableClipboardPaste
             />
           </div>
@@ -360,8 +360,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
 
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Jon', 'John']));
-      expect(onRowPasteSpy.callCount).to.equal(1);
-      expect(onRowPasteSpy.args[0]).to.deep.equal([
+      expect(processRowUpdateSpy.callCount).to.equal(1);
+      expect(processRowUpdateSpy.args[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
       ]);

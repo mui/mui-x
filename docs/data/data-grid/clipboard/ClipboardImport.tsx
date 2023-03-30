@@ -219,9 +219,9 @@ export default function ClipboardImport() {
           unstable_cellSelection
           {...data}
           // getRowId={(row) => row.rowId}
-          onRowPaste={(newRow) => {
-            console.log('onRowPaste', newRow);
+          processRowUpdate={(newRow) => {
             updateRow(newRow);
+            return newRow;
           }}
           unstable_enableClipboardPaste
         />

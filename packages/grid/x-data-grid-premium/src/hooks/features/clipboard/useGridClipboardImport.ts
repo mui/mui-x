@@ -8,17 +8,43 @@ import {
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
   useGridNativeEventListener,
+  GridRowModel,
 } from '@mui/x-data-grid';
-import { getRowIdFromRowModel, getVisibleRows } from '@mui/x-data-grid/internals';
+import { buildWarning, getRowIdFromRowModel, getVisibleRows } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+
+const missingOnProcessRowUpdateErrorWarning = buildWarning(
+  [
+    'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+    'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+  ],
+  'error',
+);
 
 const columnFieldsToExcludeFromPaste = [
   GRID_CHECKBOX_SELECTION_FIELD,
   GRID_REORDER_COL_DEF.field,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 ];
+
+// Batches rows that are updated during clipboard paste to reduce `updateRows` calls
+function batchRowUpdates<R>(func: (rows: R[]) => void, wait?: number) {
+  let rows: R[] = [];
+
+  const debounced = debounce(() => {
+    func(rows);
+    rows = [];
+  }, wait);
+
+  return (row: R) => {
+    rows.push(row);
+    debounced();
+  };
+}
 
 const stringToBoolean = (value: string) => {
   switch (value.toLowerCase().trim()) {
@@ -88,22 +114,30 @@ class CellValueUpdater {
 
   apiRef: React.MutableRefObject<GridPrivateApiPremium>;
 
-  onRowPaste: DataGridPremiumProcessedProps['onRowPaste'];
+  processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
+
+  onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
 
   getRowId: DataGridPremiumProcessedProps['getRowId'];
 
+  updateRow: (row: GridRowModel) => void;
+
   constructor({
     apiRef,
-    onRowPaste,
+    processRowUpdate,
+    onProcessRowUpdateError,
     getRowId,
   }: {
     apiRef: React.MutableRefObject<GridPrivateApiPremium>;
-    onRowPaste: DataGridPremiumProcessedProps['onRowPaste'];
+    processRowUpdate: DataGridPremiumProcessedProps['processRowUpdate'];
+    onProcessRowUpdateError: DataGridPremiumProcessedProps['onProcessRowUpdateError'];
     getRowId: DataGridPremiumProcessedProps['getRowId'];
   }) {
     this.apiRef = apiRef;
-    this.onRowPaste = onRowPaste;
+    this.processRowUpdate = processRowUpdate;
+    this.onProcessRowUpdateError = onProcessRowUpdateError;
     this.getRowId = getRowId;
+    this.updateRow = batchRowUpdates(apiRef.current.updateRows, 50);
   }
 
   updateCell({
@@ -150,24 +184,33 @@ class CellValueUpdater {
   applyUpdates() {
     const apiRef = this.apiRef;
     const rowsToUpdate = this.rowsToUpdate;
-    const rowsToUpdateArr: GridValidRowModel[] = [];
-    const onRowPastePayload: Parameters<NonNullable<typeof this.onRowPaste>>[] = [];
+    const processRowUpdate = this.processRowUpdate;
+    const onProcessRowUpdateError = this.onProcessRowUpdateError;
+
     Object.keys(rowsToUpdate).forEach((rowId) => {
       const newRow = rowsToUpdate[rowId];
-      rowsToUpdateArr.push(rowsToUpdate[rowId]);
-      const oldRow = apiRef.current.getRow(rowId);
-      onRowPastePayload.push([newRow, oldRow]);
-    });
-    if (rowsToUpdateArr.length === 0) {
-      return;
-    }
 
-    apiRef.current.updateRows(rowsToUpdateArr);
+      if (typeof processRowUpdate === 'function') {
+        const handleError = (errorThrown: any) => {
+          if (onProcessRowUpdateError) {
+            onProcessRowUpdateError(errorThrown);
+          } else {
+            missingOnProcessRowUpdateErrorWarning();
+          }
+        };
 
-    // call onRowPaste with the new and old rows
-    onRowPastePayload.forEach((payload) => {
-      if (typeof this.onRowPaste === 'function') {
-        this.onRowPaste(...payload);
+        try {
+          const oldRow = apiRef.current.getRow(rowId);
+          Promise.resolve(processRowUpdate(newRow, oldRow))
+            .then((finalRowUpdate) => {
+              this.updateRow(finalRowUpdate);
+            })
+            .catch(handleError);
+        } catch (error) {
+          handleError(error);
+        }
+      } else {
+        this.updateRow(newRow);
       }
     });
   }
@@ -177,10 +220,16 @@ export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'pagination' | 'paginationMode' | 'onRowPaste' | 'getRowId' | 'unstable_enableClipboardPaste'
+    | 'pagination'
+    | 'paginationMode'
+    | 'processRowUpdate'
+    | 'onProcessRowUpdateError'
+    | 'getRowId'
+    | 'unstable_enableClipboardPaste'
   >,
 ): void => {
-  const onRowPaste = props.onRowPaste;
+  const processRowUpdate = props.processRowUpdate;
+  const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
   const enableClipboardPaste = props.unstable_enableClipboardPaste;
 
@@ -211,14 +260,19 @@ export const useGridClipboardImport = (
         return;
       }
 
+      const cellUpdater = new CellValueUpdater({
+        apiRef,
+        processRowUpdate,
+        onProcessRowUpdateError,
+        getRowId,
+      });
+
       const rowsData = text.split('\r\n');
 
       const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
 
       const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
       if (cellSelectionModel && apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
-        const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
-
         Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
           const rowDataString = rowsData[isSingleValuePasted ? 0 : rowIndex];
           const hasRowData = isSingleValuePasted ? true : rowDataString !== undefined;
@@ -247,7 +301,6 @@ export const useGridClipboardImport = (
 
       if (selectedRows.size > 1 && !isSingleValuePasted) {
         // Multiple values are pasted starting from the first and top-most cell
-        const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
         const pastedRowsDataCount = rowsData.length;
 
         // There's no guarantee that the selected rows are in the same order as the pasted rows
@@ -293,8 +346,6 @@ export const useGridClipboardImport = (
         paginationMode: props.paginationMode,
       });
 
-      const cellUpdater = new CellValueUpdater({ apiRef, onRowPaste, getRowId });
-
       const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
       rowsData.forEach((rowData, index) => {
         const parsedData = rowData.split('\t');
@@ -314,7 +365,15 @@ export const useGridClipboardImport = (
 
       cellUpdater.applyUpdates();
     },
-    [apiRef, props.pagination, props.paginationMode, onRowPaste, getRowId, enableClipboardPaste],
+    [
+      apiRef,
+      props.pagination,
+      props.paginationMode,
+      processRowUpdate,
+      onProcessRowUpdateError,
+      getRowId,
+      enableClipboardPaste,
+    ],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
