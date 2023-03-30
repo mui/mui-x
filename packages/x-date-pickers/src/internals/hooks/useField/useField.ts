@@ -338,7 +338,7 @@ export const useField = <
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
-          activeDateManager.activeDate,
+          activeDateManager.date,
         );
 
         updateSectionValue({
