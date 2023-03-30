@@ -9,7 +9,7 @@ _Mar 30, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Add Danish (da-DK), and improve Norwegian (bb-NO), Spanish (es-ES), and Swedish (sv-SE) locales
+- 🌍 Add Danish (da-DK), and improve Norwegian (nb-NO), Spanish (es-ES), and Swedish (sv-SE) locales
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -21,7 +21,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Fix filter model buttons' display condition (#8415) @MBilalShafi
 - [DataGrid] Fix infinite rerender in a flex parent (#8436) @cherniavskii
 - [DataGrid] Prevent reopening column menu when clicking in the button while it is open (#8286) @tanuj-22
-- [DataGrid] Rename `components` by `slots` in column menu API  (#7999) @MBilalShafi
+- [DataGrid] Rename `components` by `slots` in column menu API (#7999) @MBilalShafi
+- [DataGrid] Remove hardcoded CSS classes' usages (#8444) @MBilalShafi
 - [DataGridPremium] Fix aggregation initial state causing issue with quick filter (#8441) @MBilalShafi
 - [l10n] Improve Danish (da-DK) locale (#8368) @BossElijah
 - [l10n] Improve Danish (da-DK) locale (#8378) @BossElijah
