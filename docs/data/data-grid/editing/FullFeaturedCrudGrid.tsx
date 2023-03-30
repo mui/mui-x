@@ -189,7 +189,7 @@ export default function FullFeaturedCrudGrid() {
             <GridActionsCellItem
               icon={<CancelIcon />}
               label="Cancel"
-              className="primary"
+              className="textPrimary"
               onClick={handleCancelClick(id)}
               color="inherit"
             />,
