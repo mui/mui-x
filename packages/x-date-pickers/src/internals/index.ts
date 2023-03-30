@@ -73,7 +73,7 @@ export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,
   PickerSelectionState,
-} from './hooks/usePicker/usePickerValue';
+} from './hooks/usePicker/usePickerValue.types';
 export type {
   UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,

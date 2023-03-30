@@ -7,7 +7,7 @@ import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
-import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
+import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 
 export interface PickersModalDialogSlotsComponent {
   /**
