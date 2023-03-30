@@ -21,13 +21,13 @@ export function LineChart(
     'children'
   >,
 ) {
-  const { xAxis, yAxis, series, colors, width, height, margin } = props;
+  const { xAxis, yAxis, series, colors, width, height, margin, sx } = props;
 
   return (
     <DrawingProvider width={width} height={height} margin={margin}>
       <SeriesContextProvider series={series} colors={colors}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
-          <Surface width={width} height={height}>
+          <Surface width={width} height={height} sx={sx}>
             <LinePlot />
             <XAxis
               label="Bottom X axis"

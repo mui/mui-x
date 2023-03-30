@@ -10,12 +10,12 @@ import Surface from '../Surface';
 type ChartContainerProps = LayoutConfig & SeriesContextProviderProps;
 
 export function ChartContainer(props: ChartContainerProps) {
-  const { width, height, series, margin, children } = props;
+  const { width, height, series, margin, sx, children } = props;
 
   return (
     <DrawingProvider width={width} height={height} margin={margin}>
       <SeriesContextProvider series={series}>
-        <Surface width={width} height={height}>
+        <Surface width={width} height={height} sx={sx}>
           {children}
         </Surface>
       </SeriesContextProvider>
