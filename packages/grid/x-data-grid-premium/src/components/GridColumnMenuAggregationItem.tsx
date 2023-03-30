@@ -6,7 +6,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import GlobalStyles from '@mui/material/GlobalStyles';
 import { unstable_useId as useId } from '@mui/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
@@ -32,7 +31,6 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const rootProps = useGridRootProps();
   const id = useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
-  const [menuOpen, setOpen] = React.useState(false);
 
   const availableAggregationFunctions = React.useMemo(
     () =>
@@ -85,26 +83,20 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       <ListItemText>
         <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
           <InputLabel id={`${id}-label`}>{label}</InputLabel>
-          <GlobalStyles
-            styles={() =>
-              menuOpen ? `body { overflow: auto !important; padding-right: 0 !important; }` : ``
-            }
-          />
           <Select
             labelId={`${id}-label`}
             id={`${id}-input`}
             value={selectedAggregationRule}
             label={label}
+            native
             color="primary"
             onChange={handleAggregationItemChange}
             onBlur={(e) => e.stopPropagation()}
             fullWidth
-            onOpen={() => setOpen(true)}
-            onClose={() => setOpen(false)}
           >
-            <MenuItem value="">...</MenuItem>
+            <option value="">&nbsp;</option>
             {availableAggregationFunctions.map((aggFunc) => (
-              <MenuItem key={aggFunc} value={aggFunc}>
+              <option key={aggFunc} value={aggFunc}>
                 {getAggregationFunctionLabel({
                   apiRef,
                   aggregationRule: {
@@ -112,7 +104,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
                     aggregationFunction: rootProps.aggregationFunctions[aggFunc],
                   },
                 })}
-              </MenuItem>
+              </option>
             ))}
           </Select>
         </FormControl>
