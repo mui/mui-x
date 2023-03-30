@@ -2,12 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## 6.0.4
+
 _Mar 30, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🌍 Add Danish (da-DK), and improve Norwegian (bb-NO), Spanish (es-ES), and Swedish (sv-SE) locales
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 ### `@mui/x-data-grid@v6.0.4` / `@mui/x-data-grid-pro@v6.0.4` / `@mui/x-data-grid-premium@v6.0.4`
 
