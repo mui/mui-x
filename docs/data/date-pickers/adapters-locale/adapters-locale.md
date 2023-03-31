@@ -149,7 +149,8 @@ This prop is available on all fields and pickers.
 
 ### Dense field format
 
-If your component must be rendered inside a dense interface, you can make the format more compact using the `formatDensity` prop:
+If your component must be rendered inside a dense interface, you can make the format more compact using the `formatDensity` prop.
+Setting `formatDensity` to `"dense"` will remove extra spaces.
 
 {{"demo": "CompactFieldFormat.js"}}
 
