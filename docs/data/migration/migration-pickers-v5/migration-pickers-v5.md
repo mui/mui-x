@@ -70,6 +70,21 @@ The `inputFormat` prop has been renamed to `format` on all the pickers component
  />
 ```
 
+### Update expected values in tests
+
+The value rendered in the input has been modified.
+Spaces are added around `/` characters.
+If you are using RTL or if your date contains single digits sections, non-ASCII characters will be added.
+
+If your tests are relying on the inputs values, you can clean them with the following method.
+
+```ts
+export const cleanString = (dirtyString: string) =>
+  dirtyString
+    .replace(/[\u2066\u2067\u2068\u2069]/g, '') // Remove non-ASCII characters
+    .replace(/ \/ /g, '/'); // Remove extra spaces
+```
+
 ### Update the format of the `value` prop
 
 Previously, it was possible to provide any format that your date management library was able to parse.
