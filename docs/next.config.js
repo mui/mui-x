@@ -19,7 +19,6 @@ module.exports = withDocsInfra({
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
-    SLACK_FEEDBACKS_TOKEN: process.env.SLACK_FEEDBACKS_TOKEN,
     CONTEXT: process.env.CONTEXT,
     // #default-branch-switch
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
