@@ -57,3 +57,11 @@ export interface DesktopOnlyTimePickerProps<TDate> extends ExportedDigitalClockP
    */
   renderTimeInASingleColumnThreshold?: number;
 }
+
+export interface DigitalClockOnlyProps {
+  /**
+   * The time interval at which to display minutes and seconds.
+   * @default 5
+   */
+  timeStep?: number;
+}

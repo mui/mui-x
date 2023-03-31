@@ -1,6 +1,10 @@
 import { DesktopTimeClockClasses } from './desktopTimeClockClasses';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import {
+  BaseClockProps,
+  DigitalClockOnlyProps,
+  ExportedBaseClockProps,
+} from '../internals/models/props/clock';
 import { DesktopTimeClockSectionProps } from './DesktopTimeClockSection';
 
 export interface DesktopTimeClockSectionOption<TValue> {
@@ -10,13 +14,9 @@ export interface DesktopTimeClockSectionOption<TValue> {
   value: TValue;
 }
 
-export interface ExportedDesktopTimeClockProps<TDate> extends ExportedBaseClockProps<TDate> {
-  /**
-   * Number representing the increment of precision at which to display minutes and seconds.
-   * @default 5
-   */
-  timeStep?: number;
-}
+export interface ExportedDesktopTimeClockProps<TDate>
+  extends ExportedBaseClockProps<TDate>,
+    DigitalClockOnlyProps {}
 
 export interface DesktopTimeClockSectionViewProps<TValue>
   extends Pick<DesktopTimeClockSectionProps<TValue>, 'onChange' | 'items'> {}

@@ -1,14 +1,14 @@
 import { DigitalClockClasses } from './digitalClockClasses';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import {
+  BaseClockProps,
+  DigitalClockOnlyProps,
+  ExportedBaseClockProps,
+} from '../internals/models/props/clock';
 
-export interface ExportedDigitalClockProps<TDate> extends ExportedBaseClockProps<TDate> {
-  /**
-   * Number representing the increment of precision at which to display minutes and seconds in digital view.
-   * @default 5
-   */
-  timeStep?: number;
-}
+export interface ExportedDigitalClockProps<TDate>
+  extends ExportedBaseClockProps<TDate>,
+    DigitalClockOnlyProps {}
 
 export interface DigitalClockSlotsComponent {}
 
