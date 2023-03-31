@@ -409,7 +409,12 @@ export default function ApiPage(props) {
             <br />
             <span dangerouslySetInnerHTML={{ __html: t('api-docs.overrideStyles') }} />
             <span
-              dangerouslySetInnerHTML={{ __html: t('api-docs.overrideStylesStyledComponent') }}
+              dangerouslySetInnerHTML={{
+                __html: t('api-docs.overrideStylesStyledComponent').replace(
+                  /{{styleOverridesLink}}/,
+                  '/material-ui/customization/theme-components/#theme-style-overrides',
+                ),
+              }}
             />
           </React.Fragment>
         ) : null}
