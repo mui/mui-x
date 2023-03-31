@@ -241,7 +241,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     (viewToBuild: TimeView): DesktopTimeClockSectionViewProps<number> => {
       switch (viewToBuild) {
         case 'hours': {
-          const handleHoursChange = (hours: number | MeridiemEnum) => {
+          const handleHoursChange = (hours) => {
             if (typeof hours !== 'number') {
               return;
             }
@@ -273,7 +273,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
 
         case 'minutes': {
           const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
-          const handleMinutesChange = (minutes: number | MeridiemEnum) => {
+          const handleMinutesChange = (minutes) => {
             if (typeof minutes !== 'number') {
               return;
             }
@@ -302,7 +302,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
 
         case 'seconds': {
           const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
-          const handleSecondsChange = (seconds: number | MeridiemEnum) => {
+          const handleSecondsChange = (seconds) => {
             if (typeof seconds !== 'number') {
               return;
             }
