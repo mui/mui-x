@@ -241,6 +241,7 @@ export default function ClipboardImport() {
             return newRow;
           }}
           unstable_enableClipboardPaste
+          experimentalFeatures={{ ignoreValueFormatterDuringExport: true }}
         />
       </div>
     </div>

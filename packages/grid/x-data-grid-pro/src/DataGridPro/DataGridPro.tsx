@@ -243,6 +243,13 @@ DataGridProRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
+    ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+      PropTypes.shape({
+        clipboardExport: PropTypes.bool,
+        csvExport: PropTypes.bool,
+      }),
+      PropTypes.bool,
+    ]),
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),

@@ -77,7 +77,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, ignoreValueFormatterDuringExport?: { clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {

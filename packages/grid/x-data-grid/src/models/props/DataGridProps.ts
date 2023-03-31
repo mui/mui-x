@@ -43,6 +43,12 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  ignoreValueFormatterDuringExport:
+    | boolean
+    | {
+        csvExport?: boolean;
+        clipboardExport?: boolean;
+      };
 }
 
 /**

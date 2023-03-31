@@ -160,10 +160,10 @@ export const useDataGridPremiumComponent = (
   useGridInfiniteLoader(privateApiRef, props);
   useGridLazyLoader(privateApiRef, props);
   useGridColumnMenu(privateApiRef);
-  useGridCsvExport(privateApiRef);
+  useGridCsvExport(privateApiRef, props);
   useGridPrintExport(privateApiRef, props);
   useGridExcelExport(privateApiRef, props);
-  useGridClipboard(privateApiRef);
+  useGridClipboard(privateApiRef, props);
   // TODO: Move it up?
   useGridClipboardImport(privateApiRef, props);
   useGridDimensions(privateApiRef, props);

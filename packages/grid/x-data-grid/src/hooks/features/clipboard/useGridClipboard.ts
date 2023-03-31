@@ -4,6 +4,7 @@ import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -57,7 +58,15 @@ function hasNativeSelection(element: HTMLInputElement) {
  * @requires useGridCsvExport (method)
  * @requires useGridSelection (method)
  */
-export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
+export const useGridClipboard = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'experimentalFeatures'>,
+): void => {
+  const ignoreValueFormatterFlag = props.experimentalFeatures?.ignoreValueFormatterDuringExport;
+  const ignoreValueFormatter =
+    (typeof ignoreValueFormatterFlag === 'object'
+      ? ignoreValueFormatterFlag?.clipboardExport
+      : ignoreValueFormatterFlag) || false;
   const copySelectedRowsToClipboard = React.useCallback<
     GridClipboardApi['unstable_copySelectedRowsToClipboard']
   >(() => {
@@ -102,7 +111,10 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
           const focusedCell = gridFocusCellSelector(apiRef);
           if (focusedCell) {
             const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
-            textToCopy = serializeCellValue(cellParams.formattedValue, '\t');
+            textToCopy = serializeCellValue(cellParams, {
+              delimiterCharacter: '\t',
+              ignoreValueFormatter,
+            });
           }
         }
       }
@@ -112,7 +124,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
         apiRef.current.publishEvent('clipboardCopy', textToCopy);
       }
     },
-    [apiRef],
+    [apiRef, ignoreValueFormatter],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);

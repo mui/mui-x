@@ -17,10 +17,16 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 ## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-You can enable clipboard paste using `unstable_enableClipboardPaste` prop:
+You can enable clipboard paste using the `unstable_enableClipboardPaste` prop.
+
+Additionally, to make sure the copied cells are formatted correctly and can be parsed during paste,
+it's recommended to set the `ignoreValueFormatterDuringExport` flag to `true`.
 
 ```tsx
-<DataGridPremium unstable_enableClipboardPaste />
+<DataGridPremium
+  unstable_enableClipboardPaste
+  experimentalFeatures={{ ignoreValueFormatterDuringExport: true }}
+/>
 ```
 
 :::warning
@@ -34,14 +40,14 @@ The paste operation only affects cells in the [columns that are `editable`](/x/r
 The priority of the clipboard paste is the following, from highest to lowest:
 
 - If more than one cell is selected (see [Cell selection](/x/react-data-grid/cell-selection/)):
-  - If clipboard contains a single cell, it is pasted to each selected cell
-  - If clipboard contains multiple cells/rows, they are pasted starting from the first selected cell, but won't leak the selected range
+  - If the clipboard contains a single cell, it is pasted to each selected cell
+  - If the clipboard contains multiple cells/rows, they are pasted starting from the first selected cell, but won't leak the selected range
 - If more than one row is selected (see [Row selection](/x/react-data-grid/row-selection/)):
-  - If clipboard contains a single row, it is pasted to each selected row
-  - If clipboard contains multiple rows, they are pasted starting from the first selected row, but won't leak the selected range
+  - If the clipboard contains a single row, it is pasted to each selected row
+  - If the clipboard contains multiple rows, they are pasted starting from the first selected row, but won't leak the selected range
 - If a single cell is selected:
-  - If clipboard contains a single cell, it is pasted to the selected cell
-  - If clipboard contains multiple cells/rows, the data is pasted starting from the selected cell
+  - If the clipboard contains a single cell, it is pasted to the selected cell
+  - If the clipboard contains multiple cells/rows, the data is pasted starting from the selected cell
 
 ### Persisting pasted data
 

@@ -121,4 +121,6 @@ export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
 
+export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
+
 export * from './utils';

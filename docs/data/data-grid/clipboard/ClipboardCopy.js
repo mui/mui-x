@@ -8,7 +8,7 @@ export default function ClipboardCopy() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
-    maxColumns: 12,
+    maxColumns: 20,
   });
 
   const [copiedData, setCopiedData] = React.useState('');
@@ -28,6 +28,7 @@ export default function ClipboardCopy() {
           apiRef={apiRef}
           {...data}
           checkboxSelection
+          disableRowSelectionOnClick
           unstable_cellSelection
         />
       </div>

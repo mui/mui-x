@@ -4,6 +4,7 @@ import {
   GridPipeProcessor,
   GridStateInitializer,
   isNavigationKey,
+  serializeCellValue,
   useGridRegisterPipeProcessor,
   useGridVisibleRows,
 } from '@mui/x-data-grid-pro/internals';
@@ -47,11 +48,18 @@ export const useGridCellSelection = (
     | 'unstable_onCellSelectionModelChange'
     | 'pagination'
     | 'paginationMode'
+    | 'experimentalFeatures'
   >,
 ) => {
   const visibleRows = useGridVisibleRows(apiRef, props);
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
+
+  const ignoreValueFormatterFlag = props.experimentalFeatures?.ignoreValueFormatterDuringExport;
+  const ignoreValueFormatter =
+    (typeof ignoreValueFormatterFlag === 'object'
+      ? ignoreValueFormatterFlag?.clipboardExport
+      : ignoreValueFormatterFlag) || false;
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -407,24 +415,6 @@ export const useGridCellSelection = (
     [apiRef, props.unstable_cellSelection, hasClickedValidCellForRangeSelection],
   );
 
-  // TODO: move this to the GridColDef to make if configurable?
-  const stringifyCellForClipboard = React.useCallback(
-    (rowId: GridRowId, field: string) => {
-      const cellParams = apiRef.current.getCellParams(rowId, field);
-      let data: string;
-      const columnType = cellParams.colDef.type;
-      if (columnType === 'number') {
-        data = String(cellParams.value);
-      } else if (columnType === 'date' || columnType === 'dateTime') {
-        data = (cellParams.value as Date)?.toString();
-      } else {
-        data = cellParams.formattedValue as any;
-      }
-      return data;
-    },
-    [apiRef],
-  );
-
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
       if (apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
@@ -434,7 +424,11 @@ export const useGridCellSelection = (
           const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
             let cellData: string;
             if (fieldsMap[field]) {
-              cellData = stringifyCellForClipboard(rowId, field);
+              const cellParams = apiRef.current.getCellParams(rowId, field);
+              cellData = serializeCellValue(cellParams, {
+                delimiterCharacter: '\t',
+                ignoreValueFormatter,
+              });
             } else {
               cellData = '';
             }
@@ -447,7 +441,7 @@ export const useGridCellSelection = (
 
       return value;
     },
-    [apiRef, stringifyCellForClipboard],
+    [apiRef, ignoreValueFormatter],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);
