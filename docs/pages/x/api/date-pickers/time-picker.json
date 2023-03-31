@@ -56,7 +56,6 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "renderTimeInASingleColumnThreshold": { "type": { "name": "number" }, "default": "24" },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -77,6 +76,7 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
     "timeStep": { "type": { "name": "number" }, "default": "5" },
     "value": { "type": { "name": "any" } },
     "view": {

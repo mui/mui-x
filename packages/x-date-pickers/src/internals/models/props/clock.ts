@@ -52,10 +52,10 @@ export interface BaseClockProps<TDate> extends ExportedUseViewsOptions<TimeView>
 
 export interface DesktopOnlyTimePickerProps<TDate> extends ExportedDigitalClockProps<TDate> {
   /**
-   * Number of possible time options at which the single column time renderer is used.
+   * Amount of time options below or at which the single column time renderer is used.
    * @default 24
    */
-  renderTimeInASingleColumnThreshold?: number;
+  thresholdToRenderTimeInASingleColumn?: number;
 }
 
 export interface DigitalClockOnlyProps {

@@ -29,11 +29,11 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     'MuiDesktopTimePicker',
   );
 
-  const renderTimeInASingleColumnThreshold =
-    defaultizedProps.renderTimeInASingleColumnThreshold ?? 24;
+  const thresholdToRenderTimeInASingleColumn =
+    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
   const timeStep = defaultizedProps.timeStep ?? 5;
   const shouldRenderTimeInASingleColumn =
-    (24 * 60) / timeStep <= renderTimeInASingleColumnThreshold;
+    (24 * 60) / timeStep <= thresholdToRenderTimeInASingleColumn;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderSingleColumnTimeView
@@ -260,11 +260,6 @@ DesktopTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
-   * Number of possible time options at which the single column time renderer is used.
-   * @default 24
-   */
-  renderTimeInASingleColumnThreshold: PropTypes.number,
-  /**
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -325,7 +320,12 @@ DesktopTimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Number representing the increment of precision at which to display minutes and seconds in digital view.
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
+  /**
+   * The time interval at which to display minutes and seconds.
    * @default 5
    */
   timeStep: PropTypes.number,
