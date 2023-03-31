@@ -22,7 +22,7 @@ import {
 } from './usePickerValue.types';
 
 /**
- * Decides if the new value should be published
+ * Decide if the new value should be published
  * The published value will be passed to `onChange` if defined.
  */
 const shouldPublishValue = <TValue, TError>(
@@ -55,7 +55,7 @@ const shouldPublishValue = <TValue, TError>(
 };
 
 /**
- * Decides if the new value should be committed.
+ * Decide if the new value should be committed.
  * The committed value will be passed to `onAccept` if defined.
  * It will also be used as a reset target when calling the `cancel` picker action (when clicking on the "Cancel" button).
  */
@@ -67,9 +67,12 @@ const shouldCommitValue = <TValue, TError>(
   const isCurrentValueTheDefaultValue = !isControlled && !dateState.hasBeenModifiedSinceMount;
 
   if (action.name === 'setValueFromAction') {
-    // If the component is not controlled, and  the value before,
-    // Then we want to publish the default value whenever the user pressed the "Accept" button.
-    if (isCurrentValueTheDefaultValue && action.pickerAction === 'accept') {
+    // If the component is not controlled, and the value has not been modified since the mount,
+    // Then we want to publish the default value whenever the user pressed the "Accept", "Today" or "Clear" button.
+    if (
+      isCurrentValueTheDefaultValue &&
+      ['accept', 'today', 'clear'].includes(action.pickerAction)
+    ) {
       return true;
     }
 
@@ -90,7 +93,7 @@ const shouldCommitValue = <TValue, TError>(
 };
 
 /**
- * Decides if the picker should be closed after the value is updated.
+ * Decide if the picker should be closed after the value is updated.
  */
 const shouldClosePicker = <TValue, TError>(
   params: PickerValueUpdaterParams<TValue, TError>,

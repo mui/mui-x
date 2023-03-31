@@ -69,25 +69,22 @@ export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
 }
 
-export type PickerChangeHandler<TValue, TError> = (
-  value: TValue,
-  context: PickerChangeHandlerContext<TError>,
-) => void;
-
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
 
 export interface UsePickerValueState<TValue> {
   /**
-   * Date internally used on the views and displayed in the field.
+   * Date displayed on the views and the field.
    * It is updated whenever the user modifies something.
    */
   draft: TValue;
   /**
    * Last value published (e.g: the last value for which `shouldPublishValue` returned `true`).
+   * If `onChange` is defined, it's the value that was passed on the last call to this callback.
    */
   lastPublishedValue: TValue;
   /**
    * Last value committed (e.g: the last value for which `shouldCommitValue` returned `true`).
+   * If `onAccept` is defined, it's the value that was passed on the last call to this callback.
    */
   lastCommittedValue: TValue;
   /**
@@ -100,7 +97,7 @@ export interface UsePickerValueState<TValue> {
    * Then we might want to apply some custom logic.
    *
    * For example, when the component is not controlled and `defaultValue` is defined.
-   * Then clicking "Accept" should fire `onAccept` with `defaultValue`, but clicking "Cancel" should not.
+   * Then clicking on "Accept", "Today" or "Clear" should fire `onAccept` with `defaultValue`, but clicking on "Cancel" or dimissing the picker should not.
    */
   hasBeenModifiedSinceMount: boolean;
 }
@@ -161,7 +158,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
-  onChange?: PickerChangeHandler<TValue, TError>;
+  onChange?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
   /**
    * Callback fired when the value is accepted.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
