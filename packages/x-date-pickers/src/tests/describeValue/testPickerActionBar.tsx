@@ -70,6 +70,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onClose={onClose}
             open
             componentsProps={{ actionBar: { actions: ['clear'] } }}
+            value={emptyValue}
           />,
         );
 
