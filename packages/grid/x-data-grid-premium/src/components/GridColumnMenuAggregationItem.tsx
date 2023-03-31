@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -83,20 +83,20 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       <ListItemText>
         <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
           <InputLabel id={`${id}-label`}>{label}</InputLabel>
-          <Select
+          <rootProps.slots.baseSelect
+            aria-labelledby={`${id}-label`}
             labelId={`${id}-label`}
-            id={`${id}-input`}
             value={selectedAggregationRule}
             label={label}
             native
             color="primary"
             onChange={handleAggregationItemChange}
-            onBlur={(e) => e.stopPropagation()}
+            onBlur={(e: FocusEvent) => e.stopPropagation()}
             fullWidth
           >
-            <option value="">&nbsp;</option>
+            <rootProps.slots.baseSelectOption native value="" />
             {availableAggregationFunctions.map((aggFunc) => (
-              <option key={aggFunc} value={aggFunc}>
+              <rootProps.slots.baseSelectOption native key={aggFunc} value={aggFunc}>
                 {getAggregationFunctionLabel({
                   apiRef,
                   aggregationRule: {
@@ -104,9 +104,9 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
                     aggregationFunction: rootProps.aggregationFunctions[aggFunc],
                   },
                 })}
-              </option>
+              </rootProps.slots.baseSelectOption>
             ))}
-          </Select>
+          </rootProps.slots.baseSelect>
         </FormControl>
       </ListItemText>
     </MenuItem>
