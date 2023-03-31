@@ -171,7 +171,9 @@ class CellValueUpdater {
     const { apiRef, processRowUpdate, onProcessRowUpdateError } = this.options;
     const rowsToUpdate = this.rowsToUpdate;
 
-    Object.keys(rowsToUpdate).forEach((rowId) => {
+    apiRef.current.publishEvent('clipboardPasteStart');
+
+    const promises = Object.keys(rowsToUpdate).map(async (rowId) => {
       const newRow = rowsToUpdate[rowId];
 
       if (typeof processRowUpdate === 'function') {
@@ -185,17 +187,18 @@ class CellValueUpdater {
 
         try {
           const oldRow = apiRef.current.getRow(rowId);
-          Promise.resolve(processRowUpdate(newRow, oldRow))
-            .then((finalRowUpdate) => {
-              this.updateRow(finalRowUpdate);
-            })
-            .catch(handleError);
+          const finalRowUpdate = await processRowUpdate(newRow, oldRow);
+          this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);
         }
       } else {
         this.updateRow(newRow);
       }
+    });
+    Promise.allSettled(promises).then(() => {
+      this.rowsToUpdate = {};
+      apiRef.current.publishEvent('clipboardPasteEnd');
     });
   }
 }

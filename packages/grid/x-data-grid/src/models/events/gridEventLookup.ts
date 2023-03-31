@@ -509,11 +509,22 @@ export interface GridEventLookup
   };
 
   // Clipboard
+  // TODO: make these events public
   /**
    * Fired when the data is copied to the clipboard
    * @ignore - do not document.
    */
   clipboardCopy: { params: string };
+  /**
+   * Fired when the clipboard paste operation starts.
+   * @ignore - do not document.
+   */
+  clipboardPasteStart: {};
+  /**
+   * Fired when the clipboard paste operation ends.
+   * @ignore - do not document.
+   */
+  clipboardPasteEnd: {};
 
   // PreferencePanel
   /**

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 
@@ -206,6 +206,21 @@ const useSessionStorageData = () => {
 export default function ClipboardImport() {
   const [rowSelection, setRowSelection] = React.useState(false);
   const { data, updateRow } = useSessionStorageData();
+  const [loading, setLoading] = React.useState(false);
+
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent('clipboardPasteStart', () => {
+      setLoading(true);
+    });
+  }, [apiRef]);
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent('clipboardPasteEnd', () => {
+      setLoading(false);
+    });
+  }, [apiRef]);
 
   return (
     <div style={{ width: '100%' }}>
@@ -214,6 +229,8 @@ export default function ClipboardImport() {
       </Button>
       <div style={{ height: 400 }}>
         <DataGridPremium
+          apiRef={apiRef}
+          loading={loading}
           rowSelection={rowSelection}
           checkboxSelection={rowSelection}
           unstable_cellSelection

@@ -39,7 +39,7 @@ The priority of the clipboard paste is the following, from highest to lowest:
 - If more than one row is selected (see [Row selection](/x/react-data-grid/row-selection/)):
   - If clipboard contains a single row, it is pasted to each selected row
   - If clipboard contains multiple rows, they are pasted starting from the first selected row, but won't leak the selected range
-- If there is a single cell selected:
+- If a single cell is selected:
   - If clipboard contains a single cell, it is pasted to the selected cell
   - If clipboard contains multiple cells/rows, the data is pasted starting from the selected cell
 
