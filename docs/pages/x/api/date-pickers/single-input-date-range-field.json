@@ -69,6 +69,9 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "unstableFieldRef": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
+    },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "variant": {
       "type": {

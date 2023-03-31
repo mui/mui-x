@@ -4,6 +4,10 @@
 
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
+## Introduction
+
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+
 ## Start using the new release
 
 In `package.json`, change the version of the date pickers package to `latest` or `^6.0.0`.
@@ -102,7 +106,7 @@ If you were relying on Clock Picker in desktop mode for tests—make sure to che
 You can manually re-enable the clock using the new `viewRenderers` prop.
 The code below enables the `Clock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
 
-Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#default-props) for more information.
+Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#theme-default-props) for more information.
 
 ```tsx
 const theme = createTheme({
@@ -156,9 +160,14 @@ The picker components no longer have a keyboard view to render the input inside 
 At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
 :::
 
-### ✅ Rename `shouldDisableTime` prop
+### ✅ Rename or refactor `shouldDisableTime` prop
 
-The `shouldDisableTime` prop signature has been changed. Either rename the prop to `shouldDisableClock` or refactor usage.
+The `shouldDisableTime` prop signature has been changed.
+Previously it did receive `value` as a `number` of hours, minutes, or seconds. Now it will receive the date object (based on the used adapter).
+This will allow more powerful usage and will be compatible with the future digital time selection view.
+
+Either rename the prop to the newly added, but deprecated `shouldDisableClock` or refactor usage to account for the change in prop type.
+The codemod will take care of renaming the prop to keep the existing functionality but feel free to update to the new `shouldDisableTime` prop on your own.
 
 ```diff
  <DateTimePicker

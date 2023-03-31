@@ -2,27 +2,28 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
+import { useTheme } from '@mui/material/styles';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
-  FieldSection,
   UseFieldParams,
   UseFieldResponse,
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.types';
-import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
+import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
+import { FieldSection } from '../../../models';
 
 export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -37,8 +38,8 @@ export const useField = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
-    sectionOrder,
     sectionsValueBoundaries,
+    placeholder,
   } = useFieldState(params);
 
   const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
@@ -51,7 +52,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false },
+    internalProps: { readOnly = false, unstableFieldRef },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -70,6 +71,13 @@ export const useField = <
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
+
+  const sectionOrder = React.useMemo(
+    () => getSectionOrder(state.sections, isRTL),
+    [state.sections, isRTL],
+  );
 
   const syncSelectionFromDOM = () => {
     if (readOnly) {
@@ -184,41 +192,52 @@ export const useField = <
       return;
     }
 
-    const prevValueStr = cleanString(fieldValueManager.getValueStrFromSections(state.sections));
+    let keyPressed: string;
+    if (
+      selectedSectionIndexes.startIndex === 0 &&
+      selectedSectionIndexes.endIndex === state.sections.length - 1
+    ) {
+      keyPressed = cleanValueStr;
+    } else {
+      const prevValueStr = cleanString(
+        fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+      );
 
-    let startOfDiffIndex = -1;
-    let endOfDiffIndex = -1;
-    for (let i = 0; i < prevValueStr.length; i += 1) {
-      if (startOfDiffIndex === -1 && prevValueStr[i] !== cleanValueStr[i]) {
-        startOfDiffIndex = i;
+      let startOfDiffIndex = -1;
+      let endOfDiffIndex = -1;
+      for (let i = 0; i < prevValueStr.length; i += 1) {
+        if (startOfDiffIndex === -1 && prevValueStr[i] !== cleanValueStr[i]) {
+          startOfDiffIndex = i;
+        }
+
+        if (
+          endOfDiffIndex === -1 &&
+          prevValueStr[prevValueStr.length - i - 1] !== cleanValueStr[cleanValueStr.length - i - 1]
+        ) {
+          endOfDiffIndex = i;
+        }
       }
 
-      if (
-        endOfDiffIndex === -1 &&
-        prevValueStr[prevValueStr.length - i - 1] !== cleanValueStr[cleanValueStr.length - i - 1]
-      ) {
-        endOfDiffIndex = i;
+      const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+      const hasDiffOutsideOfActiveSection =
+        startOfDiffIndex < activeSection.start ||
+        prevValueStr.length - endOfDiffIndex - 1 > activeSection.end;
+
+      if (hasDiffOutsideOfActiveSection) {
+        // TODO: Support if the new date is valid
+        return;
       }
+
+      // The active section being selected, the browser has replaced its value with the key pressed by the user.
+      const activeSectionEndRelativeToNewValue =
+        cleanValueStr.length -
+        prevValueStr.length +
+        activeSection.end -
+        cleanString(activeSection.endSeparator || '').length;
+
+      keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
     }
-
-    const activeSection = state.sections[selectedSectionIndexes.startIndex];
-
-    const hasDiffOutsideOfActiveSection =
-      startOfDiffIndex < activeSection.start ||
-      prevValueStr.length - endOfDiffIndex - 1 > activeSection.end;
-
-    if (hasDiffOutsideOfActiveSection) {
-      // TODO: Support if the new date is valid
-      return;
-    }
-
-    // The active section being selected, the browser has replaced its value with the key pressed by the user.
-    const activeSectionEndRelativeToNewValue =
-      cleanValueStr.length -
-      prevValueStr.length +
-      activeSection.end -
-      cleanString(activeSection.endSeparator || '').length;
-    const keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
       setTempAndroidValueStr(valueStr);
@@ -319,7 +338,7 @@ export const useField = <
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
-          activeDateManager.activeDate,
+          activeDateManager.date,
         );
 
         updateSectionValue({
@@ -334,9 +353,11 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
-      if (inputRef.current!.selectionStart !== 0 || inputRef.current!.selectionEnd !== 0) {
-        // Ensure input selection range is in sync with component selection indexes
-        inputRef.current!.setSelectionRange(0, 0);
+      if (inputRef.current!.scrollLeft) {
+        // Ensure that input content is not marked as selected.
+        // setting selection range to 0 causes issues in Safari.
+        // https://bugs.webkit.org/show_bug.cgi?id=224425
+        inputRef.current!.scrollLeft = 0;
       }
       return;
     }
@@ -355,7 +376,11 @@ export const useField = <
       selectionStart !== inputRef.current!.selectionStart ||
       selectionEnd !== inputRef.current!.selectionEnd
     ) {
+      // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
+      const currentScrollTop = inputRef.current!.scrollTop;
       inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      // Even reading this variable seems to do the trick, but also setting it just to make use of it
+      inputRef.current!.scrollTop = currentScrollTop;
     }
   });
 
@@ -397,8 +422,9 @@ export const useField = <
   }, [state.tempValueStrAndroid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
-    () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid],
+    () =>
+      state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid, isRTL],
   );
 
   const inputMode = React.useMemo(() => {
@@ -415,11 +441,30 @@ export const useField = <
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder =
-    !inputHasFocus &&
-    (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
+    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
+
+  React.useImperativeHandle(unstableFieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: () => {
+      const browserStartIndex = inputRef.current!.selectionStart ?? 0;
+      const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
+      if (browserStartIndex === 0 && browserEndIndex === 0) {
+        return null;
+      }
+
+      const nextSectionIndex =
+        browserStartIndex <= state.sections[0].startInInput
+          ? 1 // Special case if browser index is in invisible characters at the beginning.
+          : state.sections.findIndex(
+              (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+            );
+      return nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+    },
+    setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
+  }));
 
   return {
-    placeholder: state.placeholder,
+    placeholder,
     autoComplete: 'off',
     ...otherForwardedProps,
     value: shouldShowPlaceholder ? '' : valueStr,

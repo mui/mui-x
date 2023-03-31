@@ -109,6 +109,8 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
           'selectedDay',
           'hoveredDay',
           'day',
+          'defaultValue',
+          'value',
         ];
         if (propsToNotResolve.includes(name)) {
           return false;
@@ -116,7 +118,14 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
         return undefined;
       },
     });
-    const codeWithPropTypes = typescriptToProptypes.inject(propTypesAST, code);
+    const codeWithPropTypes = typescriptToProptypes.inject(propTypesAST, code, {
+      shouldInclude: ({ prop }) => {
+        if (prop.jsDoc && prop.jsDoc.includes('@typescript-to-proptypes-ignore')) {
+          return false;
+        }
+        return undefined;
+      },
+    });
 
     const prettierConfig = prettier.resolveConfig.sync(jsPath, {
       config: path.join(workspaceRoot, 'prettier.config.js'),

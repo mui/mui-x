@@ -1,10 +1,10 @@
-import { DateOrTimeView } from '../../models';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { InferError } from '../validation/useValidation';
 import { buildWarning } from '../../utils/warning';
+import { FieldSection, DateOrTimeView } from '../../../models';
 
 const warnRenderInputIsDefined = buildWarning([
   'The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
@@ -16,7 +16,8 @@ export const usePicker = <
   TValue,
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UsePickerProps<TValue, TView, any, any, any>,
+  TSection extends FieldSection,
+  TExternalProps extends UsePickerProps<TValue, TView, TSection, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,
@@ -26,17 +27,19 @@ export const usePicker = <
   additionalViewProps,
   validator,
   autoFocusView,
-}: UsePickerParams<TValue, TDate, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
+}: UsePickerParams<
   TValue,
+  TDate,
   TView,
-  InferError<TExternalProps>
-> => {
+  TSection,
+  TExternalProps,
+  TAdditionalProps
+>): UsePickerResponse<TValue, TView, TSection, InferError<TExternalProps>> => {
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).renderInput != null) {
       warnRenderInputIsDefined();
     }
   }
-
   const pickerValueResponse = usePickerValue({
     props,
     valueManager,

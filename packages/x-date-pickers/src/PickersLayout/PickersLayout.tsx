@@ -6,7 +6,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
-import { DateOrTimeView } from '../internals/models/views';
+import { DateOrTimeView } from '../models';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
