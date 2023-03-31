@@ -154,19 +154,21 @@ export function useViews<TValue, TView extends unknown>({
     }
   });
 
-  const handleFocusedViewChange = useEventCallback((viewToFocus: TView | null, hasFocus: boolean) => {
-    if (hasFocus) {
-      // Focus event
-      setFocusedView(viewToFocus);
-    } else {
-      // Blur event
-      setFocusedView(
-        (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view switching
-      );
-    }
+  const handleFocusedViewChange = useEventCallback(
+    (viewToFocus: TView | null, hasFocus: boolean) => {
+      if (hasFocus) {
+        // Focus event
+        setFocusedView(viewToFocus);
+      } else {
+        // Blur event
+        setFocusedView(
+          (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view switching
+        );
+      }
 
-    onFocusedViewChange?.(viewToFocus, hasFocus);
-  });
+      onFocusedViewChange?.(viewToFocus, hasFocus);
+    },
+  );
 
   const goToNextView = useEventCallback(() => {
     if (nextView) {
