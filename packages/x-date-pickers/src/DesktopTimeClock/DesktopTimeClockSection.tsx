@@ -20,6 +20,7 @@ export interface DesktopTimeClockSectionProps<TValue> {
   items: DesktopTimeClockSectionOption<TValue>[];
   onChange: (value: TValue) => void;
   active?: boolean;
+  shouldFocus?: boolean;
 }
 
 const useUtilityClasses = (ownerState: DesktopTimeClockSectionProps<any>) => {
@@ -107,7 +108,17 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
     name: 'MuiDesktopTimeClockSection',
   });
 
-  const { autoFocus, onChange, className, disabled, readOnly, items, active, ...other } = props;
+  const {
+    autoFocus,
+    onChange,
+    className,
+    disabled,
+    readOnly,
+    items,
+    active,
+    shouldFocus,
+    ...other
+  } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -119,6 +130,11 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
     const selectedItem = containerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
     if (!selectedItem) {
       return;
+    }
+    // handle re-focusing when `active` flag doesn't change
+    // i.e. move to `minutes` section, select minutes -> we want the focus to be applied to meridiem section
+    if (active && shouldFocus) {
+      selectedItem.focus();
     }
     const offsetTop = selectedItem.offsetTop;
 

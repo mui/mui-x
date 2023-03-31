@@ -57,6 +57,8 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
     timeStep,
+    // fallback to `closeOnSelect={false}` given a multi column time picker.
+    closeOnSelect: inProps.closeOnSelect ?? shouldRenderTimeInASingleColumn,
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,

@@ -154,7 +154,7 @@ export function useViews<TValue, TView extends unknown>({
     }
   });
 
-  const handleFocusedViewChange = useEventCallback((viewToFocus: TView, hasFocus: boolean) => {
+  const handleFocusedViewChange = useEventCallback((viewToFocus: TView | null, hasFocus: boolean) => {
     if (hasFocus) {
       // Focus event
       setFocusedView(viewToFocus);
@@ -171,10 +171,8 @@ export function useViews<TValue, TView extends unknown>({
   const goToNextView = useEventCallback(() => {
     if (nextView) {
       handleChangeView(nextView);
-      setTimeout(() => {
-        handleFocusedViewChange(nextView, true);
-      });
     }
+    handleFocusedViewChange(nextView, true);
   });
 
   const setValueAndGoToNextView = useEventCallback(

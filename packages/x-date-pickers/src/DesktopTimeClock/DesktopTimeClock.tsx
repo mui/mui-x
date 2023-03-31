@@ -113,11 +113,6 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     onFocusedViewChange,
   });
 
-  const resolvedFocusedView = React.useMemo(
-    () => (focusMeridiem ? 'meridiem' : focusedView),
-    [focusMeridiem, focusedView],
-  );
-
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
     [value, now, utils],
@@ -254,7 +249,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
               const isNextViewMeridiem = views.indexOf('hours') + 1 === views.length && ampm;
               setValueAndGoToNextView(
                 utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
-                isNextViewMeridiem ? 'partial' : 'finish',
+                'finish',
               );
               setFocusMeridiem(isNextViewMeridiem);
             }, 0);
@@ -279,11 +274,8 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             }
             setView('minutes');
             setTimeout(() => {
+              setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
               const isNextViewMeridiem = views.indexOf('minutes') + 1 === views.length && ampm;
-              setValueAndGoToNextView(
-                utils.setMinutes(selectedTimeOrMidnight, minutes),
-                isNextViewMeridiem ? 'partial' : 'finish',
-              );
               setFocusMeridiem(isNextViewMeridiem);
             }, 0);
           };
@@ -308,11 +300,8 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             }
             setView('seconds');
             setTimeout(() => {
+              setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, seconds), 'finish');
               const isNextViewMeridiem = views.indexOf('seconds') + 1 === views.length && ampm;
-              setValueAndGoToNextView(
-                utils.setSeconds(selectedTimeOrMidnight, seconds),
-                isNextViewMeridiem ? 'partial' : 'finish',
-              );
               setFocusMeridiem(isNextViewMeridiem);
             }, 0);
           };
@@ -401,9 +390,10 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
           items={meridiemOptions.items}
           onChange={meridiemOptions.onChange}
           disabled={disabled}
-          active={resolvedFocusedView === 'meridiem'}
-          autoFocus={resolvedFocusedView === 'meridiem'}
+          active={!focusedView}
+          autoFocus={!focusedView}
           readOnly={readOnly}
+          shouldFocus={focusMeridiem}
         />
       )}
     </DesktopTimeClockRoot>

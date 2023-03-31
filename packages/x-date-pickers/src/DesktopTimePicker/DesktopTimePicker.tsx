@@ -54,6 +54,8 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ampmInClock,
     timeStep,
     viewRenderers,
+    // fallback to `closeOnSelect={false}` given a multi column time picker.
+    closeOnSelect: inProps.closeOnSelect ?? shouldRenderTimeInASingleColumn,
     slots: {
       field: TimeField,
       openPickerIcon: Clock,
