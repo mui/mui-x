@@ -9,7 +9,9 @@ import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
 
 const StyledMenuList = styled(MenuList)(() => ({
-  minWidth: 248,
+  '@media (pointer: fine)': {
+    minWidth: 248,
+  },
 }));
 
 const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
