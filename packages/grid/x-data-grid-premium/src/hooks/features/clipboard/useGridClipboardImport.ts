@@ -173,7 +173,7 @@ class CellValueUpdater {
 
     apiRef.current.publishEvent('clipboardPasteStart');
 
-    const promises = Object.keys(rowsToUpdate).map(async (rowId) => {
+    const handleRowUpdate = async (rowId: GridRowId) => {
       const newRow = rowsToUpdate[rowId];
 
       if (typeof processRowUpdate === 'function') {
@@ -195,8 +195,16 @@ class CellValueUpdater {
       } else {
         this.updateRow(newRow);
       }
+    };
+
+    const promises = Object.keys(rowsToUpdate).map((rowId) => {
+      // Wrap in promise that always resolves to avoid Promise.all from stopping on first error.
+      // This is to avoid using `Promise.allSettled` that has worse browser support.
+      return new Promise((resolve) => {
+        handleRowUpdate(rowId).then(resolve).catch(resolve);
+      });
     });
-    Promise.allSettled(promises).then(() => {
+    Promise.all(promises).then(() => {
       this.rowsToUpdate = {};
       apiRef.current.publishEvent('clipboardPasteEnd');
     });
