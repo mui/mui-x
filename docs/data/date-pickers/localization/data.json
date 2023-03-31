@@ -190,5 +190,13 @@
     "missingKeysCount": 8,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/-/packages/x-date-pickers/src/locales/urPK.ts/"
+  },
+  {
+    "languageTag": "kz-KZ",
+    "importName": "kzKZ",
+    "localeName": "Kazakh",
+    "missingKeysCount": 1,
+    "totalKeysCount": 35,
+    "githubLink": "https://github.com/mui/mui-x/blob/-/packages/x-date-pickers/src/locales/kzKZ.ts/"
   }
 ]
