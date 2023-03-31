@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.4
+
+_Mar 30, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Danish (da-DK), and improve Norwegian (nb-NO), Spanish (es-ES), and Swedish (sv-SE) locales
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.0.4` / `@mui/x-data-grid-pro@v6.0.4` / `@mui/x-data-grid-premium@v6.0.4`
+
+#### Changes
+
+- [DataGrid] Fix column header tooltip not showing when the title is truncated (#8433) @rohitnatesh
+- [DataGrid] Fix filter model buttons' display condition (#8415) @MBilalShafi
+- [DataGrid] Fix infinite rerender in a flex parent (#8436) @cherniavskii
+- [DataGrid] Prevent reopening column menu when clicking in the button while it is open (#8286) @tanuj-22
+- [DataGrid] Rename `components` by `slots` in column menu API (#7999) @MBilalShafi
+- [DataGrid] Remove hardcoded CSS classes' usages (#8444) @MBilalShafi
+- [DataGridPremium] Fix aggregation initial state causing issue with quick filter (#8441) @MBilalShafi
+- [l10n] Improve Danish (da-DK) locale (#8368) @BossElijah
+- [l10n] Improve Danish (da-DK) locale (#8378) @BossElijah
+- [l10n] Improve Norwegian (nb-NO) locale (#8367) @BossElijah
+- [l10n] Improve Norwegian (nb-NO) locale (#8409) @BossElijah
+- [l10n] Improve Spanish (es-ES) locale (#8420) @martjanz
+- [l10n] Improve Swedish (sv-SE) locale (#8381) @BossElijah
+
+### `@mui/x-date-pickers@v6.0.4` / `@mui/x-date-pickers-pro@v6.0.4`
+
+#### Changes
+
+- [fields] Add missing tokens to `AdapterDateFnsJalali` (#8402) @flaviendelangle
+- [fields] Clean the active date manager (#8370) @flaviendelangle
+- [fields] Cleanup `useFieldState`  (#8292) @flaviendelangle
+- [fields] Only add RTL characters when needed (#8325) @flaviendelangle
+- [pickers] Add support for single input fields in range pickers  (#7927) @flaviendelangle
+- [pickers] Allows non token characters in format (#8256) @alexfauquette
+- [pickers] Avoid root imports and move public models to the models folder (#8337) @flaviendelangle
+- [pickers] Update `view` when `views` or `openTo` changes (#8361) @LukasTy
+- [l10n] Improve Norwegian (nb-NO) locale (#8382) @BossElijah
+- [l10n] Add Danish (da-DK) locale (#8379) @BossElijah
+- [l10n] Improve Swedish (sv-SE) locale (#8381) @BossElijah
+
+### `@mui/x-codemod@v6.0.4`
+
+#### Changes
+
+- [codemod] Fix `remove-stabilized-experimentalFeatures` codemod (#8289) @alexfauquette
+
+### Docs
+
+- [docs] Fix `GridCellParams` signature in migration guide (#8427) @cherniavskii
+- [docs] Fix "Custom field" demos responsive styles (#8408) @LukasTy
+- [docs] Remove `label` from demos where it reduces clarity (#8416) @LukasTy
+- [docs] Update slots' references in Data Grid migration guide (#8159) @MBilalShafi
+
+### Core
+
+- [charts] Work on typing (#8421) @flaviendelangle
+
 ## 6.0.3
 
 _Mar 23, 2023_

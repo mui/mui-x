@@ -106,7 +106,7 @@ If you were relying on Clock Picker in desktop mode for tests—make sure to che
 You can manually re-enable the clock using the new `viewRenderers` prop.
 The code below enables the `Clock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
 
-Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#default-props) for more information.
+Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#theme-default-props) for more information.
 
 ```tsx
 const theme = createTheme({
