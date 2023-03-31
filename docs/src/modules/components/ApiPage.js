@@ -232,8 +232,8 @@ export default function ApiPage(props) {
     packages,
   } = pageContent;
 
-  const defaultPropsLink = '/material-ui/customization/theme-components/#default-props';
-  const styleOverridesLink = '/material-ui/customization/theme-components/#global-style-overrides';
+  const defaultPropsLink = '/material-ui/customization/theme-components/#theme-default-props';
+  const styleOverridesLink = '/material-ui/customization/theme-components/#theme-style-overrides';
 
   const {
     componentDescription,
