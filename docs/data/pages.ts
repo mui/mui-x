@@ -1,8 +1,13 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
+const isPreview =
+  process.env.NODE_ENV === 'development' ||
+  process.env.CONTEXT === 'deploy-preview' ||
+  process.env.CONTEXT === 'branch-deploy';
+
 const pages: MuiPage[] = [
   {
-    pathname: '/x/whats-new',
+    pathname: '/blog/mui-x-v6/',
     title: "✨ What's new in v6? ✨",
     icon: 'VisibilityIcon',
   },
@@ -71,6 +76,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/scrolling' },
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
+      { pathname: '/x/react-data-grid/performance' },
       {
         pathname: '/x/react-data-grid-group-pivot',
         title: 'Group & Pivot',
@@ -103,41 +109,63 @@ const pages: MuiPage[] = [
         title: 'API Reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
-          { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
-          { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
-          { pathname: '/x/api/data-grid/data-grid-premium', title: 'DataGridPremium' },
-          { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
-          { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
-          { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
           {
-            pathname: '/x/api/data-grid/grid-single-select-col-def',
-            title: 'GridSingleSelectColDef',
-          },
-          { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
-          { pathname: '/x/api/data-grid/grid-export-state-params', title: 'GridExportStateParams' },
-          { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
-          { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
-          { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
-          { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
-          { pathname: '/x/api/data-grid/grid-filter-panel', title: 'GridFilterPanel' },
-          {
-            pathname: '/x/api/data-grid/grid-row-class-name-params',
-            title: 'GridRowClassNameParams',
-          },
-          { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
-          { pathname: '/x/api/data-grid/grid-row-spacing-params', title: 'GridRowSpacingParams' },
-          {
-            pathname: '/x/api/data-grid/grid-aggregation-function',
-            title: 'GridAggregationFunction',
-          },
-          { pathname: '/x/api/data-grid/grid-csv-export-options', title: 'GridCsvExportOptions' },
-          {
-            pathname: '/x/api/data-grid/grid-print-export-options',
-            title: 'GridPrintExportOptions',
+            pathname: '/x/api/data-grid-components-group',
+            subheader: 'Components',
+            children: [
+              { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
+              { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
+              { pathname: '/x/api/data-grid/data-grid-premium', title: 'DataGridPremium' },
+              { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
+              { pathname: '/x/api/data-grid/grid-filter-panel', title: 'GridFilterPanel' },
+            ],
           },
           {
-            pathname: '/x/api/data-grid/grid-excel-export-options',
-            title: 'GridExcelExportOptions',
+            pathname: '/x/api/data-grid-interfaces-group',
+            subheader: 'Interfaces',
+            children: [
+              { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
+              { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
+              { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
+              {
+                pathname: '/x/api/data-grid/grid-single-select-col-def',
+                title: 'GridSingleSelectColDef',
+              },
+
+              { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
+              {
+                pathname: '/x/api/data-grid/grid-export-state-params',
+                title: 'GridExportStateParams',
+              },
+              { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
+              { pathname: '/x/api/data-grid/grid-filter-model', title: 'GridFilterModel' },
+              { pathname: '/x/api/data-grid/grid-filter-operator', title: 'GridFilterOperator' },
+              {
+                pathname: '/x/api/data-grid/grid-row-class-name-params',
+                title: 'GridRowClassNameParams',
+              },
+              { pathname: '/x/api/data-grid/grid-row-params', title: 'GridRowParams' },
+              {
+                pathname: '/x/api/data-grid/grid-row-spacing-params',
+                title: 'GridRowSpacingParams',
+              },
+              {
+                pathname: '/x/api/data-grid/grid-aggregation-function',
+                title: 'GridAggregationFunction',
+              },
+              {
+                pathname: '/x/api/data-grid/grid-csv-export-options',
+                title: 'GridCsvExportOptions',
+              },
+              {
+                pathname: '/x/api/data-grid/grid-print-export-options',
+                title: 'GridPrintExportOptions',
+              },
+              {
+                pathname: '/x/api/data-grid/grid-excel-export-options',
+                title: 'GridExcelExportOptions',
+              },
+            ],
           },
         ],
       },
@@ -250,8 +278,9 @@ const pages: MuiPage[] = [
         title: 'Visual customization',
         children: [
           { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
-          { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
-          { pathname: '/x/react-date-pickers/shortcuts', title: 'Shortcuts' },
+          { pathname: '/x/react-date-pickers/custom-layout' },
+          { pathname: '/x/react-date-pickers/custom-field' },
+          { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
       {
@@ -404,6 +433,27 @@ const pages: MuiPage[] = [
       },
     ],
   },
+  ...(isPreview
+    ? [
+        {
+          pathname: '/x/react-charts-group',
+          title: 'Charts 🚧',
+          icon: 'ChartIcon',
+          children: [
+            { pathname: '/x/react-charts', title: '🚧 Overview' },
+            { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
+            { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
+            { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
+            { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
+            { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
+            { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
+            { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
+            { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
+            { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
+          ],
+        },
+      ]
+    : []),
 ];
 
 export default pages;

@@ -9,7 +9,7 @@ import {
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateView } from '../internals/models/views';
+import { DateView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface DesktopDatePickerSlotsComponent<TDate>
@@ -29,7 +29,7 @@ export interface DesktopDatePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -41,7 +41,7 @@ export interface DesktopDatePickerProps<TDate>
    */
   componentsProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DesktopDatePickerSlotsComponent<TDate>>;

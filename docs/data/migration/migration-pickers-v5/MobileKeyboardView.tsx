@@ -7,7 +7,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateView } from '@mui/x-date-pickers';
+import { DateView } from '@mui/x-date-pickers/models';
 import {
   pickersLayoutClasses,
   PickersLayoutContentWrapper,

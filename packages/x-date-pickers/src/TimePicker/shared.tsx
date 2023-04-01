@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { TimeView } from '../TimeClock';
 import { useUtils } from '../internals/hooks/useUtils';
 import {
   TimeClockSlotsComponent,
@@ -16,7 +15,7 @@ import {
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from './TimePickerToolbar';
-import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
+import { TimeValidationError, TimeView } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
@@ -38,12 +37,12 @@ export interface BaseTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
     ExportedTimeClockProps<TDate> {
   /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true on desktop, false on mobile
    */
-  ampm?: boolean;
+  ampmInClock?: boolean;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -55,7 +54,7 @@ export interface BaseTimePickerProps<TDate>
    */
   componentsProps?: BaseTimePickerSlotsComponentsProps;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseTimePickerSlotsComponent<TDate>>;

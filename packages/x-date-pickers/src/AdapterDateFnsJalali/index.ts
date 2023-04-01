@@ -3,30 +3,67 @@ import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import getWeek from 'date-fns-jalali/getWeek';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
+  // Year
   y: 'year',
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
+
+  // Month
   M: 'month',
   MM: 'month',
-  MMMM: { sectionName: 'month', contentType: 'letter' },
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  LLL: { sectionName: 'month', contentType: 'letter' },
-  LLLL: { sectionName: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  LLL: { sectionType: 'month', contentType: 'letter' },
+  LLLL: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
   d: 'day',
   dd: 'day',
+  do: 'day',
+
+  // Day of the week
+  E: { sectionType: 'weekDay', contentType: 'letter' },
+  EE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
+  i: 'weekDay',
+  ii: 'weekDay',
+  iii: { sectionType: 'weekDay', contentType: 'letter' },
+  iiii: { sectionType: 'weekDay', contentType: 'letter' },
+  e: 'weekDay',
+  ee: 'weekDay',
+  eee: { sectionType: 'weekDay', contentType: 'letter' },
+  eeee: { sectionType: 'weekDay', contentType: 'letter' },
+  eeeee: { sectionType: 'weekDay', contentType: 'letter' },
+  eeeeee: { sectionType: 'weekDay', contentType: 'letter' },
+  c: 'weekDay',
+  cc: 'weekDay',
+  ccc: { sectionType: 'weekDay', contentType: 'letter' },
+  cccc: { sectionType: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
+  cccccc: { sectionType: 'weekDay', contentType: 'letter' },
+
+  // Meridiem
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
+
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
   hh: 'hours',
+
+  // Minutes
   mm: 'minutes',
+
+  // Seconds
   ss: 'seconds',
-  a: 'meridiem',
-  aa: 'meridiem',
-  aaa: 'meridiem',
 };
 
 export class AdapterDateFnsJalali

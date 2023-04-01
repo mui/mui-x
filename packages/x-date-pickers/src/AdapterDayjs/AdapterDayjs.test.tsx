@@ -10,13 +10,14 @@ import { expect } from 'chai';
 import {
   buildPickerDragInteractions,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
   MockedDataTransfer,
 } from 'test/utils/pickers-utils';
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { DateRangeCalendar } from '@mui/x-date-pickers-pro';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 
 dayjs.extend(utc);
 
@@ -51,10 +52,9 @@ describe('<AdapterDayjs />', () => {
         it('should have correct placeholder', () => {
           render(<DateTimePicker />);
 
-          expectInputValue(
+          expectInputPlaceholder(
             screen.getByRole('textbox'),
             localizedTexts[localeKey].placeholder,
-            true,
           );
         });
 
@@ -83,7 +83,7 @@ describe('<AdapterDayjs />', () => {
 
     it('should not create UTC dates when no instance passed', () => {
       const onChange = spy();
-      render(<DateCalendar defaultValue={dayjs('2022-04-10')} onChange={onChange} />);
+      render(<DateCalendar defaultValue={dayjs('2022-04-17')} onChange={onChange} />);
 
       userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
 
@@ -96,7 +96,7 @@ describe('<AdapterDayjs />', () => {
       const onChange = spy();
       render(
         <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
-          <DateCalendar defaultValue={dayjs.utc('2022-04-10')} onChange={onChange} />
+          <DateCalendar defaultValue={dayjs.utc('2022-04-17')} onChange={onChange} />
         </LocalizationProvider>,
       );
 
@@ -116,7 +116,7 @@ describe('<AdapterDayjs />', () => {
       const { executeDateDrag } = buildPickerDragInteractions(() => dataTransfer);
 
       const onChange = spy();
-      const initialValue: [any, any] = [dayjs.utc('2022-04-10'), dayjs.utc('2022-04-12')];
+      const initialValue: [any, any] = [dayjs.utc('2022-04-17'), dayjs.utc('2022-04-21')];
       render(
         <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
           <DateRangeCalendar onChange={onChange} defaultValue={initialValue} calendars={1} />
@@ -124,9 +124,9 @@ describe('<AdapterDayjs />', () => {
       );
 
       executeDateDrag(
-        screen.getByRole('gridcell', { name: '12', selected: true }),
-        screen.getByRole('gridcell', { name: '13' }),
-        screen.getByRole('gridcell', { name: '14' }),
+        screen.getByRole('gridcell', { name: '21', selected: true }),
+        screen.getByRole('gridcell', { name: '22' }),
+        screen.getByRole('gridcell', { name: '23' }),
       );
 
       expect(onChange.callCount).to.equal(1);

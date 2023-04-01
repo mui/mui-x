@@ -8,7 +8,7 @@ import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
   inProps: SingleInputDateRangeFieldProps<TDate>,
@@ -51,6 +51,8 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
   );
 }) as DateRangeFieldComponent;
 
+SingleInputDateRangeField.fieldType = 'single-input';
+
 SingleInputDateRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -70,7 +72,7 @@ SingleInputDateRangeField.propTypes = {
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -218,7 +220,7 @@ SingleInputDateRangeField.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -258,7 +260,7 @@ SingleInputDateRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -271,6 +273,10 @@ SingleInputDateRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

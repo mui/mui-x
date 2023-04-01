@@ -33,6 +33,7 @@ function App ({ apiRef, initialState }) {
     quickFilterLogicOperator: GridLinkOperator.Or,
   });
   apiRef.current.setFilterLinkOperator('and');
+  const rowIndex = apiRef.current.getRowIndex(1);
   const localeText = apiRef.current.getLocaleText('filterPanelLinkOperator');
   return (
     <React.Fragment>

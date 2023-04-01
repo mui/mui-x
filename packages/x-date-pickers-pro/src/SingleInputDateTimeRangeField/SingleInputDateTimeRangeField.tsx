@@ -8,7 +8,7 @@ import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeF
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
   TDate,
@@ -22,10 +22,10 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const ownerState = themeProps;
 
-  const Input = slots?.input ?? components?.Input ?? TextField;
+  const Input = slots?.textField ?? components?.TextField ?? TextField;
   const inputProps: SingleInputDateTimeRangeFieldProps<TDate> = useSlotProps({
     elementType: Input,
-    externalSlotProps: componentsProps?.input,
+    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -49,6 +49,8 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
     />
   );
 }) as DateRangeFieldComponent;
+
+SingleInputDateTimeRangeField.fieldType = 'single-input';
 
 SingleInputDateTimeRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -74,7 +76,7 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -250,7 +252,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -305,7 +307,7 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -318,6 +320,10 @@ SingleInputDateTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

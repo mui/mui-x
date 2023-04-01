@@ -28,6 +28,8 @@ export type { GridApi, GridInitialState, GridState } from './typeOverloads/reexp
 
 export {
   GridColumnMenu,
-  GRID_COLUMN_MENU_COMPONENTS,
-  GRID_COLUMN_MENU_COMPONENTS_PROPS,
+  GRID_COLUMN_MENU_SLOTS,
+  GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexports';
+
+export { GridColumnHeaders } from './components/GridColumnHeaders';

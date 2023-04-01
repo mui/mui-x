@@ -13,12 +13,12 @@ export default function CustomFieldFormat() {
         <DateField
           label="Date Field"
           format="MM - DD - YYYY"
-          defaultValue={dayjs('2022-04-07')}
+          defaultValue={dayjs('2022-04-17')}
         />
         <DatePicker
           label="Date Picker"
           format="YYYY/MM/DD"
-          defaultValue={dayjs('2022-04-07')}
+          defaultValue={dayjs('2022-04-17')}
         />
       </DemoContainer>
     </LocalizationProvider>

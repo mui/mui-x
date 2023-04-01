@@ -72,7 +72,12 @@ export default function CommonlyUsedComponents() {
           }
           component="DateRangePicker"
         >
-          <DateRangePicker />
+          <DateRangePicker
+            localeText={{
+              start: '',
+              end: '',
+            }}
+          />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

@@ -48,7 +48,6 @@ export type {
   PickersPopperClasses,
 } from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
-export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
@@ -57,8 +56,6 @@ export {
   useField,
   createDateStrForInputFromSections,
   addPositionPropertiesToSections,
-  splitFormatIntoSections,
-  getSectionOrder,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
@@ -66,13 +63,12 @@ export type {
   UseFieldResponse,
   UseFieldForwardedProps,
   FieldValueManager,
-  FieldSection,
   FieldChangeHandler,
   FieldChangeHandlerContext,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
-export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
+export type { UsePickerResponse, UsePickerParams, UsePickerProps } from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,
@@ -115,9 +111,6 @@ export type {
 export { validateDate } from './hooks/validation/useDateValidation';
 export { validateTime } from './hooks/validation/useTimeValidation';
 export { validateDateTime } from './hooks/validation/useDateTimeValidation';
-export type { DateValidationError } from './hooks/validation/useDateValidation';
-export type { TimeValidationError } from './hooks/validation/useTimeValidation';
-export type { DateTimeValidationError } from './hooks/validation/useDateTimeValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
@@ -129,10 +122,9 @@ export type {
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
-export type { DateOrTimeView, DateView, TimeView } from './models/views';
 export type { WrapperVariant } from './models/common';
 
-export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
+export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,

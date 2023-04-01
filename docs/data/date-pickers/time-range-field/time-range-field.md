@@ -6,7 +6,7 @@ githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Time Range Field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">The Time Range Field let the user select a range of time with the keyboard.</p>
 
@@ -23,6 +23,6 @@ or two inputs using `MultiInputTimeRangeField` as show below.
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The component can be uncontrolled or controlled.
 
 {{"demo": "TimeRangeFieldValue.js"}}

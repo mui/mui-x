@@ -1,12 +1,13 @@
 // Do not remove the `.d.ts` file extension, it allows to keep the `@ts-expect-error` below after the build.
 import { IUtils } from '@date-io/core/IUtils';
+import { FieldSectionType } from '../../models';
 
 // TODO: Maybe we should add the same constraint.
 // @ts-ignore TDate in our codebase does not have the `ExtendableDateType` constraint.
 export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
   isMUIAdapter: boolean;
 
-  formatTokenMap: MuiFormatTokenMap;
+  formatTokenMap: FieldFormatTokenMap;
 
   /**
    * Characters used to start and end an escaped message in the format.
@@ -18,18 +19,8 @@ export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
   getWeekNumber: (date: TDate) => number;
 };
 
-export type MuiDateSectionName =
-  | 'year'
-  | 'month'
-  | 'day'
-  | 'weekDay'
-  | 'hours'
-  | 'minutes'
-  | 'seconds'
-  | 'meridiem';
-
-export type MuiFormatTokenMap = {
+export type FieldFormatTokenMap = {
   [formatToken: string]:
-    | MuiDateSectionName
-    | { sectionName: MuiDateSectionName; contentType: 'digit' | 'letter' };
+    | FieldSectionType
+    | { sectionType: FieldSectionType; contentType: 'digit' | 'letter' };
 };

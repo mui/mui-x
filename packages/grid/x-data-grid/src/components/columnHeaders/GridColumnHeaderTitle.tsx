@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -24,12 +24,12 @@ const GridColumnHeaderTitleRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderTitle',
   overridesResolver: (props, styles) => styles.columnHeaderTitle,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
+})<{ ownerState: OwnerState }>({
   textOverflow: 'ellipsis',
   overflow: 'hidden',
   whiteSpace: 'nowrap',
-  fontWeight: theme.typography.fontWeightMedium,
-}));
+  fontWeight: 'var(--unstable_DataGrid-headWeight)',
+});
 
 const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
@@ -57,13 +57,13 @@ export interface GridColumnHeaderTitleProps {
 
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
 function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
-  const { label, description, columnWidth } = props;
+  const { label, description } = props;
   const rootProps = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
 
-  React.useEffect(() => {
-    if (!description && titleRef && titleRef.current) {
+  const handleMouseOver = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(() => {
+    if (!description && titleRef?.current) {
       const isOver = isOverflown(titleRef.current);
       if (isOver) {
         setTooltip(label);
@@ -71,14 +71,16 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
         setTooltip('');
       }
     }
-  }, [titleRef, columnWidth, description, label]);
+  }, [description, label]);
 
   return (
     <rootProps.slots.baseTooltip
       title={description || tooltip}
       {...rootProps.slotProps?.baseTooltip}
     >
-      <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
+      <ColumnHeaderInnerTitle onMouseOver={handleMouseOver} ref={titleRef}>
+        {label}
+      </ColumnHeaderInnerTitle>
     </rootProps.slots.baseTooltip>
   );
 }

@@ -16,7 +16,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The component can be uncontrolled or controlled.
 
 {{"demo": "DateFieldValue.js"}}
 
@@ -27,7 +27,6 @@ The component can be uncontrolled or controlled
 ## Localization
 
 Use the `LocalizationProvider` to change the date-library locale used in the time field.
-
 See the [localization documentation page](/x/react-date-pickers/localization/) for more details.
 
 ## Validation

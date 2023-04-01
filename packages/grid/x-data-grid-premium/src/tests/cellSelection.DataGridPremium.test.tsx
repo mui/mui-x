@@ -2,7 +2,6 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   DataGridPremium,

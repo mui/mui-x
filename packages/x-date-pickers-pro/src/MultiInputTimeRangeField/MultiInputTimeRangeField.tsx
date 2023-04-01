@@ -63,6 +63,9 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
+    autoFocus,
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
@@ -85,6 +88,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
+    additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
 
@@ -138,7 +142,9 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     startTextFieldProps,
     endTextFieldProps,
     startInputRef: startTextFieldProps.inputRef,
+    unstableStartFieldRef,
     endInputRef: endTextFieldProps.inputRef,
+    unstableEndFieldRef,
   });
 
   return (
@@ -180,9 +186,10 @@ MultiInputTimeRangeField.propTypes = {
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
+  autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -282,7 +289,7 @@ MultiInputTimeRangeField.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -325,7 +332,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable slots.
+   * Overridable slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -348,6 +355,8 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

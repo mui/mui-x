@@ -94,8 +94,10 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   adapterName?: AdapterName;
 }
 
-export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
-  return (node: React.ReactNode) =>
+export function wrapPickerMount(
+  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
+) {
+  return (node: React.ReactElement) =>
     mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
 }
 
@@ -150,10 +152,22 @@ export type OpenPickerParams =
       type: 'date-range';
       variant: 'mobile' | 'desktop';
       initialFocus: 'start' | 'end';
+      /**
+       * @default false
+       */
+      isSingleInput?: boolean;
     };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
+    if (params.isSingleInput) {
+      const target = screen.getByRole<HTMLInputElement>('textbox');
+      userEvent.mousePress(target);
+      const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
+
+      return target.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
     const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
 
     return userEvent.mousePress(target);
@@ -294,7 +308,7 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 export const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
@@ -304,7 +318,7 @@ export const getCleanedSelectedContent = (input: HTMLInputElement) =>
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
-  shouldRemoveDashSpaces: boolean = false,
+  shouldRemoveDashSpaces = false,
 ) => {
   let value = cleanText(input.value);
   if (shouldRemoveDashSpaces) {
@@ -312,6 +326,11 @@ export const expectInputValue = (
   }
 
   return expect(value).to.equal(expectedValue);
+};
+
+export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
+  const cleanPlaceholder = cleanText(input.placeholder).replace(/ \/ /g, '/');
+  return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
 interface BuildFieldInteractionsParams<P extends {}> {
@@ -344,6 +363,8 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
   ) => void;
 }
 
+export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
+
 export const buildFieldInteractions = <P extends {}>({
   clock,
   render,
@@ -354,11 +375,14 @@ export const buildFieldInteractions = <P extends {}>({
     cursorStartPosition,
     cursorEndPosition = cursorStartPosition,
   ) => {
+    if (document.activeElement !== input) {
+      act(() => {
+        input.focus();
+      });
+      clock.runToLast();
+    }
     act(() => {
       fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
       fireEvent.mouseUp(input);
       input.setSelectionRange(cursorStartPosition, cursorEndPosition);
       fireEvent.click(input);
@@ -395,7 +419,15 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
+
+    // focus input to trigger setting placeholder as value if no value is present
+    act(() => {
+      input.focus();
+    });
+    // make sure the value of the input is rendered before proceeding
+    clock.runToLast();
+
     const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
     if (clickPosition === -1) {
       throw new Error(
@@ -413,7 +445,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     clickOnInput(input, cursorPosition);
 
     keyStrokes.forEach((keyStroke) => {

@@ -78,6 +78,7 @@ function LocalisationTable(props) {
     <MarkdownElement
       sx={{
         width: '100%',
+        px: [2, 0],
       }}
     >
       <table>
