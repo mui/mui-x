@@ -426,48 +426,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const handleTouchMove = (event: React.TouchEvent) => {
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   };
-  const getRenderedRowsIds = (
-    params: {
-      renderContext: GridRenderContext | null;
-
-      availableSpace?: number | null;
-      rows?: GridRowEntry[];
-    } = { renderContext },
-  ) => {
-    const { renderContext: nextRenderContext, availableSpace = containerDimensions.width } = params;
-
-    if (!nextRenderContext || availableSpace == null) {
-      return [];
-    }
-
-    const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
-
-    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
-      firstIndex: nextRenderContext.firstRowIndex,
-      lastIndex: nextRenderContext.lastRowIndex,
-      minFirstIndex: 0,
-      maxLastIndex: currentPage.rows.length,
-      buffer: rowBuffer,
-    });
-
-    const renderedRowIds: GridRowId[] = [];
-
-    if (params.rows) {
-      params.rows.forEach((row) => {
-        renderedRowIds.push(row.id);
-      });
-    } else {
-      if (!currentPage.range) {
-        return [];
-      }
-
-      for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
-        const row = currentPage.rows[i];
-        renderedRowIds.push(row.id);
-      }
-    }
-    return renderedRowIds;
-  };
 
   const getRows = (
     params: {
@@ -478,9 +436,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       availableSpace?: number | null;
       rows?: GridRowEntry[];
       rowIndexOffset?: number;
+      onRowRender?: (rowId: GridRowId) => void;
     } = { renderContext },
   ) => {
     const {
+      onRowRender,
       renderContext: nextRenderContext,
       minFirstColumn = renderZoneMinColumnIndex,
       maxLastColumn = renderZoneMaxColumnIndex,
@@ -565,6 +525,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = false;
       } else {
         isSelected = apiRef.current.isRowSelectable(id);
+      }
+      if (onRowRender) {
+        onRowRender(id);
       }
 
       const { style: rootRowStyle, ...rootRowProps } = rootProps.slotProps?.row || {};
@@ -661,6 +624,5 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }),
     getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
-    getRenderedRowsIds,
   };
 };
