@@ -174,20 +174,17 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const currentColumns = React.useMemo(() => {
     const togglableColumns = getTogglableColumns ? getTogglableColumns(sortedColumns) : null;
 
+    const togglableSortedColumns = togglableColumns
+      ? sortedColumns.filter(({ field }) => togglableColumns.includes(field))
+      : sortedColumns;
+
     if (!searchValue) {
-      return togglableColumns
-        ? sortedColumns.filter(({ field }) => togglableColumns.includes(field))
-        : sortedColumns;
+      return togglableSortedColumns;
     }
-    const searchValueToCheck = searchValue.toLowerCase();
-    return sortedColumns.filter((column) => {
-      if (togglableColumns) {
-        return (
-          togglableColumns.includes(column.field) && searchPredicate(column, searchValueToCheck)
-        );
-      }
-      return searchPredicate(column, searchValueToCheck);
-    });
+
+    return togglableSortedColumns.filter((column) =>
+      searchPredicate(column, searchValue.toLowerCase()),
+    );
   }, [sortedColumns, searchValue, searchPredicate, getTogglableColumns]);
 
   const firstSwitchRef = React.useRef<HTMLInputElement>(null);
