@@ -144,12 +144,12 @@ const nlNLGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Rijen hersorteren',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregatie',
+  aggregationFunctionLabelSum: 'som',
+  aggregationFunctionLabelAvg: 'gem',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'grootte',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

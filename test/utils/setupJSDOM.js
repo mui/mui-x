@@ -1,6 +1,7 @@
 const coreExports = require('@mui/monorepo/test/utils/setupJSDOM');
 require('./licenseRelease');
 require('./addChaiAssertions');
+require('./setupPickers');
 const { createXMochaHooks } = require('./mochaHooks');
 
 const mochaHooks = createXMochaHooks(coreExports.mochaHooks);

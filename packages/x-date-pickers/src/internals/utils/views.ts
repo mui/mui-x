@@ -1,4 +1,4 @@
-import { DateOrTimeView, DateView } from '../models/views';
+import { DateOrTimeView, DateView } from '../../models';
 
 export const isYearOnlyView = (views: readonly DateView[]): views is ReadonlyArray<'year'> =>
   views.length === 1 && views[0] === 'year';

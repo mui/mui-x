@@ -1,14 +1,16 @@
 import * as React from 'react';
 import moment from 'moment/moment';
 import jMoment from 'moment-jalaali';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui/monorepo/test/utils';
 import {
   buildFieldInteractions,
   createPickerRenderer,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
-import { FieldSectionType, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
+import { FieldSectionType } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 
@@ -86,7 +88,7 @@ adapterToTest.forEach((adapterName) => {
       cursorPosition?: number;
     }) => {
       render(<DateTimeField defaultValue={initialValue} format={format} />);
-      const input = screen.getByRole<HTMLInputElement>('textbox');
+      const input = getTextbox();
       clickOnInput(input, cursorPosition);
       userEvent.keyPress(input, { key });
 

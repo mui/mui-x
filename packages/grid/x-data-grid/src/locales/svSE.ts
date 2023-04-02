@@ -47,7 +47,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Ta bort alla',
   filterPanelDeleteIconLabel: 'Ta bort',
   filterPanelLogicOperator: 'Logisk operatör',
   filterPanelOperator: 'Operatör',
@@ -80,7 +80,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Visa kolumner',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Hantera kolumner',
   columnMenuFilter: 'Filtrera',
   columnMenuHideColumn: 'Dölj',
   columnMenuUnsort: 'Osortera',

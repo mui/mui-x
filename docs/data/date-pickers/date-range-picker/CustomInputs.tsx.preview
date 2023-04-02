@@ -1,6 +1,0 @@
-<DateRangePicker
-  defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
-  slots={{
-    textField: BrowserInput,
-  }}
-/>

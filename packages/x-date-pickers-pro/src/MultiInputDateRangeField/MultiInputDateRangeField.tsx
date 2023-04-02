@@ -322,6 +322,8 @@ MultiInputDateRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

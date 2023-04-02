@@ -23,6 +23,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Day of the month
   d: 'day',
   dd: 'day',
+  do: 'day',
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'letter' },
