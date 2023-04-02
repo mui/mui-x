@@ -19,6 +19,10 @@ import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
+import {
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
+} from '../headerFiltering/gridHeaderFilteringSelectors';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -307,20 +311,15 @@ export const useGridKeyboardNavigation = (
     GridEventListener<'columnHeaderFilterKeyDown'>
   >(
     (params, event) => {
-      // const headerTitleNode = event.currentTarget.querySelector(
-      //   `.${gridClasses.columnHeaderTitleContainerContent}`,
-      // );
-      // const isFromInsideContent =
-      //   !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
-
-      // if (isFromInsideContent && params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-      //   // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
-      //   // There is one exception for the checkBoxHeader
-      //   return;
-      // }
-
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
+        return;
+      }
+
+      const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
+      const isHeaderMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === params.field;
+
+      if (isEditing || isHeaderMenuOpen || !isNavigationKey(event.key)) {
         return;
       }
 
@@ -365,6 +364,8 @@ export const useGridKeyboardNavigation = (
           });
           if (leftColIndex !== null) {
             goToHeaderFilter(leftColIndex, event);
+          } else {
+            apiRef.current.setColumnHeaderFilterFocus(params.field, event);
           }
           break;
         }
@@ -393,10 +394,6 @@ export const useGridKeyboardNavigation = (
 
         case 'End': {
           goToHeaderFilter(lastColIndex, event);
-          break;
-        }
-
-        case 'Enter': {
           break;
         }
 

@@ -413,6 +413,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridTabIndexColumnHeaderFilterSelector",
+    "returnType": "GridColumnIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridTabIndexColumnHeaderSelector",
     "returnType": "GridColumnIdentifier | null",
     "description": "",

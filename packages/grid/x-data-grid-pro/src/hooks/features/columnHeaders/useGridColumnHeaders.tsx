@@ -12,7 +12,7 @@ import {
   getTotalHeaderHeight,
   useGridPrivateApiContext,
 } from '@mui/x-data-grid/internals';
-import { GridColumnHeaderFilterItem } from '../../../components/GridColumnHeaderFilterItem';
+import { GridHeaderFilterItem } from '../../../components/headerFiltering/GridHeaderFilterItem';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export interface UseGridColumnHeadersProProps extends UseGridColumnHeadersProps {}
@@ -31,6 +31,7 @@ const GridHeaderFilterRow = styled('div', {
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity(props);
   const apiRef = useGridPrivateApiContext();
+  const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
   const disableHeaderFiltering = !rootProps.experimentalFeatures?.headerFiltering;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
@@ -61,17 +62,22 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const hasFocus = columnHeaderFilterFocus?.field === colDef.field;
 
-      // TODO: Fix `tabIndex`
-      const tabIndex = -1;
+      const isFirstColumn = columnIndex === 0;
+      const tabIndexField = props.columnHeaderFilterTabIndexState?.field;
+      const tabIndex =
+        tabIndexField === colDef.field || (isFirstColumn && !props.hasOtherElementInTabSequence)
+          ? 0
+          : -1;
 
       filters.push(
-        <GridColumnHeaderFilterItem
+        <GridHeaderFilterItem
           key={colDef.field}
           headerHeight={headerHeight}
           colDef={colDef}
           colIndex={columnIndex}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
+          headerFilterMenuRef={headerFilterMenuRef}
           {...other}
         />,
       );

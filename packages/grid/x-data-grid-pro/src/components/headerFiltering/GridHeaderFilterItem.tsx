@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { GridStateColDef, useGridPrivateApiContext } from '@mui/x-data-grid/internals';
 import { getDataGridUtilityClass, useGridRootProps } from '@mui/x-data-grid';
-import { GridGenericColumnHeaderFilterItem } from './GridGenericColumnHeaderFilterItem';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { GridGenericHeaderFilterItem } from './GridGenericHeaderFilterItem';
+import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -12,6 +12,7 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
+  headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 type OwnerState = GridColumnHeaderItemProps & {
@@ -38,8 +39,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridColumnHeaderFilterItem(props: GridColumnHeaderItemProps) {
-  const { colDef, colIndex, headerHeight, hasFocus, tabIndex } = props;
+function GridHeaderFilterItem(props: GridColumnHeaderItemProps) {
+  const { colDef, colIndex, headerHeight, hasFocus, tabIndex, headerFilterMenuRef } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
 
@@ -66,25 +67,25 @@ function GridColumnHeaderFilterItem(props: GridColumnHeaderItemProps) {
   const label = colDef.headerName ?? colDef.field;
 
   return (
-    <GridGenericColumnHeaderFilterItem
+    <GridGenericHeaderFilterItem
       classes={classes}
       colIndex={colIndex}
       height={headerHeight}
       hasFocus={hasFocus}
       tabIndex={tabIndex}
-      colType={colDef.type!}
-      field={colDef.field}
+      colDef={colDef}
       headerFilterComponent={headerFilterComponent}
       description={colDef.description}
       width={colDef.computedWidth}
       headerClassName={headerClassName}
       label={label}
       data-field={colDef.field}
+      headerFilterMenuRef={headerFilterMenuRef}
     />
   );
 }
 
-GridColumnHeaderFilterItem.propTypes = {
+GridHeaderFilterItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -104,4 +105,4 @@ GridColumnHeaderFilterItem.propTypes = {
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
 } as any;
 
-export { GridColumnHeaderFilterItem };
+export { GridHeaderFilterItem };

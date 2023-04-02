@@ -127,6 +127,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       filterColumnLookup,
       columnPositions,
       columnHeaderTabIndexState,
+      columnHeaderFilterTabIndexState,
       columnGroupHeaderTabIndexState,
       columnHeaderFocus,
       columnGroupHeaderFocus,
@@ -184,6 +185,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       filterColumnLookup,
       columnPositions,
       columnHeaderTabIndexState,
+      columnHeaderFilterTabIndexState,
       hasOtherElementInTabSequence,
       columnGroupHeaderTabIndexState,
       columnHeaderFocus,
@@ -337,6 +339,9 @@ GridColumnHeaders.propTypes = {
       }),
     ),
   ).isRequired,
+  columnHeaderFilterTabIndexState: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+  }),
   columnHeaderFocus: PropTypes.shape({
     field: PropTypes.string.isRequired,
   }),

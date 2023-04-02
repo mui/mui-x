@@ -21,6 +21,10 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export {
+  gridHeaderFilteringEditFieldSelector,
+  gridHeaderFilteringMenuSelector,
+} from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type {
   UseGridColumnHeadersProps,
   GetHeadersParams,
@@ -82,6 +86,10 @@ export {
   gridAdditionalRowGroupsSelector,
   gridPinnedRowsSelector,
 } from '../hooks/features/rows/gridRowsSelector';
+export {
+  headerFilteringStateInitializer,
+  useGridHeaderFiltering,
+} from '../hooks/features/headerFiltering/useGridHeaderFiltering';
 export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridRowSelection,

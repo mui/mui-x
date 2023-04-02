@@ -532,6 +532,7 @@
   { "name": "GridStatePersistenceApi", "kind": "Interface" },
   { "name": "gridStringOrNumberComparator", "kind": "Variable" },
   { "name": "gridTabIndexCellSelector", "kind": "Variable" },
+  { "name": "gridTabIndexColumnHeaderFilterSelector", "kind": "Variable" },
   { "name": "gridTabIndexColumnHeaderSelector", "kind": "Variable" },
   { "name": "GridTabIndexState", "kind": "Interface" },
   { "name": "gridTabIndexStateSelector", "kind": "Variable" },

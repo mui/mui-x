@@ -14,6 +14,7 @@ import {
 import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import {
+  gridTabIndexColumnHeaderFilterSelector,
   gridTabIndexColumnHeaderSelector,
   gridTabIndexCellSelector,
   gridFocusColumnHeaderSelector,
@@ -47,6 +48,11 @@ function GridBody(props: GridBodyProps) {
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
+  const columnHeaderFilterTabIndexState = useGridSelector(
+    apiRef,
+    gridTabIndexColumnHeaderFilterSelector,
+  );
+
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnGroupHeaderTabIndexState = useGridSelector(
@@ -72,6 +78,7 @@ function GridBody(props: GridBodyProps) {
 
   const hasOtherElementInTabSequence = !(
     columnGroupHeaderTabIndexState === null &&
+    columnHeaderFilterTabIndexState === null &&
     columnHeaderTabIndexState === null &&
     cellTabIndexState === null
   );
@@ -129,6 +136,7 @@ function GridBody(props: GridBodyProps) {
         columnPositions={columnPositions}
         columnHeaderTabIndexState={columnHeaderTabIndexState}
         columnGroupHeaderTabIndexState={columnGroupHeaderTabIndexState}
+        columnHeaderFilterTabIndexState={columnHeaderFilterTabIndexState}
         columnHeaderFocus={columnHeaderFocus}
         columnGroupHeaderFocus={columnGroupHeaderFocus}
         densityFactor={densityFactor}

@@ -37,6 +37,11 @@ export const gridTabIndexColumnHeaderSelector = createSelector(
   (state: GridTabIndexState) => state.columnHeader,
 );
 
+export const gridTabIndexColumnHeaderFilterSelector = createSelector(
+  gridTabIndexStateSelector,
+  (state: GridTabIndexState) => state.columnHeaderFilter,
+);
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_gridTabIndexColumnGroupHeaderSelector = createSelector(
   gridTabIndexStateSelector,

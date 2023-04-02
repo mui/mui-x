@@ -40,6 +40,8 @@ import {
   rowSelectionStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
+  headerFilteringStateInitializer,
+  useGridHeaderFiltering,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -98,6 +100,7 @@ export const useDataGridProComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(headerFilteringStateInitializer, apiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, apiRef, props);
   useGridInitializeState(detailPanelStateInitializer, apiRef, props);
   useGridInitializeState(columnPinningStateInitializer, apiRef, props);
@@ -117,6 +120,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnMenuStateInitializer, apiRef, props);
   useGridInitializeState(columnGroupsStateInitializer, apiRef, props);
 
+  useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);

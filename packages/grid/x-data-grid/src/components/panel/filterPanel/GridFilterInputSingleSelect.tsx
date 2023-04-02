@@ -51,10 +51,12 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     item,
     applyValue,
     type,
+    onChange,
     apiRef,
     focusElementRef,
     getOptionLabel: getOptionLabelProp,
     getOptionValue: getOptionValueProp,
+    SelectProps,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -95,8 +97,9 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
       setFilterValueState(String(value));
       applyValue({ ...item, value });
+      onChange?.(event);
     },
-    [currentValueOptions, getOptionValue, applyValue, item],
+    [currentValueOptions, getOptionValue, applyValue, item, onChange],
   );
 
   React.useEffect(() => {
@@ -143,6 +146,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       select
       SelectProps={{
         native: isSelectNative,
+        ...SelectProps,
         ...rootProps.slotProps?.baseSelect,
       }}
       {...others}
