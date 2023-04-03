@@ -15,7 +15,9 @@ export interface ExportedBaseClockProps<TDate>
   ampm?: boolean;
 }
 
-export interface BaseClockProps<TDate> extends ExportedUseViewsOptions<TimeView> {
+export interface BaseClockProps<TDate>
+  extends ExportedUseViewsOptions<TimeView>,
+    ExportedBaseClockProps<TDate> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
