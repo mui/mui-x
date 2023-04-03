@@ -38,6 +38,15 @@ const shouldPublishValue = <TValue, TError>(
   }
 
   if (action.name === 'setValueFromAction') {
+    // If the component is not controlled, and the value has not been modified since the mount,
+    // Then we want to publish the default value whenever the user pressed the "Accept", "Today" or "Clear" button.
+    if (
+      isCurrentValueTheDefaultValue &&
+      ['accept', 'today', 'clear'].includes(action.pickerAction)
+    ) {
+      return true;
+    }
+
     return hasChanged(dateState.lastPublishedValue);
   }
 
@@ -68,7 +77,7 @@ const shouldCommitValue = <TValue, TError>(
 
   if (action.name === 'setValueFromAction') {
     // If the component is not controlled, and the value has not been modified since the mount,
-    // Then we want to publish the default value whenever the user pressed the "Accept", "Today" or "Clear" button.
+    // Then we want to commit the default value whenever the user pressed the "Accept", "Today" or "Clear" button.
     if (
       isCurrentValueTheDefaultValue &&
       ['accept', 'today', 'clear'].includes(action.pickerAction)

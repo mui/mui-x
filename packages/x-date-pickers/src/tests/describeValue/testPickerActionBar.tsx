@@ -170,7 +170,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should call onClose and onAccept when validating the default value', () => {
+      it('should call onChange, onClose and onAccept when validating the default value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -189,7 +189,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         // Accept the modifications
         userEvent.mousePress(screen.getByText(/ok/i));
-        expect(onChange.callCount).to.equal(0); // The accepted value as already been committed, don't call onChange
+        expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
       });
