@@ -35,7 +35,6 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     defaultProps: {
       views: ['day'],
       openTo: 'day',
-      closeOnSelect: true,
     },
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
     emptyValue: null,
@@ -55,13 +54,17 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
 
       expectInputValue(input, expectedValueStr, true);
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, confirmChange } = {}) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
         userEvent.mousePress(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
+        if (confirmChange) {
+          // click `OK` action to confirm the change and close picker
+          userEvent.mousePress(screen.getByRole('button', { name: 'OK' }));
+        }
       } else {
         const input = getTextbox();
         clickOnInput(input, 10); // Update the day

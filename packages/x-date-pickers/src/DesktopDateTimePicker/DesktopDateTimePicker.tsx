@@ -16,6 +16,7 @@ import {
   renderDigitalClockTimeView,
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
+import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -52,6 +53,9 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     ...defaultizedProps.viewRenderers,
   };
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
+  const actionBarActions: PickersActionBarAction[] = !shouldRenderTimeInASingleColumn
+    ? ['accept']
+    : [];
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -83,6 +87,10 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
       tabs: {
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
+      },
+      actionBar: {
+        actions: actionBarActions,
+        ...defaultizedProps.slotProps?.actionBar,
       },
     },
   };
