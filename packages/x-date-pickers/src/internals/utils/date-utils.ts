@@ -1,4 +1,4 @@
-import { MuiPickersAdapter } from '../models';
+import { MuiPickersAdapter } from '../../models';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;

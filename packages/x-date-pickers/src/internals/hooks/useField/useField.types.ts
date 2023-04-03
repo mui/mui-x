@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { MuiPickersAdapter } from '../../models';
-import { FieldSectionType, FieldSection, FieldSelectedSections } from '../../../models';
+import {
+  FieldSectionType,
+  FieldSection,
+  FieldSelectedSections,
+  MuiPickersAdapter,
+} from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 
