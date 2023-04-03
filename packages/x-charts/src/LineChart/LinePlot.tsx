@@ -64,6 +64,7 @@ export function LinePlot() {
                 !!series[seriesId].area && (
                   <AreaElement
                     key={seriesId}
+                    id={seriesId}
                     d={areaPath(d3Data) || undefined}
                     color={series[seriesId].area.color ?? series[seriesId].color}
                   />
@@ -102,6 +103,7 @@ export function LinePlot() {
               return (
                 <LineElement
                   key={seriesId}
+                  id={seriesId}
                   d={linePath(d3Data) || undefined}
                   color={series[seriesId].color}
                 />

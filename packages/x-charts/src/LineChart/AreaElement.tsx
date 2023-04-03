@@ -12,7 +12,7 @@ export interface AreaElementClasses {
 export interface AreaElementOwnerState {
   id: string;
   color: string;
-  classes: Partial<AreaElementClasses>;
+  classes?: Partial<AreaElementClasses>;
 }
 
 export function getAreaElementUtilityClass(slot: string) {
@@ -38,11 +38,13 @@ const AreaElementPath = styled('path', {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
-  fill: d3Color(ownerState.color).brighter(1).formatHex(),
+  fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
   pointerEvents: 'none',
 }));
 
-export function AreaElement(props) {
+export type AreaElementProps = AreaElementOwnerState & React.ComponentPropsWithoutRef<'path'>;
+
+export function AreaElement(props: AreaElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
   const ownerState = { id, classes: innerClasses, color };
   const classes = useUtilityClasses(ownerState);

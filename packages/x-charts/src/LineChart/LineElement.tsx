@@ -11,7 +11,7 @@ export interface LineElementClasses {
 export interface LineElementOwnerState {
   id: string;
   color: string;
-  classes: Partial<LineElementClasses>;
+  classes?: Partial<LineElementClasses>;
 }
 
 export function getLineElementUtilityClass(slot: string) {
@@ -42,7 +42,9 @@ const LineElementPath = styled('path', {
   pointerEvents: 'none',
 }));
 
-export function LineElement(props) {
+export type LineElementProps = LineElementOwnerState & React.ComponentPropsWithoutRef<'path'>;
+
+export function LineElement(props: LineElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
   const ownerState = { id, classes: innerClasses, color };
   const classes = useUtilityClasses(ownerState);

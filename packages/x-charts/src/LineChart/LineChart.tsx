@@ -6,18 +6,20 @@ import {
   SeriesContextProvider,
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
-import { DrawingProvider } from '../context/DrawingProvider';
+import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import Surface from '../Surface';
+import Surface, { SurfaceProps } from '../Surface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { LayoutConfig } from '../models/layout';
 
 export function LineChart(
   props: Omit<
-    LayoutConfig & SeriesContextProviderProps & CartesianContextProviderProps,
+    SurfaceProps &
+      SeriesContextProviderProps &
+      CartesianContextProviderProps &
+      DrawingProviderProps,
     'children'
   >,
 ) {
