@@ -51,4 +51,13 @@ The priority of the clipboard paste is the following, from highest to lowest:
 
 ### Persisting pasted data
 
+Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/#persistence) - use the `processRowUpdate` prop to persist the updated row in your data source:
+
+```tsx
+processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;
+```
+
+The row will be updated with a value returned by the `processRowUpdate` callback.
+If the callback throws or returns a rejected promise, the row will not be updated.
+
 {{"demo": "ClipboardImport.js", "bg": "inline", "defaultCodeOpen": false}}
