@@ -310,4 +310,25 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
     expect(screen.queryByRole('button', { name: 'Show all' })).to.equal(null);
   });
+
+  it('should control columns shown in columns panel using `getTogglableColumns` prop', () => {
+    const getTogglableColumns = (cols: GridColDef[]) =>
+      cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
+    render(
+      <TestDataGrid
+        slots={{
+          toolbar: GridToolbar,
+        }}
+        slotProps={{
+          columnsPanel: {
+            getTogglableColumns,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('checkbox', { name: 'id' })).not.to.equal(null);
+    expect(screen.queryByRole('checkbox', { name: 'idBis' })).to.equal(null);
+  });
 });
