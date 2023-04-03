@@ -543,8 +543,8 @@ export const splitFormatIntoSections = <TDate>(
         cleanedSeparator = `\u2069${cleanedSeparator}\u2066`;
       }
 
-      if (formatDensity === 'normal' && cleanedSeparator === '/') {
-        cleanedSeparator = ' / ';
+      if (formatDensity === 'normal' && ['/', '.', '-'].includes(cleanedSeparator)) {
+        cleanedSeparator = ` ${cleanedSeparator} `;
       }
 
       return cleanedSeparator;
