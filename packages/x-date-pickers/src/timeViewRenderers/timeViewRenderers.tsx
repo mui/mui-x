@@ -2,7 +2,10 @@ import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
-import { DesktopTimeClock, DesktopTimeClockProps } from '../DesktopTimeClock';
+import {
+  MultiSectionDigitalClock,
+  MultiSectionDigitalClockProps,
+} from '../MultiSectionDigitalClock';
 import { TimeView } from '../models';
 
 const isTimePickerView = (view: TimeView): boolean =>
@@ -172,8 +175,8 @@ export const renderMultiColumnTimeView = <TDate extends unknown>({
   autoFocus,
   disableIgnoringDatePartForTimeValidation,
   timeStep,
-}: TimeViewRendererProps<TimeView, DesktopTimeClockProps<TDate>>) => (
-  <DesktopTimeClock<TDate>
+}: TimeViewRendererProps<TimeView, MultiSectionDigitalClockProps<TDate>>) => (
+  <MultiSectionDigitalClock<TDate>
     view={view}
     onViewChange={onViewChange}
     focusedView={focusedView}

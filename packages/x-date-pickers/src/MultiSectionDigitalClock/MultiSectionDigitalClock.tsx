@@ -15,46 +15,48 @@ import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { getDesktopTimeClockUtilityClass } from './desktopTimeClockClasses';
-import { DesktopTimeClockSection } from './DesktopTimeClockSection';
-import { DesktopTimeClockProps, DesktopTimeClockSectionViewProps } from './DesktopTimeClock.types';
-import { getHourSectionOptions, getTimeSectionOptions } from './desktopTimeClock.utils';
+import { getMultiSectionDigitalClockUtilityClass } from './multiSectionDigitalClockClasses';
+import { MultiSectionDigitalClockSection } from './MultiSectionDigitalClockSection';
+import {
+  MultiSectionDigitalClockProps,
+  MultiSectionDigitalClockViewProps,
+} from './MultiSectionDigitalClock.types';
+import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
 import { TimeView } from '../models';
 
-const useUtilityClasses = (ownerState: DesktopTimeClockProps<any>) => {
+const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
   };
 
-  return composeClasses(slots, getDesktopTimeClockUtilityClass, classes);
+  return composeClasses(slots, getMultiSectionDigitalClockUtilityClass, classes);
 };
 
-const DesktopTimeClockRoot = styled(PickerViewRoot, {
-  name: 'MuiDesktopTimeClock',
+const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
+  name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DesktopTimeClockProps<any> }>({
+})<{ ownerState: MultiSectionDigitalClockProps<any> }>({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
   padding: '4px 0',
 });
 
-type DesktopTimeClockComponent = (<TDate>(
-  props: DesktopTimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MultiSectionDigitalClockComponent = (<TDate>(
+  props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate extends unknown>(
-  inProps: DesktopTimeClockProps<TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
+  TDate extends unknown,
+>(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
 
   const props = useThemeProps({
     props: inProps,
-    name: 'MuiDesktopTimeClock',
+    name: 'MuiMultiSectionDigitalClock',
   });
 
   const {
@@ -89,7 +91,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
   } = props;
 
   const [value, setValue] = useControlled({
-    name: 'DesktopTimeClock',
+    name: 'MultiSectionDigitalClock',
     state: 'value',
     controlled: valueProp,
     default: defaultValue ?? null,
@@ -241,7 +243,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
   });
 
   const buildViewProps = React.useCallback(
-    (viewToBuild: TimeView): DesktopTimeClockSectionViewProps<number> => {
+    (viewToBuild: TimeView): MultiSectionDigitalClockViewProps<number> => {
       switch (viewToBuild) {
         case 'hours': {
           const handleHoursChange = (hours) => {
@@ -326,10 +328,10 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
   const viewTimeOptions = React.useMemo(() => {
     return views.reduce((result, currentView) => {
       return { ...result, [currentView]: buildViewProps(currentView) };
-    }, {} as Record<TimeView, DesktopTimeClockSectionViewProps<number>>);
+    }, {} as Record<TimeView, MultiSectionDigitalClockViewProps<number>>);
   }, [views, buildViewProps]);
 
-  const meridiemOptions = React.useMemo<DesktopTimeClockSectionViewProps<MeridiemEnum>>(
+  const meridiemOptions = React.useMemo<MultiSectionDigitalClockViewProps<MeridiemEnum>>(
     () => ({
       onChange: handleMeridiemChange,
       items: [
@@ -352,14 +354,14 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <DesktopTimeClockRoot
+    <MultiSectionDigitalClockRoot
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
     >
       {Object.entries(viewTimeOptions).map(([timeView, viewOptions]) => (
-        <DesktopTimeClockSection
+        <MultiSectionDigitalClockSection
           key={timeView}
           items={viewOptions.items}
           onChange={viewOptions.onChange}
@@ -370,7 +372,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
         />
       ))}
       {ampm && (
-        <DesktopTimeClockSection
+        <MultiSectionDigitalClockSection
           key="meridiem"
           items={meridiemOptions.items}
           onChange={meridiemOptions.onChange}
@@ -381,11 +383,11 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
           shouldFocus={focusMeridiem}
         />
       )}
-    </DesktopTimeClockRoot>
+    </MultiSectionDigitalClockRoot>
   );
-}) as DesktopTimeClockComponent;
+}) as MultiSectionDigitalClockComponent;
 
-DesktopTimeClock.propTypes = {
+MultiSectionDigitalClock.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |

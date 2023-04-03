@@ -1,5 +1,5 @@
 import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
-import { DesktopTimeClockSectionOption } from './DesktopTimeClock.types';
+import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
 interface IGetHoursSectionOptions<TDate> {
   now: TDate;
@@ -15,10 +15,10 @@ export const getHourSectionOptions = <TDate>({
   utils,
   ampm,
   isDisabled,
-}: IGetHoursSectionOptions<TDate>): DesktopTimeClockSectionOption<number>[] => {
+}: IGetHoursSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
   const currentHours = value ? utils.getHours(value) : null;
 
-  const result: DesktopTimeClockSectionOption<number>[] = [];
+  const result: MultiSectionDigitalClockOption<number>[] = [];
 
   const isSelected = (hour: number) => {
     if (currentHours === null) {
@@ -66,7 +66,7 @@ export const getTimeSectionOptions = ({
   timeStep,
   resolveLabel,
   hasValue = true,
-}: IGetTimeSectionOptions): DesktopTimeClockSectionOption<number>[] => {
+}: IGetTimeSectionOptions): MultiSectionDigitalClockOption<number>[] => {
   const isSelected = (timeValue: number) => {
     if (value === null) {
       return false;
