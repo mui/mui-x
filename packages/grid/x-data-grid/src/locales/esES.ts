@@ -80,7 +80,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menú',
   columnMenuShowColumns: 'Mostrar columnas',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desordenar',
