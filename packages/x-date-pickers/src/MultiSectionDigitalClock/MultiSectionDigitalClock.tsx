@@ -378,7 +378,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           onChange={meridiemOptions.onChange}
           disabled={disabled}
           active={!focusedView}
-          autoFocus={!focusedView}
+          autoFocus={autoFocus ? !focusedView : false}
           readOnly={readOnly}
           shouldFocus={focusMeridiem}
         />
