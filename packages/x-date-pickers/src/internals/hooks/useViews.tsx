@@ -10,7 +10,7 @@ export type PickerOnChangeFn<TDate> = (
   selectionState?: PickerSelectionState,
 ) => void;
 
-export interface UseViewsOptions<TValue, TView extends unknown> {
+export interface UseViewsOptions<TValue, TView extends DateOrTimeView> {
   /**
    * Callback fired when the value changes.
    * @template TValue
@@ -65,7 +65,7 @@ export interface ExportedUseViewsOptions<TView extends DateOrTimeView>
 
 let warnedOnceNotValidView = false;
 
-interface UseViewsResponse<TValue, TView extends unknown> {
+interface UseViewsResponse<TValue, TView extends DateOrTimeView> {
   view: TView;
   setView: (view: TView) => void;
   focusedView: TView | null;
@@ -81,7 +81,7 @@ interface UseViewsResponse<TValue, TView extends unknown> {
   setValueAndGoToView: (value: TValue, newView: TView) => void;
 }
 
-export function useViews<TValue, TView extends unknown>({
+export function useViews<TValue, TView extends DateOrTimeView>({
   onChange,
   onViewChange,
   openTo,
