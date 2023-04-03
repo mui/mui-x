@@ -46,6 +46,42 @@ function batchRowUpdates<R>(func: (rows: R[]) => void, wait?: number) {
   };
 }
 
+async function getTextFromClipboard(rootEl: HTMLElement) {
+  if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
+    return navigator.clipboard.readText();
+  }
+
+  return new Promise<string>((resolve) => {
+    // Firefox does not support navigator.clipboard.readText
+    const focusedCell = document.activeElement;
+
+    const el = document.createElement('input');
+    el.style.width = '0px';
+    el.style.height = '0px';
+    el.style.border = 'none';
+    el.style.margin = '0';
+    el.style.padding = '0';
+    el.style.outline = 'none';
+    el.style.position = 'absolute';
+    el.style.top = '0';
+    el.style.left = '0';
+
+    const handlePasteEvent = (event: ClipboardEvent) => {
+      el.removeEventListener('paste', handlePasteEvent);
+      const text = event.clipboardData?.getData('text/plain');
+      if (focusedCell instanceof HTMLElement) {
+        focusedCell.focus({ preventScroll: true });
+      }
+      el.remove();
+      resolve(text || '');
+    };
+
+    el.addEventListener('paste', handlePasteEvent);
+    rootEl.appendChild(el);
+    el.focus({ preventScroll: true });
+  });
+}
+
 const stringToBoolean = (value: string) => {
   switch (value.toLowerCase().trim()) {
     case 'true':
@@ -227,6 +263,7 @@ export const useGridClipboardImport = (
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
   const enableClipboardPaste = props.unstable_enableClipboardPaste;
+  const rootEl = apiRef.current.rootElementRef?.current;
 
   const handlePaste = React.useCallback(
     async (event: KeyboardEvent) => {
@@ -247,10 +284,14 @@ export const useGridClipboardImport = (
         }
       }
 
+      if (!rootEl) {
+        return;
+      }
+
       // Do not enter cell edit mode on paste
       event.stopPropagation();
 
-      const text = await navigator.clipboard.readText();
+      const text = await getTextFromClipboard(rootEl);
       if (!text) {
         return;
       }
@@ -368,6 +409,7 @@ export const useGridClipboardImport = (
       onProcessRowUpdateError,
       getRowId,
       enableClipboardPaste,
+      rootEl,
     ],
   );
 
