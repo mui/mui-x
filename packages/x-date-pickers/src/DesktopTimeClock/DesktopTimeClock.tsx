@@ -103,7 +103,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     },
   );
 
-  const { view, setValueAndGoToNextView, setView } = useViews<TDate | null, TimeView>({
+  const { view, setValueAndGoToNextView, setValueAndGoToView } = useViews<TDate | null, TimeView>({
     view: inView,
     views,
     openTo,
@@ -241,18 +241,14 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
               return;
             }
             const valueWithMeridiem = convertValueToMeridiem(hours, meridiemMode, ampm);
-            // ensure that the current view is the one we are changing
-            // this allows to keep selecting the same view multiple times
-            setView('hours');
-            // delay until next tick to ensure the view update has been synced (if needed)
-            setTimeout(() => {
-              const isNextViewMeridiem = views.indexOf('hours') + 1 === views.length && ampm;
-              setValueAndGoToNextView(
-                utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
-                'finish',
-              );
-              setFocusMeridiem(isNextViewMeridiem);
-            }, 0);
+            const viewIndex = views.indexOf('hours');
+            const nextView = views[viewIndex + 1];
+            const isNextViewMeridiem = !nextView && ampm;
+            setValueAndGoToView(
+              utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
+              nextView,
+            );
+            setFocusMeridiem(isNextViewMeridiem);
           };
           return {
             onChange: handleHoursChange,
@@ -272,12 +268,11 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             if (typeof minutes !== 'number') {
               return;
             }
-            setView('minutes');
-            setTimeout(() => {
-              setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
-              const isNextViewMeridiem = views.indexOf('minutes') + 1 === views.length && ampm;
-              setFocusMeridiem(isNextViewMeridiem);
-            }, 0);
+            const viewIndex = views.indexOf('minutes');
+            const nextView = views[viewIndex + 1];
+            const isNextViewMeridiem = !nextView && ampm;
+            setValueAndGoToView(utils.setMinutes(selectedTimeOrMidnight, minutes), nextView);
+            setFocusMeridiem(isNextViewMeridiem);
           };
 
           return {
@@ -298,12 +293,11 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             if (typeof seconds !== 'number') {
               return;
             }
-            setView('seconds');
-            setTimeout(() => {
-              setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, seconds), 'finish');
-              const isNextViewMeridiem = views.indexOf('seconds') + 1 === views.length && ampm;
-              setFocusMeridiem(isNextViewMeridiem);
-            }, 0);
+            const viewIndex = views.indexOf('seconds');
+            const nextView = views[viewIndex + 1];
+            const isNextViewMeridiem = !nextView && ampm;
+            setValueAndGoToView(utils.setSeconds(selectedTimeOrMidnight, seconds), nextView);
+            setFocusMeridiem(isNextViewMeridiem);
           };
 
           return {
@@ -328,10 +322,9 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       ampm,
       utils,
       meridiemMode,
-      setView,
-      setValueAndGoToNextView,
-      selectedTimeOrMidnight,
       views,
+      setValueAndGoToView,
+      selectedTimeOrMidnight,
       disabled,
       isTimeDisabled,
       timeStep,

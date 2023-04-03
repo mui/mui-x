@@ -78,6 +78,7 @@ interface UseViewsResponse<TValue, TView extends unknown> {
     value: TValue,
     currentViewSelectionState?: PickerSelectionState,
   ) => void;
+  setValueAndGoToView: (value: TValue, newView: TView) => void;
 }
 
 export function useViews<TValue, TView extends unknown>({
@@ -192,6 +193,14 @@ export function useViews<TValue, TView extends unknown>({
     },
   );
 
+  const setValueAndGoToView = useEventCallback((value: TValue, newView: TView | null) => {
+    onChange(value, !newView ? 'finish' : 'partial');
+    if (newView) {
+      handleChangeView(newView);
+      handleFocusedViewChange(newView, true);
+    }
+  });
+
   return {
     view,
     setView: handleChangeView,
@@ -202,5 +211,6 @@ export function useViews<TValue, TView extends unknown>({
     defaultView: defaultView.current,
     goToNextView,
     setValueAndGoToNextView,
+    setValueAndGoToView,
   };
 }
