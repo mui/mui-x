@@ -21,9 +21,9 @@ export function LineChart(
       CartesianContextProviderProps &
       DrawingProviderProps,
     'children'
-  >,
+  > & { children?: React.ReactNode },
 ) {
-  const { xAxis, yAxis, series, colors, width, height, margin, sx } = props;
+  const { xAxis, yAxis, series, colors, width, height, margin, sx, children } = props;
 
   return (
     <DrawingProvider width={width} height={height} margin={margin}>
@@ -51,6 +51,7 @@ export function LineChart(
               position="right"
               axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
             />
+            {children}
           </Surface>
         </CartesianContextProvider>
       </SeriesContextProvider>
