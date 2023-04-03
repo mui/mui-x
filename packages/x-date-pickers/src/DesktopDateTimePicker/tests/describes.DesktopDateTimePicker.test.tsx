@@ -35,6 +35,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     defaultProps: {
       views: ['day'],
       openTo: 'day',
+      closeOnSelect: true,
     },
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
     emptyValue: null,
