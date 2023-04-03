@@ -246,15 +246,14 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     (viewToBuild: TimeView): MultiSectionDigitalClockViewProps<number> => {
       switch (viewToBuild) {
         case 'hours': {
-          const handleHoursChange = (hours) => {
-            if (typeof hours !== 'number') {
-              return;
-            }
-            const valueWithMeridiem = convertValueToMeridiem(hours, meridiemMode, ampm);
-            handleSectionChange('hours', utils.setHours(selectedTimeOrMidnight, valueWithMeridiem));
-          };
           return {
-            onChange: handleHoursChange,
+            onChange: (hours) => {
+              const valueWithMeridiem = convertValueToMeridiem(hours, meridiemMode, ampm);
+              handleSectionChange(
+                'hours',
+                utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
+              );
+            },
             items: getHourSectionOptions({
               now,
               value,
@@ -266,18 +265,12 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         }
 
         case 'minutes': {
-          const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
-          const handleMinutesChange = (minutes) => {
-            if (typeof minutes !== 'number') {
-              return;
-            }
-            handleSectionChange('minutes', utils.setMinutes(selectedTimeOrMidnight, minutes));
-          };
-
           return {
-            onChange: handleMinutesChange,
+            onChange: (minutes) => {
+              handleSectionChange('minutes', utils.setMinutes(selectedTimeOrMidnight, minutes));
+            },
             items: getTimeSectionOptions({
-              value: minutesValue,
+              value: utils.getMinutes(selectedTimeOrMidnight),
               isDisabled: (minutes) => disabled || isTimeDisabled(minutes, 'minutes'),
               resolveLabel: (minutes) => utils.format(utils.setMinutes(now, minutes), 'minutes'),
               timeStep,
@@ -287,18 +280,12 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         }
 
         case 'seconds': {
-          const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
-          const handleSecondsChange = (seconds) => {
-            if (typeof seconds !== 'number') {
-              return;
-            }
-            handleSectionChange('seconds', utils.setSeconds(selectedTimeOrMidnight, seconds));
-          };
-
           return {
-            onChange: handleSecondsChange,
+            onChange: (seconds) => {
+              handleSectionChange('seconds', utils.setSeconds(selectedTimeOrMidnight, seconds));
+            },
             items: getTimeSectionOptions({
-              value: secondsValue,
+              value: utils.getSeconds(selectedTimeOrMidnight),
               isDisabled: (seconds) => disabled || isTimeDisabled(seconds, 'seconds'),
               resolveLabel: (seconds) => utils.format(utils.setSeconds(now, seconds), 'seconds'),
               timeStep,
