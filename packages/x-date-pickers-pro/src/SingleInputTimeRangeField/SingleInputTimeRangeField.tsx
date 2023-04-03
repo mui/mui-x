@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
@@ -19,17 +19,23 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     name: 'MuiSingleInputTimeRangeField',
   });
 
-  const { slots, slotProps, components, componentsProps, ...other } = themeProps;
+  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
+    themeProps;
 
   const ownerState = themeProps;
 
-  const Input = slots?.textField ?? components?.TextField ?? TextField;
-  const inputProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps({
-    elementType: Input,
-    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
-    externalForwardedProps: other,
-    ownerState,
-  });
+  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+  const { inputRef: externalInputRef, ...textFieldProps }: SingleInputTimeRangeFieldProps<TDate> =
+    useSlotProps({
+      elementType: TextField,
+      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+      externalForwardedProps: other,
+      ownerState,
+    });
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
 
   const {
     ref: inputRef,
@@ -37,13 +43,13 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     inputMode,
     readOnly,
     ...fieldProps
-  } = useSingleInputTimeRangeField<TDate, typeof inputProps>({
-    props: inputProps,
-    inputRef: inputProps.inputRef,
+  } = useSingleInputTimeRangeField<TDate, typeof textFieldProps>({
+    props: textFieldProps,
+    inputRef: externalInputRef,
   });
 
   return (
-    <Input
+    <TextField
       ref={ref}
       {...fieldProps}
       inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
