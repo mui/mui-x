@@ -1,6 +1,6 @@
 {
   "name": "benchmark",
-  "version": "6.0.3",
+  "version": "6.0.4",
   "private": true,
   "scripts": {
     "browser": "webpack --config browser/webpack.config.js && node browser/scripts/benchmark.js"
@@ -24,7 +24,7 @@
     "react-virtualized": "^9.22.3",
     "serve-handler": "^6.1.5",
     "style-loader": "^3.3.2",
-    "webpack": "^5.76.3",
+    "webpack": "^5.77.0",
     "webpack-cli": "^5.0.1"
   }
 }
