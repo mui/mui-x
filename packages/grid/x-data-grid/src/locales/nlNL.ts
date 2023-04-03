@@ -47,7 +47,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Alles verwijderen',
   filterPanelDeleteIconLabel: 'Verwijderen',
   filterPanelLogicOperator: 'Logische operator',
   filterPanelOperator: 'Operatoren',
@@ -80,7 +80,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Toon kolommen',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Kolommen beheren',
   columnMenuFilter: 'Filteren',
   columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Annuleer sortering',
@@ -136,7 +136,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stop groeperen op ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Detailmenu in- of uitklappen',
   expandDetailPanel: 'Uitklappen',
   collapseDetailPanel: 'Inklappen',
 
