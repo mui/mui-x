@@ -12,7 +12,10 @@ import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { renderMultiColumnTimeView, renderSingleColumnTimeView } from '../timeViewRenderers';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '../timeViewRenderers';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,8 +39,8 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     (24 * 60) / timeStep <= thresholdToRenderTimeInASingleColumn;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
-    ? renderSingleColumnTimeView
-    : renderMultiColumnTimeView;
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,

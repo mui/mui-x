@@ -84,7 +84,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   />
 );
 
-export const renderSingleColumnTimeView = <TDate extends unknown>({
+export const renderDigitalClockTimeView = <TDate extends unknown>({
   view,
   onViewChange,
   focusedView,
@@ -146,7 +146,7 @@ export const renderSingleColumnTimeView = <TDate extends unknown>({
   />
 );
 
-export const renderMultiColumnTimeView = <TDate extends unknown>({
+export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   view,
   onViewChange,
   focusedView,
