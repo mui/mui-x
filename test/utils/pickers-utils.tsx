@@ -318,18 +318,18 @@ export const getCleanedSelectedContent = (input: HTMLInputElement) =>
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
-  shouldRemoveDashSpaces = false,
+  shouldRemoveDensitySpaces = false,
 ) => {
   let value = cleanText(input.value);
-  if (shouldRemoveDashSpaces) {
-    value = value.replace(/ \/ /g, '/');
+  if (shouldRemoveDensitySpaces) {
+    value = value.replace(/ (\/|-|\.) /g, '$1');
   }
 
   return expect(value).to.equal(expectedValue);
 };
 
 export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
-  const cleanPlaceholder = cleanText(input.placeholder).replace(/ \/ /g, '/');
+  const cleanPlaceholder = cleanText(input.placeholder).replace(/ (\/|-|\.) /g, '$1');
   return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
