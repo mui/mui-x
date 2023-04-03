@@ -1,1 +1,5 @@
-<DatePicker label="Date Picker" defaultValue={new Date(2022, 1, 1)} />
+<ThemeProvider theme={theme}>
+  <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
+    <DatePicker label="Date Picker" defaultValue={new Date(2022, 1, 1)} />
+  </LocalizationProvider>
+</ThemeProvider>
