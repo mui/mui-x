@@ -82,6 +82,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           ? colDef.headerClassName({ field: colDef.field, colDef })
           : colDef.headerClassName;
 
+      // TODO: Support for `isAnyOf` operator
+      const filterOperators = colDef.filterOperators?.filter(
+        (operator) => operator.value !== 'isAnyOf',
+      );
+
       filters.push(
         <GridHeaderFilterItem
           colIndex={columnIndex}
@@ -95,6 +100,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           headerFilterMenuRef={headerFilterMenuRef}
           headerFilterComponent={headerFilterComponent}
           headerClassName={headerClassName}
+          filterOperators={filterOperators}
           data-field={colDef.field}
           {...other}
         />,

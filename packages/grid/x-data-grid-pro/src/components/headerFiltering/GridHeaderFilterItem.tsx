@@ -11,6 +11,7 @@ import {
   gridFilterModelSelector,
   useGridRootProps,
   getGridFilter,
+  GridFilterOperator,
   GridHeaderFilterEventLookup,
   GridColDef,
   gridVisibleColumnFieldsSelector,
@@ -35,6 +36,7 @@ interface GridHeaderFilterItemProps
   hasFocus?: boolean;
   tabIndex: 0 | -1;
   headerFilterComponent?: React.ReactNode;
+  filterOperators?: GridFilterOperator[];
   width: number;
   colDef: GridColDef;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
@@ -75,6 +77,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
       hasFocus,
       tabIndex,
       headerFilterComponent,
+      filterOperators,
       description,
       width,
       headerClassName,
@@ -97,10 +100,11 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const item = React.useMemo(
       () =>
-        filterModel?.items.find((i) => i.field === colDef.field) ?? getGridFilter(colDef as any),
+        filterModel?.items.find((i) => i.field === colDef.field && i.operator !== 'isAnyOf') ??
+        getGridFilter(colDef as any),
       [filterModel?.items, colDef],
     );
-    const currentOperator = colDef?.filterOperators![0];
+    const currentOperator = filterOperators![0];
 
     const InputComponent =
       (colDef.type && TYPES_WITH_NO_FILTER_CELL.includes(colDef.type)) || !colDef.filterable
@@ -221,7 +225,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
       colDef,
     };
 
-    const classes = useUtilityClasses(ownerState);
+    const classes = useUtilityClasses(ownerState as OwnerState);
 
     const isNoInputOperator = noInputOperators[colDef.type!]?.includes(item.operator);
     const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
@@ -276,7 +280,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
                 },
                 startAdornment: isFilterActive ? (
                   <GridHeaderFilterAdorment
-                    operators={colDef?.filterOperators!}
+                    operators={filterOperators!}
                     item={item}
                     field={colDef.field}
                     applyFilterChanges={applyFilterChanges}
