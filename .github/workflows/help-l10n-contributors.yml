@@ -1,14 +1,14 @@
 name: Provide help for l10n PR
 on:
   pull_request:
-    types: opened
+    # types: opened
     paths:
       - '**/src/locales/**.ts'
 jobs:
   help-provider:
     runs-on: ubuntu-latest
     permissions:
-      pull_request: write
+      pull-requests: write
     steps:
       - name: Add tag
         uses: actions/github-script@v6
