@@ -33,7 +33,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
-  const disableHeaderFiltering = !rootProps.experimentalFeatures?.headerFiltering;
+  // const disableHeaderFiltering = !rootProps.experimentalFeatures?.headerFiltering;
+  const disableHeaderFiltering = false;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
   const totalHeaderHeight =
     getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
