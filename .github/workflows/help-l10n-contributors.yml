@@ -26,11 +26,11 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
           body: |
-            Seems you are updating localization :earth_africa: files
+            Seems you are updating localization :earth_africa: files.
 
-            Thanks for contributing to the :tada: To make your PR perfect, here is a list of elements to check :heavy_check_mark:
+            Thank you for contributing to the localization! :tada: To make your PR perfect, here is a list of elements to check: :heavy_check_mark:
 
-            - [ ] Verify the PR title respects the release format. Here are two examples (depending if you update or add a locale file)
+            - [ ] Verify if the PR title respects the release format. Here are two examples (depending if you update or add a locale file)
               > [l10n] Improve Swedish (sv-SE) locale
               > [l10n] Add Danish (da-DK) locale
 
@@ -39,5 +39,5 @@ jobs:
 
             If you are **adding** a new locale file, here are other specific steps:
 
-            - [ ] Verify you added an export line in `src/locales/index.ts` for the new locale.
+            - [ ] Verify that you have added an export line in `src/locales/index.ts` for the new locale.
             - [ ] Run `yarn docs:api` which should add your new translation to the list of exported interfaces.
