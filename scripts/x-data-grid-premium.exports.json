@@ -357,6 +357,7 @@
   { "name": "GridGroupWorkIcon", "kind": "Variable" },
   { "name": "GridHeader", "kind": "Variable" },
   { "name": "GridHeaderCheckbox", "kind": "Variable" },
+  { "name": "GridHeaderFilterEventLookup", "kind": "Interface" },
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },
   { "name": "GridIconSlotsComponent", "kind": "Interface" },
   { "name": "GridInitialState", "kind": "TypeAlias" },

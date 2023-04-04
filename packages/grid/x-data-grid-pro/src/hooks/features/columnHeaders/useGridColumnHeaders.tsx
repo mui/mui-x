@@ -71,7 +71,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       filters.push(
         <GridHeaderFilterItem
-          key={colDef.field}
+          key={`${colDef.field}-filter`}
           headerHeight={headerHeight}
           colDef={colDef}
           colIndex={columnIndex}

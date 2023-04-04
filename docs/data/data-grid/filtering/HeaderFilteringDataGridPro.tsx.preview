@@ -1,1 +1,13 @@
-<DataGridPro {...data} experimentalFeatures={{ headerFiltering: true }} />
+<DataGridPro
+  {...data}
+  initialState={{
+    ...data.initialState,
+    columns: {
+      columnVisibilityModel: {
+        avatar: false,
+        id: false,
+      },
+    },
+  }}
+  experimentalFeatures={{ headerFiltering: true }}
+/>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import {
   GridFilterItem,
   useGridSelector,
@@ -47,7 +48,10 @@ const FilterFormValueInput = styled('div', {
   overridesResolver: (_, styles) => styles.filterFormValueInput,
 })<{ ownerState: OwnerState }>({ width: '100%' });
 
-function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
+const GridGenericHeaderFilterItem = React.forwardRef<
+  HTMLDivElement,
+  GridGenericColumnHeaderItemProps
+>((props, ref) => {
   const {
     classes,
     colIndex,
@@ -69,6 +73,7 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
   const columnFields = gridVisibleColumnFieldsSelector(apiRef);
   const rootProps = useGridRootProps();
   const cellRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, cellRef);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
 
@@ -82,7 +87,7 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
   const currentOperator = colDef?.filterOperators![0];
 
   const InputComponent =
-    colDef.type && TYPES_WITH_NO_FILTER_CELL.includes(colDef.type)
+    (colDef.type && TYPES_WITH_NO_FILTER_CELL.includes(colDef.type)) || !colDef.filterable
       ? null
       : currentOperator?.InputComponent;
 
@@ -93,20 +98,16 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
     [apiRef],
   );
 
-  React.useEffect(() => {
-    if (hasFocus && cellRef.current) {
-      cellRef.current.focus();
+  React.useLayoutEffect(() => {
+    if (hasFocus) {
+      let focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
+      if (isEditing && InputComponent) {
+        focusableElement = inputRef.current;
+      }
+      const elementToFocus = focusableElement || cellRef.current;
+      elementToFocus?.focus();
     }
-  }, [hasFocus]);
-
-  React.useEffect(() => {
-    if (isEditing) {
-      inputRef.current?.focus();
-    } else {
-      cellRef.current?.focus();
-      inputRef.current?.blur();
-    }
-  }, [isEditing]);
+  }, [InputComponent, apiRef, hasFocus, isEditing]);
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
@@ -206,7 +207,7 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
   return (
     <div
       className={clsx(classes.root, headerClassName)}
-      ref={cellRef}
+      ref={handleRef}
       style={{
         height,
         width,
@@ -266,6 +267,6 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
       </FilterFormValueInput>
     </div>
   );
-}
+});
 
 export { GridGenericHeaderFilterItem };

@@ -307,9 +307,7 @@ export const useGridKeyboardNavigation = (
     ],
   );
 
-  const handleHeaderFilterKeyDown = React.useCallback<
-    GridEventListener<'headerFilterKeyDown'>
-  >(
+  const handleHeaderFilterKeyDown = React.useCallback<GridEventListener<'headerFilterKeyDown'>>(
     (params, event) => {
       const dimensions = apiRef.current.getRootDimensions();
       if (!dimensions) {
