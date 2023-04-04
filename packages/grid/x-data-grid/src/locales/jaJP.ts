@@ -46,7 +46,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'すべて削除',
   filterPanelDeleteIconLabel: '削除',
   filterPanelLogicOperator: '論理演算子',
   filterPanelOperator: '演算子',
