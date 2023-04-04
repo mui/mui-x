@@ -2,70 +2,70 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
 const views = {
-  hours: 'las horas',
-  minutes: 'los minutos',
-  seconds: 'los segundos',
+  hours: 'les hores',
+  minutes: 'els minuts',
+  seconds: 'els segons',
 };
 
 const esESPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
-  previousMonth: 'Último mes',
-  nextMonth: 'Próximo mes',
+  previousMonth: 'Últim mes',
+  nextMonth: 'Pròxim mes',
 
   // View navigation
-  openPreviousView: 'abrir la última vista',
-  openNextView: 'abrir la siguiente vista',
+  openPreviousView: 'obrir l\'última vista',
+  openNextView: 'obrir la següent vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'la vista del año está abierta, cambie a la vista de calendario'
-      : 'la vista de calendario está abierta, cambie a la vista del año',
+      ? 'la vista de l\'any està oberta, canvie a la vista de calendari'
+      : 'la vista de calendari està oberta, canvie a la vista de l\'any',
 
   // DateRange placeholders
-  start: 'Empezar',
+  start: 'Començar',
   end: 'Terminar',
 
   // Action bar
-  cancelButtonLabel: 'Cancelar',
-  clearButtonLabel: 'Limpiar',
+  cancelButtonLabel: 'Cancel·lar',
+  clearButtonLabel: 'Netejar',
   okButtonLabel: 'OK',
-  todayButtonLabel: 'Hoy',
+  todayButtonLabel: 'Hui',
 
   // Toolbar titles
-  datePickerToolbarTitle: 'Seleccionar fecha',
-  dateTimePickerToolbarTitle: 'Seleccionar fecha & hora',
+  datePickerToolbarTitle: 'Seleccionar data',
+  dateTimePickerToolbarTitle: 'Seleccionar data i hora',
   timePickerToolbarTitle: 'Seleccionar hora',
-  dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
+  dateRangePickerToolbarTitle: 'Seleccionar rang de dates',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
     `Seleccione ${views[view]}. ${
       time === null
-        ? 'Sin tiempo seleccionado'
-        : `El tiempo seleccionado es ${adapter.format(time, 'fullTime')}`
+        ? 'Sense temps seleccionat'
+        : `El temps seleccionat és ${adapter.format(time, 'fullTime')}`
     }`,
-  hoursClockNumberText: (hours) => `${hours} horas`,
-  minutesClockNumberText: (minutes) => `${minutes} minutos`,
-  secondsClockNumberText: (seconds) => `${seconds} segundos`,
+  hoursClockNumberText: (hours) => `${hours} hores`,
+  minutesClockNumberText: (minutes) => `${minutes} minuts`,
+  secondsClockNumberText: (seconds) => `${seconds} segons`,
 
   // Calendar labels
-  calendarWeekNumberHeaderLabel: 'Número de semana',
+  calendarWeekNumberHeaderLabel: 'Número de setmana',
   calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: weekNumber => `Semana ${weekNumber}`,
+  calendarWeekNumberAriaLabelText: weekNumber => `Setmana ${weekNumber}`,
   calendarWeekNumberText: weekNumber => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Elige la fecha, la fecha elegida es ${utils.format(value, 'fullDate')}`
-      : 'Elige la fecha',
+      ? `Tria la data, la data triada és ${utils.format(value, 'fullDate')}`
+      : 'Tria la data',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Elige la hora, la hora elegido es ${utils.format(value, 'fullTime')}`
-      : 'Elige la hora',
+      ? `Tria l\'hora, l\'hora triada és ${utils.format(value, 'fullTime')}`
+      : 'Tria l\'hora',
 
   // Table labels
-  timeTableLabel: 'elige la fecha',
-  dateTableLabel: 'elige la hora',
+  timeTableLabel: 'tria la data',
+  dateTableLabel: 'tria l\'hora',
 
   // Field section placeholders
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
