@@ -5,8 +5,7 @@ on:
     paths:
       - '**/src/locales/**.ts'
 jobs:
-  add-tag:
-  add-comment:
+  help-provider:
     runs-on: ubuntu-latest
     permissions:
       pull_request: write
