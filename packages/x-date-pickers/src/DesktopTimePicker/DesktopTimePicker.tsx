@@ -63,6 +63,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     viewRenderers,
     // fallback to `closeOnSelect={false}` given a multi column time picker.
     closeOnSelect: inProps.closeOnSelect ?? shouldRenderTimeInASingleColumn,
+    // Setting only `hours` time view in case of single column time picker
+    // Allows for easy view lifecycle management
+    views: shouldRenderTimeInASingleColumn ? ['hours' as TimeView] : defaultizedProps.views,
     slots: {
       field: TimeField,
       openPickerIcon: Clock,

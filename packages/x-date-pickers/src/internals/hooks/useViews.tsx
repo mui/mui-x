@@ -78,7 +78,7 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeView> {
     value: TValue,
     currentViewSelectionState?: PickerSelectionState,
   ) => void;
-  setValueAndGoToView: (value: TValue, newView: TView) => void;
+  setValueAndGoToView: (value: TValue, newView: TView | null) => void;
 }
 
 export function useViews<TValue, TView extends DateOrTimeView>({

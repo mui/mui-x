@@ -113,7 +113,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     onChange?.(newValue, 'finish');
   });
 
-  const { setView, setValueAndGoToNextView } = useViews<TDate | null, TimeView>({
+  const { setValueAndGoToNextView } = useViews<TDate | null, TimeView>({
     view: inView,
     views,
     openTo,
@@ -124,12 +124,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   });
 
   const handleItemSelect = useEventCallback((newValue: TDate | null) => {
-    // setting view to the last one before setting new value so that the picker would close after selection (if needed)
-    setView(views[views.length - 1]);
-    // delay until next tick to ensure the view update has been synced (if needed)
-    setTimeout(() => {
-      setValueAndGoToNextView(newValue, 'finish');
-    });
+    setValueAndGoToNextView(newValue, 'finish');
   });
 
   React.useEffect(() => {
