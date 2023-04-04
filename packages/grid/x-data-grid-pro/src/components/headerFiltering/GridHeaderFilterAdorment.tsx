@@ -29,10 +29,6 @@ function GridHeaderFilterAdorment(props: {
     headerFilterMenuRef.current = event.currentTarget;
     apiRef.current.showHeaderFilterMenu(field);
   };
-  const handleClose = () => {
-    apiRef.current.hideHeaderFilterMenu();
-    headerFilterMenuRef.current = null;
-  };
 
   return (
     <React.Fragment>
@@ -42,10 +38,10 @@ function GridHeaderFilterAdorment(props: {
         </IconButton>
       </InputAdornment>
       <GridHeaderFilterMenu
+        field={field}
         open={open}
         item={item}
         target={headerFilterMenuRef.current}
-        onExited={handleClose}
         operators={operators}
         {...others}
       />

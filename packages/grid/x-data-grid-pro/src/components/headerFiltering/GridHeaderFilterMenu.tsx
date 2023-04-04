@@ -6,25 +6,25 @@ import ListItemText from '@mui/material/ListItemText';
 import {
   useGridApiContext,
   GridMenu,
-  GridMenuProps,
   GridFilterOperator,
   GridFilterItem,
+  GridColDef,
 } from '@mui/x-data-grid';
 import { OPERATOR_SYMBOL_MAPPING, OPERATOR_LABEL_MAPPING } from './constants';
 
 export interface GridHeaderFilterMenuProps {
+  field: GridColDef['field'];
   applyFilterChanges: (item: GridFilterItem) => void;
   operators: GridFilterOperator<any, any, any>[];
   item: GridFilterItem;
   open: boolean;
   target: HTMLElement | null;
-  onExited?: GridMenuProps['onExited'];
 }
 
 function GridHeaderFilterMenu({
   open,
+  field,
   target,
-  onExited,
   applyFilterChanges,
   operators,
   item,
@@ -57,7 +57,7 @@ function GridHeaderFilterMenu({
       open={open}
       target={target}
       onClickAway={hideMenu}
-      onExited={onExited}
+      onExited={hideMenu}
     >
       <MenuList onKeyDown={handleListKeyDown} autoFocus={open}>
         {operators.map((op) => (
@@ -66,6 +66,7 @@ function GridHeaderFilterMenu({
               applyFilterChanges({ ...item, operator: op.value });
               hideMenu();
             }}
+            key={`${field}-${op.value}`}
           >
             <ListItemIcon>{OPERATOR_SYMBOL_MAPPING[op.value]}</ListItemIcon>
             <ListItemText>{OPERATOR_LABEL_MAPPING[op.value]}</ListItemText>

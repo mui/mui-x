@@ -32,8 +32,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       'withBorderColor',
       showRightBorder && 'columnHeader--withRightBorder',
     ],
-    titleContainer: ['columnHeaderTitleContainer'],
-    titleContainerContent: ['columnHeaderTitleContainerContent'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

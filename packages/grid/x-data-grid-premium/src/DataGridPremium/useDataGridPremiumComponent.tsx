@@ -60,6 +60,8 @@ import {
   columnGroupsStateInitializer,
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
+  headerFilteringStateInitializer,
+  useGridHeaderFiltering,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -108,6 +110,7 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(headerFilteringStateInitializer, privateApiRef, props);
   useGridInitializeState(rowGroupingStateInitializer, privateApiRef, props);
   useGridInitializeState(aggregationStateInitializer, privateApiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
@@ -131,6 +134,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnGroupsStateInitializer, privateApiRef, props);
 
   useGridRowGrouping(privateApiRef, props);
+  useGridHeaderFiltering(privateApiRef, props);
   useGridTreeData(privateApiRef);
   useGridAggregation(privateApiRef, props);
   useGridKeyboardNavigation(privateApiRef, props);

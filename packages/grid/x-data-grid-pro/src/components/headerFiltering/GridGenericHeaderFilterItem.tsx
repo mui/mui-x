@@ -7,7 +7,7 @@ import {
   gridFilterModelSelector,
   useGridRootProps,
   getGridFilter,
-  GridColumnHeaderEventLookup,
+  GridHeaderFilterEventLookup,
   GridColDef,
   gridVisibleColumnFieldsSelector,
 } from '@mui/x-data-grid';
@@ -24,14 +24,12 @@ import { OPERATOR_LABEL_MAPPING, noInputOperators } from './constants';
 
 interface GridGenericColumnHeaderItemProps
   extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
-  classes: Record<'root' | 'titleContainer' | 'titleContainerContent', string>;
+  classes: Record<'root', string>;
   colIndex: number;
   height: number;
   sortIndex?: number;
-  filterItemsCounter?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  disableReorder?: boolean;
   headerFilterComponent?: React.ReactNode;
   width: number;
   label: string;
@@ -40,6 +38,8 @@ interface GridGenericColumnHeaderItemProps
 }
 
 type OwnerState = DataGridProProcessedProps;
+
+const TYPES_WITH_NO_FILTER_CELL = ['actions', 'checkboxSelection'];
 
 const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
@@ -82,7 +82,9 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
   const currentOperator = colDef?.filterOperators![0];
 
   const InputComponent =
-    colDef.type !== 'checkboxSelection' ? currentOperator?.InputComponent : null;
+    colDef.type && TYPES_WITH_NO_FILTER_CELL.includes(colDef.type)
+      ? null
+      : currentOperator?.InputComponent;
 
   const applyFilterChanges = React.useCallback(
     (updatedItem: GridFilterItem) => {
@@ -163,7 +165,7 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
   );
 
   const publish = React.useCallback(
-    (eventName: keyof GridColumnHeaderEventLookup, propHandler: React.EventHandler<any>) =>
+    (eventName: keyof GridHeaderFilterEventLookup, propHandler?: React.EventHandler<any>) =>
       (event: React.SyntheticEvent) => {
         apiRef.current.publishEvent(
           eventName,
@@ -177,18 +179,25 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
     [apiRef, colDef.field],
   );
 
+  const onClick = React.useCallback(
+    (event: React.MouseEvent) => {
+      if (!hasFocus) {
+        apiRef.current.startHeaderFilterEditMode(colDef.field);
+        apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);
+      }
+    },
+    [apiRef, colDef.field, hasFocus],
+  );
+
   const mouseEventsHandlers = React.useMemo(
     () => ({
-      onKeyDown: publish('columnHeaderFilterKeyDown', onKeyDown),
-      onClick: (event: React.MouseEvent) => {
-        if (!hasFocus) {
-          apiRef.current.startHeaderFilterEditMode(colDef.field);
-          apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);
-          headerFilterMenuRef.current = buttonRef.current;
-        }
-      },
+      onKeyDown: publish('headerFilterKeyDown', onKeyDown),
+      onFocus: publish('headerFilterFocus'),
+      onBlur: publish('headerFilterBlur'),
+      onClick: publish('headerFilterClick', onClick),
+      onDoubleClick: publish('headerFilterDoubleClick'),
     }),
-    [apiRef, colDef.field, hasFocus, headerFilterMenuRef, onKeyDown, publish],
+    [onClick, onKeyDown, publish],
   );
 
   const isNoInputOperator = noInputOperators[colDef.type!]?.includes(item.operator);
@@ -204,7 +213,7 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
         minWidth: width,
         maxWidth: width,
       }}
-      role="columnheader"
+      role="gridcell"
       tabIndex={tabIndex}
       aria-colindex={colIndex + 1}
       aria-label={headerFilterComponent == null ? propLabel : undefined}
@@ -215,7 +224,8 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
         as={rootProps.slots.baseFormControl}
         ownerState={rootProps as DataGridProProcessedProps}
       >
-        {InputComponent ? (
+        {headerFilterComponent}
+        {InputComponent && !headerFilterComponent ? (
           <InputComponent
             apiRef={apiRef}
             item={item}
@@ -223,9 +233,6 @@ function GridGenericHeaderFilterItem(props: GridGenericColumnHeaderItemProps) {
             applyValue={applyFilterChanges}
             onFocus={() => {
               apiRef.current.startHeaderFilterEditMode(colDef.field);
-              if (!hasFocus) {
-                apiRef.current.setColumnHeaderFilterFocus(colDef.field);
-              }
             }}
             onBlur={() => {
               apiRef.current.stopHeaderFilterEditMode();

@@ -307,8 +307,8 @@ export const useGridKeyboardNavigation = (
     ],
   );
 
-  const handleColumnHeaderFilterKeyDown = React.useCallback<
-    GridEventListener<'columnHeaderFilterKeyDown'>
+  const handleHeaderFilterKeyDown = React.useCallback<
+    GridEventListener<'headerFilterKeyDown'>
   >(
     (params, event) => {
       const dimensions = apiRef.current.getRootDimensions();
@@ -713,7 +713,7 @@ export const useGridKeyboardNavigation = (
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
-  useGridApiEventHandler(apiRef, 'columnHeaderFilterKeyDown', handleColumnHeaderFilterKeyDown);
+  useGridApiEventHandler(apiRef, 'headerFilterKeyDown', handleHeaderFilterKeyDown);
   useGridApiEventHandler(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
 };
