@@ -1,8 +1,10 @@
 <ThemeProvider theme={theme}>
-  <LocalizationProvider dateAdapter={AdapterMomentHijri}>
-    <DatePicker
-      label="Date Picker"
-      defaultValue={moment(new Date(2022, 1, 1))}
-    />
-  </LocalizationProvider>
+  <div dir="rtl">
+    <LocalizationProvider dateAdapter={AdapterMomentHijri}>
+      <DateTimePicker
+        label="Date Picker"
+        defaultValue={moment(new Date(2022, 1, 1))}
+      />
+    </LocalizationProvider>
+  </div>
 </ThemeProvider>
