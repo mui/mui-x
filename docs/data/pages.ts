@@ -195,6 +195,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
           { pathname: '/x/react-date-pickers/time-field', title: 'Time Field', newFeature: true },
           { pathname: '/x/react-date-pickers/time-clock', title: 'Time Clock' },
+          {
+            pathname: '/x/react-date-pickers/digital-clock',
+            title: 'Digital Clock',
+            newFeature: true,
+          },
         ],
       },
       {

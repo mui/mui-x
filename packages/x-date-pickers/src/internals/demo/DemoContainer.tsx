@@ -15,6 +15,7 @@ type PickersGridChildComponentType =
   | 'multi-input-range-field'
   | 'single-input-range-field'
   | 'UI-view'
+  | 'Tall-UI-view'
   | 'multi-panel-UI-view';
 
 type PickersSupportedSections = 'date' | 'time' | 'date-time';
@@ -22,6 +23,10 @@ type PickersSupportedSections = 'date' | 'time' | 'date-time';
 const getChildTypeFromChildName = (childName: string): PickersGridChildComponentType => {
   if (childName.match(/^([A-Za-z]+)Range(Calendar|Clock)$/)) {
     return 'multi-panel-UI-view';
+  }
+
+  if (childName.match(/^([A-Za-z]*)(DigitalClock)$/)) {
+    return 'Tall-UI-view';
   }
 
   if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
@@ -98,7 +103,7 @@ export function DemoContainer(props: DemoGridProps) {
 
   const getSpacing = (direction: 'column' | 'row') => {
     if (direction === 'row') {
-      return childrenTypes.has('UI-view') ? 3 : 2;
+      return childrenTypes.has('UI-view') || childrenTypes.has('Tall-UI-view') ? 3 : 2;
     }
 
     return childrenTypes.has('UI-view') ? 4 : 3;

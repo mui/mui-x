@@ -1,0 +1,61 @@
+---
+product: date-pickers
+title: React Digital Clock component
+components: DigitalClock, MultiColumnDigitalClock
+githubLabel: 'component: TimePicker'
+packageName: '@mui/x-date-pickers'
+---
+
+# Digital Clock
+
+<p class="description">The Digital Clock components let the user select a time without any input or popper / modal.</p>
+
+## Description
+
+There are two component versions for different cases. The `DigitalClock` handles selection of a single time instance in one step, just like a `select` component. The `MultiSectionDigitalClock` allows selecting time using separate sections for separate views.
+
+The `DigitalClock` is more appropriate when there is a limited amount of time options needed, while the `MultiSectionDigitalClock` is suited for cases when a more granular time selection is needed.
+
+## Basic usage
+
+{{"demo": "DigitalClockBasic.js"}}
+
+## Uncontrolled vs. Controlled
+
+The components can be uncontrolled or controlled.
+
+{{"demo": "DigitalClockValue.js"}}
+
+## Form props
+
+The components can be disabled or read-only.
+
+{{"demo": "DigitalClockFormProps.js"}}
+
+## Views
+
+The `MultiSectionDigitalClock` component can contain three views: `hours`, `minutes`, and `seconds`.
+By default, only the `hours` and `minutes` views are enabled.
+
+You can customize the enabled views using the `views` prop.
+Views will appear in the order they're included in the `views` array.
+
+{{"demo": "DigitalClockViews.js"}}
+
+## 12h/24h format
+
+By default, the components use the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
+
+You can force a specific format using the `ampm` prop.
+
+You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#12h-24h-format).
+
+{{"demo": "DigitalClockAmPm.js"}}
+
+## Time step
+
+By default, the components list the time options in `5` unit (`minutes` or `seconds`) intervals.
+
+You can force a desired interval using the `timeStep` prop.
+
+{{"demo": "DigitalClockTimeStep.js"}}

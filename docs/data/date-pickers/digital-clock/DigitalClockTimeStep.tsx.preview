@@ -1,0 +1,9 @@
+<DemoItem label="Digital clock">
+  <DigitalClock timeStep={60} />
+</DemoItem>
+<DemoItem label="Multi section digital clock">
+  <MultiSectionDigitalClock
+    timeStep={2}
+    views={['hours', 'minutes', 'seconds']}
+  />
+</DemoItem>
