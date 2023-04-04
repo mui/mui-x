@@ -1,7 +1,7 @@
 name: Provide help for l10n PR
 on:
   pull_request:
-    # types: opened
+    types: opened
     paths:
       - '**/src/locales/**.ts'
 jobs:
@@ -26,13 +26,11 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
           body: |
-            Thanks for contributing to the internationalization :earth_africa::tada: 
+            Seems you are updating localization :earth_africa: files
 
-            To make your PR perfect, here is a list of 
+            Thanks for contributing to the :tada: To make your PR perfect, here is a list of elements to check :heavy_check_mark:
 
-            - [ ] Verify the PR title respects the release format.
-
-              Here are two examples (depending if you update or add a locale file)
+            - [ ] Verify the PR title respects the release format. Here are two examples (depending if you update or add a locale file)
               > [l10n] Improve Swedish (sv-SE) locale
               > [l10n] Add Danish (da-DK) locale
 
