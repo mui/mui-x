@@ -7,7 +7,7 @@ const views = {
   seconds: 'els segons',
 };
 
-const esESPickers: Partial<PickersLocaleText<any>> = {
+const caESPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Últim mes',
   nextMonth: 'Pròxim mes',
@@ -68,14 +68,14 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: "tria l'hora",
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
-export const esES = getPickersLocalization(esESPickers);
+export const caES = getPickersLocalization(caESPickers);
