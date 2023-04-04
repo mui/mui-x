@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { userEvent, describeConformance } from '@mui/monorepo/test/utils';
+import { screen, userEvent, describeConformance } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
@@ -49,6 +49,9 @@ describe('<DesktopTimePicker /> - Describes', () => {
     componentFamily: 'picker',
     type: 'time',
     variant: 'desktop',
+    defaultProps: {
+      views: ['hours'],
+    },
     values: [
       adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
       adapterToUse.date(new Date(2018, 0, 1, 18, 30)),
@@ -69,16 +72,22 @@ describe('<DesktopTimePicker /> - Describes', () => {
         true,
       );
     },
-    setNewValue: (value, { isOpened } = {}) => {
-      const newValue = adapterToUse.addHours(value, 1);
+    setNewValue: (value, { isOpened, applySameValue, confirmChange } = {}) => {
+      const newValue = applySameValue ? value : adapterToUse.addHours(value, 1);
 
       if (isOpened) {
-        throw new Error("Can't test UI views on DesktopTimePicker");
+        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+        const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
+        userEvent.mousePress(screen.getByRole('menuitem', { name: hours }));
+        if (confirmChange) {
+          // click `OK` action to confirm the change and close picker
+          userEvent.mousePress(screen.getByRole('button', { name: 'OK' }));
+        }
+      } else {
+        const input = getTextbox();
+        clickOnInput(input, 1); // Update the hour
+        userEvent.keyPress(input, { key: 'ArrowUp' });
       }
-
-      const input = getTextbox();
-      clickOnInput(input, 1); // Update the hour
-      userEvent.keyPress(input, { key: 'ArrowUp' });
 
       return newValue;
     },

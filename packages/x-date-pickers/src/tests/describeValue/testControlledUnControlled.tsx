@@ -120,7 +120,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const params = pickerParams as DescribeValueOptions<'picker', any>;
       if (
         componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+        (params.variant === 'desktop' && params.type === 'date-range')
       ) {
         return;
       }
@@ -139,7 +139,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const params = pickerParams as DescribeValueOptions<'picker', any>;
       if (
         componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+        (params.variant === 'desktop' && params.type === 'date-range')
       ) {
         return;
       }
@@ -168,7 +168,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const params = pickerParams as DescribeValueOptions<'picker', any>;
       if (
         componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+        (params.variant === 'desktop' && params.type === 'date-range')
       ) {
         return;
       }
