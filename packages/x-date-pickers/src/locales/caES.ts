@@ -13,12 +13,12 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   nextMonth: 'Pròxim mes',
 
   // View navigation
-  openPreviousView: 'obrir l\'última vista',
+  openPreviousView: "obrir l'última vista",
   openNextView: 'obrir la següent vista',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'la vista de l\'any està oberta, canvie a la vista de calendari'
-      : 'la vista de calendari està oberta, canvie a la vista de l\'any',
+      ? "la vista de l'any està oberta, canvie a la vista de calendari"
+      : "la vista de calendari està oberta, canvie a la vista de l'any",
 
   // DateRange placeholders
   start: 'Començar',
@@ -50,8 +50,8 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Número de setmana',
   calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: weekNumber => `Setmana ${weekNumber}`,
-  calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Setmana ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -60,12 +60,12 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
       : 'Tria la data',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Tria l\'hora, l\'hora triada és ${utils.format(value, 'fullTime')}`
-      : 'Tria l\'hora',
+      ? `Tria l'hora, l'hora triada és ${utils.format(value, 'fullTime')}`
+      : "Tria l'hora",
 
   // Table labels
   timeTableLabel: 'tria la data',
-  dateTableLabel: 'tria l\'hora',
+  dateTableLabel: "tria l'hora",
 
   // Field section placeholders
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
