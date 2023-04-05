@@ -78,8 +78,36 @@ ${
 `);
 }
 
+function addL10nHelpMessage() {
+  const isAddingLocale = danger.git.created_files.some((file) => file.includes('/src/locales/'));
+  const isUpdatingLocale = danger.git.modified_files.some((file) => file.includes('/src/locales/'));
+
+  if (!isAddingLocale && !isUpdatingLocale) {
+    return;
+  }
+  markdown(
+    [
+      'Seems you are updating localization :earth_africa: files.',
+      '',
+      'Thank you for contributing to the localization! :tada: To make your PR perfect, here is a list of elements to check: :heavy_check_mark:',
+      '- [ ] Verify if the PR title respects the release format. Here are two examples (depending if you update or add a locale file)',
+      '  > [l10n] Improve Swedish (sv-SE) locale',
+      '  > [l10n] Add Danish (da-DK) locale',
+      '- [ ] Update the documentation of supported locales by running `yarn l10n`',
+      ...(isAddingLocale
+        ? [
+            '- [ ] Verify that you have added an export line in `src/locales/index.ts` for the new locale.',
+            '- [ ] Run `yarn docs:api` which should add your new translation to the list of exported interfaces.',
+          ]
+        : []),
+      '- [ ] Clean files with `yarn prettier`.',
+    ].join('\n'),
+  );
+}
+
 async function run() {
   addDeployPreviewUrls();
+  addL10nHelpMessage();
 
   switch (dangerCommand) {
     case 'reportPerformance':
