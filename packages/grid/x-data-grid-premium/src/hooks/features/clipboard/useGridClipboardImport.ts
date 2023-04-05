@@ -47,12 +47,7 @@ function batchRowUpdates<R>(func: (rows: R[]) => void, wait?: number) {
 }
 
 async function getTextFromClipboard(rootEl: HTMLElement) {
-  if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
-    return navigator.clipboard.readText();
-  }
-
   return new Promise<string>((resolve) => {
-    // Firefox does not support navigator.clipboard.readText
     const focusedCell = document.activeElement;
 
     const el = document.createElement('input');

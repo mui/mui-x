@@ -107,25 +107,16 @@ describe('<DataGridPremium /> - Clipboard', () => {
   });
 
   describe('paste', () => {
-    let readText: SinonStub;
-    const originalClipboard = navigator.clipboard;
-
-    beforeEach(function beforeEachHook() {
-      readText = stub().resolves();
-
-      Object.defineProperty(navigator, 'clipboard', {
-        value: { readText },
-        writable: true,
-      });
-    });
-
-    afterEach(function afterEachHook() {
-      Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
-    });
-
     function paste(cell: HTMLElement, pasteText: string) {
-      readText.returns(pasteText);
+      const pasteEvent = new Event('paste');
+
+      // @ts-ignore
+      pasteEvent.clipboardData = {
+        getData: () => pasteText,
+      };
+
       fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+      document.activeElement!.dispatchEvent(pasteEvent);
     }
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
