@@ -3,9 +3,11 @@ import barSeriesFormatter from '../BarChart/formatter';
 import scatterSeriesFormatter from '../ScatterChart/formatter';
 import lineSeriesFormatter from '../LineChart/formatter';
 import { AllSeriesType } from '../models/seriesType';
+import { defaultizeColor } from '../internals/defaultizeColor';
 
 export type SeriesContextProviderProps = {
   series: AllSeriesType[];
+  colors?: string[];
   children: React.ReactNode;
 };
 
@@ -27,17 +29,19 @@ const seriesTypeFormatter: { [type in AllSeriesType['type']]?: (series: any) => 
   },
 };
 
-const formatSeries = (series: AllSeriesType[]) => {
+const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
   // Group series by type
   const formattedSeries: FormattedSeries = {};
-  series.forEach(({ id, type, ...other }) => {
+  series.forEach((seriesData, seriesIndex: number) => {
+    const { id, type } = seriesData;
+
     if (formattedSeries[type] === undefined) {
       formattedSeries[type] = { series: {}, seriesOrder: [] };
     }
     if (formattedSeries[type]?.[id] !== undefined) {
       throw new Error(`MUI: series' id "${id}" is not unique`);
     }
-    formattedSeries[type].series[id] = { id, type, ...other };
+    formattedSeries[type].series[id] = defaultizeColor(seriesData, seriesIndex, colors);
     formattedSeries[type].seriesOrder.push(id);
   });
 
@@ -52,8 +56,8 @@ const formatSeries = (series: AllSeriesType[]) => {
   return formattedSeries;
 };
 
-export function SeriesContextProvider({ series, children }: SeriesContextProviderProps) {
-  const formattedSeries = React.useMemo(() => formatSeries(series), [series]);
+export function SeriesContextProvider({ series, colors, children }: SeriesContextProviderProps) {
+  const formattedSeries = React.useMemo(() => formatSeries(series, colors), [series, colors]);
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;
 }

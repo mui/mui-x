@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
-import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -64,7 +64,7 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<
         'Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2',
       );
     }
-    // Extract escaped section to avoid entending them
+    // Extract escaped section to avoid extending them
     const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
     return (
       format

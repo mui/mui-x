@@ -7,7 +7,7 @@ import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Tooltip } from '../Tooltip';
 
 export function BarChart(props: Omit<ChartContainerProps, 'children'>) {
-  const { xAxis, yAxis, series, width, height, margin } = props;
+  const { xAxis, yAxis, series, width, height, margin, colors } = props;
 
   return (
     <ChartContainer
@@ -17,6 +17,7 @@ export function BarChart(props: Omit<ChartContainerProps, 'children'>) {
       margin={margin}
       xAxis={xAxis}
       yAxis={yAxis}
+      colors={colors}
     >
       <BarPlot />
       <XAxis

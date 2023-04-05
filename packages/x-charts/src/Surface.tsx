@@ -1,3 +1,4 @@
+import { styled, SxProps, Theme } from '@mui/system';
 import * as React from 'react';
 import { isBandScale } from './hooks/useScale';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './constants';
@@ -19,6 +20,7 @@ export interface SurfaceProps {
   className?: string;
   title?: string;
   desc?: string;
+  sx?: SxProps<Theme>;
   children?: React.ReactNode;
 }
 
@@ -124,6 +126,11 @@ const useAxisEvents = (interactionApiRef: React.RefObject<any>) => {
   return { handleMouseOut, handleMouseMove };
 };
 
+const ChartSurfaceStyles = styled('svg', {
+  name: 'MuiChartsSurface',
+  slot: 'Root',
+})();
+
 export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Surface(
   props: SurfaceProps,
   ref,
@@ -134,7 +141,7 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
   const { handleMouseOut, handleMouseMove } = useAxisEvents(interactionApiRef);
 
   return (
-    <svg
+    <ChartSurfaceStyles
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
@@ -146,6 +153,6 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
       <title>{props.title}</title>
       <desc>{props.desc}</desc>
       {children}
-    </svg>
+    </ChartSurfaceStyles>
   );
 });

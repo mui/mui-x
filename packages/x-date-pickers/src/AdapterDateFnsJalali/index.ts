@@ -3,7 +3,7 @@ import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import getWeek from 'date-fns-jalali/getWeek';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year

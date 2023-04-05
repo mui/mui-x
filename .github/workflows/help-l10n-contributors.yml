@@ -1,0 +1,43 @@
+name: Provide help for l10n PR
+on:
+  pull_request:
+    types: opened
+    paths:
+      - '**/src/locales/**.ts'
+jobs:
+  help-provider:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Add tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["l10n"]
+            })
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@a35cf36e5301d70b76f316e867e7788a55a31dae
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body: |
+            Seems you are updating localization :earth_africa: files.
+
+            Thank you for contributing to the localization! :tada: To make your PR perfect, here is a list of elements to check: :heavy_check_mark:
+
+            - [ ] Verify if the PR title respects the release format. Here are two examples (depending if you update or add a locale file)
+              > [l10n] Improve Swedish (sv-SE) locale
+              > [l10n] Add Danish (da-DK) locale
+
+            - [ ] Update the documentation of supported locales by running `yarn l10n`
+            - [ ] Clean files with `yarn prettier`
+
+            If you are **adding** a new locale file, here are other specific steps:
+
+            - [ ] Verify that you have added an export line in `src/locales/index.ts` for the new locale.
+            - [ ] Run `yarn docs:api` which should add your new translation to the list of exported interfaces.

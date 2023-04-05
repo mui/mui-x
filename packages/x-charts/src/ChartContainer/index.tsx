@@ -1,24 +1,24 @@
 import * as React from 'react';
-import { DrawingProvider } from '../context/DrawingProvider';
+import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   SeriesContextProvider,
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { LayoutConfig } from '../models/layout';
-import { Surface } from '../Surface';
+import { Highlight } from '../Highlight';
+import { Surface, SurfaceProps } from '../Surface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import { Highlight } from '../Highlight';
 
-export type ChartContainerProps = LayoutConfig &
+export type ChartContainerProps = Omit<SurfaceProps, 'interactionApiRef'> &
   SeriesContextProviderProps &
+  Omit<DrawingProviderProps, 'svgRef'> &
   CartesianContextProviderProps;
 
 export function ChartContainer(props: ChartContainerProps) {
-  const { width, height, series, margin, xAxis, yAxis, children } = props;
+  const { width, height, series, margin, xAxis, yAxis, sx, title, desc, children } = props;
   const ref = React.useRef<SVGSVGElement>(null);
   const interactionApiRef = React.useRef<any>(null);
 
@@ -27,7 +27,15 @@ export function ChartContainer(props: ChartContainerProps) {
       <SeriesContextProvider series={series}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <InteractionProvider interactionApiRef={interactionApiRef}>
-            <Surface width={width} height={height} ref={ref} interactionApiRef={interactionApiRef}>
+            <Surface
+              width={width}
+              height={height}
+              ref={ref}
+              interactionApiRef={interactionApiRef}
+              sx={sx}
+              title={title}
+              desc={desc}
+            >
               <Highlight />
               {children}
             </Surface>

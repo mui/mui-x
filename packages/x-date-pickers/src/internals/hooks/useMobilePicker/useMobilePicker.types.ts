@@ -1,7 +1,6 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
-import { MuiPickersAdapter } from '../../models';
 import {
   BaseNonStaticPickerProps,
   BasePickerProps,
@@ -12,7 +11,12 @@ import {
   PickersModalDialogSlotsComponentsProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseSingleInputFieldProps, FieldSection, DateOrTimeView } from '../../../models';
+import {
+  BaseSingleInputFieldProps,
+  FieldSection,
+  DateOrTimeView,
+  MuiPickersAdapter,
+} from '../../../models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,

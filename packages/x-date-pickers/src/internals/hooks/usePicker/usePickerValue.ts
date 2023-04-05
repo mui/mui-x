@@ -7,8 +7,7 @@ import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
-import { MuiPickersAdapter } from '../../models/muiPickersAdapter';
-import { FieldSection, FieldSelectedSections } from '../../../models';
+import { FieldSection, FieldSelectedSections, MuiPickersAdapter } from '../../../models';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**

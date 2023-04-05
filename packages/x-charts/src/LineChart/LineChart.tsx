@@ -5,8 +5,8 @@ import { YAxis } from '../YAxis/YAxis';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 
-export function LineChart(props: Omit<ChartContainerProps, 'children'>) {
-  const { xAxis, yAxis, series, width, height, margin } = props;
+export function LineChart(props: ChartContainerProps) {
+  const { xAxis, yAxis, series, width, height, margin, colors, sx, children } = props;
 
   return (
     <ChartContainer
@@ -16,6 +16,8 @@ export function LineChart(props: Omit<ChartContainerProps, 'children'>) {
       margin={margin}
       xAxis={xAxis}
       yAxis={yAxis}
+      colors={colors}
+      sx={sx}
     >
       <LinePlot />
       <XAxis
@@ -34,6 +36,7 @@ export function LineChart(props: Omit<ChartContainerProps, 'children'>) {
         position="right"
         axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
       />
+      {children}
     </ChartContainer>
   );
 }

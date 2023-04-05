@@ -7,7 +7,7 @@ import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Tooltip } from '../Tooltip';
 
 export function ScatterChart(props: Omit<ChartContainerProps, 'children'>) {
-  const { xAxis, yAxis, series, width, height, margin } = props;
+  const { xAxis, yAxis, series, width, height, margin, colors } = props;
 
   return (
     <ChartContainer
@@ -15,6 +15,7 @@ export function ScatterChart(props: Omit<ChartContainerProps, 'children'>) {
       width={width}
       height={height}
       margin={margin}
+      colors={colors}
       xAxis={xAxis}
       yAxis={yAxis}
     >
