@@ -1,4 +1,6 @@
-<ThemeProvider theme={theme}>
+<ThemeProvider
+  theme={(theme: Theme) => createTheme({ ...theme, direction: 'rtl' })}
+>
   <div dir="rtl">
     <LocalizationProvider dateAdapter={AdapterMomentHijri}>
       <DateTimePicker

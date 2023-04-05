@@ -902,7 +902,7 @@ export const getSectionOrder = (
       (section, index) =>
         index >= groupedSectionsStart &&
         section.endSeparator?.includes(' ') &&
-        // Special case where the spaces were nto there in the initial input
+        // Special case where the spaces were not there in the initial input
         section.endSeparator !== ' / ',
     );
     if (groupedSectionsEnd === -1) {
