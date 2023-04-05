@@ -12,10 +12,13 @@ import {
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
 
-export type ChartContainerProps = Omit<SurfaceProps, 'interactionApiRef'> &
-  SeriesContextProviderProps &
-  Omit<DrawingProviderProps, 'svgRef'> &
-  CartesianContextProviderProps;
+export type ChartContainerProps = Omit<
+  Omit<SurfaceProps, 'interactionApiRef'> &
+    SeriesContextProviderProps &
+    Omit<DrawingProviderProps, 'svgRef'> &
+    CartesianContextProviderProps,
+  'children'
+> & { children?: React.ReactNode };
 
 export function ChartContainer(props: ChartContainerProps) {
   const { width, height, series, margin, xAxis, yAxis, sx, title, desc, children } = props;
