@@ -1,4 +1,5 @@
-import { CartesianSeriesType, CommonSeriesType } from './common';
+import { DefaultizedProps } from '../helpers';
+import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
 
 export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
   type: 'line';
@@ -6,3 +7,7 @@ export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
   stack?: string;
   area?: any;
 }
+
+export interface DefaultizedLineSeriesType
+  extends DefaultizedProps<LineSeriesType, 'xAxisKey' | 'yAxisKey'>,
+    DefaultizedCommonSeriesType {}
