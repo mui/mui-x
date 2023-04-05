@@ -27,7 +27,7 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Keresés…',
-  toolbarQuickFilterLabel: 'Keresls',
+  toolbarQuickFilterLabel: 'Keresés',
   toolbarQuickFilterDeleteIconLabel: 'Törlés',
 
   // Export selector toolbar button text
