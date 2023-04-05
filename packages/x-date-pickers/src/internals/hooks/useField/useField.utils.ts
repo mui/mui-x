@@ -898,7 +898,11 @@ export const getSectionOrder = (
   while (RTLIndex >= 0) {
     groupedSectionsEnd = sections.findIndex(
       // eslint-disable-next-line @typescript-eslint/no-loop-func
-      (section, index) => index >= groupedSectionsStart && section.endSeparator?.includes(' '),
+      (section, index) =>
+        index >= groupedSectionsStart &&
+        section.endSeparator?.includes(' ') &&
+        // Special case where the spaces were not there in the initial input
+        section.endSeparator !== ' / ',
     );
     if (groupedSectionsEnd === -1) {
       groupedSectionsEnd = sections.length - 1;
