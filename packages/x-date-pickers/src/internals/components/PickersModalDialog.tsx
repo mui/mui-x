@@ -94,6 +94,7 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
     <Dialog
       open={open}
       onClose={onDismiss}
+      {...slotProps?.dialog}
       {...componentsProps?.dialog}
       TransitionComponent={Transition}
       TransitionProps={slotProps?.mobileTransition ?? componentsProps?.mobileTransition}
