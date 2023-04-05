@@ -13,7 +13,7 @@ const timeViews = {
 const csCZPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Další měsíc',
-  nextMonth: 'Předchozí month',
+  nextMonth: ' month',
 
   // View navigation
   openPreviousView: 'otevřít předchozí zobrazení',
