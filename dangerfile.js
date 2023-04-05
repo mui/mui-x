@@ -87,6 +87,8 @@ function addL10nHelpMessage() {
   }
   markdown(
     [
+      '## Localization writing tips :writing_hand:',
+      '',
       'Seems you are updating localization :earth_africa: files.',
       '',
       'Thank you for contributing to the localization! :tada: To make your PR perfect, here is a list of elements to check: :heavy_check_mark:',
@@ -101,13 +103,14 @@ function addL10nHelpMessage() {
           ]
         : []),
       '- [ ] Clean files with `yarn prettier`.',
+      '',
     ].join('\n'),
   );
 }
 
 async function run() {
-  addDeployPreviewUrls();
   addL10nHelpMessage();
+  addDeployPreviewUrls();
 
   switch (dangerCommand) {
     case 'reportPerformance':
