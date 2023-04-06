@@ -22,7 +22,7 @@ import { gridExpandedSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
-import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
@@ -110,8 +110,6 @@ export const useGridRowSelection = (
     checkboxSelection,
     disableMultipleRowSelection,
     disableRowSelectionOnClick,
-    pagination,
-    paginationMode,
     isRowSelectable: propIsRowSelectable,
   } = props;
 
