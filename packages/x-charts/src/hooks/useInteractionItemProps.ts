@@ -15,7 +15,7 @@ export const useInteractionItemProps = () => {
       });
     };
     const onMouseLeave = () => {
-      dispatch({ type: 'enterItem', data });
+      dispatch({ type: 'leaveItem', data });
     };
     return {
       onMouseEnter,

@@ -129,7 +129,7 @@ const useAxisEvents = (interactionApiRef: React.RefObject<any>) => {
 const ChartSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})();
+})(() => ({}));
 
 export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Surface(
   props: SurfaceProps,

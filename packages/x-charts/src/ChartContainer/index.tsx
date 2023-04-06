@@ -11,6 +11,7 @@ import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
+import { Tooltip } from '../Tooltip';
 
 export type ChartContainerProps = Omit<
   Omit<SurfaceProps, 'interactionApiRef'> &
@@ -42,6 +43,7 @@ export function ChartContainer(props: ChartContainerProps) {
               <Highlight />
               {children}
             </Surface>
+            <Tooltip trigger="item" />
           </InteractionProvider>
         </CartesianContextProvider>
       </SeriesContextProvider>

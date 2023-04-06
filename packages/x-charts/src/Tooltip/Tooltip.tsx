@@ -86,12 +86,15 @@ export function Tooltip(props: TooltipProps) {
   const displayedData = trigger === 'item' ? item : axis;
   const popperOpen = displayedData !== null;
 
+  if (!popperOpen) {
+    return null;
+  }
   return (
     <Popper
       open={popperOpen}
       placement="right-start"
       anchorEl={(displayedData && (displayedData as any).target) || svgRef.current}
-      style={{ padding: '16px', pointerEvents: 'none', top: 0, left: 0, width: 200, height: 500 }}
+      style={{ padding: '16px', pointerEvents: 'none' }}
     >
       <Paper>
         {trigger === 'item' ? (
