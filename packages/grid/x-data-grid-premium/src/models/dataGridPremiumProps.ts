@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridCallbackDetails, GridValidRowModel, GridGroupNode } from '@mui/x-data-grid-pro';
+import {
+  GridCallbackDetails,
+  GridValidRowModel,
+  GridGroupNode,
+  GridEventListener,
+} from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
@@ -170,4 +175,12 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {string} inProgress Indicates if the task is in progress.
    */
   onExcelExportStateChange?: (inProgress: 'pending' | 'finished') => void;
+  /**
+   * Callback fired when the clipboard paste operation starts.
+   */
+  onClipboardPasteStart?: GridEventListener<'clipboardPasteStart'>;
+  /**
+   * Callback fired when the clipboard paste operation ends.
+   */
+  onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd'>;
 }

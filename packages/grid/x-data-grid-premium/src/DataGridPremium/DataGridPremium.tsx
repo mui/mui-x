@@ -518,6 +518,19 @@ DataGridPremiumRaw.propTypes = {
    */
   onCellModesModelChange: PropTypes.func,
   /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy: PropTypes.func,
+  /**
+   * Callback fired when the clipboard paste operation ends.
+   */
+  onClipboardPasteEnd: PropTypes.func,
+  /**
+   * Callback fired when the clipboard paste operation starts.
+   */
+  onClipboardPasteStart: PropTypes.func,
+  /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.

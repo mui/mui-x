@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  GridValidRowModel,
-  useGridApiRef,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridValidRowModel } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 
@@ -212,20 +208,6 @@ export default function ClipboardPastePersistence() {
   const { data, updateRow } = useSessionStorageData();
   const [loading, setLoading] = React.useState(false);
 
-  const apiRef = useGridApiRef();
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent('clipboardPasteStart', () => {
-      setLoading(true);
-    });
-  }, [apiRef]);
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent('clipboardPasteEnd', () => {
-      setLoading(false);
-    });
-  }, [apiRef]);
-
   return (
     <div style={{ width: '100%' }}>
       <Button sx={{ mb: 2 }} onClick={() => setRowSelection(!rowSelection)}>
@@ -233,7 +215,6 @@ export default function ClipboardPastePersistence() {
       </Button>
       <div style={{ height: 400 }}>
         <DataGridPremium
-          apiRef={apiRef}
           loading={loading}
           rowSelection={rowSelection}
           checkboxSelection={rowSelection}
@@ -243,6 +224,8 @@ export default function ClipboardPastePersistence() {
             updateRow(newRow);
             return newRow;
           }}
+          onClipboardPasteStart={() => setLoading(true)}
+          onClipboardPasteEnd={() => setLoading(false)}
           unstable_enableClipboardPaste
           experimentalFeatures={{ ignoreValueFormatterDuringExport: true }}
         />

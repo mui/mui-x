@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridClipboardApi } from '../../../models/api';
-import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
+import { useGridApiMethod, useGridApiOptionHandler, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -60,7 +60,7 @@ function hasNativeSelection(element: HTMLInputElement) {
  */
 export const useGridClipboard = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'experimentalFeatures'>,
+  props: Pick<DataGridProcessedProps, 'experimentalFeatures' | 'onClipboardCopy'>,
 ): void => {
   const ignoreValueFormatterFlag = props.experimentalFeatures?.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
@@ -134,4 +134,6 @@ export const useGridClipboard = (
   };
 
   useGridApiMethod(apiRef, clipboardApi, 'public');
+
+  useGridApiOptionHandler(apiRef, 'clipboardCopy', props.onClipboardCopy);
 };

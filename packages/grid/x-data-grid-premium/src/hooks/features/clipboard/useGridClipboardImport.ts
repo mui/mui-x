@@ -9,6 +9,7 @@ import {
   gridVisibleColumnFieldsSelector,
   useGridNativeEventListener,
   GridRowModel,
+  useGridApiOptionHandler,
 } from '@mui/x-data-grid';
 import { buildWarning, getRowIdFromRowModel, getVisibleRows } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
@@ -258,6 +259,8 @@ export const useGridClipboardImport = (
     | 'onProcessRowUpdateError'
     | 'getRowId'
     | 'unstable_enableClipboardPaste'
+    | 'onClipboardPasteStart'
+    | 'onClipboardPasteEnd'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
@@ -415,4 +418,7 @@ export const useGridClipboardImport = (
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
+
+  useGridApiOptionHandler(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
+  useGridApiOptionHandler(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
 };
