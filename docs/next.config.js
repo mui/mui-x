@@ -12,16 +12,16 @@ const workspaceRoot = path.join(__dirname, '../');
 
 module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-  assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
+  assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
     ENABLE_AD: process.env.ENABLE_AD,
     LIB_VERSION: pkg.version,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
-    SLACK_FEEDBACKS_TOKEN: process.env.SLACK_FEEDBACKS_TOKEN,
+    CONTEXT: process.env.CONTEXT,
     // #default-branch-switch
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/next',
+    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },

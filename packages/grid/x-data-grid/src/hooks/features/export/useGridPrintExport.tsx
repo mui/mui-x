@@ -3,7 +3,7 @@ import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
@@ -38,6 +38,15 @@ type PrintWindowOnLoad = (
   >,
 ) => void;
 
+function buildPrintWindow(title?: string): HTMLIFrameElement {
+  const iframeEl = document.createElement('iframe');
+  iframeEl.style.position = 'absolute';
+  iframeEl.style.width = '0px';
+  iframeEl.style.height = '0px';
+  iframeEl.title = title || document.title;
+  return iframeEl;
+}
+
 /**
  * @requires useGridColumns (state)
  * @requires useGridFilter (state)
@@ -46,7 +55,7 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'headerHeight'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
@@ -86,18 +95,6 @@ export const useGridPrintExport = (
     [apiRef],
   );
 
-  // TODO move outside of this scope and remove React.useCallback
-  const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
-    const iframeEl = document.createElement('iframe');
-
-    iframeEl.style.position = 'absolute';
-    iframeEl.style.width = '0px';
-    iframeEl.style.height = '0px';
-    iframeEl.title = title || document.title;
-
-    return iframeEl;
-  }, []);
-
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
     (printWindow, options): void => {
       const normalizeOptions = {
@@ -117,18 +114,13 @@ export const useGridPrintExport = (
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
       const gridClone = gridRootElement!.cloneNode(true) as HTMLElement;
-      const gridCloneViewport: HTMLElement | null = gridClone.querySelector(
-        `.${gridClasses.virtualScroller}`,
-      );
-      // Expand the viewport window to prevent clipping
-      gridCloneViewport!.style.height = 'auto';
-      gridCloneViewport!.style.width = 'auto';
-      gridCloneViewport!.parentElement!.style.width = 'auto';
-      gridCloneViewport!.parentElement!.style.height = 'auto';
 
       // Allow to overflow to not hide the border of the last row
       const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
       gridMain!.style.overflow = 'visible';
+
+      // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
+      gridClone!.style.contain = 'size';
 
       const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
       const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
@@ -137,9 +129,11 @@ export const useGridPrintExport = (
       columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =
-        gridRootElement!.querySelector(`.${gridClasses.toolbarContainer}`)?.clientHeight || 0;
+        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.toolbarContainer}`)
+          ?.offsetHeight || 0;
       let gridFooterElementHeight =
-        gridRootElement!.querySelector(`.${gridClasses.footerContainer}`)?.clientHeight || 0;
+        gridRootElement!.querySelector<HTMLElement>(`.${gridClasses.footerContainer}`)
+          ?.offsetHeight || 0;
 
       if (normalizeOptions.hideToolbar) {
         gridClone.querySelector(`.${gridClasses.toolbarContainer}`)?.remove();
@@ -154,10 +148,12 @@ export const useGridPrintExport = (
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
         rowsMeta.currentPageTotalHeight +
-        getTotalHeaderHeight(apiRef, props.headerHeight) +
+        getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
         gridToolbarElementHeight +
         gridFooterElementHeight
       }px`;
+      // The height above does not include grid border width, so we need to exclude it
+      gridClone.style.boxSizing = 'content-box';
 
       // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
       // prevents us to do it
@@ -222,7 +218,7 @@ export const useGridPrintExport = (
         printWindow.contentWindow!.print();
       }
     },
-    [apiRef, doc, props.headerHeight],
+    [apiRef, doc, props.columnHeaderHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(
@@ -259,7 +255,7 @@ export const useGridPrintExport = (
       previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
 
       if (props.pagination) {
-        const visibleRowCount = gridVisibleRowCountSelector(apiRef);
+        const visibleRowCount = gridExpandedRowCountSelector(apiRef);
         apiRef.current.setPageSize(visibleRowCount);
       }
 
@@ -275,9 +271,14 @@ export const useGridPrintExport = (
       } else {
         printWindow.onload = () => {
           handlePrintWindowLoad(printWindow, options);
-          printWindow.contentWindow!.onafterprint = () => {
-            handlePrintWindowAfterPrint(printWindow);
-          };
+
+          const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
+          mediaQueryList.addEventListener('change', (mql) => {
+            const isAfterPrint = mql.matches === false;
+            if (isAfterPrint) {
+              handlePrintWindowAfterPrint(printWindow);
+            }
+          });
         };
         doc.current!.body.appendChild(printWindow);
       }
@@ -286,7 +287,6 @@ export const useGridPrintExport = (
       props,
       logger,
       apiRef,
-      buildPrintWindow,
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,
       updateGridColumnsForPrint,

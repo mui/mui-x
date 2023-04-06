@@ -9,7 +9,7 @@ import {
   unstable_useControlled as useControlled,
 } from '@mui/utils';
 import clsx from 'clsx';
-import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
+import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
@@ -27,6 +27,7 @@ import {
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface DayCalendarSlotsComponent<TDate> {
   /**
@@ -45,10 +46,9 @@ export interface DayCalendarSlotsComponentsProps<TDate> {
   >;
 }
 
-export interface ExportedDayCalendarProps<TDate>
-  extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
+export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -79,11 +79,12 @@ export interface ExportedDayCalendarProps<TDate>
 }
 
 export interface DayCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>> {
+    Required<BaseDateValidationProps<TDate>>,
+    SlotsAndSlotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
@@ -102,8 +103,6 @@ export interface DayCalendarProps<TDate>
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
   classes?: Partial<DayCalendarClasses>;
-  components?: DayCalendarSlotsComponent<TDate>;
-  componentsProps?: DayCalendarSlotsComponentsProps<TDate>;
 }
 
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
@@ -223,13 +222,10 @@ function WrappedDay<TDate extends unknown>({
   day,
   focusableDay,
   selectedDays,
-  onFocus,
-  onBlur,
-  onKeyDown,
-  onDaySelect,
   isDateDisabled,
   currentMonthNumber,
   isViewFocused,
+  ...other
 }: Pick<PickersDayProps<TDate>, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
   parentProps: DayCalendarProps<TDate>;
   day: TDate;
@@ -249,28 +245,27 @@ function WrappedDay<TDate extends unknown>({
     showDaysOutsideCurrentMonth,
     components,
     componentsProps,
+    slots,
+    slotProps,
   } = parentProps;
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
   const isToday = utils.isSameDay(day, now);
 
-  const Day = components?.Day ?? PickersDay;
+  const Day = slots?.day ?? components?.Day ?? PickersDay;
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
-    externalSlotProps: componentsProps?.day,
+    externalSlotProps: slotProps?.day ?? componentsProps?.day,
     additionalProps: {
       disableHighlightToday,
-      onKeyDown,
-      onFocus,
-      onBlur,
-      onDaySelect,
       showDaysOutsideCurrentMonth,
       role: 'gridcell',
       isAnimating: isMonthSwitchingAnimating,
       // it is used in date range dragging logic by accessing `dataset.timestamp`
       'data-timestamp': utils.toJsDate(day).valueOf(),
+      ...other,
     },
     ownerState: { ...parentProps, day, selected: isSelected },
   });
@@ -280,6 +275,27 @@ function WrappedDay<TDate extends unknown>({
     [disabled, isDateDisabled, day],
   );
 
+  const outsideCurrentMonth = React.useMemo(
+    () => utils.getMonth(day) !== currentMonthNumber,
+    [utils, day, currentMonthNumber],
+  );
+
+  const isFirstVisibleCell = React.useMemo(() => {
+    const startOfMonth = utils.startOfMonth(utils.setMonth(day, currentMonthNumber));
+    if (!showDaysOutsideCurrentMonth) {
+      return utils.isSameDay(day, startOfMonth);
+    }
+    return utils.isSameDay(day, utils.startOfWeek(startOfMonth));
+  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, utils]);
+
+  const isLastVisibleCell = React.useMemo(() => {
+    const endOfMonth = utils.endOfMonth(utils.setMonth(day, currentMonthNumber));
+    if (!showDaysOutsideCurrentMonth) {
+      return utils.isSameDay(day, endOfMonth);
+    }
+    return utils.isSameDay(day, utils.endOfWeek(endOfMonth));
+  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, utils]);
+
   return (
     <Day
       {...dayProps}
@@ -287,7 +303,9 @@ function WrappedDay<TDate extends unknown>({
       disabled={isDisabled}
       autoFocus={isViewFocused && isFocusableDay}
       today={isToday}
-      outsideCurrentMonth={utils.getMonth(day) !== currentMonthNumber}
+      outsideCurrentMonth={outsideCurrentMonth}
+      isFirstVisibleCell={isFirstVisibleCell}
+      isLastVisibleCell={isLastVisibleCell}
       selected={isSelected}
       tabIndex={isFocusableDay ? 0 : -1}
       aria-selected={isSelected}
@@ -563,11 +581,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             role="rowgroup"
             className={classes.monthContainer}
           >
-            {weeksToDisplay.map((week) => (
+            {weeksToDisplay.map((week, index) => (
               <PickersCalendarWeek
                 role="row"
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
+                // fix issue of announcing row 1 as row 2
+                // caused by week day labels row
+                aria-rowindex={index + 1}
               >
                 {displayWeekNumber && (
                   <PickersCalendarWeekNumber
@@ -580,7 +601,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     {localeText.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
                   </PickersCalendarWeekNumber>
                 )}
-                {week.map((day) => (
+                {week.map((day, dayIndex) => (
                   <WrappedDay
                     key={(day as any).toString()}
                     parentProps={props}
@@ -594,6 +615,8 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
                     isViewFocused={internalHasFocus}
+                    // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
+                    aria-colindex={dayIndex + 1}
                   />
                 ))}
               </PickersCalendarWeek>

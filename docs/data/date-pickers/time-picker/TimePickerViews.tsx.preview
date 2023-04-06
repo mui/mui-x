@@ -1,15 +1,10 @@
-<NextTimePicker
+<MobileTimePicker
   label={'"hours", "minutes" and "seconds"'}
-  defaultValue={dayjs('2022-04-07T15:30:25')}
   views={['hours', 'minutes', 'seconds']}
 />
-<NextTimePicker
-  label={'"hours"'}
-  defaultValue={dayjs('2022-04-07T15:30:25')}
-  views={['hours']}
-/>
-<NextTimePicker
+<MobileTimePicker label={'"hours"'} views={['hours']} />
+<MobileTimePicker
   label={'"minutes" and "seconds"'}
-  defaultValue={dayjs('2022-04-07T15:30:25')}
   views={['minutes', 'seconds']}
+  format="mm:ss"
 />

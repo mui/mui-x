@@ -16,7 +16,7 @@ import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
-import { LicenseInfo } from '@mui/x-data-grid-pro';
+import { LicenseInfo } from '@mui/x-license-pro';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
@@ -24,7 +24,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
     // #default-branch-switch with latest for the master branch
-    return 'next';
+    return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -202,8 +202,6 @@ function AppWrapper(props) {
     }
   }, []);
 
-  const activePage = findActivePage(pages, router.pathname);
-
   let fonts = [];
   if (router.pathname.match(/onepirate/)) {
     fonts = [
@@ -211,7 +209,15 @@ function AppWrapper(props) {
     ];
   }
 
-  const pageContextValue = React.useMemo(() => ({ activePage, pages }), [activePage]);
+  const pageContextValue = React.useMemo(() => {
+    const { activePage, activePageParents } = findActivePage(pages, router.pathname);
+
+    return { activePage, activePageParents, pages };
+  }, [router.pathname]);
+
+  // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
+  // Fixes playground styles in dark mode.
+  const ThemeWrapper = router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
 
   return (
     <React.Fragment>
@@ -224,12 +230,12 @@ function AppWrapper(props) {
         <CodeCopyProvider>
           <CodeVariantProvider>
             <PageContext.Provider value={pageContextValue}>
-              <ThemeProvider>
+              <ThemeWrapper>
                 <DocsStyledEngineProvider cacheLtr={emotionCache}>
                   {children}
                   <GoogleAnalytics />
                 </DocsStyledEngineProvider>
-              </ThemeProvider>
+              </ThemeWrapper>
             </PageContext.Provider>
           </CodeVariantProvider>
         </CodeCopyProvider>

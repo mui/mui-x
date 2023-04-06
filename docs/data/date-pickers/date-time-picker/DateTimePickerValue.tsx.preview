@@ -1,8 +1,8 @@
-<NextDateTimePicker
+<DateTimePicker
   label="Uncontrolled picker"
-  defaultValue={dayjs('2022-04-07T15:30')}
+  defaultValue={dayjs('2022-04-17T15:30')}
 />
-<NextDateTimePicker
+<DateTimePicker
   label="Controlled picker"
   value={value}
   onChange={(newValue) => setValue(newValue)}

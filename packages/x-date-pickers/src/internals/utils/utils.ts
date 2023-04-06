@@ -12,7 +12,7 @@ export function arrayIncludes<T>(array: T[] | readonly T[], itemOrItems: T | T[]
 export const onSpaceOrEnter =
   (
     innerFn: (ev: React.MouseEvent<any> | React.KeyboardEvent<any>) => void,
-    onFocus?: (event: React.KeyboardEvent<any>) => void,
+    externalEvent?: (event: React.KeyboardEvent<any>) => void,
   ) =>
   (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -23,8 +23,8 @@ export const onSpaceOrEnter =
       event.stopPropagation();
     }
 
-    if (onFocus) {
-      onFocus(event);
+    if (externalEvent) {
+      externalEvent(event);
     }
   };
 
@@ -46,3 +46,5 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
 
   return activeEl;
 };
+
+export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';

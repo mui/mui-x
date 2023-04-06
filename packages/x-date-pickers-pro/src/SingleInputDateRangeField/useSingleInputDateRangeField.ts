@@ -46,12 +46,13 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    unstableFieldRef,
     ...other
   } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
-    forwardedProps: other as unknown as TChildProps,
+    forwardedProps: other as Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TDate>>,
     internalProps: {
       value,
       defaultValue,
@@ -66,10 +67,11 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      unstableFieldRef,
     },
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
     validator: validateDateRange,
-    supportedDateSections: ['year', 'month', 'day'],
+    valueType: 'date',
   });
 };

@@ -17,7 +17,7 @@ import type {
   GridTabIndexState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
-import type { GridEditRowsModel } from './gridEditRowModel';
+import type { GridEditingState } from './gridEditRowModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
 
 /**
@@ -26,7 +26,7 @@ import type { GridRowSelectionModel } from './gridRowSelectionModel';
 export interface GridStateCommunity {
   rows: GridRowsState;
   rowsMeta: GridRowsMetaState;
-  editRows: GridEditRowsModel;
+  editRows: GridEditingState;
   pagination: GridPaginationState;
   columns: GridColumnsState;
   columnGrouping: GridColumnsGroupingState;
@@ -38,7 +38,6 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  error?: any;
 }
 
 /**

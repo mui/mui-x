@@ -24,7 +24,10 @@ const getApplyFilterFnSameYear = (value: string) => {
     return null;
   }
   return (params: GridCellParams): boolean => {
-    return params.value.getFullYear() === Number(value);
+    if (params.value instanceof Date) {
+      return params.value.getFullYear() === Number(value);
+    }
+    return false;
   };
 };
 
@@ -63,7 +66,7 @@ export default function QuickFilteringCustomLogic() {
       <DataGrid
         {...data}
         columns={columns}
-        components={{ Toolbar: QuickSearchToolbar }}
+        slots={{ toolbar: QuickSearchToolbar }}
       />
     </Box>
   );

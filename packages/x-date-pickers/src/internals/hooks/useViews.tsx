@@ -1,9 +1,8 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useControlled as useControlled } from '@mui/utils';
-import { arrayIncludes } from '../utils/utils';
-import { PickerSelectionState } from './usePickerState';
-import { DateOrTimeView } from '../models';
+import type { PickerSelectionState } from './usePicker';
+import { DateOrTimeView } from '../../models';
 import { MakeOptional } from '../models/helpers';
 
 export type PickerOnChangeFn<TDate> = (
@@ -73,6 +72,7 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeView> {
   setFocusedView: (view: TView, hasFocus: boolean) => void;
   nextView: TView | null;
   previousView: TView | null;
+  defaultView: TView;
   goToNextView: () => void;
   setValueAndGoToNextView: (
     value: TValue,
@@ -110,7 +110,9 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     }
   }
 
-  const defaultView = React.useRef(arrayIncludes(views, openTo) ? openTo : views[0]);
+  const previousOpenTo = React.useRef(openTo);
+  const previousViews = React.useRef(views);
+  const defaultView = React.useRef(views.includes(openTo!) ? openTo! : views[0]);
   const [view, setView] = useControlled({
     name: 'useViews',
     state: 'view',
@@ -125,6 +127,17 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     controlled: inFocusedView,
     default: defaultFocusedView.current,
   });
+
+  React.useEffect(() => {
+    // Update the current view when `openTo` or `views` props change
+    if (
+      (previousOpenTo.current && previousOpenTo.current !== openTo) ||
+      (previousViews.current &&
+        previousViews.current.some((previousView) => !views.includes(previousView)))
+    ) {
+      setView(views.includes(openTo!) ? openTo! : views[0]);
+    }
+  }, [openTo, setView, view, views]);
 
   const viewIndex = views.indexOf(view);
   const previousView: TView | null = views[viewIndex - 1] ?? null;
@@ -161,10 +174,12 @@ export function useViews<TValue, TView extends DateOrTimeView>({
 
   const handleFocusedViewChange = useEventCallback((viewToFocus: TView, hasFocus: boolean) => {
     if (hasFocus) {
+      // Focus event
       setFocusedView(viewToFocus);
     } else {
-      setFocusedView((prevFocusedView) =>
-        viewToFocus === prevFocusedView ? null : prevFocusedView,
+      // Blur event
+      setFocusedView(
+        (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view switching
       );
     }
 
@@ -178,6 +193,7 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     setFocusedView: handleFocusedViewChange,
     nextView,
     previousView,
+    defaultView: defaultView.current,
     goToNextView,
     setValueAndGoToNextView,
   };

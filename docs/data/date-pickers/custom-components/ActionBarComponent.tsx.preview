@@ -1,11 +1,9 @@
 <StaticDatePicker
-  onChange={(newValue) => setValue(newValue)}
-  value={value}
-  renderInput={(params) => <TextField {...params} />}
-  components={{
-    ActionBar: CustomActionBar,
+  defaultValue={dayjs('2022-04-17')}
+  slots={{
+    actionBar: CustomActionBar,
   }}
-  componentsProps={{
+  slotProps={{
     actionBar: {
       actions: ['today'],
     },

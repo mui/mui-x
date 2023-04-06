@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
@@ -17,7 +17,7 @@ import {
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateView } from '@mui/x-date-pickers';
+import { DateView } from '@mui/x-date-pickers/models';
 
 function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -58,13 +58,14 @@ function RestaurantHeader() {
   );
 }
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) {
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   return (
     <PickersLayoutRoot
       ownerState={props}
       sx={{
+        overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,
@@ -88,10 +89,10 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
 export default function AddComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
-        components={{
-          Layout: CustomLayout,
-          ActionBar: ActionList,
+      <StaticDatePicker
+        slots={{
+          layout: CustomLayout,
+          actionBar: ActionList,
         }}
       />
     </LocalizationProvider>

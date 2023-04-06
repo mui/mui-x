@@ -43,17 +43,19 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     minTime,
     maxTime,
     minutesStep,
+    shouldDisableClock,
     shouldDisableTime,
     disableIgnoringDatePartForTimeValidation,
     selectedSections,
     onSelectedSectionsChange,
     ampm,
+    unstableFieldRef,
     ...other
   } = useDefaultizedTimeField<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
-    forwardedProps: other as unknown as TChildProps,
+    forwardedProps: other as Omit<TChildProps, keyof UseTimeFieldProps<TDate>>,
     internalProps: {
       value,
       defaultValue,
@@ -66,15 +68,17 @@ export const useTimeField = <TDate, TChildProps extends {}>({
       minTime,
       maxTime,
       minutesStep,
+      shouldDisableClock,
       shouldDisableTime,
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
       ampm,
+      unstableFieldRef,
     },
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateTime,
-    supportedDateSections: ['hours', 'minutes', 'seconds', 'meridiem'],
+    valueType: 'time',
   });
 };

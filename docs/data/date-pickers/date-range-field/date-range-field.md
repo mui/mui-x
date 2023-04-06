@@ -6,14 +6,9 @@ githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Range Field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Date Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-<p class="description">The Date Range Field let the user select a date range with the keyboard.</p>
-
-:::warning
-This component is unstable.
-It might receive breaking changes on its props to have the best component possible by the time of the stable release.
-:::
+<p class="description">The Date Range Field components let the user select a date range with the keyboard.</p>
 
 ## Basic usage
 
@@ -28,6 +23,6 @@ All the topics covered below are applicable to both `SingleInputDateRangeField` 
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The component can be uncontrolled or controlled.
 
 {{"demo": "DateRangeFieldValue.js"}}

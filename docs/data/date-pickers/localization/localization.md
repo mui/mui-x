@@ -30,7 +30,7 @@ you just have to import the locale from `@mui/x-date-pikers` (see the [list of s
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { deDE } from '@mui/x-date-pickers';
+import { deDE } from '@mui/x-date-pickers/locales';
 
 const theme = createTheme(
   {
@@ -53,7 +53,7 @@ If you are already using the [translations of the core components](/material-ui/
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { deDE as dataGridDeDE } from '@mui/x-data-grid';
 import { deDE as coreDeDE } from '@mui/material/locale';
-import { deDE } from '@mui/x-date-pickers';
+import { deDE } from '@mui/x-date-pickers/locales';
 
 const theme = createTheme(
   {
@@ -77,7 +77,9 @@ If you want to pass language translations without using `createTheme` and `Theme
 you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
-import { LocalizationProvider, deDE, DatePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { deDE } from '@mui/x-date-pickers/locales';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 <LocalizationProvider
   localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}

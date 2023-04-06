@@ -7,7 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { INCOTERM_OPTIONS } from '../services/static-data';
 
-function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
+function EditIncoterm(props: GridRenderEditCellParams<any, string | null>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -57,6 +57,6 @@ function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
   );
 }
 
-export function renderEditIncoterm(params: GridRenderEditCellParams<string | null>) {
+export function renderEditIncoterm(params: GridRenderEditCellParams<any, string | null>) {
   return <EditIncoterm {...params} />;
 }

@@ -38,15 +38,15 @@ export default function DisableMultiFiltersDataGridPro() {
         (colDef) => colDef.filterable && !filteredFields.includes(colDef.field),
       )
       .find((colDef) => colDef.filterOperators?.length);
-    return columnForNewFilter?.field;
+    return columnForNewFilter?.field ?? null;
   };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,

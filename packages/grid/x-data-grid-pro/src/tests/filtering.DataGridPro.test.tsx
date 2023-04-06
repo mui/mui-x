@@ -3,7 +3,7 @@ import {
   GridApi,
   DataGridProProps,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridPreferencePanelsValue,
   GridRowModel,
   SUBMIT_FILTER_STROKE_TIME,
@@ -12,8 +12,8 @@ import {
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
   GridToolbar,
+  gridExpandedSortedRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -89,7 +89,7 @@ describe('<DataGridPro /> - Filter', () => {
       const columnForNewFilter = columns
         .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
         .find((colDef) => colDef.filterOperators?.length);
-      return columnForNewFilter?.field;
+      return columnForNewFilter?.field ?? null;
     };
 
     render(
@@ -137,7 +137,6 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    // TODO: Debug two calls each filter
     expect(getColumnForNewFilter.callCount).to.equal(2);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     fireEvent.click(addButton);
@@ -168,7 +167,9 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
 
-    const selectListOfColumns = document.querySelectorAll('.MuiDataGrid-filterFormColumnInput')[0];
+    const selectListOfColumns = document.querySelectorAll<HTMLElement>(
+      '.MuiDataGrid-filterFormColumnInput',
+    )[0];
     const availableColumns = within(selectListOfColumns).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
@@ -196,7 +197,7 @@ describe('<DataGridPro /> - Filter', () => {
               operator: 'contains',
             },
           ],
-          linkOperator: GridLinkOperator.And,
+          logicOperator: GridLogicOperator.And,
         }}
       />,
     );
@@ -207,7 +208,7 @@ describe('<DataGridPro /> - Filter', () => {
     render(
       <TestCase
         filterModel={{
-          linkOperator: GridLinkOperator.Or,
+          logicOperator: GridLogicOperator.Or,
           items: [
             {
               id: 1,
@@ -314,7 +315,72 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
-  it('should allow multiple filter and changing the linkOperator', () => {
+  it('should work as expected with "Add filter" and "Remove all" buttons ', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    const removeButton = screen.getByRole('button', { name: /Remove all/i });
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(3);
+    fireEvent.click(removeButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    // clicking on `remove all` should close the panel when no filters
+    fireEvent.click(removeButton);
+    clock.tick(100);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
+  });
+
+  it('should hide `Add filter` in filter panel when `disableAddFilterButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableAddFilterButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).not.to.equal(null);
+  });
+
+  it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableRemoveAllButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
+  });
+
+  it('should allow multiple filter and changing the logicOperator', () => {
     const newModel: GridFilterModel = {
       items: [
         {
@@ -330,7 +396,7 @@ describe('<DataGridPro /> - Filter', () => {
           operator: 'endsWith',
         },
       ],
-      linkOperator: GridLinkOperator.Or,
+      logicOperator: GridLogicOperator.Or,
     };
     render(<TestCase filterModel={newModel} />);
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
@@ -398,7 +464,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), { target: { value: '' } });
+    fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '' } });
     clock.tick(500);
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
@@ -450,7 +516,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -466,7 +532,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     apiRef.current.subscribeEvent('filterModelChange', listener);
     expect(listener.callCount).to.equal(0);
-    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(listener.callCount).to.equal(1);
     expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -480,10 +546,10 @@ describe('<DataGridPro /> - Filter', () => {
           operator: 'startsWith',
         },
       ],
-      linkOperator: GridLinkOperator.Or,
+      logicOperator: GridLogicOperator.Or,
     };
     render(<TestCase checkboxSelection filterModel={newModel} />);
-    const checkAllCell = getColumnHeaderCell(0).querySelector('input');
+    const checkAllCell = getColumnHeaderCell(0).querySelector('input')!;
     fireEvent.click(checkAllCell);
     expect(apiRef.current.state.rowSelection).to.deep.equal([1]);
   });
@@ -504,7 +570,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visibleRows', () => {
+  it('should show the latest expandedRows', () => {
     render(
       <TestCase
         initialState={{
@@ -521,8 +587,11 @@ describe('<DataGridPro /> - Filter', () => {
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-    expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
-    expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(gridExpandedSortedRowEntriesSelector(apiRef).length).to.equal(1);
+    expect(gridExpandedSortedRowEntriesSelector(apiRef)[0].model).to.deep.equal({
+      id: 1,
+      brand: 'Adidas',
+    });
   });
 
   it('should not scroll the page when a filter is removed from the panel', function test() {
@@ -541,7 +610,7 @@ describe('<DataGridPro /> - Filter', () => {
             },
             filter: {
               filterModel: {
-                linkOperator: GridLinkOperator.Or,
+                logicOperator: GridLogicOperator.Or,
                 items: [
                   { id: 1, field: 'brand', value: 'a', operator: 'contains' },
                   { id: 2, field: 'brand', value: 'm', operator: 'contains' },
@@ -576,7 +645,7 @@ describe('<DataGridPro /> - Filter', () => {
             },
             filter: {
               filterModel: {
-                linkOperator: GridLinkOperator.Or,
+                logicOperator: GridLogicOperator.Or,
                 items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
               },
             },
@@ -700,7 +769,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should not update the filter state when the filterModelProp is set', () => {
-      const testFilterModel: GridFilterModel = { items: [], linkOperator: GridLinkOperator.Or };
+      const testFilterModel: GridFilterModel = { items: [], logicOperator: GridLogicOperator.Or };
       render(
         <TestCase
           filterModel={testFilterModel}
@@ -737,7 +806,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(filterForms).to.have.length(2);
       expect(onModelChange.callCount).to.equal(1);
       expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
-      expect(onModelChange.lastCall.firstArg.linkOperator).to.deep.equal(GridLinkOperator.And);
+      expect(onModelChange.lastCall.firstArg.logicOperator).to.deep.equal(GridLogicOperator.And);
     });
 
     it('should control filter state when the model and the onChange are set', () => {

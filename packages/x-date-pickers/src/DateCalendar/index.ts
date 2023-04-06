@@ -3,7 +3,7 @@ export type {
   DateCalendarProps,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
-} from './DateCalendar';
+} from './DateCalendar.types';
 
 export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendarClasses';
 export type { DateCalendarClassKey, DateCalendarClasses } from './dateCalendarClasses';
@@ -26,5 +26,3 @@ export type {
   PickersSlideTransitionClasses,
 } from './pickersSlideTransitionClasses';
 export type { ExportedSlideTransitionProps } from './PickersSlideTransition';
-
-export type { DateView } from '../internals/models';

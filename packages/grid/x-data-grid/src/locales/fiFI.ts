@@ -6,7 +6,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
-  errorOverlayDefaultLabel: 'Tapahtui virhe.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tiiveys',
@@ -48,8 +47,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Poista',
-  filterPanelLinkOperator: 'Logiikkaoperaattori',
+  filterPanelLogicOperator: 'Logiikkaoperaattori',
   filterPanelOperator: 'Operaattorit',
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',

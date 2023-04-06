@@ -4,17 +4,15 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
 import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
-  GridErrorHandler,
   GridFooterPlaceholder,
   GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
+  useGridSelector,
+  gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
-import {
-  DataGridProVirtualScroller,
-  DataGridProColumnHeaders,
-} from '@mui/x-data-grid-pro/internals';
+import { DataGridProVirtualScroller } from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
@@ -31,19 +29,19 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
+  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeader />
-          <GridBody
-            ColumnHeadersComponent={DataGridProColumnHeaders}
-            VirtualScrollerComponent={DataGridProVirtualScroller}
-          >
-            <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-          </GridBody>
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
+        <GridHeader />
+        <GridBody
+          VirtualScrollerComponent={DataGridProVirtualScroller}
+          ColumnHeadersProps={{ pinnedColumns }}
+        >
+          <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
+        </GridBody>
+        <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
   );
@@ -136,6 +134,11 @@ DataGridPremiumRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
+   * Sets the height in pixel of the column headers in the grid.
+   * @default 56
+   */
+  columnHeaderHeight: PropTypes.number,
+  /**
    * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -145,20 +148,18 @@ DataGridPremiumRaw.propTypes = {
    */
   columnThreshold: PropTypes.number,
   /**
-   * Extend native column types with your new column types.
-   */
-  columnTypes: PropTypes.object,
-  /**
    * Set the column visibility model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overrideable components.
+   * Overridable components.
+   * @deprecated Use the `slots` prop instead.
    */
   components: PropTypes.object,
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
   /**
@@ -229,11 +230,6 @@ DataGridPremiumRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: PropTypes.bool,
-  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -269,21 +265,12 @@ DataGridPremiumRaw.propTypes = {
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
   /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel: PropTypes.object,
-  /**
-   * An error that will turn the grid into its error state and display the error component.
-   */
-  error: PropTypes.any,
-  /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
-    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -311,7 +298,7 @@ DataGridPremiumRaw.propTypes = {
         value: PropTypes.any,
       }),
     ).isRequired,
-    linkOperator: PropTypes.oneOf(['and', 'or']),
+    logicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
@@ -384,11 +371,6 @@ DataGridPremiumRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  /**
-   * Set the height in pixel of the column headers in the grid.
-   * @default 56
-   */
-  headerHeight: PropTypes.number,
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -516,13 +498,6 @@ DataGridPremiumRaw.propTypes = {
    */
   onCellEditStop: PropTypes.func,
   /**
-   * Callback fired when a cell loses focus.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellFocusOut: PropTypes.func,
-  /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
@@ -531,7 +506,7 @@ DataGridPremiumRaw.propTypes = {
   onCellKeyDown: PropTypes.func,
   /**
    * Callback fired when the `cellModesModel` prop changes.
-   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCellModesModel} cellModesModel Object containing which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
@@ -611,18 +586,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
   /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
+   * Callback fired when the state of the Excel export changes.
+   * @param {string} inProgress Indicates if the task is in progress.
    */
-  onEditRowsModelChange: PropTypes.func,
-  /**
-   * Callback fired when an exception is thrown in the grid.
-   * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onError: PropTypes.func,
+  onExcelExportStateChange: PropTypes.func,
   /**
    * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
@@ -651,17 +618,11 @@ DataGridPremiumRaw.propTypes = {
    */
   onMenuOpen: PropTypes.func,
   /**
-   * Callback fired when the current page has changed.
-   * @param {number} page Index of the page displayed on the Grid.
+   * Callback fired when the pagination model has changed.
+   * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPageChange: PropTypes.func,
-  /**
-   * Callback fired when the page size has changed.
-   * @param {number} pageSize Size of the page displayed on the Grid.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onPageSizeChange: PropTypes.func,
+  onPaginationModelChange: PropTypes.func,
   /**
    * Callback fired when the pinned columns have changed.
    * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
@@ -735,7 +696,7 @@ DataGridPremiumRaw.propTypes = {
   onRowGroupingModelChange: PropTypes.func,
   /**
    * Callback fired when the `rowModesModel` prop changes.
-   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowModesModelChange: PropTypes.func,
@@ -774,16 +735,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
-   * The zero-based index of the current page.
-   * @default 0
+   * Select the pageSize dynamically using the component UI.
+   * @default [25, 50, 100]
    */
-  page: PropTypes.number,
-  /**
-   * Set the number of rows in one page.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
-   * @default 100
-   */
-  pageSize: PropTypes.number,
+  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -796,6 +751,13 @@ DataGridPremiumRaw.propTypes = {
    * @default "client"
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
+  /**
+   * The pagination model of type [[GridPaginationModel]] which refers to current `page` and `pageSize`.
+   */
+  paginationModel: PropTypes.shape({
+    page: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+  }),
   /**
    * The column fields to display pinned to left or right.
    */
@@ -839,7 +801,7 @@ DataGridPremiumRaw.propTypes = {
    */
   rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
@@ -882,11 +844,6 @@ DataGridPremiumRaw.propTypes = {
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
   /**
-   * Select the pageSize dynamically using the component UI.
-   * @default [25, 50, 100]
-   */
-  rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
-  /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3
    */
@@ -910,6 +867,14 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable components.
+   */
+  slots: PropTypes.object,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -961,7 +926,7 @@ DataGridPremiumRaw.propTypes = {
   unstable_cellSelectionModel: PropTypes.object,
   /**
    * Callback fired when the selection state of one or multiple cells changes.
-   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   unstable_onCellSelectionModelChange: PropTypes.func,

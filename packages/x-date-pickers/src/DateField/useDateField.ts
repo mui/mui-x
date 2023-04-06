@@ -48,12 +48,13 @@ export const useDateField = <TDate, TChildProps extends {}>({
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    unstableFieldRef,
     ...other
   } = useDefaultizedDateField<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
-    forwardedProps: other as unknown as TChildProps,
+    forwardedProps: other as Omit<TChildProps, keyof UseDateFieldProps<TDate>>,
     internalProps: {
       value,
       defaultValue,
@@ -70,10 +71,11 @@ export const useDateField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      unstableFieldRef,
     },
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDate,
-    supportedDateSections: ['year', 'month', 'day'],
+    valueType: 'date',
   });
 };

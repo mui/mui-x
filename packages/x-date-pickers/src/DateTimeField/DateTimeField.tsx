@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { DateTimeFieldProps } from './DateTimeField.types';
@@ -19,17 +19,24 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
     name: 'MuiDateTimeField',
   });
 
-  const { components, componentsProps, ...other } = themeProps;
+  const { components, componentsProps, slots, slotProps, InputProps, inputProps, ...other } =
+    themeProps;
 
   const ownerState = themeProps;
 
-  const Input = components?.Input ?? TextField;
-  const { inputRef: externalInputRef, ...inputProps }: DateTimeFieldProps<TDate> = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
-    externalForwardedProps: other,
-    ownerState,
-  });
+  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+  const { inputRef: externalInputRef, ...textFieldProps }: DateTimeFieldProps<TDate> = useSlotProps(
+    {
+      elementType: TextField,
+      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+      externalForwardedProps: other,
+      ownerState,
+    },
+  );
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
 
   const {
     ref: inputRef,
@@ -37,13 +44,13 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
     inputMode,
     readOnly,
     ...fieldProps
-  } = useDateTimeField<TDate, typeof inputProps>({
-    props: inputProps,
+  } = useDateTimeField<TDate, typeof textFieldProps>({
+    props: textFieldProps,
     inputRef: externalInputRef,
   });
 
   return (
-    <Input
+    <TextField
       ref={ref}
       {...fieldProps}
       inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
@@ -75,13 +82,15 @@ DateTimeField.propTypes = {
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -94,7 +103,7 @@ DateTimeField.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -104,7 +113,7 @@ DateTimeField.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -213,14 +222,16 @@ DateTimeField.propTypes = {
   onBlur: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error.
    * @param {TValue} value The value associated to the error.
    */
@@ -247,18 +258,36 @@ DateTimeField.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
       startIndex: PropTypes.number.isRequired,
     }),
   ]),
+  /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
    * @template TDate
@@ -270,12 +299,12 @@ DateTimeField.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
@@ -284,13 +313,23 @@ DateTimeField.propTypes = {
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
    * The size of the component.
    */
   size: PropTypes.oneOf(['medium', 'small']),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -300,6 +339,10 @@ DateTimeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -47,7 +47,7 @@ function TestEvents() {
   // @ts-expect-error Argument of type '(params: GridCellParams, event: React.KeyboardEvent<HTMLEvent>) => void' is not assignable to parameter of type 'GridEventListener<'cellClick'>'.
   useGridApiEventHandler(apiRef, 'cellClick', handleCellClickWrongEvents);
 
-  // @ts-expect-error  Argument of type '"cellTripleClick"' is not assignable to parameter of type '"resize" | "debouncedResize" | "componentError" | "unmount" | "cellModeChange" | "cellClick" | "cellDoubleClick" | "cellMouseDown" | "cellMouseUp" | "cellKeyDown" | "cellFocusIn" | ... 49 more'
+  // @ts-expect-error  Argument of type '"cellTripleClick"' is not assignable to parameter of type '"resize" | "debouncedResize" | "unmount" | "cellModeChange" | "cellClick" | "cellDoubleClick" | "cellMouseDown" | "cellMouseUp" | "cellKeyDown" | "cellFocusIn" | ... 49 more'
   useGridApiEventHandler(apiRef, 'cellTripleClick', () => {});
 
   // should work with valid string event name

@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { UncapitalizeObjectKeys } from '../internals/utils';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 /**
  * Grid components React prop interface containing all the overridable components.
- * TODO: Differentiate community and pro interface
  */
 export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
@@ -37,6 +37,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BaseButton: React.JSXElementConstructor<any>;
   /**
+   * The custom IconButton component used in the grid.
+   * @default IconButton
+   */
+  BaseIconButton: React.JSXElementConstructor<any>;
+  /**
    * The custom Tooltip component used in the grid.
    * @default Tooltip
    */
@@ -46,6 +51,16 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default Popper
    */
   BasePopper: React.JSXElementConstructor<any>;
+  /**
+   * The custom InputLabel component used in the grid.
+   * @default InputLabel
+   */
+  BaseInputLabel: React.JSXElementConstructor<any>;
+  /**
+   * The custom SelectOption component used in the grid.
+   * @default MenuItem
+   */
+  BaseSelectOption: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each cell.
    * @default GridCell
@@ -67,10 +82,10 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   ColumnMenu: React.JSXElementConstructor<any>;
   /**
-   * Error overlay component rendered above the grid when an error is caught.
-   * @default GridErrorOverlay
+   * Component responsible for rendering the column headers.
+   * @default DataGridColumnHeaders
    */
-  ErrorOverlay: React.JSXElementConstructor<any>;
+  ColumnHeaders: React.JSXElementConstructor<any>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    * @default GridFooter
@@ -127,3 +142,6 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Row: React.JSXElementConstructor<any>;
 }
+
+export interface UncapitalizedGridSlotsComponent
+  extends UncapitalizeObjectKeys<GridSlotsComponent> {}

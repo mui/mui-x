@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const plPLPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +9,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'otwórz poprzedni widok',
   openNextView: 'otwórz następny widok',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'otwarty jest widok roku, przełącz na widok kalendarza'
       : 'otwarty jest widok kalendarza, przełącz na widok roku',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Początek',
@@ -27,10 +25,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Dzisiaj',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Wybierz datę',
+  dateTimePickerToolbarTitle: 'Wybierz datę i czas',
+  timePickerToolbarTitle: 'Wybierz czas',
+  dateRangePickerToolbarTitle: 'Wybierz zakres dat',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -42,10 +40,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
 
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Numer tygodnia',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Tydzień ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -65,6 +63,7 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',

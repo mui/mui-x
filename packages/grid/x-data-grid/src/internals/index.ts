@@ -1,8 +1,12 @@
-export type { GridBaseColDef, GridStateColDef } from '../models/colDef/gridColDef';
+export type {
+  GridBaseColDef,
+  GridStateColDef,
+  GridSingleSelectColDef,
+} from '../models/colDef/gridColDef';
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone } from '../components/virtualization/GridVirtualScrollerRenderZone';
-export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
+export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
@@ -17,6 +21,7 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export type { UseGridColumnHeadersProps } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
@@ -27,6 +32,7 @@ export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
+export type { GridColumnGroupLookup } from '../hooks/features/columnGrouping/gridColumnGroupsInterfaces';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
@@ -37,6 +43,7 @@ export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
+export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
@@ -49,6 +56,7 @@ export {
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
 export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
+export { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
@@ -104,7 +112,7 @@ export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/ex
 export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
-export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
+export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
@@ -112,3 +120,5 @@ export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
+
+export * from './utils';

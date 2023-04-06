@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +9,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'åpne forrige visning',
   openNextView: 'åpne neste visning',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'årsvisning er åpen, bytt til kalendervisning'
       : 'kalendervisning er åpen, bytt til årsvisning',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -27,10 +25,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'I dag',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Velg dato',
+  dateTimePickerToolbarTitle: 'Velg dato & klokkeslett',
+  timePickerToolbarTitle: 'Velg klokkeslett',
+  dateRangePickerToolbarTitle: 'Velg datoperiode',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -42,10 +40,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
 
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Ukenummer',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Uke ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -65,6 +63,7 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',

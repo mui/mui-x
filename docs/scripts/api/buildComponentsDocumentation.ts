@@ -14,6 +14,7 @@ import generatePropTypeDescription, {
 } from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
+import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
@@ -121,7 +122,10 @@ function extractSlots(options: {
     throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
   }
 
-  const types = (propInterface as ttp.InterfaceType).types;
+  const types = [...(propInterface as ttp.InterfaceType).types].sort((a, b) =>
+    a[0] > b[0] ? 1 : -1,
+  );
+
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
     const description = renderMarkdownInline(parsed.description);
@@ -142,7 +146,12 @@ function extractSlots(options: {
       return;
     }
 
-    slots[name] = {
+    // Workaround to generate correct (camelCase) keys for slots in v6 `API Reference` documentation
+    // TODO v7: Remove this condition when `Grid(Pro|Premium)SlotsComponent` type is refactored to have `camelCase` names
+    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedGridSlotsComponent`
+    const slotName = project.name.includes('grid') ? camelCase(name) : name;
+
+    slots[slotName] = {
       type,
       description,
       default: defaultValue,
@@ -246,7 +255,7 @@ const buildComponentDocumentation = async (options: {
 
   reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
 
-  reactApi.styles = await parseStyles(reactApi, project.program as any);
+  reactApi.styles = await parseStyles({ project, componentName: reactApi.name });
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
     : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
@@ -327,6 +336,14 @@ const buildComponentDocumentation = async (options: {
       } else if (propName === 'sx') {
         description +=
           ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
+      }
+      // Parse and generate `@see` doc with a {@link}
+      const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
+      if (seeTag && seeTag.description) {
+        description += ` ${seeTag.description.replace(
+          /{@link ([^|| ]*)[|| ]([^}]*)}/,
+          '<a href="$1">$2</a>',
+        )}`;
       }
       componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 
@@ -513,7 +530,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/${project.documentationFolderName}',
     false,
-    /\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
+    /\\.\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

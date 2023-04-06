@@ -67,15 +67,15 @@ Day.propTypes = {
 };
 
 export default function CustomDay() {
-  const [value, setValue] = React.useState(dayjs('2022-04-07'));
+  const [value, setValue] = React.useState(dayjs('2022-04-17'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        components={{ Day }}
-        componentsProps={{
+        slots={{ day: Day }}
+        slotProps={{
           day: {
             selectedDay: value,
           },

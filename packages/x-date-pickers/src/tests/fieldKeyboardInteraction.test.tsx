@@ -1,23 +1,34 @@
 import * as React from 'react';
-import { screen, userEvent, act } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
-import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
-import { MuiDateSectionName, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
+import { expect } from 'chai';
+import moment from 'moment/moment';
+import jMoment from 'moment-jalaali';
+import { userEvent } from '@mui/monorepo/test/utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {
+  buildFieldInteractions,
+  createPickerRenderer,
+  expectInputValue,
+  getCleanedSelectedContent,
+  getTextbox,
+} from 'test/utils/pickers-utils';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { FieldSectionType, MuiPickersAdapter } from '@mui/x-date-pickers/models';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 
-function updatedDate<TDate>(
+function updateDate<TDate>(
   date: TDate,
   adapter: MuiPickersAdapter<TDate>,
-  sectionName: MuiDateSectionName,
+  sectionType: FieldSectionType,
   diff: number,
 ) {
-  switch (sectionName) {
+  switch (sectionType) {
     case 'year':
       return adapter.addYears(date, diff);
     case 'month':
       return adapter.addMonths(date, diff);
     case 'day':
+    case 'weekDay':
       return adapter.addDays(date, diff);
     case 'hours':
       return adapter.addHours(date, diff);
@@ -38,9 +49,100 @@ const adapterToTest = [
   'dayjs',
   'moment',
   'date-fns-jalali',
-  'moment-hijri',
+  // 'moment-hijri',
   'moment-jalaali',
 ] as const;
+
+const theme = createTheme({
+  direction: 'rtl',
+});
+
+describe(`RTL - test arrows navigation`, () => {
+  const { render, clock, adapter } = createPickerRenderer({
+    clock: 'fake',
+    adapterName: 'moment-jalaali',
+  });
+
+  before(() => {
+    jMoment.loadPersian();
+  });
+
+  after(() => {
+    moment.locale('en');
+  });
+
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+
+  it('should move selected section to the next section respecting RTL order in empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 28);
+
+    const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+    });
+  });
+
+  it('should move selected section to the previouse section respecting RTL order in empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 18);
+
+    const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowLeft' });
+    });
+  });
+
+  it('should move selected section to the next section respecting RTL order in non-empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField defaultValue={adapter.date(new Date(2018, 3, 25, 11, 54))} />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 28);
+
+    // 25/04/2018 => 1397/02/05
+    const expectedValues = ['11', '54', '1397', '02', '05', '05'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+    });
+  });
+
+  it('should move selected section to the previouse section respecting RTL order in non-empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField defaultValue={adapter.date(new Date(2018, 3, 25, 11, 54))} />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 18);
+
+    // 25/04/2018 => 1397/02/05
+    const expectedValues = ['05', '02', '1397', '54', '11', '11'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowLeft' });
+    });
+  });
+});
 
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
@@ -49,13 +151,21 @@ adapterToTest.forEach((adapterName) => {
       adapterName,
     });
 
-    const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
-      act(() => {
-        input.focus();
-        input.setSelectionRange(cursorPosition, cursorPosition);
-        clock.runToLast();
-      });
-    };
+    before(() => {
+      if (adapterName === 'moment-jalaali') {
+        jMoment.loadPersian();
+      } else if (adapterName === 'moment') {
+        moment.locale('en');
+      }
+    });
+
+    after(() => {
+      if (adapterName === 'moment-jalaali') {
+        moment.locale('en');
+      }
+    });
+
+    const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
     const testKeyPress = <TDate extends unknown>({
       key,
@@ -71,17 +181,19 @@ adapterToTest.forEach((adapterName) => {
       cursorPosition?: number;
     }) => {
       render(<DateTimeField defaultValue={initialValue} format={format} />);
-      const input = screen.getByRole('textbox') as HTMLInputElement;
+      const input = getTextbox();
       clickOnInput(input, cursorPosition);
       userEvent.keyPress(input, { key });
+
       expectInputValue(input, adapter.formatByString(expectedValue, format));
     };
 
-    const testKeyboardInteraction = (formatToken, sectionData) => {
-      const sectionName = typeof sectionData === 'object' ? sectionData.sectionName : sectionData;
-      it(`should increase "${sectionName}" when pressing ArrowUp on "${formatToken}" token`, () => {
+    const testKeyboardInteraction = (formatToken, sectionConfig) => {
+      const sectionType =
+        typeof sectionConfig === 'object' ? sectionConfig.sectionType : sectionConfig;
+      it(`should increase "${sectionType}" when pressing ArrowUp on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updatedDate(initialValue, adapter, sectionName, 1);
+        const expectedValue = updateDate(initialValue, adapter, sectionType, 1);
 
         testKeyPress({
           key: 'ArrowUp',
@@ -91,9 +203,9 @@ adapterToTest.forEach((adapterName) => {
         });
       });
 
-      it(`should decrease "${sectionName}" when pressing ArrowDown on "${formatToken}" token`, () => {
+      it(`should decrease "${sectionType}" when pressing ArrowDown on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updatedDate(initialValue, adapter, sectionName, -1);
+        const expectedValue = updateDate(initialValue, adapter, sectionType, -1);
 
         testKeyPress({
           key: 'ArrowDown',
@@ -104,8 +216,8 @@ adapterToTest.forEach((adapterName) => {
       });
     };
 
-    Object.entries(adapter.formatTokenMap).forEach(([formatToken, sectionName]) =>
-      testKeyboardInteraction(formatToken, sectionName),
+    Object.entries(adapter.formatTokenMap).forEach(([formatToken, sectionConfig]) =>
+      testKeyboardInteraction(formatToken, sectionConfig),
     );
   });
 });

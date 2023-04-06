@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateOrTimeView } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
 export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeView>
@@ -28,10 +28,13 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   onMonthChange,
   defaultCalendarMonth,
   rangePosition,
+  defaultRangePosition,
   onRangePositionChange,
   calendars,
   components,
   componentsProps,
+  slots,
+  slotProps,
   loading,
   renderLoading,
   disableHighlightToday,
@@ -61,10 +64,13 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     onMonthChange={onMonthChange}
     defaultCalendarMonth={defaultCalendarMonth}
     rangePosition={rangePosition}
+    defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}
     calendars={calendars}
     components={components}
     componentsProps={componentsProps}
+    slots={slots}
+    slotProps={slotProps}
     loading={loading}
     renderLoading={renderLoading}
     disableHighlightToday={disableHighlightToday}

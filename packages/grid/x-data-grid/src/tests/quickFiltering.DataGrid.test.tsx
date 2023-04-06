@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -7,7 +6,7 @@ import {
   DataGrid,
   DataGridProps,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -81,7 +80,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       clock.runToLast();
       expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
         items: [],
-        linkOperator: 'and',
+        logicOperator: 'and',
         quickFilterValues: ['adid', 'nik'],
         quickFilterLogicOperator: 'and',
       });
@@ -95,13 +94,13 @@ describe('<DataGrid /> - Quick Filter', () => {
       });
       clock.runToLast();
 
-      expect(screen.getByRole('searchbox').value).to.equal('adidas   nike');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas   nike');
     });
 
     it('should update input when the state is modified', () => {
       const { setProps } = render(<TestCase />);
 
-      expect(screen.getByRole('searchbox').value).to.equal('');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
 
       setProps({
         filterModel: {
@@ -109,7 +108,7 @@ describe('<DataGrid /> - Quick Filter', () => {
           quickFilterValues: ['adidas', 'nike'],
         },
       });
-      expect(screen.getByRole('searchbox').value).to.equal('adidas nike');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas nike');
 
       setProps({
         filterModel: {
@@ -117,7 +116,7 @@ describe('<DataGrid /> - Quick Filter', () => {
           quickFilterValues: [],
         },
       });
-      expect(screen.getByRole('searchbox').value).to.equal('');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
     });
 
     it('should allow to customize input formatting', () => {
@@ -131,14 +130,14 @@ describe('<DataGrid /> - Quick Filter', () => {
         />,
       );
 
-      expect(screen.getByRole('searchbox').value).to.equal('');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('');
       setProps({
         filterModel: {
           items: [],
           quickFilterValues: ['adidas', 'nike'],
         },
       });
-      expect(screen.getByRole('searchbox').value).to.equal('adidas, nike');
+      expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas, nike');
     });
   });
 
@@ -163,7 +162,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       render(
         <TestCase
           initialState={{
-            filter: { filterModel: { items: [], quickFilterLogicOperator: GridLinkOperator.Or } },
+            filter: { filterModel: { items: [], quickFilterLogicOperator: GridLogicOperator.Or } },
           }}
         />,
       );
@@ -191,18 +190,23 @@ describe('<DataGrid /> - Quick Filter', () => {
             quickFilterValues,
           }}
           rows={[
-            { id: 0, country: undefined },
-            { id: 1, country: null },
-            { id: 2, country: '' },
-            { id: 3, country: 'France (fr)' },
-            { id: 4, country: 'Germany' },
-            { id: 5, country: 0 },
-            { id: 6, country: 1 },
+            { id: 0, country: undefined, phone: '5511111111' },
+            { id: 1, country: null, phone: '5522222222' },
+            { id: 2, country: '', phone: '5533333333' },
+            { id: 3, country: 'France (fr)', phone: '5544444444' },
+            { id: 4, country: 'Germany', phone: '5555555555' },
+            { id: 5, country: 8, phone: '5566666666' },
+            { id: 6, country: 9, phone: '5577777777' },
           ]}
           columns={[
             {
               field: 'country',
               type: 'string',
+            },
+            {
+              field: 'phone',
+              type: 'string',
+              valueFormatter: ({ value }) => `+${value.slice(0, 2)} ${value.slice(2)}`,
             },
           ]}
         />,
@@ -213,7 +217,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       return values;
     };
 
-    const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany', '0', '1'];
+    const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany', '8', '9'];
 
     it('default operator should behave like "contains"', () => {
       expect(getRows({ quickFilterValues: ['Fra'] })).to.deep.equal(['France (fr)']);
@@ -222,8 +226,8 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getRows({ quickFilterValues: ['fra'] })).to.deep.equal(['France (fr)']);
 
       // Number casting
-      expect(getRows({ quickFilterValues: ['0'] })).to.deep.equal(['0']);
-      expect(getRows({ quickFilterValues: ['1'] })).to.deep.equal(['1']);
+      expect(getRows({ quickFilterValues: ['8'] })).to.deep.equal(['8']);
+      expect(getRows({ quickFilterValues: ['9'] })).to.deep.equal(['9']);
 
       // Empty values
       expect(getRows({ quickFilterValues: [undefined] })).to.deep.equal(ALL_ROWS);
@@ -232,6 +236,11 @@ describe('<DataGrid /> - Quick Filter', () => {
       // Value with regexp special literal
       expect(getRows({ quickFilterValues: ['[-[]{}()*+?.,\\^$|#s]'] })).to.deep.equal([]);
       expect(getRows({ quickFilterValues: ['(fr)'] })).to.deep.equal(['France (fr)']);
+    });
+
+    it('should filter considering the formatted value when a valueFormatter is used', () => {
+      expect(getRows({ quickFilterValues: ['+55 44444444'] })).to.deep.equal(['France (fr)']);
+      expect(getRows({ quickFilterValues: ['5544444444'] })).to.deep.equal([]);
     });
   });
 
@@ -344,18 +353,21 @@ describe('<DataGrid /> - Quick Filter', () => {
     };
 
     const ALL_ROWS_COUNTRY = ['', '', 'United States', 'Germany'];
-    const ALL_ROWS_YEAR = ['', '', '1974', '1984'];
+    const ALL_ROWS_YEAR = ['', '', 'Year 1974', 'Year 1984'];
 
-    it('should filter with operator "start with"', () => {
+    it('should filter with operator "contains"', () => {
       // With simple options
       expect(getRows({ quickFilterValues: ['germa'] }).country).to.deep.equal(['Germany']);
       expect(getRows({ quickFilterValues: [''] }).country).to.deep.equal(ALL_ROWS_COUNTRY);
-      expect(getRows({ quickFilterValues: ['erman'] }).country).to.deep.equal([]);
+      expect(getRows({ quickFilterValues: ['erman'] }).country).to.deep.equal(['Germany']);
 
       // With object options
-      expect(getRows({ quickFilterValues: ['1974'] }).year).to.deep.equal(['1974']);
-      expect(getRows({ quickFilterValues: ['year'] }).year).to.deep.equal(['1974', '1984']);
-      expect(getRows({ quickFilterValues: ['97'] }).year).to.deep.equal([]);
+      expect(getRows({ quickFilterValues: ['1974'] }).year).to.deep.equal(['Year 1974']);
+      expect(getRows({ quickFilterValues: ['year'] }).year).to.deep.equal([
+        'Year 1974',
+        'Year 1984',
+      ]);
+      expect(getRows({ quickFilterValues: ['97'] }).year).to.deep.equal(['Year 1974']);
       expect(getRows({ quickFilterValues: [undefined] }).year).to.deep.equal(ALL_ROWS_YEAR);
       expect(getRows({ quickFilterValues: [''] }).year).to.deep.equal(ALL_ROWS_YEAR);
     });

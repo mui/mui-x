@@ -9,7 +9,7 @@
     },
     {
       "name": "unstable_getSelectedCellsAsArray",
-      "description": "Returns an array containg only the selected cells.\nEach item is an object with the ID and field of the cell.",
+      "description": "Returns an array containing only the selected cells.\nEach item is an object with the ID and field of the cell.",
       "type": "() => GridCellCoordinates[]"
     },
     {

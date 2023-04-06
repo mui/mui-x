@@ -6,7 +6,6 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'بدون سطر',
   noResultsOverlayLabel: 'نتیجه ای پیدا نشد.',
-  errorOverlayDefaultLabel: 'خطایی روی داد.',
 
   // Density selector toolbar button text
   toolbarDensity: 'تراکم',
@@ -48,8 +47,9 @@ const faIRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
+  filterPanelRemoveAll: 'حذف همه',
   filterPanelDeleteIconLabel: 'حذف',
-  filterPanelLinkOperator: 'عملگر منطقی',
+  filterPanelLogicOperator: 'عملگر منطقی',
   filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',
@@ -80,7 +80,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'فهرست',
   columnMenuShowColumns: 'نمایش ستون‌ها',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'مدیریت ستون‌ها',
   columnMenuFilter: 'فیلتر',
   columnMenuHideColumn: 'مخفی',
   columnMenuUnsort: 'نامرتب‌کردن',

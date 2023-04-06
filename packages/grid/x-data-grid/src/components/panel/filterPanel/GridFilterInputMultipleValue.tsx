@@ -57,7 +57,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     <Autocomplete<string, true, false, true>
       multiple
       freeSolo
-      limitTags={1}
       options={[]}
       filterOptions={(options, params) => {
         const { inputValue } = params;
@@ -72,7 +71,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
         ))
       }
       renderInput={(params) => (
-        <rootProps.components.BaseTextField
+        <rootProps.slots.baseTextField
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -83,7 +82,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           inputRef={focusElementRef}
           type={type || 'text'}
           {...TextFieldProps}
-          {...rootProps.componentsProps?.baseTextField}
+          {...rootProps.slotProps?.baseTextField}
         />
       )}
       {...other}

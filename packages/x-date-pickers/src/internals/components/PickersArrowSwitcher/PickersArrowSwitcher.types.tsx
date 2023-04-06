@@ -3,18 +3,19 @@ import { SlotComponentProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
+import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 export interface ExportedPickersArrowSwitcherProps {
   /**
-   * Overrideable components.
+   * Overridable component slots.
    * @default {}
    */
-  components?: PickersArrowSwitcherSlotsComponent;
+  slots?: UncapitalizeObjectKeys<PickersArrowSwitcherSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickersArrowSwitcherSlotsComponentsProps;
+  slotProps?: PickersArrowSwitcherSlotsComponentsProps;
   classes?: Partial<PickersArrowSwitcherClasses>;
 }
 

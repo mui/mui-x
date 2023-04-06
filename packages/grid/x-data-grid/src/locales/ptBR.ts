@@ -6,7 +6,6 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nenhuma linha',
   noResultsOverlayLabel: 'Nenhum resultado encontrado.',
-  errorOverlayDefaultLabel: 'Ocorreu um erro.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidade',
@@ -48,8 +47,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Excluir',
-  filterPanelLinkOperator: 'Operador lógico',
+  filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operador',
   filterPanelOperatorAnd: 'E',
   filterPanelOperatorOr: 'Ou',
@@ -80,7 +80,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Exibir colunas',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Gerir colunas',
   columnMenuFilter: 'Filtrar',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desfazer ordenação',
@@ -144,12 +144,12 @@ const ptBRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Reorganizar linhas',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agrupar',
+  aggregationFunctionLabelSum: 'soma',
+  aggregationFunctionLabelAvg: 'média',
+  aggregationFunctionLabelMin: 'mín',
+  aggregationFunctionLabelMax: 'máx',
+  aggregationFunctionLabelSize: 'tamanho',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

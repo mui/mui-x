@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
+import { DateTimeValidationError, FieldSection } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
@@ -12,7 +12,7 @@ import {
   TimeValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps } from '../internals';
+import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
@@ -20,7 +20,10 @@ export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
 }
 
 export interface UseDateTimeFieldProps<TDate>
-  extends MakeOptional<UseFieldInternalProps<TDate | null, DateTimeValidationError>, 'format'>,
+  extends MakeOptional<
+      UseFieldInternalProps<TDate | null, FieldSection, DateTimeValidationError>,
+      'format'
+    >,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
@@ -56,27 +59,40 @@ export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit
 export interface DateTimeFieldProps<TDate>
   extends UseDateTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: DateTimeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<DateTimeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DateTimeFieldSlotsComponentsProps<TDate>;
 }
 
 export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;
 
 export interface DateTimeFieldSlotsComponent {
   /**
-   * Input rendered.
-   * @default TextField
+   * Form control with an input to render the value.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
 }
 
 export interface DateTimeFieldSlotsComponentsProps<TDate> {
-  input?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
+  textField?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
 }

@@ -8,7 +8,7 @@ const items = [
   { id: 3, item: 'Pencil', quantity: 100, price: 1.25 },
 ];
 
-type Item = typeof items[number];
+type Item = (typeof items)[number];
 
 interface SubtotalHeader {
   id: 'SUBTOTAL';
@@ -126,7 +126,6 @@ export default function ColumnSpanningFunction() {
     >
       <DataGrid
         autoHeight
-        disableExtendRowFullWidth
         disableColumnFilter
         disableRowSelectionOnClick
         hideFooter

@@ -3,9 +3,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
-import { MuiPickersAdapter } from '../internals/models';
+import { MuiPickersAdapter } from '../models';
 import { clamp } from '../internals/utils/date-utils';
-import type { DateCalendarDefaultizedProps } from './DateCalendar';
+import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 
 interface CalendarState<TDate> {
   currentMonth: TDate;

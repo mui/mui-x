@@ -199,7 +199,7 @@ function Heading(props) {
   return (
     <Level id={hash}>
       {getTranslatedHeader(t, hash)}
-      <a aria-labelledby={hash} className="anchor-link-style" href={`#${hash}`} tabIndex={-1}>
+      <a aria-labelledby={hash} className="anchor-link" href={`#${hash}`} tabIndex={-1}>
         <svg>
           <use xlinkHref="#anchor-link-icon" />
         </svg>
@@ -231,6 +231,9 @@ export default function ApiPage(props) {
     styles: componentStyles,
     packages,
   } = pageContent;
+
+  const defaultPropsLink = '/material-ui/customization/theme-components/#theme-default-props';
+  const styleOverridesLink = '/material-ui/customization/theme-components/#theme-style-overrides';
 
   const {
     componentDescription,
@@ -355,10 +358,10 @@ export default function ApiPage(props) {
             <Heading hash="component-name" />
             <span
               dangerouslySetInnerHTML={{
-                __html: t('api-docs.styleOverrides').replace(
-                  /{{componentStyles\.name}}/,
-                  componentStyles.name,
-                ),
+                __html: t('api-docs.styleOverrides')
+                  .replace(/{{componentStyles\.name}}/, componentStyles.name)
+                  .replace(/{{defaultPropsLink}}/, defaultPropsLink)
+                  .replace(/{{styleOverridesLink}}/, styleOverridesLink),
               }}
             />
           </React.Fragment>
@@ -406,7 +409,12 @@ export default function ApiPage(props) {
             <br />
             <span dangerouslySetInnerHTML={{ __html: t('api-docs.overrideStyles') }} />
             <span
-              dangerouslySetInnerHTML={{ __html: t('api-docs.overrideStylesStyledComponent') }}
+              dangerouslySetInnerHTML={{
+                __html: t('api-docs.overrideStylesStyledComponent').replace(
+                  /{{styleOverridesLink}}/,
+                  '/material-ui/customization/theme-components/#theme-style-overrides',
+                ),
+              }}
             />
           </React.Fragment>
         ) : null}

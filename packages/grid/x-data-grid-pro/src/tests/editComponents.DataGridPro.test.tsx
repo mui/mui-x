@@ -10,7 +10,6 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
@@ -532,8 +531,13 @@ describe('<DataGridPro /> - Edit Components', () => {
       });
     });
 
-    it('should apply the value formatter to the options provided', () => {
-      defaultData.columns[0].valueFormatter = ({ value }) => (value as string).toLowerCase();
+    it('should apply getOptionLabel to the options provided', () => {
+      defaultData.columns[0].renderEditCell = (params) => {
+        return renderEditSingleSelectCell({
+          ...params,
+          getOptionLabel: (value) => (value as string).toLowerCase(),
+        });
+      };
       render(<TestCase />);
 
       const cell = getCell(0, 0);
@@ -587,7 +591,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
-      fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();

@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateOrTimeView } from '../../models';
+import { DateOrTimeView } from '../../../models';
 import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue';
+import { isTimeView } from '../../utils/time-utils';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeView>
   extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
@@ -66,7 +69,7 @@ export interface UsePickerViewsBaseProps<
  */
 export interface UsePickerViewsNonStaticProps {
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker?: boolean;
@@ -81,7 +84,10 @@ export interface UsePickerViewsProps<
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 > extends UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerViewsNonStaticProps {}
+    UsePickerViewsNonStaticProps {
+  className?: string;
+  sx?: SxProps<Theme>;
+}
 
 export interface UsePickerViewParams<
   TValue,
@@ -138,15 +144,17 @@ export const usePickerViews = <
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
   const { views, openTo, onViewChange, disableOpenPicker, viewRenderers } = props;
+  const { className, sx, ...propsToForwardToView } = props;
 
-  const { view, setView, focusedView, setFocusedView, setValueAndGoToNextView } = useViews({
-    view: undefined,
-    views,
-    openTo,
-    onChange,
-    onViewChange,
-    autoFocus: autoFocusView,
-  });
+  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
+    useViews({
+      view: undefined,
+      views,
+      openTo,
+      onChange,
+      onViewChange,
+      autoFocus: autoFocusView,
+    });
 
   const { hasUIView, viewModeLookup } = React.useMemo(
     () =>
@@ -172,6 +180,17 @@ export const usePickerViews = <
       ),
     [disableOpenPicker, viewRenderers, views],
   );
+
+  const hasMultipleUITimeView = React.useMemo(() => {
+    const numberUITimeViews = views.reduce((acc, viewForReduce) => {
+      if (viewRenderers[viewForReduce] != null && isTimeView(viewForReduce)) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+
+    return numberUITimeViews > 1;
+  }, [viewRenderers, views]);
 
   const currentViewMode = viewModeLookup[view];
   const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');
@@ -199,9 +218,26 @@ export const usePickerViews = <
       return;
     }
 
+    let newView = view;
+
+    // If the current view is a field view, go to the last popper view
     if (currentViewMode === 'field' && popperView != null) {
-      setView(popperView);
+      newView = popperView;
     }
+
+    // If the current view is not the default view and both are UI views
+    if (
+      newView !== defaultView &&
+      viewModeLookup[newView] === 'UI' &&
+      viewModeLookup[defaultView] === 'UI'
+    ) {
+      newView = defaultView;
+    }
+
+    if (newView !== view) {
+      setView(newView);
+    }
+    setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const layoutProps: UsePickerViewsLayoutResponse<TView> = {
@@ -225,7 +261,7 @@ export const usePickerViews = <
       }
 
       return renderer({
-        ...props,
+        ...propsToForwardToView,
         ...additionalViewProps,
         ...propsFromPickerValue,
         views,
@@ -234,6 +270,7 @@ export const usePickerViews = <
         onViewChange: setView,
         focusedView,
         onFocusedViewChange: setFocusedView,
+        showViewSwitcher: hasMultipleUITimeView,
       });
     },
   };

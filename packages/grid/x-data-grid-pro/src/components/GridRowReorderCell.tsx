@@ -8,8 +8,8 @@ import {
   useGridApiContext,
   useGridSelector,
   getDataGridUtilityClass,
-  gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
+import { gridEditRowsStateSelector } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -95,7 +95,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
 
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
-      <rootProps.components.RowReorderIcon />
+      <rootProps.slots.rowReorderIcon />
       <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );

@@ -26,14 +26,14 @@ export interface GridParamsApi {
    * @returns {GridCellParams} The cell params.
    */
   getCellParams: <
-    V = any,
     R extends GridValidRowModel = any,
+    V = unknown,
     F = V,
     N extends GridTreeNode = GridTreeNode,
   >(
     id: GridRowId,
     field: string,
-  ) => GridCellParams<V, R, F, N>;
+  ) => GridCellParams<R, V, F, N>;
   /**
    * Gets the [[GridRowParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.

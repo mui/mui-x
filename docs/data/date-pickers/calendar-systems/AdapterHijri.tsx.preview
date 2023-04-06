@@ -1,4 +1,10 @@
-<NextDatePicker
-  label="Date Picker"
-  defaultValue={moment(new Date(2022, 1, 1))}
-/>
+<ThemeProvider theme={theme}>
+  <div dir="rtl">
+    <LocalizationProvider dateAdapter={AdapterMomentHijri}>
+      <DateTimePicker
+        label="Date Picker"
+        defaultValue={moment(new Date(2022, 1, 1))}
+      />
+    </LocalizationProvider>
+  </div>
+</ThemeProvider>

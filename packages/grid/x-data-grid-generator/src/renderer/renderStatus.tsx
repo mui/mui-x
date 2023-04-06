@@ -58,7 +58,7 @@ const Status = React.memo((props: StatusProps) => {
   );
 });
 
-export function renderStatus(params: GridRenderCellParams<string>) {
+export function renderStatus(params: GridRenderCellParams<any, string>) {
   if (params.value == null) {
     return '';
   }

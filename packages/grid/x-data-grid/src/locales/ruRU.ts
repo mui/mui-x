@@ -6,7 +6,6 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
   noResultsOverlayLabel: 'Данные не найдены.',
-  errorOverlayDefaultLabel: 'Обнаружена ошибка.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',
@@ -56,8 +55,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Удалить',
-  filterPanelLinkOperator: 'Логические операторы',
+  filterPanelLogicOperator: 'Логические операторы',
   filterPanelOperator: 'Операторы',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
@@ -88,7 +88,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
   columnMenuUnsort: 'Отменить сортировку',

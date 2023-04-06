@@ -2,16 +2,16 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { openPicker } from 'test/utils/pickers-utils';
+import { getTextbox, openPicker } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
-export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-picker'> = (
+export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
   getOptions,
 ) => {
   const { componentFamily, render, values, setNewValue, ...pickerParams } = getOptions();
 
-  if (componentFamily !== 'new-picker') {
+  if (componentFamily !== 'picker') {
     return;
   }
 
@@ -82,6 +82,23 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       }
       expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
       expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
+    });
+
+    it('should not select input content after closing on mobile', () => {
+      if (pickerParams.variant !== 'mobile') {
+        return;
+      }
+      render(<ElementToTest defaultValue={values[0]} />);
+
+      // Change the value
+      setNewValue(values[0]);
+      let textbox: HTMLInputElement;
+      if (pickerParams.type === 'date-range') {
+        textbox = screen.getAllByRole<HTMLInputElement>('textbox')[0];
+      } else {
+        textbox = getTextbox();
+      }
+      expect(textbox.scrollLeft).to.be.equal(0);
     });
 
     it('should call onChange, onClose and onAccept when selecting a value and `props.closeOnSelect` is true', () => {

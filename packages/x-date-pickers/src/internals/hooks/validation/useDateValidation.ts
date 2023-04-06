@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useValidation, ValidationProps, Validator } from './useValidation';
+import { Validator } from './useValidation';
 import {
   BaseDateValidationProps,
-  CommonDateTimeValidationError,
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
 } from './models';
+import { DateValidationError } from '../../../models';
 import { useLocalizationContext } from '../useUtils';
 import { applyDefaultDate } from '../../utils/date-utils';
 
@@ -15,14 +15,6 @@ export interface DateComponentValidationProps<TDate>
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>> {}
-
-export type DateValidationError =
-  | CommonDateTimeValidationError
-  | 'shouldDisableDate'
-  | 'shouldDisableMonth'
-  | 'shouldDisableYear'
-  | 'minDate'
-  | 'maxDate';
 
 export const validateDate: Validator<
   any | null,
@@ -106,11 +98,3 @@ export const useIsDateDisabled = <TDate>({
     ],
   );
 };
-
-// TODO v6: Drop with the legacy pickers
-export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
-
-// TODO v6: Drop with the legacy pickers
-export const useDateValidation = <TDate>(
-  props: ValidationProps<DateValidationError, TDate | null, DateComponentValidationProps<TDate>>,
-): DateValidationError => useValidation(props, validateDate, isSameDateError, null);

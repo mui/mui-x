@@ -52,7 +52,7 @@ function ValueLabelComponent(props: any) {
   );
 }
 
-function EditProgress(props: GridRenderEditCellParams<number>) {
+function EditProgress(props: GridRenderEditCellParams<any, number>) {
   const { id, value, field } = props;
   const [valueState, setValueState] = React.useState(Number(value));
 
@@ -106,6 +106,6 @@ function EditProgress(props: GridRenderEditCellParams<number>) {
   );
 }
 
-export function renderEditProgress(params: GridRenderEditCellParams<number>) {
+export function renderEditProgress(params: GridRenderEditCellParams<any, number>) {
   return <EditProgress {...params} />;
 }

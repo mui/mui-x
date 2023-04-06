@@ -6,14 +6,13 @@ import {
   fireEvent,
   getByRole,
   describeConformance,
-  createEvent,
   fireTouchChangedEvent,
   userEvent,
 } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
+  buildPickerDragInteractions,
   createPickerRenderer,
-  DragEventTypes,
   MockedDataTransfer,
   rangeCalendarDayTouches,
   wrapPickerMount,
@@ -26,7 +25,7 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: DateRangePosition) => {
   if (position === 'end') {
@@ -142,55 +141,28 @@ describe('<DateRangeCalendar />', () => {
     describe('dragging behavior', () => {
       let dataTransfer: DataTransfer | null;
 
-      const createDragEvent = (type: DragEventTypes, target: ChildNode) => {
-        const createdEvent = createEvent[type](target);
-        Object.defineProperty(createdEvent, 'dataTransfer', {
-          value: dataTransfer,
-        });
-        return createdEvent;
-      };
-
-      const executeDateDragWithoutDrop = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
-        const endDate = otherDates[otherDates.length - 1];
-        fireEvent(startDate, createDragEvent('dragStart', startDate));
-        fireEvent(startDate, createDragEvent('dragLeave', startDate));
-        otherDates.slice(0, otherDates.length - 1).forEach((date) => {
-          fireEvent(date, createDragEvent('dragEnter', date));
-          fireEvent(date, createDragEvent('dragOver', date));
-          fireEvent(date, createDragEvent('dragLeave', date));
-        });
-        fireEvent(endDate, createDragEvent('dragEnter', endDate));
-        fireEvent(endDate, createDragEvent('dragOver', endDate));
-      };
-
-      const executeDateDrag = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
-        executeDateDragWithoutDrop(startDate, ...otherDates);
-        const endDate = otherDates[otherDates.length - 1];
-        fireEvent(endDate, createDragEvent('drop', endDate));
-        fireEvent(endDate, createDragEvent('dragEnd', endDate));
-      };
+      const { executeDateDragWithoutDrop, executeDateDrag } = buildPickerDragInteractions(
+        () => dataTransfer,
+      );
 
       type TouchTarget = Pick<Touch, 'clientX' | 'clientY'>;
 
       const fireTouchEvent = (
         type: 'touchstart' | 'touchmove' | 'touchend',
-        target: ChildNode,
+        target: Element,
         touch: TouchTarget,
       ) => {
         fireTouchChangedEvent(target, type, { changedTouches: [touch] });
       };
 
-      const executeDateTouchDragWithoutEnd = (
-        target: ChildNode,
-        ...touchTargets: TouchTarget[]
-      ) => {
+      const executeDateTouchDragWithoutEnd = (target: Element, ...touchTargets: TouchTarget[]) => {
         fireTouchEvent('touchstart', target, touchTargets[0]);
         touchTargets.slice(0, touchTargets.length - 1).forEach((touch) => {
           fireTouchEvent('touchmove', target, touch);
         });
       };
 
-      const executeDateTouchDrag = (target: ChildNode, ...touchTargets: TouchTarget[]) => {
+      const executeDateTouchDrag = (target: Element, ...touchTargets: TouchTarget[]) => {
         const endTouchTarget = touchTargets[touchTargets.length - 1];
         executeDateTouchDragWithoutEnd(target, ...touchTargets);
         fireTouchEvent('touchend', target, endTouchTarget);
@@ -433,7 +405,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(6);
         // flip date range
         executeDateDragWithoutDrop(
           screen.getByRole('gridcell', { name: '1' }),
@@ -442,7 +416,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(10);
       });
 
       it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
@@ -462,7 +438,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(6);
         // flip date range
         executeDateTouchDragWithoutEnd(
           screen.getByRole('gridcell', { name: '1' }),
@@ -472,7 +450,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
+        expect(
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
+        ).to.have.lengthOf(10);
       });
     });
   });
@@ -483,6 +463,20 @@ describe('<DateRangeCalendar />', () => {
         <DateRangeCalendar
           components={{
             Day: (day) => <div key={String(day)} data-testid="slot used" />,
+          }}
+        />,
+      );
+
+      expect(screen.getAllByTestId('slot used')).not.to.have.length(0);
+    });
+  });
+
+  describe('Slots: day', () => {
+    it('should render custom day component', () => {
+      render(
+        <DateRangeCalendar
+          slots={{
+            day: (day) => <div key={String(day)} data-testid="slot used" />,
           }}
         />,
       );
@@ -579,8 +573,8 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
@@ -595,8 +589,8 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );

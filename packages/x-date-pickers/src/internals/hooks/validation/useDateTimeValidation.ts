@@ -1,14 +1,7 @@
-import { useValidation, ValidationProps, Validator } from './useValidation';
-import {
-  validateDate,
-  DateValidationError,
-  DateComponentValidationProps,
-} from './useDateValidation';
-import {
-  validateTime,
-  TimeValidationError,
-  TimeComponentValidationProps,
-} from './useTimeValidation';
+import { Validator } from './useValidation';
+import { validateDate, DateComponentValidationProps } from './useDateValidation';
+import { validateTime, TimeComponentValidationProps } from './useTimeValidation';
+import { DateTimeValidationError } from '../../../models';
 
 export interface DateTimeComponentValidationProps<TDate>
   extends DateComponentValidationProps<TDate>,
@@ -36,20 +29,3 @@ export const validateDateTime: Validator<
     props,
   });
 };
-
-export type DateTimeValidationError = DateValidationError | TimeValidationError;
-
-// TODO v6: Drop with the legacy pickers
-export const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) =>
-  a === b;
-
-// TODO v6: Drop with the legacy pickers
-export function useDateTimeValidation<TDate>(
-  props: ValidationProps<
-    DateTimeValidationError,
-    TDate | null,
-    DateTimeComponentValidationProps<TDate>
-  >,
-): DateTimeValidationError {
-  return useValidation(props, validateDateTime, isSameDateTimeError, null);
-}

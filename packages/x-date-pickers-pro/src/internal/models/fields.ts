@@ -1,31 +1,54 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import Stack, { StackProps } from '@mui/material/Stack';
-import Typography, { TypographyProps } from '@mui/material/Typography';
-import { BaseFieldProps, FieldSection } from '@mui/x-date-pickers/internals';
+import { BaseFieldProps } from '@mui/x-date-pickers/internals';
+import { FieldSection } from '@mui/x-date-pickers/models';
 
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
 }
 
-export interface RangeFieldSectionWithoutPosition
-  extends Omit<RangeFieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'> {}
+/**
+ * Props the `textField` slot of the multi input field can receive when used inside a picker.
+ */
+export interface MultiInputFieldSlotTextFieldProps {
+  inputRef?: React.Ref<HTMLInputElement>;
+  disabled?: boolean;
+  readOnly?: boolean;
+  id?: string;
+  label?: React.ReactNode;
+  onKeyDown?: React.KeyboardEventHandler;
+  onFocus?: React.FocusEventHandler;
+  focused?: boolean;
+}
 
-export interface BaseMultiInputFieldProps<TValue, TError>
-  extends Omit<BaseFieldProps<TValue, TError>, 'components' | 'componentsProps'> {
-  components?: {
-    Root?: React.ElementType<StackProps>;
-    Input?: React.ElementType<TextFieldProps>;
-    Separator?: React.ElementType<TypographyProps>;
+/**
+ * Props the `root` slot of the multi input field can receive when used inside a picker.
+ */
+export interface MultiInputFieldSlotRootProps {
+  onBlur?: React.FocusEventHandler;
+}
+
+/**
+ * Props the multi input field can receive when used inside a picker.
+ * Only contains what the MUI component are passing to the field, not what users can pass using the `props.slotProps.field`.
+ */
+export interface BaseMultiInputFieldProps<TValue, TSection extends FieldSection, TError>
+  extends BaseFieldProps<TValue, TSection, TError> {
+  slots?: {
+    root?: React.ElementType;
+    separator?: React.ElementType;
+    textField?: React.ElementType;
   };
-  componentsProps?: {
-    root?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
-    input?: SlotComponentProps<
-      typeof TextField,
+  slotProps?: {
+    root?: SlotComponentProps<
+      React.ElementType<MultiInputFieldSlotRootProps>,
+      {},
+      Record<string, any>
+    >;
+    textField?: SlotComponentProps<
+      React.ElementType<MultiInputFieldSlotTextFieldProps>,
       {},
       { position?: 'start' | 'end' } & Record<string, any>
     >;
-    separator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
   };
 }

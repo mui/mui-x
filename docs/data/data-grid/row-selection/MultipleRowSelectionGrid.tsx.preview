@@ -1,1 +1,12 @@
-<DataGridPro {...data} pagination pageSize={10} />
+<DataGridPro
+  {...data}
+  pagination
+  initialState={{
+    ...data.initialState,
+    pagination: {
+      paginationModel: {
+        pageSize: 10,
+      },
+    },
+  }}
+/>

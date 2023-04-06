@@ -152,7 +152,7 @@ describe('<DateCalendar />', () => {
 
       expect(screen.getByText('January 2019')).toBeVisible();
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
-      // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+      // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
           '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
@@ -446,8 +446,8 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
@@ -463,8 +463,8 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );

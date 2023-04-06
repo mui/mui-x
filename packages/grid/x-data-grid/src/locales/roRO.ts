@@ -6,7 +6,6 @@ const roROGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Lipsă date',
   noResultsOverlayLabel: 'Nu au fost găsite rezultate.',
-  errorOverlayDefaultLabel: 'A apărut o eroare neașteptată.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Înălțime rând',
@@ -48,8 +47,9 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Adăugare filtru',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Ștergere',
-  filterPanelLinkOperator: 'Operatori logici',
+  filterPanelLogicOperator: 'Operatori logici',
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'Și',
   filterPanelOperatorOr: 'Sau',

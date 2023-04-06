@@ -6,7 +6,6 @@ const itITGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nessun record',
   noResultsOverlayLabel: 'Nessun record trovato.',
-  errorOverlayDefaultLabel: 'Si è verificato un errore.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densità',
@@ -48,8 +47,9 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Rimuovi',
-  filterPanelLinkOperator: 'Operatore logico',
+  filterPanelLogicOperator: 'Operatore logico',
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',

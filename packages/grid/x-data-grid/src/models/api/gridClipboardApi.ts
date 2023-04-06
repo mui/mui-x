@@ -5,8 +5,7 @@ export interface GridClipboardApi {
   /**
    * Copies the selected rows to the clipboard.
    * The fields will be separated by the TAB character.
-   * @param {boolean} includeHeaders Whether to include the headers or not. Default is `false`.
    * @ignore - do not document.
    */
-  unstable_copySelectedRowsToClipboard: (includeHeaders?: boolean) => void;
+  unstable_copySelectedRowsToClipboard: () => void;
 }

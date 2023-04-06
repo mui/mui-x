@@ -63,7 +63,7 @@ export function useGridDimensions(
     | 'autoHeight'
     | 'getRowHeight'
     | 'rowHeight'
-    | 'headerHeight'
+    | 'columnHeaderHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
@@ -73,7 +73,7 @@ export function useGridDimensions(
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.headerHeight);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -272,8 +272,7 @@ export function useGridDimensions(
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, 'pageChange', updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, 'pageSizeChange', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'paginationModelChange', updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, 'columnsChange', updateGridDimensionsRef);
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);

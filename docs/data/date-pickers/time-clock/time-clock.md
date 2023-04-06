@@ -2,13 +2,13 @@
 product: date-pickers
 title: React Time Clock component
 components: TimeClock
-githubLabel: 'component: pickers'
+githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
 ---
 
 # Time Clock
 
-<p class="description">The Time Clock lets the user select a time without any input or popper / modal.</p>
+<p class="description">The Time Clock component lets the user select a time without any input or popper / modal.</p>
 
 ## Basic usage
 
@@ -16,7 +16,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The component can be uncontrolled or controlled.
 
 {{"demo": "TimeClockValue.js"}}
 

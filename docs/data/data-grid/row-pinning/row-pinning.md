@@ -6,18 +6,9 @@ title: Data Grid - Row pinning
 
 <p class="description">Pin rows to keep them visible at all times.</p>
 
-Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the grid vertically.
+Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the data grid vertically.
 
-:::warning
-This feature is experimental, it needs to be explicitly activated using the `rowPinning` experimental feature flag.
-
-```tsx
-<DataGridPro experimentalFeatures={{ rowPinning: true }} {...otherProps} />
-```
-
-:::
-
-You can pin rows at the top or bottom of the grid by passing pinned rows data through the `pinnedRows` prop:
+You can pin rows at the top or bottom of the Data Grid by passing pinned rows data through the `pinnedRows` prop:
 
 ```tsx
 const pinnedRows: GridPinnedRowsProp = {
@@ -35,11 +26,11 @@ The data format for pinned rows is the same as for the `rows` prop (see [Feeding
 
 Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-definition/#row-identifier) requirements.
 
-{{"demo": "RowPinning.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "RowPinning.js", "bg": "inline"}}
 
 :::warning
 Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
-Otherwise, the grid will re-apply heavy work like sorting and filtering.
+Otherwise, the data grid will re-apply heavy work like sorting and filtering.
 :::
 
 ## Controlling pinned rows
@@ -48,7 +39,7 @@ You can control which rows are pinned by changing `pinnedRows`.
 
 In the demo below we use `actions` column type to add buttons to pin a row either at the top or bottom and change `pinnedRows` prop dynamically.
 
-{{"demo": "RowPinningWithActions.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RowPinningWithActions.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Usage with other features
 
@@ -56,7 +47,7 @@ Pinned rows are not affected by sorting and filtering.
 
 Pagination does not impact pinned rows as well - they stay pinned regardless the page number or page size.
 
-{{"demo": "RowPinningWithPagination.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RowPinningWithPagination.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
 Pinned rows do not support the following features:

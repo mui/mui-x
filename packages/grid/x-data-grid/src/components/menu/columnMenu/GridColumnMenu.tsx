@@ -1,20 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
-import { useGridColumnMenuComponents } from '../../../hooks/features/columnMenu/useGridColumnMenuComponents';
+import { useGridColumnMenuSlots } from '../../../hooks/features/columnMenu/useGridColumnMenuSlots';
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuColumnsItem } from './menuItems/GridColumnMenuColumnsItem';
 import { GridColumnMenuFilterItem } from './menuItems/GridColumnMenuFilterItem';
 import { GridColumnMenuSortItem } from './menuItems/GridColumnMenuSortItem';
 import { GridColumnMenuProps, GridGenericColumnMenuProps } from './GridColumnMenuProps';
 
-export const GRID_COLUMN_MENU_COMPONENTS = {
-  ColumnMenuSortItem: GridColumnMenuSortItem,
-  ColumnMenuFilterItem: GridColumnMenuFilterItem,
-  ColumnMenuColumnsItem: GridColumnMenuColumnsItem,
+export const GRID_COLUMN_MENU_SLOTS = {
+  columnMenuSortItem: GridColumnMenuSortItem,
+  columnMenuFilterItem: GridColumnMenuFilterItem,
+  columnMenuColumnsItem: GridColumnMenuColumnsItem,
 };
 
-export const GRID_COLUMN_MENU_COMPONENTS_PROPS = {
+export const GRID_COLUMN_MENU_SLOT_PROPS = {
   columnMenuSortItem: { displayOrder: 10 },
   columnMenuFilterItem: { displayOrder: 20 },
   columnMenuColumnsItem: { displayOrder: 30 },
@@ -22,21 +22,20 @@ export const GRID_COLUMN_MENU_COMPONENTS_PROPS = {
 
 const GridGenericColumnMenu = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
   function GridGenericColumnMenu(props, ref) {
-    const { defaultComponents, defaultComponentsProps, components, componentsProps, ...other } =
-      props;
+    const { defaultSlots, defaultSlotProps, slots, slotProps, ...other } = props;
 
-    const orderedComponents = useGridColumnMenuComponents({
+    const orderedSlots = useGridColumnMenuSlots({
       ...other,
-      defaultComponents,
-      defaultComponentsProps,
-      components,
-      componentsProps,
+      defaultSlots,
+      defaultSlotProps,
+      slots,
+      slotProps,
     });
 
     return (
       <GridColumnMenuContainer ref={ref} {...other}>
-        {orderedComponents.map(([Component, componentProps], index) => (
-          <Component key={index} {...componentProps} />
+        {orderedSlots.map(([Component, otherProps], index) => (
+          <Component key={index} {...otherProps} />
         ))}
       </GridColumnMenuContainer>
     );
@@ -49,8 +48,8 @@ const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
       <GridGenericColumnMenu
         {...props}
         ref={ref}
-        defaultComponents={GRID_COLUMN_MENU_COMPONENTS}
-        defaultComponentsProps={GRID_COLUMN_MENU_COMPONENTS_PROPS}
+        defaultSlots={GRID_COLUMN_MENU_SLOTS}
+        defaultSlotProps={GRID_COLUMN_MENU_SLOT_PROPS}
       />
     );
   },
@@ -62,21 +61,21 @@ GridColumnMenu.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
-  /**
-   * `components` could be used to add new and (or) override default column menu items
-   * If you register a nee component you must pass it's `displayOrder` in `componentsProps`
-   * or it will be placed in the end of the list
-   */
-  components: PropTypes.object,
-  /**
-   * Could be used to pass new props or override props specific to a column menu component
-   * e.g. `displayOrder`
-   */
-  componentsProps: PropTypes.object,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,
   open: PropTypes.bool.isRequired,
+  /**
+   * Could be used to pass new props or override props specific to a column menu component
+   * e.g. `displayOrder`
+   */
+  slotProps: PropTypes.object,
+  /**
+   * `slots` could be used to add new and (or) override default column menu items
+   * If you register a nee component you must pass it's `displayOrder` in `slotProps`
+   * or it will be placed in the end of the list
+   */
+  slots: PropTypes.object,
 } as any;
 
 export { GridColumnMenu, GridGenericColumnMenu };

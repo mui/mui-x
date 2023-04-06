@@ -6,7 +6,6 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
-  errorOverlayDefaultLabel: 'Ein unerwarteter Fehler ist aufgetreten.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',
@@ -48,8 +47,9 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Löschen',
-  filterPanelLinkOperator: 'Logische Operatoren',
+  filterPanelLogicOperator: 'Logische Operatoren',
   filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',

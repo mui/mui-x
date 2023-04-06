@@ -6,7 +6,6 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма редове',
   noResultsOverlayLabel: 'Няма намерени резултати.',
-  errorOverlayDefaultLabel: 'Възникна грешка.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Гъстота',
@@ -27,16 +26,16 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Търси…',
+  toolbarQuickFilterLabel: 'Търсене',
+  toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
   toolbarExportCSV: 'Изтегли като CSV',
   toolbarExportPrint: 'Принтиране',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Изтегли като Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
@@ -47,8 +46,9 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
+  filterPanelRemoveAll: 'Премахни всички',
   filterPanelDeleteIconLabel: 'Изтрий',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Логически оператор',
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
@@ -79,7 +79,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Покажи колоните',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Управление на колони',
   columnMenuFilter: 'Филтри',
   columnMenuHideColumn: 'Скрий',
   columnMenuUnsort: 'Отмени сортирането',
@@ -139,7 +139,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Свиване',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Подредба на редове',
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',

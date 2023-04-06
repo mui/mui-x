@@ -277,9 +277,9 @@ export interface GridClasses {
    */
   filterFormDeleteIcon: string;
   /**
-   * Styles applied to the link operator inout of the filter form component.
+   * Styles applied to the link operator input of the filter form component.
    */
-  filterFormLinkOperatorInput: string;
+  filterFormLogicOperatorInput: string;
   /**
    * Styles applied to the column input of the filter form component.
    */
@@ -602,7 +602,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editInputCell',
   'filterForm',
   'filterFormDeleteIcon',
-  'filterFormLinkOperatorInput',
+  'filterFormLogicOperatorInput',
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',

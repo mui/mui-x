@@ -19,7 +19,7 @@ const DENSITY_FACTORS: Record<GridDensity, number> = {
 };
 
 export const densityStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'density' | 'headerHeight' | 'rowHeight'>
+  Pick<DataGridProcessedProps, 'density'>
 > = (state, props) => ({
   ...state,
   density: { value: props.density, factor: DENSITY_FACTORS[props.density] },
@@ -27,7 +27,7 @@ export const densityStateInitializer: GridStateInitializer<
 
 export const useGridDensity = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'headerHeight' | 'rowHeight' | 'density'>,
+  props: Pick<DataGridProcessedProps, 'density'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
 

@@ -216,8 +216,7 @@ ${logChangelogSection(dataGridCommits, '#### Changes')}
 ${logChangelogSection(pickersCommits, '#### Changes')}
 ${logChangelogSection(
   codemodCommits,
-  `
-### \`@mui/x-codemod@v__VERSION__\`
+  `### \`@mui/x-codemod@v__VERSION__\`
 
 #### Changes`,
 )}
@@ -250,7 +249,7 @@ yargs(process.argv.slice(2))
         })
         .option('release', {
           // #default-branch-switch
-          default: 'next',
+          default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         });

@@ -55,7 +55,7 @@ export const useGridInfiniteLoader = (
         const rowScrollEndParam: GridRowScrollEndParams = {
           visibleColumns,
           viewportPageSize,
-          virtualRowsCount: currentPage.rows.length,
+          visibleRowsCount: currentPage.rows.length,
         };
         apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParam);
         isInScrollBottomArea.current = true;

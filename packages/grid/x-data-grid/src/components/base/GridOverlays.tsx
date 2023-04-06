@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
   gridRowCountSelector,
   gridRowsLoadingSelector,
@@ -95,7 +95,7 @@ export function GridOverlays() {
   const rootProps = useGridRootProps();
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
   const showNoRowsOverlay = !loading && totalRowCount === 0;
@@ -104,19 +104,15 @@ export function GridOverlays() {
   let overlay: JSX.Element | null = null;
 
   if (showNoRowsOverlay) {
-    overlay = <rootProps.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />;
+    overlay = <rootProps.slots.noRowsOverlay {...rootProps.slotProps?.noRowsOverlay} />;
   }
 
   if (showNoResultsOverlay) {
-    overlay = (
-      <rootProps.components.NoResultsOverlay {...rootProps.componentsProps?.noResultsOverlay} />
-    );
+    overlay = <rootProps.slots.noResultsOverlay {...rootProps.slotProps?.noResultsOverlay} />;
   }
 
   if (loading) {
-    overlay = (
-      <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
-    );
+    overlay = <rootProps.slots.loadingOverlay {...rootProps.slotProps?.loadingOverlay} />;
   }
 
   if (overlay === null) {

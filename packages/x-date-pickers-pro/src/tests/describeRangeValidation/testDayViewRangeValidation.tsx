@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { screen } from '@mui/monorepo/test/utils';
-import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
 
 const isDisable = (el: HTMLElement) => el.getAttribute('disabled') !== null;
@@ -31,10 +30,6 @@ const testMonthSwitcherAreDisable = (areDisable: [boolean, boolean]) => {
   }
 };
 
-const dateParser = (value: (null | number[])[]) => {
-  return value.map((date) => (date === null ? date : adapterToUse.date(new Date(...(date as [])))));
-};
-
 export function testDayViewRangeValidation(ElementToTest, getOptions) {
   describe('validation in day view:', () => {
     const { componentFamily, views, variant = 'desktop' } = getOptions();
@@ -45,23 +40,10 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
     const isDesktop = variant === 'desktop';
 
-    const defaultProps = componentFamily.includes('legacy')
-      ? {
-          open: true,
-          defaultCalendarMonth: adapterToUse.date(new Date(2018, 2, 12)),
-          value: [null, null],
-          onChange: () => {},
-          renderInput: (startProps, endProps) => (
-            <div>
-              <TextField {...startProps} />
-              <TextField {...endProps} />
-            </div>
-          ),
-        }
-      : {
-          defaultCalendarMonth: adapterToUse.date(new Date(2018, 2, 12)),
-          open: true,
-        };
+    const defaultProps = {
+      defaultCalendarMonth: adapterToUse.date(new Date(2018, 2, 12)),
+      open: true,
+    };
 
     it('should apply shouldDisableDate', function test() {
       const { render } = getOptions();
@@ -76,70 +58,6 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
 
       testDisabledDate('10', [false, true], isDesktop);
       testDisabledDate('11', [true, true], isDesktop);
-    });
-
-    it('should apply shouldDisableYear', function test() {
-      if (componentFamily !== 'legacy-picker') {
-        return;
-      }
-      const { render, clock } = getOptions();
-
-      const { setProps } = render(
-        <ElementToTest
-          {...defaultProps}
-          shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
-        />,
-      );
-
-      testDisabledDate('10', [true, true], isDesktop);
-
-      setProps({
-        value: dateParser([
-          [2018, 11, 15],
-          [2019, 0, 13],
-        ]),
-      });
-      clock.runToLast();
-      testDisabledDate('10', [true, false], isDesktop);
-
-      setProps({
-        value: dateParser([
-          [2019, 5, 15],
-          [2019, 5, 19],
-        ]),
-      });
-      clock.runToLast();
-      testDisabledDate('10', [false, false], isDesktop);
-    });
-
-    it('should apply shouldDisableMonth', function test() {
-      if (componentFamily !== 'legacy-picker') {
-        return;
-      }
-      const { render, clock } = getOptions();
-
-      const { setProps } = render(
-        <ElementToTest
-          {...defaultProps}
-          shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 2}
-        />,
-      );
-
-      testDisabledDate('1', [true, false], isDesktop);
-      testDisabledDate('15', [true, false], isDesktop);
-      testDisabledDate('30', [true, false], isDesktop);
-
-      setProps({
-        value: dateParser([
-          [2018, 4, 10],
-          [2018, 5, 13],
-        ]),
-      });
-      clock.runToLast();
-
-      testDisabledDate('1', [false, false], isDesktop);
-      testDisabledDate('15', [false, false], isDesktop);
-      testDisabledDate('30', [false, false], isDesktop);
     });
 
     it('should apply disablePast', function test() {

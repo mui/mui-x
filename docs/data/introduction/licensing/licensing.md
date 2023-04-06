@@ -19,7 +19,7 @@ See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparis
 
 ### Community Plan
 
-The community version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+The community version of MUI X is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
 
 MIT licensed npm packages:
@@ -158,13 +158,14 @@ You only need to install the key once in your application.
 When using Next.js, you should call `setLicenseKey` in [`_app.js`](https://nextjs.org/docs/advanced-features/custom-app):
 
 ```tsx
+import { LicenseInfo } from '@mui/x-license-pro';
+
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
-function MyApp({ Component, pageProps }) {
+export default function MyApp(props) {
+  const { Component, pageProps } = props;
   return <Component {...pageProps} />;
 }
-
-export default MyApp;
 ```
 
 :::

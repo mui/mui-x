@@ -8,10 +8,11 @@ import {
 import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
 import { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import { RangeFieldSection } from './fields';
 
 export interface UseDateTimeRangeFieldProps<TDate>
   extends MakeOptional<
-      UseFieldInternalProps<DateRange<TDate>, DateTimeRangeValidationError>,
+      UseFieldInternalProps<DateRange<TDate>, RangeFieldSection, DateTimeRangeValidationError>,
       'format'
     >,
     DayRangeValidationProps<TDate>,

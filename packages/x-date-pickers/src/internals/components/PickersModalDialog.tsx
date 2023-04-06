@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
 import DialogContent from '@mui/material/DialogContent';
 import Fade from '@mui/material/Fade';
 import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
@@ -7,11 +6,10 @@ import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
-import { PickersActionBar, PickersActionBarAction } from '../../PickersActionBar';
-import { PickerStateWrapperProps } from '../hooks/usePickerState';
-import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
+import { UncapitalizeObjectKeys } from '../utils/slots-migration';
+import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
 
-export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsComponent, 'ActionBar'> {
+export interface PickersModalDialogSlotsComponent {
   /**
    * Custom component for the dialog inside which the views are rendered on mobile.
    * @default PickersModalDialogRoot
@@ -23,14 +21,13 @@ export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsCompo
    */
   MobilePaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
-   * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions).
+   * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).
    * @default Fade from @mui/material
    */
   MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogSlotsComponentsProps
-  extends Pick<PickersSlotsComponentsProps, 'actionBar'> {
+export interface PickersModalDialogSlotsComponentsProps {
   /**
    * Props passed down to the [`Dialog`](https://mui.com/material-ui/api/dialog/) component.
    */
@@ -40,22 +37,23 @@ export interface PickersModalDialogSlotsComponentsProps
    */
   mobilePaper?: Partial<MuiPaperProps>;
   /**
-   * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions) component.
+   * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions/) component.
    */
   mobileTransition?: Partial<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogProps extends PickerStateWrapperProps {
+export interface PickersModalDialogProps extends UsePickerValueActions {
   /**
-   * Overrideable components.
+   * Overridable component slots.
    * @default {}
    */
-  components?: PickersModalDialogSlotsComponent;
+  slots?: UncapitalizeObjectKeys<PickersModalDialogSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickersModalDialogSlotsComponentsProps;
+  slotProps?: PickersModalDialogSlotsComponentsProps;
+  open: boolean;
 }
 
 const PickersModalDialogRoot = styled(MuiDialog)({
@@ -75,47 +73,22 @@ const PickersModalDialogContent = styled(DialogContent)({
 });
 
 export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDialogProps>) {
-  const {
-    children,
-    onAccept,
-    onClear,
-    onDismiss,
-    onCancel,
-    onSetToday,
-    open,
-    components,
-    componentsProps,
-  } = props;
+  const { children, onDismiss, open, slots, slotProps } = props;
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
-  const actionBarProps = useSlotProps({
-    elementType: ActionBar,
-    externalSlotProps: componentsProps?.actionBar,
-    additionalProps: {
-      onAccept,
-      onClear,
-      onCancel,
-      onSetToday,
-      actions: ['cancel', 'accept'] as PickersActionBarAction[],
-    },
-    ownerState: { wrapperVariant: 'mobile' },
-  });
-
-  const Dialog = components?.Dialog ?? PickersModalDialogRoot;
-  const Transition = components?.MobileTransition ?? Fade;
+  const Dialog = slots?.dialog ?? PickersModalDialogRoot;
+  const Transition = slots?.mobileTransition ?? Fade;
 
   return (
     <Dialog
       open={open}
       onClose={onDismiss}
-      {...componentsProps?.dialog}
+      {...slotProps?.dialog}
       TransitionComponent={Transition}
-      TransitionProps={componentsProps?.mobileTransition}
-      PaperComponent={components?.MobilePaper}
-      PaperProps={componentsProps?.mobilePaper}
+      TransitionProps={slotProps?.mobileTransition}
+      PaperComponent={slots?.mobilePaper}
+      PaperProps={slotProps?.mobilePaper}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
-      <ActionBar {...actionBarProps} />
     </Dialog>
   );
 }

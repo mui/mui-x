@@ -18,6 +18,8 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'classes',
         'components',
         'componentsProps',
+        'slots',
+        'slotProps',
         'columns',
         'currentColumn',
         'colDef',
@@ -35,6 +37,9 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'rowNode',
         'localeText',
         'columnGroupingModel',
+        'unstableFieldRef',
+        'unstableStartFieldRef',
+        'unstableEndFieldRef',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;

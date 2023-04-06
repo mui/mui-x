@@ -6,10 +6,6 @@ import {
 export interface PickersYearClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element in desktop mode. */
-  modeDesktop: string;
-  /** Styles applied to the root element in mobile mode. */
-  modeMobile: string;
   /** Styles applied to the year button element. */
   yearButton: string;
   /** Styles applied to a selected year button element. */
@@ -24,10 +20,8 @@ export function getPickersYearUtilityClass(slot: string) {
   return generateUtilityClass('MuiPickersYear', slot);
 }
 
-export const pickersYearClasses = generateUtilityClasses('MuiPickersYear', [
+export const pickersYearClasses = generateUtilityClasses<PickersYearClassKey>('MuiPickersYear', [
   'root',
-  'modeDesktop',
-  'modeMobile',
   'yearButton',
   'selected',
   'disabled',
