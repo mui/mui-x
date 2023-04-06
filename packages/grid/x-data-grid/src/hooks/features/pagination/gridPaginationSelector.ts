@@ -45,12 +45,22 @@ export const gridPageSizeSelector = createSelector(
 /**
  * Get the amount of pages needed to display all the rows if the pagination is enabled
  * @category Pagination
+ * @deprecated Use `gridPageSizeSelector`, `gridFilteredTopLevelRowCountSelector`, and `rootProps.rowCount` to calculate it
  */
 export const gridPageCountSelector = createSelector(
   gridPaginationModelSelector,
   gridFilteredTopLevelRowCountSelector,
-  (paginationModel, visibleTopLevelRowCount) =>
-    getPageCount(visibleTopLevelRowCount, paginationModel.pageSize),
+
+  (paginationModel, visibleTopLevelRowCount) => {
+    console.warn(
+      [
+        `MUI: Do not use \`gridPageCountSelector\` with \`rowCount\` prop.`,
+        `Use \`gridPageSizeSelector\`, \`gridFilteredTopLevelRowCountSelector\`,`,
+        `and \`rootProps.rowCount\`/\`gridFilteredTopLevelRowCountSelector\` to calculate page count instead`,
+      ].join('\n'),
+    );
+    return getPageCount(visibleTopLevelRowCount, paginationModel.pageSize);
+  },
 );
 
 /**
