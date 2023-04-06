@@ -4,6 +4,7 @@ import {
   FieldSection,
   FieldSelectedSections,
   MuiPickersAdapter,
+  FieldSectionContentType,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
@@ -59,6 +60,20 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    * Format of the date when rendered in the input(s).
    */
   format: string;
+  /**
+   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   *
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies.
+   *
+   * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
+   * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
+   *
+   * Warning n°3: When using dayjs in strict mode and `shouldRespectLeadingZeros={false}`, parsing the value from the input will result in an invalid date.
+   *
+   * @default `false`
+   */
+  shouldRespectLeadingZeros?: boolean;
   /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
@@ -143,7 +158,7 @@ export type FieldSectionsValueBoundaries<TDate> = {
   [SectionType in FieldSectionType]: (params: {
     currentDate: TDate | null;
     format: string;
-    contentType: 'digit' | 'letter';
+    contentType: FieldSectionContentType;
   }) => FieldSectionValueBoundaries<TDate, SectionType>;
 };
 
@@ -220,7 +235,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection>
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
-   * @param {boolean} isRTL `true` is the current orientation is "right to left"
+   * @param {boolean} isRTL `true` if the current orientation is "right to left"
    * @returns {string} The string value to render in the input.
    */
   getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;

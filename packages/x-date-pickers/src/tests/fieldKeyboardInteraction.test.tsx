@@ -13,6 +13,10 @@ import {
 } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { FieldSectionType, MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import {
+  getDateSectionConfigFromFormatToken,
+  cleanLeadingZeros,
+} from '../internals/hooks/useField/useField.utils';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 
@@ -167,57 +171,73 @@ adapterToTest.forEach((adapterName) => {
 
     const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
+    const cleanValueStr = (
+      valueStr: string,
+      sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>,
+    ) => {
+      if (sectionConfig.contentType === 'digit' && sectionConfig.maxLength != null) {
+        return cleanLeadingZeros(adapter, valueStr, sectionConfig.maxLength);
+      }
+
+      return valueStr;
+    };
+
     const testKeyPress = <TDate extends unknown>({
       key,
       format,
       initialValue,
       expectedValue,
-      cursorPosition = 1,
+      sectionConfig,
     }: {
       key: string;
       format: string;
       initialValue: TDate;
       expectedValue: TDate;
-      cursorPosition?: number;
+      sectionConfig: ReturnType<typeof getDateSectionConfigFromFormatToken>;
     }) => {
       render(<DateTimeField defaultValue={initialValue} format={format} />);
       const input = getTextbox();
-      clickOnInput(input, cursorPosition);
+      clickOnInput(input, 1);
       userEvent.keyPress(input, { key });
 
-      expectInputValue(input, adapter.formatByString(expectedValue, format));
+      expectInputValue(
+        input,
+        cleanValueStr(adapter.formatByString(expectedValue, format), sectionConfig),
+      );
     };
 
-    const testKeyboardInteraction = (formatToken, sectionConfig) => {
-      const sectionType =
-        typeof sectionConfig === 'object' ? sectionConfig.sectionType : sectionConfig;
-      it(`should increase "${sectionType}" when pressing ArrowUp on "${formatToken}" token`, () => {
+    const testKeyboardInteraction = (formatToken) => {
+      const sectionConfig = getDateSectionConfigFromFormatToken(adapter, formatToken);
+
+      it(`should increase "${sectionConfig.type}" when pressing ArrowUp on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updateDate(initialValue, adapter, sectionType, 1);
+        const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, 1);
 
         testKeyPress({
           key: 'ArrowUp',
           initialValue,
           expectedValue,
+          sectionConfig,
           format: formatToken,
         });
       });
 
-      it(`should decrease "${sectionType}" when pressing ArrowDown on "${formatToken}" token`, () => {
+      it(`should decrease "${sectionConfig.type}" when pressing ArrowDown on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updateDate(initialValue, adapter, sectionType, -1);
+        const expectedValue = updateDate(initialValue, adapter, sectionConfig.type, -1);
 
         testKeyPress({
           key: 'ArrowDown',
           initialValue,
           expectedValue,
+          sectionConfig,
           format: formatToken,
         });
       });
     };
 
-    Object.entries(adapter.formatTokenMap).forEach(([formatToken, sectionConfig]) =>
-      testKeyboardInteraction(formatToken, sectionConfig),
-    );
+    Object.keys(adapter.formatTokenMap).forEach((formatToken) => {
+      testKeyboardInteraction(formatToken);
+    });
   });
 });

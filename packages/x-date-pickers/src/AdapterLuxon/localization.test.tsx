@@ -13,15 +13,15 @@ const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
   undefined: {
     placeholder: 'MM/DD/YYYY hh:mm aa',
-    value: '5/15/2018 09:35 AM',
+    value: '05/15/2018 09:35 AM',
   },
   fr: {
     placeholder: 'DD/MM/YYYY hh:mm',
-    value: '15/5/2018 9:35',
+    value: '15/05/2018 09:35',
   },
   de: {
     placeholder: 'DD.MM.YYYY hh:mm',
-    value: '15.5.2018 9:35',
+    value: '15.05.2018 09:35',
   },
 };
 describe('<AdapterLuxon />', () => {

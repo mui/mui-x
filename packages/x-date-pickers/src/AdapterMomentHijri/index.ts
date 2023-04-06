@@ -7,9 +7,9 @@ import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
-  iY: 'year',
-  iYY: 'year',
-  iYYYY: 'year',
+  iY: { sectionType: 'year', contentType: 'letter' },
+  iYY: { sectionType: 'year', contentType: 'letter' },
+  iYYYY: { sectionType: 'year', contentType: 'letter' },
 
   // Month
   iM: 'month',

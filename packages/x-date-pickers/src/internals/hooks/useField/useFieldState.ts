@@ -65,6 +65,7 @@ export const useFieldState = <
       format,
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
+      shouldRespectLeadingZeros = false,
     },
   } = params;
 
@@ -76,9 +77,9 @@ export const useFieldState = <
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
-        splitFormatIntoSections(utils, localeText, format, date),
+        splitFormatIntoSections(utils, localeText, format, date, shouldRespectLeadingZeros),
       ),
-    [fieldValueManager, format, localeText, isRTL, utils],
+    [fieldValueManager, format, localeText, isRTL, shouldRespectLeadingZeros, utils],
   );
 
   const placeholder = React.useMemo(
@@ -241,7 +242,13 @@ export const useFieldState = <
         return null;
       }
 
-      const sections = splitFormatIntoSections(utils, localeText, format, date);
+      const sections = splitFormatIntoSections(
+        utils,
+        localeText,
+        format,
+        date,
+        shouldRespectLeadingZeros,
+      );
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
