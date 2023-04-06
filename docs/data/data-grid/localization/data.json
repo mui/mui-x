@@ -75,7 +75,7 @@
     "languageTag": "fr-FR",
     "importName": "frFR",
     "localeName": "French",
-    "missingKeysCount": 8,
+    "missingKeysCount": 2,
     "totalKeysCount": 94,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/frFR.ts"
   },
