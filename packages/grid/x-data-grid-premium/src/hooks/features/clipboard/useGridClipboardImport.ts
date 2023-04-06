@@ -166,12 +166,13 @@ class CellValueUpdater {
     field: GridColDef['field'];
     pastedCellValue: string;
   }) {
+    if (pastedCellValue === undefined) {
+      return;
+    }
+
     const { apiRef, getRowId } = this.options;
     const colDef = apiRef.current.getColumn(field);
     if (!colDef || !colDef.editable) {
-      return;
-    }
-    if (pastedCellValue === undefined) {
       return;
     }
     const row = this.rowsToUpdate[rowId] || { ...apiRef.current.getRow(rowId) };
