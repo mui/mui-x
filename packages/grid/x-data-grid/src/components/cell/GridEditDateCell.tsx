@@ -98,7 +98,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const hasUpdatedValueOnRender = React.useRef(false);
+  const hasUpdatedEditValueOnMount = React.useRef(false);
 
   const parseValueToDate = React.useCallback((value: string) => {
     if (value === '') {
@@ -155,15 +155,15 @@ function GridEditDateCell(props: GridEditDateCellProps) {
 
   const meta = apiRef.current.unstable_getEditCellMeta(id, field);
 
-  const handleInputRef = async (el: HTMLInputElement) => {
+  const handleInputRef = (el: HTMLInputElement) => {
     inputRef.current = el;
 
-    if (meta.unstable_updateValueOnRender && !hasUpdatedValueOnRender.current) {
+    if (meta.unstable_updateValueOnRender && !hasUpdatedEditValueOnMount.current) {
       const inputValue = inputRef.current.value;
       const parsedDate = parseValueToDate(inputValue);
       setValueState({ parsed: parsedDate, formatted: inputValue });
       apiRef.current.setEditCellValue({ id, field, value: parsedDate });
-      hasUpdatedValueOnRender.current = true;
+      hasUpdatedEditValueOnMount.current = true;
     }
   };
 
