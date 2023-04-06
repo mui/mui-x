@@ -585,46 +585,14 @@ export const useGridRowSelection = (
   }, [apiRef, isRowSelectable, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
-    if (!props.rowSelection) {
+    if (!props.rowSelection || isStateControlled) {
       return;
     }
 
     const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
-
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
-      const { rows: currentPageRows } = getVisibleRows(apiRef, {
-        pagination,
-        paginationMode,
-      });
-
-      const currentPageRowsLookup = currentPageRows.reduce<Record<GridRowId, true>>(
-        (acc, { id }) => {
-          acc[id] = true;
-          return acc;
-        },
-        {},
-      );
-
-      const firstSelectableRow = currentSelection.find((id) => {
-        let isSelectable = true;
-        if (isRowSelectable) {
-          isSelectable = isRowSelectable(id);
-        }
-        return isSelectable && currentPageRowsLookup[id]; // Check if the row is in the current page
-      });
-
-      apiRef.current.setRowSelectionModel(
-        firstSelectableRow !== undefined ? [firstSelectableRow] : [],
-      );
+      // See https://github.com/mui/mui-x/issues/8455
+      apiRef.current.setRowSelectionModel([]);
     }
-  }, [
-    apiRef,
-    canHaveMultipleSelection,
-    checkboxSelection,
-    disableMultipleRowSelection,
-    isRowSelectable,
-    pagination,
-    paginationMode,
-    props.rowSelection,
-  ]);
+  }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
 };
