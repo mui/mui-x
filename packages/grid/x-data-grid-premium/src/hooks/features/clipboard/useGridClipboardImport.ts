@@ -371,7 +371,7 @@ export const useGridClipboardImport = (
       }
 
       const selectedCell = gridFocusCellSelector(apiRef);
-      if (!selectedCell || !selectedCell.id || !selectedCell.field) {
+      if (!selectedCell) {
         return;
       }
 

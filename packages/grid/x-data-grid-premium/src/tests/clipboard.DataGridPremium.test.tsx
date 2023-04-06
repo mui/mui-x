@@ -400,5 +400,101 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
       expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
     });
+
+    it('should call `processRowUpdate` with each row impacted by the paste', async () => {
+      const processRowUpdateSpy = spy((newRow) => {
+        return newRow;
+      });
+      render(<Test processRowUpdate={processRowUpdateSpy} />);
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(2, 2), { shiftKey: true });
+
+      paste(cell, '12');
+
+      await waitFor(() => {
+        expect(getCell(2, 2).textContent).to.equal('12');
+      });
+
+      expect(processRowUpdateSpy.callCount).to.equal(3);
+      expect(processRowUpdateSpy.args).to.deep.equal([
+        [
+          { id: 0, currencyPair: '12', price1M: '12' }, // new row
+          { id: 0, currencyPair: 'USDGBP', price1M: 1 }, // old row
+        ],
+        [
+          { id: 1, currencyPair: '12', price1M: '12' }, // new row
+          { id: 1, currencyPair: 'USDEUR', price1M: 11 }, // old row
+        ],
+        [
+          { id: 2, currencyPair: '12', price1M: '12' }, // new row
+          { id: 2, currencyPair: 'GBPEUR', price1M: 21 }, // old row
+        ],
+      ]);
+    });
+
+    it('should use the returned value from `processRowUpdate`', async () => {
+      render(
+        <Test
+          processRowUpdate={(newRow) => {
+            return { ...newRow, currencyPair: '123' };
+          }}
+        />,
+      );
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      paste(cell, '12');
+
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['123', 'USDEUR', 'GBPEUR', 'JPYUSD']);
+      });
+    });
+
+    it('should emit clipboard paste events', async () => {
+      const calls: string[] = [];
+      const onClipboardPasteStartSpy = spy(() => {
+        calls.push('onClipboardPasteStart');
+      });
+      const onClipboardPasteEndSpy = spy(() => {
+        calls.push('onClipboardPasteEnd');
+      });
+      const processRowUpdateSpy = spy((newRow) => {
+        calls.push('processRowUpdate');
+        return newRow;
+      });
+      render(
+        <Test
+          onClipboardPasteStart={onClipboardPasteStartSpy}
+          onClipboardPasteEnd={onClipboardPasteEndSpy}
+          processRowUpdate={processRowUpdateSpy}
+        />,
+      );
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(0, 2), { shiftKey: true });
+
+      const clipboardData = '12';
+      paste(cell, clipboardData);
+
+      await waitFor(() => {
+        expect(getCell(0, 2).textContent).to.equal('12');
+      });
+      expect(calls).to.deep.equal([
+        'onClipboardPasteStart',
+        'processRowUpdate',
+        'onClipboardPasteEnd',
+      ]);
+    });
   });
 });
