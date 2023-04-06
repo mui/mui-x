@@ -20,6 +20,7 @@ import { getTimeClockUtilityClass } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -80,8 +81,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
-    slots,
-    slotProps,
+    slots: innerSlots,
+    slotProps: innerSlotProps,
     value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
@@ -103,6 +104,9 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     readOnly,
     ...other
   } = props;
+
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const [value, setValue] = useControlled({
     name: 'DateCalendar',
@@ -361,8 +365,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       {showViewSwitcher && (
         <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
-          components={components}
-          componentsProps={componentsProps}
           slots={slots}
           slotProps={slotProps}
           onGoToPrevious={() => setView(previousView!)}

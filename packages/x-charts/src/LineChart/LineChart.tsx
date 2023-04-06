@@ -6,28 +6,30 @@ import {
   SeriesContextProvider,
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
-import { DrawingProvider } from '../context/DrawingProvider';
+import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import Surface from '../Surface';
+import Surface, { SurfaceProps } from '../Surface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { LayoutConfig } from '../models/layout';
 
 export function LineChart(
   props: Omit<
-    LayoutConfig & SeriesContextProviderProps & CartesianContextProviderProps,
+    SurfaceProps &
+      SeriesContextProviderProps &
+      CartesianContextProviderProps &
+      DrawingProviderProps,
     'children'
-  >,
+  > & { children?: React.ReactNode },
 ) {
-  const { xAxis, yAxis, series, width, height, margin } = props;
+  const { xAxis, yAxis, series, colors, width, height, margin, sx, children } = props;
 
   return (
     <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={series}>
+      <SeriesContextProvider series={series} colors={colors}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
-          <Surface width={width} height={height}>
+          <Surface width={width} height={height} sx={sx}>
             <LinePlot />
             <XAxis
               label="Bottom X axis"
@@ -49,6 +51,7 @@ export function LineChart(
               position="right"
               axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
             />
+            {children}
           </Surface>
         </CartesianContextProvider>
       </SeriesContextProvider>

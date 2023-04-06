@@ -1,11 +1,14 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import moment from 'moment/moment';
 import jMoment from 'moment-jalaali';
 import { userEvent } from '@mui/monorepo/test/utils';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   buildFieldInteractions,
   createPickerRenderer,
   expectInputValue,
+  getCleanedSelectedContent,
   getTextbox,
 } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
@@ -49,6 +52,97 @@ const adapterToTest = [
   // 'moment-hijri',
   'moment-jalaali',
 ] as const;
+
+const theme = createTheme({
+  direction: 'rtl',
+});
+
+describe(`RTL - test arrows navigation`, () => {
+  const { render, clock, adapter } = createPickerRenderer({
+    clock: 'fake',
+    adapterName: 'moment-jalaali',
+  });
+
+  before(() => {
+    jMoment.loadPersian();
+  });
+
+  after(() => {
+    moment.locale('en');
+  });
+
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
+
+  it('should move selected section to the next section respecting RTL order in empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 28);
+
+    const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+    });
+  });
+
+  it('should move selected section to the previouse section respecting RTL order in empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 18);
+
+    const expectedValues = ['DD', 'MM', 'YYYY', 'mm', 'hh', 'hh'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowLeft' });
+    });
+  });
+
+  it('should move selected section to the next section respecting RTL order in non-empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField defaultValue={adapter.date(new Date(2018, 3, 25, 11, 54))} />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 28);
+
+    // 25/04/2018 => 1397/02/05
+    const expectedValues = ['11', '54', '1397', '02', '05', '05'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+    });
+  });
+
+  it('should move selected section to the previouse section respecting RTL order in non-empty field', () => {
+    render(
+      <ThemeProvider theme={theme}>
+        <DateTimeField defaultValue={adapter.date(new Date(2018, 3, 25, 11, 54))} />
+      </ThemeProvider>,
+    );
+    const input = getTextbox();
+    clickOnInput(input, 18);
+
+    // 25/04/2018 => 1397/02/05
+    const expectedValues = ['05', '02', '1397', '54', '11', '11'];
+
+    expectedValues.forEach((expectedValue) => {
+      expect(getCleanedSelectedContent(input)).to.equal(expectedValue);
+      userEvent.keyPress(input, { key: 'ArrowLeft' });
+    });
+  });
+});
 
 adapterToTest.forEach((adapterName) => {
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
