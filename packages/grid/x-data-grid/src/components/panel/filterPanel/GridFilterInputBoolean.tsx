@@ -30,16 +30,25 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
     setFilterValueState(item.value || '');
   }, [item.value]);
 
+  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+
   return (
-    <rootProps.slots.baseFormControl {...rootProps.slotProps?.baseFormControl} variant="standard">
-      <rootProps.slots.baseInputLabel {...rootProps.slotProps?.baseInputLabel} id={labelId} shrink>
-        {apiRef.current.getLocaleText('filterPanelInputLabel')}
+    <React.Fragment>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        shrink
+        variant="standard"
+      >
+        {label}
       </rootProps.slots.baseInputLabel>
       <rootProps.slots.baseSelect
         labelId={labelId}
         id={selectId}
+        label={label}
         value={filterValueState}
         onChange={onFilterChange}
+        variant="standard"
         native={isSelectNative}
         displayEmpty
         inputProps={{ ref: focusElementRef }}
@@ -68,6 +77,6 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
           {apiRef.current.getLocaleText('filterValueFalse')}
         </rootProps.slots.baseSelectOption>
       </rootProps.slots.baseSelect>
-    </rootProps.slots.baseFormControl>
+    </React.Fragment>
   );
 }

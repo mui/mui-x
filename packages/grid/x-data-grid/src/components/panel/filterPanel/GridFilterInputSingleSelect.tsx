@@ -124,16 +124,25 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     return null;
   }
 
+  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+
   return (
-    <rootProps.slots.baseFormControl {...rootProps.slotProps?.baseFormControl} variant="standard">
-      <rootProps.slots.baseInputLabel {...rootProps.slotProps?.baseInputLabel} id={labelId} shrink>
-        {apiRef.current.getLocaleText('filterPanelInputLabel')}
+    <React.Fragment>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        shrink
+        variant="standard"
+      >
+        {label}
       </rootProps.slots.baseInputLabel>
       <rootProps.slots.baseSelect
         id={id}
+        label={label}
         labelId={labelId}
         value={filterValueState}
         onChange={onFilterChange}
+        variant="standard"
         type={type || 'text'}
         inputProps={{
           ref: focusElementRef,
@@ -152,7 +161,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
         })}
       </rootProps.slots.baseSelect>
-    </rootProps.slots.baseFormControl>
+    </React.Fragment>
   );
 }
 
