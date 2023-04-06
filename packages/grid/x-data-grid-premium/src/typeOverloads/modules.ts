@@ -31,6 +31,14 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the state of the Excel export task changes
    */
   excelExportStateChange: { params: 'pending' | 'finished' };
+  /**
+   * Fired when the clipboard paste operation starts.
+   */
+  clipboardPasteStart: {};
+  /**
+   * Fired when the clipboard paste operation ends.
+   */
+  clipboardPasteEnd: {};
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
