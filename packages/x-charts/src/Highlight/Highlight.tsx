@@ -5,8 +5,10 @@ import { isBandScale } from '../hooks/useScale';
 
 export type HighlightProps = {};
 
-export function Highlight() {
-  // props: HighlightProps
+export const Highlight = React.forwardRef<SVGPathElement>(function Highlight(
+  props: HighlightProps,
+  ref,
+) {
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
 
   const USED_X_AXIS_ID = xAxisIds[0];
@@ -15,12 +17,12 @@ export function Highlight() {
   const xScale = xAxis[USED_X_AXIS_ID].scale;
   const yScale = yAxis[USED_Y_AXIS_ID].scale;
 
-  const { axis, interactionApi } = React.useContext(InteractionContext);
+  const { axis } = React.useContext(InteractionContext);
 
-  React.useEffect(() => {
-    interactionApi?.listenXAxis(USED_X_AXIS_ID);
-    interactionApi?.listenYAxis(USED_Y_AXIS_ID);
-  }, [USED_X_AXIS_ID, USED_Y_AXIS_ID, interactionApi]);
+  // React.useEffect(() => {
+  //   interactionApi?.listenXAxis(USED_X_AXIS_ID);
+  //   interactionApi?.listenYAxis(USED_Y_AXIS_ID);
+  // }, [USED_X_AXIS_ID, USED_Y_AXIS_ID, interactionApi]);
 
   if (isBandScale(xScale)) {
     if (axis.x === null) {
@@ -32,7 +34,12 @@ export function Highlight() {
     const y1 = yScale(yScale.domain().at(-1));
 
     return (
-      <path d={`M ${x0} ${y0} L ${x0 + w} ${y0} L ${x0 + w} ${y1} L ${x0} ${y1} Z`} fill="gray" />
+      <path
+        d={`M ${x0} ${y0} L ${x0 + w} ${y0} L ${x0 + w} ${y1} L ${x0} ${y1} Z`}
+        fill="gray"
+        fillOpacity={0.1}
+        ref={ref}
+      />
     );
   }
   return (
@@ -44,6 +51,7 @@ export function Highlight() {
           )} ${yScale(yScale.domain().at(-1))}`}
           stroke="black"
           strokeDasharray="5 2"
+          ref={ref}
         />
       )}
       {axis.y !== null && (
@@ -57,4 +65,4 @@ export function Highlight() {
       )}
     </React.Fragment>
   );
-}
+});

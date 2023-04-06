@@ -5,13 +5,12 @@ import {
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { Highlight } from '../Highlight';
 import { Surface, SurfaceProps } from '../Surface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import { Tooltip } from '../Tooltip';
+import { Tooltip, TooltipProps } from '../Tooltip';
 
 export type ChartContainerProps = Omit<
   Omit<SurfaceProps, 'interactionApiRef'> &
@@ -19,10 +18,10 @@ export type ChartContainerProps = Omit<
     Omit<DrawingProviderProps, 'svgRef'> &
     CartesianContextProviderProps,
   'children'
-> & { children?: React.ReactNode };
+> & { children?: React.ReactNode; tooltip?: TooltipProps };
 
 export function ChartContainer(props: ChartContainerProps) {
-  const { width, height, series, margin, xAxis, yAxis, sx, title, desc, children } = props;
+  const { width, height, series, margin, xAxis, yAxis, sx, title, desc, tooltip, children } = props;
   const ref = React.useRef<SVGSVGElement>(null);
   const interactionApiRef = React.useRef<any>(null);
 
@@ -40,10 +39,9 @@ export function ChartContainer(props: ChartContainerProps) {
               title={title}
               desc={desc}
             >
-              <Highlight />
               {children}
+              <Tooltip {...tooltip}  />
             </Surface>
-            <Tooltip trigger="item" />
           </InteractionProvider>
         </CartesianContextProvider>
       </SeriesContextProvider>
