@@ -85,7 +85,30 @@ const useAxisEvents = (interactionApiRef: React.RefObject<any>) => {
       }
       const { scale: xScale, data: xAxisData } = xAxis[usedXAxis];
       if (!isBandScale(xScale)) {
-        return { value: xScale.invert(x) };
+        const value = xScale.invert(x);
+
+        const closestIndex = xAxisData?.findIndex((v: typeof value, index) => {
+          if (v > value) {
+            // @ts-ignore
+            if (index === 0 || Math.abs(value - v) < Math.abs(value - xAxisData[index - 1])) {
+              return true;
+            }
+          }
+          if (v <= value) {
+            if (
+              index === xAxisData.length - 1 ||
+              // @ts-ignore
+              Math.abs(value - v) < Math.abs(value - xAxisData[index + 1])
+            ) {
+              return true;
+            }
+          }
+          return false;
+        });
+
+        return {
+          value: closestIndex !== undefined && closestIndex >= 0 ? xAxisData![closestIndex] : value,
+        };
       }
       const dataIndex = Math.floor((x - xScale.range()[0]) / xScale.step());
       if (dataIndex < 0 || dataIndex >= xAxisData!.length) {

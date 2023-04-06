@@ -5,10 +5,13 @@ import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { LineElement } from './LineElement';
 import { AreaElement } from './AreaElement';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
+
+  const getItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -67,6 +70,7 @@ export function LinePlot() {
                     id={seriesId}
                     d={areaPath(d3Data) || undefined}
                     color={series[seriesId].area.color ?? series[seriesId].color}
+                    {...getItemProps({ type: 'line', seriesId })}
                   />
                 )
               );
@@ -106,6 +110,7 @@ export function LinePlot() {
                   id={seriesId}
                   d={linePath(d3Data) || undefined}
                   color={series[seriesId].color}
+                  {...getItemProps({ type: 'line', seriesId })}
                 />
               );
             });
