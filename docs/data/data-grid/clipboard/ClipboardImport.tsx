@@ -239,7 +239,6 @@ export default function ClipboardImport() {
           checkboxSelection={rowSelection}
           unstable_cellSelection
           {...data}
-          // getRowId={(row) => row.rowId}
           processRowUpdate={(newRow) => {
             updateRow(newRow);
             return newRow;
