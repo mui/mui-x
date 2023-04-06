@@ -19,6 +19,10 @@ export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
 export interface GridEditCellMeta {
   changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue';
+  /**
+   * Determines if `setEditCellValue` should be called on the first render to sync the value.
+   */
+  unstable_updateValueOnRender?: boolean;
 }
 
 export interface GridEditingSharedApi {
