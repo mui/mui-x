@@ -64,6 +64,13 @@ export interface PickerValueManager<TValue, TDate, TError> {
    */
   isSameError: (error: TError, prevError: TError | null) => boolean;
   /**
+   * Checks if the current error is empty or not.
+   * @template TError
+   * @param {TError} error The current error.
+   * @returns {boolean} `true` if the current error is not empty.
+   */
+  hasError: (error: TError) => boolean;
+  /**
    * The value identifying no error, used to initialise the error state.
    */
   defaultErrorState: TError;
@@ -505,14 +512,13 @@ export const usePickerValue = <
   };
 
   const isValid = (testedValue: TValue) => {
-    const validationResponse = validator({
+    const error = validator({
       adapter,
       value: testedValue,
       props: { ...props, value: testedValue },
     });
-    return Array.isArray(testedValue)
-      ? (validationResponse as any[]).every((v) => v === null)
-      : validationResponse === null;
+
+    return valueManager.hasError(error);
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
