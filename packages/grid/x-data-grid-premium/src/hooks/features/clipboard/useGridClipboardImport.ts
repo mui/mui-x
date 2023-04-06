@@ -202,6 +202,11 @@ class CellValueUpdater {
   applyUpdates() {
     const { apiRef, processRowUpdate, onProcessRowUpdateError } = this.options;
     const rowsToUpdate = this.rowsToUpdate;
+    const rowIdsToUpdate = Object.keys(rowsToUpdate);
+
+    if (rowIdsToUpdate.length === 0) {
+      return;
+    }
 
     apiRef.current.publishEvent('clipboardPasteStart');
 
@@ -229,7 +234,7 @@ class CellValueUpdater {
       }
     };
 
-    const promises = Object.keys(rowsToUpdate).map((rowId) => {
+    const promises = rowIdsToUpdate.map((rowId) => {
       // Wrap in promise that always resolves to avoid Promise.all from stopping on first error.
       // This is to avoid using `Promise.allSettled` that has worse browser support.
       return new Promise((resolve) => {
