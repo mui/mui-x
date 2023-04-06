@@ -1273,6 +1273,13 @@
   dependencies:
     "@date-io/moment" "^2.16.1"
 
+"@date-io/js-joda@^2.16.1":
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/@date-io/js-joda/-/js-joda-2.16.1.tgz#8288fc55a4699e2b7468a93ab3f7189bec95059f"
+  integrity sha512-KKOqKGef5wgaQZxCzHAd5U7Jtrswg/93HvhhwsSMUGy/P/Xf1i0YHIFL2pKzQm9BKmrwDFkoSKvVbdxd+5i71w==
+  dependencies:
+    "@date-io/core" "^2.16.0"
+
 "@date-io/luxon@^2.16.1":
   version "2.16.1"
   resolved "https://registry.yarnpkg.com/@date-io/luxon/-/luxon-2.16.1.tgz#b08786614cb58831c729a15807753011e4acb966"
@@ -1634,6 +1641,16 @@
   dependencies:
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
+
+"@js-joda/core@^5.5.2":
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/@js-joda/core/-/core-5.5.2.tgz#3d7953004d70adf6a0a4140a78c948de758284e0"
+  integrity sha512-retLUN4TwCJ0QJDi9OCJwYVaXAz93NeOkEtEQL98M2bykBOxmURlP0YlfsuE46kItOOVZIWRYC3KsSLhQ1R2Qw==
+
+"@js-joda/locale_en-us@^4.8.6":
+  version "4.8.6"
+  resolved "https://registry.yarnpkg.com/@js-joda/locale_en-us/-/locale_en-us-4.8.6.tgz#78c9fb3ae8070bf33a30a84ecc0900569f93f330"
+  integrity sha512-j7LX8XhDsly+cNWkuF/+/NgKhsusnmf8ycoEgzdml9d7eEGEt5Hkd3jpthC/0pjjui9o4cVeegVrJkl4GKwhig==
 
 "@juggle/resize-observer@^3.4.0":
   version "3.4.0"
