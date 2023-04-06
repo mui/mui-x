@@ -31,7 +31,7 @@ it's recommended to set the `ignoreValueFormatterDuringExport` flag to `true`.
 
 :::warning
 This feature is not stable yet, meaning that its APIs may suffer breaking changes.
-While in development, all props and methods related to cell selection must be prefixed with `unstable_`.
+While in development, all props and methods related to clipboard paste must be prefixed with `unstable_`.
 :::
 
 You can paste data from clipboard using the <kbd class="key">Ctrl</kbd>/<kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd> keyboard shortcut.
