@@ -40,7 +40,7 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
     }
 
-    if (newDeps['@mui/x-date-pickers']) {
+    if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
       newDeps['date-fns'] = versions['date-fns'];
     }
 
