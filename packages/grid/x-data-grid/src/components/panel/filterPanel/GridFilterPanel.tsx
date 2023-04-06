@@ -232,8 +232,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
           ))}
         </GridPanelContent>
         {!rootProps.disableMultipleColumnsFiltering &&
-        !disableAddFilterButton &&
-        !disableRemoveAllButton ? (
+        !(disableAddFilterButton && disableRemoveAllButton) ? (
           <GridPanelFooter>
             {!disableAddFilterButton ? (
               <rootProps.slots.baseButton

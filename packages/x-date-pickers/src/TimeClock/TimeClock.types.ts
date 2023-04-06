@@ -6,7 +6,7 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
-import { TimeView } from '../internals/models/views';
+import { TimeView } from '../models';
 import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 

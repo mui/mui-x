@@ -57,13 +57,13 @@ export interface GridColumnHeaderTitleProps {
 
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
 function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
-  const { label, description, columnWidth } = props;
+  const { label, description } = props;
   const rootProps = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
 
-  React.useEffect(() => {
-    if (!description && titleRef && titleRef.current) {
+  const handleMouseOver = React.useCallback<React.MouseEventHandler<HTMLDivElement>>(() => {
+    if (!description && titleRef?.current) {
       const isOver = isOverflown(titleRef.current);
       if (isOver) {
         setTooltip(label);
@@ -71,14 +71,16 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
         setTooltip('');
       }
     }
-  }, [titleRef, columnWidth, description, label]);
+  }, [description, label]);
 
   return (
     <rootProps.slots.baseTooltip
       title={description || tooltip}
       {...rootProps.slotProps?.baseTooltip}
     >
-      <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
+      <ColumnHeaderInnerTitle onMouseOver={handleMouseOver} ref={titleRef}>
+        {label}
+      </ColumnHeaderInnerTitle>
     </rootProps.slots.baseTooltip>
   );
 }

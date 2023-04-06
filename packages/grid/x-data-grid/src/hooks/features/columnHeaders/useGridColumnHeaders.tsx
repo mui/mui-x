@@ -390,8 +390,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         })
         .filter((groupStructure) => groupStructure.columnFields.length > 0);
 
-      const leftOverflow =
+      const firstVisibleColumnIndex =
         visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
+      const hiddenGroupColumns = visibleColumnGroupHeader[0].columnFields.slice(
+        0,
+        firstVisibleColumnIndex,
+      );
+      const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
+        const column = apiRef.current.getColumn(field);
+        return acc + (column.computedWidth ?? 0);
+      }, 0);
 
       let columnIndex = firstColumnToRender;
       const elements = visibleColumnGroupHeader.map(({ groupId, columnFields }) => {

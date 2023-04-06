@@ -3,16 +3,11 @@ import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
-import {
-  FieldChangeHandlerContext,
-  FieldSection,
-  FieldSelectedSections,
-  UseFieldInternalProps,
-} from '../useField';
+import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
-import { MuiPickersAdapter } from '../../models/muiPickersAdapter';
+import { FieldSection, FieldSelectedSections, MuiPickersAdapter } from '../../../models';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -68,6 +63,13 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @returns {boolean} `true` if the new error is different from the previous one.
    */
   isSameError: (error: TError, prevError: TError | null) => boolean;
+  /**
+   * Checks if the current error is empty or not.
+   * @template TError
+   * @param {TError} error The current error.
+   * @returns {boolean} `true` if the current error is not empty.
+   */
+  hasError: (error: TError) => boolean;
   /**
    * The value identifying no error, used to initialise the error state.
    */
@@ -129,12 +131,6 @@ interface UsePickerValueAction<DraftValue, TError> {
    * @default false
    */
   skipOnChangeCall?: boolean;
-  /**
-   * If `true`, force firing the `onChange` callback
-   * This field takes precedence over `skipOnChangeCall`
-   * @default false
-   */
-  forceOnChangeCall?: boolean;
   /**
    * Context passed from a deeper component (a field or a calendar).
    */
@@ -313,17 +309,12 @@ export const usePickerValue = <
   const utils = useUtils<TDate>();
   const adapter = useLocalizationContext<TDate>();
 
-  const [rawValue, setValue] = useControlled({
+  const [value, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
     name: 'usePickerValue',
     state: 'value',
   });
-
-  const value = React.useMemo(
-    () => valueManager.cleanValue(utils, rawValue),
-    [valueManager, utils, rawValue],
-  );
 
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
@@ -367,9 +358,8 @@ export const usePickerValue = <
     });
 
     if (
-      params.forceOnChangeCall ||
-      (!params.skipOnChangeCall &&
-        !valueManager.areValuesEqual(utils, dateState.committed, params.value))
+      !params.skipOnChangeCall &&
+      !valueManager.areValuesEqual(utils, dateState.committed, params.value)
     ) {
       setValue(params.value);
 
@@ -417,8 +407,6 @@ export const usePickerValue = <
     setDate({
       value: valueManager.emptyValue,
       action: 'acceptAndClose',
-      // force `onChange` in cases like input (value) === `Invalid date`
-      forceOnChangeCall: !valueManager.areValuesEqual(utils, value as any, valueManager.emptyValue),
     });
   });
 
@@ -427,8 +415,6 @@ export const usePickerValue = <
     setDate({
       value: dateState.draft,
       action: 'acceptAndClose',
-      // force `onChange` in cases like input (value) === `Invalid date`
-      forceOnChangeCall: !valueManager.areValuesEqual(utils, dateState.committed, dateState.draft),
     });
   });
 
@@ -512,8 +498,13 @@ export const usePickerValue = <
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
+  const viewValue = React.useMemo(
+    () => valueManager.cleanValue(utils, dateState.draft),
+    [utils, valueManager, dateState.draft],
+  );
+
   const viewResponse: UsePickerValueViewsResponse<TValue> = {
-    value: dateState.draft,
+    value: viewValue,
     onChange: handleChange,
     onClose: handleClose,
     open: isOpen,
@@ -521,19 +512,18 @@ export const usePickerValue = <
   };
 
   const isValid = (testedValue: TValue) => {
-    const validationResponse = validator({
+    const error = validator({
       adapter,
       value: testedValue,
       props: { ...props, value: testedValue },
     });
-    return Array.isArray(testedValue)
-      ? (validationResponse as any[]).every((v) => v === null)
-      : validationResponse === null;
+
+    return valueManager.hasError(error);
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     ...actions,
-    value: dateState.draft,
+    value: viewValue,
     onChange: handleChangeAndCommit,
     isValid,
   };

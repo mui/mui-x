@@ -47,7 +47,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Fjern alle',
   filterPanelDeleteIconLabel: 'Slett',
   filterPanelLogicOperator: 'Logisk operator',
   filterPanelOperator: 'Operatører',
@@ -80,7 +80,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Vis kolonner',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Administrer kolonner',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Usorter',
@@ -134,7 +134,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stopp å grupper på ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Utvid/kollaps detalj panel',
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
 
@@ -142,12 +142,12 @@ const nbNOGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Rad reorganisering',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregering',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'snitt',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'maks',
+  aggregationFunctionLabelSize: 'størrelse',
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);

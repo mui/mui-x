@@ -9,7 +9,7 @@ import {
   BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { TimeView } from '../internals/models/views';
+import { TimeView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface DesktopTimePickerSlotsComponent<TDate>

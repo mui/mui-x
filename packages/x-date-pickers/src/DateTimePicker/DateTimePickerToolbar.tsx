@@ -13,7 +13,7 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
-import { DateOrTimeView } from '../internals/models';
+import { DateOrTimeView } from '../models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {

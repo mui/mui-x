@@ -15,6 +15,7 @@ export * from './svSE';
 export * from './itIT';
 export * from './zhCN';
 export * from './koKR';
+export * from './kzKZ';
 export * from './isIS';
 export * from './jaJP';
 export * from './ukUA';
