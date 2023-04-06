@@ -1,0 +1,8 @@
+<DataGridPremium
+  {...data}
+  checkboxSelection
+  disableRowSelectionOnClick
+  unstable_cellSelection
+  unstable_enableClipboardPaste
+  experimentalFeatures={{ ignoreValueFormatterDuringExport: true }}
+/>

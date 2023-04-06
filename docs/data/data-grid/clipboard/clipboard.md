@@ -49,6 +49,8 @@ The priority of the clipboard paste is the following, from highest to lowest:
   - If the clipboard contains a single cell, it is pasted to the selected cell
   - If the clipboard contains multiple cells/rows, the data is pasted starting from the selected cell
 
+{{"demo": "ClipboardPaste.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Persisting pasted data
 
 Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/#persistence) - use the `processRowUpdate` prop to persist the updated row in your data source:
