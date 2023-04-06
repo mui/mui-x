@@ -210,9 +210,14 @@ export default function ClipboardPastePersistence() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button sx={{ mb: 2 }} onClick={() => setRowSelection(!rowSelection)}>
-        Toggle row selection
-      </Button>
+      <div style={{ marginBottom: 8 }}>
+        <Button onClick={() => setRowSelection(!rowSelection)}>
+          Toggle row selection
+        </Button>
+        <Button onClick={() => sessionStorage.removeItem('clipboardImportRows')}>
+          Clear session storage
+        </Button>
+      </div>
       <div style={{ height: 400 }}>
         <DataGridPremium
           loading={loading}

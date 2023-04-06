@@ -62,4 +62,6 @@ processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;
 The row will be updated with a value returned by the `processRowUpdate` callback.
 If the callback throws or returns a rejected promise, the row will not be updated.
 
+The demo below shows how to persist the pasted data in browser's `sessionStorage`.
+
 {{"demo": "ClipboardPastePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
