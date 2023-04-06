@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  GridValidRowModel,
+  useGridApiRef,
+} from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 
@@ -191,7 +195,7 @@ const useSessionStorageData = () => {
 
   const rowsRef = React.useRef([...rows]);
 
-  const updateRow = React.useCallback((newRow) => {
+  const updateRow = React.useCallback((newRow: GridValidRowModel) => {
     const index = rowsRef.current.findIndex((row) => row.id === newRow.id);
     rowsRef.current[index] = newRow;
     sessionStorage.setItem('clipboardImportRows', JSON.stringify(rowsRef.current));
@@ -203,7 +207,7 @@ const useSessionStorageData = () => {
   };
 };
 
-export default function ClipboardImport() {
+export default function ClipboardPastePersistence() {
   const [rowSelection, setRowSelection] = React.useState(false);
   const { data, updateRow } = useSessionStorageData();
   const [loading, setLoading] = React.useState(false);
