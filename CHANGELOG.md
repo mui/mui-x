@@ -23,8 +23,6 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Fix memory leaks in development (#8301) @cherniavskii
 - [DataGrid] Sync `date` column value when entering edit mode by pressing a digit (#8364) @m4theushw
 - [DataGrid] Wrap column menu button with a tooltip (#7890) @cherniavskii
-- [l10n] Add Catalan (Spain) (ca-ES) and improve Spanish (es-ES) locales (#8498) @makenshikuro
-- [l10n] Add Kazakh (kz-KZ) locale (#8451) @zhunus
 - [l10n] Improve Dutch (nl-NL) locale (#8491) @thedutchruben
 - [l10n] Improve Hebrew (he-IL) locale (#8464) @soris1989
 - [l10n] Improve Hungarian (hu-HU) locale (#8486) @PetakCC
