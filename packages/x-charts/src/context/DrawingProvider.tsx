@@ -2,7 +2,7 @@ import * as React from 'react';
 import useChartDimensions from '../hooks/useChartDimensions';
 import { LayoutConfig } from '../models/layout';
 
-interface DrawingProviderProps extends LayoutConfig {
+export interface DrawingProviderProps extends LayoutConfig {
   children: React.ReactNode;
 }
 

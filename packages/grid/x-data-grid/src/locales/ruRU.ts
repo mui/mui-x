@@ -88,7 +88,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
   columnMenuUnsort: 'Отменить сортировку',
