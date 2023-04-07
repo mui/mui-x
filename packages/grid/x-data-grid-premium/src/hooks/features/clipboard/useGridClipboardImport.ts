@@ -307,7 +307,8 @@ export const useGridClipboardImport = (
         getRowId,
       });
 
-      const rowsData = text.split('\r\n');
+      // support both \n and \r\n
+      const rowsData = text.replace(/\r/g, '').split('\n');
 
       const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
 

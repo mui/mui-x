@@ -175,7 +175,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           ['51', '52', '53'],
         ]
           .map((row) => row.join('\t'))
-          .join('\r\n');
+          .join('\n');
         paste(cell, clipboardData);
 
         // selected cells should be updated
@@ -209,7 +209,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           ['21'], // third row
         ]
           .map((row) => row.join('\t'))
-          .join('\r\n');
+          .join('\n');
         paste(cell, clipboardData);
 
         const secondColumnValuesBeforePaste = [
@@ -262,7 +262,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           ['p11', 'p12', 'p13'].join('\t'),
           ['p21', 'p22', 'p23'].join('\t'),
           ['p31', 'p32', 'p33'].join('\t'),
-        ].join('\r\n');
+        ].join('\n');
         paste(cell, clipboardData);
 
         await waitFor(() => {
@@ -323,6 +323,35 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Nike', 'Puma']);
+      });
+    });
+
+    [
+      { key: '\\n', value: '\n' },
+      { key: '\\r\\n', value: '\r\n' },
+    ].forEach((newLine) => {
+      it(`should support ${newLine.key} new line character`, async () => {
+        render(<Test />);
+
+        const cell = getCell(0, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
+
+        fireEvent.keyDown(cell, { key: 'Shift' });
+        fireEvent.click(getCell(1, 2), { shiftKey: true });
+
+        const clipboardData = [['p01', 'p02'].join('\t'), ['p11', 'p12'].join('\t')].join(
+          newLine.value,
+        );
+        paste(cell, clipboardData);
+
+        // selected cells should be updated
+        await waitFor(() => {
+          expect(getCell(0, 1)).to.have.text('p01');
+        });
+        expect(getCell(0, 2)).to.have.text('p02');
+        expect(getCell(1, 1)).to.have.text('p11');
+        expect(getCell(1, 2)).to.have.text('p12');
       });
     });
 
