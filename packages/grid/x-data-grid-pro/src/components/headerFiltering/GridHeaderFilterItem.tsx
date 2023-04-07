@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/system';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -62,12 +61,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
-
-const FilterFormValueInput = styled('div', {
-  name: 'MuiDataGrid',
-  slot: 'FilterFormValueInput',
-  overridesResolver: (_, styles) => styles.filterFormValueInput,
-})<{ ownerState: OwnerState }>({ width: '100%' });
 
 const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterItemProps>(
   (props, ref) => {
@@ -231,6 +224,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
 
     const label = colDef.headerName ?? colDef.field;
+    const placeholder = apiRef.current.getLocaleText('columnMenuFilter');
 
     return (
       <div
@@ -249,50 +243,44 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         {...other}
         {...mouseEventsHandlers}
       >
-        <FilterFormValueInput
-          as={rootProps.slots.baseFormControl}
-          ownerState={ownerState as OwnerState}
-        >
-          {headerFilterComponent}
-          {InputComponent && !headerFilterComponent ? (
-            <InputComponent
-              apiRef={apiRef}
-              item={item}
-              inputRef={inputRef}
-              applyValue={applyFilterChanges}
-              onFocus={() => {
-                apiRef.current.startHeaderFilterEditMode(colDef.field);
-              }}
-              onBlur={() => {
-                apiRef.current.stopHeaderFilterEditMode();
-              }}
-              variant="standard"
-              placeholder={item?.value ? '' : 'Filter'}
-              label={isFilterActive ? OPERATOR_LABEL_MAPPING[item.operator] : ' '}
-              fullWidth
-              {...currentOperator?.InputComponentProps}
-              InputProps={{
-                disabled: isNoInputOperator,
-                componentsProps: {
-                  input: {
-                    tabIndex: -1,
-                  },
+        {headerFilterComponent}
+        {InputComponent && !headerFilterComponent ? (
+          <InputComponent
+            apiRef={apiRef}
+            item={item}
+            inputRef={inputRef}
+            applyValue={applyFilterChanges}
+            onFocus={() => {
+              apiRef.current.startHeaderFilterEditMode(colDef.field);
+            }}
+            onBlur={() => {
+              apiRef.current.stopHeaderFilterEditMode();
+            }}
+            fullWidth
+            placeholder={placeholder}
+            label={isFilterActive ? OPERATOR_LABEL_MAPPING[item.operator] : ' '}
+            {...currentOperator?.InputComponentProps}
+            InputProps={{
+              disabled: isNoInputOperator,
+              componentsProps: {
+                input: {
+                  'tab-index': -1,
                 },
-                startAdornment: isFilterActive ? (
-                  <GridHeaderFilterAdorment
-                    operators={filterOperators!}
-                    item={item}
-                    field={colDef.field}
-                    applyFilterChanges={applyFilterChanges}
-                    headerFilterMenuRef={headerFilterMenuRef}
-                    buttonRef={buttonRef}
-                  />
-                ) : null,
-                ...currentOperator?.InputComponentProps?.InputProps,
-              }}
-            />
-          ) : null}
-        </FilterFormValueInput>
+              },
+              startAdornment: isFilterActive ? (
+                <GridHeaderFilterAdorment
+                  operators={filterOperators!}
+                  item={item}
+                  field={colDef.field}
+                  applyFilterChanges={applyFilterChanges}
+                  headerFilterMenuRef={headerFilterMenuRef}
+                  buttonRef={buttonRef}
+                />
+              ) : null,
+              ...currentOperator?.InputComponentProps?.InputProps,
+            }}
+          />
+        ) : null}
       </div>
     );
   },
