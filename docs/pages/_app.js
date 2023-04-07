@@ -41,7 +41,7 @@ ponyfillGlobal.muiDocConfig = {
     }
 
     if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
-      newDeps['date-fns'] = versions['date-fns'];
+      newDeps.dayjs = versions.dayjs;
     }
 
     return newDeps;
@@ -56,6 +56,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       'date-fns': 'latest',
+      dayjs: 'latest',
       exceljs: 'latest',
     };
     return output;
