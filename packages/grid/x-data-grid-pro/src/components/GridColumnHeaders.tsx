@@ -137,6 +137,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       columnVisibility,
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence,
+      headerFiltersRef,
       pinnedColumns,
       ...other
     } = props;
@@ -181,6 +182,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
     } = useGridColumnHeaders({
       innerRef,
       visibleColumns,
+      headerFiltersRef,
       sortColumnLookup,
       filterColumnLookup,
       columnPositions,
@@ -357,6 +359,9 @@ GridColumnHeaders.propTypes = {
   densityFactor: PropTypes.number.isRequired,
   filterColumnLookup: PropTypes.object.isRequired,
   hasOtherElementInTabSequence: PropTypes.bool.isRequired,
+  headerFiltersRef: PropTypes.shape({
+    current: PropTypes.object,
+  }).isRequired,
   headerGroupingMaxDepth: PropTypes.number.isRequired,
   innerRef: PropTypes.oneOfType([
     PropTypes.func,

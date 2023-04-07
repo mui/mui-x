@@ -136,6 +136,7 @@ export const useGridColumnResize = (
 
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
+  const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const colGroupingElementRef = React.useRef<Element[]>();
   const colCellElementsRef = React.useRef<Element[]>();
   const theme = useTheme();
@@ -162,6 +163,10 @@ export const useGridColumnResize = (
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
     colElementRef.current!.style.maxWidth = `${newWidth}px`;
+
+    headerFilterElementRef.current!.style.width = `${newWidth}px`;
+    headerFilterElementRef.current!.style.minWidth = `${newWidth}px`;
+    headerFilterElementRef.current!.style.maxWidth = `${newWidth}px`;
 
     [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
       const div = element as HTMLDivElement;
@@ -254,6 +259,11 @@ export const useGridColumnResize = (
       colDefRef.current = colDef as GridStateColDef;
       colElementRef.current =
         apiRef.current.columnHeadersContainerElementRef?.current!.querySelector<HTMLDivElement>(
+          `[data-field="${colDef.field}"]`,
+        )!;
+
+      headerFilterElementRef.current =
+        apiRef.current.headerFiltersElementRef?.current!.querySelector<HTMLDivElement>(
           `[data-field="${colDef.field}"]`,
         )!;
 

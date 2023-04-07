@@ -109,12 +109,14 @@ function GridBody(props: GridBodyProps) {
   apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
   const columnHeadersRef = React.useRef<HTMLDivElement>(null);
+  const headerFiltersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.register('private', {
     columnHeadersContainerElementRef: columnsContainerRef,
     columnHeadersElementRef: columnHeadersRef,
+    headerFiltersElementRef: headerFiltersRef,
     virtualScrollerRef,
   });
 
@@ -130,6 +132,7 @@ function GridBody(props: GridBodyProps) {
       <rootProps.slots.columnHeaders
         ref={columnsContainerRef}
         innerRef={columnHeadersRef}
+        headerFiltersRef={headerFiltersRef}
         visibleColumns={visibleColumns}
         filterColumnLookup={filterColumnLookup}
         sortColumnLookup={sortColumnLookup}

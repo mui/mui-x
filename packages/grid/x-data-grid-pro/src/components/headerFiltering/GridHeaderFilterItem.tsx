@@ -238,6 +238,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         }}
         role="cell"
         tabIndex={tabIndex}
+        data-field={colDef.field}
         aria-colindex={colIndex + 1}
         aria-label={headerFilterComponent == null ? label : undefined}
         {...other}

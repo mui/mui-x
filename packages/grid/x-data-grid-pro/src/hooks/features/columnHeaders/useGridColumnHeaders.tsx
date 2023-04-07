@@ -15,7 +15,9 @@ import {
 import { GridHeaderFilterItem } from '../../../components/headerFiltering/GridHeaderFilterItem';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-export interface UseGridColumnHeadersProProps extends UseGridColumnHeadersProps {}
+export interface UseGridColumnHeadersProProps extends UseGridColumnHeadersProps {
+  headerFiltersRef: React.RefObject<HTMLDivElement>;
+}
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -28,8 +30,9 @@ const GridHeaderFilterRow = styled('div', {
   borderTop: '1px solid rgba(224, 224, 224, 1)',
 }));
 
-export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
+export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
   const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity(props);
+  const { headerFiltersRef } = props;
   const apiRef = useGridPrivateApiContext();
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
@@ -108,7 +111,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridHeaderFilterRow ownerState={rootProps} role="row">
+      <GridHeaderFilterRow ref={headerFiltersRef} ownerState={rootProps} role="row">
         {filters}
       </GridHeaderFilterRow>
     );
