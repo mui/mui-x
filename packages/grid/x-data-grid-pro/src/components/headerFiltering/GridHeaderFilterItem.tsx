@@ -119,7 +119,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     );
 
     React.useLayoutEffect(() => {
-      if (hasFocus) {
+      if (hasFocus && !isMenuOpen) {
         let focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
         if (isEditing && InputComponent) {
           focusableElement = inputRef.current;
@@ -127,7 +127,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         const elementToFocus = focusableElement || cellRef.current;
         elementToFocus?.focus();
       }
-    }, [InputComponent, apiRef, hasFocus, isEditing]);
+    }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 
     const onKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
