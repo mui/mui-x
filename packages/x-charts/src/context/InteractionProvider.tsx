@@ -4,7 +4,6 @@ import { LineItemIdentifier } from '../models/seriesType/line';
 import { ScatterItemIdentifier } from '../models/seriesType/scatter';
 
 export interface InteractionProviderProps {
-  interactionApiRef: React.RefObject<any>;
   children: React.ReactNode;
 }
 
@@ -41,17 +40,12 @@ type InteractionState = {
   item: null | ItemInteractionData;
   axis: AxisInteractionData;
   dispatch: React.Dispatch<InteractionActions>;
-  interactionApi: {
-    listenXAxis: (axisId?: string) => void;
-    listenYAxis: (axisId?: string) => void;
-  };
 };
 
 export const InteractionContext = React.createContext<InteractionState>({
   item: null,
   axis: { x: null, y: null },
   dispatch: () => null,
-  interactionApi: { listenXAxis: () => {}, listenYAxis: () => {} },
 });
 
 const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, InteractionActions> = (
@@ -82,20 +76,18 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
   }
 };
 
-export function InteractionProvider({ children, interactionApiRef }: InteractionProviderProps) {
+export function InteractionProvider({ children }: InteractionProviderProps) {
   const [data, dispatch] = React.useReducer(dataReducer, {
     item: null,
     axis: { x: null, y: null },
-    interactionApi: interactionApiRef.current,
   });
 
   const value = React.useMemo(
     () => ({
       ...data,
       dispatch,
-      interactionApi: interactionApiRef.current,
     }),
-    [data, interactionApiRef],
+    [data],
   );
 
   return <InteractionContext.Provider value={value}>{children}</InteractionContext.Provider>;

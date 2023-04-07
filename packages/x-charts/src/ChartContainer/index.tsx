@@ -13,7 +13,7 @@ import {
 import { Tooltip, TooltipProps } from '../Tooltip';
 
 export type ChartContainerProps = Omit<
-  Omit<SurfaceProps, 'interactionApiRef'> &
+  SurfaceProps &
     SeriesContextProviderProps &
     Omit<DrawingProviderProps, 'svgRef'> &
     CartesianContextProviderProps,
@@ -23,24 +23,15 @@ export type ChartContainerProps = Omit<
 export function ChartContainer(props: ChartContainerProps) {
   const { width, height, series, margin, xAxis, yAxis, sx, title, desc, tooltip, children } = props;
   const ref = React.useRef<SVGSVGElement>(null);
-  const interactionApiRef = React.useRef<any>(null);
 
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={ref}>
       <SeriesContextProvider series={series}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
-          <InteractionProvider interactionApiRef={interactionApiRef}>
-            <Surface
-              width={width}
-              height={height}
-              ref={ref}
-              interactionApiRef={interactionApiRef}
-              sx={sx}
-              title={title}
-              desc={desc}
-            >
+          <InteractionProvider>
+            <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
               {children}
-              <Tooltip {...tooltip}  />
+              <Tooltip {...tooltip} />
             </Surface>
           </InteractionProvider>
         </CartesianContextProvider>
