@@ -2,6 +2,7 @@ import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridControlledStateEventLookupPro,
   GridApiCachesPro,
+  GridEventLookupPro,
 } from '@mui/x-data-grid-pro/typeOverloads';
 import type { GridGroupingValueGetterParams } from '../models';
 import type {
@@ -31,6 +32,9 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the state of the Excel export task changes
    */
   excelExportStateChange: { params: 'pending' | 'finished' };
+}
+
+interface GridEventLookupPremium extends GridEventLookupPro {
   /**
    * Fired when the clipboard paste operation starts.
    */
@@ -79,6 +83,8 @@ export interface GridApiCachesPremium extends GridApiCachesPro {
 }
 
 declare module '@mui/x-data-grid-pro' {
+  interface GridEventLookup extends GridEventLookupPremium {}
+
   interface GridControlledStateEventLookup
     extends GridControlledStateEventLookupPro,
       GridControlledStateEventLookupPremium {}
