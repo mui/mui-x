@@ -132,102 +132,104 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
     });
 
-    it('should paste into each cell of the range when single value is pasted', async () => {
-      render(<Test />);
+    describe('cell selection', () => {
+      it('should paste into each cell of the range when single value is pasted', async () => {
+        render(<Test />);
 
-      const cell = getCell(0, 1);
-      cell.focus();
-      userEvent.mousePress(cell);
+        const cell = getCell(0, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
 
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.click(getCell(2, 2), { shiftKey: true });
+        fireEvent.keyDown(cell, { key: 'Shift' });
+        fireEvent.click(getCell(2, 2), { shiftKey: true });
 
-      const clipboardData = '12';
-      paste(cell, clipboardData);
+        const clipboardData = '12';
+        paste(cell, clipboardData);
 
-      await waitFor(() => {
-        expect(getCell(0, 1)).to.have.text(clipboardData);
+        await waitFor(() => {
+          expect(getCell(0, 1)).to.have.text(clipboardData);
+        });
+        expect(getCell(0, 2)).to.have.text(clipboardData);
+        expect(getCell(1, 1)).to.have.text(clipboardData);
+        expect(getCell(1, 2)).to.have.text(clipboardData);
+        expect(getCell(2, 1)).to.have.text(clipboardData);
+        expect(getCell(2, 2)).to.have.text(clipboardData);
       });
-      expect(getCell(0, 2)).to.have.text(clipboardData);
-      expect(getCell(1, 1)).to.have.text(clipboardData);
-      expect(getCell(1, 2)).to.have.text(clipboardData);
-      expect(getCell(2, 1)).to.have.text(clipboardData);
-      expect(getCell(2, 2)).to.have.text(clipboardData);
-    });
 
-    it('should not paste values outside of the selected cells range', async () => {
-      render(<Test rowLength={5} colLength={5} />);
+      it('should not paste values outside of the selected cells range', async () => {
+        render(<Test rowLength={5} colLength={5} />);
 
-      const cell = getCell(0, 1);
-      cell.focus();
-      userEvent.mousePress(cell);
+        const cell = getCell(0, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
 
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.click(getCell(2, 2), { shiftKey: true });
+        fireEvent.keyDown(cell, { key: 'Shift' });
+        fireEvent.click(getCell(2, 2), { shiftKey: true });
 
-      const clipboardData = [
-        ['01', '02', '03'],
-        ['11', '12', '13'],
-        ['21', '22', '23'],
-        ['31', '32', '33'],
-        ['41', '42', '43'],
-        ['51', '52', '53'],
-      ]
-        .map((row) => row.join('\t'))
-        .join('\r\n');
-      paste(cell, clipboardData);
+        const clipboardData = [
+          ['01', '02', '03'],
+          ['11', '12', '13'],
+          ['21', '22', '23'],
+          ['31', '32', '33'],
+          ['41', '42', '43'],
+          ['51', '52', '53'],
+        ]
+          .map((row) => row.join('\t'))
+          .join('\r\n');
+        paste(cell, clipboardData);
 
-      // selected cells should be updated
-      await waitFor(() => {
-        expect(getCell(0, 1)).to.have.text('01');
+        // selected cells should be updated
+        await waitFor(() => {
+          expect(getCell(0, 1)).to.have.text('01');
+        });
+        expect(getCell(0, 2)).to.have.text('02');
+        expect(getCell(1, 1)).to.have.text('11');
+        expect(getCell(1, 2)).to.have.text('12');
+        expect(getCell(2, 1)).to.have.text('21');
+        expect(getCell(2, 2)).to.have.text('22');
+
+        // cells out of selection range should not be updated
+        expect(getCell(0, 3)).not.to.have.text('03');
+        expect(getCell(3, 1)).not.to.have.text('31');
       });
-      expect(getCell(0, 2)).to.have.text('02');
-      expect(getCell(1, 1)).to.have.text('11');
-      expect(getCell(1, 2)).to.have.text('12');
-      expect(getCell(2, 1)).to.have.text('21');
-      expect(getCell(2, 2)).to.have.text('22');
 
-      // cells out of selection range should not be updated
-      expect(getCell(0, 3)).not.to.have.text('03');
-      expect(getCell(3, 1)).not.to.have.text('31');
-    });
+      it('should not paste empty values into cells within selected range when there are no corresponding values in the clipboard', async () => {
+        render(<Test rowLength={5} colLength={5} />);
 
-    it('should not paste empty values into cells withing selected range when there are no corresponding values in the clipboard', async () => {
-      render(<Test rowLength={5} colLength={5} />);
+        const cell = getCell(0, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
 
-      const cell = getCell(0, 1);
-      cell.focus();
-      userEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'Shift' });
+        fireEvent.click(getCell(2, 2), { shiftKey: true });
 
-      fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.click(getCell(2, 2), { shiftKey: true });
+        const clipboardData = [
+          ['01'], // first row
+          ['11'], // second row
+          ['21'], // third row
+        ]
+          .map((row) => row.join('\t'))
+          .join('\r\n');
+        paste(cell, clipboardData);
 
-      const clipboardData = [
-        ['01'], // first row
-        ['11'], // second row
-        ['21'], // third row
-      ]
-        .map((row) => row.join('\t'))
-        .join('\r\n');
-      paste(cell, clipboardData);
+        const secondColumnValuesBeforePaste = [
+          getCell(0, 2).textContent!,
+          getCell(1, 2).textContent!,
+          getCell(2, 2).textContent!,
+        ];
 
-      const secondColumnValuesBeforePaste = [
-        getCell(0, 2).textContent!,
-        getCell(1, 2).textContent!,
-        getCell(2, 2).textContent!,
-      ];
+        // selected cells should be updated if there's data in the clipboard
+        await waitFor(() => {
+          expect(getCell(0, 1)).to.have.text('01');
+        });
+        expect(getCell(1, 1)).to.have.text('11');
+        expect(getCell(2, 1)).to.have.text('21');
 
-      // selected cells should be updated if there's data in the clipboard
-      await waitFor(() => {
-        expect(getCell(0, 1)).to.have.text('01');
+        // selected cells should be updated if there's no data for them in the clipboard
+        expect(getCell(0, 2)).to.have.text(secondColumnValuesBeforePaste[0]);
+        expect(getCell(1, 2)).to.have.text(secondColumnValuesBeforePaste[1]);
+        expect(getCell(2, 2)).to.have.text(secondColumnValuesBeforePaste[2]);
       });
-      expect(getCell(1, 1)).to.have.text('11');
-      expect(getCell(2, 1)).to.have.text('21');
-
-      // selected cells should be updated if there's no data for them in the clipboard
-      expect(getCell(0, 2)).to.have.text(secondColumnValuesBeforePaste[0]);
-      expect(getCell(1, 2)).to.have.text(secondColumnValuesBeforePaste[1]);
-      expect(getCell(2, 2)).to.have.text(secondColumnValuesBeforePaste[2]);
     });
 
     it('should work well with `getRowId` prop', async () => {
