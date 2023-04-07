@@ -45,7 +45,6 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [l10n] Improve Japanese (ja-JP) locale (#8462) @megos
 - [l10n] Improve Portuguese (pt-BR) locale (#8480) @pwnedev
 
-
 ### Docs
 
 - [docs] Fix 301 redirect (#8524) @alexfauquette
