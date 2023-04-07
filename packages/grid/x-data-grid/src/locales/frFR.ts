@@ -145,11 +145,11 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggrégation',
-  aggregationFunctionLabelSum: 'som',
-  aggregationFunctionLabelAvg: 'moy',
-  aggregationFunctionLabelMin: 'min',
-  aggregationFunctionLabelMax: 'max',
-  aggregationFunctionLabelSize: 'nbr',
+  aggregationFunctionLabelSum: 'Somme',
+  aggregationFunctionLabelAvg: 'Moyenne',
+  aggregationFunctionLabelMin: 'Minimum',
+  aggregationFunctionLabelMax: 'Maximum',
+  aggregationFunctionLabelSize: "Nombre d'éléments",
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
