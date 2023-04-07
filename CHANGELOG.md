@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 #### Changes
 
-- [DataGrid] Allow to control visibility of columns shown in `ColumnsPanel` (#8401) @MBilalShafi
+- [DataGrid] Allow to control visibility of columns shown in the `ColumnsPanel` component (#8401) @MBilalShafi
 - [DataGrid] Fix filters with empty array value not being removed from the filter model (#8501) @cherniavskii
 - [DataGrid] Fix memory leaks in development (#8301) @cherniavskii
 - [DataGrid] Sync `date` column value when entering edit mode by pressing a digit (#8364) @m4theushw
