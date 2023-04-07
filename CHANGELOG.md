@@ -10,7 +10,7 @@ _Apr 6, 2023_
 We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Catalan (ca-ES), Kazakh (kz-KZ) and improve Spanish (es-ES), Dutch (nl-NL), Hebrew (he-IL), Hungarian (hu-HU), Japanese (ja-JP), Portuguese (pt-BR), and Russian (ru-RU) locales
-- ✨ Allow to control visibility of columns shown in `ColumnsPanel` (#8401) @MBilalShafi
+- ✨ Allow to control visibility of columns shown in the columns panel (#8401) @MBilalShafi
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
