@@ -44,7 +44,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [l10n] Improve Hebrew (he-IL) locale (#8464) @soris1989
 - [l10n] Improve Japanese (ja-JP) locale (#8462) @megos
 - [l10n] Improve Portuguese (pt-BR) locale (#8480) @pwnedev
-
+- [pickers] Update peer dependency versions (#8531) @LukasTy
 ### Docs
 
 - [docs] Fix 301 redirect (#8524) @alexfauquette
