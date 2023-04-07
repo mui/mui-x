@@ -339,7 +339,7 @@ export const useGridClipboardImport = (
 
       const selectedRows = apiRef.current.getSelectedRows();
 
-      if (selectedRows.size > 1 && !isSingleValuePasted) {
+      if (selectedRows.size > 0 && !isSingleValuePasted) {
         // Multiple values are pasted starting from the first and top-most cell
         const pastedRowsDataCount = rowsData.length;
 
