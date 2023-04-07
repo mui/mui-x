@@ -144,7 +144,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Positionnement des lignes',
 
   // Aggregation
-  aggregationMenuItemHeader: 'Aggrégation',
+  aggregationMenuItemHeader: 'Agrégation',
   aggregationFunctionLabelSum: 'Somme',
   aggregationFunctionLabelAvg: 'Moyenne',
   aggregationFunctionLabelMin: 'Minimum',
