@@ -43,7 +43,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           {...data}
           {...other}
           apiRef={apiRef}
-          rowSelection={false}
+          disableRowSelectionOnClick
           unstable_cellSelection
           disableVirtualization
           unstable_enableClipboardPaste
@@ -229,6 +229,63 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(0, 2)).to.have.text(secondColumnValuesBeforePaste[0]);
         expect(getCell(1, 2)).to.have.text(secondColumnValuesBeforePaste[1]);
         expect(getCell(2, 2)).to.have.text(secondColumnValuesBeforePaste[2]);
+      });
+    });
+
+    describe('row selection', () => {
+      it('should paste into each selected row if single row of data is pasted', async () => {
+        render(<Test rowSelectionModel={[0, 1, 2]} />);
+
+        const cell = getCell(2, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
+
+        const clipboardData = ['p01', 'p02', 'p03'].join('\t');
+        paste(cell, clipboardData);
+
+        await waitFor(() => {
+          // the last row is not selected and should not be updated
+          expect(getColumnValues(1)).to.deep.equal(['p02', 'p02', 'p02', 'JPYUSD']);
+          expect(getColumnValues(2)).to.deep.equal(['p03', 'p03', 'p03', '31']);
+        });
+      });
+
+      it('should paste into selected rows if multiple rows of data are pasted', async () => {
+        render(<Test rowSelectionModel={[0, 1, 2]} />);
+
+        const cell = getCell(2, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
+
+        const clipboardData = [
+          ['p01', 'p02', 'p03'].join('\t'),
+          ['p11', 'p12', 'p13'].join('\t'),
+          ['p21', 'p22', 'p23'].join('\t'),
+          ['p31', 'p32', 'p33'].join('\t'),
+        ].join('\r\n');
+        paste(cell, clipboardData);
+
+        await waitFor(() => {
+          // the last row is not selected and should not be updated
+          expect(getColumnValues(1)).to.deep.equal(['p02', 'p12', 'p22', 'JPYUSD']);
+          expect(getColumnValues(2)).to.deep.equal(['p03', 'p13', 'p23', '31']);
+        });
+      });
+
+      it('should ignore row selection when single cell value is pasted', async () => {
+        render(<Test rowSelectionModel={[0, 1, 2]} />);
+
+        const cell = getCell(2, 1);
+        cell.focus();
+        userEvent.mousePress(cell);
+
+        paste(cell, 'pasted');
+
+        await waitFor(() => {
+          // should ignore selected rows and paste into selected cell
+          expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'pasted', 'JPYUSD']);
+          expect(getColumnValues(2)).to.deep.equal(['1', '11', '21', '31']);
+        });
       });
     });
 
