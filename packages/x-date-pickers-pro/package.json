@@ -54,8 +54,8 @@
     "react-transition-group": "^4.4.5"
   },
   "peerDependencies": {
-    "@mui/material": "^5.4.1",
-    "@mui/system": "^5.4.1",
+    "@mui/material": "^5.8.6",
+    "@mui/system": "^5.8.0",
     "date-fns": "^2.25.0",
     "dayjs": "^1.10.7",
     "luxon": "^3.0.2",
