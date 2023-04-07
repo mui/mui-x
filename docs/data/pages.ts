@@ -1,5 +1,4 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
-import { SvgIconComponent } from '@material-ui/icons';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 
 const isPreview =
