@@ -39,6 +39,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [pickers] Move `hasError` from `fieldValueManager` to `valueManager` (#8453) @flaviendelangle
 - [pickers] Move the adapters interfaces to the X repository (#8412) @flaviendelangle
 - [pickers] Update peer dependency versions (#8531) @LukasTy
+- [pickers] Fix `isValid` regression (#8543) @LukasTy
 - [l10n] Add Catalan (Spain) (ca-ES) and improve Spanish (es-ES) locales (#8498) @makenshikuro
 - [l10n] Add Kazakh (kz-KZ) locale (#8451) @zhunus
 - [l10n] Improve Dutch (nl-NL) locale (#8491) @thedutchruben
