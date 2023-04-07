@@ -518,7 +518,7 @@ export const usePickerValue = <
       props: { ...props, value: testedValue },
     });
 
-    return valueManager.hasError(error);
+    return !valueManager.hasError(error);
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
