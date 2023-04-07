@@ -3,7 +3,7 @@ import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import getWeek from 'date-fns/getWeek';
-import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -23,6 +23,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Day of the month
   d: 'day',
   dd: 'day',
+  do: 'day',
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'letter' },

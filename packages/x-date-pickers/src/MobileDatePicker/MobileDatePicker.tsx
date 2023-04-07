@@ -4,13 +4,8 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
 import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import {
-  PickerViewRendererLookup,
-  DateView,
-  useLocaleText,
-  useUtils,
-  validateDate,
-} from '../internals';
+import { PickerViewRendererLookup, useLocaleText, useUtils, validateDate } from '../internals';
+import { DateView } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { singleItemValueManager } from '../internals/utils/valueManagers';

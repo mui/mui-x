@@ -233,6 +233,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
+          unstable_updateValueOnRender: false,
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];
@@ -243,6 +244,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           value: 1,
           error: false,
           isProcessingProps: true,
+          unstable_updateValueOnRender: false,
         });
       });
 
@@ -877,6 +879,16 @@ describe('<DataGridPro /> - Row Editing', () => {
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a', shiftKey: true });
         expect(listener.callCount).to.equal(1);
+      });
+
+      it('should not call startRowEditMode if space is pressed', () => {
+        render(<TestCase autoHeight />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStart', listener);
+        const cell = getCell(0, 1);
+        userEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: ' ' });
+        expect(listener.callCount).to.equal(0);
       });
 
       it(`should call startRowEditMode if ctrl+V is pressed`, () => {

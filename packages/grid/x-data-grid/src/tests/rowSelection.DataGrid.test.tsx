@@ -313,7 +313,7 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
       setProps({
         checkboxSelection: false,
-        isRowSelectable: ({ id }: { id: GridRowId }) => id > 0,
+        isRowSelectable: ({ id }: { id: GridRowId }) => Number(id) > 0,
       });
       expect(getSelectedRowIds()).to.deep.equal([1]);
     });
@@ -533,7 +533,7 @@ describe('<DataGrid /> - Row Selection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           rowSelectionModel={[1]}
-          isRowSelectable={(params) => params.id > 0}
+          isRowSelectable={(params) => Number(params.id) > 0}
           checkboxSelection
         />,
       );
@@ -558,7 +558,7 @@ describe('<DataGrid /> - Row Selection', () => {
             paginationMode="server"
             rowCount={4}
             rowSelectionModel={[1, 4]}
-            isRowSelectable={(params) => params.id > 0}
+            isRowSelectable={(params) => Number(params.id) > 0}
             checkboxSelection
           />,
         );

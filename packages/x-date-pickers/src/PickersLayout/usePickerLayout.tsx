@@ -4,7 +4,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
-import { DateOrTimeView } from '../internals/models';
+import { DateOrTimeView } from '../models';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';

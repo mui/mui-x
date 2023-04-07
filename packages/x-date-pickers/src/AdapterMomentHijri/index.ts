@@ -2,7 +2,7 @@
 import BaseAdapterMomentHijri from '@date-io/hijri';
 // @ts-ignore
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
-import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {

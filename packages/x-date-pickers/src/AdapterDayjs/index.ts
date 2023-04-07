@@ -2,8 +2,7 @@
 import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
-import { DateIOFormats } from '@date-io/core/IUtils';
-import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter, AdapterFormats } from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
 const localeNotFoundWarning = buildWarning([
@@ -27,6 +26,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Day of the month
   D: 'day',
   DD: 'day',
+  Do: 'day',
 
   // Day of the week
   d: 'weekDay',
@@ -57,7 +57,7 @@ interface Opts {
   locale?: string;
   /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
   instance?: typeof defaultDayjs;
-  formats?: Partial<DateIOFormats>;
+  formats?: Partial<AdapterFormats>;
 }
 
 export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickersAdapter<Dayjs> {

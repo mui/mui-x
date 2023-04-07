@@ -514,4 +514,33 @@ describe('<DataGrid /> - Filter panel', () => {
       'isEmpty',
     );
   });
+
+  // See https://github.com/mui/mui-x/issues/7901#issuecomment-1427058922
+  it('should remove `isAnyOf` filter from the model when filter panel is opened through column menu', () => {
+    render(
+      <TestCase
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ field: 'country', operator: 'isAnyOf', value: [] }],
+            },
+          },
+        }}
+      />,
+    );
+
+    // open filter panel
+    const columnCell = getColumnHeaderCell(3);
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    fireEvent.click(menuIconButton);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
+
+    // check that the filter is changed to default one (`is`)
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
+      'country',
+    );
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'is',
+    );
+  });
 });

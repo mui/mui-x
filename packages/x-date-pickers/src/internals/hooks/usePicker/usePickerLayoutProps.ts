@@ -1,7 +1,7 @@
 import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
-import { DateOrTimeView } from '../../models/views';
+import { DateOrTimeView } from '../../../models';
 import { WrapperVariant } from '../../models/common';
 
 /**
