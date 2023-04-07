@@ -37,7 +37,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [fields] Fix usage of `slotProps.textField.InputProps` (#8428) @flaviendelangle
 - [pickers] Fix `componentsProps.dialog` propagation (#8509) @LukasTy
 - [pickers] Move `hasError` from `fieldValueManager` to `valueManager` (#8453) @flaviendelangle
-- [pickers] Move the adapters interfaces to our repository (#8412) @flaviendelangle
+- [pickers] Move the adapters interfaces to the X repository (#8412) @flaviendelangle
 - [l10n] Add Catalan (Spain) (ca-ES) and improve Spanish (es-ES) locales (#8498) @makenshikuro
 - [l10n] Add Kazakh (kz-KZ) locale (#8451) @zhunus
 - [l10n] Improve Dutch (nl-NL) locale (#8491) @thedutchruben
