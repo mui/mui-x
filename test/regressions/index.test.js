@@ -102,6 +102,7 @@ async function main() {
         page.mouse.move(0, 0);
 
         const pathsToNotWaitForFlagCDN = [
+          '/docs-data-grid-filtering/HeaderFilteringDataGridPro', // No flag column
           '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
           '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
           '/docs-data-grid-filtering/QuickFilteringInitialize', // No content rendered
