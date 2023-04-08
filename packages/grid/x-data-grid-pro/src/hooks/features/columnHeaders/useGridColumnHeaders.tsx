@@ -34,7 +34,7 @@ const GridHeaderFilterRow = styled('div', {
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
   const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity(props);
-  const { headerFiltersRef } = props;
+  const { headerFiltersRef, headerGroupingMaxDepth } = props;
   const apiRef = useGridPrivateApiContext();
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
@@ -90,9 +90,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
           : colDef.headerClassName;
 
       // TODO: Support for `isAnyOf` operator
-      const filterOperators = colDef.filterOperators?.filter(
-        (operator) => operator.value !== 'isAnyOf',
-      );
+      const filterOperators =
+        colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
 
       filters.push(
         <GridHeaderFilterItem
@@ -103,7 +102,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
           colDef={colDef}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
-          description={colDef.description}
           headerFilterMenuRef={headerFilterMenuRef}
           headerFilterComponent={headerFilterComponent}
           headerClassName={headerClassName}
@@ -115,7 +113,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
     }
 
     return (
-      <GridHeaderFilterRow ref={headerFiltersRef} ownerState={rootProps} role="row">
+      <GridHeaderFilterRow
+        ref={headerFiltersRef}
+        ownerState={rootProps}
+        role="row"
+        aria-rowindex={headerGroupingMaxDepth + 2}
+      >
         {filters}
       </GridHeaderFilterRow>
     );

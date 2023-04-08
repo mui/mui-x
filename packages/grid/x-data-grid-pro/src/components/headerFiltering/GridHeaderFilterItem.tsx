@@ -25,10 +25,10 @@ import {
 } from '@mui/x-data-grid/internals';
 import { GridHeaderFilterAdorment } from './GridHeaderFilterAdorment';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
-import { OPERATOR_LABEL_MAPPING, noInputOperators } from './constants';
+import { OPERATOR_LABEL_MAPPING, NO_INPUT_OPERATORS, TYPES_WITH_NO_FILTER_CELL } from './constants';
 
 interface GridHeaderFilterItemProps
-  extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
+  extends Pick<GridStateColDef, 'headerClassName'> {
   colIndex: number;
   height: number;
   sortIndex?: number;
@@ -42,8 +42,6 @@ interface GridHeaderFilterItemProps
 }
 
 type OwnerState = DataGridProProcessedProps & GridHeaderFilterItemProps;
-
-const TYPES_WITH_NO_FILTER_CELL = ['actions', 'checkboxSelection'];
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { colDef, classes, showColumnVerticalBorder } = ownerState;
@@ -68,14 +66,11 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
       colIndex,
       height,
       hasFocus,
-      tabIndex,
       headerFilterComponent,
       filterOperators,
-      description,
       width,
       headerClassName,
       colDef,
-      resizable,
       headerFilterMenuRef,
       ...other
     } = props;
@@ -98,13 +93,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
       [filterModel?.items, colDef],
     );
 
-    const currentOperator = React.useMemo(
-      () =>
-        item?.operator
-          ? filterOperators?.find(({ value }) => value === item.operator)
-          : filterOperators![0],
-      [filterOperators, item],
-    );
+    const currentOperator = filterOperators![0];
 
     const InputComponent =
       (colDef.type && TYPES_WITH_NO_FILTER_CELL.includes(colDef.type)) || !colDef.filterable
@@ -227,7 +216,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
 
     const classes = useUtilityClasses(ownerState as OwnerState);
 
-    const isNoInputOperator = noInputOperators[colDef.type!]?.includes(item.operator);
+    const isNoInputOperator = NO_INPUT_OPERATORS[colDef.type!]?.includes(item.operator);
     const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
 
     const placeholder = apiRef.current.getLocaleText('columnMenuFilter');
@@ -242,9 +231,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
           minWidth: width,
           maxWidth: width,
         }}
-        role="cell"
-        tabIndex={tabIndex}
-        data-field={colDef.field}
+        role="columnheader"
         aria-colindex={colIndex + 1}
         aria-label={headerFilterComponent == null ? colDef.headerName ?? colDef.field : undefined}
         {...other}
@@ -269,6 +256,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             {...currentOperator?.InputComponentProps}
             InputProps={{
               disabled: isNoInputOperator,
+              value: isNoInputOperator ? '' : undefined,
               componentsProps: {
                 input: {
                   'tab-index': -1,
