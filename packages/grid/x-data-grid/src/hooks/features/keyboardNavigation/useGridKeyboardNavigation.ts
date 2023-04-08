@@ -20,8 +20,8 @@ import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
-  gridHeaderFilteringEditFieldSelector,
-  gridHeaderFilteringMenuSelector,
+  unstable_gridHeaderFilteringEditFieldSelector,
+  unstable_gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
 
 function enrichPageRowsWithPinnedRows(
@@ -314,8 +314,8 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
-      const isHeaderMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === params.field;
+      const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
+      const isHeaderMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === params.field;
 
       if (isEditing || isHeaderMenuOpen || !isNavigationKey(event.key)) {
         return;

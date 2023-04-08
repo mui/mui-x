@@ -19,8 +19,8 @@ import {
 import {
   GridStateColDef,
   useGridPrivateApiContext,
-  gridHeaderFilteringEditFieldSelector,
-  gridHeaderFilteringMenuSelector,
+  unstable_gridHeaderFilteringEditFieldSelector,
+  unstable_gridHeaderFilteringMenuSelector,
   isNavigationKey,
 } from '@mui/x-data-grid/internals';
 import { GridHeaderFilterAdorment } from './GridHeaderFilterAdorment';
@@ -88,8 +88,8 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     const inputRef = React.useRef<HTMLInputElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-    const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
-    const isMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
+    const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
+    const isMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const item = React.useMemo(
       () =>
@@ -97,12 +97,19 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         getGridFilter(colDef as any),
       [filterModel?.items, colDef],
     );
-    const currentOperator = filterOperators![0];
+
+    const currentOperator = React.useMemo(
+      () =>
+        item?.operator
+          ? filterOperators?.find(({ value }) => value === item.operator)
+          : filterOperators![0],
+      [filterOperators, item],
+    );
 
     const InputComponent =
       (colDef.type && TYPES_WITH_NO_FILTER_CELL.includes(colDef.type)) || !colDef.filterable
         ? null
-        : currentOperator.InputComponent;
+        : currentOperator!.InputComponent;
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
@@ -223,7 +230,6 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     const isNoInputOperator = noInputOperators[colDef.type!]?.includes(item.operator);
     const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
 
-    const label = colDef.headerName ?? colDef.field;
     const placeholder = apiRef.current.getLocaleText('columnMenuFilter');
 
     return (
@@ -240,7 +246,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         tabIndex={tabIndex}
         data-field={colDef.field}
         aria-colindex={colIndex + 1}
-        aria-label={headerFilterComponent == null ? label : undefined}
+        aria-label={headerFilterComponent == null ? colDef.headerName ?? colDef.field : undefined}
         {...other}
         {...mouseEventsHandlers}
       >

@@ -22,8 +22,8 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
-  gridHeaderFilteringEditFieldSelector,
-  gridHeaderFilteringMenuSelector,
+  unstable_gridHeaderFilteringEditFieldSelector,
+  unstable_gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
 export type {
   UseGridColumnHeadersProps,

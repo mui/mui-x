@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { createSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
-export const gridHeaderFilteringStateSelector = (state: GridStateCommunity) =>
+export const unstable_gridHeaderFilteringStateSelector = (state: GridStateCommunity) =>
   state.headerFiltering;
 
-export const gridHeaderFilteringEditFieldSelector = createSelector(
-  gridHeaderFilteringStateSelector,
+export const unstable_gridHeaderFilteringEditFieldSelector = createSelector(
+  unstable_gridHeaderFilteringStateSelector,
   (headerFilteringState) => headerFilteringState.editing,
 );
 
-export const gridHeaderFilteringMenuSelector = createSelector(
-  gridHeaderFilteringStateSelector,
+export const unstable_gridHeaderFilteringMenuSelector = createSelector(
+  unstable_gridHeaderFilteringStateSelector,
   (headerFilteringState) => headerFilteringState.menuOpen,
 );

@@ -7,7 +7,7 @@ import {
   useGridApiContext,
   GridColDef,
 } from '@mui/x-data-grid';
-import { gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
+import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { GridHeaderFilterMenu } from './GridHeaderFilterMenu';
 import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
@@ -23,7 +23,7 @@ function GridHeaderFilterAdorment(props: {
 
   const apiRef = useGridApiContext();
   const open = Boolean(
-    gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,
+    unstable_gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,
   );
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     headerFilterMenuRef.current = event.currentTarget;
