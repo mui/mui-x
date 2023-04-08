@@ -60,9 +60,25 @@ To use header filtering, you need to upgrade to the [Pro plan](/x/introduction/l
 
 :::
 
-Header filtering adds a new header row using which you can add quick filters to the columns. You can also access the filters added using header filter in the regular filter panel.
+Header filtering adds a new header row using which the users can quickly add some filters to the columns. The filters added on filter panel are synchronized with the filtering row and vice versa.
 
 {{"demo": "HeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+**Tip:** You can render custom components in the header filtering row by using the `colDef.renderHeaderFilter` method.
+
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'name',
+    renderHeaderFilter: (params: GridColumnHeaderParams<R, V, F>) => (
+      <MyCustomHeaderFilter {...params} />
+    ),
+  },
+];
+```
+
+:::
 
 ## Pass filters to the Data Grid
 
