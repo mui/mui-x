@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
   useGridRootProps,
-  gridFocusColumnHeaderFilterSelector,
+  unstable_gridFocusColumnHeaderFilterSelector,
   useGridSelector,
+  GridColumnIdentifier,
 } from '@mui/x-data-grid';
 import { styled } from '@mui/system';
 import {
@@ -16,6 +17,7 @@ import { GridHeaderFilterItem } from '../../../components/headerFiltering/GridHe
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export interface UseGridColumnHeadersProProps extends UseGridColumnHeadersProps {
+  columnHeaderFilterTabIndexState: GridColumnIdentifier | null;
   headerFiltersRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -42,7 +44,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
     getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
     (disableHeaderFiltering ? 0 : rootProps.columnHeaderHeight);
 
-  const columnHeaderFilterFocus = useGridSelector(apiRef, gridFocusColumnHeaderFilterSelector);
+  const columnHeaderFilterFocus = useGridSelector(
+    apiRef,
+    unstable_gridFocusColumnHeaderFilterSelector,
+  );
 
   const getColumnFilters = (params?: GetHeadersParams, other = {}) => {
     if (disableHeaderFiltering) {

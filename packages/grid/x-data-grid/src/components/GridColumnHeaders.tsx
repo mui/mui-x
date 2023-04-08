@@ -89,9 +89,6 @@ GridColumnHeaders.propTypes = {
       }),
     ),
   ).isRequired,
-  columnHeaderFilterTabIndexState: PropTypes.shape({
-    field: PropTypes.string.isRequired,
-  }),
   columnHeaderFocus: PropTypes.shape({
     field: PropTypes.string.isRequired,
   }),

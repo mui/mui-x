@@ -14,7 +14,8 @@ export const gridFocusColumnHeaderSelector = createSelector(
   (focusState: GridFocusState) => focusState.columnHeader,
 );
 
-export const gridFocusColumnHeaderFilterSelector = createSelector(
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const unstable_gridFocusColumnHeaderFilterSelector = createSelector(
   gridFocusStateSelector,
   (focusState: GridFocusState) => focusState.columnHeaderFilter,
 );
@@ -37,7 +38,8 @@ export const gridTabIndexColumnHeaderSelector = createSelector(
   (state: GridTabIndexState) => state.columnHeader,
 );
 
-export const gridTabIndexColumnHeaderFilterSelector = createSelector(
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const unstable_gridTabIndexColumnHeaderFilterSelector = createSelector(
   gridTabIndexStateSelector,
   (state: GridTabIndexState) => state.columnHeaderFilter,
 );

@@ -10,6 +10,10 @@ import {
   GridContextProvider,
   GridValidRowModel,
   useGridSelector,
+  unstable_gridTabIndexColumnHeaderFilterSelector,
+  gridTabIndexColumnHeaderSelector,
+  gridTabIndexCellSelector,
+  unstable_gridTabIndexColumnGroupHeaderSelector,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
@@ -27,6 +31,34 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const props = useDataGridProProps(inProps);
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
+  const headerFiltersRef = React.useRef<HTMLDivElement>(null);
+
+  privateApiRef.current.register('private', {
+    headerFiltersElementRef: headerFiltersRef,
+  });
+
+  const columnHeaderFilterTabIndexState = useGridSelector(
+    privateApiRef,
+    unstable_gridTabIndexColumnHeaderFilterSelector,
+  );
+
+  const columnHeaderTabIndexState = useGridSelector(
+    privateApiRef,
+    gridTabIndexColumnHeaderSelector,
+  );
+
+  const cellTabIndexState = useGridSelector(privateApiRef, gridTabIndexCellSelector);
+  const columnGroupHeaderTabIndexState = useGridSelector(
+    privateApiRef,
+    unstable_gridTabIndexColumnGroupHeaderSelector,
+  );
+
+  const hasOtherElementInTabSequence = !(
+    columnGroupHeaderTabIndexState === null &&
+    columnHeaderFilterTabIndexState === null &&
+    columnHeaderTabIndexState === null &&
+    cellTabIndexState === null
+  );
 
   const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
 
@@ -36,7 +68,12 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         <GridHeader />
         <GridBody
           VirtualScrollerComponent={DataGridProVirtualScroller}
-          ColumnHeadersProps={{ pinnedColumns }}
+          ColumnHeadersProps={{
+            pinnedColumns,
+            headerFiltersRef,
+            columnHeaderFilterTabIndexState,
+            hasOtherElementInTabSequence,
+          }}
         >
           <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
         </GridBody>

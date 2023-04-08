@@ -164,9 +164,13 @@ export const useGridColumnResize = (
     colElementRef.current!.style.minWidth = `${newWidth}px`;
     colElementRef.current!.style.maxWidth = `${newWidth}px`;
 
-    headerFilterElementRef.current!.style.width = `${newWidth}px`;
-    headerFilterElementRef.current!.style.minWidth = `${newWidth}px`;
-    headerFilterElementRef.current!.style.maxWidth = `${newWidth}px`;
+    const headerFilterElement = headerFilterElementRef.current;
+
+    if (headerFilterElement) {
+      headerFilterElement.style.width = `${newWidth}px`;
+      headerFilterElement.style.minWidth = `${newWidth}px`;
+      headerFilterElement.style.maxWidth = `${newWidth}px`;
+    }
 
     [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
       const div = element as HTMLDivElement;
@@ -262,10 +266,13 @@ export const useGridColumnResize = (
           `[data-field="${colDef.field}"]`,
         )!;
 
-      headerFilterElementRef.current =
-        apiRef.current.headerFiltersElementRef?.current!.querySelector<HTMLDivElement>(
+      const headerFilterRowElement = apiRef.current.headerFiltersElementRef?.current;
+
+      if (headerFilterRowElement) {
+        headerFilterElementRef.current = headerFilterRowElement.querySelector<HTMLDivElement>(
           `[data-field="${colDef.field}"]`,
-        )!;
+        ) as HTMLDivElement;
+      }
 
       colGroupingElementRef.current = findGroupHeaderElementsFromField(
         apiRef.current.columnHeadersContainerElementRef?.current!,

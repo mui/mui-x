@@ -52,7 +52,6 @@ export interface UseGridColumnHeadersProps {
   columnPositions: number[];
   columnHeaderTabIndexState: GridColumnIdentifier | null;
   columnGroupHeaderTabIndexState: GridColumnGroupIdentifier | null;
-  columnHeaderFilterTabIndexState: GridColumnIdentifier | null;
   columnHeaderFocus: GridColumnIdentifier | null;
   columnGroupHeaderFocus: GridColumnGroupIdentifier | null;
   densityFactor: number;

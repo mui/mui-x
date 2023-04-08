@@ -14,7 +14,6 @@ import {
 import { gridFilterActiveItemsLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import {
-  gridTabIndexColumnHeaderFilterSelector,
   gridTabIndexColumnHeaderSelector,
   gridTabIndexCellSelector,
   gridFocusColumnHeaderSelector,
@@ -48,10 +47,6 @@ function GridBody(props: GridBodyProps) {
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-  const columnHeaderFilterTabIndexState = useGridSelector(
-    apiRef,
-    gridTabIndexColumnHeaderFilterSelector,
-  );
 
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
@@ -78,7 +73,6 @@ function GridBody(props: GridBodyProps) {
 
   const hasOtherElementInTabSequence = !(
     columnGroupHeaderTabIndexState === null &&
-    columnHeaderFilterTabIndexState === null &&
     columnHeaderTabIndexState === null &&
     cellTabIndexState === null
   );
@@ -109,14 +103,12 @@ function GridBody(props: GridBodyProps) {
   apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
   const columnHeadersRef = React.useRef<HTMLDivElement>(null);
-  const headerFiltersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.register('private', {
     columnHeadersContainerElementRef: columnsContainerRef,
     columnHeadersElementRef: columnHeadersRef,
-    headerFiltersElementRef: headerFiltersRef,
     virtualScrollerRef,
   });
 
@@ -132,14 +124,12 @@ function GridBody(props: GridBodyProps) {
       <rootProps.slots.columnHeaders
         ref={columnsContainerRef}
         innerRef={columnHeadersRef}
-        headerFiltersRef={headerFiltersRef}
         visibleColumns={visibleColumns}
         filterColumnLookup={filterColumnLookup}
         sortColumnLookup={sortColumnLookup}
         columnPositions={columnPositions}
         columnHeaderTabIndexState={columnHeaderTabIndexState}
         columnGroupHeaderTabIndexState={columnGroupHeaderTabIndexState}
-        columnHeaderFilterTabIndexState={columnHeaderFilterTabIndexState}
         columnHeaderFocus={columnHeaderFocus}
         columnGroupHeaderFocus={columnGroupHeaderFocus}
         densityFactor={densityFactor}
