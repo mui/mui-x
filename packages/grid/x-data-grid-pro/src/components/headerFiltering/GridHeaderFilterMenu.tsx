@@ -18,6 +18,8 @@ export interface GridHeaderFilterMenuProps {
   operators: GridFilterOperator<any, any, any>[];
   item: GridFilterItem;
   open: boolean;
+  id: string;
+  labelledBy: string;
   target: HTMLElement | null;
 }
 
@@ -28,6 +30,8 @@ function GridHeaderFilterMenu({
   applyFilterChanges,
   operators,
   item,
+  id,
+  labelledBy,
 }: GridHeaderFilterMenuProps) {
   const apiRef = useGridApiContext();
 
@@ -59,13 +63,14 @@ function GridHeaderFilterMenu({
       onClickAway={hideMenu}
       onExited={hideMenu}
     >
-      <MenuList onKeyDown={handleListKeyDown} autoFocus={open}>
+      <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown} autoFocus={open}>
         {operators.map((op) => (
           <MenuItem
             onClick={() => {
               applyFilterChanges({ ...item, operator: op.value });
               hideMenu();
             }}
+            selected={op.value === item.operator}
             key={`${field}-${op.value}`}
           >
             <ListItemIcon>{OPERATOR_SYMBOL_MAPPING[op.value]}</ListItemIcon>

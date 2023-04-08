@@ -1,12 +1,13 @@
 import * as React from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
 import {
   GridFilterItem,
   GridFilterOperator,
   useGridApiContext,
   GridColDef,
+  useGridRootProps,
 } from '@mui/x-data-grid';
+import { unstable_useId as useId } from '@mui/utils';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { GridHeaderFilterMenu } from './GridHeaderFilterMenu';
 import { OPERATOR_SYMBOL_MAPPING } from './constants';
@@ -21,6 +22,10 @@ function GridHeaderFilterAdorment(props: {
 }) {
   const { operators, item, field, buttonRef, headerFilterMenuRef, ...others } = props;
 
+  const buttonId = useId();
+  const menuId = useId();
+
+  const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const open = Boolean(
     unstable_gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,
@@ -33,9 +38,20 @@ function GridHeaderFilterAdorment(props: {
   return (
     <React.Fragment>
       <InputAdornment position="start">
-        <IconButton ref={buttonRef} tabIndex={-1} size="small" onClick={handleClick}>
+        <rootProps.slots.baseIconButton
+          id={buttonId}
+          ref={buttonRef}
+          aria-label={apiRef.current.getLocaleText('filterPanelOperator')}
+          title={apiRef.current.getLocaleText('filterPanelOperator')}
+          aria-controls={menuId}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup="true"
+          tabIndex={-1}
+          size="small"
+          onClick={handleClick}
+        >
           {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? ''}
-        </IconButton>
+        </rootProps.slots.baseIconButton>
       </InputAdornment>
       <GridHeaderFilterMenu
         field={field}
@@ -43,6 +59,8 @@ function GridHeaderFilterAdorment(props: {
         item={item}
         target={headerFilterMenuRef.current}
         operators={operators}
+        labelledBy={buttonId!}
+        id={menuId!}
         {...others}
       />
     </React.Fragment>

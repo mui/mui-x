@@ -27,8 +27,7 @@ import { GridHeaderFilterAdorment } from './GridHeaderFilterAdorment';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { OPERATOR_LABEL_MAPPING, NO_INPUT_OPERATORS, TYPES_WITH_NO_FILTER_CELL } from './constants';
 
-interface GridHeaderFilterItemProps
-  extends Pick<GridStateColDef, 'headerClassName'> {
+interface GridHeaderFilterItemProps extends Pick<GridStateColDef, 'headerClassName'> {
   colIndex: number;
   height: number;
   sortIndex?: number;
@@ -201,10 +200,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     const mouseEventsHandlers = React.useMemo(
       () => ({
         onKeyDown: publish('headerFilterKeyDown', onKeyDown),
-        onFocus: publish('headerFilterFocus'),
-        onBlur: publish('headerFilterBlur'),
         onClick: publish('headerFilterClick', onClick),
-        onDoubleClick: publish('headerFilterDoubleClick'),
       }),
       [onClick, onKeyDown, publish],
     );
@@ -256,7 +252,6 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             {...currentOperator?.InputComponentProps}
             InputProps={{
               disabled: isNoInputOperator,
-              value: isNoInputOperator ? '' : undefined,
               componentsProps: {
                 input: {
                   'tab-index': -1,
