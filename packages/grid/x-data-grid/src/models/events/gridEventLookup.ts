@@ -201,34 +201,11 @@ export interface GridHeaderFilterEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
-   * Fired when a column header filter is double-clicked.
-   */
-  headerFilterDoubleClick: {
-    params: GridColumnHeaderParams;
-    event: React.MouseEvent<HTMLElement>;
-  };
-  /**
    * Fired when a key is pressed in a column header filter. It's mapped do the `keydown` DOM event.
    */
   headerFilterKeyDown: {
     params: GridColumnHeaderParams;
     event: React.KeyboardEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a column header filter gains focus.
-   * @ignore - do not document.
-   */
-  headerFilterFocus: {
-    params: GridColumnHeaderParams;
-    event: React.FocusEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a column header filter loses focus.
-   * @ignore - do not document.
-   */
-  headerFilterBlur: {
-    params: GridColumnHeaderParams;
-    event: React.FocusEvent<HTMLElement>;
   };
 }
 
