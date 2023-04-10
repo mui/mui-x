@@ -142,7 +142,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
 
   // Aggregation
-  aggregationMenuItemHeader: 'جمع کرنا',
+  aggregationMenuItemHeader: 'ایگریگیشن',
   aggregationFunctionLabelSum: 'کل',
   aggregationFunctionLabelAvg: 'اوسط',
   aggregationFunctionLabelMin: 'کم از کم',
