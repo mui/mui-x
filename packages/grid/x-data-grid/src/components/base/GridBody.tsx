@@ -47,7 +47,6 @@ function GridBody(props: GridBodyProps) {
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const columnGroupHeaderTabIndexState = useGridSelector(
