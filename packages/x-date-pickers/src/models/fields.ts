@@ -116,6 +116,10 @@ export interface BaseSingleInputFieldProps<TValue, TSection extends FieldSection
   extends BaseFieldProps<TValue, TSection, TError> {
   label?: React.ReactNode;
   id?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler;
+  onBlur?: React.FocusEventHandler;
+  focused?: boolean;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;

@@ -16,6 +16,12 @@ import { AxisConfig, AxisDefaultized, ScaleName } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
+import {
+  ChartSeries,
+  ChartSeriesType,
+  ExtremumGetter,
+  ExtremumGetterResult,
+} from '../models/seriesType/config';
 
 export type CartesianContextProviderProps = {
   xAxis?: AxisConfig[];
@@ -23,13 +29,14 @@ export type CartesianContextProviderProps = {
   children: React.ReactNode;
 };
 
-// TODO: those migt be better placed in a distinc file
-const getExtremumX = {
+// TODO: those might be better placed in a distinct file
+const xExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumX,
   scatter: getScatterExtremumX,
   line: getLineExtremumX,
 };
-const getExtremumY = {
+
+const yExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumY,
   scatter: getScatterExtremumY,
   line: getLineExtremumY,
@@ -41,7 +48,7 @@ type DefaultizedAxisConfig = {
 
 export const CartesianContext = React.createContext<{
   /**
-   * Mapping from axis key to scalling function
+   * Mapping from axis key to scaling function
    */
   xAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
@@ -61,43 +68,55 @@ export function CartesianContextProvider({
   const drawingArea = React.useContext(DrawingContext);
 
   const value = React.useMemo(() => {
-    const completedXAxis: DefaultizedAxisConfig = {};
-    const completedYAxis: DefaultizedAxisConfig = {};
+    const axisExtremumCallback = <T extends keyof typeof xExtremumGetters>(
+      acc: ExtremumGetterResult,
+      chartType: T,
+      axis: AxisConfig,
+      getters: { [T2 in ChartSeriesType]: ExtremumGetter<T2> },
+    ): ExtremumGetterResult => {
+      const getter = getters[chartType];
+      const series = (formattedSeries[chartType]?.series as { [id: string]: ChartSeries<T> }) ?? {};
 
-    [
-      ...(xAxis ?? []),
-      {
-        id: DEFAULT_X_AXIS_KEY,
-        scaleName: 'linear' as ScaleName,
-      },
-    ].forEach((axis) => {
-      const [minData, maxData] = (
-        Object.keys(getExtremumX) as Array<keyof typeof getExtremumX>
-      ).reduce(
-        ([currentMinData, currentMaxData]: [number | null, number | null], chartType) => {
-          if (formattedSeries[chartType]?.series === undefined) {
-            return [currentMinData, currentMaxData];
-          }
-          const [minChartTypeData, maxChartTypeData] = getExtremumX[chartType]({
-            // @ts-ignore TODO: find a way to let TS understand types are coherend because they come from the same key
-            series: formattedSeries[chartType]?.series ?? {},
-            xAxis: axis,
-          });
-          if (currentMinData === null || currentMaxData === null) {
-            return [minChartTypeData, maxChartTypeData];
-          }
-          if (minChartTypeData === null || maxChartTypeData === null) {
-            return [currentMinData, currentMaxData];
-          }
-          return [
-            Math.min(minChartTypeData, currentMinData),
-            Math.max(maxChartTypeData, currentMaxData),
-          ];
-        },
-        [null, null],
+      const [minChartTypeData, maxChartTypeData] = getter({
+        series,
+        axis,
+      });
+
+      const [minData, maxData] = acc;
+
+      if (minData === null || maxData === null) {
+        return [minChartTypeData!, maxChartTypeData!];
+      }
+
+      if (minChartTypeData === null || maxChartTypeData === null) {
+        return [minData, maxData];
+      }
+
+      return [Math.min(minChartTypeData, minData), Math.max(maxChartTypeData, maxData)];
+    };
+
+    const getAxisExtremum = (
+      axis: AxisConfig,
+      getters: { [T in ChartSeriesType]: ExtremumGetter<T> },
+    ) => {
+      const charTypes = Object.keys(getters) as ChartSeriesType[];
+
+      return charTypes.reduce(
+        (acc, charType) => axisExtremumCallback(acc, charType, axis, getters),
+        [null, null] as ExtremumGetterResult,
       );
+    };
 
-      const scaleName = axis.scaleName ?? ('linear' as ScaleName);
+    const allXAxis: AxisConfig[] = [
+      ...(xAxis ?? []),
+      { id: DEFAULT_X_AXIS_KEY, scaleName: 'linear' },
+    ];
+
+    const completedXAxis: DefaultizedAxisConfig = {};
+    allXAxis.forEach((axis) => {
+      const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters);
+
+      const scaleName = axis.scaleName ?? 'linear';
       completedXAxis[axis.id] = {
         ...axis,
         scaleName,
@@ -109,41 +128,16 @@ export function CartesianContextProvider({
       };
     });
 
-    [
+    const allYAxis: AxisConfig[] = [
       ...(yAxis ?? []),
-      {
-        id: DEFAULT_Y_AXIS_KEY,
-        scaleName: 'linear' as ScaleName,
-      },
-    ].forEach((axis) => {
-      const [minData, maxData] = (
-        Object.keys(getExtremumX) as Array<keyof typeof getExtremumX>
-      ).reduce(
-        ([currentMinData, currentMaxData]: [number | null, number | null], chartType) => {
-          if (formattedSeries[chartType]?.series === undefined) {
-            return [currentMinData, currentMaxData];
-          }
+      { id: DEFAULT_Y_AXIS_KEY, scaleName: 'linear' },
+    ];
 
-          const [minChartTypeData, maxChartTypeData] = getExtremumY[chartType]({
-            // @ts-ignore
-            series: formattedSeries[chartType]?.series,
-            yAxis: axis,
-          });
-          if (currentMinData === null || currentMaxData === null) {
-            return [minChartTypeData, maxChartTypeData];
-          }
-          if (minChartTypeData === null || maxChartTypeData === null) {
-            return [currentMinData, currentMaxData];
-          }
-          return [
-            Math.min(minChartTypeData, currentMinData),
-            Math.max(maxChartTypeData, currentMaxData),
-          ];
-        },
-        [null, null],
-      );
+    const completedYAxis: DefaultizedAxisConfig = {};
+    allYAxis.forEach((axis) => {
+      const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters);
 
-      const scaleName = axis.scaleName ?? ('linear' as ScaleName);
+      const scaleName: ScaleName = axis.scaleName ?? 'linear';
       completedYAxis[axis.id] = {
         ...axis,
         scaleName,

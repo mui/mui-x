@@ -160,8 +160,7 @@ export const useGridEditing = (
   const getEditCellMeta = React.useCallback<GridEditingSharedApi['unstable_getEditCellMeta']>(
     (id, field) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-
-      return { changeReason: editingState[id][field].changeReason };
+      return editingState[id][field];
     },
     [apiRef],
   );

@@ -19,7 +19,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { getActiveElement } from '../utils/utils';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../utils/slots-migration';
+import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
 
 export interface PickersPopperSlotsComponent {
@@ -76,8 +76,6 @@ export interface PickerPopperProps extends UsePickerValueActions {
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  components?: PickersPopperSlotsComponent;
-  componentsProps?: PickersPopperSlotsComponentsProps;
   slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
   slotProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
@@ -273,13 +271,9 @@ export function PickersPopper(inProps: PickerPopperProps) {
     open,
     role,
     placement,
-    components,
-    componentsProps,
-    slots: innerSlots,
-    slotProps: innerSlotProps,
+    slots,
+    slotProps,
   } = props;
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {

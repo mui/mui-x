@@ -98,7 +98,7 @@ Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` 
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx

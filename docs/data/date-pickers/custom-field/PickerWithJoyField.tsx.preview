@@ -1,9 +1,9 @@
 <CssVarsProvider theme={mergedTheme}>
   <SyncThemeMode mode={mode} />
   <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <Stack spacing={2} sx={{ width: 400 }}>
+    <DemoContainer components={['DatePicker', 'DateRangePicker']}>
       <JoyDatePicker />
       <JoyDateRangePicker />
-    </Stack>
+    </DemoContainer>
   </LocalizationProvider>
 </CssVarsProvider>

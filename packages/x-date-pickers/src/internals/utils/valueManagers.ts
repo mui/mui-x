@@ -24,32 +24,28 @@ export const singleItemValueManager: SingleItemPickerValueManager = {
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: areDatesEqual,
   isSameError: (a, b) => a === b,
+  hasError: (error) => error != null,
   defaultErrorState: null,
 };
 
-export const singleItemFieldValueManager: FieldValueManager<
-  any,
-  any,
-  FieldSection,
-  DateValidationError | TimeValidationError | DateTimeValidationError
-> = {
+export const singleItemFieldValueManager: FieldValueManager<any, any, FieldSection> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, date, prevSections, getSectionsFromDate) => {
+  getSectionsFromValue: (utils, date, prevSections, isRTL, getSectionsFromDate) => {
     const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
 
     if (shouldReUsePrevDateSections) {
       return prevSections;
     }
 
-    return addPositionPropertiesToSections(getSectionsFromDate(date));
+    return addPositionPropertiesToSections(getSectionsFromDate(date), isRTL);
   },
-  getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
-  getActiveDateSections: (sections) => sections,
+  getValueStrFromSections: createDateStrForInputFromSections,
   getActiveDateManager: (utils, state) => ({
-    activeDate: state.value,
-    referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => ({
+    date: state.value,
+    referenceDate: state.referenceValue,
+    getSections: (sections) => sections,
+    getNewValuesFromNewActiveDate: (newActiveDate) => ({
       value: newActiveDate,
       referenceValue:
         newActiveDate == null || !utils.isValid(newActiveDate)
@@ -59,5 +55,4 @@ export const singleItemFieldValueManager: FieldValueManager<
   }),
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
-  hasError: (error) => error != null,
 };

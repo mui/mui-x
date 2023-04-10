@@ -257,7 +257,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       const handleRowSelectionModelChange = spy();
       render(
         <TestDataGridSelection
-          isRowSelectable={(params) => params.id > 0}
+          isRowSelectable={(params) => Number(params.id) > 0}
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );
@@ -291,7 +291,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       const handleRowSelectionModelChange = spy();
       render(
         <TestDataGridSelection
-          isRowSelectable={(params) => params.id > 0}
+          isRowSelectable={(params) => Number(params.id) > 0}
           onRowSelectionModelChange={handleRowSelectionModelChange}
         />,
       );

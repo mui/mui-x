@@ -310,8 +310,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
-        components={components}
-        componentsProps={componentsProps}
         slots={slots}
         slotProps={slotProps}
       />

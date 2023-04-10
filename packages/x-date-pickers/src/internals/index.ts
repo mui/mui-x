@@ -68,7 +68,7 @@ export type {
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
-export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
+export type { UsePickerResponse, UsePickerParams, UsePickerProps } from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,
@@ -120,7 +120,6 @@ export type {
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { WrapperVariant } from './models/common';
 
