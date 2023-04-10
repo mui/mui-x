@@ -5,7 +5,6 @@ import { adapterToUse } from 'test/utils/pickers-utils';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 const toMinutesLabel = (minutes: number | string) =>
-  // eslint-disable-next-line eqeqeq
   `${Number(minutes) < 10 ? `0${minutes}` : minutes} minutes`;
 
 export const testMinutesViewValidation: DescribeValidationTestSuite = (
