@@ -80,6 +80,7 @@
         "@mui/joy",
         "@mui/icons-material",
         "@mui/base",
+        "@mui/styles",
         "@mui/system",
         "@mui/utils"
       ]
