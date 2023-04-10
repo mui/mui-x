@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.1.0
+
+_Apr 7, 2023_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Catalan (ca-ES), Kazakh (kz-KZ) and improve Spanish (es-ES), Dutch (nl-NL), Hebrew (he-IL), Hungarian (hu-HU), Japanese (ja-JP), Portuguese (pt-BR), and Russian (ru-RU) locales
+- ✨ Allow to control visibility of columns shown in the columns panel (#8401) @MBilalShafi
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.1.0` / `@mui/x-data-grid-pro@v6.1.0` / `@mui/x-data-grid-premium@v6.1.0`
+
+#### Changes
+
+- [DataGrid] Allow to control visibility of columns shown in the `ColumnsPanel` component (#8401) @MBilalShafi
+- [DataGrid] Fix filters with empty array value not being removed from the filter model (#8501) @cherniavskii
+- [DataGrid] Fix memory leaks in development (#8301) @cherniavskii
+- [DataGrid] Sync `date` column value when entering edit mode by pressing a digit (#8364) @m4theushw
+- [DataGrid] Wrap column menu button with a tooltip (#7890) @cherniavskii
+- [l10n] Improve Dutch (nl-NL) locale (#8491) @thedutchruben
+- [l10n] Improve Hungarian (hu-HU) locale (#8486) @PetakCC
+- [l10n] Improve Japanese (ja-JP) locale (#8462) @megos
+- [l10n] Improve Portuguese (pt-BR) locale (#8480) @pwnedev
+- [l10n] Improve Russian (ru-RU) locale (#8510) @alexrapro
+
+### `@mui/x-date-pickers@v6.1.0` / `@mui/x-date-pickers-pro@v6.1.0`
+
+#### Changes
+
+- [fields] Fix RTL navigation (#8490) @alexfauquette
+- [fields] Fix usage of `slotProps.textField.InputProps` (#8428) @flaviendelangle
+- [pickers] Fix `componentsProps.dialog` propagation (#8509) @LukasTy
+- [pickers] Move `hasError` from `fieldValueManager` to `valueManager` (#8453) @flaviendelangle
+- [pickers] Move the adapters interfaces to the X repository (#8412) @flaviendelangle
+- [pickers] Update peer dependency versions (#8531) @LukasTy
+- [pickers] Fix `isValid` regression (#8543) @LukasTy
+- [l10n] Add Catalan (Spain) (ca-ES) and improve Spanish (es-ES) locales (#8498) @makenshikuro
+- [l10n] Add Kazakh (kz-KZ) locale (#8451) @zhunus
+- [l10n] Improve Dutch (nl-NL) locale (#8491) @thedutchruben
+- [l10n] Improve Hebrew (he-IL) locale (#8464) @soris1989
+- [l10n] Improve Japanese (ja-JP) locale (#8462) @megos
+- [l10n] Improve Portuguese (pt-BR) locale (#8480) @pwnedev
+
+### Docs
+
+- [docs] Fix 301 redirect (#8524) @alexfauquette
+- [docs] Fix 404 links (#8454) @alexfauquette
+- [docs] Fix broken API reference link (#8460) @oliviertassinari
+
+### Core
+
+- [core] Avoid 301 links (#8383) @oliviertassinari
+- [core] Fix the l10n helper by using danger instead of actions (#8512) @alexfauquette
+- [core] Help contributors for l10n PRs (#8503) @alexfauquette
+- [core] Remove legacy token (#8457) @oliviertassinari
+- [charts] Add a styling system (#8445) @alexfauquette
+
 ## 6.0.4
 
 _Mar 30, 2023_
