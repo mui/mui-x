@@ -786,16 +786,16 @@ const transferDateSectionValue = <TDate>(
   }
 };
 
-const reliableSectionModificationOrder: FieldSectionType[] = [
-  'year',
-  'month',
-  'day',
-  'weekDay',
-  'hours',
-  'minutes',
-  'seconds',
-  'meridiem',
-];
+const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
+  year: 1,
+  month: 2,
+  day: 3,
+  weekDay: 4,
+  hours: 5,
+  minutes: 6,
+  seconds: 7,
+  meridiem: 8,
+};
 
 export const mergeDateIntoReferenceDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -807,9 +807,7 @@ export const mergeDateIntoReferenceDate = <TDate>(
   // cloning sections before sort to avoid mutating it
   [...sections]
     .sort(
-      (a, b) =>
-        reliableSectionModificationOrder.indexOf(a.type) -
-        reliableSectionModificationOrder.indexOf(b.type),
+      (a, b) => reliableSectionModificationOrder[a.type] - reliableSectionModificationOrder[b.type],
     )
     .reduce((mergedDate, section) => {
       if (!shouldLimitToEditedSections || section.modified) {
