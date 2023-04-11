@@ -43,12 +43,12 @@ const MarkElementPath = styled('path', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState }) => ({
-  stroke: 'none',
   transform: `translate(${ownerState.x}px, ${ownerState.y}px) ${
     ownerState.isHighlighted ? 'scale(2)' : ''
   }`,
-  transition: ['transform 0.2s'],
   fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
+  stroke: ownerState.color,
+  strokeWidth: ownerState.isHighlighted ? 2 : 1,
   pointerEvents: 'none',
 }));
 
