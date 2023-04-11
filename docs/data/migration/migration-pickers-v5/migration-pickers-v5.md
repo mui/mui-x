@@ -439,7 +439,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  renderInput={(inputProps) => <TextField {...props} variant="outlined" />}
-  +  componentsProps={{ textField: { variant: 'outlined' } }}
+  +  slotProps={{ textField: { variant: 'outlined' } }}
    />
 
    <DateRangePicker
@@ -450,7 +450,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} variant="outlined" />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ textField: { variant: 'outlined' } }}
+  +  slotProps={{ textField: { variant: 'outlined' } }}
    />
   ```
 
@@ -465,7 +465,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ fieldSeparator: { children: 'to' } }}
+  +  slotProps={{ fieldSeparator: { children: 'to' } }}
    />
   ```
 
@@ -487,7 +487,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -  toolbarPlaceholder="__"
   -  toolbarFormat="DD / MM / YYYY"
   -  showToolbar
-  +  componentsProps={{
+  +  slotProps={{
   +    toolbar: {
   +      toolbarPlaceholder: '__',
   +      toolbarFormat: 'DD / MM / YYYY',
@@ -575,7 +575,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -  hideTabs={false}
   -  dateRangeIcon={<LightModeIcon />}
   -  timeIcon={<AcUnitIcon />}
-  +  componentsProps={{
+  +  slotProps={{
   +    tabs: {
   +      hidden: false,
   +      dateIcon: <LightModeIcon />,
@@ -669,7 +669,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PopperProps={{ onClick: handleClick }}
-  +  componentsProps={{ popper: { onClick: handleClick } }}
+  +  slotProps={{ popper: { onClick: handleClick } }}
    />
   ```
 
@@ -691,7 +691,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  DialogProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ dialog: { backgroundColor: 'red' }}}
+  +  slotProps={{ dialog: { backgroundColor: 'red' }}}
    />
   ```
 
@@ -702,7 +702,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' } }}
+  +  slotProps={{ desktopPaper: { backgroundColor: 'red' } }}
    />
   ```
 
@@ -713,7 +713,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  TrapFocusProps={{ isEnabled: () => false }}
-  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false } }}
+  +  slotProps={{ desktopTrapFocus: { isEnabled: () => false } }}
    />
   ```
 
@@ -799,12 +799,12 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 ### ✅ Input
 
 - The `InputProps` prop has been removed.
-  You can use the `InputProps` of the `textField` component slot props instead:
+  You can use the `InputProps` prop of the `textField` component slot props instead:
 
   ```diff
    <DatePicker
   -  InputProps={{ color: 'primary' }}
-  +  componentsProps={{ textField: { InputProps: { color: 'primary' } } }}
+  +  slotProps={{ textField: { InputProps: { color: 'primary' } } }}
    />
   ```
 
@@ -815,7 +815,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  InputAdornmentProps={{ position: 'start' }}
-  +  componentsProps={{ inputAdornment: { position: 'start' } }}
+  +  slotProps={{ inputAdornment: { position: 'start' } }}
    />
   ```
 
@@ -826,7 +826,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  OpenPickerButtonProps={{ ref: buttonRef }}
-  +  componentsProps={{ openPickerButton: { ref: buttonRef } }}
+  +  slotProps={{ openPickerButton: { ref: buttonRef } }}
    />
   ```
 
