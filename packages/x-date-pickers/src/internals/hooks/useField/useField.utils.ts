@@ -731,13 +731,13 @@ const transferDateSectionValue = <TDate>(
   dateToTransferTo: TDate,
 ) => {
   switch (section.type) {
-    // case 'year': {
-    //   return utils.setYear(dateToTransferTo, utils.getYear(dateToTransferFrom));
-    // }
+    case 'year': {
+      return utils.setYear(dateToTransferTo, utils.getYear(dateToTransferFrom));
+    }
 
-    // case 'month': {
-    //   return utils.setMonth(dateToTransferTo, utils.getMonth(dateToTransferFrom));
-    // }
+    case 'month': {
+      return utils.setMonth(dateToTransferTo, utils.getMonth(dateToTransferFrom));
+    }
 
     case 'weekDay': {
       const formattedDaysInWeek = getDaysInWeekStr(utils, section.format);
@@ -749,9 +749,9 @@ const transferDateSectionValue = <TDate>(
       return utils.addDays(dateToTransferFrom, diff);
     }
 
-    // case 'day': {
-    //   return utils.setDate(dateToTransferTo, utils.getDate(dateToTransferFrom));
-    // }
+    case 'day': {
+      return utils.setDate(dateToTransferTo, utils.getDate(dateToTransferFrom));
+    }
 
     case 'meridiem': {
       const isAM = utils.getHours(dateToTransferFrom) < 12;
@@ -786,51 +786,16 @@ const transferDateSectionValue = <TDate>(
   }
 };
 
-const getCleanISOSectionValue = (value: number) => {
-  return value < 10 ? `0${value}` : value.toString();
-};
-
-const getCleanISOYearValue = (value: number) => {
-  let result;
-  if (value < 10) {
-    result = `000${value}`;
-  } else if (value < 100) {
-    result = `00${value}`;
-  } else if (value < 1000) {
-    result = `0${value}`;
-  }
-  return result ? result.toString() : value.toString();
-};
-
-const transferDateSectionsValue = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  sections: FieldSectionWithoutPosition[],
-  dateToTransferFrom: TDate,
-  dateToTransferTo: TDate,
-) => {
-  const yearSection = sections.find((section) => section.type === 'year');
-  const monthSection = sections.find((section) => section.type === 'month');
-  const daySection = sections.find((section) => section.type === 'day');
-  const fromJSDate = utils.toJsDate(dateToTransferFrom);
-  const toJSDate = utils.toJsDate(dateToTransferTo);
-  const parsedDate = utils.date(
-    new Date(
-      `${getCleanISOYearValue(
-        yearSection ? fromJSDate.getFullYear() : toJSDate.getFullYear(),
-      )}-${getCleanISOSectionValue(
-        (monthSection ? fromJSDate.getMonth() : toJSDate.getMonth()) + 1,
-      )}-${getCleanISOSectionValue(daySection ? fromJSDate.getDate() : toJSDate.getDate())}`,
-      // the below approach would be way cleaner, but the issue is with the year
-      // where `2` would produce a `1902`, but should instead be `0002`
-      // yearSection ? fromJSDate.getFullYear() : toJSDate.getFullYear(),
-      // monthSection ? fromJSDate.getMonth() : toJSDate.getMonth(),
-      // daySection ? fromJSDate.getDate() : toJSDate.getDate(),
-    ),
-  );
-  return parsedDate ? utils.mergeDateAndTime(parsedDate, dateToTransferTo) : dateToTransferTo;
-};
-
-const leapSensitiveSectionTypes: FieldSectionType[] = ['year', 'month', 'day'];
+const reliableSectionModificationOrder: FieldSectionType[] = [
+  'year',
+  'month',
+  'day',
+  'weekDay',
+  'hours',
+  'minutes',
+  'seconds',
+  'meridiem',
+];
 
 export const mergeDateIntoReferenceDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -838,26 +803,21 @@ export const mergeDateIntoReferenceDate = <TDate>(
   sections: FieldSectionWithoutPosition[],
   referenceDate: TDate,
   shouldLimitToEditedSections: boolean,
-) => {
-  const sectionsToMerge = sections.filter(
-    (section) =>
-      (!shouldLimitToEditedSections || section.modified) &&
-      leapSensitiveSectionTypes.includes(section.type),
-  );
-  const intermediateDate =
-    sectionsToMerge.length > 0
-      ? transferDateSectionsValue(utils, sectionsToMerge, dateToTransferFrom, referenceDate)
-      : referenceDate;
-  return sections
-    .filter((section) => !leapSensitiveSectionTypes.includes(section.type))
+) =>
+  // cloning sections before sort to avoid mutating it
+  [...sections]
+    .sort(
+      (a, b) =>
+        reliableSectionModificationOrder.indexOf(a.type) -
+        reliableSectionModificationOrder.indexOf(b.type),
+    )
     .reduce((mergedDate, section) => {
       if (!shouldLimitToEditedSections || section.modified) {
         return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
       }
 
       return mergedDate;
-    }, intermediateDate);
-};
+    }, referenceDate);
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
