@@ -1042,6 +1042,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('sould not overflow parent', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Doesn't work with mocked window.getComputedStyle
+      }
+    });
+
     const rows = [{ id: 1, username: '@MUI', age: 20 }];
     const columns = [
       { field: 'id', width: 300 },
