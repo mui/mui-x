@@ -115,6 +115,7 @@ export const GridRootStyles = styled('div', {
     outline: 'none',
     height: '100%',
     display: 'flex',
+    overflow: 'hidden',
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
     [`&.${gridClasses.autoHeight}`]: {
