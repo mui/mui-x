@@ -9,7 +9,12 @@ import {
   MultiSectionDigitalClockSectionClasses,
   getMultiSectionDigitalClockSectionUtilityClass,
 } from './multiSectionDigitalClockSectionClasses';
-import type { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
+import type {
+  MultiSectionDigitalClockOption,
+  MultiSectionDigitalClockSlotsComponent,
+  MultiSectionDigitalClockSlotsComponentsProps,
+} from './MultiSectionDigitalClock.types';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface MultiSectionDigitalClockSectionProps<TValue> {
   autoFocus?: boolean;
@@ -21,6 +26,8 @@ export interface MultiSectionDigitalClockSectionProps<TValue> {
   onChange: (value: TValue) => void;
   active?: boolean;
   shouldFocus?: boolean;
+  slots?: UncapitalizeObjectKeys<MultiSectionDigitalClockSlotsComponent>;
+  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
 }
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockSectionProps<any>) => {
@@ -118,11 +125,15 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       items,
       active,
       shouldFocus,
+      slots,
+      slotProps,
       ...other
     } = props;
 
     const ownerState = props;
     const classes = useUtilityClasses(ownerState);
+    const DigitalClockSectionItem =
+      slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
 
     React.useEffect(() => {
       if (containerRef.current === null) {
@@ -152,16 +163,17 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         {...other}
       >
         {items.map((option) => (
-          <MultiSectionDigitalClockSectionItem
+          <DigitalClockSectionItem
             aria-readonly={readOnly}
             key={option.label}
             onClick={() => !readOnly && onChange(option.value)}
             selected={option.isSelected(option.value)}
             disabled={disabled ?? option.isDisabled?.(option.value)}
             disableRipple={readOnly}
+            {...slotProps?.digitalClockSectionItem}
           >
             {option.label}
-          </MultiSectionDigitalClockSectionItem>
+          </DigitalClockSectionItem>
         ))}
       </MultiSectionDigitalClockSectionRoot>
     );

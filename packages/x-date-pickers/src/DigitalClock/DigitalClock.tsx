@@ -101,6 +101,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
+  const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
+  const clockItemProps = slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem;
+
   const [value, setValue] = useControlled({
     name: 'DigitalClock',
     state: 'value',
@@ -234,16 +237,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     >
       <DigitalClockList autoFocusItem={autoFocus || !!focusedView}>
         {timeOptions.map((option) => (
-          <DigitalClockItem
+          <ClockItem
             aria-readonly={readOnly}
             key={utils.toISO(option)}
             onClick={() => !readOnly && handleItemSelect(option)}
             selected={utils.isEqual(option, value)}
             disabled={disabled || isTimeDisabled(option)}
             disableRipple={readOnly}
+            {...clockItemProps}
           >
             {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
-          </DigitalClockItem>
+          </ClockItem>
         ))}
       </DigitalClockList>
     </DigitalClockRoot>

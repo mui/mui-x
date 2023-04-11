@@ -20,8 +20,16 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { DigitalClockSlotsComponent, DigitalClockSlotsComponentsProps } from '../DigitalClock';
+import {
+  MultiSectionDigitalClockSlotsComponent,
+  MultiSectionDigitalClockSlotsComponentsProps,
+} from '../MultiSectionDigitalClock';
 
-export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
+export interface BaseTimePickerSlotsComponent<TDate>
+  extends TimeClockSlotsComponent,
+    DigitalClockSlotsComponent,
+    MultiSectionDigitalClockSlotsComponent {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
@@ -29,7 +37,10 @@ export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsCompo
   Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
+export interface BaseTimePickerSlotsComponentsProps
+  extends TimeClockSlotsComponentsProps,
+    DigitalClockSlotsComponentsProps,
+    MultiSectionDigitalClockSlotsComponentsProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
