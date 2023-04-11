@@ -406,7 +406,7 @@ getApplyQuickFilterFn: (value: string) => {
 
 To remove the quick filtering on a given column set `getApplyQuickFilterFn: undefined`.
 
-In the demo bellow, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on."
+In the demo below, the column "Name" is not searchable with the quick filter, and 4 digits figures will be compared to the year of column "Created on."
 
 {{"demo": "QuickFilteringCustomLogic.js", "bg": "inline", "defaultCodeOpen": false}}
 
