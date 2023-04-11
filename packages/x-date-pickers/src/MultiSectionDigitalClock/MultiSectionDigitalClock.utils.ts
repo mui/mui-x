@@ -1,4 +1,4 @@
-import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
+import { MuiPickersAdapter } from '../models';
 import { MultiSectionDigitalClockOption } from './MultiSectionDigitalClock.types';
 
 interface IGetHoursSectionOptions<TDate> {
