@@ -6,6 +6,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { color as d3Color } from 'd3-color';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { getSymbol } from '../internals/utils';
+import { InteractionContext } from '../context/InteractionProvider';
 
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
@@ -14,6 +15,9 @@ export interface MarkElementClasses {
 export interface MarkElementOwnerState {
   id: string;
   color: string;
+  isHighlighted: boolean;
+  x: number;
+  y: number;
   classes?: Partial<MarkElementClasses>;
 }
 
@@ -26,9 +30,9 @@ export const lineElementClasses: MarkElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, id } = ownerState;
+  const { classes, isHighlighted, id } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`],
+    root: ['root', `series-${id}`, isHighlighted && 'isHighlighted'],
   };
 
   return composeClasses(slots, getMarkElementUtilityClass, classes);
@@ -40,21 +44,31 @@ const MarkElementPath = styled('path', {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
+  transform: `translate(${ownerState.x}px, ${ownerState.y}px) ${
+    ownerState.isHighlighted ? 'scale(2)' : ''
+  }`,
+  transition: ['transform 0.2s'],
   fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
   pointerEvents: 'none',
 }));
 
-export type MarkElementProps = MarkElementOwnerState &
+export type MarkElementProps = Omit<MarkElementOwnerState, 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     /**
      * The shape of the marker.
      */
     shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
+    /**
+     * The index to the element in the series' data array.
+     */
+    dataIndex: number;
   };
 
 export function MarkElement(props: MarkElementProps) {
-  const { id, classes: innerClasses, color, shape, ...other } = props;
-  const ownerState = { id, classes: innerClasses, color };
+  const { x, y, id, classes: innerClasses, color, shape, dataIndex, ...other } = props;
+  const { axis } = React.useContext(InteractionContext);
+  const isHighlighted = axis.x?.index === dataIndex;
+  const ownerState = { id, classes: innerClasses, isHighlighted, color, x, y };
   const classes = useUtilityClasses(ownerState);
 
   return (

@@ -79,6 +79,7 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
 
         return {
           value: closestIndex !== undefined && closestIndex >= 0 ? xAxisData![closestIndex] : value,
+          index: closestIndex,
         };
       }
       const dataIndex = Math.floor((x - xScale.range()[0]) / xScale.step());

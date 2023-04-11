@@ -140,11 +140,13 @@ export function LinePlot() {
                 const y = stackedData[index][1];
                 return (
                   <MarkElement
-                    key={seriesId}
+                    key={`${seriesId}-${index}`}
                     id={seriesId}
+                    dataIndex={index}
                     shape="circle"
                     color={series[seriesId].color}
-                    transform={`translate(${xScale(x)}, ${yScale(y)})`}
+                    x={xScale(x)}
+                    y={yScale(y)}
                     {...getItemProps({ type: 'line', seriesId, dataIndex: index })}
                   />
                 );
