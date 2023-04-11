@@ -159,7 +159,7 @@ export const usePickerValue = <
       if (isControlled !== (inValue !== undefined)) {
         console.error(
           [
-            `MUI: A component is changing  the ${
+            `MUI: A component is changing the ${
               isControlled ? '' : 'un'
             }controlled value of a picker to be ${isControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -232,19 +232,19 @@ export const usePickerValue = <
       closeOnSelect,
     };
 
-    const isPublished = shouldPublishValue(updaterParams);
-    const isCommitted = shouldCommitValue(updaterParams);
-    const isClosed = shouldClosePicker(updaterParams);
+    const shouldPublish = shouldPublishValue(updaterParams);
+    const shouldCommit = shouldCommitValue(updaterParams);
+    const shouldClose = shouldClosePicker(updaterParams);
 
     setDateState((prev) => ({
       ...prev,
       draft: action.value,
-      lastPublishedValue: isPublished ? action.value : prev.lastPublishedValue,
-      lastCommittedValue: isCommitted ? action.value : prev.lastCommittedValue,
+      lastPublishedValue: shouldPublish ? action.value : prev.lastPublishedValue,
+      lastCommittedValue: shouldCommit ? action.value : prev.lastCommittedValue,
       hasBeenModifiedSinceMount: true,
     }));
 
-    if (isPublished && onChange) {
+    if (shouldPublish && onChange) {
       const validationError =
         action.name === 'setValueFromField'
           ? action.context.validationError
@@ -261,11 +261,11 @@ export const usePickerValue = <
       onChange(action.value, context);
     }
 
-    if (isCommitted && onAccept) {
+    if (shouldCommit && onAccept) {
       onAccept(action.value);
     }
 
-    if (isClosed) {
+    if (shouldClose) {
       setIsOpen(false);
     }
   });
@@ -285,7 +285,6 @@ export const usePickerValue = <
   }
 
   const handleClear = useEventCallback(() => {
-    // Reset all date in state to the empty value and close picker.
     updateDate({
       value: valueManager.emptyValue,
       name: 'setValueFromAction',
@@ -294,23 +293,22 @@ export const usePickerValue = <
   });
 
   const handleAccept = useEventCallback(() => {
-    // Set all date in state to equal the current draft value and close picker.
     updateDate({
-      value: dateState.draft,
+      value: dateState.lastPublishedValue,
       name: 'setValueFromAction',
       pickerAction: 'accept',
     });
   });
 
   const handleDismiss = useEventCallback(() => {
-    // Set all dates in state to equal the last committed date.
-    // e.g. Reset the state to the last committed value.
-    updateDate({ value: dateState.draft, name: 'setValueFromAction', pickerAction: 'dismiss' });
+    updateDate({
+      value: dateState.lastPublishedValue,
+      name: 'setValueFromAction',
+      pickerAction: 'dismiss',
+    });
   });
 
   const handleCancel = useEventCallback(() => {
-    // Set all dates in state to equal the last accepted date and close picker.
-    // e.g. Reset the state to the last accepted value
     updateDate({
       value: dateState.lastCommittedValue,
       name: 'setValueFromAction',
@@ -319,7 +317,6 @@ export const usePickerValue = <
   });
 
   const handleSetToday = useEventCallback(() => {
-    // Set all dates in state to equal today and close picker.
     updateDate({
       value: valueManager.getTodayValue(utils),
       name: 'setValueFromAction',

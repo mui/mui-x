@@ -137,10 +137,6 @@ export type PickerValueUpdateAction<TValue, TError> =
       name: 'setValueFromAction';
       value: TValue;
       pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
-    }
-  | {
-      name: 'setValueFromOutside';
-      value: TValue;
     };
 
 /**
