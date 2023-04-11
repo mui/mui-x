@@ -6,6 +6,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { LineElement } from './LineElement';
 import { AreaElement } from './AreaElement';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { MarkElement } from './MarkElement';
 
 export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
@@ -113,6 +114,41 @@ export function LinePlot() {
                   {...getItemProps({ type: 'line', seriesId })}
                 />
               );
+            });
+          });
+        })}
+      </g>
+      <g>
+        {Object.keys(seriesPerAxis).flatMap((key) => {
+          const [xAxisKey, yAxisKey] = key.split('-');
+
+          const xScale = xAxis[xAxisKey].scale;
+          const yScale = yAxis[yAxisKey].scale;
+          const xData = xAxis[xAxisKey].data;
+
+          if (xData === undefined) {
+            throw new Error(
+              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+            );
+          }
+
+          return stackingGroups.flatMap((groupIds) => {
+            return groupIds.flatMap((seriesId) => {
+              const stackedData = series[seriesId].stackedData;
+
+              return xData?.map((x, index) => {
+                const y = stackedData[index][1];
+                return (
+                  <MarkElement
+                    key={seriesId}
+                    id={seriesId}
+                    shape="circle"
+                    color={series[seriesId].color}
+                    transform={`translate(${xScale(x)}, ${yScale(y)})`}
+                    {...getItemProps({ type: 'line', seriesId, dataIndex: index })}
+                  />
+                );
+              });
             });
           });
         })}
