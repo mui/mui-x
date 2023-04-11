@@ -297,28 +297,16 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
-    it('should keep only one selected row when turning off checkboxSelection', () => {
+    it('should reset selected rows when turning off checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection checkboxSelection />);
       fireEvent.click(getCell(0, 0).querySelector('input')!);
       fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
       setProps({ checkboxSelection: false });
-      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    it('should keep only one selectable row as selected when turning off checkboxSelection', () => {
-      const { setProps } = render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0).querySelector('input')!);
-      fireEvent.click(getCell(1, 0).querySelector('input')!);
-      expect(getSelectedRowIds()).to.deep.equal([0, 1]);
-      setProps({
-        checkboxSelection: false,
-        isRowSelectable: ({ id }: { id: GridRowId }) => Number(id) > 0,
-      });
-      expect(getSelectedRowIds()).to.deep.equal([1]);
-    });
-
-    it('should keep only the first row in the current page as selected when turning off checkboxSelection', () => {
+    it('should reset row selection in the current page as selected when turning off checkboxSelection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
@@ -333,8 +321,8 @@ describe('<DataGrid /> - Row Selection', () => {
       fireEvent.click(getCell(2, 0).querySelector('input')!);
       expect(screen.getByText('2 rows selected')).not.to.equal(null);
       setProps({ checkboxSelection: false });
-      expect(getSelectedRowIds()).to.deep.equal([2]);
-      expect(screen.getByText('1 row selected')).not.to.equal(null);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(screen.queryByText('2 row selected')).to.equal(null);
     });
 
     it('should set the correct aria-label on the column header checkbox', () => {

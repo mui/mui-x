@@ -379,14 +379,13 @@ export const usePickerValue = <
   };
 
   const isValid = (testedValue: TValue) => {
-    const validationResponse = validator({
+    const error = validator({
       adapter,
       value: testedValue,
       props: { ...props, value: testedValue },
     });
-    return Array.isArray(testedValue)
-      ? (validationResponse as any[]).every((v) => v === null)
-      : validationResponse === null;
+
+    return !valueManager.hasError(error);
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {

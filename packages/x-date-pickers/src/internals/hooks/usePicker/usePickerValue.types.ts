@@ -59,6 +59,13 @@ export interface PickerValueManager<TValue, TDate, TError> {
    */
   isSameError: (error: TError, prevError: TError | null) => boolean;
   /**
+   * Checks if the current error is empty or not.
+   * @template TError
+   * @param {TError} error The current error.
+   * @returns {boolean} `true` if the current error is not empty.
+   */
+  hasError: (error: TError) => boolean;
+  /**
    * The value identifying no error, used to initialise the error state.
    */
   defaultErrorState: TError;
