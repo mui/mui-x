@@ -12,14 +12,23 @@ import { MakeOptional } from '../internals/models/helpers';
 import { TimeView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DigitalClockSlotsComponent, DigitalClockSlotsComponentsProps } from '../DigitalClock';
+import {
+  MultiSectionDigitalClockSlotsComponent,
+  MultiSectionDigitalClockSlotsComponentsProps,
+} from '../MultiSectionDigitalClock';
 
 export interface DesktopTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent<TDate, TimeView>, 'Field' | 'OpenPickerIcon'> {}
+    MakeOptional<UseDesktopPickerSlotsComponent<TDate, TimeView>, 'Field' | 'OpenPickerIcon'>,
+    DigitalClockSlotsComponent,
+    MultiSectionDigitalClockSlotsComponent {}
 
 export interface DesktopTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeView> {}
+    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeView>,
+    DigitalClockSlotsComponentsProps,
+    MultiSectionDigitalClockSlotsComponentsProps {}
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
