@@ -141,6 +141,14 @@
       "default": "TrapFocus from @mui/material",
       "type": { "name": "elementType" }
     },
+    "DigitalClockItem": {
+      "default": "MenuItem from '@mui/material'",
+      "type": { "name": "elementType" }
+    },
+    "DigitalClockSectionItem": {
+      "default": "MenuItem from '@mui/material'",
+      "type": { "name": "elementType" }
+    },
     "Field": { "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },

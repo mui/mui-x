@@ -71,6 +71,8 @@
     "DesktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
     "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
+    "DigitalClockItem": "Component responsible for rendering a single digital clock item.",
+    "DigitalClockSectionItem": "Component responsible for rendering a single digital clock section item.",
     "Field": "Component used to enter the date with the keyboard.",
     "InputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",

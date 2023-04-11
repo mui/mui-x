@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Digital Clock component
-components: DigitalClock, MultiColumnDigitalClock
+components: DigitalClock, MultiSectionDigitalClock
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
 ---

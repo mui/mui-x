@@ -360,6 +360,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           slotProps={slotProps ?? componentsProps}
         />
       ))}
+
       {ampm && (
         <MultiSectionDigitalClockSection
           key="meridiem"
@@ -387,12 +388,10 @@ MultiSectionDigitalClock.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
-   */
-  ampmInClock: PropTypes.bool,
-  /**
-   * Set to `true` if focus should be moved to clock picker.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
   /**
@@ -438,6 +437,10 @@ MultiSectionDigitalClock.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * Controlled focused view.
+   */
+  focusedView: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
@@ -460,17 +463,26 @@ MultiSectionDigitalClock.propTypes = {
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired on focused view change.
+   * @template TView
+   * @param {TView | null} view The new view to focus or not.
+   * @param {boolean} hasFocus `true` if the view should be focused.
+   */
+  onFocusedViewChange: PropTypes.func,
+  /**
    * Callback fired on view change.
-   * @param {TimeView} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
-   * Initially open view.
-   * @default 'hours'
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * Make picker read only.
+   * If `true`, the picker and text field are readOnly.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -489,7 +501,6 @@ MultiSectionDigitalClock.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
-  showViewSwitcher: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -509,17 +520,23 @@ MultiSectionDigitalClock.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * The time interval at which to display minutes and seconds.
+   * @default 5
+   */
+  timeStep: PropTypes.number,
+  /**
    * The selected value.
    * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**
-   * Controlled open view.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
    */
   view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * Views for calendar picker.
-   * @default ['hours', 'minutes']
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
