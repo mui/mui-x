@@ -13,6 +13,39 @@ import { Highlight } from '../Highlight';
 import { isBandScale } from '../hooks/useScale';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 
+function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
+  if (mousePosition === null) {
+    return {
+      getBoundingClientRect: () => ({
+        width: 0,
+        height: 0,
+        x: 0,
+        y: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        toJSON: () => '',
+      }),
+    };
+  }
+  const { x, y } = mousePosition;
+  return {
+    getBoundingClientRect: () => ({
+      width: 0,
+      height: 0,
+      x,
+      y,
+      top: y,
+      right: x,
+      bottom: y,
+      left: x,
+      toJSON: () =>
+        JSON.stringify({ width: 0, height: 0, x, y, top: y, right: x, bottom: y, left: x }),
+    }),
+  };
+}
+
 const useAxisEvents = (trigger: TooltipProps['trigger']) => {
   const svgRef = React.useContext(SVGContext);
   const { width, height, top, left } = React.useContext(DrawingContext);
@@ -195,6 +228,43 @@ function AxisTooltipContent(props: AxisInteractionData) {
   );
 }
 
+const useMouseTraker = () => {
+  const svgRef = React.useContext(SVGContext);
+
+  // Use a ref to avoid rerendering on every mousemove event.
+  const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
+
+  const handleMouseOut = React.useCallback(() => {
+    setMousePosition(null);
+  }, [setMousePosition]);
+
+  const handleMouseMove = React.useCallback(
+    (event: MouseEvent) => {
+      setMousePosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+    },
+    [setMousePosition],
+  );
+
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null) {
+      return () => {};
+    }
+
+    element.addEventListener('onmouseout', handleMouseOut);
+    element.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      element.removeEventListener('onmouseout', handleMouseOut);
+      element.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [handleMouseMove, handleMouseOut, svgRef]);
+
+  return mousePosition;
+};
+
 export type TooltipProps = {
   /**
    * Select the kinf of tooltip to display
@@ -210,16 +280,14 @@ export function Tooltip(props: TooltipProps) {
   const { trigger = 'axis' } = props;
 
   useAxisEvents(trigger);
+  const mousePosition = useMouseTraker();
 
   const { item, axis } = React.useContext(InteractionContext);
 
   const highlightRef = React.useRef<SVGPathElement>(null);
 
   const displayedData = trigger === 'item' ? item : axis;
-  const popperOpen =
-    displayedData !== null && trigger === 'item'
-      ? displayedData !== null
-      : (displayedData as AxisInteractionData).x !== null;
+  const popperOpen = mousePosition !== null;
 
   return (
     <NoSsr>
@@ -228,7 +296,7 @@ export function Tooltip(props: TooltipProps) {
           <Popper
             open={popperOpen}
             placement="right-start"
-            anchorEl={(displayedData && (displayedData as any).target) || highlightRef.current}
+            anchorEl={generateVirtualElement(mousePosition)}
             style={{ padding: '16px', pointerEvents: 'none' }}
           >
             <Paper>
