@@ -165,10 +165,10 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
       return () => {};
     }
 
-    element.addEventListener('onmouseout', handleMouseOut);
+    element.addEventListener('mouseout', handleMouseOut);
     element.addEventListener('mousemove', handleMouseMove);
     return () => {
-      element.removeEventListener('onmouseout', handleMouseOut);
+      element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
   }, [handleMouseMove, handleMouseOut, svgRef, trigger]);
@@ -285,10 +285,10 @@ const useMouseTraker = () => {
       return () => {};
     }
 
-    element.addEventListener('onmouseout', handleMouseOut);
+    element.addEventListener('mouseout', handleMouseOut);
     element.addEventListener('mousemove', handleMouseMove);
     return () => {
-      element.removeEventListener('onmouseout', handleMouseOut);
+      element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
   }, [handleMouseMove, handleMouseOut, svgRef]);
@@ -322,7 +322,13 @@ export function Tooltip(props: TooltipProps) {
   const highlightRef = React.useRef<SVGPathElement>(null);
 
   const displayedData = trigger === 'item' ? item : axis;
-  const popperOpen = mousePosition !== null;
+
+  const popperOpen =
+    mousePosition !== null &&
+    ((trigger === 'item' && displayedData !== null) ||
+      (trigger === 'axis' &&
+        ((displayedData as AxisInteractionData).x !== null ||
+          (displayedData as AxisInteractionData).y !== null)));
 
   return (
     <NoSsr>
