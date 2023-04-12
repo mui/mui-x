@@ -429,7 +429,7 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.any,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the picker views and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -494,7 +494,7 @@ TimeClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * If `true`, the picker and text field are readOnly.
+   * If `true`, the picker views and text field are read-only.
    * @default false
    */
   readOnly: PropTypes.bool,

@@ -298,7 +298,7 @@ DigitalClock.propTypes = {
    */
   defaultValue: PropTypes.any,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the picker views and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -363,7 +363,7 @@ DigitalClock.propTypes = {
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * If `true`, the picker and text field are readOnly.
+   * If `true`, the picker views and text field are read-only.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -401,7 +401,8 @@ DigitalClock.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The time interval at which to display minutes and seconds.
+   * The time interval between two `minutes` or `seconds` options.
+   * For example, if `timeStep = 8`, then the available options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
    * @default 5
    */
   timeStep: PropTypes.number,
