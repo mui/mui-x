@@ -38,6 +38,7 @@ const LineElementPath = styled('path', {
 })<{ ownerState: LineElementOwnerState }>(({ ownerState }) => ({
   stroke: ownerState.color,
   strokeWidth: 5,
+  strokeLinejoin: 'round',
   fill: 'none',
   pointerEvents: 'none',
 }));
