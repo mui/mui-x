@@ -330,6 +330,9 @@ export function Tooltip(props: TooltipProps) {
         ((displayedData as AxisInteractionData).x !== null ||
           (displayedData as AxisInteractionData).y !== null)));
 
+  if (trigger === 'none') {
+    return null;
+  }
   return (
     <NoSsr>
       <React.Fragment>
