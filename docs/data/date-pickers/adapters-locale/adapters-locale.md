@@ -148,7 +148,7 @@ This prop is available on all fields and pickers.
 {{"demo": "CustomFieldFormat.js"}}
 
 :::info
-If you want to have a less dense field format, you can use the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
+You can control the field format spacing using the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
 :::
 
 ### Custom field placeholder

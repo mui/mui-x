@@ -44,10 +44,10 @@ This adornment is purely decorative, the focus remains on the field when the pic
 
 ### Change the format density
 
-You can make the format less dense using the `formatDensity` prop.
+You can control the field format spacing using the `formatDensity` prop.
 Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
 
-{{"demo": "SpaciousFieldFormat.js"}}
+{{"demo": "FieldFormatDensity.js"}}
 
 ## Commonly used custom field
 
