@@ -41,12 +41,12 @@ export interface BaseClockProps<TDate>
    */
   onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the picker views and text field are disabled.
    * @default false
    */
   disabled?: boolean;
   /**
-   * If `true`, the picker and text field are readOnly.
+   * If `true`, the picker views and text field are read-only.
    * @default false
    */
   readOnly?: boolean;
@@ -62,7 +62,8 @@ export interface DesktopOnlyTimePickerProps<TDate> extends ExportedDigitalClockP
 
 export interface DigitalClockOnlyProps {
   /**
-   * The time interval at which to display minutes and seconds.
+   * The time interval between two `minutes` or `seconds` options.
+   * For example, if `timeStep = 8`, then the available options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
    * @default 5
    */
   timeStep?: number;

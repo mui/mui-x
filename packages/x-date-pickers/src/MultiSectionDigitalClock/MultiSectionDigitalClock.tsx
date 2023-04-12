@@ -9,7 +9,7 @@ import { useUtils, useNow } from '../internals/hooks/useUtils';
 import {
   convertValueToMeridiem,
   createIsAfterIgnoreDatePart,
-  MeridiemEnum,
+  Meridiem,
 } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -321,7 +321,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     }, {} as Record<TimeView, MultiSectionDigitalClockViewProps<number>>);
   }, [views, buildViewProps]);
 
-  const meridiemOptions = React.useMemo<MultiSectionDigitalClockViewProps<MeridiemEnum>>(
+  const meridiemOptions = React.useMemo<MultiSectionDigitalClockViewProps<Meridiem>>(
     () => ({
       onChange: handleMeridiemChange,
       items: [

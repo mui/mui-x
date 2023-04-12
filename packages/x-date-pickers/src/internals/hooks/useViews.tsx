@@ -194,7 +194,7 @@ export function useViews<TValue, TView extends DateOrTimeView>({
   );
 
   const setValueAndGoToView = useEventCallback((value: TValue, newView: TView | null) => {
-    onChange(value, !newView ? 'finish' : 'partial');
+    onChange(value, newView ? 'partial' : 'finish');
     if (newView) {
       handleChangeView(newView);
       handleFocusedViewChange(newView, true);
