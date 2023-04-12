@@ -9,7 +9,7 @@ The copied cell values are separated by a tab (`\t`) character and the rows are 
 
 The priority of the data copied to the clipboard is the following, from highest to lowest:
 
-1. If more than one cell is selected (see [Cell selection](/x/react-data-grid/cell-selection/)), the selected cells are copied
+1. If more than one cell is selected (see [Cell selection<span class="plan-premium" title="Premium plan"></span>](/x/react-data-grid/cell-selection/)), the selected cells are copied
 2. If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)), the selected rows are copied
 3. If there is a single cell selected, the single cell is copied
 
@@ -39,7 +39,7 @@ The paste operation only affects cells in the [columns that are `editable`](/x/r
 
 The priority of the clipboard paste is the following, from highest to lowest:
 
-1. If more than one cell is selected (see [Cell selection](/x/react-data-grid/cell-selection/)):
+1. If more than one cell is selected (see [Cell selection<span class="plan-premium" title="Premium plan"></span>](/x/react-data-grid/cell-selection/)):
 
    1. If the clipboard contains a single cell, it is pasted to each selected cell
    2. If the clipboard contains multiple cells/rows, they are pasted starting from the first selected cell, but won't leak the selected range
