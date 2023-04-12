@@ -23,6 +23,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeConformance(<DesktopTimePicker />, () => ({

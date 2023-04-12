@@ -10,6 +10,7 @@ import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
 describe('<StaticDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
   });
 
   describeValidation(StaticDateTimePicker, () => ({
@@ -29,7 +30,7 @@ describe('<StaticDateTimePicker />', () => {
     );
 
     fireEvent.click(screen.getByRole('gridcell', { name: '1' }));
-    expect(onChange.callCount).to.equal(0);
+    expect(onChange.callCount).to.equal(1);
 
     expect(screen.getByLabelText(/Selected time/)).toBeVisible();
   });
