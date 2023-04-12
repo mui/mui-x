@@ -1,4 +1,6 @@
 [
+  { "name": "AdapterFormats", "kind": "Interface" },
+  { "name": "AdapterUnits", "kind": "TypeAlias" },
   { "name": "BaseMultiInputFieldProps", "kind": "Interface" },
   { "name": "BaseSingleInputFieldProps", "kind": "Interface" },
   { "name": "beBY", "kind": "Variable" },
@@ -115,6 +117,7 @@
   { "name": "ExportedPickersYearProps", "kind": "Interface" },
   { "name": "ExportedSlideTransitionProps", "kind": "Interface" },
   { "name": "faIR", "kind": "Variable" },
+  { "name": "FieldFormatTokenMap", "kind": "TypeAlias" },
   { "name": "FieldRef", "kind": "Interface" },
   { "name": "FieldSection", "kind": "Interface" },
   { "name": "FieldSectionType", "kind": "TypeAlias" },
@@ -162,6 +165,7 @@
   { "name": "MonthCalendarClasses", "kind": "Interface" },
   { "name": "MonthCalendarClassKey", "kind": "TypeAlias" },
   { "name": "MonthCalendarProps", "kind": "Interface" },
+  { "name": "MuiPickersAdapter", "kind": "Interface" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
   { "name": "MultiInputDateRangeField", "kind": "Variable" },
   { "name": "MultiInputDateRangeFieldProps", "kind": "Interface" },

@@ -7,8 +7,7 @@ import {
   FieldSectionWithoutPosition,
   FieldSectionValueBoundaries,
 } from './useField.types';
-import { MuiPickersAdapter } from '../../models';
-import { FieldSectionType, FieldSection } from '../../../models';
+import { FieldSectionType, FieldSection, MuiPickersAdapter } from '../../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
@@ -787,6 +786,17 @@ const transferDateSectionValue = <TDate>(
   }
 };
 
+const reliableSectionModificationOrder: Record<FieldSectionType, number> = {
+  year: 1,
+  month: 2,
+  day: 3,
+  weekDay: 4,
+  hours: 5,
+  minutes: 6,
+  seconds: 7,
+  meridiem: 8,
+};
+
 export const mergeDateIntoReferenceDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   dateToTransferFrom: TDate,
@@ -794,13 +804,18 @@ export const mergeDateIntoReferenceDate = <TDate>(
   referenceDate: TDate,
   shouldLimitToEditedSections: boolean,
 ) =>
-  sections.reduce((mergedDate, section) => {
-    if (!shouldLimitToEditedSections || section.modified) {
-      return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
-    }
+  // cloning sections before sort to avoid mutating it
+  [...sections]
+    .sort(
+      (a, b) => reliableSectionModificationOrder[a.type] - reliableSectionModificationOrder[b.type],
+    )
+    .reduce((mergedDate, section) => {
+      if (!shouldLimitToEditedSections || section.modified) {
+        return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
+      }
 
-    return mergedDate;
-  }, referenceDate);
+      return mergedDate;
+    }, referenceDate);
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
@@ -899,7 +914,11 @@ export const getSectionOrder = (
   while (RTLIndex >= 0) {
     groupedSectionsEnd = sections.findIndex(
       // eslint-disable-next-line @typescript-eslint/no-loop-func
-      (section, index) => index >= groupedSectionsStart && section.endSeparator?.includes(' '),
+      (section, index) =>
+        index >= groupedSectionsStart &&
+        section.endSeparator?.includes(' ') &&
+        // Special case where the spaces were not there in the initial input
+        section.endSeparator !== ' / ',
     );
     if (groupedSectionsEnd === -1) {
       groupedSectionsEnd = sections.length - 1;

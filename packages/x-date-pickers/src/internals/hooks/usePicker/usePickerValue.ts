@@ -7,8 +7,7 @@ import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
-import { MuiPickersAdapter } from '../../models/muiPickersAdapter';
-import { FieldSection, FieldSelectedSections } from '../../../models';
+import { FieldSection, FieldSelectedSections, MuiPickersAdapter } from '../../../models';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -64,6 +63,13 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @returns {boolean} `true` if the new error is different from the previous one.
    */
   isSameError: (error: TError, prevError: TError | null) => boolean;
+  /**
+   * Checks if the current error is empty or not.
+   * @template TError
+   * @param {TError} error The current error.
+   * @returns {boolean} `true` if the current error is not empty.
+   */
+  hasError: (error: TError) => boolean;
   /**
    * The value identifying no error, used to initialise the error state.
    */
@@ -506,14 +512,13 @@ export const usePickerValue = <
   };
 
   const isValid = (testedValue: TValue) => {
-    const validationResponse = validator({
+    const error = validator({
       adapter,
       value: testedValue,
       props: { ...props, value: testedValue },
     });
-    return Array.isArray(testedValue)
-      ? (validationResponse as any[]).every((v) => v === null)
-      : validationResponse === null;
+
+    return !valueManager.hasError(error);
   };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {

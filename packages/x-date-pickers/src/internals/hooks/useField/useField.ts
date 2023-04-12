@@ -398,8 +398,8 @@ export const useField = <
       return error;
     }
 
-    return fieldValueManager.hasError(validationError);
-  }, [fieldValueManager, validationError, error]);
+    return valueManager.hasError(validationError);
+  }, [valueManager, validationError, error]);
 
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
