@@ -19,7 +19,7 @@ export interface UseFieldParams<
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
+  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
   validator: Validator<
     TValue,
     TDate,
@@ -197,7 +197,7 @@ export type FieldSelectedSectionsIndexes = {
   shouldSelectBoundarySelectors?: boolean;
 };
 
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
+export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
@@ -265,13 +265,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     value: TValue,
     prevReferenceValue: TValue,
   ) => TValue;
-  /**
-   * Checks if the current error is empty or not.
-   * @template TError
-   * @param {TError} error The current error.
-   * @returns {boolean} `true` if the current error is not empty.
-   */
-  hasError: (error: TError) => boolean;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {
