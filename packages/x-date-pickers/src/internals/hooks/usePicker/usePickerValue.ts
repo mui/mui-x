@@ -271,8 +271,8 @@ export const usePickerValue = <
   });
 
   React.useEffect(() => {
-    if (isOpen && inValue !== undefined) {
-      setDateState((prev) => ({ ...prev, lastCommittedValue: inValue }));
+    if (isOpen) {
+      setDateState((prev) => ({ ...prev, lastCommittedValue: dateState.draft }));
     }
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
