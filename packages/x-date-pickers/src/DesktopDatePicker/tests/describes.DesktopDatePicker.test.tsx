@@ -40,7 +40,6 @@ describe('<DesktopDatePicker /> - Describes', () => {
       expectInputValue(
         input,
         expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
-        true,
       );
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {

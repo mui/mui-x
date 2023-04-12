@@ -321,7 +321,7 @@ export const expectInputValue = (input: HTMLInputElement, expectedValue: string)
 };
 
 export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
-  const cleanPlaceholder = cleanText(input.placeholder).replace(/ (\/|-|\.) /g, '$1');
+  const cleanPlaceholder = cleanText(input.placeholder);
   return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
