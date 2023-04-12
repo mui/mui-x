@@ -38,13 +38,14 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MultiSectionDigitalClockProps<any> }>({
+})<{ ownerState: MultiSectionDigitalClockProps<any> }>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
   padding: '4px 0',
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-});
+  borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+}));
 
 type MultiSectionDigitalClockComponent = (<TDate>(
   props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
