@@ -12,6 +12,7 @@
     "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "divider": "Add an element between each child.",
     "format": "Format of the date when rendered in the input(s).",
+    "formatDensity": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
     "maxTime": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
     "minTime": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
     "minutesStep": "Step over minutes.",

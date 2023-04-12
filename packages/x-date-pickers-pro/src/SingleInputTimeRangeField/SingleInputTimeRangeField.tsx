@@ -127,6 +127,12 @@ SingleInputTimeRangeField.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
    * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
    */
   FormHelperTextProps: PropTypes.object,

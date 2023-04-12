@@ -3,7 +3,7 @@ import { expectInputPlaceholder, expectInputValue, getTextbox } from 'test/utils
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
-describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
+describeAdapters('<DateField /> - Format', DateField, ({ render, adapter, adapterName }) => {
   it('should support escaped characters in start separator', () => {
     const { start: startChar, end: endChar } = adapter.escapedCharacters;
     // For Day.js: "[Escaped] YYYY"
@@ -67,5 +67,42 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'Escaped January Escaped 2019');
+  });
+
+  it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
+    const { setProps } = render(<DateField formatDensity="spacious" />);
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MM / DD / YYYY');
+
+    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    expectInputValue(input, adapterName === 'luxon' ? '1 / 1 / 2019' : '01 / 01 / 2019');
+  });
+
+  it('should add spaces around `.` when `formatDensity = "spacious"`', () => {
+    const { setProps } = render(
+      <DateField
+        formatDensity="spacious"
+        format={adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.')}
+      />,
+    );
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MM . DD . YYYY');
+
+    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    expectInputValue(input, adapterName === 'luxon' ? '1 . 1 . 2019' : '01 . 01 . 2019');
+  });
+
+  it('should add spaces around `-` when `formatDensity = "spacious"`', () => {
+    const { setProps } = render(
+      <DateField
+        formatDensity="spacious"
+        format={adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-')}
+      />,
+    );
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MM - DD - YYYY');
+
+    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    expectInputValue(input, adapterName === 'luxon' ? '1 - 1 - 2019' : '01 - 01 - 2019');
   });
 });

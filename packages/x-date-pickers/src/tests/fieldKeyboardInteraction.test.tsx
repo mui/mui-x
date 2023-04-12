@@ -84,7 +84,7 @@ describe(`RTL - test arrows navigation`, () => {
       </ThemeProvider>,
     );
     const input = getTextbox();
-    clickOnInput(input, 28);
+    clickOnInput(input, 24);
 
     const expectedValues = ['hh', 'mm', 'YYYY', 'MM', 'DD', 'DD'];
 
@@ -94,7 +94,7 @@ describe(`RTL - test arrows navigation`, () => {
     });
   });
 
-  it('should move selected section to the previouse section respecting RTL order in empty field', () => {
+  it('should move selected section to the previous section respecting RTL order in empty field', () => {
     render(
       <ThemeProvider theme={theme}>
         <DateTimeField />
@@ -118,7 +118,7 @@ describe(`RTL - test arrows navigation`, () => {
       </ThemeProvider>,
     );
     const input = getTextbox();
-    clickOnInput(input, 28);
+    clickOnInput(input, 24);
 
     // 25/04/2018 => 1397/02/05
     const expectedValues = ['11', '54', '1397', '02', '05', '05'];
@@ -129,7 +129,7 @@ describe(`RTL - test arrows navigation`, () => {
     });
   });
 
-  it('should move selected section to the previouse section respecting RTL order in non-empty field', () => {
+  it('should move selected section to the previous section respecting RTL order in non-empty field', () => {
     render(
       <ThemeProvider theme={theme}>
         <DateTimeField defaultValue={adapter.date(new Date(2018, 3, 25, 11, 54))} />

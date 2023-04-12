@@ -10,6 +10,7 @@
     "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "divider": "Add an element between each child.",
     "format": "Format of the date when rendered in the input(s).",
+    "formatDensity": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",
     "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TValue, context: FieldChangeHandlerContext&lt;TError&gt;) =&gt; void</code><br><em>value:</em> The new value.<br><em>context:</em> The context containing the validation result of the current value.",

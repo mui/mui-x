@@ -42,12 +42,12 @@ describe('<DateTimeField /> - Describes', () => {
           )
         : '';
 
-      expectInputValue(input, expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);
       const input = getTextbox();
-      clickOnInput(input, 9); // Update the day
+      clickOnInput(input, 5); // Update the day
       userEvent.keyPress(input, { key: 'ArrowUp' });
       return newValue;
     },

@@ -61,6 +61,12 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    */
   format: string;
   /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity?: 'dense' | 'spacious';
+  /**
    * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
    * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
    *

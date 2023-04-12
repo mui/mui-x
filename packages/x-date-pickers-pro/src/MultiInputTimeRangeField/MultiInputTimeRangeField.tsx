@@ -50,6 +50,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     value,
     defaultValue,
     format,
+    formatDensity,
     shouldRespectLeadingZeros,
     onChange,
     readOnly,
@@ -126,6 +127,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       value,
       defaultValue,
       format,
+      formatDensity,
       shouldRespectLeadingZeros,
       onChange,
       readOnly,
@@ -244,6 +246,12 @@ MultiInputTimeRangeField.propTypes = {
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.

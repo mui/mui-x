@@ -13,6 +13,7 @@
     "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "focused": "If <code>true</code>, the component is displayed in focused state.",
     "format": "Format of the date when rendered in the input(s).",
+    "formatDensity": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
     "FormHelperTextProps": "Props applied to the <a href=\"/material-ui/api/form-helper-text/\"><code>FormHelperText</code></a> element.",
     "fullWidth": "If <code>true</code>, the input will take up the full width of its container.",
     "helperText": "The helper text content.",
