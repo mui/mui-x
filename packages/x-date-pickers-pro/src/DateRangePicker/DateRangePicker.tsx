@@ -145,6 +145,12 @@ DateRangePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Density of the format when rendered in the input.
+   * When "spacious", a space will be added before and after each `/`, `-` and `.` character.
+   * @default "normal"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.
    */
