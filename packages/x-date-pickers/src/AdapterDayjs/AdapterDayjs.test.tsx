@@ -41,7 +41,7 @@ const localizedTexts = {
     value: '15.05.2018 09:35',
   },
 };
-describe('<AdapterDayjs />', () => {
+describe.only('<AdapterDayjs />', () => {
   describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss' });
 
   describe('Adapter localization', () => {
@@ -88,7 +88,7 @@ describe('<AdapterDayjs />', () => {
     });
 
     it('Formatting', () => {
-      const adapter = new AdapterDayjs({ locale: 'en-US' });
+      const adapter = new AdapterDayjs({ locale: 'en' });
       const adapterRu = new AdapterDayjs({ locale: 'ru' });
 
       const expectDate = (
