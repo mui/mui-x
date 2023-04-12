@@ -1,4 +1,4 @@
-# Data Grid - Clipboard
+# Data Grid - Copy and paste
 
 <p class="description">Copy and paste data using clipboard.</p>
 
