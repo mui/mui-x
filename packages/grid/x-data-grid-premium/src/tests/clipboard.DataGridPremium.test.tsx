@@ -483,10 +483,12 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       paste(cell, ['0', 'Nike', 'Shoes', '$120', '4.0'].join('\t'));
 
-      await waitFor(() => expect(getColumnValues(1)).to.deep.equal(['Nike', 'Nike', 'Puma']));
-      expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
-      expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
-      expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['Nike', 'Nike', 'Puma']);
+        expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
+        expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
+        expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
+      });
     });
 
     it('should call `processRowUpdate` with each row impacted by the paste', async () => {
