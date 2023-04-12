@@ -76,16 +76,19 @@
     "react-dom": "^17.0.2 || ^18.0.0"
   },
   "peerDependenciesMeta": {
-    "date-fns": {
-      "optional": true
-    },
-    "dayjs": {
-      "optional": true
-    },
     "@emotion/react": {
       "optional": true
     },
     "@emotion/styled": {
+      "optional": true
+    },
+    "date-fns": {
+      "optional": true
+    },
+    "date-fns-jalali": {
+      "optional": true
+    },
+    "dayjs": {
       "optional": true
     },
     "luxon": {
@@ -98,9 +101,6 @@
       "optional": true
     },
     "moment-jalaali": {
-      "optional": true
-    },
-    "date-fns-jalali": {
       "optional": true
     }
   },
