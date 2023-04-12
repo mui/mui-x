@@ -417,29 +417,28 @@ export const useGridCellSelection = (
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
-      if (apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
-        const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
-        const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
-          const fieldsMap = cellSelectionModel[rowId];
-          const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
-            let cellData: string;
-            if (fieldsMap[field]) {
-              const cellParams = apiRef.current.getCellParams(rowId, field);
-              cellData = serializeCellValue(cellParams, {
-                delimiterCharacter: '\t',
-                ignoreValueFormatter,
-              });
-            } else {
-              cellData = '';
-            }
-            return acc2 === '' ? cellData : [acc2, cellData].join('\t');
-          }, '');
-          return acc === '' ? rowString : [acc, rowString].join('\r\n');
-        }, '');
-        return copyData;
+      if (apiRef.current.unstable_getSelectedCellsAsArray().length <= 1) {
+        return value;
       }
-
-      return value;
+      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+      const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
+        const fieldsMap = cellSelectionModel[rowId];
+        const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+          let cellData: string;
+          if (fieldsMap[field]) {
+            const cellParams = apiRef.current.getCellParams(rowId, field);
+            cellData = serializeCellValue(cellParams, {
+              delimiterCharacter: '\t',
+              ignoreValueFormatter,
+            });
+          } else {
+            cellData = '';
+          }
+          return acc2 === '' ? cellData : [acc2, cellData].join('\t');
+        }, '');
+        return acc === '' ? rowString : [acc, rowString].join('\r\n');
+      }, '');
+      return copyData;
     },
     [apiRef, ignoreValueFormatter],
   );
