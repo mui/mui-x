@@ -4,5 +4,10 @@ coverage:
       default:
         target: auto
         threshold: 1%
+      adapters:
+        target: 95%
+        paths:
+          - 'packages/x-date-pickers/src/AdapterDayjs/AdapterDayjs.ts'
     patch: off
+
 comment: false
