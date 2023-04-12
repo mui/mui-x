@@ -54,8 +54,8 @@ export interface BaseNonStaticPickerProps {
   format?: string;
   /**
    * Density of the format when rendered in the input.
-   * When "spacious", a space will be added before and after each `/`, `-` and `.` character.
-   * @default "normal"
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
    */
   formatDensity?: 'dense' | 'spacious';
 }
