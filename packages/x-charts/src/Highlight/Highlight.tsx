@@ -47,6 +47,7 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
         fill="gray"
         fillOpacity={0.1}
         ref={ref}
+        style={{ pointerEvents: 'none' }}
       />
     );
   }
@@ -60,6 +61,7 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
           stroke="black"
           strokeDasharray="5 2"
           ref={ref}
+          style={{ pointerEvents: 'none' }}
         />
       )}
       {yHighlight && axis.y !== null && (
@@ -69,6 +71,7 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
           )} ${yScale(axis.y.value)}`}
           stroke="black"
           strokeDasharray="5 2"
+          style={{ pointerEvents: 'none' }}
         />
       )}
     </React.Fragment>

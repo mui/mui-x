@@ -343,7 +343,7 @@ export function Tooltip(props: TooltipProps) {
             anchorEl={generateVirtualElement(mousePosition)}
             style={{ padding: '16px', pointerEvents: 'none' }}
           >
-            <Paper sx={{ p: 2 }}>
+            <Paper sx={{ p: 1 }}>
               {trigger === 'item' ? (
                 <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
               ) : (
