@@ -76,7 +76,7 @@ export const getTimeSectionOptions = ({
   };
 
   return [
-    ...Array.from({ length: 60 / timeStep }, (_, index) => {
+    ...Array.from({ length: Math.ceil(60 / timeStep) }, (_, index) => {
       const timeValue = timeStep * index;
       return {
         value: timeValue,
