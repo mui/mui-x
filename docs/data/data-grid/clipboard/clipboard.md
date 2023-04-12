@@ -9,9 +9,9 @@ The copied cell values are separated by a tab (`\t`) character and the rows are 
 
 The priority of the data copied to the clipboard is the following, from highest to lowest:
 
-- If more than one cell is selected (see [Cell selection](/x/react-data-grid/cell-selection/)), the selected cells are copied
-- If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)), the selected rows are copied
-- If there is a single cell selected, the single cell is copied
+1. If more than one cell is selected (see [Cell selection](/x/react-data-grid/cell-selection/)), the selected cells are copied
+2. If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)), the selected rows are copied
+3. If there is a single cell selected, the single cell is copied
 
 {{"demo": "ClipboardCopy.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -39,15 +39,19 @@ The paste operation only affects cells in the [columns that are `editable`](/x/r
 
 The priority of the clipboard paste is the following, from highest to lowest:
 
-- If more than one cell is selected (see [Cell selection](/x/react-data-grid/cell-selection/)):
-  - If the clipboard contains a single cell, it is pasted to each selected cell
-  - If the clipboard contains multiple cells/rows, they are pasted starting from the first selected cell, but won't leak the selected range
-- If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)):
-  - If the clipboard contains a single row, it is pasted to each selected row
-  - If the clipboard contains multiple rows, they are pasted starting from the first selected row, but won't leak the selected range
-- If a single cell is selected:
-  - If the clipboard contains a single cell, it is pasted to the selected cell
-  - If the clipboard contains multiple cells/rows, the data is pasted starting from the selected cell
+1. If more than one cell is selected (see [Cell selection](/x/react-data-grid/cell-selection/)):
+
+   1. If the clipboard contains a single cell, it is pasted to each selected cell
+   2. If the clipboard contains multiple cells/rows, they are pasted starting from the first selected cell, but won't leak the selected range
+
+2. If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)):
+
+   1. If the clipboard contains a single row, it is pasted to each selected row
+   2. If the clipboard contains multiple rows, they are pasted starting from the first selected row, but won't leak the selected range
+
+3. If a single cell is selected:
+   1. If the clipboard contains a single cell, it is pasted to the selected cell
+   2. If the clipboard contains multiple cells/rows, the data is pasted starting from the selected cell, but won't leak the selected range
 
 {{"demo": "ClipboardPaste.js", "bg": "inline", "defaultCodeOpen": false}}
 
