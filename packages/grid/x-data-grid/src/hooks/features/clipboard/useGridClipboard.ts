@@ -81,27 +81,26 @@ export const useGridClipboard = (
         return;
       }
 
-      let textToCopy = apiRef.current.unstable_applyPipeProcessors('clipboardCopy', '');
-
-      if (!textToCopy) {
-        const selectedRows = apiRef.current.getSelectedRows();
-        if (selectedRows.size > 0) {
-          textToCopy = apiRef.current.getDataAsCsv({
-            includeHeaders: false,
-            // TODO: make it configurable
-            delimiter: '\t',
+      let textToCopy = '';
+      const selectedRows = apiRef.current.getSelectedRows();
+      if (selectedRows.size > 0) {
+        textToCopy = apiRef.current.getDataAsCsv({
+          includeHeaders: false,
+          // TODO: make it configurable
+          delimiter: '\t',
+        });
+      } else {
+        const focusedCell = gridFocusCellSelector(apiRef);
+        if (focusedCell) {
+          const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
+          textToCopy = serializeCellValue(cellParams, {
+            delimiterCharacter: '\t',
+            ignoreValueFormatter,
           });
-        } else {
-          const focusedCell = gridFocusCellSelector(apiRef);
-          if (focusedCell) {
-            const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
-            textToCopy = serializeCellValue(cellParams, {
-              delimiterCharacter: '\t',
-              ignoreValueFormatter,
-            });
-          }
         }
       }
+
+      textToCopy = apiRef.current.unstable_applyPipeProcessors('clipboardCopy', textToCopy);
 
       if (textToCopy) {
         copyToClipboard(textToCopy);
