@@ -147,12 +147,9 @@ This prop is available on all fields and pickers.
 
 {{"demo": "CustomFieldFormat.js"}}
 
-### Dense field format
-
-If your component must be rendered inside a dense interface, you can make the format more compact using the `formatDensity` prop.
-Setting `formatDensity` to `"dense"` will remove extra spaces.
-
-{{"demo": "CompactFieldFormat.js"}}
+:::info
+If you want to have a less dense field format, you can use the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
+:::
 
 ### Custom field placeholder
 

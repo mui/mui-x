@@ -444,7 +444,7 @@ export const splitFormatIntoSections = <TDate>(
   localeText: PickersLocaleText<TDate>,
   format: string,
   date: TDate | null,
-  formatDensity: 'dense' | 'normal',
+  formatDensity: 'dense' | 'spacious',
 ) => {
   let startSeparator: string = '';
   const sections: FieldSectionWithoutPosition[] = [];
@@ -542,7 +542,7 @@ export const splitFormatIntoSections = <TDate>(
         cleanedSeparator = `\u2069${cleanedSeparator}\u2066`;
       }
 
-      if (formatDensity === 'normal' && ['/', '.', '-'].includes(cleanedSeparator)) {
+      if (formatDensity === 'spacious' && ['/', '.', '-'].includes(cleanedSeparator)) {
         cleanedSeparator = ` ${cleanedSeparator} `;
       }
 

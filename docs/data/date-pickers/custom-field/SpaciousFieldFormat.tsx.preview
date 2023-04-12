@@ -1,0 +1,4 @@
+<DateField
+  defaultValue={dayjs('2022-04-17')}
+  formatDensity="spacious"
+/>

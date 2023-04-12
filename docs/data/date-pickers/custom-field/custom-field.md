@@ -25,7 +25,7 @@ You can use the `fieldSeparator` slot to pass custom props to the `Typography` r
 
 ### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-You can pass the single input fields to the you range picker to use it for keyboard editing:
+You can pass the single input fields to the range picker to use it for keyboard editing:
 
 {{"demo": "SingleInputDateRangePicker.js"}}
 
@@ -41,6 +41,13 @@ You can manually add an `endAdornment` if you want your range picker to look exa
 :::info
 This adornment is purely decorative, the focus remains on the field when the picker is opened.
 :::
+
+### Change the format density
+
+You can make the format less dense using the `formatDensity` prop.
+Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+
+{{"demo": "SpaciousFieldFormat.js"}}
 
 ## Commonly used custom field
 

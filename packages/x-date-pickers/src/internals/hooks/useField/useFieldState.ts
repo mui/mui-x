@@ -63,7 +63,7 @@ export const useFieldState = <
       defaultValue,
       onChange,
       format,
-      formatDensity = 'normal',
+      formatDensity = 'dense',
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
     },

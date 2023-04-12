@@ -4,22 +4,12 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-export default function CompactFieldFormat() {
+export default function SpaciousFieldFormat() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateField', 'DatePicker']}>
-        <DateField
-          label="Date Field"
-          defaultValue={dayjs('2022-04-17')}
-          formatDensity="dense"
-        />
-        <DatePicker
-          label="Date Picker"
-          defaultValue={dayjs('2022-04-17')}
-          formatDensity="dense"
-        />
+      <DemoContainer components={['DateField']}>
+        <DateField defaultValue={dayjs('2022-04-17')} formatDensity="spacious" />
       </DemoContainer>
     </LocalizationProvider>
   );

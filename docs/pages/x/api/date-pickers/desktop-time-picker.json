@@ -28,7 +28,7 @@
     "disablePast": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
-      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'normal'" },
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
       "default": "\"normal\""
     },
     "inputRef": {

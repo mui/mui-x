@@ -28,8 +28,8 @@
     "divider": { "type": { "name": "node" } },
     "format": { "type": { "name": "string" } },
     "formatDensity": {
-      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'normal'" },
-      "default": "\"normal\""
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
     },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
