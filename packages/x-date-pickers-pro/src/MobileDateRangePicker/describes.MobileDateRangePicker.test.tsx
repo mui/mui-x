@@ -50,7 +50,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         if (!value) {
           expectInputPlaceholder(input, 'MM/DD/YYYY');
         }
-        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '', true);
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '');
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {

@@ -50,7 +50,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
           )
         : '';
 
-      expectInputValue(input, expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {

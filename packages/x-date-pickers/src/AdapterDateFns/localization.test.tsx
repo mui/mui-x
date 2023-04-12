@@ -47,7 +47,7 @@ describe('<AdapterDateFns />', () => {
       it('should have well formatted value', () => {
         render(<DateTimePicker value={adapter.date(testDate)} />);
 
-        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
+        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
       });
     });
   });

@@ -315,16 +315,8 @@ export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
 
-export const expectInputValue = (
-  input: HTMLInputElement,
-  expectedValue: string,
-  shouldRemoveDensitySpaces = false,
-) => {
-  let value = cleanText(input.value);
-  if (shouldRemoveDensitySpaces) {
-    value = value.replace(/ (\/|-|\.) /g, '$1');
-  }
-
+export const expectInputValue = (input: HTMLInputElement, expectedValue: string) => {
+  const value = cleanText(input.value);
   return expect(value).to.equal(expectedValue);
 };
 
