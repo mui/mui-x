@@ -46,6 +46,10 @@
       "matchPackageNames": ["react", "react-dom", "react-is", "react-test-renderer"]
     },
     {
+      "groupName": "React router",
+      "matchPackageNames": ["react-router", "react-router-dom"]
+    },
+    {
       "groupName": "typescript-eslint",
       "matchPackagePatterns": "@typescript-eslint/*"
     },
@@ -80,6 +84,7 @@
         "@mui/joy",
         "@mui/icons-material",
         "@mui/base",
+        "@mui/styles",
         "@mui/system",
         "@mui/utils"
       ]
