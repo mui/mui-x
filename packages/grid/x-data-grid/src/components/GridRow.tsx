@@ -280,8 +280,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns' | 'isNotVisible'
       >,
     ) => {
-      const focusedCell = gridFocusCellSelector(apiRef);
-
       const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
         rowId,
         column.field,
@@ -300,7 +298,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
           Object.keys(editRowsState).length > 0);
 
       let cellIsNotVisible = false;
-      if (isColumnWithFocusedCellNotInRange && focusedCell!.field === column.field) {
+      if (isColumnWithFocusedCellNotInRange && focusedCell === column.field) {
         cellIsNotVisible = true;
       } else {
         cellIsNotVisible = false;
@@ -390,11 +388,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       disableColumnReorder,
       rowReordering,
       sortModel.length,
+      focusedCell,
       isColumnWithFocusedCellNotInRange,
       treeDepth,
       editRowsState,
       getCellClassName,
-      focusedCell,
       tabbableCell,
       CellComponent,
       rowHeight,
@@ -563,7 +561,6 @@ GridRow.propTypes = {
   isLastVisible: PropTypes.bool,
   isNotVisible: PropTypes.bool,
   index: PropTypes.number,
-  isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

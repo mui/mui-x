@@ -146,8 +146,47 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const getRenderedColumnsRef = React.useRef(
     defaultMemoize(
-      (columns: GridStateColDef[], firstColumnToRender: number, lastColumnToRender: number) => {
-        return columns.slice(firstColumnToRender, lastColumnToRender);
+      (
+        columns: GridStateColDef[],
+        firstColumnToRender: number,
+        lastColumnToRender: number,
+        minFirstColumn: number,
+        maxLastColumn: number,
+        indexOfColumnWithFocusedCell: number,
+      ) => {
+        // If the selected column is not within the current range of columns being displayed,
+        // we need to render it at either the left or right of the columns,
+        // depending on whether it is above or below the range.
+        let isColumnWithFocusedCellNotInRange = false;
+
+        const renderedColumns = columns.slice(firstColumnToRender, lastColumnToRender);
+
+        if (indexOfColumnWithFocusedCell > -1) {
+          const focusedColumn = visibleColumns[indexOfColumnWithFocusedCell];
+          if (
+            firstColumnToRender > indexOfColumnWithFocusedCell ||
+            lastColumnToRender < indexOfColumnWithFocusedCell
+          ) {
+            isColumnWithFocusedCellNotInRange = true;
+
+            if (
+              firstColumnToRender > indexOfColumnWithFocusedCell &&
+              indexOfColumnWithFocusedCell >= minFirstColumn
+            ) {
+              renderedColumns.unshift(focusedColumn);
+            } else if (
+              lastColumnToRender < indexOfColumnWithFocusedCell &&
+              indexOfColumnWithFocusedCell < maxLastColumn
+            ) {
+              renderedColumns.push(focusedColumn);
+            }
+          }
+        }
+
+        return {
+          isColumnWithFocusedCellNotInRange,
+          renderedColumns,
+        };
       },
     ),
   );
@@ -560,10 +599,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       visibleRows: currentPage.rows,
     });
 
-    const renderedColumns = getRenderedColumnsRef.current(
+    const { isColumnWithFocusedCellNotInRange, renderedColumns } = getRenderedColumnsRef.current(
       visibleColumns,
       firstColumnToRender,
       lastColumnToRender,
+      minFirstColumn,
+      maxLastColumn,
+      indexOfColumnWithFocusedCell,
     );
 
     const { style: rootRowStyle, ...rootRowProps } = rootProps.slotProps?.row || {};
@@ -573,31 +615,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     if (invalidatesCachedRowStyle) {
       rowStyleCache.current = {};
-    }
-
-    // If the selected column is not within the current range of columns being displayed,
-    // we need to render it at either the left or right of the columns,
-    // depending on whether it is above or below the range.
-    let isColumnWithFocusedCellNotInRange = false;
-    if (indexOfColumnWithFocusedCell > -1) {
-      const focusedColumn = visibleColumns[indexOfColumnWithFocusedCell];
-      if (
-        firstColumnToRender > indexOfColumnWithFocusedCell ||
-        lastColumnToRender < indexOfColumnWithFocusedCell
-      ) {
-        isColumnWithFocusedCellNotInRange = true;
-        if (
-          firstColumnToRender > indexOfColumnWithFocusedCell &&
-          indexOfColumnWithFocusedCell >= minFirstColumn
-        ) {
-          renderedColumns.unshift(focusedColumn);
-        } else if (
-          lastColumnToRender < indexOfColumnWithFocusedCell &&
-          indexOfColumnWithFocusedCell < maxLastColumn
-        ) {
-          renderedColumns.push(focusedColumn);
-        }
-      }
     }
 
     const rows: JSX.Element[] = [];
