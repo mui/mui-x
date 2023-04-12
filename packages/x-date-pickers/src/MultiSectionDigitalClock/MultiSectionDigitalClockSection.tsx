@@ -81,7 +81,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   '&:after': {
     display: 'block',
     content: '""',
-    height: 318,
+    height: 185,
   },
 }));
 

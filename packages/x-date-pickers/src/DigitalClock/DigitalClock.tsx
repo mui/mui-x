@@ -15,6 +15,7 @@ import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
 import { TimeView } from '../models';
+import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -35,6 +36,7 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   overflowY: 'auto',
   width: '100%',
   scrollBehavior: 'smooth',
+  maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
 });
 
 const DigitalClockList = styled(MenuList, {
@@ -47,7 +49,9 @@ const DigitalClockItem = styled(MenuItem, {
   name: 'MuiDigitalClock',
   slot: 'Item',
   overridesResolver: (props, styles) => styles.item,
-})({});
+})({
+  padding: '8px 16px',
+});
 
 type DigitalClockComponent = (<TDate>(
   props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,

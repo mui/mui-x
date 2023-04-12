@@ -23,6 +23,7 @@ import {
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
 import { TimeView } from '../models';
+import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -42,6 +43,7 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
   flexDirection: 'row',
   width: '100%',
   padding: '4px 0',
+  maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
 });
 
 type MultiSectionDigitalClockComponent = (<TDate>(
