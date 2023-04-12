@@ -28,7 +28,7 @@ export default function TestLinesTime() {
           type: 'line',
           id: 's1',
           stack: '1',
-          area: { color: 'red' },
+          area: {},
           xAxisKey: 'lineCategories',
           yAxisKey: 'lineCategoriesY',
           data: [2, 5, 3, 4, 1],
@@ -46,7 +46,7 @@ export default function TestLinesTime() {
           xAxisKey: 'lineCategories',
           yAxisKey: 'lineCategoriesY',
           stack: '1',
-          area: { color: 'blue' },
+          area: {},
           data: [10, 3, 1, 2, 10],
         },
       ]}

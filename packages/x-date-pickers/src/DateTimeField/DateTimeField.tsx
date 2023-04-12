@@ -19,7 +19,8 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
     name: 'MuiDateTimeField',
   });
 
-  const { components, componentsProps, slots, slotProps, ...other } = themeProps;
+  const { components, componentsProps, slots, slotProps, InputProps, inputProps, ...other } =
+    themeProps;
 
   const ownerState = themeProps;
 
@@ -32,6 +33,10 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
       ownerState,
     },
   );
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
 
   const {
     ref: inputRef,
