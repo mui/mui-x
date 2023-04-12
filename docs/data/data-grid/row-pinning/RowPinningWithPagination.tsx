@@ -38,7 +38,6 @@ export default function RowPinningWithPagination() {
         }}
         pagination
         pageSizeOptions={[5, 10, 25, 50, 100]}
-        experimentalFeatures={{ rowPinning: true }}
       />
     </div>
   );

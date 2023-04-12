@@ -1,8 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
-import { SlotComponentProps } from '@mui/base';
-import { useSlotProps } from '@mui/base/utils';
+import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -275,6 +274,27 @@ function WrappedDay<TDate extends unknown>({
     [disabled, isDateDisabled, day],
   );
 
+  const outsideCurrentMonth = React.useMemo(
+    () => utils.getMonth(day) !== currentMonthNumber,
+    [utils, day, currentMonthNumber],
+  );
+
+  const isFirstVisibleCell = React.useMemo(() => {
+    const startOfMonth = utils.startOfMonth(utils.setMonth(day, currentMonthNumber));
+    if (!showDaysOutsideCurrentMonth) {
+      return utils.isSameDay(day, startOfMonth);
+    }
+    return utils.isSameDay(day, utils.startOfWeek(startOfMonth));
+  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, utils]);
+
+  const isLastVisibleCell = React.useMemo(() => {
+    const endOfMonth = utils.endOfMonth(utils.setMonth(day, currentMonthNumber));
+    if (!showDaysOutsideCurrentMonth) {
+      return utils.isSameDay(day, endOfMonth);
+    }
+    return utils.isSameDay(day, utils.endOfWeek(endOfMonth));
+  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, utils]);
+
   return (
     <Day
       {...dayProps}
@@ -282,7 +302,9 @@ function WrappedDay<TDate extends unknown>({
       disabled={isDisabled}
       autoFocus={isViewFocused && isFocusableDay}
       today={isToday}
-      outsideCurrentMonth={utils.getMonth(day) !== currentMonthNumber}
+      outsideCurrentMonth={outsideCurrentMonth}
+      isFirstVisibleCell={isFirstVisibleCell}
+      isLastVisibleCell={isLastVisibleCell}
       selected={isSelected}
       tabIndex={isFocusableDay ? 0 : -1}
       aria-selected={isSelected}

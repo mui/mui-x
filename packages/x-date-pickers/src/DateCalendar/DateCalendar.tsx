@@ -310,8 +310,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
-        components={components}
-        componentsProps={componentsProps}
         slots={slots}
         slotProps={slotProps}
       />
@@ -398,7 +396,7 @@ DateCalendar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -570,7 +568,7 @@ DateCalendar.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

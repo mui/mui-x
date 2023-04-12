@@ -5,12 +5,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import {
-  DateOrTimeView,
-  PickerViewRendererLookup,
-  useLocaleText,
-  validateDateTime,
-} from '../internals';
+import { PickerViewRendererLookup, useLocaleText, validateDateTime } from '../internals';
+import { DateOrTimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -41,11 +37,13 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
     seconds: renderTimeViewClock,
     ...defaultizedProps.viewRenderers,
   };
+  const ampmInClock = defaultizedProps.ampmInClock ?? false;
 
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    ampmInClock,
     slots: {
       field: DateTimeField,
       ...defaultizedProps.slots,
@@ -60,6 +58,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
       }),
       toolbar: {
         hidden: false,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
@@ -91,7 +90,7 @@ MobileDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -111,7 +110,7 @@ MobileDateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -183,6 +182,12 @@ MobileDateTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -407,7 +412,7 @@ MobileDateTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

@@ -30,21 +30,17 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
-  /**
-   * Enables the ability for rows to be pinned in data grid.
-   */
-  rowPinning: boolean;
 }
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @deprecated Use the `slots` prop instead.
    */
   components?: Partial<GridProSlotsComponent>;
   /**
-   * Overrideable components.
+   * Overridable components.
    */
   slots?: Partial<UncapitalizedGridProSlotsComponent>;
 }

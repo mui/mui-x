@@ -19,7 +19,8 @@ describe('<MobileDateRangePicker />', () => {
   });
 
   describeConformance(<MobileDateRangePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiMobileDateRangePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
@@ -274,6 +275,7 @@ describe('<MobileDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           slotProps={{ actionBar: { actions: ['clear'] } }}
+          value={[null, null]}
         />,
       );
 

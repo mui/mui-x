@@ -98,7 +98,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
       const itemValueIndexes = item.value.map((element) => {
         // Gets the index matching between values and valueOptions
         return resolvedFormattedValueOptions?.findIndex(
-          (formatedOption) => formatedOption === element,
+          (formattedOption) => formattedOption === element,
         );
       });
 

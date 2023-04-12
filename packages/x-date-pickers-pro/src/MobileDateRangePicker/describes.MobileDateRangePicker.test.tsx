@@ -5,6 +5,7 @@ import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   adapterToUse,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
   openPicker,
 } from 'test/utils/pickers-utils';
@@ -39,12 +40,17 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {
       // `getAllByRole('textbox')` does not work here, because inputs are `readonly`
-      const textBoxes = [screen.getByLabelText('Start'), screen.getByLabelText('End')];
+      const textBoxes: HTMLInputElement[] = [
+        screen.getByLabelText('Start'),
+        screen.getByLabelText('End'),
+      ];
       expectedValues.forEach((value, index) => {
-        const expectedValueStr =
-          value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
+        const input = textBoxes[index];
         // TODO: Support single range input
-        expectInputValue(textBoxes[index], expectedValueStr, true);
+        if (!value) {
+          expectInputPlaceholder(input, 'MM/DD/YYYY');
+        }
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '');
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
@@ -63,15 +69,13 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       userEvent.mousePress(
         screen.getAllByRole('gridcell', {
-          name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]),
+          name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         })[0],
       );
 
-      // Close the picker to return to the initial state
+      // Close the picker
       if (!isOpened) {
-        fireDiscreteEvent.keyDown(screen.getByLabelText(setEndDate ? 'End' : 'Start'), {
-          key: 'Escape',
-        });
+        fireDiscreteEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       }
 

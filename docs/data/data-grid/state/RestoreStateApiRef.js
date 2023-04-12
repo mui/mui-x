@@ -136,40 +136,7 @@ ViewListItem.propTypes = {
   selected: PropTypes.bool.isRequired,
   view: PropTypes.shape({
     label: PropTypes.string.isRequired,
-    value: PropTypes.shape({
-      columns: PropTypes.shape({
-        columnVisibilityModel: PropTypes.object,
-        dimensions: PropTypes.object,
-        orderedFields: PropTypes.arrayOf(PropTypes.string),
-      }),
-      detailPanel: PropTypes.shape({
-        expandedRowIds: PropTypes.arrayOf(
-          PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        ).isRequired,
-      }),
-      filter: PropTypes.shape({
-        filterModel: PropTypes.object,
-      }),
-      pagination: PropTypes.shape({
-        paginationModel: PropTypes.object,
-      }),
-      pinnedColumns: PropTypes.shape({
-        left: PropTypes.arrayOf(PropTypes.string),
-        right: PropTypes.arrayOf(PropTypes.string),
-      }),
-      preferencePanel: PropTypes.shape({
-        open: PropTypes.bool.isRequired,
-        /**
-         * Tab currently opened.
-         * @default GridPreferencePanelsValue.filter
-         * TODO v6: Remove the default behavior
-         */
-        openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
-      }),
-      sorting: PropTypes.shape({
-        sortModel: PropTypes.arrayOf(PropTypes.object),
-      }),
-    }).isRequired,
+    value: PropTypes.object.isRequired,
   }).isRequired,
   viewId: PropTypes.string.isRequired,
 };

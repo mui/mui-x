@@ -2,18 +2,27 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
-import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getValueFromValueOptions, isSingleSelectColDef } from './filterPanelUtils';
+import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 
-const renderSingleSelectOptions = (
-  { valueOptions, field }: GridSingleSelectColDef,
-  OptionComponent: React.ElementType,
-  getOptionLabel: NonNullable<GridSingleSelectColDef['getOptionLabel']>,
-  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>,
-) => {
+const renderSingleSelectOptions = ({
+  column: { valueOptions, field },
+  OptionComponent,
+  getOptionLabel,
+  getOptionValue,
+  isSelectNative,
+  baseSelectOptionProps,
+}: {
+  column: GridSingleSelectColDef;
+  OptionComponent: React.ElementType;
+  getOptionLabel: NonNullable<GridSingleSelectColDef['getOptionLabel']>;
+  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>;
+  isSelectNative: boolean;
+  baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
+}) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
@@ -24,7 +33,7 @@ const renderSingleSelectOptions = (
     const label = getOptionLabel(option);
 
     return (
-      <OptionComponent key={value} value={value}>
+      <OptionComponent {...baseSelectOptionProps} native={isSelectNative} key={value} value={value}>
         {label}
       </OptionComponent>
     );
@@ -50,10 +59,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();
+  const labelId = useId();
   const rootProps = useGridRootProps();
 
-  const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-  const isSelectNative = baseSelectProps.native ?? true;
+  const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? true;
 
   let resolvedColumn: GridSingleSelectColDef | null = null;
   if (item.field) {
@@ -115,34 +124,44 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     return null;
   }
 
+  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+
   return (
-    <rootProps.slots.baseTextField
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState}
-      onChange={onFilterChange}
-      variant="standard"
-      type={type || 'text'}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputRef={focusElementRef}
-      select
-      SelectProps={{
-        native: isSelectNative,
-        ...rootProps.slotProps?.baseSelect,
-      }}
-      {...others}
-      {...rootProps.slotProps?.baseTextField}
-    >
-      {renderSingleSelectOptions(
-        resolvedColumn,
-        isSelectNative ? 'option' : MenuItem,
-        getOptionLabel,
-        getOptionValue,
-      )}
-    </rootProps.slots.baseTextField>
+    <React.Fragment>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        shrink
+        variant="standard"
+      >
+        {label}
+      </rootProps.slots.baseInputLabel>
+      <rootProps.slots.baseSelect
+        id={id}
+        label={label}
+        labelId={labelId}
+        value={filterValueState}
+        onChange={onFilterChange}
+        variant="standard"
+        type={type || 'text'}
+        inputProps={{
+          ref: focusElementRef,
+          placeholder: apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+        }}
+        native={isSelectNative}
+        {...others}
+        {...rootProps.slotProps?.baseSelect}
+      >
+        {renderSingleSelectOptions({
+          column: resolvedColumn,
+          OptionComponent: rootProps.slots.baseSelectOption,
+          getOptionLabel,
+          getOptionValue,
+          isSelectNative,
+          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+        })}
+      </rootProps.slots.baseSelect>
+    </React.Fragment>
   );
 }
 

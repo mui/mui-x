@@ -26,6 +26,10 @@
     "disablePast": { "type": { "name": "bool" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
     "FormHelperTextProps": { "type": { "name": "object" } },
     "fullWidth": { "type": { "name": "bool" } },
     "helperText": { "type": { "name": "node" } },
@@ -70,6 +74,9 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
+    },
+    "unstableFieldRef": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
     },
     "value": { "type": { "name": "any" } },
     "variant": {

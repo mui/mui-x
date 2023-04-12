@@ -7,7 +7,6 @@ import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
-import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
@@ -21,10 +20,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridHeader />
-        <GridBody
-          ColumnHeadersComponent={DataGridColumnHeaders}
-          VirtualScrollerComponent={DataGridVirtualScroller}
-        />
+        <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
         <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
@@ -121,12 +117,12 @@ DataGridRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @deprecated Use `slots` instead.
    */
   components: PropTypes.object,
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
    * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
@@ -345,7 +341,7 @@ DataGridRaw.propTypes = {
   onCellKeyDown: PropTypes.func,
   /**
    * Callback fired when the `cellModesModel` prop changes.
-   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCellModesModel} cellModesModel Object containing which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
@@ -491,7 +487,7 @@ DataGridRaw.propTypes = {
   onRowEditStop: PropTypes.func,
   /**
    * Callback fired when the `rowModesModel` prop changes.
-   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowModesModelChange: PropTypes.func,
@@ -616,11 +612,11 @@ DataGridRaw.propTypes = {
    */
   showColumnVerticalBorder: PropTypes.bool,
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable components.
+   * Overridable components.
    */
   slots: PropTypes.object,
   /**

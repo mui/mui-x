@@ -6,8 +6,8 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
-import { TimeView } from '../internals/models/views';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+import { TimeView } from '../models';
+import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface ExportedTimeClockProps<TDate>
@@ -44,7 +44,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    */
   classes?: Partial<TimeClockClasses>;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -56,7 +56,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    */
   componentsProps?: TimeClockSlotsComponentsProps;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<TimeClockSlotsComponent>;

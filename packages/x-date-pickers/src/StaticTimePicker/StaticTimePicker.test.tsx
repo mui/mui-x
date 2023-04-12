@@ -13,7 +13,10 @@ import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<StaticTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+  });
 
   describeValidation(StaticTimePicker, () => ({
     render,
@@ -23,7 +26,8 @@ describe('<StaticTimePicker />', () => {
   }));
 
   describeConformance(<StaticTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiStaticTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: undefined,

@@ -5,7 +5,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { TimeView, useLocaleText, validateTime } from '../internals';
+import { useLocaleText, validateTime } from '../internals';
+import { TimeView } from '../models';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
@@ -34,9 +35,12 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ...defaultizedProps.viewRenderers,
   };
 
+  const ampmInClock = defaultizedProps.ampmInClock ?? true;
+
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    ampmInClock,
     viewRenderers,
     slots: {
       field: TimeField,
@@ -53,6 +57,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
       }),
       toolbar: {
         hidden: true,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
@@ -80,7 +85,7 @@ DesktopTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -100,7 +105,7 @@ DesktopTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -146,6 +151,12 @@ DesktopTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -288,7 +299,7 @@ DesktopTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

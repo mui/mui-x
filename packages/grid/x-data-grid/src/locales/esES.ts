@@ -41,7 +41,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Columns panel text
   columnsPanelTextFieldLabel: 'Columna de búsqueda',
   columnsPanelTextFieldPlaceholder: 'Título de columna',
-  columnsPanelDragIconLabel: 'Reorder columna',
+  columnsPanelDragIconLabel: 'Reordenar columna',
   columnsPanelShowAllButton: 'Mostrar todo',
   columnsPanelHideAllButton: 'Ocultar todo',
 
@@ -80,7 +80,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menú',
   columnMenuShowColumns: 'Mostrar columnas',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desordenar',

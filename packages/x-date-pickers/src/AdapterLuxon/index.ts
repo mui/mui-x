@@ -1,34 +1,15 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
-import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
-  s: 'seconds',
-  ss: 'seconds',
+  // Year
+  y: 'year',
+  yy: 'year',
+  yyyy: 'year',
 
-  m: 'minutes',
-  mm: 'minutes',
-
-  H: 'hours',
-  HH: 'hours',
-  h: 'hours',
-  hh: 'hours',
-
-  a: 'meridiem',
-
-  d: 'day',
-  dd: 'day',
-
-  c: 'weekDay',
-  ccc: { sectionType: 'weekDay', contentType: 'letter' },
-  cccc: { sectionType: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
-  E: 'weekDay',
-  EEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
-
+  // Month
   L: 'month',
   LL: 'month',
   LLL: { sectionType: 'month', contentType: 'letter' },
@@ -38,9 +19,36 @@ const formatTokenMap: FieldFormatTokenMap = {
   MMM: { sectionType: 'month', contentType: 'letter' },
   MMMM: { sectionType: 'month', contentType: 'letter' },
 
-  y: 'year',
-  yy: 'year',
-  yyyy: 'year',
+  // Day of the month
+  d: 'day',
+  dd: 'day',
+
+  // Day of the week
+  c: 'weekDay',
+  ccc: { sectionType: 'weekDay', contentType: 'letter' },
+  cccc: { sectionType: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
+  E: 'weekDay',
+  EEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
+
+  // Meridiem
+  a: 'meridiem',
+
+  // Hours
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+
+  // Minutes
+  m: 'minutes',
+  mm: 'minutes',
+
+  // Seconds
+  s: 'seconds',
+  ss: 'seconds',
 };
 
 export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<DateTime> {
@@ -56,10 +64,24 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<
         'Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2',
       );
     }
-    // The returned format can contain `yyyyy` which means year between 4 and 6 digits.
-    // This value is supported by luxon parser but not luxon formatter.
-    // To avoid conflicts, we replace it by 4 digits which is enough for most use-cases.
-    return DateTime.expandFormat(format, { locale: this.locale }).replace('yyyyy', 'yyyy');
+    // Extract escaped section to avoid extending them
+    const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
+    return (
+      format
+        .match(longFormatRegexp)!
+        .map((token: string) => {
+          const firstCharacter = token[0];
+          if (firstCharacter === "'") {
+            return token;
+          }
+          return DateTime.expandFormat(token, { locale: this.locale });
+        })
+        .join('')
+        // The returned format can contain `yyyyy` which means year between 4 and 6 digits.
+        // This value is supported by luxon parser but not luxon formatter.
+        // To avoid conflicts, we replace it by 4 digits which is enough for most use-cases.
+        .replace('yyyyy', 'yyyy')
+    );
   };
 
   // Redefined here just to show how it can be written using expandFormat

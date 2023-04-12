@@ -34,8 +34,8 @@ This component has the following peer dependencies that you will need to install
 
 ```json
 "peerDependencies": {
-  "@mui/material": "^5.4.1",
-  "@mui/system": "^5.4.1",
+  "@mui/material": "^5.8.6",
+  "@mui/system": "^5.8.0",
   "react": "^17.0.2 || ^18.0.0",
   "react-dom": "^17.0.2 || ^18.0.0"
 },
@@ -54,7 +54,7 @@ After installation completed, you have to set the `dateAdapter` prop of the `Loc
 The supported adapters are exported from `@mui/x-date-pickers`.
 
 ```jsx
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // date-fns
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 // or for dayjs

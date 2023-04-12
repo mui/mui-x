@@ -6,13 +6,14 @@ import {
   UseTimeFieldProps,
 } from '@mui/x-date-pickers/TimeField';
 import {
-  TimeValidationError,
   useLocalizationContext,
   useUtils,
   useValidation,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
+import { TimeValidationError } from '@mui/x-date-pickers/models';
 import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import {
@@ -44,16 +45,21 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
   } as any;
 };
 
-export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
+export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
-  startTextFieldProps: inStartTextFieldProps,
-  endTextFieldProps: inEndTextFieldProps,
+  startTextFieldProps,
   startInputRef,
+  unstableStartFieldRef,
+  endTextFieldProps,
   endInputRef,
-}: UseMultiInputTimeRangeFieldParams<TDate, TChildProps>): UseMultiInputRangeFieldResponse<
-  Omit<TChildProps, keyof UseTimeFieldProps<TDate>>
-> => {
-  const sharedProps = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inSharedProps);
+  unstableEndFieldRef,
+}: UseMultiInputTimeRangeFieldParams<
+  TDate,
+  TTextFieldSlotProps
+>): UseMultiInputRangeFieldResponse<TTextFieldSlotProps> => {
+  const sharedProps = useDefaultizedTimeRangeFieldProps<TDate, UseTimeFieldProps<TDate>>(
+    inSharedProps,
+  );
   const adapter = useLocalizationContext<TDate>();
 
   const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
@@ -81,7 +87,7 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
         validationError: validateTimeRange({
           adapter,
           value: newDateRange,
-          props: { ...sharedProps, value: newDateRange },
+          props: sharedProps,
         }),
       };
 
@@ -104,36 +110,39 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
     rangeValueManager.defaultErrorState,
   );
 
-  const startInputProps: UseTimeFieldComponentProps<TDate, TChildProps> = {
+  const startFieldProps: UseTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
     error: !!validationError[0],
-    ...inStartTextFieldProps,
+    ...startTextFieldProps,
     format,
     disabled,
     readOnly,
+    unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
   };
 
-  const endInputProps: UseTimeFieldComponentProps<TDate, TChildProps> = {
+  const endFieldProps: UseTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
     error: !!validationError[1],
-    ...inEndTextFieldProps,
+    ...endTextFieldProps,
     format,
     disabled,
     readOnly,
+    unstableFieldRef: unstableEndFieldRef,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
   };
 
-  const startDateResponse = useTimeField<TDate, TChildProps>({
-    props: startInputProps,
+  const startDateResponse = useTimeField({
+    props: startFieldProps,
     inputRef: startInputRef,
-  });
-  const endDateResponse = useTimeField<TDate, TChildProps>({
-    props: endInputProps,
+  }) as UseFieldResponse<TTextFieldSlotProps>;
+
+  const endDateResponse = useTimeField({
+    props: endFieldProps,
     inputRef: endInputRef,
-  });
+  }) as UseFieldResponse<TTextFieldSlotProps>;
 
   return { startDate: startDateResponse, endDate: endDateResponse };
 };

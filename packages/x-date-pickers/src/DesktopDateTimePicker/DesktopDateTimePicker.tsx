@@ -6,7 +6,8 @@ import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
-import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
+import { useLocaleText, validateDateTime } from '../internals';
+import { DateOrTimeView } from '../models';
 import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
@@ -37,12 +38,14 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     seconds: null,
     ...defaultizedProps.viewRenderers,
   };
+  const ampmInClock = defaultizedProps.ampmInClock ?? true;
 
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
+    ampmInClock,
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,
@@ -58,6 +61,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
       }),
       toolbar: {
         hidden: true,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
@@ -89,7 +93,7 @@ DesktopDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -109,7 +113,7 @@ DesktopDateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -181,6 +185,12 @@ DesktopDateTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -405,7 +415,7 @@ DesktopDateTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

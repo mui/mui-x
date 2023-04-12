@@ -95,15 +95,21 @@ export const GridRootStyles = styled('div', {
   ],
 })<{ ownerState: OwnerState }>(({ theme }) => {
   const borderColor = getBorderColor(theme);
+  const radius = theme.shape.borderRadius;
 
   const gridStyle: CSSInterpolation = {
+    '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
+    '--unstable_DataGrid-headWeight': theme.typography.fontWeightMedium,
+    '--unstable_DataGrid-overlayBackground': theme.vars
+      ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
+      : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 'var(--unstable_DataGrid-radius)',
     color: (theme.vars || theme).palette.text.primary,
     ...theme.typography.body2,
     outline: 'none',
@@ -432,13 +438,13 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
       background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: 'var(--unstable_DataGrid-radius)',
       opacity: (theme.vars || theme).palette.action.disabledOpacity,
     },
     [`& .${gridClasses['row--dragging']}`]: {
       background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: 'var(--unstable_DataGrid-radius)',
       opacity: (theme.vars || theme).palette.action.disabledOpacity,
 
       [`& .${gridClasses.rowReorderCellPlaceholder}`]: {

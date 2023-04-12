@@ -8,7 +8,8 @@ import {
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from '../internals/hooks/useStaticPicker';
-import { DateView, MakeOptional, UncapitalizeObjectKeys } from '../internals';
+import { MakeOptional, UncapitalizeObjectKeys } from '../internals';
+import { DateView } from '../models';
 
 export interface StaticDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
@@ -22,7 +23,7 @@ export interface StaticDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -34,7 +35,7 @@ export interface StaticDatePickerProps<TDate>
    */
   componentsProps?: StaticDatePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<StaticDatePickerSlotsComponent<TDate>>;

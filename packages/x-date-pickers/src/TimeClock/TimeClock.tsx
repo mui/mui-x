@@ -14,12 +14,13 @@ import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internal
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { TimeView } from '../internals/models';
+import { TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getTimeClockUtilityClass } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -38,6 +39,7 @@ const TimeClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: TimeClockProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative',
 });
 
 const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
@@ -54,7 +56,6 @@ type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-// TODO v6: Drop the `showViewSwitcher` prop with the legacy pickers
 /**
  *
  * API:
@@ -80,8 +81,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
-    slots,
-    slotProps,
+    slots: innerSlots,
+    slotProps: innerSlotProps,
     value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
@@ -103,6 +104,9 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     readOnly,
     ...other
   } = props;
+
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const [value, setValue] = useControlled({
     name: 'DateCalendar',
@@ -343,23 +347,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       ownerState={ownerState}
       {...other}
     >
-      {showViewSwitcher && (
-        <TimeClockArrowSwitcher
-          className={classes.arrowSwitcher}
-          components={components}
-          componentsProps={componentsProps}
-          slots={slots}
-          slotProps={slotProps}
-          onGoToPrevious={() => setView(previousView!)}
-          isPreviousDisabled={!previousView}
-          previousLabel={localeText.openPreviousView}
-          onGoToNext={() => setView(nextView!)}
-          isNextDisabled={!nextView}
-          nextLabel={localeText.openNextView}
-          ownerState={ownerState}
-        />
-      )}
-
       <Clock<TDate>
         autoFocus={autoFocus}
         ampmInClock={ampmInClock && views.includes('hours')}
@@ -375,6 +362,20 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         readOnly={readOnly}
         {...viewProps}
       />
+      {showViewSwitcher && (
+        <TimeClockArrowSwitcher
+          className={classes.arrowSwitcher}
+          slots={slots}
+          slotProps={slotProps}
+          onGoToPrevious={() => setView(previousView!)}
+          isPreviousDisabled={!previousView}
+          previousLabel={localeText.openPreviousView}
+          onGoToNext={() => setView(nextView!)}
+          isNextDisabled={!nextView}
+          nextLabel={localeText.openNextView}
+          ownerState={ownerState}
+        />
+      )}
     </TimeClockRoot>
   );
 }) as TimeClockComponent;
@@ -404,7 +405,7 @@ TimeClock.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -499,7 +500,7 @@ TimeClock.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

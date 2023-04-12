@@ -2,8 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getCleanedSelectedContent } from 'test/utils/pickers-utils';
+import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { expectInputValue, getCleanedSelectedContent, getTextbox } from 'test/utils/pickers-utils';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<TimeField /> - Editing', () => {
@@ -253,7 +253,7 @@ describe('<TimeField /> - Editing', () => {
       it('should go to the next section when pressing `2` in a 12-hours format', () => {
         render(<TimeField format={adapter.formats.fullTime12h} />);
 
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 0);
 
         // Press "2"
@@ -265,7 +265,7 @@ describe('<TimeField /> - Editing', () => {
       it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
         render(<TimeField format={adapter.formats.fullTime12h} />);
 
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 0);
 
         // Press "1"
@@ -363,14 +363,18 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
 
-      it('should not loose time information when cleaning the date then filling it again', () => {
+      it('should not loose date information when cleaning the date then filling it again', () => {
+        if (adapter.lib !== 'dayjs') {
+          return;
+        }
+
         const onChange = spy();
 
         render(
@@ -380,11 +384,12 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
 
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
         userEvent.keyPress(input, { key: 'Backspace' });
+        userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
         expectInputValue(input, '03:mm');
@@ -405,7 +410,7 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
 

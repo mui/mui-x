@@ -1,6 +1,8 @@
 {
   "props": {
     "day": { "type": { "name": "any" }, "required": true },
+    "isFirstVisibleCell": { "type": { "name": "bool" }, "required": true },
+    "isLastVisibleCell": { "type": { "name": "bool" }, "required": true },
     "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
     "action": {
       "type": {
