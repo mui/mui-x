@@ -64,13 +64,6 @@ describe('<DataGridPro /> - Clipboard', () => {
       Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
     });
 
-    it('should copy the selected rows to the clipboard', () => {
-      render(<Test />);
-      act(() => apiRef.current.selectRows([0, 1]));
-      act(() => apiRef.current.unstable_copySelectedRowsToClipboard());
-      expect(writeText.firstCall.args[0]).to.equal(['0\tNike', '1\tAdidas'].join('\r\n'));
-    });
-
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
         render(<Test disableRowSelectionOnClick />);

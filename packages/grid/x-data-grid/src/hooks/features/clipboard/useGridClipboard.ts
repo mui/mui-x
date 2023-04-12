@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridClipboardApi } from '../../../models/api';
-import { useGridApiMethod, useGridApiOptionHandler, useGridNativeEventListener } from '../../utils';
+import { useGridApiOptionHandler, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { serializeCellValue } from '../export/serializers/csvSerializer';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -67,21 +66,6 @@ export const useGridClipboard = (
     (typeof ignoreValueFormatterFlag === 'object'
       ? ignoreValueFormatterFlag?.clipboardExport
       : ignoreValueFormatterFlag) || false;
-  const copySelectedRowsToClipboard = React.useCallback<
-    GridClipboardApi['unstable_copySelectedRowsToClipboard']
-  >(() => {
-    if (apiRef.current.getSelectedRows().size === 0) {
-      return;
-    }
-
-    const data = apiRef.current.getDataAsCsv({
-      includeHeaders: false,
-      // TODO: make it configurable
-      delimiter: '\t',
-    });
-
-    copyToClipboard(data);
-  }, [apiRef]);
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
@@ -128,12 +112,6 @@ export const useGridClipboard = (
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
-
-  const clipboardApi: GridClipboardApi = {
-    unstable_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
-  };
-
-  useGridApiMethod(apiRef, clipboardApi, 'public');
 
   useGridApiOptionHandler(apiRef, 'clipboardCopy', props.onClipboardCopy);
 };
