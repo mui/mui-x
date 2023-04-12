@@ -44,46 +44,48 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   name: 'MuiMultiSectionDigitalClock',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MultiSectionDigitalClockSectionProps<any> }>(({ theme }) => ({
-  width: 56,
-  padding: 0,
-  overflow: 'hidden',
-  scrollBehavior: 'smooth',
-  '&:hover': {
-    overflowY: 'auto',
-  },
-  '&::-webkit-scrollbar': {
-    width: 10,
-    height: 10,
-    background: theme.vars
-      ? theme.vars.palette.AppBar.defaultBg
-      : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800],
-  },
-  '&::-webkit-scrollbar-thumb': {
-    background: theme.vars
-      ? theme.vars.palette.Chip.defaultBorder
-      : theme.palette.grey[theme.palette.mode === 'light' ? 400 : 600],
-    border: `2px solid ${
-      theme.vars
-        ? theme.vars.palette.AppBar.defaultBg
-        : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800]
-    }`,
-    borderRadius: 8,
+})<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
+  ({ theme, ownerState }) => ({
+    width: 56,
+    padding: 0,
+    overflow: 'hidden',
+    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
     '&:hover': {
-      background: theme.vars
-        ? theme.vars.palette.Chip.defaultIconColor
-        : theme.palette.grey[theme.palette.mode === 'light' ? 600 : 400],
+      overflowY: 'auto',
     },
-  },
-  '&:not(:first-of-type)': {
-    borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
-  '&:after': {
-    display: 'block',
-    content: '""',
-    height: 185,
-  },
-}));
+    '&::-webkit-scrollbar': {
+      width: 10,
+      height: 10,
+      background: theme.vars
+        ? theme.vars.palette.AppBar.defaultBg
+        : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800],
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: theme.vars
+        ? theme.vars.palette.Chip.defaultBorder
+        : theme.palette.grey[theme.palette.mode === 'light' ? 400 : 600],
+      border: `2px solid ${
+        theme.vars
+          ? theme.vars.palette.AppBar.defaultBg
+          : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800]
+      }`,
+      borderRadius: 8,
+      '&:hover': {
+        background: theme.vars
+          ? theme.vars.palette.Chip.defaultIconColor
+          : theme.palette.grey[theme.palette.mode === 'light' ? 600 : 400],
+      },
+    },
+    '&:not(:first-of-type)': {
+      borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
+    },
+    '&:after': {
+      display: 'block',
+      content: '""',
+      height: 185,
+    },
+  }),
+);
 
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   name: 'MuiMultiSectionDigitalClock',
@@ -130,7 +132,10 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       ...other
     } = props;
 
-    const ownerState = props;
+    const ownerState = React.useMemo(
+      () => ({ ...props, alreadyRendered: !!containerRef.current }),
+      [props],
+    );
     const classes = useUtilityClasses(ownerState);
     const DigitalClockSectionItem =
       slots?.digitalClockSectionItem ?? MultiSectionDigitalClockSectionItem;
