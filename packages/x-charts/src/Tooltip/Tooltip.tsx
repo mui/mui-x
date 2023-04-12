@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import NoSsr from '@mui/material/NoSsr';
+import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import {
   AxisInteractionData,
   InteractionContext,
@@ -12,6 +14,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { Highlight } from '../Highlight';
 import { isBandScale } from '../hooks/useScale';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
+import { getSymbol } from '../internals/utils';
 
 function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
   if (mousePosition === null) {
@@ -197,7 +200,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
   const USED_X_AXIS_ID = xAxisIds[0];
 
   const seriesConcerned = React.useMemo(() => {
-    const rep: { type: string; id: string }[] = [];
+    const rep: { type: string; id: string; color: string }[] = [];
 
     // @ts-ignore
     Object.keys(series).forEach((seriesType) => {
@@ -205,7 +208,11 @@ function AxisTooltipContent(props: AxisInteractionData) {
       series[seriesType].seriesOrder.forEach((seriesId: string) => {
         // @ts-ignore
         if (series[seriesType].series[seriesId].xAxisKey === USED_X_AXIS_ID) {
-          rep.push({ type: seriesType, id: seriesId });
+          rep.push({
+            type: seriesType,
+            id: seriesId,
+            color: series[seriesType].series[seriesId].color,
+          });
         }
       });
     });
@@ -216,15 +223,28 @@ function AxisTooltipContent(props: AxisInteractionData) {
     return null;
   }
 
+  const markerSize = 30; // TODO: allows customization
+  const shape = 'square';
   return (
-    <div>
-      {seriesConcerned.map(({ type, id }) => (
-        <p key={id}>
+    <React.Fragment>
+      {seriesConcerned.map(({ type, color, id }) => (
+        <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
+          <svg width={markerSize} height={markerSize}>
+            <path
+              // @ts-ignore TODO: Fix me
+              d={d3Symbol(d3SymbolsFill[getSymbol(shape)], markerSize)()!}
+              // TODO: Should be customizable. Maybe owner state would make more sense
+              // fill={invertMarkers ? d.stroke : d.fill}
+              // stroke={invertMarkers ? d.fill : d.stroke}
+              fill={color}
+              transform={`translate(${markerSize / 2}, ${markerSize / 2})`}
+            />
+          </svg>
           {/* @ts-ignore */}
           {id}: {format(series[type].series[id].data[dataIndex])}
-        </p>
+        </Typography>
       ))}
-    </div>
+    </React.Fragment>
   );
 }
 
@@ -299,7 +319,7 @@ export function Tooltip(props: TooltipProps) {
             anchorEl={generateVirtualElement(mousePosition)}
             style={{ padding: '16px', pointerEvents: 'none' }}
           >
-            <Paper>
+            <Paper sx={{ p: 2 }}>
               {trigger === 'item' ? (
                 <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
               ) : (
