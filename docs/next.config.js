@@ -63,7 +63,18 @@ module.exports = withDocsInfra({
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                use: [
+                  options.defaultLoaders.babel,
+                  {
+                    loader: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                    options: {
+                      env: {
+                        SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
+                        LIB_VERSION: options.config.env.LIB_VERSION,
+                      },
+                    },
+                  },
+                ],
               },
             ],
           },
