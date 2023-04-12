@@ -45,7 +45,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> }>(({ theme }) => ({
-  width: 60,
+  width: 56,
   padding: 0,
   overflow: 'hidden',
   scrollBehavior: 'smooth',
@@ -92,7 +92,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 })({
   padding: 8,
   marginInline: 3,
-  width: 54,
+  width: 50,
   justifyContent: 'center',
 });
 
