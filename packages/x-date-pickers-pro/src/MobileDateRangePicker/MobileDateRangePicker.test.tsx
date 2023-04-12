@@ -275,6 +275,7 @@ describe('<MobileDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           slotProps={{ actionBar: { actions: ['clear'] } }}
+          value={[null, null]}
         />,
       );
 
