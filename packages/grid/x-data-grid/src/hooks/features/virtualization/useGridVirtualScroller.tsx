@@ -608,7 +608,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }
 
   const needsHorizontalScrollbar =
-    containerDimensions.width && columnsTotalWidth + offset >= containerDimensions.width;
+    containerDimensions.width && columnsTotalWidth - offset >= containerDimensions.width;
 
   const contentSize = React.useMemo(() => {
     // In cases where the columns exceed the available width,
