@@ -178,6 +178,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     defaultRangePosition: inDefaultRangePosition,
     onRangePositionChange: inOnRangePositionChange,
     calendars,
+    calendarDirection = 'onward',
     components,
     componentsProps,
     slots: innerSlots,
@@ -463,16 +464,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     [calendars],
   );
 
-  const visibleMonths = React.useMemo(
-    () =>
-      Array.from({ length: calendars }).map((_, index) =>
-        utils.setMonth(
-          calendarState.currentMonth,
-          utils.getMonth(calendarState.currentMonth) + index,
-        ),
-      ),
-    [utils, calendarState.currentMonth, calendars],
-  );
+  const visibleMonths = React.useMemo(() => {
+    const firstMonth =
+      calendarDirection === 'onward'
+        ? calendarState.currentMonth
+        : utils.addMonths(calendarState.currentMonth, 1 - calendars);
+
+    return Array.from({ length: calendars }).map((_, index) => utils.addMonths(firstMonth, index));
+  }, [utils, calendarState.currentMonth, calendars, calendarDirection]);
 
   const focusedMonth = React.useMemo(() => {
     if (!autoFocus) {
@@ -580,6 +579,10 @@ DateRangeCalendar.propTypes = {
    * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
+  /**
+   * @default 'onward'
+   */
+  calendarDirection: PropTypes.oneOf(['backward', 'onward']),
   /**
    * The number of calendars to render.
    * @default 2

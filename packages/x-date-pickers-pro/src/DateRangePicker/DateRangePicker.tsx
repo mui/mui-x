@@ -41,6 +41,10 @@ DateRangePicker.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
+   * @default 'onward'
+   */
+  calendarDirection: PropTypes.oneOf(['backward', 'onward']),
+  /**
    * The number of calendars to render on **desktop**.
    * @default 2
    */

@@ -69,6 +69,10 @@ StaticDateRangePicker.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
+   * @default 'onward'
+   */
+  calendarDirection: PropTypes.oneOf(['backward', 'onward']),
+  /**
    * The number of calendars to render.
    * @default 2
    */

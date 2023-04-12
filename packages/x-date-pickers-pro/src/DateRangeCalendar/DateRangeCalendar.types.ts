@@ -89,6 +89,10 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   calendars?: 1 | 2 | 3;
   /**
+   * @default 'onward'
+   */
+  calendarDirection?: 'onward' | 'backward';
+  /**
    * If `true`, editing dates by dragging is disabled.
    * @default false
    */
