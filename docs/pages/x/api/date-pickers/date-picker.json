@@ -1,5 +1,9 @@
 {
   "props": {
+    "acceptValueOnDismiss": {
+      "type": { "name": "bool" },
+      "default": "`true` for desktop, `false` for mobile."
+    },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {

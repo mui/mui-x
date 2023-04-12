@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "acceptValueOnDismiss": "If <code>false</code>, on dismiss will reset the value to the value when the picker was opened.<br>Might make most sense when in need of resetting the value on modal dismiss.",
     "autoFocus": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
     "calendars": "The number of calendars to render on <strong>desktop</strong>.",
     "className": "Class name applied to the root element.",

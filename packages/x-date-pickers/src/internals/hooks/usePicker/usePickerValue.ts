@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_useControlled as useControlled } from '@mui/utils';
+import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
@@ -205,6 +205,13 @@ export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSect
    * Use in controlled mode (see `open`).
    */
   onOpen?: () => void;
+  /**
+   * If `false`, on dismiss will reset the value to the value when the picker was opened.
+   *
+   * Might make most sense when in need of resetting the value on modal dismiss.
+   * @default `true` for desktop, `false` for mobile.
+   */
+  acceptValueOnDismiss?: boolean;
 }
 
 /**
@@ -304,6 +311,7 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
+    acceptValueOnDismiss = wrapperVariant === 'desktop',
   } = props;
 
   const utils = useUtils<TDate>();
@@ -484,7 +492,7 @@ export const usePickerValue = <
   const actions: UsePickerValueActions = {
     onClear: handleClear,
     onAccept: handleAccept,
-    onDismiss: handleDismiss,
+    onDismiss: acceptValueOnDismiss ? handleDismiss : handleCancel,
     onCancel: handleCancel,
     onSetToday: handleSetToday,
     onOpen: handleOpen,
