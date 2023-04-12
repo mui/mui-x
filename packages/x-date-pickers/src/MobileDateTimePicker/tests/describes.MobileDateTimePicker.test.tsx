@@ -13,13 +13,17 @@ import {
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+  });
 
   describeValidation(MobileDateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day'],
+    views: ['year', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   describeValue(MobileDateTimePicker, () => ({

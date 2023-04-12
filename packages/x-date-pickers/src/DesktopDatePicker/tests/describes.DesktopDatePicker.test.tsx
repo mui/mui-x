@@ -21,6 +21,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
     clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeValue(DesktopDatePicker, () => ({

@@ -17,7 +17,7 @@ import {
   MonthValidationProps,
   DayValidationProps,
 } from '../internals/hooks/validation/models';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
