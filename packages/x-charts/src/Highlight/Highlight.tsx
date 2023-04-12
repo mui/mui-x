@@ -3,12 +3,20 @@ import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../hooks/useScale';
 
-export type HighlightProps = {};
+export type HighlightProps = {
+  highlight: {
+    x?: boolean;
+    y?: boolean;
+  };
+};
 
-export const Highlight = React.forwardRef<SVGPathElement>(function Highlight(
-  props: HighlightProps,
+export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(function Highlight(
+  props,
   ref,
 ) {
+  const {
+    highlight: { x: xHighlight, y: yHighlight },
+  } = props;
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
 
   const USED_X_AXIS_ID = xAxisIds[0];
@@ -44,7 +52,7 @@ export const Highlight = React.forwardRef<SVGPathElement>(function Highlight(
   }
   return (
     <React.Fragment>
-      {axis.x !== null && (
+      {xHighlight && axis.x !== null && (
         <path
           d={`M ${xScale(axis.x.value)} ${yScale(yScale.domain()[0])} L ${xScale(
             axis.x.value,
@@ -54,7 +62,7 @@ export const Highlight = React.forwardRef<SVGPathElement>(function Highlight(
           ref={ref}
         />
       )}
-      {axis.y !== null && (
+      {yHighlight && axis.y !== null && (
         <path
           d={`M ${xScale(xScale.domain()[0])} ${yScale(axis.y.value)} L ${xScale(
             xScale.domain().at(-1)!,

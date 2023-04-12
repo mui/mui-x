@@ -12,7 +12,7 @@ import {
 } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { Highlight } from '../Highlight';
+import { Highlight, HighlightProps } from '../Highlight';
 import { isBandScale } from '../hooks/useScale';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 import { getSymbol } from '../internals/utils';
@@ -305,10 +305,14 @@ export type TooltipProps = {
    * @default 'item'
    */
   trigger?: 'item' | 'axis' | 'none';
+  /**
+   * Props propagate to the highlight
+   */
+  highlightProps: Partial<HighlightProps>;
 };
 
 export function Tooltip(props: TooltipProps) {
-  const { trigger = 'axis' } = props;
+  const { trigger = 'axis', highlightProps } = props;
 
   useAxisEvents(trigger);
   const mousePosition = useMouseTraker();
@@ -339,7 +343,7 @@ export function Tooltip(props: TooltipProps) {
             </Paper>
           </Popper>
         )}
-        <Highlight ref={highlightRef} />
+        <Highlight ref={highlightRef} highlight={{ x: true, y: false }} {...highlightProps} />
       </React.Fragment>
     </NoSsr>
   );
