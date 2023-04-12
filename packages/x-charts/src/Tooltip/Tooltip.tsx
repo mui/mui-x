@@ -2,6 +2,7 @@ import * as React from 'react';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import NoSsr from '@mui/material/NoSsr';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import {
@@ -193,11 +194,13 @@ function ItemTooltipContent(props: ItemInteractionData) {
 }
 function AxisTooltipContent(props: AxisInteractionData) {
   const dataIndex = props.x && props.x.index;
+  const axisValue = props.x && props.x.value;
 
-  const { xAxisIds } = React.useContext(CartesianContext);
+  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
   const series = React.useContext(SeriesContext);
 
   const USED_X_AXIS_ID = xAxisIds[0];
+  const xAxisName = xAxis[USED_X_AXIS_ID].id;
 
   const seriesConcerned = React.useMemo(() => {
     const rep: { type: string; id: string; color: string }[] = [];
@@ -227,6 +230,14 @@ function AxisTooltipContent(props: AxisInteractionData) {
   const shape = 'square';
   return (
     <React.Fragment>
+      {axisValue != null && (
+        <React.Fragment>
+          <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center' }}>
+            {xAxisName}: {axisValue.toLocaleString()}
+          </Typography>
+          <Divider />
+        </React.Fragment>
+      )}
       {seriesConcerned.map(({ type, color, id }) => (
         <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
           <svg width={markerSize} height={markerSize}>
