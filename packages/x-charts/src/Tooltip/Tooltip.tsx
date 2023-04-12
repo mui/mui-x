@@ -308,7 +308,7 @@ export type TooltipProps = {
   /**
    * Props propagate to the highlight
    */
-  highlightProps: Partial<HighlightProps>;
+  highlightProps?: Partial<HighlightProps>;
 };
 
 export function Tooltip(props: TooltipProps) {

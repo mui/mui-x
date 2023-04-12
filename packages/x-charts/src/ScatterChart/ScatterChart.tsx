@@ -17,6 +17,7 @@ export function ScatterChart(props: Omit<ChartContainerProps, 'children'>) {
       colors={colors}
       xAxis={xAxis}
       yAxis={yAxis}
+      tooltip={{ trigger: 'item' }}
     >
       <ScatterPlot />
       <XAxis
