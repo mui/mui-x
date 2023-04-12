@@ -388,7 +388,10 @@ setupExcelExportWebWorker({
 
 :::
 
-## 🚧 Clipboard [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+## Clipboard
+
+The clipboard export allows you to copy the content of the data grid to the clipboard.
+For more information, check the [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy) docs.
 
 ## apiRef
 
