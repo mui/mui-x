@@ -81,7 +81,7 @@
     "@babel/register": "^7.21.0",
     "@babel/traverse": "^7.21.4",
     "@babel/types": "^7.21.4",
-    "@emotion/cache": "^11.10.5",
+    "@emotion/cache": "^11.10.7",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
