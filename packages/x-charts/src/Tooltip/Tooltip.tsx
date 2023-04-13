@@ -214,6 +214,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
           rep.push({
             type: seriesType,
             id: seriesId,
+            // @ts-ignore
             color: series[seriesType].series[seriesId].color,
           });
         }

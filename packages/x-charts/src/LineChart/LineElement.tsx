@@ -13,7 +13,7 @@ export interface LineElementClasses {
 export interface LineElementOwnerState {
   id: string;
   color: string;
-  isBlured: boolean;
+  isNotHighlighted: boolean;
   isHighlighted: boolean;
   classes?: Partial<LineElementClasses>;
 }
@@ -44,10 +44,11 @@ const LineElementPath = styled('path', {
   strokeWidth: 5,
   strokeLinejoin: 'round',
   fill: 'none',
-  opacity: ownerState.isBlured ? 0.3 : 1,
+  opacity: ownerState.isNotHighlighted ? 0.3 : 1,
 }));
 
-export type LineElementProps = LineElementOwnerState & React.ComponentPropsWithoutRef<'path'>;
+export type LineElementProps = Omit<LineElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
+  React.ComponentPropsWithoutRef<'path'>;
 
 export function LineElement(props: LineElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
@@ -62,7 +63,7 @@ export function LineElement(props: LineElementProps) {
     id,
     classes: innerClasses,
     color,
-    isBlured: someSerriesIsHighlighted && !isHighlighted,
+    isNotHighlighted: someSerriesIsHighlighted && !isHighlighted,
     isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);

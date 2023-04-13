@@ -14,7 +14,7 @@ export interface AreaElementClasses {
 export interface AreaElementOwnerState {
   id: string;
   color: string;
-  isBlured: boolean;
+  isNotHighlighted: boolean;
   isHighlighted: boolean;
   classes?: Partial<AreaElementClasses>;
 }
@@ -43,10 +43,11 @@ const AreaElementPath = styled('path', {
 })<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
   fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
-  opacity: ownerState.isBlured ? 0.3 : 1,
+  opacity: ownerState.isNotHighlighted ? 0.3 : 1,
 }));
 
-export type AreaElementProps = AreaElementOwnerState & React.ComponentPropsWithoutRef<'path'>;
+export type AreaElementProps = Omit<AreaElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
+  React.ComponentPropsWithoutRef<'path'>;
 
 export function AreaElement(props: AreaElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
@@ -61,7 +62,7 @@ export function AreaElement(props: AreaElementProps) {
     id,
     classes: innerClasses,
     color,
-    isBlured: someSerriesIsHighlighted && !isHighlighted,
+    isNotHighlighted: someSerriesIsHighlighted && !isHighlighted,
     isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);

@@ -15,6 +15,7 @@ export interface MarkElementClasses {
 export interface MarkElementOwnerState {
   id: string;
   color: string;
+  isNotHighlighted: boolean;
   isHighlighted: boolean;
   x: number;
   y: number;
@@ -52,7 +53,7 @@ const MarkElementPath = styled('path', {
   pointerEvents: 'none',
 }));
 
-export type MarkElementProps = Omit<MarkElementOwnerState, 'isHighlighted'> &
+export type MarkElementProps = Omit<MarkElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     /**
      * The shape of the marker.
@@ -68,7 +69,16 @@ export function MarkElement(props: MarkElementProps) {
   const { x, y, id, classes: innerClasses, color, shape, dataIndex, ...other } = props;
   const { axis } = React.useContext(InteractionContext);
   const isHighlighted = axis.x?.index === dataIndex;
-  const ownerState = { id, classes: innerClasses, isHighlighted, color, x, y };
+  const someSerriesIsHighlighted = axis.x !== null;
+  const ownerState = {
+    id,
+    classes: innerClasses,
+    isHighlighted,
+    isNotHighlighted: someSerriesIsHighlighted && !isHighlighted,
+    color,
+    x,
+    y,
+  };
   const classes = useUtilityClasses(ownerState);
 
   return (
