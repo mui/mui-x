@@ -6,17 +6,30 @@ import JoyInput from '@mui/joy/Input';
 import JoyFormControl from '@mui/joy/FormControl';
 import JoyFormLabel from '@mui/joy/FormLabel';
 import JoyButton from '@mui/joy/Button';
+import JoyIconButton from '@mui/joy/IconButton';
+import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 
 function convertColor<
-  T extends 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit',
+  T extends
+    | 'primary'
+    | 'secondary'
+    | 'error'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | 'inherit'
+    | 'default',
 >(color: T | undefined) {
   if (color === 'secondary') {
     return 'primary';
   }
   if (color === 'error') {
     return 'danger';
+  }
+  if (color === 'default') {
+    return 'neutral';
   }
   return color as ColorPaletteProp;
 }
@@ -29,13 +42,17 @@ function convertSize<T extends 'small' | 'medium' | 'large'>(size: T | undefined
     | undefined;
 }
 
-function convertVariant<T extends 'outlined' | 'contained' | 'text'>(variant: T | undefined) {
+function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard' | 'filled'>(
+  variant: T | undefined,
+) {
   return (
     variant
       ? {
           outlined: 'outlined',
           contained: 'solid',
           text: 'plain',
+          standard: 'plain',
+          filled: 'soft',
         }[variant]
       : variant
   ) as VariantProp;
@@ -89,10 +106,70 @@ const Button = React.forwardRef<
       {...props}
       size={convertSize(size)}
       color={convertColor(color)}
-      variant={convertVariant(variant)}
+      variant={convertVariant(variant) ?? 'plain'}
       ref={ref}
       startDecorator={startIcon}
       endDecorator={endIcon}
+      sx={sx as SxProps<Theme>}
+    />
+  );
+});
+
+const IconButton = React.forwardRef<
+  HTMLButtonElement,
+  NonNullable<GridSlotsComponentsProps['baseIconButton']>
+>(function IconButton({ color, size, sx, ...props }, ref) {
+  return (
+    <JoyIconButton
+      {...props}
+      size={convertSize(size)}
+      color={convertColor(color)}
+      variant="plain"
+      ref={ref}
+      sx={sx as SxProps<Theme>}
+    />
+  );
+});
+
+const Switch = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['baseSwitch']>
+>(function Switch(
+  {
+    name,
+    checked,
+    checkedIcon,
+    color,
+    disableRipple,
+    disableFocusRipple,
+    disableTouchRipple,
+    edge,
+    icon,
+    inputProps,
+    inputRef,
+    size,
+    sx,
+    onChange,
+    onClick,
+    ...props
+  },
+  ref,
+) {
+  return (
+    <JoySwitch
+      {...(props as JoySwitchProps)}
+      onChange={onChange as JoySwitchProps['onChange']}
+      size={convertSize(size)}
+      color={convertColor(color)}
+      ref={ref}
+      slotProps={{
+        input: {
+          ...inputProps,
+          name,
+          onClick: onClick as JSX.IntrinsicElements['input']['onClick'],
+          ref: inputRef,
+        },
+      }}
       sx={sx as SxProps<Theme>}
     />
   );
@@ -102,10 +179,9 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseCheckbox: Checkbox,
   baseTextField: TextField,
   baseButton: Button,
+  baseIconButton: IconButton,
+  baseSwitch: Switch,
   // BaseFormControl: MUIFormControl,
-  // BaseSelect: MUISelect,
-  // BaseSwitch: MUISwitch,
-  // BaseIconButton: MUIIconButton,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
 };
