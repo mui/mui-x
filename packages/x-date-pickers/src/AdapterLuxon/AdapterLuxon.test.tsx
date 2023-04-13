@@ -29,8 +29,9 @@ const localizedTexts = {
     value: '15.5.2018 9:35',
   },
 };
+
 describe('<AdapterLuxon />', () => {
-  describeGregorianAdapter.only(AdapterLuxon, { formatDateTime: 'yyyy-MM-dd HH:mm:ss' });
+  describeGregorianAdapter(AdapterLuxon, { formatDateTime: 'yyyy-MM-dd HH:mm:ss' });
 
   describe('Adapter localization', () => {
     describe('English', () => {
