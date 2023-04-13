@@ -3,7 +3,9 @@ import {
   useGridRootProps,
   unstable_gridFocusColumnHeaderFilterSelector,
   useGridSelector,
+  getGridFilter,
   GridColumnIdentifier,
+  gridFilterModelSelector,
 } from '@mui/x-data-grid';
 import { styled } from '@mui/system';
 import {
@@ -40,6 +42,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
   const disableHeaderFiltering = !rootProps.experimentalFeatures?.headerFiltering;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const totalHeaderHeight =
     getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
     (disableHeaderFiltering ? 0 : rootProps.columnHeaderHeight);
@@ -65,11 +68,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
     const filters: JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
       const colDef = renderedColumns[i];
-
       const columnIndex = firstColumnToRender + i;
-
       const hasFocus = columnHeaderFilterFocus?.field === colDef.field;
-
       const isFirstColumn = columnIndex === 0;
       const tabIndexField = props.columnHeaderFilterTabIndexState?.field;
       const tabIndex =
@@ -93,6 +93,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
       const filterOperators =
         colDef.filterOperators?.filter((operator) => operator.value !== 'isAnyOf') ?? [];
 
+      const item =
+        filterModel?.items.find((it) => it.field === colDef.field && it.operator !== 'isAnyOf') ??
+        getGridFilter(colDef as any);
+
       filters.push(
         <GridHeaderFilterItem
           colIndex={columnIndex}
@@ -107,6 +111,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
           headerClassName={headerClassName}
           filterOperators={filterOperators}
           data-field={colDef.field}
+          colType={colDef.type as any}
+          operator={item.operator as any}
+          item={item}
+          {...rootProps.slotProps?.headerFilter}
           {...other}
         />,
       );

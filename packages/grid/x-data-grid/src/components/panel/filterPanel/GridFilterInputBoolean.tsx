@@ -3,7 +3,9 @@ import { TextFieldProps } from '@mui/material/TextField';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFieldProps) {
+export type GridFilterInputBooleanProps = GridFilterInputValueProps & TextFieldProps;
+
+export function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const { item, applyValue, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const rootProps = useGridRootProps();

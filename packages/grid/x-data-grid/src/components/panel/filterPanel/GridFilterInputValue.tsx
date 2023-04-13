@@ -7,11 +7,12 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
-export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps {
-  type?: 'text' | 'number' | 'date' | 'datetime-local';
-}
+export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
+  TextFieldProps & {
+    type?: 'text' | 'number' | 'date' | 'datetime-local';
+  };
 
-function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
+function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');

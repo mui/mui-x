@@ -25,6 +25,7 @@ export {
   unstable_gridHeaderFilteringEditFieldSelector,
   unstable_gridHeaderFilteringMenuSelector,
 } from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
+export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
 export type {
   UseGridColumnHeadersProps,
   GetHeadersParams,

@@ -6,15 +6,16 @@ import {
 } from '@mui/utils';
 import {
   GridFilterItem,
-  useGridSelector,
-  gridFilterModelSelector,
   useGridRootProps,
-  getGridFilter,
   GridFilterOperator,
   GridHeaderFilterEventLookup,
   GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
+  GridTypeFilterInputValueProps,
+  GridFilterInputDateProps,
+  GridFilterInputSingleSelectProps,
+  GridFilterInputBooleanProps,
 } from '@mui/x-data-grid';
 import {
   GridStateColDef,
@@ -27,7 +28,40 @@ import { GridHeaderFilterAdorment } from './GridHeaderFilterAdorment';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { OPERATOR_LABEL_MAPPING, NO_INPUT_OPERATORS, TYPES_WITH_NO_FILTER_CELL } from './constants';
 
-interface GridHeaderFilterItemProps extends Pick<GridStateColDef, 'headerClassName'> {
+type GridHeaderFilterItemConditionalProps =
+  | {
+      operator: 'contains' | 'startsWith' | 'endsWith' | 'equals';
+      colType: 'string' | string;
+      InputComponentProps?: GridTypeFilterInputValueProps;
+    }
+  | {
+      operator: 'isEmpty' | 'isNotEmpty';
+      InputComponentProps?: null;
+    }
+  | {
+      operator: '=' | '!=' | '>' | '>=' | '<' | '<=';
+      colType: 'number';
+      InputComponentProps?: GridTypeFilterInputValueProps;
+    }
+  | {
+      operator: 'is' | 'not' | 'after' | 'onOrAfter' | 'before' | 'onOrBefore';
+      colType: 'date' | 'dateTime';
+      InputComponentProps?: GridFilterInputDateProps;
+    }
+  | {
+      operator: 'is' | 'not';
+      colType: 'singleSelect';
+      InputComponentProps?: GridFilterInputSingleSelectProps;
+    }
+  | {
+      colType: 'boolean';
+      InputComponentProps?: GridFilterInputBooleanProps;
+    };
+
+export type GridHeaderFilterItemOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
+  GridHeaderFilterItemConditionalProps;
+
+type GridHeaderFilterItemProps = GridHeaderFilterItemOverridableProps & {
   colIndex: number;
   height: number;
   sortIndex?: number;
@@ -38,7 +72,8 @@ interface GridHeaderFilterItemProps extends Pick<GridStateColDef, 'headerClassNa
   width: number;
   colDef: GridColDef;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
-}
+  item: GridFilterItem;
+};
 
 type OwnerState = DataGridProProcessedProps & GridHeaderFilterItemProps;
 
@@ -70,7 +105,9 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
       width,
       headerClassName,
       colDef,
+      item,
       headerFilterMenuRef,
+      InputComponentProps,
       ...other
     } = props;
 
@@ -84,13 +121,6 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
 
     const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
     const isMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
-    const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-    const item = React.useMemo(
-      () =>
-        filterModel?.items.find((i) => i.field === colDef.field && i.operator !== 'isAnyOf') ??
-        getGridFilter(colDef as any),
-      [filterModel?.items, colDef],
-    );
 
     const currentOperator = filterOperators![0];
 
@@ -215,8 +245,6 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     const isNoInputOperator = NO_INPUT_OPERATORS[colDef.type!]?.includes(item.operator);
     const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
 
-    const placeholder = apiRef.current.getLocaleText('columnMenuFilter');
-
     return (
       <div
         className={clsx(classes.root, headerClassName)}
@@ -240,21 +268,18 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             item={item}
             inputRef={inputRef}
             applyValue={applyFilterChanges}
-            onFocus={() => {
-              apiRef.current.startHeaderFilterEditMode(colDef.field);
-            }}
-            onBlur={() => {
-              apiRef.current.stopHeaderFilterEditMode();
-            }}
+            onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
+            onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
             fullWidth
-            placeholder={placeholder}
+            placeholder={apiRef.current.getLocaleText('columnMenuFilter')}
             label={isFilterActive ? OPERATOR_LABEL_MAPPING[item.operator] : ' '}
             {...currentOperator?.InputComponentProps}
+            {...InputComponentProps}
             InputProps={{
               disabled: isNoInputOperator,
               componentsProps: {
                 input: {
-                  'tab-index': -1,
+                  tabIndex: -1,
                 },
               },
               startAdornment: isFilterActive ? (
@@ -268,6 +293,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
                 />
               ) : null,
               ...currentOperator?.InputComponentProps?.InputProps,
+              ...InputComponentProps?.InputProps,
             }}
           />
         ) : null}
