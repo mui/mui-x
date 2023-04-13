@@ -32,12 +32,12 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   name: 'MuiDigitalClock',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DigitalClockProps<any> }>({
+})<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>(({ ownerState }) => ({
   overflowY: 'auto',
   width: '100%',
-  scrollBehavior: 'smooth',
+  scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
-});
+}));
 
 const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
@@ -102,7 +102,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ...other
   } = props;
 
-  const ownerState = props;
+  const ownerState = React.useMemo(
+    () => ({ ...props, alreadyRendered: !!containerRef.current }),
+    [props],
+  );
   const classes = useUtilityClasses(ownerState);
 
   const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
@@ -138,25 +141,13 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (containerRef.current === null) {
       return;
     }
-    const selectedItem = containerRef.current.querySelector<HTMLElement>('ul [tabindex="0"]');
+    const selectedItem = containerRef.current.querySelector<HTMLElement>('ul li[selected]');
     if (!selectedItem) {
       return;
     }
-    // Taken from useScroll in x-data-grid, but vertically centered
-    const offsetHeight = selectedItem.offsetHeight;
     const offsetTop = selectedItem.offsetTop;
 
-    const clientHeight = containerRef.current.clientHeight;
-    const scrollTop = containerRef.current.scrollTop;
-
-    const elementBottom = offsetTop + offsetHeight;
-
-    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
-      // item already visible
-      return;
-    }
-
-    containerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+    containerRef.current.scrollTop = offsetTop;
   });
 
   const selectedTimeOrMidnight = React.useMemo(
