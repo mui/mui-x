@@ -56,7 +56,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   tabbableCell: string | null;
   row?: GridRowModel;
   isLastVisible?: boolean;
-  isColumnWithFocusedCellNotInRange?: boolean;
+  indexOfColumnWithFocusedCellNotInRange?: number;
   isNotVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -115,7 +115,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     firstColumnToRender,
     lastColumnToRender,
     isLastVisible = false,
-    isColumnWithFocusedCellNotInRange = false,
+    indexOfColumnWithFocusedCellNotInRange,
     isNotVisible,
     focusedCell,
     tabbableCell,
@@ -298,7 +298,11 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
           Object.keys(editRowsState).length > 0);
 
       let cellIsNotVisible = false;
-      if (isColumnWithFocusedCellNotInRange && focusedCell === column.field) {
+
+      if (
+        indexOfColumnWithFocusedCellNotInRange &&
+        visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field
+      ) {
         cellIsNotVisible = true;
       } else {
         cellIsNotVisible = false;
@@ -389,7 +393,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       rowReordering,
       sortModel.length,
       focusedCell,
-      isColumnWithFocusedCellNotInRange,
+      indexOfColumnWithFocusedCellNotInRange,
+      visibleColumns,
       treeDepth,
       editRowsState,
       getCellClassName,
@@ -474,16 +479,48 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const rowType = apiRef.current.getRowNode(rowId)!.type;
   const cells: JSX.Element[] = [];
 
+  const focusedColumn = visibleColumns.find(
+    (column) =>
+      indexOfColumnWithFocusedCellNotInRange &&
+      visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field,
+  );
+
+  if (focusedColumn) {
+    if (!renderedColumns.includes(focusedColumn) && focusedCell) {
+      renderedColumns.unshift(focusedColumn);
+    }
+    if (renderedColumns.includes(focusedColumn) && !focusedCell) {
+      renderedColumns.shift();
+    }
+  }
+
   for (let i = 0; i < renderedColumns.length; i += 1) {
     const column = renderedColumns[i];
-    const indexRelativeToAllColumns = firstColumnToRender + i;
+
+    let indexRelativeToAllColumns = firstColumnToRender + i;
+
+    if (
+      indexOfColumnWithFocusedCellNotInRange &&
+      visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field &&
+      focusedCell
+    ) {
+      indexRelativeToAllColumns = indexOfColumnWithFocusedCellNotInRange;
+    } else if (indexOfColumnWithFocusedCellNotInRange && focusedCell) {
+      indexRelativeToAllColumns -= 1;
+    }
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
       indexRelativeToAllColumns,
     );
 
-    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+    const shouldRenderColumn =
+      !indexOfColumnWithFocusedCellNotInRange ||
+      (visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field &&
+        focusedCell) ||
+      visibleColumns[indexOfColumnWithFocusedCellNotInRange].field !== column.field;
+
+    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan && shouldRenderColumn) {
       if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
         const cellProps = {
@@ -492,6 +529,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
           showRightBorder: rootProps.showCellVerticalBorder,
           indexRelativeToAllColumns,
         };
+
         cells.push(getCell(column, cellProps));
       } else {
         const { width } = cellColSpanInfo.cellProps;
@@ -557,7 +595,7 @@ GridRow.propTypes = {
    * If some rows above have expanded children, this index also take those children into account.
    */
   index: PropTypes.number,
-  isColumnWithFocusedCellNotInRange: PropTypes.bool,
+  indexOfColumnWithFocusedCellNotInRange: PropTypes.number,
   isLastVisible: PropTypes.bool,
   isNotVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number,
