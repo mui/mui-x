@@ -106,6 +106,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     () => ({ ...props, alreadyRendered: !!containerRef.current }),
     [props],
   );
+
   const classes = useUtilityClasses(ownerState);
 
   const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
