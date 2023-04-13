@@ -231,7 +231,7 @@ export default function ClipboardPastePersistence() {
           }}
           onClipboardPasteStart={() => setLoading(true)}
           onClipboardPasteEnd={() => setLoading(false)}
-          unstable_enableClipboardPaste
+          experimentalFeatures={{ enableClipboardPaste: true }}
           unstable_ignoreValueFormatterDuringExport
         />
       </div>

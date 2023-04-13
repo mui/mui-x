@@ -46,7 +46,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           disableRowSelectionOnClick
           unstable_cellSelection
           disableVirtualization
-          unstable_enableClipboardPaste
+          experimentalFeatures={{ enableClipboardPaste: true }}
         />
       </div>
     );
@@ -305,7 +305,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               getRowId={(row) => row.customIdField}
               rowSelection={false}
               unstable_cellSelection
-              unstable_enableClipboardPaste
+              experimentalFeatures={{ enableClipboardPaste: true }}
             />
           </div>
         );
@@ -371,7 +371,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               getRowId={(row) => row.customIdField}
               rowSelection={false}
               unstable_cellSelection
-              unstable_enableClipboardPaste
+              experimentalFeatures={{ enableClipboardPaste: true }}
             />
           </div>
         );
@@ -421,7 +421,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               rowSelection={false}
               processRowUpdate={processRowUpdateSpy}
-              unstable_enableClipboardPaste
+              experimentalFeatures={{ enableClipboardPaste: true }}
             />
           </div>
         );
@@ -465,7 +465,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               rowSelection={false}
               unstable_cellSelection
-              unstable_enableClipboardPaste
+              experimentalFeatures={{ enableClipboardPaste: true }}
               disableVirtualization
             />
           </div>

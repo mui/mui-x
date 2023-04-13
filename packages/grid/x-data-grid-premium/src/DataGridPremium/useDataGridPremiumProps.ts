@@ -23,7 +23,6 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   aggregationFunctions: GRID_AGGREGATION_FUNCTIONS,
   aggregationRowsScope: 'filtered',
   getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
-  unstable_enableClipboardPaste: false,
 };
 
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS)!;

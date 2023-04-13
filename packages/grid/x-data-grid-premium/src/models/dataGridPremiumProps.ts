@@ -26,7 +26,12 @@ import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  /**
+   * If `true`, the grid will allow to paste data from clipboard.
+   */
+  enableClipboardPaste?: boolean;
+}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
@@ -50,13 +55,7 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
       DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
       DataGridPremiumPropsWithoutDefaultValue<R>,
     DataGridPremiumForcedPropsKey
-  > {
-  /**
-   * Unstable features, breaking changes might be introduced.
-   * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
-   */
-  experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
-}
+  > {}
 
 export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
@@ -119,10 +118,6 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
    */
   getAggregationPosition: (groupNode: GridGroupNode) => GridAggregationPosition | null;
-  /**
-   * If `true`, the grid will allow to paste data from clipboard.
-   */
-  unstable_enableClipboardPaste?: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
@@ -183,4 +178,9 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * Callback fired when the clipboard paste operation ends.
    */
   onClipboardPasteEnd?: GridEventListener<'clipboardPasteEnd'>;
+  /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
+   */
+  experimentalFeatures?: Partial<GridExperimentalPremiumFeatures>;
 }

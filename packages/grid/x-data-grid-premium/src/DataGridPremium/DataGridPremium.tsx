@@ -270,6 +270,7 @@ DataGridPremiumRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
+    enableClipboardPaste: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -937,10 +938,6 @@ DataGridPremiumRaw.propTypes = {
    * Set the cell selection model of the grid.
    */
   unstable_cellSelectionModel: PropTypes.object,
-  /**
-   * If `true`, the grid will allow to paste data from clipboard.
-   */
-  unstable_enableClipboardPaste: PropTypes.bool,
   /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.

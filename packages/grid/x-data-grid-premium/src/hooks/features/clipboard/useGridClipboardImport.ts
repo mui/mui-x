@@ -259,15 +259,15 @@ export const useGridClipboardImport = (
     | 'processRowUpdate'
     | 'onProcessRowUpdateError'
     | 'getRowId'
-    | 'unstable_enableClipboardPaste'
     | 'onClipboardPasteStart'
     | 'onClipboardPasteEnd'
+    | 'experimentalFeatures'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
-  const enableClipboardPaste = props.unstable_enableClipboardPaste;
+  const enableClipboardPaste = props.experimentalFeatures?.enableClipboardPaste ?? false;
   const rootEl = apiRef.current.rootElementRef?.current;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
