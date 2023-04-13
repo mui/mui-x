@@ -381,11 +381,15 @@ DateTimePicker.propTypes = {
    */
   thresholdToRenderTimeInASingleColumn: PropTypes.number,
   /**
-   * The time interval between two `minutes` or `seconds` options.
-   * For example, if `timeStep = 8`, then the available options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * @default 5
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
-  timeStep: PropTypes.number,
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
   /**
    * The selected value.
    * Used when the component is controlled.
