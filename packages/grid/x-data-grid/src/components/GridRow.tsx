@@ -556,11 +556,10 @@ GridRow.propTypes = {
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
    */
-
+  index: PropTypes.number,
   isColumnWithFocusedCellNotInRange: PropTypes.bool,
   isLastVisible: PropTypes.bool,
   isNotVisible: PropTypes.bool,
-  index: PropTypes.number,
   lastColumnToRender: PropTypes.number,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
