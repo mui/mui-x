@@ -73,7 +73,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const {
     ampm = utils.is12HourCycleInCurrentLocale(),
-    timeStep = 5,
+    timeSteps,
     autoFocus,
     components,
     componentsProps,
@@ -102,6 +102,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ...other
   } = props;
 
+  const minuteTimeStep = React.useMemo(() => timeSteps?.minutes ?? 5, [timeSteps]);
   const ownerState = React.useMemo(
     () => ({ ...props, alreadyRendered: !!containerRef.current }),
     [props],
@@ -217,12 +218,12 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     const startOfDay = utils.startOfDay(selectedTimeOrMidnight);
     return [
       startOfDay,
-      ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
-        utils.addMinutes(startOfDay, timeStep * (index + 1)),
+      ...Array.from({ length: Math.ceil((24 * 60) / minuteTimeStep) - 1 }, (_, index) =>
+        utils.addMinutes(startOfDay, minuteTimeStep * (index + 1)),
       ),
       utils.endOfDay(selectedTimeOrMidnight),
     ];
-  }, [selectedTimeOrMidnight, timeStep, utils]);
+  }, [selectedTimeOrMidnight, minuteTimeStep, utils]);
 
   return (
     <DigitalClockRoot

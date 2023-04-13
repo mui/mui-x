@@ -112,7 +112,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   sx,
   autoFocus,
   disableIgnoringDatePartForTimeValidation,
-  timeStep,
+  timeSteps,
 }: TimeViewRendererProps<TimeView, DigitalClockProps<TDate>>) => (
   <DigitalClock<TDate>
     view={view}
@@ -142,7 +142,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     sx={sx}
     autoFocus={autoFocus}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
-    timeStep={timeStep}
+    timeSteps={timeSteps}
   />
 );
 
@@ -174,7 +174,7 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   sx,
   autoFocus,
   disableIgnoringDatePartForTimeValidation,
-  timeStep,
+  timeSteps,
 }: TimeViewRendererProps<TimeView, MultiSectionDigitalClockProps<TDate>>) => (
   <MultiSectionDigitalClock<TDate>
     view={view}
@@ -204,6 +204,6 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
     sx={sx}
     autoFocus={autoFocus}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
-    timeStep={timeStep}
+    timeSteps={timeSteps}
   />
 );

@@ -40,6 +40,8 @@ By default, only the `hours` and `minutes` views are enabled.
 You can customize the enabled views using the `views` prop.
 Views will appear in the order they're included in the `views` array.
 
+The `DigitalClock` component is built to work only with `hours` view, providing it with any more views will have no effect as the prop value will be ignored.
+
 {{"demo": "DigitalClockViews.js"}}
 
 ## 12h/24h format
@@ -52,10 +54,15 @@ You can find more information about 12h/24h format in the [Date localization pag
 
 {{"demo": "DigitalClockAmPm.js"}}
 
-## Time step
+## Time steps
 
 By default, the components list the time options in `5` unit (`minutes` or `seconds`) intervals.
 
-You can set the desired interval using the `timeStep` prop.
+You can set the desired interval using the `timeSteps` prop.
+The prop accepts values for `hours`, `minutes`, or `seconds` units.
+
+:::info
+The `DigitalClock` component uses only `minutes` `timeSteps` option, other are ignored.
+:::
 
 {{"demo": "DigitalClockTimeStep.js"}}

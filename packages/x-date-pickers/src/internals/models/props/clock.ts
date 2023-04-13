@@ -1,7 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../../hooks/validation/models';
 import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue.types';
-import { TimeView } from '../../../models';
+import { TimeStepOptions, TimeView } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
 
@@ -62,9 +62,9 @@ export interface DesktopOnlyTimePickerProps<TDate> extends ExportedDigitalClockP
 
 export interface DigitalClockOnlyProps {
   /**
-   * The time interval between two `minutes` or `seconds` options.
-   * For example, if `timeStep = 8`, then the available options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * @default 5
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
-  timeStep?: number;
+  timeSteps?: TimeStepOptions;
 }

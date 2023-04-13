@@ -36,9 +36,9 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   >(inProps, 'MuiDesktopDateTimePicker');
   const thresholdToRenderTimeInASingleColumn =
     defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
-  const timeStep = defaultizedProps.timeStep ?? 5;
+  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
   const shouldRenderTimeInASingleColumn =
-    (24 * 60) / timeStep <= thresholdToRenderTimeInASingleColumn;
+    (24 * 60) / timeSteps.minutes <= thresholdToRenderTimeInASingleColumn;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -64,7 +64,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     viewRenderers,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
-    timeStep,
+    timeSteps,
     // fallback to `closeOnSelect={false}` given a multi column time picker.
     closeOnSelect: inProps.closeOnSelect ?? shouldRenderTimeInASingleColumn,
     // Setting single time view in case of single column time picker

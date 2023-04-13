@@ -10,11 +10,11 @@ export default function DigitalClockTimeStep() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DigitalClock', 'MultiSectionDigitalClock']}>
         <DemoItem label="Digital clock">
-          <DigitalClock timeStep={60} />
+          <DigitalClock timeSteps={{ minutes: 60 }} />
         </DemoItem>
         <DemoItem label="Multi section digital clock">
           <MultiSectionDigitalClock
-            timeStep={2}
+            timeSteps={{ minutes: 11, seconds: 15 }}
             views={['hours', 'minutes', 'seconds']}
           />
         </DemoItem>

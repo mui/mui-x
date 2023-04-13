@@ -66,7 +66,7 @@ createTheme({
     },
     MuiDigitalClock: {
       defaultProps: {
-        timeStep: 42,
+        timeSteps: { minutes: 42 },
         // @ts-expect-error invalid MuiDigitalClock prop
         someRandomProp: true,
       },

@@ -22,7 +22,7 @@ import {
   MultiSectionDigitalClockViewProps,
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
-import { TimeView } from '../models';
+import { TimeStepOptions, TimeView } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
@@ -64,7 +64,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
 
   const {
     ampm = utils.is12HourCycleInCurrentLocale(),
-    timeStep = 5,
+    timeSteps: inTimeSteps,
     autoFocus,
     components,
     componentsProps,
@@ -92,6 +92,15 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     readOnly,
     ...other
   } = props;
+  const timeSteps = React.useMemo<Required<TimeStepOptions>>(
+    () => ({
+      hours: 1,
+      minutes: 5,
+      seconds: 5,
+      ...inTimeSteps,
+    }),
+    [inTimeSteps],
+  );
 
   const [value, setValue] = useControlled({
     name: 'MultiSectionDigitalClock',
@@ -276,7 +285,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               value: utils.getMinutes(selectedTimeOrMidnight),
               isDisabled: (minutes) => disabled || isTimeDisabled(minutes, 'minutes'),
               resolveLabel: (minutes) => utils.format(utils.setMinutes(now, minutes), 'minutes'),
-              timeStep,
+              timeStep: timeSteps.minutes,
               hasValue: !!value,
             }),
           };
@@ -291,7 +300,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               value: utils.getSeconds(selectedTimeOrMidnight),
               isDisabled: (seconds) => disabled || isTimeDisabled(seconds, 'seconds'),
               resolveLabel: (seconds) => utils.format(utils.setSeconds(now, seconds), 'seconds'),
-              timeStep,
+              timeStep: timeSteps.seconds,
               hasValue: !!value,
             }),
           };
@@ -311,7 +320,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       selectedTimeOrMidnight,
       disabled,
       isTimeDisabled,
-      timeStep,
+      timeSteps,
     ],
   );
 

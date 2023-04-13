@@ -35,9 +35,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
 
   const thresholdToRenderTimeInASingleColumn =
     defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
-  const timeStep = defaultizedProps.timeStep ?? 5;
+  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
   const shouldRenderTimeInASingleColumn =
-    (24 * 60) / timeStep <= thresholdToRenderTimeInASingleColumn;
+    (24 * 60) / timeSteps.minutes <= thresholdToRenderTimeInASingleColumn;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -59,7 +59,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const props = {
     ...defaultizedProps,
     ampmInClock,
-    timeStep,
+    timeSteps,
     viewRenderers,
     // fallback to `closeOnSelect={false}` given a multi column time picker.
     closeOnSelect: inProps.closeOnSelect ?? shouldRenderTimeInASingleColumn,
