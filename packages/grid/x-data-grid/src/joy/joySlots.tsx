@@ -7,6 +7,8 @@ import JoyFormControl from '@mui/joy/FormControl';
 import JoyFormLabel from '@mui/joy/FormLabel';
 import JoyButton from '@mui/joy/Button';
 import JoyIconButton from '@mui/joy/IconButton';
+import JoySelect from '@mui/joy/Select';
+import JoyOption from '@mui/joy/Option';
 import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
@@ -175,12 +177,59 @@ const Switch = React.forwardRef<
   );
 });
 
+const Select = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['baseSelect']>
+>(function Select(
+  {
+    labelId,
+    label,
+    inputRef,
+    inputProps,
+    MenuProps,
+    fullWidth,
+    native,
+    color,
+    size,
+    sx,
+    variant,
+    ...props
+  },
+  ref,
+) {
+  return (
+    <JoySelect
+      {...props}
+      color={convertColor(color)}
+      size={convertSize(size)}
+      variant={convertVariant(variant)}
+      slotProps={{
+        button: {
+          ...(inputProps as JSX.IntrinsicElements['button']),
+          ref: inputRef,
+        },
+      }}
+      ref={ref}
+      sx={sx as SxProps<Theme>}
+    />
+  );
+});
+
+const Option = React.forwardRef<
+  HTMLLIElement,
+  NonNullable<GridSlotsComponentsProps['baseSelectOption']>
+>(function Option({ native, ...props }, ref) {
+  return <JoyOption {...props} ref={ref} />;
+});
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseCheckbox: Checkbox,
   baseTextField: TextField,
   baseButton: Button,
   baseIconButton: IconButton,
   baseSwitch: Switch,
+  baseSelect: Select,
+  baseSelectOption: Option,
   // BaseFormControl: MUIFormControl,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
