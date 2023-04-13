@@ -61,6 +61,7 @@
   "peerDependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@mui/base": "^5.0.0-alpha.87",
     "@mui/material": "^5.8.6",
     "@mui/system": "^5.8.0",
     "date-fns": "^2.25.0",
@@ -74,16 +75,19 @@
     "react-dom": "^17.0.2 || ^18.0.0"
   },
   "peerDependenciesMeta": {
-    "date-fns": {
-      "optional": true
-    },
-    "dayjs": {
-      "optional": true
-    },
     "@emotion/react": {
       "optional": true
     },
     "@emotion/styled": {
+      "optional": true
+    },
+    "date-fns": {
+      "optional": true
+    },
+    "date-fns-jalali": {
+      "optional": true
+    },
+    "dayjs": {
       "optional": true
     },
     "luxon": {
@@ -96,9 +100,6 @@
       "optional": true
     },
     "moment-jalaali": {
-      "optional": true
-    },
-    "date-fns-jalali": {
       "optional": true
     }
   },

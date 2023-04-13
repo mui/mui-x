@@ -53,17 +53,32 @@
     "react-transition-group": "^4.4.5"
   },
   "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/base": "^5.0.0-alpha.87",
     "@mui/material": "^5.8.6",
     "@mui/system": "^5.8.0",
     "date-fns": "^2.25.0",
+    "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.10.7",
     "luxon": "^3.0.2",
     "moment": "^2.29.4",
+    "moment-hijri": "^2.1.2",
+    "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0",
     "react": "^17.0.2 || ^18.0.0",
     "react-dom": "^17.0.2 || ^18.0.0"
   },
   "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    },
     "date-fns": {
+      "optional": true
+    },
+    "date-fns-jalali": {
       "optional": true
     },
     "dayjs": {
@@ -73,6 +88,12 @@
       "optional": true
     },
     "moment": {
+      "optional": true
+    },
+    "moment-hijri": {
+      "optional": true
+    },
+    "moment-jalaali": {
       "optional": true
     }
   },
