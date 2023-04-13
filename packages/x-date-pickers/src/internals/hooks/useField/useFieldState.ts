@@ -63,6 +63,7 @@ export const useFieldState = <
       defaultValue,
       onChange,
       format,
+      formatDensity = 'dense',
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
     },
@@ -76,9 +77,9 @@ export const useFieldState = <
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
-        splitFormatIntoSections(utils, localeText, format, date),
+        splitFormatIntoSections(utils, localeText, format, date, formatDensity),
       ),
-    [fieldValueManager, format, localeText, isRTL, utils],
+    [fieldValueManager, format, localeText, isRTL, utils, formatDensity],
   );
 
   const placeholder = React.useMemo(
@@ -241,7 +242,7 @@ export const useFieldState = <
         return null;
       }
 
-      const sections = splitFormatIntoSections(utils, localeText, format, date);
+      const sections = splitFormatIntoSections(utils, localeText, format, date, formatDensity);
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 

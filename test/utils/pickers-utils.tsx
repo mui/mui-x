@@ -315,21 +315,13 @@ export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
 
-export const expectInputValue = (
-  input: HTMLInputElement,
-  expectedValue: string,
-  shouldRemoveDashSpaces = false,
-) => {
-  let value = cleanText(input.value);
-  if (shouldRemoveDashSpaces) {
-    value = value.replace(/ \/ /g, '/');
-  }
-
+export const expectInputValue = (input: HTMLInputElement, expectedValue: string) => {
+  const value = cleanText(input.value);
   return expect(value).to.equal(expectedValue);
 };
 
 export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
-  const cleanPlaceholder = cleanText(input.placeholder).replace(/ \/ /g, '/');
+  const cleanPlaceholder = cleanText(input.placeholder);
   return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
