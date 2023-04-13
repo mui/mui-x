@@ -25,7 +25,7 @@
     "@babel/runtime-corejs2": "^7.21.0",
     "@date-io/date-fns-jalali": "^2.16.0",
     "@docsearch/react": "^3.3.3",
-    "@emotion/cache": "^11.10.5",
+    "@emotion/cache": "^11.10.7",
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.6",
