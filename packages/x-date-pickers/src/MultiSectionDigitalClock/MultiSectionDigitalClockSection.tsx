@@ -144,7 +144,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (containerRef.current === null) {
         return;
       }
-      const selectedItem = containerRef.current.querySelector<HTMLElement>('[tabindex="0"]');
+      const selectedItem = containerRef.current.querySelector<HTMLElement>('li[selected]');
       if (!selectedItem) {
         return;
       }
