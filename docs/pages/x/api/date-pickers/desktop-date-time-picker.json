@@ -104,7 +104,13 @@
       }
     },
     "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
-    "timeStep": { "type": { "name": "number" }, "default": "5" },
+    "timeSteps": {
+      "type": {
+        "name": "shape",
+        "description": "{ hours?: number, minutes?: number, seconds?: number }"
+      },
+      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+    },
     "value": { "type": { "name": "any" } },
     "view": {
       "type": {
