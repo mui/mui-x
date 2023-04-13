@@ -364,7 +364,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         />
       ))}
 
-      {ampm && (
+      {ampm && views.includes('hours') && (
         <MultiSectionDigitalClockSection
           key="meridiem"
           items={meridiemOptions.items}

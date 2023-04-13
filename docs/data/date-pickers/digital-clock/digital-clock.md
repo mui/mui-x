@@ -44,7 +44,7 @@ Views will appear in the order they're included in the `views` array.
 
 ## 12h/24h format
 
-By default, the components use the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
+The components use the hour format of the locale's time setting, i.e. the 12-hour or 24-hour format.
 
 You can force a specific format using the `ampm` prop.
 
@@ -56,6 +56,6 @@ You can find more information about 12h/24h format in the [Date localization pag
 
 By default, the components list the time options in `5` unit (`minutes` or `seconds`) intervals.
 
-You can force a desired interval using the `timeStep` prop.
+You can set the desired interval using the `timeStep` prop.
 
 {{"demo": "DigitalClockTimeStep.js"}}
