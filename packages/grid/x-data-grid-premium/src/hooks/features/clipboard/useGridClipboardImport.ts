@@ -7,9 +7,10 @@ import {
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
-  useGridNativeEventListener,
   GridRowModel,
   useGridApiOptionHandler,
+  useGridApiEventHandler,
+  GridEventListener,
 } from '@mui/x-data-grid';
 import { buildWarning, getRowIdFromRowModel, getVisibleRows } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
@@ -269,8 +270,8 @@ export const useGridClipboardImport = (
   const enableClipboardPaste = props.unstable_enableClipboardPaste;
   const rootEl = apiRef.current.rootElementRef?.current;
 
-  const handlePaste = React.useCallback(
-    async (event: KeyboardEvent) => {
+  const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
+    async (params, event) => {
       if (!enableClipboardPaste) {
         return;
       }
@@ -293,7 +294,7 @@ export const useGridClipboardImport = (
       }
 
       // Do not enter cell edit mode on paste
-      event.stopPropagation();
+      event.defaultMuiPrevented = true;
 
       const text = await getTextFromClipboard(rootEl);
       if (!text) {
@@ -418,7 +419,7 @@ export const useGridClipboardImport = (
     ],
   );
 
-  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
+  useGridApiEventHandler(apiRef, 'cellKeyDown', handlePaste);
 
   useGridApiOptionHandler(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
   useGridApiOptionHandler(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);

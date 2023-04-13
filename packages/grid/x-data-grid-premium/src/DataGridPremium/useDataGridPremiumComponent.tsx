@@ -145,6 +145,7 @@ export const useDataGridPremiumComponent = (
   useGridDetailPanel(privateApiRef, props);
   useGridColumnSpanning(privateApiRef);
   useGridColumnGrouping(privateApiRef, props);
+  useGridClipboardImport(privateApiRef, props);
   useGridEditing(privateApiRef, props);
   useGridFocus(privateApiRef, props);
   useGridPreferencesPanel(privateApiRef, props);
@@ -164,8 +165,6 @@ export const useDataGridPremiumComponent = (
   useGridPrintExport(privateApiRef, props);
   useGridExcelExport(privateApiRef, props);
   useGridClipboard(privateApiRef, props);
-  // TODO: Move it up?
-  useGridClipboardImport(privateApiRef, props);
   useGridDimensions(privateApiRef, props);
   useGridEvents(privateApiRef, props);
   useGridStatePersistence(privateApiRef);
