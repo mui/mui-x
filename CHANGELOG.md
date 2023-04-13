@@ -9,10 +9,15 @@ _Apr 13, 2023_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- Add `@mui/base` as a `peerDependency` of `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`
+- Add `@mui/base` as a `peerDependency` of `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` (#8590) @LukasTy
 
   Both libraries were not working correctly if used without `@mui/base`.
   Most package manager should automatically use the `@mui/base` version installed for `@mui/material`.
+
+- The value rendered in the picker or field input no longer has spaces around the `/` characters (#8425) @flaviendelangle
+
+  You can use the `formatDensity='spacious'` prop to add it back.
+  More information on [the dedicated doc section](https://mui.com/x/react-date-pickers/custom-field/#change-the-format-density)
 
 - 🌍 Improve French (fr-FR) and Urdu (ur-PK) and locales.
 - 🐞 Bugfixes
@@ -33,7 +38,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [DateTimePicker] Fix `TimeClock` validation ignoring date by default (#8570) @LukasTy
 - [fields] Fix reliance on section order (#8545) @LukasTy
-- [fields] Make the space between slashes in the format an option (#8425) @flaviendelangle
+- [fields] Make the space between format separators controllable (#8425) @flaviendelangle
 - [pickers] Add `@mui/base` to `peerDependencies` (#8590) @LukasTy
 - [pickers] Fix JSDoc for `formatDensity` prop (#8601) @flaviendelangle
 - [pickers] Improve value lifecycle on non-controlled pickers (#8312) @flaviendelangle
@@ -42,7 +47,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 ### Docs
 
 - [docs] Fix "Custom day rendering" demo alignment (#8541) @LukasTy
-- [docs] Fix typo (#8576) @alexfauquette
+- [docs] Fix **below** typo (#8576) @alexfauquette
 
 ### Core
 
