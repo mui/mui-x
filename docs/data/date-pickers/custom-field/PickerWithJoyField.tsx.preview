@@ -1,4 +1,4 @@
-<CssVarsProvider theme={mergedTheme}>
+<CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
   <SyncThemeMode mode={mode} />
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <DemoContainer components={['DatePicker', 'DateRangePicker']}>
