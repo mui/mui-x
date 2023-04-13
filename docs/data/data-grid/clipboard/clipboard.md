@@ -20,12 +20,12 @@ The priority of the data copied to the clipboard is the following, from highest 
 You can enable clipboard paste using the `unstable_enableClipboardPaste` prop.
 
 Additionally, to make sure the copied cells are formatted correctly and can be parsed during paste,
-it's recommended to set the `ignoreValueFormatterDuringExport` flag to `true`.
+it's recommended to set the `unstable_ignoreValueFormatterDuringExport` prop to `true`.
 
 ```tsx
 <DataGridPremium
   unstable_enableClipboardPaste
-  experimentalFeatures={{ ignoreValueFormatterDuringExport: true }}
+  unstable_ignoreValueFormatterDuringExport
 />
 ```
 

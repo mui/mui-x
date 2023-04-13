@@ -18,7 +18,7 @@ export default function ClipboardPaste() {
         disableRowSelectionOnClick
         unstable_cellSelection
         unstable_enableClipboardPaste
-        experimentalFeatures={{ ignoreValueFormatterDuringExport: true }}
+        unstable_ignoreValueFormatterDuringExport
       />
     </div>
   );

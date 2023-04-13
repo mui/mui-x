@@ -77,7 +77,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, ignoreValueFormatterDuringExport?: { clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -258,6 +258,13 @@
     "unstable_cellSelection": { "type": { "name": "bool" } },
     "unstable_cellSelectionModel": { "type": { "name": "object" } },
     "unstable_enableClipboardPaste": { "type": { "name": "bool" } },
+    "unstable_ignoreValueFormatterDuringExport": {
+      "type": {
+        "name": "union",
+        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
+      },
+      "default": ": false"
+    },
     "unstable_onCellSelectionModelChange": { "type": { "name": "func" } }
   },
   "slots": {

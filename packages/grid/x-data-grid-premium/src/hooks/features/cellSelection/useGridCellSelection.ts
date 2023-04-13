@@ -48,18 +48,18 @@ export const useGridCellSelection = (
     | 'unstable_onCellSelectionModelChange'
     | 'pagination'
     | 'paginationMode'
-    | 'experimentalFeatures'
+    | 'unstable_ignoreValueFormatterDuringExport'
   >,
 ) => {
   const visibleRows = useGridVisibleRows(apiRef, props);
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
 
-  const ignoreValueFormatterFlag = props.experimentalFeatures?.ignoreValueFormatterDuringExport;
+  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
-    (typeof ignoreValueFormatterFlag === 'object'
-      ? ignoreValueFormatterFlag?.clipboardExport
-      : ignoreValueFormatterFlag) || false;
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.clipboardExport
+      : ignoreValueFormatterProp) || false;
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',

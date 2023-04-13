@@ -71,6 +71,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnResize: false,
   keepNonExistentRowsSelected: false,
   keepColumnPositionIfDraggedOutside: false,
+  unstable_ignoreValueFormatterDuringExport: false,
 };
 
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;

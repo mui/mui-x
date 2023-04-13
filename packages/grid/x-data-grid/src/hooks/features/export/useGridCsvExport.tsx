@@ -23,15 +23,15 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
  */
 export const useGridCsvExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'experimentalFeatures'>,
+  props: Pick<DataGridProcessedProps, 'unstable_ignoreValueFormatterDuringExport'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
 
-  const ignoreValueFormatterFlag = props.experimentalFeatures?.ignoreValueFormatterDuringExport;
+  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
-    (typeof ignoreValueFormatterFlag === 'object'
-      ? ignoreValueFormatterFlag?.csvExport
-      : ignoreValueFormatterFlag) || false;
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.csvExport
+      : ignoreValueFormatterProp) || false;
 
   const getDataAsCsv = React.useCallback(
     (options: GridCsvExportOptions = {}): string => {

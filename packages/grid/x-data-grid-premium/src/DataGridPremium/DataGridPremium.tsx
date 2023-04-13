@@ -270,13 +270,6 @@ DataGridPremiumRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
-    ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-      PropTypes.shape({
-        clipboardExport: PropTypes.bool,
-        csvExport: PropTypes.bool,
-      }),
-      PropTypes.bool,
-    ]),
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -948,6 +941,18 @@ DataGridPremiumRaw.propTypes = {
    * If `true`, the grid will allow to paste data from clipboard.
    */
   unstable_enableClipboardPaste: PropTypes.bool,
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default: false
+   */
+  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
   /**
    * Callback fired when the selection state of one or multiple cells changes.
    * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.

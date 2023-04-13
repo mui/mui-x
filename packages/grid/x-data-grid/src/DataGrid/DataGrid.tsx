@@ -172,13 +172,6 @@ DataGridRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
-    ignoreValueFormatterDuringExport: PropTypes.oneOfType([
-      PropTypes.shape({
-        clipboardExport: PropTypes.bool,
-        csvExport: PropTypes.bool,
-      }),
-      PropTypes.bool,
-    ]),
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -659,5 +652,17 @@ DataGridRaw.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
+  ]),
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default: false
+   */
+  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
   ]),
 } as any;

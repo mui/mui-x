@@ -59,13 +59,16 @@ function hasNativeSelection(element: HTMLInputElement) {
  */
 export const useGridClipboard = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'experimentalFeatures' | 'onClipboardCopy'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'unstable_ignoreValueFormatterDuringExport' | 'onClipboardCopy'
+  >,
 ): void => {
-  const ignoreValueFormatterFlag = props.experimentalFeatures?.ignoreValueFormatterDuringExport;
+  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
-    (typeof ignoreValueFormatterFlag === 'object'
-      ? ignoreValueFormatterFlag?.clipboardExport
-      : ignoreValueFormatterFlag) || false;
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.clipboardExport
+      : ignoreValueFormatterProp) || false;
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
