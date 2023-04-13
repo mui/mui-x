@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 # Time Picker
 
-<p class="description">The Time Picker component let the user select a time.</p>
+<p class="description">The Time Picker component lets the user select a time.</p>
 
 :::info
 The component by default currently does not ship with **time** picker view experience on **desktop**.
