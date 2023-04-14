@@ -483,6 +483,30 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
+    it('should respect leading zeros when shouldRespectLeadingZeros = true', () => {
+      testFieldChange({
+        format: ['luxon', 'date-fns'].includes(adapterName) ? 'd' : 'D',
+        shouldRespectLeadingZeros: true,
+        keyStrokes: [
+          { value: '1', expected: '1' },
+          { value: '2', expected: '12' },
+          { value: '2', expected: '2' },
+        ],
+      });
+    });
+
+    it('should not respect leading zeros when shouldRespectLeadingZeros = false', () => {
+      testFieldChange({
+        format: ['luxon', 'date-fns'].includes(adapterName) ? 'd' : 'D',
+        shouldRespectLeadingZeros: false,
+        keyStrokes: [
+          { value: '1', expected: '01' },
+          { value: '2', expected: '12' },
+          { value: '2', expected: '02' },
+        ],
+      });
+    });
+
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testFieldChange({
         format: adapter.formats.year,
