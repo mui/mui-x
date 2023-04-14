@@ -182,7 +182,12 @@ class CellValueUpdater {
       return;
     }
 
-    const parsedValue = parseCellStringValue(pastedCellValue, colDef);
+    let parsedValue = parseCellStringValue(pastedCellValue, colDef);
+
+    if (colDef.valueParser) {
+      parsedValue = colDef.valueParser(parsedValue, apiRef.current.getCellParams(rowId, field));
+    }
+
     if (parsedValue === undefined) {
       return;
     }

@@ -443,6 +443,47 @@ describe('<DataGridPremium /> - Clipboard', () => {
       ]);
     });
 
+    it('should use valueParser if the column has one', async () => {
+      const columns: GridColDef[] = [
+        {
+          field: 'name',
+          editable: true,
+          valueParser: (value) => {
+            return String(value)
+              .split(' ')
+              .map((str) => (str.length > 0 ? str[0].toUpperCase() + str.slice(1) : ''))
+              .join(' ');
+          },
+        },
+      ];
+      const rows = [
+        { id: 0, name: 'Jon Snow' },
+        { id: 1, name: 'Cersei Lannister' },
+      ];
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              rowSelection={false}
+              experimentalFeatures={{ enableClipboardPaste: true }}
+            />
+          </div>
+        );
+      }
+
+      render(<Component />);
+
+      const cell = getCell(1, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      paste(cell, 'john doe');
+
+      await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Jon Snow', 'John Doe']));
+    });
+
     it('should only paste if the cell is editable', async () => {
       const rows = [
         { id: 0, brand: 'Nike', category: 'Shoes', price: '$120', rating: '4.0' },
