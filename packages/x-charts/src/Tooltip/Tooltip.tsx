@@ -295,6 +295,18 @@ export type TooltipProps = {
   highlightProps?: Partial<HighlightProps>;
 };
 
+function getTootipHasData(
+  trigger: TooltipProps['trigger'],
+  displayedData: null | AxisInteractionData | ItemInteractionData,
+): boolean {
+  const hasItemData = displayedData !== null;
+  const hasAxisXData = (displayedData as AxisInteractionData).x !== null;
+  const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
+  return (
+    (trigger === 'item' && hasItemData) || (trigger === 'axis' && (hasAxisXData || hasAxisYData))
+  );
+}
+
 export function Tooltip(props: TooltipProps) {
   const { trigger = 'axis', highlightProps } = props;
 
@@ -307,12 +319,8 @@ export function Tooltip(props: TooltipProps) {
 
   const displayedData = trigger === 'item' ? item : axis;
 
-  const popperOpen =
-    mousePosition !== null &&
-    ((trigger === 'item' && displayedData !== null) ||
-      (trigger === 'axis' &&
-        ((displayedData as AxisInteractionData).x !== null ||
-          (displayedData as AxisInteractionData).y !== null)));
+  const tooltipHasData = getTootipHasData(trigger, displayedData);
+  const popperOpen = mousePosition !== null && tooltipHasData;
 
   if (trigger === 'none') {
     return null;
