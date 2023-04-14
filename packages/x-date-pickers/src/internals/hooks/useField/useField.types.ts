@@ -60,6 +60,12 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    */
   format: string;
   /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity?: 'dense' | 'spacious';
+  /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
    * @default false

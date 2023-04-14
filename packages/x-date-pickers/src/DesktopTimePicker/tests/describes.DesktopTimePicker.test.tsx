@@ -70,7 +70,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
         expectedValue
           ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
           : '',
-        true,
       );
     },
     setNewValue: (value, { isOpened, applySameValue, confirmChange } = {}) => {
