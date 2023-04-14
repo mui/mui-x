@@ -43,7 +43,9 @@ const DigitalClockList = styled(MenuList, {
   name: 'MuiDigitalClock',
   slot: 'List',
   overridesResolver: (props, styles) => styles.list,
-})({});
+})({
+  padding: 0,
+});
 
 const DigitalClockItem = styled(MenuItem, {
   name: 'MuiDigitalClock',
