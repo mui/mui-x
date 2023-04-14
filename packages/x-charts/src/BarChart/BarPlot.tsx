@@ -8,7 +8,7 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export function BarPlot() {
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
-  const getItemProps = useInteractionItemProps();
+  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -70,7 +70,7 @@ export function BarPlot() {
                   width={barWidth}
                   fill={color}
                   rx="5px"
-                  {...getItemProps({ type: 'bar', seriesId, dataIndex })}
+                  {...getInteractionItemProps({ type: 'bar', seriesId, dataIndex })}
                 />
               );
             });

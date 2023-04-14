@@ -52,7 +52,7 @@ export type AreaElementProps = Omit<AreaElementOwnerState, 'isNotHighlighted' | 
 export function AreaElement(props: AreaElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
 
-  const getItemProps = useInteractionItemProps();
+  const getInteractionItemProps = useInteractionItemProps();
 
   const { item } = React.useContext(InteractionContext);
   const someSerriesIsHighlighted = item !== null;
@@ -72,7 +72,7 @@ export function AreaElement(props: AreaElementProps) {
       {...other}
       ownerState={ownerState}
       className={classes.root}
-      {...getItemProps({ type: 'line', seriesId: id })}
+      {...getInteractionItemProps({ type: 'line', seriesId: id })}
     />
   );
 }

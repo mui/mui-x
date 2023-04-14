@@ -12,7 +12,7 @@ export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
-  const getItemProps = useInteractionItemProps();
+  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -71,7 +71,7 @@ export function LinePlot() {
                     id={seriesId}
                     d={areaPath(d3Data) || undefined}
                     color={series[seriesId].area.color ?? series[seriesId].color}
-                    {...getItemProps({ type: 'line', seriesId })}
+                    {...getInteractionItemProps({ type: 'line', seriesId })}
                   />
                 )
               );
@@ -111,7 +111,7 @@ export function LinePlot() {
                   id={seriesId}
                   d={linePath(d3Data) || undefined}
                   color={series[seriesId].color}
-                  {...getItemProps({ type: 'line', seriesId })}
+                  {...getInteractionItemProps({ type: 'line', seriesId })}
                 />
               );
             });
@@ -147,7 +147,7 @@ export function LinePlot() {
                     color={series[seriesId].color}
                     x={xScale(x)}
                     y={yScale(y)}
-                    {...getItemProps({ type: 'line', seriesId, dataIndex: index })}
+                    {...getInteractionItemProps({ type: 'line', seriesId, dataIndex: index })}
                   />
                 );
               });
