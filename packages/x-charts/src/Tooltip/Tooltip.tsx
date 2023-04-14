@@ -65,8 +65,13 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
     y: -1,
   });
 
-  const getUpdateY = React.useCallback(
-    (y: number) => {
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null || trigger !== 'axis') {
+      return () => {};
+    }
+
+    const getUpdateY = (y: number) => {
       if (usedYAxis === null) {
         return null;
       }
@@ -82,12 +87,9 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
         index: dataIndex,
         value: yAxisData![dataIndex],
       };
-    },
-    [usedYAxis, yAxis],
-  );
+    };
 
-  const getUpdateX = React.useCallback(
-    (x: number) => {
+    const getUpdateX = (x: number) => {
       if (usedXAxis === null) {
         return null;
       }
@@ -127,20 +129,17 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
         index: dataIndex,
         value: xAxisData![dataIndex],
       };
-    },
-    [usedXAxis, xAxis],
-  );
-
-  const handleMouseOut = React.useCallback(() => {
-    mousePosition.current = {
-      x: -1,
-      y: -1,
     };
-    dispatch({ type: 'updateAxis', data: { x: null, y: null } });
-  }, [dispatch]);
 
-  const handleMouseMove = React.useCallback(
-    (event: MouseEvent) => {
+    const handleMouseOut = () => {
+      mousePosition.current = {
+        x: -1,
+        y: -1,
+      };
+      dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
       mousePosition.current = {
         x: event.offsetX,
         y: event.offsetY,
@@ -155,15 +154,7 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
       const newStateY = getUpdateY(event.offsetY);
 
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
-    },
-    [dispatch, getUpdateX, getUpdateY, height, left, top, width],
-  );
-
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null || trigger !== 'axis') {
-      return () => {};
-    }
+    };
 
     element.addEventListener('mouseout', handleMouseOut);
     element.addEventListener('mousemove', handleMouseMove);
@@ -171,7 +162,7 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
       element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [handleMouseMove, handleMouseOut, svgRef, trigger]);
+  }, [svgRef, trigger, dispatch, left, width, top, height, usedYAxis, yAxis, usedXAxis, xAxis]);
 };
 
 const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
