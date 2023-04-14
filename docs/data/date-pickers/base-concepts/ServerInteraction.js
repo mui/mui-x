@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-
+import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -717,7 +717,6 @@ function DateFieldWithAccept(props) {
 
   return (
     <DateField
-      label="Controlled field"
       value={value}
       onChange={(newValue, context) => {
         setValue(newValue);
@@ -764,6 +763,8 @@ export default function ServerInteraction() {
             setOnChangeLogs((prev) => [newValue, ...prev]);
           }}
           sx={{ width: 150 }}
+          label="debounced field"
+          defaultValue={dayjs(new Date(2020, 10, 5))}
         />
         <DisplayEvents onChangeLogs={onChangeLogs} onAcceptLogs={onAcceptLogs} />
         <Button

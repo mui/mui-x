@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -126,6 +126,7 @@ export default function ServerInteraction() {
           }}
           sx={{ width: 150 }}
           label="debounced field"
+          defaultValue={dayjs(new Date(2020, 10, 5))}
         />
         <DisplayEvents onChangeLogs={onChangeLogs} onAcceptLogs={onAcceptLogs} />
         <Button
