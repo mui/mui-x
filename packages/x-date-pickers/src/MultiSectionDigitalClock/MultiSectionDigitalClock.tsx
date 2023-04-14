@@ -272,6 +272,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
               ampm,
               utils,
               isDisabled: (hours) => disabled || isTimeDisabled(hours, 'hours'),
+              timeStep: timeSteps.hours,
             }),
           };
         }

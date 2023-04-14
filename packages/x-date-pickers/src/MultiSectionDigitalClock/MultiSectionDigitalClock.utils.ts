@@ -7,6 +7,7 @@ interface IGetHoursSectionOptions<TDate> {
   utils: MuiPickersAdapter<TDate>;
   ampm: boolean;
   isDisabled: (value: number) => boolean;
+  timeStep: number;
 }
 
 export const getHourSectionOptions = <TDate>({
@@ -15,6 +16,7 @@ export const getHourSectionOptions = <TDate>({
   utils,
   ampm,
   isDisabled,
+  timeStep,
 }: IGetHoursSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
   const currentHours = value ? utils.getHours(value) : null;
 
@@ -37,7 +39,7 @@ export const getHourSectionOptions = <TDate>({
   };
 
   const endHour = ampm ? 11 : 23;
-  for (let hour = 0; hour <= endHour; hour += 1) {
+  for (let hour = 0; hour <= endHour; hour += timeStep) {
     let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
 
     label = utils.formatNumber(label);

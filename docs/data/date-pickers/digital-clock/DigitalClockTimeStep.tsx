@@ -14,7 +14,7 @@ export default function DigitalClockTimeStep() {
         </DemoItem>
         <DemoItem label="Multi section digital clock">
           <MultiSectionDigitalClock
-            timeSteps={{ minutes: 11, seconds: 15 }}
+            timeSteps={{ hours: 2, minutes: 15, seconds: 10 }}
             views={['hours', 'minutes', 'seconds']}
           />
         </DemoItem>
