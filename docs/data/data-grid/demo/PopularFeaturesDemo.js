@@ -315,14 +315,10 @@ const columns = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params) => {
-      if (typeof params.value === 'string') {
-        return <PlanTag plan={params.value} />;
-      } else if (typeof params.value === 'number') {
-        return params.value.toString();
-      } else {
+      if (!params.value) {
         return '';
       }
-      
+      return <PlanTag plan={params.value} />;
     },
     sortComparator: (p1, p2) => {
       function getSortingValue(plan) {
