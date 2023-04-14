@@ -257,25 +257,22 @@ const useMouseTracker = () => {
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
 
-  const handleMouseOut = React.useCallback(() => {
-    setMousePosition(null);
-  }, [setMousePosition]);
-
-  const handleMouseMove = React.useCallback(
-    (event: MouseEvent) => {
-      setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-    },
-    [setMousePosition],
-  );
-
   React.useEffect(() => {
     const element = svgRef.current;
     if (element === null) {
       return () => {};
     }
+
+    const handleMouseOut = () => {
+      setMousePosition(null);
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      setMousePosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+    };
 
     element.addEventListener('mouseout', handleMouseOut);
     element.addEventListener('mousemove', handleMouseMove);
@@ -283,7 +280,7 @@ const useMouseTracker = () => {
       element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [handleMouseMove, handleMouseOut, svgRef]);
+  }, [svgRef]);
 
   return mousePosition;
 };
