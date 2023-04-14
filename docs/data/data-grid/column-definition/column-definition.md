@@ -69,7 +69,7 @@ In the following demo, a formatter is used to display the tax rate's decimal val
 
 The value generated is only used for rendering purposes.
 Filtering and sorting do not rely on the formatted value.
-Use the [`valueParser`](/x/react-data-grid/editing/#value-parser-and-value-setter) to support filtering.
+Use the [`valueGetter`](/x/react-data-grid/column-definition/#value-getter) to support filtering.
 
 ## Rendering cells
 
