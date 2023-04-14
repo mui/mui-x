@@ -251,7 +251,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
   );
 }
 
-const useMouseTraker = () => {
+const useMouseTracker = () => {
   const svgRef = React.useContext(SVGContext);
 
   // Use a ref to avoid rerendering on every mousemove event.
@@ -307,7 +307,7 @@ export function Tooltip(props: TooltipProps) {
   const { trigger = 'axis', highlightProps } = props;
 
   useAxisEvents(trigger);
-  const mousePosition = useMouseTraker();
+  const mousePosition = useMouseTracker();
 
   const { item, axis } = React.useContext(InteractionContext);
 
