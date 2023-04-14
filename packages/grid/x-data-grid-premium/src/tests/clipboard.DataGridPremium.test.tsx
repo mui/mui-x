@@ -46,7 +46,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
           disableRowSelectionOnClick
           unstable_cellSelection
           disableVirtualization
-          experimentalFeatures={{ enableClipboardPaste: true }}
+          experimentalFeatures={{ clipboardPaste: true }}
         />
       </div>
     );
@@ -305,7 +305,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               getRowId={(row) => row.customIdField}
               rowSelection={false}
               unstable_cellSelection
-              experimentalFeatures={{ enableClipboardPaste: true }}
+              experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
         );
@@ -371,7 +371,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               getRowId={(row) => row.customIdField}
               rowSelection={false}
               unstable_cellSelection
-              experimentalFeatures={{ enableClipboardPaste: true }}
+              experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
         );
@@ -421,7 +421,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               rowSelection={false}
               processRowUpdate={processRowUpdateSpy}
-              experimentalFeatures={{ enableClipboardPaste: true }}
+              experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
         );
@@ -467,7 +467,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               columns={columns}
               rows={rows}
               rowSelection={false}
-              experimentalFeatures={{ enableClipboardPaste: true }}
+              experimentalFeatures={{ clipboardPaste: true }}
             />
           </div>
         );
@@ -506,7 +506,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
               rows={rows}
               rowSelection={false}
               unstable_cellSelection
-              experimentalFeatures={{ enableClipboardPaste: true }}
+              experimentalFeatures={{ clipboardPaste: true }}
               disableVirtualization
             />
           </div>

@@ -30,7 +30,7 @@ export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeat
   /**
    * If `true`, the grid will allow to paste data from clipboard.
    */
-  enableClipboardPaste?: boolean;
+  clipboardPaste?: boolean;
 }
 
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
