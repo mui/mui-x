@@ -324,25 +324,23 @@ export function Tooltip(props: TooltipProps) {
   }
   return (
     <NoSsr>
-      <React.Fragment>
-        {popperOpen && (
-          <Popper
-            open={popperOpen}
-            placement="right-start"
-            anchorEl={generateVirtualElement(mousePosition)}
-            style={{ padding: '16px', pointerEvents: 'none' }}
-          >
-            <Paper sx={{ p: 1 }}>
-              {trigger === 'item' ? (
-                <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
-              ) : (
-                <AxisTooltipContent {...(displayedData as AxisInteractionData)} />
-              )}
-            </Paper>
-          </Popper>
-        )}
-        <Highlight ref={highlightRef} highlight={{ x: true, y: false }} {...highlightProps} />
-      </React.Fragment>
+      {popperOpen && (
+        <Popper
+          open={popperOpen}
+          placement="right-start"
+          anchorEl={generateVirtualElement(mousePosition)}
+          style={{ padding: '16px', pointerEvents: 'none' }}
+        >
+          <Paper sx={{ p: 1 }}>
+            {trigger === 'item' ? (
+              <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
+            ) : (
+              <AxisTooltipContent {...(displayedData as AxisInteractionData)} />
+            )}
+          </Paper>
+        </Popper>
+      )}
+      <Highlight ref={highlightRef} highlight={{ x: true, y: false }} {...highlightProps} />
     </NoSsr>
   );
 }
