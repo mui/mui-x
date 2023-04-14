@@ -146,7 +146,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (containerRef.current === null) {
         return;
       }
-      const selectedItem = containerRef.current.querySelector<HTMLElement>('li[selected]');
+      const selectedItem = containerRef.current.querySelector<HTMLElement>('li.Mui-selected');
       if (!selectedItem) {
         return;
       }
