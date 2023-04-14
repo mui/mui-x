@@ -193,7 +193,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
   const USED_X_AXIS_ID = xAxisIds[0];
   const xAxisName = xAxis[USED_X_AXIS_ID].id;
 
-  const seriesConcerned = React.useMemo(() => {
+  const relevantSeries = React.useMemo(() => {
     const rep: { type: string; id: string; color: string }[] = [];
     (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
       series[seriesType]!.seriesOrder.forEach((seriesId) => {
@@ -225,7 +225,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
           <Divider />
         </React.Fragment>
       )}
-      {seriesConcerned.map(({ type, color, id }) => (
+      {relevantSeries.map(({ type, color, id }) => (
         <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
           <svg width={markerSize} height={markerSize}>
             <path
@@ -282,10 +282,10 @@ const useMouseTracker = () => {
 
 export type TooltipProps = {
   /**
-   * Select the kinf of tooltip to display
+   * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows vlaues associated to the hovered x value
-   * - 'none': Does nto display tooltip
+   * - 'axis': Shows values associated with the hovered x value
+   * - 'none': Does not display tooltip
    * @default 'item'
    */
   trigger?: 'item' | 'axis' | 'none';

@@ -31,7 +31,7 @@ The `width` and `height` if the component is not responsive.
 
 ### Multiple charts
 
-To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` wrapperu.
+To combine different charts, like lines with bars, you can use composition with `<ChartContainer />` wrapper.
 
 Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<ScatterPlot />`)
 

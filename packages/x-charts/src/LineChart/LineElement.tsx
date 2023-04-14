@@ -56,14 +56,14 @@ export function LineElement(props: LineElementProps) {
   const getInteractionItemProps = useInteractionItemProps();
 
   const { item } = React.useContext(InteractionContext);
-  const someSerriesIsHighlighted = item !== null;
+  const someSeriesIsHighlighted = item !== null;
   const isHighlighted = item !== null && item.type === 'line' && item.seriesId === id;
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
-    isNotHighlighted: someSerriesIsHighlighted && !isHighlighted,
+    isNotHighlighted: someSeriesIsHighlighted && !isHighlighted,
     isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);

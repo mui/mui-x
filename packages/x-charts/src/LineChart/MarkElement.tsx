@@ -69,12 +69,12 @@ export function MarkElement(props: MarkElementProps) {
   const { x, y, id, classes: innerClasses, color, shape, dataIndex, ...other } = props;
   const { axis } = React.useContext(InteractionContext);
   const isHighlighted = axis.x?.index === dataIndex;
-  const someSerriesIsHighlighted = axis.x !== null;
+  const someSeriesIsHighlighted = axis.x !== null;
   const ownerState = {
     id,
     classes: innerClasses,
     isHighlighted,
-    isNotHighlighted: someSerriesIsHighlighted && !isHighlighted,
+    isNotHighlighted: someSeriesIsHighlighted && !isHighlighted,
     color,
     x,
     y,
