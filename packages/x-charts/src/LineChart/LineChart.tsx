@@ -8,6 +8,8 @@ import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 export function LineChart(props: ChartContainerProps) {
   const { xAxis, yAxis, series, width, height, margin, colors, sx, tooltip, children } = props;
 
+  const showSecondXAxis = xAxis && xAxis.length > 1;
+  const showSecondYAxis = yAxis && yAxis.length > 1;
   return (
     <ChartContainer
       series={series}
@@ -26,17 +28,15 @@ export function LineChart(props: ChartContainerProps) {
         position="bottom"
         axisId={xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
       />
-      <XAxis
-        label="Top X axis"
-        position="top"
-        axisId={xAxis?.[1]?.id ?? xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
-      />
+      {showSecondXAxis && <XAxis label="Top X axis" position="top" axisId={xAxis?.[1]?.id} />}
       <YAxis label="Left Y axis" position="left" axisId={yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY} />
-      <YAxis
-        label="Right Y axis"
-        position="right"
-        axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
-      />
+      {showSecondYAxis && (
+        <YAxis
+          label="Right Y axis"
+          position="right"
+          axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
+        />
+      )}
       {children}
     </ChartContainer>
   );
