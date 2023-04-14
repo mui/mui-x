@@ -17,18 +17,22 @@ import type {
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
-export interface MultiSectionDigitalClockSectionProps<TValue> {
+export interface ExportedMultiSectionDigitalClockSectionProps {
+  className?: string;
+  classes?: Partial<MultiSectionDigitalClockSectionClasses>;
+  slots?: UncapitalizeObjectKeys<MultiSectionDigitalClockSlotsComponent>;
+  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
+}
+
+export interface MultiSectionDigitalClockSectionProps<TValue>
+  extends ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
-  className?: string;
-  classes?: Partial<MultiSectionDigitalClockSectionClasses>;
   items: MultiSectionDigitalClockOption<TValue>[];
   onChange: (value: TValue) => void;
   active?: boolean;
   shouldFocus?: boolean;
-  slots?: UncapitalizeObjectKeys<MultiSectionDigitalClockSlotsComponent>;
-  slotProps?: MultiSectionDigitalClockSlotsComponentsProps;
 }
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockSectionProps<any>) => {
@@ -42,7 +46,7 @@ const useUtilityClasses = (ownerState: MultiSectionDigitalClockSectionProps<any>
 };
 
 const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
-  name: 'MuiMultiSectionDigitalClock',
+  name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
@@ -90,7 +94,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
 );
 
 const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
-  name: 'MuiMultiSectionDigitalClock',
+  name: 'MuiMultiSectionDigitalClockSection',
   slot: 'Item',
   overridesResolver: (_, styles) => styles.item,
 })({

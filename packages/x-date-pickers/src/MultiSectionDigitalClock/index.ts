@@ -10,7 +10,7 @@ export type {
   MultiSectionDigitalClockSectionClasses,
   MultiSectionDigitalClockSectionClassKey,
 } from './multiSectionDigitalClockSectionClasses';
-export type { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
+export type { ExportedMultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
 export {
   multiSectionDigitalClockClasses,
   getMultiSectionDigitalClockUtilityClass,
