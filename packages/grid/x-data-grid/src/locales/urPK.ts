@@ -142,12 +142,12 @@ const urPKGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
 
   // Aggregation
-  aggregationMenuItemHeader: 'Aggregation',
-  aggregationFunctionLabelSum: 'sum',
-  aggregationFunctionLabelAvg: 'avg',
-  aggregationFunctionLabelMin: 'min',
-  aggregationFunctionLabelMax: 'max',
-  aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'ایگریگیشن',
+  aggregationFunctionLabelSum: 'کل',
+  aggregationFunctionLabelAvg: 'اوسط',
+  aggregationFunctionLabelMin: 'کم از کم',
+  aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
+  aggregationFunctionLabelSize: 'سائز',
 };
 
 export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);

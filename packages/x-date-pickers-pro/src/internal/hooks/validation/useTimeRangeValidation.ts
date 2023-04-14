@@ -1,11 +1,11 @@
 import {
   useValidation,
   Validator,
-  TimeValidationError,
   validateTime,
   BaseTimeValidationProps,
   ValidationProps,
 } from '@mui/x-date-pickers/internals';
+import { TimeValidationError } from '@mui/x-date-pickers/models';
 import { isRangeValid } from '../../utils/date-utils';
 import { DateRange } from '../../models/range';
 import { rangeValueManager } from '../../utils/valueManagers';

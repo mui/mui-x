@@ -34,8 +34,9 @@ This component has the following peer dependencies that you will need to install
 
 ```json
 "peerDependencies": {
-  "@mui/material": "^5.4.1",
-  "@mui/system": "^5.4.1",
+  "@mui/base": "^5.0.0-alpha.87",
+  "@mui/material": "^5.8.6",
+  "@mui/system": "^5.8.0",
   "react": "^17.0.2 || ^18.0.0",
   "react-dom": "^17.0.2 || ^18.0.0"
 },

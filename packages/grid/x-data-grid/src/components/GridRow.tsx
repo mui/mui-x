@@ -94,7 +94,7 @@ function EmptyCell({ width }: { width: number }) {
 
   const style = { width };
 
-  return <div className="MuiDataGrid-cell MuiDataGrid-withBorderColor" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+  return <div className={`${gridClasses.cell} ${gridClasses.withBorderColor}`} style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 }
 
 const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
@@ -317,7 +317,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       if (editCellState != null && column.renderEditCell) {
         const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
 
-        const { changeReason, ...editCellStateRest } = editCellState;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
         const params: GridRenderEditCellParams = {
           ...cellParams,

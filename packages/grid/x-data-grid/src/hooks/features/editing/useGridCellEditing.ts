@@ -157,8 +157,8 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
-        if (event.key === ' ' && event.shiftKey) {
-          return; // Shift + Space is used to select the row
+        if (event.key === ' ') {
+          return; // Space scrolls to the last row
         }
 
         if (isPrintableKey(event)) {
@@ -325,14 +325,18 @@ export const useGridCellEditing = (
       const { id, field, deleteValue, initialValue } = params;
 
       let newValue = apiRef.current.getCellValue(id, field);
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      let unstable_updateValueOnRender = false;
       if (deleteValue || initialValue) {
         newValue = deleteValue ? '' : initialValue;
+        unstable_updateValueOnRender = true;
       }
 
       const newProps = {
         value: newValue,
         error: false,
         isProcessingProps: false,
+        unstable_updateValueOnRender,
       };
 
       updateOrDeleteFieldState(id, field, newProps);

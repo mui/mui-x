@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
@@ -8,7 +8,7 @@ import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(
   inProps: SingleInputTimeRangeFieldProps<TDate>,
@@ -19,17 +19,23 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     name: 'MuiSingleInputTimeRangeField',
   });
 
-  const { slots, slotProps, components, componentsProps, ...other } = themeProps;
+  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
+    themeProps;
 
   const ownerState = themeProps;
 
-  const Input = slots?.textField ?? components?.TextField ?? TextField;
-  const inputProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps({
-    elementType: Input,
-    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
-    externalForwardedProps: other,
-    ownerState,
-  });
+  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+  const { inputRef: externalInputRef, ...textFieldProps }: SingleInputTimeRangeFieldProps<TDate> =
+    useSlotProps({
+      elementType: TextField,
+      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+      externalForwardedProps: other,
+      ownerState,
+    });
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
 
   const {
     ref: inputRef,
@@ -37,19 +43,21 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     inputMode,
     readOnly,
     ...fieldProps
-  } = useSingleInputTimeRangeField<TDate, typeof inputProps>({
-    props: inputProps,
-    inputRef: inputProps.inputRef,
+  } = useSingleInputTimeRangeField<TDate, typeof textFieldProps>({
+    props: textFieldProps,
+    inputRef: externalInputRef,
   });
 
   return (
-    <Input
+    <TextField
       ref={ref}
       {...fieldProps}
       inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
     />
   );
 }) as DateRangeFieldComponent;
+
+SingleInputTimeRangeField.fieldType = 'single-input';
 
 SingleInputTimeRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -118,6 +126,12 @@ SingleInputTimeRangeField.propTypes = {
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
    */
@@ -295,6 +309,10 @@ SingleInputTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

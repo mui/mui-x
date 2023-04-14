@@ -1,12 +1,12 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType } from '../../models/muiPickersAdapter';
+import { FieldSectionType, FieldSection } from '../../../models';
 import { useUtils } from '../useUtils';
-import { FieldSectionsValueBoundaries, FieldSection } from './useField.types';
+import { FieldSectionsValueBoundaries } from './useField.types';
 import {
   changeSectionValueFormat,
-  cleanLeadingZerosInNumericSectionValue,
-  doesSectionHaveTrailingZeros,
+  cleanDigitSectionValue,
+  doesSectionHaveLeadingZeros,
   getDateSectionConfigFromFormatToken,
   getDaysInWeekStr,
   getLetterEditingOptions,
@@ -265,7 +265,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       queryValue: string,
       sectionType: FieldSectionType,
       format: string,
-      hasTrailingZeroes: boolean,
+      hasLeadingZeros: boolean,
       contentType: 'digit' | 'letter',
     ): ReturnType<QueryApplier<TSection>> => {
       const queryValueNumber = Number(`${queryValue}`);
@@ -290,11 +290,14 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         Number(`${queryValue}0`) > sectionBoundaries.maximum ||
         queryValue.length === sectionBoundaries.maximum.toString().length;
 
-      // queryValue without leading `0` (`01` => `1`)
-      let newSectionValue = queryValueNumber.toString();
-      if (hasTrailingZeroes) {
-        newSectionValue = cleanLeadingZerosInNumericSectionValue(utils, format, newSectionValue);
-      }
+      const newSectionValue = cleanDigitSectionValue(
+        utils,
+        queryValueNumber,
+        sectionType,
+        format,
+        hasLeadingZeros,
+        sectionBoundaries,
+      );
 
       return { sectionValue: newSectionValue, shouldGoToNextSection };
     };
@@ -320,7 +323,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           queryValue,
           activeSection.type,
           'MM',
-          doesSectionHaveTrailingZeros(utils, 'digit', 'month', 'MM'),
+          doesSectionHaveLeadingZeros(utils, 'digit', 'month', 'MM'),
           'digit',
         );
 

@@ -31,5 +31,5 @@ export * from './dateRangeViewRenderers';
 export type { DateRangeValidationError } from './internal/hooks/validation/useDateRangeValidation';
 export type { DateTimeRangeValidationError } from './internal/hooks/validation/useDateTimeRangeValidation';
 export type { TimeRangeValidationError } from './internal/hooks/validation/useTimeRangeValidation';
-export type { DateRange } from './internal/models/range';
+export type { DateRange, RangePosition } from './internal/models/range';
 export type { UseDateRangeFieldProps } from './internal/models/dateRange';

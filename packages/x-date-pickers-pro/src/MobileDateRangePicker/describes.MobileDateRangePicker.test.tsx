@@ -50,7 +50,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         if (!value) {
           expectInputPlaceholder(input, 'MM/DD/YYYY');
         }
-        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '', true);
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '');
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
@@ -73,11 +73,9 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         })[0],
       );
 
-      // Close the picker to return to the initial state
+      // Close the picker
       if (!isOpened) {
-        fireDiscreteEvent.keyDown(screen.getByLabelText(setEndDate ? 'End' : 'Start'), {
-          key: 'Escape',
-        });
+        fireDiscreteEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       }
 

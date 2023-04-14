@@ -5,7 +5,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { TimeView, useLocaleText, validateTime } from '../internals';
+import { useLocaleText, validateTime } from '../internals';
+import { TimeView } from '../models';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
@@ -150,6 +151,12 @@ DesktopTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */

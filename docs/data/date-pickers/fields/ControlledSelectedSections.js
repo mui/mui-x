@@ -20,13 +20,13 @@ export default function ControlledSelectedSections() {
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
           <Button variant="outlined" onClick={() => setSelectedSectionType('month')}>
-            Pick month
+            Month
           </Button>
           <Button variant="outlined" onClick={() => setSelectedSectionType('day')}>
-            Pick day
+            Day
           </Button>
           <Button variant="outlined" onClick={() => setSelectedSectionType('year')}>
-            Pick year
+            Year
           </Button>
         </Stack>
         <DateField

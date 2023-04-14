@@ -19,7 +19,8 @@ const DateField = React.forwardRef(function DateField<TDate>(
     name: 'MuiDateField',
   });
 
-  const { components, componentsProps, slots, slotProps, ...other } = themeProps;
+  const { components, componentsProps, slots, slotProps, InputProps, inputProps, ...other } =
+    themeProps;
 
   const ownerState = themeProps;
 
@@ -30,6 +31,10 @@ const DateField = React.forwardRef(function DateField<TDate>(
     externalForwardedProps: other,
     ownerState,
   });
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
 
   const {
     ref: inputRef,
@@ -108,6 +113,12 @@ DateField.propTypes = {
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
    */
@@ -284,6 +295,10 @@ DateField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.
