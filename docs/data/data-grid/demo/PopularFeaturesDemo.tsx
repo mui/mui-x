@@ -320,12 +320,14 @@ const columns: GridColDef[] = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params: GridRenderCellParams<any, string>) => {
-      if (typeof params.value === 'string') {
-        return <PlanTag plan={params.value} />;
-      } else if (typeof params.value === 'number') {
-        return params.value;
+      switch (typeof params.value) {
+        case 'string':
+          return <PlanTag plan={params.value} />;
+        case 'number':
+          return params.value;
+        default:
+          return '';
       }
-      return '';
     },
     sortComparator: (p1, p2) => {
       function getSortingValue(plan: string) {
