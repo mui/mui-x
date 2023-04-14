@@ -10,7 +10,7 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from './SingleInputDateRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
-import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { validateDateRange } from '../internal/utils/validation/validateDateRange';
 
 export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateRangeFieldProps<TDate>,

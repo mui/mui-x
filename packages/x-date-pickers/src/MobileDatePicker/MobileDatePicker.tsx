@@ -7,7 +7,7 @@ import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../Date
 import { PickerViewRendererLookup, useLocaleText, useUtils, validateDate } from '../internals';
 import { DateView } from '../models';
 import { DateField } from '../DateField';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 

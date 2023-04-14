@@ -8,9 +8,11 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
-import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
-import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
-import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import type {
+  DateRangeValidationError,
+  DateTimeRangeValidationError,
+  TimeRangeValidationError,
+} from '../../models';
 import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<

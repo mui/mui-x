@@ -6,7 +6,7 @@ import {
   MuiPickersAdapter,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
-import { InferError, Validator } from '../validation/useValidation';
+import { InferError, Validator } from '../useValidation';
 
 export interface UseFieldParams<
   TValue,

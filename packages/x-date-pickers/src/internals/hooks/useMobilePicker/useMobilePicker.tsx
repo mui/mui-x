@@ -9,7 +9,7 @@ import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../validation/useValidation';
+import { InferError } from '../useValidation';
 import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
 
 /**

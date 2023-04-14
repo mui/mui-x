@@ -19,7 +19,7 @@ import {
   validateSections,
   getDateFromDateSections,
 } from './useField.utils';
-import { InferError } from '../validation/useValidation';
+import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {

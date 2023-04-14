@@ -23,11 +23,11 @@ import type {
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
 } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
+import { DateTimeRangeValidationError } from '../../../models';
 import {
   DateTimeRangeComponentValidationProps,
-  DateTimeRangeValidationError,
   validateDateTimeRange,
-} from '../validation/useDateTimeRangeValidation';
+} from '../../utils/validation/validateDateTimeRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 

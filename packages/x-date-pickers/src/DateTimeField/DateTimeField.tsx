@@ -310,6 +310,7 @@ DateTimeField.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

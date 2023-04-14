@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useLocalizationContext } from '../useUtils';
-import { MuiPickersAdapterContextValue } from '../../../LocalizationProvider/LocalizationProvider';
+import { useLocalizationContext } from './useUtils';
+import { MuiPickersAdapterContextValue } from '../../LocalizationProvider/LocalizationProvider';
 
 export interface ValidationCommonProps<TError, TValue> {
   /**

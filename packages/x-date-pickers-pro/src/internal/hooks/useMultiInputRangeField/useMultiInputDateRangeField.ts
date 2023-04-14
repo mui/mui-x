@@ -19,11 +19,11 @@ import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeF
 import { DateRange } from '../../models/range';
 import {
   DateRangeComponentValidationProps,
-  DateRangeValidationError,
   validateDateRange,
-} from '../validation/useDateRangeValidation';
+} from '../../utils/validation/validateDateRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
+import { DateRangeValidationError } from '../../../models';
 
 export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
