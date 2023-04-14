@@ -232,7 +232,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <DigitalClockList autoFocusItem={autoFocus || !!focusedView}>
+      <DigitalClockList autoFocusItem={autoFocus || !!focusedView} variant="selectedMenu">
         {timeOptions.map((option) => (
           <ClockItem
             aria-readonly={readOnly}
