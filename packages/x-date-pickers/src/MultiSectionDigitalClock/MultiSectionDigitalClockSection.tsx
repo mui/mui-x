@@ -15,6 +15,7 @@ import type {
   MultiSectionDigitalClockSlotsComponentsProps,
 } from './MultiSectionDigitalClock.types';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 
 export interface MultiSectionDigitalClockSectionProps<TValue> {
   autoFocus?: boolean;
@@ -46,6 +47,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MultiSectionDigitalClockSectionProps<any> & { alreadyRendered: boolean } }>(
   ({ theme, ownerState }) => ({
+    maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
     width: 56,
     padding: 0,
     overflow: 'hidden',
