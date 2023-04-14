@@ -166,7 +166,6 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         className={clsx(classes.root, className)}
         ownerState={ownerState}
         autoFocusItem={autoFocus && active}
-        variant="selectedMenu"
         {...other}
       >
         {items.map((option) => (
