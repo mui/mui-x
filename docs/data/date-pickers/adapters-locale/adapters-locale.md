@@ -151,6 +151,22 @@ This prop is available on all fields and pickers.
 You can control the field format spacing using the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
 :::
 
+### Respect leading zeros in fields
+
+By default, the value rendered in the field always contains digit zeros, even if your format says otherwise.
+You can force the field to respect your format information by setting the `shouldRespectLeadingZeros` prop to `true`.
+
+:::warning
+When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
+If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
+:::
+
+:::warning
+Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+:::
+
+{{"demo": "RespectLeadingZerosFieldFormat.js"}}
+
 ### Custom field placeholder
 
 When a section is empty, the fields displays its placeholder instead of an empty value.
