@@ -331,7 +331,8 @@ DateTimeField.propTypes = {
    * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
    * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
    *
-   * Warning n°3: When using dayjs in strict mode and `shouldRespectLeadingZeros={false}`, parsing the value from the input will result in an invalid date.
+   * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
+   * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
    *
    * @default `false`
    */
