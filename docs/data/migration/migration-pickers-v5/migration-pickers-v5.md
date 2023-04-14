@@ -830,6 +830,19 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
+## Behavior of field `onChange` props
+
+Since the masked input has been replaced by [fields](/x/react-date-pickers/fields/#fields-to-edit-a-single-element) the input value is most of the time valid.
+
+In v5, user had to delet character and rewrite them to update a date.
+Such that `onChange` was called twice.
+At the first deleted character, and when data was complet again.
+
+In v6 The user can override the field section, so `onChange` is called at nearly every key pressed.
+
+If you were relying on `onChange` to send server request, you might be interested by debouncing it to avoid sending too many requests.
+To do so please refer to the corresponding [docs example](/x/react-date-pickers/base-concepts/#server-interaction).
+
 ## Rename remaining `private` components
 
 The four components prefixed with `Private` are now stable.
