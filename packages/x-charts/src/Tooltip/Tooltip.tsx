@@ -10,7 +10,7 @@ import {
   InteractionContext,
   ItemInteractionData,
 } from '../context/InteractionProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { Highlight, HighlightProps } from '../Highlight';
 import { isBandScale } from '../hooks/useScale';
@@ -195,18 +195,13 @@ function AxisTooltipContent(props: AxisInteractionData) {
 
   const seriesConcerned = React.useMemo(() => {
     const rep: { type: string; id: string; color: string }[] = [];
-
-    // @ts-ignore
-    Object.keys(series).forEach((seriesType) => {
-      // @ts-ignore
-      series[seriesType].seriesOrder.forEach((seriesId: string) => {
-        // @ts-ignore
-        if (series[seriesType].series[seriesId].xAxisKey === USED_X_AXIS_ID) {
+    (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
+      series[seriesType]!.seriesOrder.forEach((seriesId) => {
+        if (series[seriesType]!.series[seriesId].xAxisKey === USED_X_AXIS_ID) {
           rep.push({
             type: seriesType,
             id: seriesId,
-            // @ts-ignore
-            color: series[seriesType].series[seriesId].color,
+            color: series[seriesType]!.series[seriesId].color,
           });
         }
       });

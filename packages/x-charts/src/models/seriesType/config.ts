@@ -20,7 +20,7 @@ interface ChartsSeriesConfig {
   };
 }
 
-export type ChartSeriesType = keyof ChartsSeriesConfig;
+export type ChartSeriesType = 'bar' | 'line' | 'scatter';
 
 export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;
@@ -39,12 +39,12 @@ export type ExtremumGetter<T extends ChartSeriesType> = (
   params: ExtremumGetterParams<T>,
 ) => ExtremumGetterResult;
 
-type FormatterParams<T extends ChartSeriesType> = {
+export type FormatterParams<T extends ChartSeriesType> = {
   series: { [id: string]: ChartsSeriesConfig[T]['seriesInput'] };
   seriesOrder: string[];
 };
 
-type FormatterResult<T extends ChartSeriesType> = {
+export type FormatterResult<T extends ChartSeriesType> = {
   series: { [id: string]: ChartSeries<T> };
   seriesOrder: string[];
 } & (ChartsSeriesConfig[T] extends {
