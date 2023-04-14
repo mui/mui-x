@@ -26,7 +26,7 @@ export interface FieldSection {
   format: string;
   /**
    * Maximum length of the value, only defined for "digit" sections.
-   * Is used to determine how many lead zeros should be added to the value.
+   * Will be used to determine how many leading zeros should be added to the value.
    */
   maxLength: number | null;
   /**
