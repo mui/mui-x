@@ -479,17 +479,15 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const rowType = apiRef.current.getRowNode(rowId)!.type;
   const cells: JSX.Element[] = [];
 
-  const focusedColumn = visibleColumns.find(
-    (column) =>
-      indexOfColumnWithFocusedCellNotInRange &&
-      visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field,
-  );
+  const columnWithFocusedCellNotInRange =
+    indexOfColumnWithFocusedCellNotInRange &&
+    visibleColumns[indexOfColumnWithFocusedCellNotInRange];
 
-  if (focusedColumn) {
-    if (!renderedColumns.includes(focusedColumn) && focusedCell) {
-      renderedColumns.unshift(focusedColumn);
+  if (columnWithFocusedCellNotInRange) {
+    if (!renderedColumns.includes(columnWithFocusedCellNotInRange) && focusedCell) {
+      renderedColumns.unshift(columnWithFocusedCellNotInRange);
     }
-    if (renderedColumns.includes(focusedColumn) && !focusedCell) {
+    if (renderedColumns.includes(columnWithFocusedCellNotInRange) && !focusedCell) {
       renderedColumns.shift();
     }
   }
@@ -500,8 +498,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     let indexRelativeToAllColumns = firstColumnToRender + i;
 
     if (
-      indexOfColumnWithFocusedCellNotInRange &&
-      visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field &&
+      columnWithFocusedCellNotInRange &&
+      columnWithFocusedCellNotInRange.field === column.field &&
       focusedCell
     ) {
       indexRelativeToAllColumns = indexOfColumnWithFocusedCellNotInRange;
@@ -514,13 +512,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       indexRelativeToAllColumns,
     );
 
-    const shouldRenderColumn =
-      !indexOfColumnWithFocusedCellNotInRange ||
-      (visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field &&
-        focusedCell) ||
-      visibleColumns[indexOfColumnWithFocusedCellNotInRange].field !== column.field;
-
-    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan && shouldRenderColumn) {
+    if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
       if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
         const cellProps = {
