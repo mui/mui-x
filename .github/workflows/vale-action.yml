@@ -12,7 +12,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - uses: errata-ai/vale-action@c4213d4de3d5f718b8497bd86161531c78992084 # v2.0.1
         with:
           reporter: github-pr-review
