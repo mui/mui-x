@@ -38,6 +38,9 @@ function isKeyboardEvent(event: any): event is React.KeyboardEvent {
   return !!event.key;
 }
 
+const AUTO_SCROLL_SENSITIVITY = 50; // The distance from the edge to start scrolling
+const AUTO_SCROLL_SPEED = 20; // The speed to scroll once the mouse enters the sensitivity area
+
 export const useGridCellSelection = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -52,6 +55,8 @@ export const useGridCellSelection = (
   const visibleRows = useGridVisibleRows(apiRef, props);
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
+  const mousePosition = React.useRef<any>(null);
+  const autoScrollInterval = React.useRef<NodeJS.Timer | null>();
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -211,16 +216,77 @@ export const useGridCellSelection = (
     [apiRef, hasClickedValidCellForRangeSelection],
   );
 
+  const stopAutoScroll = React.useCallback(() => {
+    if (autoScrollInterval.current) {
+      clearTimeout(autoScrollInterval.current);
+      autoScrollInterval.current = null;
+    }
+  }, []);
+
   const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>(() => {
     lastMouseDownCell.current = null;
     apiRef.current.rootElementRef?.current?.classList.remove(
       gridClasses['root--disableUserSelection'],
     );
-  }, [apiRef]);
+    stopAutoScroll();
+  }, [apiRef, stopAutoScroll]);
 
   const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>((params) => {
     cellWithVirtualFocus.current = { id: params.id, field: params.field };
   }, []);
+
+  const startAutoScroll = React.useCallback(() => {
+    if (autoScrollInterval.current) {
+      return;
+    }
+
+    autoScrollInterval.current = setInterval(() => {
+      if (!apiRef.current.virtualScrollerRef?.current) {
+        return;
+      }
+
+      const virtualScrollerRect =
+        apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
+
+      if (!virtualScrollerRect) {
+        return;
+      }
+
+      const { x: mouseX, y: mouseY } = mousePosition.current;
+      const { height, width } = virtualScrollerRect;
+
+      let deltaX = 0;
+      let deltaY = 0;
+      let multiplier = 0;
+
+      if (mouseY <= AUTO_SCROLL_SENSITIVITY) {
+        // When scrolling up, the multiplier increases as going closer the top edge
+        multiplier = (AUTO_SCROLL_SENSITIVITY - mouseY) / -AUTO_SCROLL_SENSITIVITY;
+        deltaY = AUTO_SCROLL_SPEED;
+      } else if (mouseY >= height - AUTO_SCROLL_SENSITIVITY) {
+        // When scrolling down, the multiplier increases as going closer the bottom edge
+        multiplier = (mouseY - (height - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
+        deltaY = AUTO_SCROLL_SPEED;
+      } else if (mouseX <= AUTO_SCROLL_SENSITIVITY) {
+        // When scrolling left, the multiplier increases as going closer the left edge
+        multiplier = (AUTO_SCROLL_SENSITIVITY - mouseX) / -AUTO_SCROLL_SENSITIVITY;
+        deltaX = AUTO_SCROLL_SPEED;
+      } else if (mouseX >= width - AUTO_SCROLL_SENSITIVITY) {
+        // When scrolling right, the multiplier increases as going closer the right edge
+        multiplier = (mouseX - (width - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
+        deltaX = AUTO_SCROLL_SPEED;
+      }
+
+      if (deltaX !== 0 || deltaY !== 0) {
+        const { scrollLeft, scrollTop } = apiRef.current.virtualScrollerRef.current;
+
+        apiRef.current.scroll({
+          top: scrollTop + deltaY * multiplier,
+          left: scrollLeft + deltaX * multiplier,
+        });
+      }
+    }, 20);
+  }, [apiRef]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -235,8 +301,37 @@ export const useGridCellSelection = (
         { id, field },
         event.ctrlKey || event.metaKey,
       );
+
+      const virtualScrollerRect =
+        apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
+
+      if (!virtualScrollerRect) {
+        return;
+      }
+
+      const { height, width, x, y } = virtualScrollerRect;
+      const mouseX = event.clientX - x;
+      const mouseY = event.clientY - y;
+      mousePosition.current = { x: mouseX, y: mouseY };
+
+      const hasEnteredVerticalSensitivityArea =
+        mouseY <= AUTO_SCROLL_SENSITIVITY || mouseY >= height - AUTO_SCROLL_SENSITIVITY;
+
+      const hasEnteredHorizontalSensitivityArea =
+        mouseX <= AUTO_SCROLL_SENSITIVITY || mouseX >= width - AUTO_SCROLL_SENSITIVITY;
+
+      const hasEnteredSensitivityArea =
+        hasEnteredVerticalSensitivityArea || hasEnteredHorizontalSensitivityArea;
+
+      if (hasEnteredSensitivityArea || !autoScrollInterval.current) {
+        // Mouse has entered the sensitity area for the first time
+        startAutoScroll();
+      } else if (!hasEnteredSensitivityArea && autoScrollInterval.current) {
+        // Mouse has left the sensitivity area while auto scroll is on
+        stopAutoScroll();
+      }
     },
-    [apiRef],
+    [apiRef, startAutoScroll, stopAutoScroll],
   );
 
   const handleCellClick = useEventCallback<
@@ -309,6 +404,8 @@ export const useGridCellSelection = (
       id: visibleRows.rows[endRowIndex].id,
       field: visibleColumns[endColumnIndex].field,
     };
+
+    apiRef.current.scrollToIndexes({ rowIndex: endRowIndex, colIndex: endColumnIndex });
 
     const { id, field } = params;
     apiRef.current.unstable_selectCellRange({ id, field }, cellWithVirtualFocus.current);
