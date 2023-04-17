@@ -15,10 +15,10 @@ export function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
-    top,
-    left,
-    right,
-    bottom,
+    topAxis,
+    leftAxis,
+    rightAxis,
+    bottomAxis,
     children,
   } = props;
 
@@ -35,8 +35,7 @@ export function LineChart(props: LineChartProps) {
       tooltip={tooltip}
     >
       <LinePlot />
-      <Axis top={top} left={left} right={right} bottom={bottom} />
-
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       {children}
     </ChartContainer>
   );

@@ -4,6 +4,7 @@ import { XAxis } from '../XAxis/XAxis';
 import { YAxis } from '../YAxis/YAxis';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { Axis } from '../Axis';
 
 export function BarChart(props: ChartContainerProps) {
   const { xAxis, yAxis, series, width, height, margin, colors, sx, tooltip, children } = props;
@@ -23,6 +24,7 @@ export function BarChart(props: ChartContainerProps) {
       tooltip={tooltip}
     >
       <BarPlot />
+      <Axis />
       <XAxis
         label="Bottom X axis"
         position="bottom"

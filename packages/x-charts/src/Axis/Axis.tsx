@@ -10,25 +10,25 @@ export interface AxisProps {
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default null
    */
-  top?: null | string | XAxisProps;
+  topAxis?: null | string | XAxisProps;
   /**
    * Indicate which axis to display the the bottom of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
-  bottom?: null | string | XAxisProps;
+  bottomAxis?: null | string | XAxisProps;
   /**
    * Indicate which axis to display the the left of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
-  left?: null | string | YAxisProps;
+  leftAxis?: null | string | YAxisProps;
   /**
    * Indicate which axis to display the the right of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default null
    */
-  right?: null | string | YAxisProps;
+  rightAxis?: null | string | YAxisProps;
 }
 
 const getAxisId = (
@@ -44,16 +44,16 @@ const getAxisId = (
 };
 
 export function Axis(props: AxisProps) {
-  const { top, left, right, bottom } = props;
+  const { topAxis, leftAxis, rightAxis, bottomAxis } = props;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
 
   // TODO: use for plotting line without ticks or any thing
   // const drawingArea = React.useContext(DrawingContext);
 
-  const leftId = getAxisId(left === undefined ? yAxisIds[0] : left);
-  const bottomId = getAxisId(bottom === undefined ? xAxisIds[0] : bottom);
-  const topId = getAxisId(top);
-  const rightId = getAxisId(right);
+  const leftId = getAxisId(leftAxis === undefined ? yAxisIds[0] : leftAxis);
+  const bottomId = getAxisId(bottomAxis === undefined ? xAxisIds[0] : bottomAxis);
+  const topId = getAxisId(topAxis);
+  const rightId = getAxisId(rightAxis);
 
   if (topId !== null && !xAxis[topId]) {
     throw Error(`MUI: id used to top axis "${topId}" is not defined`);
@@ -70,19 +70,29 @@ export function Axis(props: AxisProps) {
 
   return (
     <React.Fragment>
-      {topId && <XAxis position="top" axisId={topId} {...(typeof top === 'object' ? top : {})} />}
+      {topId && (
+        <XAxis position="top" axisId={topId} {...(typeof topAxis === 'object' ? topAxis : {})} />
+      )}
       {bottomId && (
         <XAxis
           position="bottom"
           axisId={bottomId}
-          {...(typeof bottom === 'object' ? bottom : {})}
+          {...(typeof bottomAxis === 'object' ? bottomAxis : {})}
         />
       )}
       {leftId && (
-        <YAxis position="left" axisId={leftId} {...(typeof left === 'object' ? left : {})} />
+        <YAxis
+          position="left"
+          axisId={leftId}
+          {...(typeof leftAxis === 'object' ? leftAxis : {})}
+        />
       )}
       {rightId && (
-        <YAxis position="right" axisId={rightId} {...(typeof right === 'object' ? right : {})} />
+        <YAxis
+          position="right"
+          axisId={rightId}
+          {...(typeof rightAxis === 'object' ? rightAxis : {})}
+        />
       )}
     </React.Fragment>
   );

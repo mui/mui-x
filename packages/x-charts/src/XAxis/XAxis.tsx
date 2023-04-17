@@ -102,7 +102,7 @@ export function XAxis(props: XAxisProps) {
             textAnchor="middle"
             fontSize={fontSize}
           >
-            {value}
+            {value.toLocaleString()}
           </text>
         </g>
       ))}
