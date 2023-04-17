@@ -9,7 +9,11 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">This page explains when callbacks like `onChange`, `onAccept`, `onOpen` or `onClose` are called.</p>
 
-## When is `onChange` called on fields?
+## Fields lifecycle
+
+### When is `onChange` called ?
+
+#### On simple fields
 
 :::info
 The information below are applicable on standalone fields (when rendering `<DateField />`),
@@ -29,7 +33,7 @@ In the example below, `onChange` will be called when any of the conditions are t
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
-## When is `onChange` called on range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
 `onChange` will be called if the date you are modifying is matching one of the condition above,
@@ -39,16 +43,14 @@ In the example below, changing the value of the start date section will call `on
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
-## When is `onChange` or `onAccept` called on pickers ?
+## Pickers lifecycle
 
-- When the field used [calls `onChange`](/x/react-date-pickers/lifecycle/#when-is-onchange-called-on-fields)
+### When is `onClose` called ?
 
-### When the picker closes automatically
+#### When the last view is completed and `closeOnSelect={true}`
 
-On desktop, the picker closes automatically once the last view is completed.
-
-- if you are using the `DatePicker` with the default views (`year`, `month` and `day`), then selecting a day will close the picker
-- if you are using the `TimePicker` with the default views (`hours`, `minutes`), then selecting the minutes will close the picker
+The `closeOnSelect` prop determines if the picker should close one the last view is completed.
+By default, it is set to `true` on desktop and `false` on mobile.
 
 :::info
 You don't have to fill all the views for the picker to close automatically.
@@ -56,20 +58,87 @@ For example, on the `DatePicker`, the `year` and `month` views are not in the de
 so the picker will close even if you never went to those views.
 :::
 
+Here are a few examples:
+
+:::info
+The example below are using the desktop and mobile variant of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on mobile or on desktop.
+:::
+
+- ```tsx
+  <DesktopDatePicker />
+  ```
+
+  - Default `views` prop: `['year', 'month', 'day']`
+  - Default `closeOnSelect` prop: `true`
+
+  **Behavior:** The picker will automatically close when selecting the day.
+
+- ```tsx
+  <DesktopDatePicker closeOnSelect={false} />
+  ```
+
+  - Default `views` prop: `['year', 'month', 'day']`
+  - Explicit `closeOnSelect` prop: `false`
+
+  **Behavior:** The picker never close when selecting a value.
+
+  :::warning
+  If you want to set `closeOnSelect` to `false` on a desktop picker, you should probably also enable the action bar to allow user to validate the value:
+
+  ```tsx
+  <DesktopDatePicker
+    closeOnSelect={false}
+    slotProps={{ actionBar: { actions: ['cancel', 'accept'] } }}
+  />
+  ```
+
+  :::
+
+- ```tsx
+  <DesktopDatePicker views={['day', 'month', 'year']} />
+  ```
+
+  - Explicit `views` prop: `['day', 'month', 'year']`
+  - Default `closeOnSelect` prop: `true`
+
+  **Behavior:** The picker will automatically close when selecting the year
+
+- ```tsx
+  <DesktopTimePicker />
+  ```
+
+  - Default `views` prop: `['hours', 'minutes']`
+  - Default `closeOnSelect` prop: `true`
+
+  **Behavior:** The picker will automatically close when selecting the minutes
+
+### When is `onChange` called ?
+
+#### When the field used calls `onChange`
+
+When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` event.
+Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#when-is-onchange-called-on-fields) for more information.
+
+#### When the picker closes automatically
+
 On mobile, the picker will not automatically close, you have to manually close it using the [action bar buttons](/x/)
 
-### When the picker is manually closed
+#### When the picker is manually closed
 
 When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, we call `onAccept` with the last
 
 - if the last view has been completed, we call `onAccept` with the current value.
 - if the last view has not been completed, we call `onAccept` with the last validated value
 
-### When a value is validated using the action bar
+#### When a value is validated using the action bar
 
-The
+### When is `onAccept` called ?
 
-- , it is called with the
+#### When the picker closes automatically
+
+#### When the picker is manually closed
+
+#### When a value is validated using the action bar
 
 ## Only update when the value is valid
 

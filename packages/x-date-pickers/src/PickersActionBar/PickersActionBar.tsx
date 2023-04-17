@@ -24,6 +24,8 @@ function PickersActionBar(props: PickersActionBarProps) {
 
   const localeText = useLocaleText();
 
+  console.log(props);
+
   if (actions == null || actions.length === 0) {
     return null;
   }
