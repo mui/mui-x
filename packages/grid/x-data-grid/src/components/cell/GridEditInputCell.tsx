@@ -118,7 +118,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
 
     useEnhancedEffect(() => {
       if (hasFocus) {
-        inputRef.current?.focus();
+        inputRef.current!.focus();
       }
     }, [hasFocus]);
 

@@ -92,7 +92,7 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
 
   useEnhancedEffect(() => {
     if (hasFocus) {
-      inputRef.current?.focus();
+      inputRef.current!.focus();
     }
   }, [hasFocus]);
 

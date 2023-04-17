@@ -149,7 +149,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
 
   useEnhancedEffect(() => {
     if (hasFocus) {
-      inputRef.current?.focus();
+      inputRef.current!.focus();
     }
   }, [hasFocus]);
 
