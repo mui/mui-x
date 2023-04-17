@@ -9,11 +9,10 @@ import {
   THEME_ID as MATERIAL_THEME_ID,
 } from '@mui/material/styles';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
-import type {} from '@mui/material/themeCssVarsAugmentation';
 
 const materialTheme = materialExtendTheme();
 
-export default function JoyUISlots() {
+export default function GridJoyUISlots() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,

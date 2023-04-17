@@ -2,4 +2,4 @@
 
 <p class="description">Using the data grid with Joy UI components</p>
 
-{{"demo": "JoyUISlots.js", "bg": "inline"}}
+{{"demo": "GridJoyUISlots.js", "bg": "inline"}}
