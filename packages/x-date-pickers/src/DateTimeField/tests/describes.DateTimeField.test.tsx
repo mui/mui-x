@@ -1,5 +1,7 @@
+import * as React from 'react';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { userEvent } from '@mui/monorepo/test/utils';
+import TextField from '@mui/material/TextField';
+import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
@@ -8,6 +10,7 @@ import {
   expectInputPlaceholder,
   expectInputValue,
   getTextbox,
+  wrapPickerMount,
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
@@ -21,6 +24,24 @@ describe('<DateTimeField /> - Describes', () => {
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'field',
+  }));
+
+  describeConformance(<DateTimeField />, () => ({
+    classes: {} as any,
+    inheritComponent: TextField,
+    render,
+    muiName: 'MuiDateTimeField',
+    wrapMount: wrapPickerMount,
+    refInstanceof: window.HTMLDivElement,
+    // cannot test reactTestRenderer because of required context
+    skip: [
+      'reactTestRenderer',
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+    ],
   }));
 
   describeValue(DateTimeField, () => ({

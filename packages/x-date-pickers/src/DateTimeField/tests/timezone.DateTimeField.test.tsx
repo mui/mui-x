@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { createPickerRenderer, expectInputValue, getTextbox } from 'test/utils/pickers-utils';
 
-describe('<DateTimeField /> - TimeZone', () => {
+describe('<DateTimeField /> - Timezone', () => {
   describe('Value time-zone modification - Luxon', () => {
     const { render, adapter } = createPickerRenderer({ clock: 'fake', adapterName: 'luxon' });
     it('should update the field when time zone changes (timestamp remains the same)', () => {

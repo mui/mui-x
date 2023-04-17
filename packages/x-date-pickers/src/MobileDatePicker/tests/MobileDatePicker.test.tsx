@@ -5,10 +5,10 @@ import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
+import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 
 describe('<MobileDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   it('allows to change only year', () => {
     const onChangeMock = spy();
@@ -70,7 +70,7 @@ describe('<MobileDatePicker />', () => {
     expect(screen.getByTestId('custom-loading')).toBeVisible();
   });
 
-  describe('Component slots: Toolbar', () => {
+  describe('Component slot: Toolbar', () => {
     it('should render custom toolbar component', () => {
       render(
         <MobileDatePicker
@@ -107,54 +107,7 @@ describe('<MobileDatePicker />', () => {
     });
   });
 
-  describe('Slots: Toolbar', () => {
-    it('should render custom toolbar component', () => {
-      render(
-        <MobileDatePicker
-          open
-          slots={{
-            toolbar: () => <div data-testid="custom-toolbar" />,
-          }}
-        />,
-      );
-
-      expect(screen.getByTestId('custom-toolbar')).toBeVisible();
-    });
-
-    it('should format toolbar according to `toolbarFormat` prop', () => {
-      render(
-        <MobileDatePicker
-          open
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          slotProps={{
-            toolbar: {
-              toolbarFormat: 'MMMM',
-            },
-          }}
-        />,
-      );
-
-      expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
-    });
-  });
-
-  describe('Component slots: Day', () => {
-    it('should render custom day', () => {
-      render(
-        <MobileDatePicker
-          open
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          slots={{
-            day: (props) => <PickersDay {...props} data-testid="test-day" />,
-          }}
-        />,
-      );
-
-      expect(screen.getAllByTestId('test-day')).to.have.length(31);
-    });
-  });
-
-  describe('Slots: Day', () => {
+  describe('Component slot: Day', () => {
     it('should render custom day', () => {
       render(
         <MobileDatePicker
@@ -178,27 +131,6 @@ describe('<MobileDatePicker />', () => {
     expect(screen.getByText('July 2018')).toBeVisible();
   });
 
-  it('prop `showTodayButton` – should accept current date when "today" button is clicked', () => {
-    const handleClose = spy();
-    const handleChange = spy();
-    render(
-      <MobileDatePicker
-        onClose={handleClose}
-        onChange={handleChange}
-        defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-        slotProps={{ actionBar: { actions: ['today'] } }}
-      />,
-    );
-    const start = adapterToUse.date();
-    userEvent.mousePress(screen.getByRole('textbox'));
-    clock.tick(10);
-    fireEvent.click(screen.getByText(/today/i));
-
-    expect(handleClose.callCount).to.equal(1);
-    expect(handleChange.callCount).to.equal(1);
-    expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
-  });
-
   describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
@@ -209,29 +141,6 @@ describe('<MobileDatePicker />', () => {
 
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
-    });
-  });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<MobileDatePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-      openPicker({ type: 'date', variant: 'mobile' });
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
-
-    it('should render title from the `toolbarTitle` locale key', () => {
-      render(
-        <MobileDatePicker
-          open
-          label="something"
-          localeText={{
-            toolbarTitle: 'test',
-          }}
-        />,
-      );
-
-      expect(screen.getByMuiTest('picker-toolbar-title').textContent).to.equal('test');
     });
   });
 });
