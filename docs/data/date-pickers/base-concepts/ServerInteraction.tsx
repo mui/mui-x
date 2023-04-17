@@ -10,26 +10,26 @@ import { DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import useControlled from '@mui/utils/useControlled';
 
 type DisplayEventsProps = {
-  onChangeLogs: (Dayjs | null)[];
-  onAcceptLogs: (Dayjs | null)[];
+  logsFromOnChange: (Dayjs | null)[];
+  logsFromOnAccept: (Dayjs | null)[];
 };
 function DisplayEvents(props: DisplayEventsProps) {
-  const { onChangeLogs, onAcceptLogs } = props;
+  const { logsFromOnChange, logsFromOnAccept } = props;
   return (
     <Stack direction="row" justifyContent="space-between" sx={{ p: 2 }}>
       <Stack sx={{ minWidth: 180 }}>
         <Typography>onChange</Typography>
         <Divider />
         <Typography component="pre" sx={{ maxHeight: '15rem', overflow: 'auto' }}>
-          {onChangeLogs
+          {logsFromOnChange
             .map(
               (value) =>
                 `- ${
                   // eslint-disable-next-line no-nested-ternary
                   value === null
                     ? 'null'
-                    : adapter.isValid(value)
-                    ? adapter.formatByString(value, 'DD/MM/YYYY')
+                    : value.isValid()
+                    ? value.format('DD/MM/YYYY')
                     : 'Invalid Date'
                 }`,
             )
@@ -42,15 +42,15 @@ function DisplayEvents(props: DisplayEventsProps) {
         <Typography>onAccept</Typography>
         <Divider />
         <Typography component="pre">
-          {onAcceptLogs
+          {logsFromOnAccept
             .map(
               (value) =>
                 `- ${
                   // eslint-disable-next-line no-nested-ternary
                   value === null
                     ? 'null'
-                    : adapter.isValid(value)
-                    ? adapter.formatByString(value, 'DD/MM/YYYY')
+                    : value.isValid()
+                    ? value.format('DD/MM/YYYY')
                     : 'Invalid Date'
                 }`,
             )
@@ -91,7 +91,8 @@ function DateFieldWithAccept(
     default: null,
   });
 
-  // Debounced function needs to be memoized to keep the same timeout beween each render. ANd for same reasone, the `onAccept` need to be wrapped in useCallback.
+  // Debounced function needs to be memoized to keep the same timeout beween each render.
+  // For the same reason, the `onAccept` needs to be wrapped in useCallback.
   const deboucedOnAccept = React.useMemo(() => debounce(onAccept, 1000), [onAccept]);
 
   return (
@@ -107,13 +108,16 @@ function DateFieldWithAccept(
   );
 }
 
-const adapter = new AdapterDayjs();
 export default function ServerInteraction() {
-  const [onChangeLogs, setOnChangeLogs] = React.useState<(Dayjs | null)[]>([]);
-  const [onAcceptLogs, setOnAcceptLogs] = React.useState<(Dayjs | null)[]>([]);
+  const [logsFromOnChange, setLogsFromOnChange] = React.useState<(Dayjs | null)[]>(
+    [],
+  );
+  const [logsFromOnAccept, setLogsFromOnAccept] = React.useState<(Dayjs | null)[]>(
+    [],
+  );
 
   const onAccept = React.useCallback((newValue: Dayjs | null) => {
-    setOnAcceptLogs((prev) => [newValue, ...prev]);
+    setLogsFromOnAccept((prev) => [newValue, ...prev]);
   }, []);
 
   return (
@@ -122,22 +126,25 @@ export default function ServerInteraction() {
         <DateFieldWithAccept
           onAccept={onAccept}
           onChange={(newValue) => {
-            setOnChangeLogs((prev) => [newValue, ...prev]);
+            setLogsFromOnChange((prev) => [newValue, ...prev]);
           }}
           sx={{ width: 150 }}
           label="debounced field"
           defaultValue={dayjs(new Date(2020, 10, 5))}
         />
-        <DisplayEvents onChangeLogs={onChangeLogs} onAcceptLogs={onAcceptLogs} />
+        <DisplayEvents
+          logsFromOnChange={logsFromOnChange}
+          logsFromOnAccept={logsFromOnAccept}
+        />
         <Button
           sx={{ ml: 'auto' }}
           variant="outlined"
           onClick={() => {
-            setOnChangeLogs([]);
-            setOnAcceptLogs([]);
+            setLogsFromOnChange([]);
+            setLogsFromOnAccept([]);
           }}
         >
-          Clear
+          Clear logs
         </Button>
       </Stack>
     </LocalizationProvider>

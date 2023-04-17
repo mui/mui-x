@@ -104,15 +104,15 @@ Especially if the user is setting the date thanks to arrow interaction.
 In such a case, the recommended UI is to add a button for validating the form.
 If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debouce the `onChange` as follow.
 
-In the next demos, we extends the `<DateField />` to add an `onAccept` props which is a debounced version of the `onAccept`.
+In the next demos, `<DateField />` is extended to add an `onAccept` props which is a debounced version of the `onChange`.
 
 {{"demo": "ServerInteraction.js"}}
 
 :::info
-Most of the picers have an `onAccept` props.
-This does concern views, and not fields.
+Most of the pickers have an `onAccept` props.
+This props does concern views, and not fields.
 
-It will be called only if user press the "accept" button, or if they finish the selection and the view is closing.
+It will be called only if user presses the "accept" button, or if they finish the selection and the view is closing.
 :::
 
 ## TypeScript

@@ -838,7 +838,7 @@ In v5, user had to delet character and rewrite them to update a date.
 Such that `onChange` was called twice.
 At the first deleted character, and when data was complet again.
 
-In v6 The user can override the field section, so `onChange` is called at nearly every key pressed.
+In v6, user can override the field section, so `onChange` is called at nearly every key pressed.
 
 If you were relying on `onChange` to send server request, you might be interested by debouncing it to avoid sending too many requests.
 To do so please refer to the corresponding [docs example](/x/react-date-pickers/base-concepts/#server-interaction).
