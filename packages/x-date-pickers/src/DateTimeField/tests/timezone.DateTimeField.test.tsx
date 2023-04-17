@@ -12,11 +12,11 @@ describe('<DateTimeField /> - TimeZone', () => {
       const date = adapter.date(new Date('2020-06-18T14:30:10.000Z')).setZone('UTC');
       setProps({ value: date });
 
-      expectInputValue(input, '6 / 18 / 2020 02:30 PM');
+      expectInputValue(input, '6/18/2020 02:30 PM');
 
       setProps({ value: date.setZone('America/Los_Angeles') });
 
-      expectInputValue(input, '6 / 18 / 2020 07:30 AM');
+      expectInputValue(input, '6/18/2020 07:30 AM');
     });
   });
 });

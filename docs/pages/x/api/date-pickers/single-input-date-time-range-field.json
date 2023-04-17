@@ -28,6 +28,10 @@
     "disablePast": { "type": { "name": "bool" } },
     "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
     "FormHelperTextProps": { "type": { "name": "object" } },
     "fullWidth": { "type": { "name": "bool" } },
     "helperText": { "type": { "name": "node" } },
@@ -103,7 +107,10 @@
     "globalClasses": {},
     "name": "MuiSingleInputDateTimeRangeField"
   },
+  "spread": true,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputDateTimeRangeField/SingleInputDateTimeRangeField.tsx",
+  "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "SingleInputDateTimeRangeField" }
