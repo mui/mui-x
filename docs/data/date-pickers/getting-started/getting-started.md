@@ -52,7 +52,7 @@ npm install @mui/material @mui/styled-engine-sc styled-components
 yarn add @mui/material @mui/styled-engine-sc styled-components
 ```
 
-## Code setup
+## Setup your date library adapter
 
 Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
 This component receives your chosen [date library's adapter](https://mui.com/x/react-date-pickers/#date-library) (the doc uses `AdapterDayjs` which is based on [dayjs](https://day.js.org/)) and makes it accessible to all the Date and Time Pickers component using React context.
