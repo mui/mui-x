@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { unstable_joySlots } from '@mui/x-data-grid/joy';
-
 import {
   experimental_extendTheme as materialExtendTheme,
   Experimental_CssVarsProvider as MaterialCssVarsProvider,
@@ -25,7 +24,7 @@ export default function JoyUISlots() {
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
         <Box sx={{ height: 400, width: '100%' }}>
-          <DataGridPro
+          <DataGrid
             pagination
             slots={unstable_joySlots}
             {...data}
