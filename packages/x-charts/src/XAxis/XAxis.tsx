@@ -12,7 +12,7 @@ export interface XAxisProps {
   /**
    * Id of the axis to render.
    */
-  axisId?: string;
+  axisId: string;
   /**
    * If true, the axis line is disabled.
    * @default false
