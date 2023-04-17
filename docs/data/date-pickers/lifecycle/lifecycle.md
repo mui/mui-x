@@ -146,3 +146,23 @@ If you only want to update your state when the value is valid, you can ignore an
 In the example below, `onChange` will only be called if the date is valid and its year is 2022:
 
 {{"demo": "LifeCycleIgnoreInvalidValue.js"}}
+
+## Server interaction
+
+If the selected value is used to interact with the server, you might want to avoid sending all the intermediate states.
+
+Especially if the user is setting the date using the arrow interaction.
+
+In such a case, the recommended UI is to add a button for validating the form.
+If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debouce the `onChange` as follow.
+
+In the following demo, `<DateField />` is extended adding an `onAccept` prop which is a debounced version of the `onChange`.
+
+{{"demo": "ServerInteraction.js"}}
+
+:::info
+Most of the pickers have an `onAccept` prop.
+This prop does concern only views and not fields.
+
+It will be called only if the user presses the "accept" button, or if they finish the selection and the view is closing.
+:::
