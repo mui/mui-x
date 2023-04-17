@@ -29,7 +29,7 @@ export interface LocalizationProviderProps<TDate> {
   children?: React.ReactNode;
   /**
    * Date library adapter class function.
-   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#code-setup code setup section} for more details.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
    */
   dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate>;
   /** Formats that are used for any child pickers */
@@ -148,7 +148,7 @@ LocalizationProvider.propTypes = {
   children: PropTypes.node,
   /**
    * Date library adapter class function.
-   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#code-setup code setup section} for more details.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
    */
   dateAdapter: PropTypes.func,
   /**
