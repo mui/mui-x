@@ -627,5 +627,196 @@ describe('<DataGridPremium /> - Clipboard', () => {
         'onClipboardPasteEnd',
       ]);
     });
+
+    describe('should copy and paste cell value', () => {
+      let clipboardData = '';
+      const writeText = (data: string) => {
+        clipboardData = data;
+        return Promise.resolve();
+      };
+      const originalClipboard = navigator.clipboard;
+
+      beforeEach(function beforeEachHook() {
+        Object.defineProperty(navigator, 'clipboard', {
+          value: { writeText },
+          writable: true,
+        });
+      });
+
+      afterEach(function afterEachHook() {
+        Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
+        clipboardData = '';
+      });
+
+      function CopyPasteTest(props: DataGridPremiumProps) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              rowSelection={false}
+              experimentalFeatures={{ clipboardPaste: true }}
+              unstable_ignoreValueFormatterDuringExport
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      function copyCell(cell: HTMLElement) {
+        userEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
+      }
+
+      function pasteIntoCell(cell: HTMLElement) {
+        cell.focus();
+        userEvent.mousePress(cell);
+        paste(cell, clipboardData);
+      }
+
+      it('column type: string', async () => {
+        const rows = [
+          { id: 0, brand: 'Nike' },
+          { id: 1, brand: 'Adidas' },
+        ];
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'brand', type: 'string', editable: true },
+        ];
+
+        render(<CopyPasteTest columns={columns} rows={rows} />);
+
+        const sourceCell = getCell(0, 1);
+        const targetCell = getCell(1, 1);
+        await waitFor(() => expect(targetCell.textContent).not.to.equal(sourceCell.textContent));
+
+        copyCell(sourceCell);
+        pasteIntoCell(targetCell);
+
+        await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
+      });
+
+      it('column type: number', async () => {
+        const rows = [
+          { id: 0, price: 100000 },
+          { id: 1, price: 120000 },
+        ];
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'price', type: 'number', editable: true },
+        ];
+
+        render(<CopyPasteTest columns={columns} rows={rows} />);
+
+        const sourceCell = getCell(0, 1);
+        const targetCell = getCell(1, 1);
+        await waitFor(() => expect(targetCell.textContent).not.to.equal(sourceCell.textContent));
+
+        copyCell(sourceCell);
+        pasteIntoCell(targetCell);
+
+        await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
+      });
+
+      it('column type: boolean', async () => {
+        const rows = [
+          { id: 0, isAdmin: false },
+          { id: 1, isAdmin: true },
+        ];
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'isAdmin', type: 'boolean', editable: true },
+        ];
+
+        render(<CopyPasteTest columns={columns} rows={rows} />);
+
+        const sourceCell = getCell(0, 1);
+        const targetCell = getCell(1, 1);
+
+        await waitFor(() => {
+          expect(targetCell.querySelector('svg')!.getAttribute('data-value')).not.to.equal(
+            sourceCell.querySelector('svg')!.getAttribute('data-value'),
+          );
+        });
+
+        copyCell(sourceCell);
+        pasteIntoCell(targetCell);
+
+        await waitFor(() => {
+          expect(targetCell.querySelector('svg')!.getAttribute('data-value')).to.equal(
+            sourceCell.querySelector('svg')!.getAttribute('data-value'),
+          );
+        });
+      });
+
+      it('column type: date', async () => {
+        const rows = [
+          { id: 0, date: new Date(2023, 3, 17) },
+          { id: 1, date: new Date(2022, 2, 26) },
+        ];
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'date', type: 'date', editable: true },
+        ];
+
+        render(<CopyPasteTest columns={columns} rows={rows} />);
+
+        const sourceCell = getCell(0, 1);
+        const targetCell = getCell(1, 1);
+        await waitFor(() => expect(targetCell.textContent).not.to.equal(sourceCell.textContent));
+
+        copyCell(sourceCell);
+        pasteIntoCell(targetCell);
+
+        await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
+      });
+
+      it('column type: dateTime', async () => {
+        const rows = [
+          { id: 0, dateTime: new Date(2023, 3, 17, 15, 45) },
+          { id: 1, dateTime: new Date(2022, 2, 26, 9, 12) },
+        ];
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          { field: 'dateTime', type: 'dateTime', editable: true },
+        ];
+
+        render(<CopyPasteTest columns={columns} rows={rows} />);
+
+        const sourceCell = getCell(0, 1);
+        const targetCell = getCell(1, 1);
+        await waitFor(() => expect(targetCell.textContent).not.to.equal(sourceCell.textContent));
+
+        copyCell(sourceCell);
+        pasteIntoCell(targetCell);
+
+        await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
+      });
+
+      it('column type: singleSelect', async () => {
+        const rows = [
+          { id: 0, value: 'Three' },
+          { id: 1, value: 'One' },
+        ];
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          {
+            field: 'value',
+            type: 'singleSelect',
+            valueOptions: ['One', 'Two', 'Three'],
+            editable: true,
+          },
+        ];
+
+        render(<CopyPasteTest columns={columns} rows={rows} />);
+
+        const sourceCell = getCell(0, 1);
+        const targetCell = getCell(1, 1);
+        await waitFor(() => expect(targetCell.textContent).not.to.equal(sourceCell.textContent));
+
+        copyCell(sourceCell);
+        pasteIntoCell(targetCell);
+
+        await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
+      });
+    });
   });
 });
