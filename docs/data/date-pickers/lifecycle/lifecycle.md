@@ -123,13 +123,6 @@ Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#when-is-
 
 On mobile, the picker will not automatically close, you have to manually close it using the [action bar buttons](/x/)
 
-#### When the picker is manually closed
-
-When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, we call `onAccept` with the last
-
-- if the last view has been completed, we call `onAccept` with the current value.
-- if the last view has not been completed, we call `onAccept` with the last validated value
-
 #### When a value is validated using the action bar
 
 ### When is `onAccept` called ?
@@ -137,6 +130,11 @@ When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker
 #### When the picker closes automatically
 
 #### When the picker is manually closed
+
+When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, we call `onAccept` with the last
+
+- if the last view has been completed, we call `onAccept` with the current value.
+- if the last view has not been completed, we call `onAccept` with the last validated value
 
 #### When a value is validated using the action bar
 
