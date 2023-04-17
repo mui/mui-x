@@ -76,7 +76,7 @@ export const useGridEditing = (
       clearTimeout(timeout);
     }
 
-    // To run the callback immediatelly without waiting the timeout
+    // To run the callback immediately without waiting the timeout
     const runImmediately = () => {
       const [timeout] = debounceMap.current[id][field];
       clearTimeout(timeout);
@@ -160,8 +160,7 @@ export const useGridEditing = (
   const getEditCellMeta = React.useCallback<GridEditingSharedApi['unstable_getEditCellMeta']>(
     (id, field) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
-
-      return { changeReason: editingState[id][field].changeReason };
+      return editingState[id][field];
     },
     [apiRef],
   );

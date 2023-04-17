@@ -5,6 +5,7 @@ import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   adapterToUse,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
   openPicker,
 } from 'test/utils/pickers-utils';
@@ -44,10 +45,12 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         screen.getByLabelText('End'),
       ];
       expectedValues.forEach((value, index) => {
-        const expectedValueStr =
-          value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
+        const input = textBoxes[index];
         // TODO: Support single range input
-        expectInputValue(textBoxes[index], expectedValueStr, true);
+        if (!value) {
+          expectInputPlaceholder(input, 'MM/DD/YYYY');
+        }
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '');
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
@@ -70,11 +73,9 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         })[0],
       );
 
-      // Close the picker to return to the initial state
+      // Close the picker
       if (!isOpened) {
-        fireDiscreteEvent.keyDown(screen.getByLabelText(setEndDate ? 'End' : 'Start'), {
-          key: 'Escape',
-        });
+        fireDiscreteEvent.keyDown(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
       }
 

@@ -65,6 +65,16 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 {{"demo": "LocalizationLuxon.js"}}
 
+:::warning
+The Date and Time Pickers are not working well with Luxon macro-token (`D`, `DD`, `T`, `TT`, ...),
+because of [how they are expanded](https://github.com/mui/mui-x/issues/7615).
+
+If your application is using only a single locale, the easiest solution is to manually provide a format that does not contain any macro-token
+(e.g. `M/d/yyyy` instead of `D` for the english locale).
+
+As soon as a solution is found the built-in support will be improved.
+:::
+
 ### With `moment`
 
 For `moment`, import the locale and then pass its name to `LocalizationProvider`:
@@ -137,6 +147,10 @@ This prop is available on all fields and pickers.
 
 {{"demo": "CustomFieldFormat.js"}}
 
+:::info
+You can control the field format spacing using the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
+:::
+
 ### Custom field placeholder
 
 When a section is empty, the fields displays its placeholder instead of an empty value.
@@ -173,7 +187,7 @@ The default formatter only keeps the first letter and capitalises it.
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
 :::
 
-The example bellow adds a dot at the end of each day in the calendar header:
+The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
 

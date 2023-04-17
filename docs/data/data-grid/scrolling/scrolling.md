@@ -10,9 +10,11 @@ If the row or column index is not present, the data grid will not do any movemen
 
 The following demo explores the usage of this API:
 
-{{"demo": "ScrollPlayground.js", "bg": true}}
+{{"demo": "ScrollPlayground.js", "bg": "inline"}}
 
 ## apiRef
+
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the data grid.

@@ -105,7 +105,7 @@ export default function App() {
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
@@ -137,7 +137,7 @@ Please pay attention to the license.
 
 The component comes [in different plans](https://mui.com/pricing/):
 
-- **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
+- **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://www.tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 - **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 - **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 

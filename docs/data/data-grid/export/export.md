@@ -399,6 +399,8 @@ You will be able to copy and paste items to and from the data grid using the sys
 
 ## apiRef
 
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+
 :::warning
 Only use this API as the last option. Give preference to the props to control the data grid.
 :::

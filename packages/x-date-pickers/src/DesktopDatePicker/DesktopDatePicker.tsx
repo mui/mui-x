@@ -4,7 +4,8 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { DateView, useLocaleText, useUtils, validateDate } from '../internals';
+import { useLocaleText, useUtils, validateDate } from '../internals';
+import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { DateField } from '../DateField';
@@ -93,7 +94,7 @@ DesktopDatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -160,6 +161,12 @@ DesktopDatePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -346,7 +353,7 @@ DesktopDatePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

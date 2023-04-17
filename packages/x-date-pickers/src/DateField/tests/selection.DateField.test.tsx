@@ -14,6 +14,14 @@ describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const clickOnInput = (input: HTMLInputElement, position: number | string) => {
+    act(() => {
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
+    });
+    clock.runToLast();
     const clickPosition = typeof position === 'string' ? input.value.indexOf(position) : position;
     if (clickPosition === -1) {
       throw new Error(
@@ -21,11 +29,6 @@ describe('<DateField /> - Selection', () => {
       );
     }
     act(() => {
-      fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
-      fireEvent.mouseUp(input);
       input.setSelectionRange(clickPosition, clickPosition);
       fireEvent.click(input);
 
@@ -38,8 +41,8 @@ describe('<DateField /> - Selection', () => {
       render(<DateField autoFocus />);
       const input = getTextbox();
 
-      expectInputValue(input, 'MM / DD / YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
     });
 
     it('should select all on mount focus (`autoFocus = true`) with start separator', () => {
@@ -56,11 +59,12 @@ describe('<DateField /> - Selection', () => {
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
-        input.select();
       });
+      clock.runToLast();
+      input.select();
 
-      expectInputValue(input, 'MM / DD / YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
     });
 
     it('should select all on <Tab> focus with start separator', () => {
@@ -69,8 +73,9 @@ describe('<DateField /> - Selection', () => {
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
-        input.select();
       });
+      clock.runToLast();
+      input.select();
 
       expectInputValue(input, '- YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('- YYYY');
@@ -82,13 +87,13 @@ describe('<DateField /> - Selection', () => {
       // Simulate a touch focus interaction on mobile
       act(() => {
         input.focus();
-        input.setSelectionRange(9, 10);
-        clock.runToLast();
       });
+      clock.runToLast();
+      expectInputValue(input, 'MM/DD/YYYY');
 
-      expectInputValue(input, 'MM / DD / YYYY');
-      expect(input.selectionStart).to.equal(9);
-      expect(input.selectionEnd).to.equal(11);
+      input.setSelectionRange(3, 5);
+      expect(input.selectionStart).to.equal(3);
+      expect(input.selectionEnd).to.equal(5);
     });
 
     it('should select day on desktop', () => {
@@ -96,7 +101,7 @@ describe('<DateField /> - Selection', () => {
       const input = getTextbox();
       clickOnInput(input, 'DD');
 
-      expectInputValue(input, 'MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
     });
   });
@@ -130,7 +135,7 @@ describe('<DateField /> - Selection', () => {
       clickOnInput(input, 1);
 
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
     });
 
     it('should select all sections with start separator', () => {
@@ -169,7 +174,7 @@ describe('<DateField /> - Selection', () => {
 
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
@@ -202,7 +207,7 @@ describe('<DateField /> - Selection', () => {
 
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent(input)).to.equal('MM');

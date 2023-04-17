@@ -4,6 +4,10 @@
 
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v5 to v6.</p>
 
+## Introduction
+
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+
 ## Start using the new release
 
 In `package.json`, change the version of the data grid package to `latest` or `^6.0.0`.
@@ -63,7 +67,7 @@ These changes were done for consistency, improve stability and make room for new
 Below are described the steps you need to make to migrate from v5 to v6.
 
 :::warning
-The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/es/blog/release/v12.22.12/).
+The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/en/blog/release/v12.22.12).
 :::
 
 ### ✅ Renamed props
@@ -85,13 +89,13 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
-- The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- The `components.Header` slot was removed. Use `components.Toolbar` or `slots.toolbar` slot instead.
 - ✅ The `disableExtendRowFullWidth` prop was removed. Use [`showCellVerticalBorder`](/x/api/data-grid/data-grid/#props) or [`showColumnVerticalBorder`](/x/api/data-grid/data-grid/#props) prop to show or hide right border for cells and header cells respectively.
 - The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
-- ✅ The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
+- ✅ The `onCellFocusOut` prop was removed. Use `slotProps.cell.onBlur` instead:
   ```tsx
   <DataGrid
-    componentsProps={{
+    slotProps={{
       cell: {
         onBlur: (event) => {
           const cellElement = event.currentTarget;
@@ -102,7 +106,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
-- The `error` and `onError` props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html). The `components.ErrorOverlay` slot was also removed.
+- The `error` and `onError` props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary). The `components.ErrorOverlay` slot was also removed.
 
 ### State access
 
@@ -120,11 +124,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
   ```diff
-  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef)
-  +const all = gridColumnFieldsSelector(apiRef)
-  +const lookup = gridColumnLookupSelector(apiRef)
-  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef)
-   }
+  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef);
+  +const all = gridColumnFieldsSelector(apiRef);
+  +const lookup = gridColumnLookupSelector(apiRef);
+  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
   ```
 - The `filterableGridColumnsIdsSelector` selector was removed. Use `gridFilterableColumnLookupSelector` instead.
   ```diff
@@ -178,9 +181,9 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
-- The `componentError` event was removed. Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
+- The `componentError` event was removed. Use the [error boundary](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary) to catch errors thrown during rendering.
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
-- The `cellFocusIn` and `cellFocusOut` events are internal now. Use `componentsProps.cell.onFocus` and `componentsProps.cell.onBlur` props instead.
+- The `cellFocusIn` and `cellFocusOut` events are internal now. Use `slotProps.cell.onFocus` and `slotProps.cell.onBlur` props instead.
 
 :::info
 To know more about the supported events and their signatures, check the [events catalog](https://mui.com/x/react-data-grid/events/#catalog-of-events) page.
@@ -244,18 +247,18 @@ To know more about the supported events and their signatures, check the [events 
 - The `GridFilterItemProps` type has been renamed to `GridColumnMenuItemProps`.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
   ```diff
-  -const CustomColumnMenu = ({ column }) => {
-  +const CustomColumnMenu = ({ colDef }) => {
-  - if (column.field === 'name') {
-  + if (colDef.field === 'name') {
-      return <div>Custom column menu for name field</div>;
-    }
-    return (
-      <div>
-        <GridFilterMenuItem colDef={colDef} />
-        <GridColumnMenuColumnsItem colDef={colDef} />
-      </div>
-    )
+  -function CustomColumnMenu({ column }) {
+  -  if (column.field === 'name') {
+  +function CustomColumnMenu({ colDef }) {
+  +  if (colDef.field === 'name') {
+       return <div>Custom column menu for name field</div>;
+     }
+     return (
+       <div>
+         <GridFilterMenuItem colDef={colDef} />
+         <GridColumnMenuColumnsItem colDef={colDef} />
+       </div>
+     );
    }
   ```
 
@@ -263,7 +266,7 @@ To know more about the supported events and their signatures, check the [events 
 Most of this breaking change is handled by `preset-safe` codemod but some further fixes may be needed:
 
 - If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better API.
-- If you are using Custom Column Menu using `components.ColumnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
+- If you are using Custom Column Menu using `components.ColumnMenu` or `slots.columnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
   :::
 
 ### Rows
@@ -278,21 +281,28 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   Use the `focusedCell` and `tabbableCell` props instead.
   For the editing state, use the API methods.
   ```diff
-   const CustomRow = (props) => {
+   function CustomRow(props) {
   -  const focusedField = props.cellFocus.field;
-  +  const focusedField = props.focusedCell;
   -  const tabIndex = props.cellTabIndex.field && cellMode === 'view' ? 0 : 1;
+  +  const focusedField = props.focusedCell;
   +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
-   }
   ```
+- Updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or calling `apiRef.current.setRows` will now remove the expansion state of the grid as these methods are meant to replace the rows.
+  For partial row updates, use the [`apiRef.current.updateRows`](/x/react-data-grid/row-updates/#the-updaterows-method) method instead.
 
 ### Pagination
 
 - The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and `onPaginationModelChange` instead.
 
   ```diff
-  -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
-  +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
+   <DataGrid
+  -  page={page}
+  -  pageSize={pageSize}
+  -  onPageChange={handlePageChange}
+  -  onPageSizeChange={handlePageSizeChange}
+  +  paginationModel={{ page, pageSize }}
+  +  onPaginationModelChange={handlePaginationModelChange}
+   />
   ```
 
 - The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
@@ -448,7 +458,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
   ```diff
   -renderCell: (params: GridRenderCellParams<number>) => {
-  +renderCell: (params: GridRenderCellParams<any, any, number>) => {
+  +renderCell: (params: GridRenderCellParams<any, number>) => {
   ```
 
 - The `GridErrorOverlay` component was removed.

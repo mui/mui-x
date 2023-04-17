@@ -21,7 +21,7 @@ const AGGREGATION_WRAPPABLE_PROPERTIES = [
   'filterOperators',
 ] as const;
 
-type WrappableColumnProperty = typeof AGGREGATION_WRAPPABLE_PROPERTIES[number];
+type WrappableColumnProperty = (typeof AGGREGATION_WRAPPABLE_PROPERTIES)[number];
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties?: {
@@ -204,7 +204,7 @@ export const wrapColumnWithAggregationValue = ({
     // TODO: Add custom root id
     const groupId = cellAggregationPosition === 'inline' ? id : rowNode.parent ?? '';
 
-    const aggregationResult = gridAggregationLookupSelector(apiRef)[groupId]?.[field];
+    const aggregationResult = gridAggregationLookupSelector(apiRef)?.[groupId]?.[field];
     if (!aggregationResult || aggregationResult.position !== cellAggregationPosition) {
       return null;
     }

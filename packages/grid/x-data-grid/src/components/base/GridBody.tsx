@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
-import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
   gridColumnPositionsSelector,
@@ -28,7 +27,6 @@ import {
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 
 interface GridBodyProps {
-  children?: React.ReactNode;
   ColumnHeadersProps?: Record<string, any>;
   VirtualScrollerComponent: React.JSXElementConstructor<
     React.HTMLAttributes<HTMLDivElement> & {
@@ -39,9 +37,10 @@ interface GridBodyProps {
 }
 
 function GridBody(props: GridBodyProps) {
-  const { children, VirtualScrollerComponent, ColumnHeadersProps } = props;
+  const { VirtualScrollerComponent, ColumnHeadersProps } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const rootRef = React.useRef<HTMLDivElement>(null);
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
@@ -80,6 +79,29 @@ function GridBody(props: GridBodyProps) {
     rootProps.disableVirtualization,
   );
 
+  useEnhancedEffect(() => {
+    apiRef.current.computeSizeAndPublishResizeEvent();
+
+    const elementToObserve = rootRef.current;
+    if (typeof ResizeObserver === 'undefined') {
+      return () => {};
+    }
+
+    const observer = new ResizeObserver(() => {
+      apiRef.current.computeSizeAndPublishResizeEvent();
+    });
+
+    if (elementToObserve) {
+      observer.observe(elementToObserve);
+    }
+
+    return () => {
+      if (elementToObserve) {
+        observer.unobserve(elementToObserve);
+      }
+    };
+  }, [apiRef]);
+
   const disableVirtualization = React.useCallback(() => {
     setIsVirtualizationDisabled(true);
   }, []);
@@ -111,15 +133,10 @@ function GridBody(props: GridBodyProps) {
     virtualScrollerRef,
   });
 
-  const handleResize = React.useCallback(
-    (size: ElementSize) => {
-      apiRef.current.publishEvent('resize', size);
-    },
-    [apiRef],
-  );
+  const hasDimensions = !!apiRef.current.getRootDimensions();
 
   return (
-    <GridMainContainer>
+    <GridMainContainer ref={rootRef}>
       <rootProps.slots.columnHeaders
         ref={columnsContainerRef}
         innerRef={columnHeadersRef}
@@ -139,17 +156,17 @@ function GridBody(props: GridBodyProps) {
         hasOtherElementInTabSequence={hasOtherElementInTabSequence}
         {...ColumnHeadersProps}
       />
-      <GridAutoSizer
-        nonce={rootProps.nonce}
-        disableHeight={rootProps.autoHeight}
-        onResize={handleResize}
-      >
+      {hasDimensions && (
         <VirtualScrollerComponent
+          // The content is only rendered after dimensions are computed because
+          // the lazy-loading hook is listening to `renderedRowsIntervalChange`,
+          // but only does something if the dimensions are also available.
+          // If this event is published while dimensions haven't been computed,
+          // the `onFetchRows` prop won't be called during mount.
           ref={virtualScrollerRef}
           disableVirtualization={isVirtualizationDisabled}
         />
-      </GridAutoSizer>
-      {children}
+      )}
     </GridMainContainer>
   );
 }
@@ -159,7 +176,6 @@ GridBody.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  children: PropTypes.node,
   ColumnHeadersProps: PropTypes.object,
   VirtualScrollerComponent: PropTypes.elementType.isRequired,
 } as any;

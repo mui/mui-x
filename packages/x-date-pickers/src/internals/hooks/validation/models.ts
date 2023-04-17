@@ -1,4 +1,4 @@
-import { TimeView } from '../../models/views';
+import { TimeView } from '../../../models';
 
 interface FutureAndPastValidationProps {
   /**

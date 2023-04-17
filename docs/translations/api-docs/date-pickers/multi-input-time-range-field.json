@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "ampm": "12h/24h view for hour selection clock.",
-    "components": "Overrideable components.",
+    "components": "Overridable components.",
     "componentsProps": "The props used for each component slot.",
     "defaultValue": "The default value. Use when the component is not controlled.",
     "direction": "Defines the <code>flex-direction</code> style property. It is applied for all screen sizes.",
@@ -12,6 +12,7 @@
     "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "divider": "Add an element between each child.",
     "format": "Format of the date when rendered in the input(s).",
+    "formatDensity": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
     "maxTime": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
     "minTime": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
     "minutesStep": "Step over minutes.",
@@ -23,9 +24,10 @@
     "shouldDisableClock": "Disable specific clock time.<br><br><strong>Signature:</strong><br><code>function(clockValue: number, view: TimeView) =&gt; boolean</code><br><em>clockValue:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): If <code>true</code> the time will be disabled.",
     "shouldDisableTime": "Disable specific time.<br><br><strong>Signature:</strong><br><code>function(value: TDate, view: TimeView) =&gt; boolean</code><br><em>value:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): If <code>true</code> the time will be disabled.",
     "slotProps": "The props used for each component slot.",
-    "slots": "Overrideable slots.",
+    "slots": "Overridable slots.",
     "spacing": "Defines the space between immediate children.",
     "sx": "The system prop, which allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
+    "useFlexGap": "If <code>true</code>, the CSS flexbox <code>gap</code> is used instead of applying <code>margin</code> to children.<br>While CSS <code>gap</code> removes the <a href=\"https://mui.com/joy-ui/react-stack#limitations\">known limitations</a>, it is not fully supported in some browsers. We recommend checking <a href=\"https://caniuse.com/?search=flex%20gap\">https://caniuse.com/?search=flex%20gap</a> before using this flag.<br>To enable this flag globally, follow the <a href=\"https://mui.com/material-ui/customization/theme-components/#default-props\">theme&#39;s default props</a> configuration.",
     "value": "The selected value. Used when the component is controlled."
   },
   "classDescriptions": {},

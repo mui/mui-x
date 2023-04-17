@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MuiRenderResult, createRenderer } from '@mui/monorepo/test/utils/createRenderer';
-import { DateOrTimeView } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { PickerComponentFamily } from '../describe.types';
 
 export interface DescribeValidationInputOptions {
@@ -10,6 +10,7 @@ export interface DescribeValidationInputOptions {
   after?: () => void;
   componentFamily: PickerComponentFamily;
   views: DateOrTimeView[];
+  variant?: 'mobile' | 'desktop';
 }
 
 export interface DescribeValidationOptions extends DescribeValidationInputOptions {

@@ -6,6 +6,8 @@ The default locale of MUI is English (United States). If you want to use other l
 
 ## Translation keys
 
+<!-- #default-branch-switch -->
+
 You can use the `localeText` prop to pass in your own text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
 in the GitHub repository.
@@ -63,7 +65,7 @@ The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DataGrid, bgBG } from '@mui/x-data-grid';
-import { bgBG as pickersBgBG } from '@mui/x-date-pickers';
+import { bgBG as pickersBgBG } from '@mui/x-date-pickers/locales';
 import { bgBG as coreBgBG } from '@mui/material/locale';
 
 const theme = createTheme(

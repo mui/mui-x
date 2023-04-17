@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -29,12 +29,14 @@ const GridMainContainerRoot = styled('div', {
   overflow: 'hidden',
 }));
 
-export function GridMainContainer(props: React.PropsWithChildren<{}>) {
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
-  return (
-    <GridMainContainerRoot className={classes.root} ownerState={rootProps}>
-      {props.children}
-    </GridMainContainerRoot>
-  );
-}
+export const GridMainContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
+  (props, ref) => {
+    const rootProps = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
+    return (
+      <GridMainContainerRoot ref={ref} className={classes.root} ownerState={rootProps}>
+        {props.children}
+      </GridMainContainerRoot>
+    );
+  },
+);

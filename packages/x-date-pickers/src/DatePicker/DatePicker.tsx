@@ -51,7 +51,7 @@ DatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -124,6 +124,12 @@ DatePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -310,7 +316,7 @@ DatePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

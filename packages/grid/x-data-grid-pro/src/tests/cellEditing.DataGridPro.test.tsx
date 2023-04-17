@@ -186,6 +186,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
+          unstable_updateValueOnRender: false,
         });
       });
 
@@ -734,6 +735,16 @@ describe('<DataGridPro /> - Cell Editing', () => {
         fireEvent.keyDown(cell, { key: '$' });
         expect(listener.lastCall.args[0].reason).to.equal('printableKeyDown');
       });
+
+      it(`should not publish 'cellEditStart' if space is pressed`, () => {
+        render(<TestCase autoHeight />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('cellEditStart', listener);
+        const cell = getCell(0, 1);
+        userEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: ' ' });
+        expect(listener.callCount).to.equal(0);
+      });
     });
 
     describe('by pressing a number', () => {
@@ -1127,7 +1138,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
     });
 
-    describe('mode=edit to mode=vew', () => {
+    describe('mode=edit to mode=view', () => {
       it('should stop edit mode', () => {
         const { setProps } = render(
           <TestCase cellModesModel={{ 0: { currencyPair: { mode: GridCellModes.Edit } } }} />,

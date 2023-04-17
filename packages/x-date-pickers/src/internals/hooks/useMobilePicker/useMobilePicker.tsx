@@ -3,15 +3,14 @@ import { useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
-import { DateOrTimeView } from '../../models';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
+import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -35,6 +34,7 @@ export const useMobilePicker = <
     className,
     sx,
     format,
+    formatDensity,
     label,
     inputRef,
     readOnly,
@@ -53,7 +53,7 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
+  } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
     props,
     inputRef: internalInputRef,
     valueManager,
@@ -66,6 +66,7 @@ export const useMobilePicker = <
   const Field = slots.field;
   const fieldProps: BaseSingleInputFieldProps<
     TDate | null,
+    FieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -82,6 +83,7 @@ export const useMobilePicker = <
       className,
       sx,
       format,
+      formatDensity,
       label,
     },
     ownerState: props,
@@ -93,7 +95,7 @@ export const useMobilePicker = <
     'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
   };
 
-  const slotsForField: BaseSingleInputFieldProps<TDate, unknown>['slots'] = {
+  const slotsForField: BaseSingleInputFieldProps<TDate, FieldSection, unknown>['slots'] = {
     textField: slots.textField,
     ...fieldProps.slots,
   };

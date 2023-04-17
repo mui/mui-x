@@ -2,8 +2,6 @@
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
-## New test section
-
 ## Making a column editable
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):
@@ -430,6 +428,8 @@ Instead, use the buttons available in each row or in the toolbar.
 See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
 
 ## apiRef
+
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

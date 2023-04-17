@@ -8,7 +8,7 @@ import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
   inProps: SingleInputDateRangeFieldProps<TDate>,
@@ -19,17 +19,23 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     name: 'MuiSingleInputDateRangeField',
   });
 
-  const { slots, slotProps, components, componentsProps, ...other } = themeProps;
+  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
+    themeProps;
 
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
-  const textFieldProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
-    elementType: TextField,
-    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
-    externalForwardedProps: other,
-    ownerState,
-  });
+  const { inputRef: externalInputRef, ...textFieldProps }: SingleInputDateRangeFieldProps<TDate> =
+    useSlotProps({
+      elementType: TextField,
+      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+      externalForwardedProps: other,
+      ownerState,
+    });
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
 
   const {
     ref: inputRef,
@@ -39,7 +45,7 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     ...fieldProps
   } = useSingleInputDateRangeField<TDate, typeof textFieldProps>({
     props: textFieldProps,
-    inputRef: textFieldProps.inputRef,
+    inputRef: externalInputRef,
   });
 
   return (
@@ -50,6 +56,8 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     />
   );
 }) as DateRangeFieldComponent;
+
+SingleInputDateRangeField.fieldType = 'single-input';
 
 SingleInputDateRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -70,7 +78,7 @@ SingleInputDateRangeField.propTypes = {
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -108,6 +116,12 @@ SingleInputDateRangeField.propTypes = {
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
    */
@@ -258,7 +272,7 @@ SingleInputDateRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -271,6 +285,10 @@ SingleInputDateRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * The ref object used to imperatively interact with the field.
+   */
+  unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -4,7 +4,8 @@ import { StaticDatePickerProps } from './StaticDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateView, validateDate } from '../internals';
+import { validateDate } from '../internals';
+import { DateView } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
@@ -72,7 +73,7 @@ StaticDatePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -266,7 +267,7 @@ StaticDatePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
