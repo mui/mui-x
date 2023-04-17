@@ -7,9 +7,7 @@ import {
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
 import { TimeView } from '../models';
-
-const isTimePickerView = (view: TimeView): boolean =>
-  view === 'hours' || view === 'minutes' || view === 'seconds';
+import { isTimeView } from '../internals/utils/time-utils';
 
 export type TimeViewRendererProps<
   TView extends unknown,
@@ -56,7 +54,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
     onViewChange={onViewChange}
     focusedView={focusedView}
     onFocusedViewChange={onFocusedViewChange}
-    views={views.filter(isTimePickerView)}
+    views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
     onChange={onChange}
@@ -119,7 +117,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     onViewChange={onViewChange}
     focusedView={focusedView}
     onFocusedViewChange={onFocusedViewChange}
-    views={views.filter(isTimePickerView)}
+    views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
     onChange={onChange}
@@ -181,7 +179,7 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
     onViewChange={onViewChange}
     focusedView={focusedView}
     onFocusedViewChange={onFocusedViewChange}
-    views={views.filter(isTimePickerView)}
+    views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
     onChange={onChange}

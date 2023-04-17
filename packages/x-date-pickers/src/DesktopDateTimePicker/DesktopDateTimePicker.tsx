@@ -51,6 +51,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
   const ampmInClock = defaultizedProps.ampmInClock ?? true;

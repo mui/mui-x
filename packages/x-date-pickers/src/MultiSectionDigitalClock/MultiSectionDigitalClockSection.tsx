@@ -32,7 +32,6 @@ export interface MultiSectionDigitalClockSectionProps<TValue>
   items: MultiSectionDigitalClockOption<TValue>[];
   onChange: (value: TValue) => void;
   active?: boolean;
-  shouldFocus?: boolean;
 }
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockSectionProps<any>) => {
@@ -132,7 +131,6 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       readOnly,
       items,
       active,
-      shouldFocus,
       slots,
       slotProps,
       ...other
@@ -154,9 +152,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (!selectedItem) {
         return;
       }
-      // handle re-focusing when `active` flag doesn't change
-      // i.e. move to `minutes` section, select minutes -> we want the focus to be applied to meridiem section
-      if (active && shouldFocus) {
+      if (active) {
         selectedItem.focus();
       }
       const offsetTop = selectedItem.offsetTop;

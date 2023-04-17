@@ -1,6 +1,7 @@
 import { DateOrTimeView, MuiPickersAdapter } from '../../models';
 
-export const isTimeView = (view: DateOrTimeView) => ['hours', 'minutes', 'seconds'].includes(view);
+const timeViews = ['hours', 'minutes', 'seconds'];
+export const isTimeView = (view: DateOrTimeView) => timeViews.includes(view);
 
 export type Meridiem = 'am' | 'pm';
 

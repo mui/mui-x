@@ -31,6 +31,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
+    meridiem: null,
     ...defaultizedProps.viewRenderers,
   };
   const ampmInClock = defaultizedProps.ampmInClock ?? false;

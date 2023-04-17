@@ -6,11 +6,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import useControlled from '@mui/utils/useControlled';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
-import {
-  convertValueToMeridiem,
-  createIsAfterIgnoreDatePart,
-  Meridiem,
-} from '../internals/utils/time-utils';
+import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -79,7 +75,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     onChange,
     defaultValue,
     view: inView,
-    views = ['hours', 'minutes'],
+    views: inViews = ['hours', 'minutes'],
     openTo,
     onViewChange,
     focusedView,
@@ -105,7 +101,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     controlled: valueProp,
     default: defaultValue ?? null,
   });
-  const [focusMeridiem, setFocusMeridiem] = React.useState(false);
 
   const handleValueChange = useEventCallback(
     (newValue: TDate | null, selectionState?: PickerSelectionState) => {
@@ -113,6 +108,13 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       onChange?.(newValue, selectionState);
     },
   );
+
+  const views = React.useMemo<readonly TimeView[]>(() => {
+    if (!ampm || !inViews.includes('hours')) {
+      return inViews;
+    }
+    return inViews.includes('meridiem') ? inViews : [...inViews, 'meridiem'];
+  }, [ampm, inViews]);
 
   const { view, setValueAndGoToNextView, setValueAndGoToView } = useViews<TDate | null, TimeView>({
     view: inView,
@@ -246,13 +248,11 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   const handleSectionChange = useEventCallback((sectionView: TimeView, newValue: TDate | null) => {
     const viewIndex = views.indexOf(sectionView);
     const nextView = views[viewIndex + 1];
-    const isNextViewMeridiem = !nextView && ampm;
     setValueAndGoToView(newValue, nextView);
-    setFocusMeridiem(isNextViewMeridiem);
   });
 
   const buildViewProps = React.useCallback(
-    (viewToBuild: TimeView): MultiSectionDigitalClockViewProps<number> => {
+    (viewToBuild: TimeView): MultiSectionDigitalClockViewProps<any> => {
       switch (viewToBuild) {
         case 'hours': {
           return {
@@ -304,6 +304,24 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           };
         }
 
+        case 'meridiem': {
+          return {
+            onChange: handleMeridiemChange,
+            items: [
+              {
+                value: 'am',
+                label: utils.getMeridiemText('am'),
+                isSelected: () => !!value && meridiemMode === 'am',
+              },
+              {
+                value: 'pm',
+                label: utils.getMeridiemText('pm'),
+                isSelected: () => !!value && meridiemMode === 'pm',
+              },
+            ],
+          };
+        }
+
         default:
           throw new Error(`Unknown view: ${viewToBuild} found.`);
       }
@@ -313,12 +331,15 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       value,
       ampm,
       utils,
+      timeSteps.hours,
+      timeSteps.minutes,
+      timeSteps.seconds,
       meridiemMode,
       handleSectionChange,
       selectedTimeOrMidnight,
       disabled,
       isTimeDisabled,
-      timeSteps,
+      handleMeridiemChange,
     ],
   );
 
@@ -327,25 +348,6 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
       return { ...result, [currentView]: buildViewProps(currentView) };
     }, {} as Record<TimeView, MultiSectionDigitalClockViewProps<number>>);
   }, [views, buildViewProps]);
-
-  const meridiemOptions = React.useMemo<MultiSectionDigitalClockViewProps<Meridiem>>(
-    () => ({
-      onChange: handleMeridiemChange,
-      items: [
-        {
-          value: 'am',
-          label: utils.getMeridiemText('am'),
-          isSelected: () => !!value && meridiemMode === 'am',
-        },
-        {
-          value: 'pm',
-          label: utils.getMeridiemText('pm'),
-          isSelected: () => !!value && meridiemMode === 'pm',
-        },
-      ],
-    }),
-    [handleMeridiemChange, meridiemMode, utils, value],
-  );
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -363,28 +365,13 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           items={viewOptions.items}
           onChange={viewOptions.onChange}
           active={view === timeView}
-          autoFocus={autoFocus ?? focusedView === view}
+          autoFocus={autoFocus ?? focusedView === timeView}
           disabled={disabled}
           readOnly={readOnly}
           slots={slots ?? components}
           slotProps={slotProps ?? componentsProps}
         />
       ))}
-
-      {ampm && views.includes('hours') && (
-        <MultiSectionDigitalClockSection
-          key="meridiem"
-          items={meridiemOptions.items}
-          onChange={meridiemOptions.onChange}
-          disabled={disabled}
-          active={!focusedView}
-          autoFocus={autoFocus ? !focusedView : false}
-          readOnly={readOnly}
-          shouldFocus={focusMeridiem}
-          slots={slots ?? components}
-          slotProps={slotProps ?? componentsProps}
-        />
-      )}
     </MultiSectionDigitalClockRoot>
   );
 }) as MultiSectionDigitalClockComponent;

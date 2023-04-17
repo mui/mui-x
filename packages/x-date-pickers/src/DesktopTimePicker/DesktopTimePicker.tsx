@@ -47,6 +47,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
 
@@ -54,6 +55,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const actionBarActions: PickersActionBarAction[] = !shouldRenderTimeInASingleColumn
     ? ['accept']
     : [];
+  const views: readonly TimeView[] = defaultizedProps.ampm
+    ? [...defaultizedProps.views, 'meridiem']
+    : defaultizedProps.views;
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -61,11 +65,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ampmInClock,
     timeSteps,
     viewRenderers,
-    // fallback to `closeOnSelect={false}` given a multi column time picker.
-    closeOnSelect: inProps.closeOnSelect ?? shouldRenderTimeInASingleColumn,
     // Setting only `hours` time view in case of single column time picker
     // Allows for easy view lifecycle management
-    views: shouldRenderTimeInASingleColumn ? ['hours' as TimeView] : defaultizedProps.views,
+    views: shouldRenderTimeInASingleColumn ? ['hours' as TimeView] : views,
     slots: {
       field: TimeField,
       openPickerIcon: Clock,
