@@ -46,6 +46,6 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=16.9.0"
+    "node": ">=14.0.0"
   }
 }
