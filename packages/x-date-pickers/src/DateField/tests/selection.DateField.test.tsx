@@ -41,8 +41,8 @@ describe('<DateField /> - Selection', () => {
       render(<DateField autoFocus />);
       const input = getTextbox();
 
-      expectInputValue(input, 'MM / DD / YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
     });
 
     it('should select all on mount focus (`autoFocus = true`) with start separator', () => {
@@ -63,8 +63,8 @@ describe('<DateField /> - Selection', () => {
       clock.runToLast();
       input.select();
 
-      expectInputValue(input, 'MM / DD / YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
     });
 
     it('should select all on <Tab> focus with start separator', () => {
@@ -89,12 +89,11 @@ describe('<DateField /> - Selection', () => {
         input.focus();
       });
       clock.runToLast();
-      expectInputValue(input, 'MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY');
 
-      input.setSelectionRange(9, 11);
-
-      expect(input.selectionStart).to.equal(9);
-      expect(input.selectionEnd).to.equal(11);
+      input.setSelectionRange(3, 5);
+      expect(input.selectionStart).to.equal(3);
+      expect(input.selectionEnd).to.equal(5);
     });
 
     it('should select day on desktop', () => {
@@ -102,7 +101,7 @@ describe('<DateField /> - Selection', () => {
       const input = getTextbox();
       clickOnInput(input, 'DD');
 
-      expectInputValue(input, 'MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
     });
   });
@@ -136,7 +135,7 @@ describe('<DateField /> - Selection', () => {
       clickOnInput(input, 1);
 
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
     });
 
     it('should select all sections with start separator', () => {
@@ -175,7 +174,7 @@ describe('<DateField /> - Selection', () => {
 
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowRight' });
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
@@ -208,7 +207,7 @@ describe('<DateField /> - Selection', () => {
 
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY');
 
       userEvent.keyPress(input, { key: 'ArrowLeft' });
       expect(getCleanedSelectedContent(input)).to.equal('MM');

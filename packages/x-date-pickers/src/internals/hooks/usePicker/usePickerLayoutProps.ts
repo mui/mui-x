@@ -1,5 +1,5 @@
 import { useIsLandscape } from '../useIsLandscape';
-import { UsePickerValueLayoutResponse } from './usePickerValue';
+import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
 import { DateOrTimeView } from '../../../models';
 import { WrapperVariant } from '../../models/common';

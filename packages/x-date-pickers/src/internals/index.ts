@@ -73,7 +73,7 @@ export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,
   PickerSelectionState,
-} from './hooks/usePicker/usePickerValue';
+} from './hooks/usePicker/usePickerValue.types';
 export type {
   UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,
@@ -120,7 +120,6 @@ export type {
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { WrapperVariant } from './models/common';
 

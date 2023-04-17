@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { MuiPickersAdapter } from '../../models';
-import { FieldSectionType, FieldSection, FieldSelectedSections } from '../../../models';
+import {
+  FieldSectionType,
+  FieldSection,
+  FieldSelectedSections,
+  MuiPickersAdapter,
+} from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 
@@ -15,7 +19,7 @@ export interface UseFieldParams<
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
+  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
   validator: Validator<
     TValue,
     TDate,
@@ -55,6 +59,12 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    * Format of the date when rendered in the input(s).
    */
   format: string;
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity?: 'dense' | 'spacious';
   /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
@@ -153,25 +163,32 @@ export interface FieldChangeHandlerContext<TError> {
 }
 
 /**
- * Object used to access and update the active value.
+ * Object used to access and update the active date (i.e: the date containing the active section).
  * Mainly useful in the range fields where we need to update the date containing the active section without impacting the other one.
  */
-interface FieldActiveDateManager<TValue, TDate> {
+interface FieldActiveDateManager<TValue, TDate, TSection extends FieldSection> {
   /**
-   * Date containing the current active section.
+   * Active date from `state.value`.
    */
-  activeDate: TDate | null;
+  date: TDate | null;
   /**
-   * Reference date containing the current active section.
+   * Active date from the `state.referenceValue`.
    */
-  referenceActiveDate: TDate;
+  referenceDate: TDate;
+  /**
+   * @template TSection
+   * @param  {TSection[]} sections The sections of the full value.
+   * @returns {TSection[]} The sections of the active date.
+   * Get the sections of the active date.
+   */
+  getSections: (sections: TSection[]) => TSection[];
   /**
    * Creates the new value and reference value based on the new active date and the current state.
    * @template TValue, TDate
    * @param {TDate | null} newActiveDate The new value of the date containing the active section.
    * @returns {Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>} The new value and reference value to publish and store in the state.
    */
-  getNewValueFromNewActiveDate: (
+  getNewValuesFromNewActiveDate: (
     newActiveDate: TDate | null,
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
 }
@@ -186,7 +203,7 @@ export type FieldSelectedSectionsIndexes = {
   shouldSelectBoundarySelectors?: boolean;
 };
 
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
+export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
@@ -214,28 +231,18 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    */
   getValueStrFromSections: (sections: TSection[], isRTL: boolean) => string;
   /**
-   * Filter the section list to only keep the sections in the same date as the active section.
-   * On a single date field does nothing.
-   * On a range date range, returns the sections of the start date if editing the start date and the end date otherwise.
-   * @template TSection
-   * @param {TSection[]} sections The full section list.
-   * @param {TSection} activeSection The active section.
-   * @returns {TSection[]} The sections in the same date as the active section.
-   */
-  getActiveDateSections: (sections: TSection[], activeSection: TSection) => TSection[];
-  /**
    * Returns the manager of the active date.
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {UseFieldState<TValue, TSection>} state The current state of the field.
    * @param {TSection} activeSection The active section.
-   * @returns {FieldActiveDateManager<TValue, TDate>} The manager of the active date.
+   * @returns {FieldActiveDateManager<TValue, TDate, TSection>} The manager of the active date.
    */
   getActiveDateManager: (
     utils: MuiPickersAdapter<TDate>,
     state: UseFieldState<TValue, TSection>,
     activeSection: TSection,
-  ) => FieldActiveDateManager<TValue, TDate>;
+  ) => FieldActiveDateManager<TValue, TDate, TSection>;
   /**
    * Parses a string version (most of the time coming from the input).
    * This method should only be used when the change does not come from a single section.
@@ -264,13 +271,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     value: TValue,
     prevReferenceValue: TValue,
   ) => TValue;
-  /**
-   * Checks if the current error is empty or not.
-   * @template TError
-   * @param {TError} error The current error.
-   * @returns {boolean} `true` if the current error is not empty.
-   */
-  hasError: (error: TError) => boolean;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {

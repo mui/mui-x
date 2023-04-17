@@ -63,6 +63,7 @@ export const useFieldState = <
       defaultValue,
       onChange,
       format,
+      formatDensity = 'dense',
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
     },
@@ -76,9 +77,9 @@ export const useFieldState = <
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
-        splitFormatIntoSections(utils, localeText, format, date),
+        splitFormatIntoSections(utils, localeText, format, date, formatDensity),
       ),
-    [fieldValueManager, format, localeText, isRTL, utils],
+    [fieldValueManager, format, localeText, isRTL, utils, formatDensity],
   );
 
   const placeholder = React.useMemo(
@@ -209,23 +210,19 @@ export const useFieldState = <
     }
 
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
-    const activeDateSections = fieldValueManager.getActiveDateSections(
-      state.sections,
-      activeSection,
-    );
 
-    const nonEmptySectionCountBefore = activeDateSections.filter(
-      (section) => section.value !== '',
-    ).length;
+    const nonEmptySectionCountBefore = activeDateManager
+      .getSections(state.sections)
+      .filter((section) => section.value !== '').length;
     const isTheOnlyNonEmptySection = nonEmptySectionCountBefore === 1;
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
     const newActiveDate = isTheOnlyNonEmptySection ? null : utils.date(new Date(''));
-    const newValues = activeDateManager.getNewValueFromNewActiveDate(newActiveDate);
+    const newValues = activeDateManager.getNewValuesFromNewActiveDate(newActiveDate);
 
     if (
       (newActiveDate != null && !utils.isValid(newActiveDate)) !==
-      (activeDateManager.activeDate != null && !utils.isValid(activeDateManager.activeDate))
+      (activeDateManager.date != null && !utils.isValid(activeDateManager.date))
     ) {
       publishValue({ ...newValues, sections: newSections });
     } else {
@@ -245,7 +242,7 @@ export const useFieldState = <
         return null;
       }
 
-      const sections = splitFormatIntoSections(utils, localeText, format, date);
+      const sections = splitFormatIntoSections(utils, localeText, format, date, formatDensity);
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
@@ -290,8 +287,8 @@ export const useFieldState = <
      */
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
-    const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    let newActiveDate = getDateFromDateSections(utils, activeDateSections);
+    const newActiveDateSections = activeDateManager.getSections(newSections);
+    let newActiveDate = getDateFromDateSections(utils, newActiveDateSections);
     let shouldRegenSections = false;
 
     /**
@@ -302,7 +299,7 @@ export const useFieldState = <
     if (!utils.isValid(newActiveDate)) {
       const clampedSections = clampDaySectionIfPossible(
         utils,
-        activeDateSections,
+        newActiveDateSections,
         sectionsValueBoundaries,
       );
       if (clampedSections != null) {
@@ -323,18 +320,18 @@ export const useFieldState = <
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
         newActiveDate,
-        activeDateSections,
-        activeDateManager.referenceActiveDate,
+        newActiveDateSections,
+        activeDateManager.referenceDate,
         true,
       );
 
-      values = activeDateManager.getNewValueFromNewActiveDate(mergedDate);
+      values = activeDateManager.getNewValuesFromNewActiveDate(mergedDate);
       shouldPublish = true;
     } else {
-      values = activeDateManager.getNewValueFromNewActiveDate(newActiveDate);
+      values = activeDateManager.getNewValuesFromNewActiveDate(newActiveDate);
       shouldPublish =
         (newActiveDate != null && !utils.isValid(newActiveDate)) !==
-        (activeDateManager.activeDate != null && !utils.isValid(activeDateManager.activeDate));
+        (activeDateManager.date != null && !utils.isValid(activeDateManager.date));
     }
 
     /**

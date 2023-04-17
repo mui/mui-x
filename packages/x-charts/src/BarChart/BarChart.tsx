@@ -21,11 +21,11 @@ export function BarChart(
     'children'
   >,
 ) {
-  const { xAxis, yAxis, series, width, height, margin } = props;
+  const { xAxis, yAxis, series, colors, width, height, margin } = props;
 
   return (
     <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={series}>
+      <SeriesContextProvider series={series} colors={colors}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <Surface width={width} height={height}>
             <BarPlot />

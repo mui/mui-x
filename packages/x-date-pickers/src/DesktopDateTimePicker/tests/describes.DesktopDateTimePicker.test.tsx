@@ -25,6 +25,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeValue(DesktopDateTimePicker, () => ({
@@ -52,7 +53,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
           )
         : '';
 
-      expectInputValue(input, expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
@@ -63,7 +64,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
         );
       } else {
         const input = getTextbox();
-        clickOnInput(input, 9); // Update the day
+        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

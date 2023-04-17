@@ -30,15 +30,11 @@ export const rangeValueManager: RangePickerValueManager = {
   areValuesEqual: (utils, a, b) =>
     areDatesEqual(utils, a[0], b[0]) && areDatesEqual(utils, a[1], b[1]),
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
+  hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
 };
 
-export const rangeFieldValueManager: FieldValueManager<
-  DateRange<any>,
-  any,
-  RangeFieldSection,
-  DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
-> = {
+export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, RangeFieldSection> = {
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
@@ -106,14 +102,6 @@ export const rangeFieldValueManager: FieldValueManager<
       isRTL,
     );
   },
-  getActiveDateSections: (sections, activeSection) => {
-    const index = activeSection.dateName === 'start' ? 0 : 1;
-    const dateRangeSections = splitDateRangeSections(sections);
-
-    return index === 0
-      ? removeLastSeparator(dateRangeSections.startDate)
-      : dateRangeSections.endDate;
-  },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
     // TODO: Improve because it would not work if the date format has `–` as a separator.
     const [startStr, endStr] = valueStr.split('–');
@@ -133,9 +121,17 @@ export const rangeFieldValueManager: FieldValueManager<
       (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<any>;
 
     return {
-      activeDate: state.value[index],
-      referenceActiveDate: state.referenceValue[index],
-      getNewValueFromNewActiveDate: (newActiveDate) => ({
+      date: state.value[index],
+      referenceDate: state.referenceValue[index],
+      getSections: (sections) => {
+        const dateRangeSections = splitDateRangeSections(sections);
+        if (index === 0) {
+          return removeLastSeparator(dateRangeSections.startDate);
+        }
+
+        return dateRangeSections.endDate;
+      },
+      getNewValuesFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
         referenceValue:
           newActiveDate == null || !utils.isValid(newActiveDate)
@@ -144,5 +140,4 @@ export const rangeFieldValueManager: FieldValueManager<
       }),
     };
   },
-  hasError: (error) => error[0] != null || error[1] != null,
 };

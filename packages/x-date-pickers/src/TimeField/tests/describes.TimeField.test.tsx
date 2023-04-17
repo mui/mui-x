@@ -38,7 +38,7 @@ describe('<TimeField /> - Describes', () => {
       const expectedValueStr = expectedValue
         ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
         : '';
-      expectInputValue(input, expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addHours(value, 1);

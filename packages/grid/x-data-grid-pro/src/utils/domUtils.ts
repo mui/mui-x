@@ -15,7 +15,7 @@ export function findGroupHeaderElementsFromField(elem: Element, field: string): 
 }
 
 export function findGridCellElementsFromCol(col: HTMLElement, api: GridApiPro) {
-  const root = findParentElementFromClassName(col, 'MuiDataGrid-root');
+  const root = findParentElementFromClassName(col, gridClasses.root);
   if (!root) {
     throw new Error('MUI: The root element is not found.');
   }
