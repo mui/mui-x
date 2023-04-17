@@ -99,7 +99,7 @@ Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` 
 ## Server interaction
 
 If the selected value is used to interact with server, you might want to avoid sending all the intermediate states.
-Especially if the user is setting the date thanks to arrow interaction.
+Especially if the user is setting the date using the arrow interaction.
 
 In such a case, the recommended UI is to add a button for validating the form.
 If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debouce the `onChange` as follow.
@@ -109,10 +109,10 @@ In the next demos, `<DateField />` is extended to add an `onAccept` props which 
 {{"demo": "ServerInteraction.js"}}
 
 :::info
-Most of the pickers have an `onAccept` props.
-This props does concern views, and not fields.
+Most of the pickers have an `onAccept` prop.
+This prop does concern only views and not fields.
 
-It will be called only if user presses the "accept" button, or if they finish the selection and the view is closing.
+It will be called only if the user presses the "accept" button, or if they finish the selection and the view is closing.
 :::
 
 ## TypeScript

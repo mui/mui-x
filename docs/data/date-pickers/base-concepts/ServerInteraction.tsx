@@ -130,7 +130,7 @@ export default function ServerInteraction() {
           }}
           sx={{ width: 150 }}
           label="debounced field"
-          defaultValue={dayjs(new Date(2020, 10, 5))}
+          defaultValue={dayjs('2022-04-17')}
         />
         <DisplayEvents
           logsFromOnChange={logsFromOnChange}
