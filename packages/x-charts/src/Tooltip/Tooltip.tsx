@@ -299,12 +299,14 @@ function getTootipHasData(
   trigger: TooltipProps['trigger'],
   displayedData: null | AxisInteractionData | ItemInteractionData,
 ): boolean {
-  const hasItemData = displayedData !== null;
+  if (trigger === 'item') {
+    return displayedData !== null;
+  }
+
   const hasAxisXData = (displayedData as AxisInteractionData).x !== null;
   const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
-  return (
-    (trigger === 'item' && hasItemData) || (trigger === 'axis' && (hasAxisXData || hasAxisYData))
-  );
+
+  return hasAxisXData || hasAxisYData;
 }
 
 export function Tooltip(props: TooltipProps) {
