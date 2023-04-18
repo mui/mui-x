@@ -366,10 +366,9 @@ DateTimePickerToolbar.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year'])
-    .isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
+    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
 } as any;
 
