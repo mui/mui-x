@@ -72,11 +72,10 @@ The `inputFormat` prop has been renamed to `format` on all the pickers component
 
 ### Update expected values in tests
 
-The value rendered in the input has been modified.
-Spaces are added around `/` characters.
+The value rendered in the input might have been modified.
 If you are using RTL or if your date contains single digits sections, non-ASCII characters will be added.
 
-If your tests are relying on the inputs values, you can clean them with the following method.
+If your tests are relying on the input values, you can clean them with the following method.
 
 ```ts
 export const cleanString = (dirtyString: string) =>
