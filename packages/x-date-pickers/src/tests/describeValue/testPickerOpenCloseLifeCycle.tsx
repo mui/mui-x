@@ -117,7 +117,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      let newValue = setNewValue(values[0], { isOpened: true });
+      let newValue = setNewValue(values[0], { isOpened: true, confirmChange: true });
       expect(onChange.callCount).to.equal(1);
       if (pickerParams.type === 'date-range') {
         newValue = setNewValue(newValue, { isOpened: true, setEndDate: true });
@@ -148,7 +148,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       );
 
       // Change the value (same value)
-      setNewValue(values[0], { isOpened: true, applySameValue: true });
+      setNewValue(values[0], { isOpened: true, applySameValue: true, confirmChange: true });
       if (pickerParams.type === 'date-range') {
         setNewValue(values[0], { isOpened: true, applySameValue: true, setEndDate: true });
       }
