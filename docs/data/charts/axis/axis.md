@@ -77,6 +77,22 @@ Those pros can accept three type of value:
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
 - `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
 
+{{"demo": "ModifyAxisPosition.js", "bg": "inline"}}
+
 ### Rendering
 
+To customize how axis are rendered, here is an interactive demonstration of the axis props (Work in progress)
+
+{{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "inline"}}
+
 ### Composition
+
+If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
+
+It will provides all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>`.
+Those components require a props `axisId` to link them to an axis you defined in the `<ChartContainer />`.
+
+You can chose their position with `position` props which accept `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
+Other props are similar to the one defined in the [previous section](/x/react-charts/axis/#rendering).
+
+{{"demo": "AxisWithComposition.js", "bg": "inline"}}
