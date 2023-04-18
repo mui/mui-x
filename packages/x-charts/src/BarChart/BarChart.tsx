@@ -5,8 +5,23 @@ import { Axis, AxisProps } from '../Axis';
 
 export interface BarChartProps extends ChartContainerProps, AxisProps {}
 
-export function BarChart(props: ChartContainerProps) {
-  const { xAxis, yAxis, series, width, height, margin, colors, sx, tooltip, children } = props;
+export function BarChart(props: BarChartProps) {
+  const {
+    xAxis,
+    yAxis,
+    series,
+    width,
+    height,
+    margin,
+    colors,
+    sx,
+    tooltip,
+    topAxis,
+    leftAxis,
+    rightAxis,
+    bottomAxis,
+    children,
+  } = props;
 
   return (
     <ChartContainer
@@ -21,7 +36,7 @@ export function BarChart(props: ChartContainerProps) {
       tooltip={tooltip}
     >
       <BarPlot />
-      <Axis />
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       {children}
     </ChartContainer>
   );

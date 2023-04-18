@@ -39,8 +39,6 @@ export default function CompositionResponsive() {
     <div style={{ width: '100%', height: '500px' }}>
       <ResponsiveChartContainer
         series={series}
-        width={500}
-        height={500}
         xAxis={[
           {
             id: 'years',
