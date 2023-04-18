@@ -17,9 +17,10 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 ## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-You can enable clipboard paste using the `clipboardPaste` experimental feature flag.
+:::warning
+This feature is experimental, it needs to be explicitly activated using the `clipboardPaste` experimental feature flag.
 
-Additionally, to make sure the copied cells are formatted correctly and can be parsed during paste,
+Additionally, to make sure the copied cells are formatted correctly and can be parsed,
 it's recommended to set the `unstable_ignoreValueFormatterDuringExport` prop to `true`.
 
 ```tsx
@@ -29,9 +30,6 @@ it's recommended to set the `unstable_ignoreValueFormatterDuringExport` prop to 
 />
 ```
 
-:::warning
-This feature is not stable yet, meaning that its APIs may suffer breaking changes.
-While in development, all props and methods related to clipboard paste must be prefixed with `unstable_`.
 :::
 
 You can paste data from clipboard using the <kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd> (<kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd> on macOS) keyboard shortcut.
