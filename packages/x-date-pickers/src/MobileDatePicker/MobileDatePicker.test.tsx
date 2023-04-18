@@ -8,7 +8,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
 
 describe('<MobileDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   it('allows to change only year', () => {
     const onChangeMock = spy();
@@ -189,14 +189,12 @@ describe('<MobileDatePicker />', () => {
         slotProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
-    const start = adapterToUse.date();
     userEvent.mousePress(screen.getByRole('textbox'));
-    clock.tick(10);
     fireEvent.click(screen.getByText(/today/i));
 
     expect(handleClose.callCount).to.equal(1);
     expect(handleChange.callCount).to.equal(1);
-    expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
+    expect(handleChange.args[0][0]).toEqualDateTime(adapterToUse.startOfDay(adapterToUse.date()));
   });
 
   describe('picker state', () => {
