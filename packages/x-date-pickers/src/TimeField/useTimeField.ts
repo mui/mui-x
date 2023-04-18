@@ -10,6 +10,7 @@ import {
 } from './TimeField.types';
 import { validateTime } from '../internals/hooks/validation/useTimeValidation';
 import { useUtils } from '../internals/hooks/useUtils';
+import { extractFieldInternalProps } from '../internals/utils/fields';
 
 const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   props: UseTimeFieldProps<TDate>,
@@ -28,56 +29,20 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
 };
 
 export const useTimeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseTimeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    formatDensity,
-    onChange,
-    readOnly,
-    onError,
-    disableFuture,
-    disablePast,
-    minTime,
-    maxTime,
-    minutesStep,
-    shouldDisableClock,
-    shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation,
-    selectedSections,
-    onSelectedSectionsChange,
-    ampm,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedTimeField<TDate, TChildProps>(props);
+  const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = extractFieldInternalProps<
+    typeof props,
+    keyof UseTimeFieldProps<any>
+  >(props, 'time');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseTimeFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      formatDensity,
-      onChange,
-      readOnly,
-      onError,
-      disableFuture,
-      disablePast,
-      minTime,
-      maxTime,
-      minutesStep,
-      shouldDisableClock,
-      shouldDisableTime,
-      disableIgnoringDatePartForTimeValidation,
-      selectedSections,
-      onSelectedSectionsChange,
-      ampm,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateTime,

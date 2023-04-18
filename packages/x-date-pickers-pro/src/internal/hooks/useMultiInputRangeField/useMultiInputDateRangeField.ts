@@ -4,6 +4,7 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldComponentProps,
   UseDateFieldProps,
+  UseDateFieldDefaultizedProps,
 } from '@mui/x-date-pickers/DateField';
 import {
   useLocalizationContext,
@@ -100,7 +101,10 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseDateFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const startFieldProps: UseDateFieldComponentProps<
+    TDate,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[0],
     ...startTextFieldProps,
     disabled,
@@ -115,7 +119,10 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     onSelectedSectionsChange,
   };
 
-  const endFieldProps: UseDateFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const endFieldProps: UseDateFieldComponentProps<
+    TDate,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,

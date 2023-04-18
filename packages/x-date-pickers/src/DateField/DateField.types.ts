@@ -30,7 +30,7 @@ export interface UseDateFieldProps<TDate>
 
 export type UseDateFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | 'format'
+  keyof BaseDateValidationProps<any> | 'format'
 >;
 
 export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<

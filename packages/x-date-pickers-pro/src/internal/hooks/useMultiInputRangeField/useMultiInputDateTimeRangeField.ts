@@ -4,6 +4,7 @@ import {
   unstable_useDateTimeField as useDateTimeField,
   UseDateTimeFieldComponentProps,
   UseDateTimeFieldProps,
+  UseDateTimeFieldDefaultizedProps,
 } from '@mui/x-date-pickers/DateTimeField';
 import {
   applyDefaultDate,
@@ -120,7 +121,10 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const startFieldProps: UseDateTimeFieldComponentProps<
+    TDate,
+    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[0],
     ...startTextFieldProps,
     format,
@@ -132,7 +136,10 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     onChange: handleStartDateChange,
   };
 
-  const endFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const endFieldProps: UseDateTimeFieldComponentProps<
+    TDate,
+    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,

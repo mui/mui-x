@@ -3,6 +3,7 @@ import {
   useDefaultDates,
   applyDefaultDate,
   useField,
+  extractFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseSingleInputDateRangeFieldDefaultizedProps,
@@ -29,48 +30,20 @@ export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends
 };
 
 export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseSingleInputDateRangeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    formatDensity,
-    onChange,
-    readOnly,
-    onError,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
+  const props = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = extractFieldInternalProps<
+    typeof props,
+    keyof UseSingleInputDateRangeFieldProps<any>
+  >(props, 'date');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      formatDensity,
-      onChange,
-      readOnly,
-      onError,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
     validator: validateDateRange,

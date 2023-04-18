@@ -57,7 +57,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        ampm: defaultizedProps.ampm,
       }),
       toolbar: {
         hidden: true,

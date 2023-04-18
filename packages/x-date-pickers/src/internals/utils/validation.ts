@@ -1,18 +1,33 @@
-const VALIDATION_PROP_NAMES = [
-  'disablePast',
-  'disableFuture',
+export const SHARED_VALIDATION_PROP_NAMES = ['disablePast', 'disableFuture'] as const;
+
+export const DATE_VALIDATION_PROP_NAMES = [
   'minDate',
   'maxDate',
-  'minTime',
-  'maxTime',
-  'minDateTime',
-  'maxDateTime',
   'shouldDisableDate',
   'shouldDisableMonth',
   'shouldDisableYear',
+] as const;
+
+export const TIME_VALIDATION_PROP_NAMES = [
+  'minTime',
+  'maxTime',
   'shouldDisableClock',
   'shouldDisableTime',
   'minuteStep',
+  'ampm',
+] as const;
+
+export const DATE_TIME_VALIDATION_PROP_NAMES = [
+  'minDateTime',
+  'maxDateTime',
+  'disableIgnoringDatePartForTimeValidation',
+] as const;
+
+const VALIDATION_PROP_NAMES = [
+  ...SHARED_VALIDATION_PROP_NAMES,
+  ...DATE_VALIDATION_PROP_NAMES,
+  ...TIME_VALIDATION_PROP_NAMES,
+  ...DATE_TIME_VALIDATION_PROP_NAMES,
 ] as const;
 
 type ValidationPropNames = (typeof VALIDATION_PROP_NAMES)[number];
