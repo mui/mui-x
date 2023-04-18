@@ -52,12 +52,6 @@ In the example below, changing the value of the start date section will call `on
 The `closeOnSelect` prop determines if the picker should close one the last view is completed.
 By default, it is set to `true` on desktop and `false` on mobile.
 
-:::info
-You don't have to fill all the views for the picker to close automatically.
-For example, on the `DatePicker`, the `year` and `month` views are not in the default workflow since they are before the opening view (`day`),
-so the picker will close even if you never went to those views.
-:::
-
 Here are a few examples:
 
 :::info
@@ -112,6 +106,20 @@ The example below are using the desktop and mobile variant of the pickers, but t
 
   **Behavior:** The picker will automatically close when selecting the minutes
 
+:::info
+You don't have to fill all the views for the picker to close automatically.
+For example, on the `DatePicker`, the `year` and `month` views are not in the default workflow since they are before the opening view (`day`),
+so the picker will close even if you never went to those views.
+:::
+
+#### When the picker is manually closed
+
+Pressing <kbd class="key">Escape</kbd> or clicking outside the picker will close the picker.
+
+#### When a value is picked using the action bar
+
+Clicking on any built-in button of the action bar will close the picker.
+
 ### When is `onChange` called ?
 
 #### When the field used calls `onChange`
@@ -123,7 +131,15 @@ Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#when-is-
 
 On mobile, the picker will not automatically close, you have to manually close it using the [action bar buttons](/x/)
 
-#### When a value is validated using the action bar
+#### When a view is completed
+
+#### When a value is picked using the action bar
+
+If the component is controlled (i.e: if it has a `value` prop),
+clicking on any built-in actions will call `onChange` if the newly published value is different from the current value.
+
+If the component is not controlled, clicking on the _Cancel_ button will call `onChange` if the newly published value is different from the current value.
+For the other built-in actions, `onChange` will be called if the newly published value is different from the last published value or if no value has ever be published.
 
 ### When is `onAccept` called ?
 
