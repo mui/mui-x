@@ -188,7 +188,7 @@ StaticTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
    */
@@ -237,7 +237,7 @@ StaticTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -245,7 +245,6 @@ StaticTimePicker.propTypes = {
    */
   viewRenderers: PropTypes.shape({
     hours: PropTypes.func,
-    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     seconds: PropTypes.func,
   }),

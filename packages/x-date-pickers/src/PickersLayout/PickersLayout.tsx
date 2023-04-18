@@ -164,8 +164,10 @@ PickersLayout.propTypes = {
     PropTypes.object,
   ]),
   value: PropTypes.any,
-  view: PropTypes.string,
-  views: PropTypes.arrayOf(PropTypes.string).isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+  views: PropTypes.arrayOf(
+    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  ).isRequired,
   wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 

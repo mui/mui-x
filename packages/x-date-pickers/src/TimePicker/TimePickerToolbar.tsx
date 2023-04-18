@@ -15,9 +15,10 @@ import {
   timePickerToolbarClasses,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
-import { TimeView } from '../models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, TimeView> {
+export interface TimePickerToolbarProps<TDate>
+  extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem> {
   ampm?: boolean;
   ampmInClock?: boolean;
   classes?: Partial<TimePickerToolbarClasses>;
