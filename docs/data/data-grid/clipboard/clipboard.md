@@ -35,6 +35,9 @@ it's recommended to set the `unstable_ignoreValueFormatterDuringExport` prop to 
 You can paste data from clipboard using the <kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd> (<kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd> on macOS) keyboard shortcut.
 The paste operation only affects cells in the [columns that are `editable`](/x/react-data-grid/editing/#making-a-column-editable).
 
+Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.
+See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and-value-setter) editing section for more details.
+
 The priority of the clipboard paste is the following, from highest to lowest:
 
 1. If more than one cell is selected (see [Cell selection<span class="plan-premium" title="Premium plan"></span>](/x/react-data-grid/cell-selection/)):
@@ -64,6 +67,6 @@ processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;
 The row will be updated with a value returned by the `processRowUpdate` callback.
 If the callback throws or returns a rejected promise, the row will not be updated.
 
-The demo below shows how to persist the pasted data in browser's `sessionStorage`.
+The demo below shows how to persist the pasted data in the browser's `sessionStorage`.
 
 {{"demo": "ClipboardPastePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
