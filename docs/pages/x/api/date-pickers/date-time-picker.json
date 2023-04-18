@@ -111,14 +111,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
-    "timeSteps": {
-      "type": {
-        "name": "shape",
-        "description": "{ hours?: number, minutes?: number, seconds?: number }"
-      },
-      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
-    },
     "value": { "type": { "name": "any" } },
     "view": {
       "type": {
@@ -156,14 +148,6 @@
       "type": { "name": "elementType" }
     },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
-    "DigitalClockItem": {
-      "default": "MenuItem from '@mui/material'",
-      "type": { "name": "elementType" }
-    },
-    "DigitalClockSectionItem": {
-      "default": "MenuItem from '@mui/material'",
-      "type": { "name": "elementType" }
-    },
     "Field": { "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
