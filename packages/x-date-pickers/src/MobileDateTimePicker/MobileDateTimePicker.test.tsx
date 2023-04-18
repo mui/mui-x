@@ -15,7 +15,7 @@ import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation
 describe('<MobileDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
-    clockConfig: new Date('2018-01-01T00:00:00.000'),
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
   });
 
   describeValidation(MobileDateTimePicker, () => ({
@@ -23,6 +23,7 @@ describe('<MobileDateTimePicker />', () => {
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   it('should render date and time by default', () => {

@@ -23,6 +23,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeConformance(<DesktopTimePicker />, () => ({
@@ -66,7 +67,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
         expectedValue
           ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
           : '',
-        true,
       );
     },
     setNewValue: (value, { isOpened } = {}) => {
