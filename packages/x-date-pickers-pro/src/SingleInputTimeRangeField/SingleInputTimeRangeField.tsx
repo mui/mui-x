@@ -52,7 +52,8 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     <TextField
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
+      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
     />
   );
 }) as DateRangeFieldComponent;
