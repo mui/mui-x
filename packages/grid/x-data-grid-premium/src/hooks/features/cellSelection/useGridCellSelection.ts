@@ -55,7 +55,7 @@ export const useGridCellSelection = (
   const visibleRows = useGridVisibleRows(apiRef, props);
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
-  const mousePosition = React.useRef<any>(null);
+  const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
   const autoScrollInterval = React.useRef<NodeJS.Timer | null>();
 
   apiRef.current.registerControlState({
@@ -248,7 +248,7 @@ export const useGridCellSelection = (
       const virtualScrollerRect =
         apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
 
-      if (!virtualScrollerRect) {
+      if (!virtualScrollerRect || !mousePosition.current) {
         return;
       }
 
