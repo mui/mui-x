@@ -11,6 +11,7 @@ import {
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeView } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -22,13 +23,17 @@ import {
   RangePickerFieldSlotsComponentsProps,
 } from '../useEnrichedRangePickerFieldProps';
 
-export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
-  extends PickersPopperSlotsComponent,
+export interface UseDesktopRangePickerSlotsComponent<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+> extends PickersPopperSlotsComponent,
     ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotsComponent {}
 
-export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends PickersPopperSlotsComponentsProps,
+export interface UseDesktopRangePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+> extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
@@ -48,7 +53,7 @@ export interface DesktopRangeOnlyPickerProps<TDate>
 
 export interface UseDesktopRangePickerProps<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends DesktopRangeOnlyPickerProps<TDate>,
@@ -77,7 +82,7 @@ export interface DesktopRangePickerAdditionalViewProps
 
 export interface UseDesktopRangePickerParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<

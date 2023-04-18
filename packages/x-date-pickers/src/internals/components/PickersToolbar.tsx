@@ -7,9 +7,12 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
 import { DateOrTimeView } from '../../models';
+import { DateOrTimeViewWithMeridiem } from '../models';
 
-export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
-  extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
+export interface PickersToolbarProps<
+  TValue,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+> extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
   className?: string;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
@@ -61,14 +64,14 @@ const PickersToolbarContent = styled(Grid, {
   }),
 }));
 
-type PickersToolbarComponent = (<TValue, TView extends DateOrTimeView>(
+type PickersToolbarComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
     React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 export const PickersToolbar = React.forwardRef(function PickersToolbar<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
 >(
   inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
   ref: React.Ref<HTMLDivElement>,

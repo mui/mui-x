@@ -127,7 +127,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     onChange?.(newValue, 'finish');
   });
 
-  const { setValueAndGoToNextView } = useViews<TDate | null, Exclude<TimeView, 'meridiem'>>({
+  const { setValueAndGoToNextView } = useViews<TDate | null, TimeView>({
     view: inView,
     views,
     openTo,

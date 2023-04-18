@@ -21,7 +21,7 @@ export interface TimeClockSlotsComponentsProps extends PickersArrowSwitcherSlots
 
 export interface TimeClockProps<TDate>
   extends ExportedTimeClockProps<TDate>,
-    BaseClockProps<TDate, Exclude<TimeView, 'meridiem'>> {
+    BaseClockProps<TDate, TimeView> {
   /**
    * Override or extend the styles applied to the component.
    */

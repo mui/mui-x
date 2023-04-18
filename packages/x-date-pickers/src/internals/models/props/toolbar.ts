@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { DateOrTimeView } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../common';
 
-export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
+export interface BaseToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>
   extends ExportedBaseToolbarProps {
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
@@ -16,7 +17,7 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
    * @param {TView} view The view to open
    */
   onViewChange: (view: TView) => void;
-  views: readonly DateOrTimeView[];
+  views: readonly TView[];
   disabled?: boolean;
   readOnly?: boolean;
   titleId?: string;

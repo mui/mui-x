@@ -6,7 +6,6 @@ import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, validateTime } from '../internals';
-import { TimeView } from '../models';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
@@ -16,6 +15,7 @@ import {
   renderMultiSectionDigitalClockTimeView,
 } from '../timeViewRenderers';
 import { PickersActionBarAction } from '../PickersActionBar';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -28,10 +28,11 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePickerDefaultizedProps<TDate, DesktopTimePickerProps<TDate>>(
-    inProps,
-    'MuiDesktopTimePicker',
-  );
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeViewWithMeridiem,
+    DesktopTimePickerProps<TDate, TimeViewWithMeridiem>
+  >(inProps, 'MuiDesktopTimePicker');
 
   const thresholdToRenderTimeInASingleColumn =
     defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
@@ -43,7 +44,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ? renderDigitalClockTimeView
     : renderMultiSectionDigitalClockTimeView;
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
+  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeViewWithMeridiem, any, {}> = {
     hours: renderTimeView,
     minutes: renderTimeView,
     seconds: renderTimeView,
@@ -55,7 +56,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const actionBarActions: PickersActionBarAction[] = !shouldRenderTimeInASingleColumn
     ? ['accept']
     : [];
-  const views: readonly TimeView[] = defaultizedProps.ampm
+  const views: readonly TimeViewWithMeridiem[] = defaultizedProps.ampm
     ? [...defaultizedProps.views, 'meridiem']
     : defaultizedProps.views;
 
@@ -67,7 +68,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     viewRenderers,
     // Setting only `hours` time view in case of single column time picker
     // Allows for easy view lifecycle management
-    views: shouldRenderTimeInASingleColumn ? ['hours' as TimeView] : views,
+    views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: TimeField,
       openPickerIcon: Clock,
@@ -93,7 +94,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, TimeView, typeof props>({
+  const { renderPicker } = useDesktopPicker<TDate, TimeViewWithMeridiem, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
@@ -275,7 +276,7 @@ DesktopTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
    */
@@ -366,7 +367,7 @@ DesktopTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -374,6 +375,7 @@ DesktopTimePicker.propTypes = {
    */
   viewRenderers: PropTypes.shape({
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     seconds: PropTypes.func,
   }),

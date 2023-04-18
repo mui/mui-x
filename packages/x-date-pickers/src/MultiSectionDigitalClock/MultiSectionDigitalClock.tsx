@@ -19,6 +19,7 @@ import {
 } from './MultiSectionDigitalClock.types';
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
 import { TimeStepOptions, TimeView } from '../models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -109,14 +110,17 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     },
   );
 
-  const views = React.useMemo<readonly TimeView[]>(() => {
+  const views = React.useMemo<readonly TimeViewWithMeridiem[]>(() => {
     if (!ampm || !inViews.includes('hours')) {
       return inViews;
     }
     return inViews.includes('meridiem') ? inViews : [...inViews, 'meridiem'];
   }, [ampm, inViews]);
 
-  const { view, setValueAndGoToNextView, setValueAndGoToView } = useViews<TDate | null, TimeView>({
+  const { view, setValueAndGoToNextView, setValueAndGoToView } = useViews<
+    TDate | null,
+    TimeViewWithMeridiem
+  >({
     view: inView,
     views,
     openTo,
@@ -245,14 +249,16 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     ],
   );
 
-  const handleSectionChange = useEventCallback((sectionView: TimeView, newValue: TDate | null) => {
-    const viewIndex = views.indexOf(sectionView);
-    const nextView = views[viewIndex + 1];
-    setValueAndGoToView(newValue, nextView);
-  });
+  const handleSectionChange = useEventCallback(
+    (sectionView: TimeViewWithMeridiem, newValue: TDate | null) => {
+      const viewIndex = views.indexOf(sectionView);
+      const nextView = views[viewIndex + 1];
+      setValueAndGoToView(newValue, nextView);
+    },
+  );
 
   const buildViewProps = React.useCallback(
-    (viewToBuild: TimeView): MultiSectionDigitalClockViewProps<any> => {
+    (viewToBuild: TimeViewWithMeridiem): MultiSectionDigitalClockViewProps<any> => {
       switch (viewToBuild) {
         case 'hours': {
           return {
@@ -438,7 +444,7 @@ MultiSectionDigitalClock.propTypes = {
   /**
    * Controlled focused view.
    */
-  focusedView: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  focusedView: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -479,7 +485,7 @@ MultiSectionDigitalClock.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * If `true`, the picker views and text field are read-only.
    * @default false
@@ -538,9 +544,9 @@ MultiSectionDigitalClock.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Available views.
    */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired),
 } as any;

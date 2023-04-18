@@ -8,12 +8,17 @@ import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { FieldSection, DateOrTimeView } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
-export interface UseStaticPickerSlotsComponent<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {}
+export interface UseStaticPickerSlotsComponent<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+> extends ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {}
 
-export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {}
+export interface UseStaticPickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+> extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -35,7 +40,7 @@ export interface StaticOnlyPickerProps {
 
 export interface UseStaticPickerProps<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TError,
   TExternalProps extends UsePickerViewsProps<TDate | null, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
@@ -66,7 +71,7 @@ export interface UseStaticPickerProps<
 
 export interface UseStaticPickerParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,

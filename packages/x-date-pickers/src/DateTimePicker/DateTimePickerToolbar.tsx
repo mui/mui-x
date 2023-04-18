@@ -13,7 +13,7 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -23,7 +23,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps<TDate>
   extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps<TDate | null, DateOrTimeView> {
+    BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -366,9 +366,10 @@ DateTimePickerToolbar.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year'])
+    .isRequired,
   views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
 } as any;
 

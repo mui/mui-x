@@ -28,7 +28,7 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
    * Should only be `undefined` on the server
    */
   selectedId: string | undefined;
-  type: Exclude<TimeView, 'meridiem'>;
+  type: TimeView;
   /**
    * The numeric value of the current view.
    */

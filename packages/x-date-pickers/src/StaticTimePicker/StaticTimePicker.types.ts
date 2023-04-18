@@ -10,6 +10,7 @@ import {
 } from '../internals/hooks/useStaticPicker';
 import { MakeOptional, UncapitalizeObjectKeys } from '../internals';
 import { TimeView } from '../models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface StaticTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
@@ -19,8 +20,10 @@ export interface StaticTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
     UseStaticPickerSlotsComponentsProps<TDate, TimeView> {}
 
-export interface StaticTimePickerProps<TDate>
-  extends BaseTimePickerProps<TDate>,
+export interface StaticTimePickerProps<
+  TDate,
+  TView extends TimeViewWithMeridiem | TimeView = TimeView,
+> extends BaseTimePickerProps<TDate, TView>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable components.

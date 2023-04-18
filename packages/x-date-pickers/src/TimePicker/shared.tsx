@@ -20,6 +20,7 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -33,8 +34,8 @@ export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsCompon
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
-export interface BaseTimePickerProps<TDate>
-  extends Omit<BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>, 'views'>,
+export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem | TimeView>
+  extends BasePickerInputProps<TDate | null, TDate, TView, TimeValidationError>,
     ExportedBaseClockProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
@@ -71,20 +72,17 @@ export interface BaseTimePickerProps<TDate>
   viewRenderers?: Partial<
     PickerViewRendererLookup<
       TDate | null,
-      TimeView,
-      TimeViewRendererProps<TimeView, BaseClockProps<TDate, TimeView>>,
+      TView,
+      TimeViewRendererProps<TView, BaseClockProps<TDate, TView>>,
       {}
     >
   >;
-  /**
-   * Available views.
-   */
-  views?: readonly Exclude<TimeView, 'meridiem'>[];
 }
 
 type UseTimePickerDefaultizedProps<
   TDate,
-  Props extends BaseTimePickerProps<TDate>,
+  TView extends TimeViewWithMeridiem | TimeView,
+  Props extends BaseTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
   TDate,
   Omit<
@@ -93,10 +91,11 @@ type UseTimePickerDefaultizedProps<
   >
 >;
 
-export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
-  props: Props,
-  name: string,
-): UseTimePickerDefaultizedProps<TDate, Props> {
+export function useTimePickerDefaultizedProps<
+  TDate,
+  TView extends TimeViewWithMeridiem | TimeView,
+  Props extends BaseTimePickerProps<TDate, TView>,
+>(props: Props, name: string): UseTimePickerDefaultizedProps<TDate, TView, Props> {
   const utils = useUtils<TDate>();
   const themeProps = useThemeProps({
     props,
@@ -125,8 +124,8 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
     ...applyDefaultViewProps({
       views: themeProps.views,
       openTo: themeProps.openTo,
-      defaultViews: ['hours', 'minutes'],
-      defaultOpenTo: 'hours',
+      defaultViews: ['hours', 'minutes'] as TView[],
+      defaultOpenTo: 'hours' as TView,
     }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,

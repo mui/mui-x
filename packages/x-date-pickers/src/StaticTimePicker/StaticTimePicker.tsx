@@ -10,17 +10,18 @@ import { validateTime } from '../internals/hooks/validation/useTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticTimePickerComponent = (<TDate>(
-  props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+  props: StaticTimePickerProps<TDate, TimeView> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
-  inProps: StaticTimePickerProps<TDate>,
+  inProps: StaticTimePickerProps<TDate, TimeView>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const defaultizedProps = useTimePickerDefaultizedProps<TDate, StaticTimePickerProps<TDate>>(
-    inProps,
-    'MuiStaticTimePicker',
-  );
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeView,
+    StaticTimePickerProps<TDate, TimeView>
+  >(inProps, 'MuiStaticTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
@@ -29,7 +30,6 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
-    meridiem: null,
     ...defaultizedProps.viewRenderers,
   };
 
@@ -188,7 +188,7 @@ StaticTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
    */
@@ -237,7 +237,7 @@ StaticTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -245,6 +245,7 @@ StaticTimePicker.propTypes = {
    */
   viewRenderers: PropTypes.shape({
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     seconds: PropTypes.func,
   }),

@@ -8,8 +8,9 @@ import { DateOrTimeView } from '../models';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
-function toolbarHasView<TValue, TView extends DateOrTimeView>(
+function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
 ): toolbarProps is BaseToolbarProps<TValue, TView> {
   return toolbarProps.view !== null;
@@ -30,13 +31,16 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface PickersLayoutPropsWithValueRequired<TValue, TDate, TView extends DateOrTimeView>
-  extends PickersLayoutProps<TValue, TDate, TView> {
+interface PickersLayoutPropsWithValueRequired<
+  TValue,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+> extends PickersLayoutProps<TValue, TDate, TView> {
   value: TValue;
 }
 interface UsePickerLayoutResponse extends SubComponents {}
 
-const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
+const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse => {
   const {

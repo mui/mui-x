@@ -7,6 +7,7 @@ import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeView } from '../models';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
@@ -70,9 +71,11 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-const PickersLayout = function PickersLayout<TValue, TDate, TView extends DateOrTimeView>(
-  inProps: PickersLayoutProps<TValue, TDate, TView>,
-) {
+const PickersLayout = function PickersLayout<
+  TValue,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+>(inProps: PickersLayoutProps<TValue, TDate, TView>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
@@ -161,10 +164,8 @@ PickersLayout.propTypes = {
     PropTypes.object,
   ]),
   value: PropTypes.any,
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
+  view: PropTypes.string,
+  views: PropTypes.arrayOf(PropTypes.string).isRequired,
   wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 

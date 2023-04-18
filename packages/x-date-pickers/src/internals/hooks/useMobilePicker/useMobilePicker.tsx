@@ -11,6 +11,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -20,7 +21,7 @@ import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../.
  */
 export const useMobilePicker = <
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,

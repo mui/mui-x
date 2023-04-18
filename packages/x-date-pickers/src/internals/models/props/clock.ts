@@ -4,6 +4,7 @@ import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue.types
 import { TimeStepOptions, TimeView } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
+import { TimeViewWithMeridiem } from '../common';
 
 export interface ExportedBaseClockProps<TDate>
   extends TimeValidationProps<TDate>,
@@ -15,7 +16,7 @@ export interface ExportedBaseClockProps<TDate>
   ampm?: boolean;
 }
 
-export interface BaseClockProps<TDate, TView extends TimeView>
+export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem | TimeView>
   extends ExportedUseViewsOptions<TView>,
     ExportedBaseClockProps<TDate> {
   className?: string;

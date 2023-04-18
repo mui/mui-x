@@ -6,6 +6,7 @@ import { DateOrTimeView } from '../../../models';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { MakeOptional } from '../helpers';
+import { DateOrTimeViewWithMeridiem } from '../common';
 
 /**
  * Props common to all pickers after applying the default props on each picker.
@@ -13,7 +14,7 @@ import { MakeOptional } from '../helpers';
 export interface BasePickerProps<
   TValue,
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
@@ -36,8 +37,12 @@ export interface BasePickerProps<
 /**
  * Props common to all pickers before applying the default props on each picker.
  */
-export interface BasePickerInputProps<TValue, TDate, TView extends DateOrTimeView, TError>
-  extends Omit<
+export interface BasePickerInputProps<
+  TValue,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TError,
+> extends Omit<
     MakeOptional<BasePickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}

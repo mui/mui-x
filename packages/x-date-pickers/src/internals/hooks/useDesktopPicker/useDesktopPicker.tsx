@@ -12,6 +12,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -21,7 +22,7 @@ import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../.
  */
 export const useDesktopPicker = <
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,

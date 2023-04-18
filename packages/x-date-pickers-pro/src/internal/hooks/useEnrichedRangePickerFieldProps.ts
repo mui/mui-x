@@ -10,6 +10,7 @@ import {
   FieldSelectedSections,
   DateOrTimeView,
 } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -71,7 +72,7 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
 
 export interface UseEnrichedRangePickerFieldPropsParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
   TError,
   FieldProps extends BaseFieldProps<DateRange<TDate>, RangeFieldSection, TError> = BaseFieldProps<
     DateRange<TDate>,
@@ -97,7 +98,11 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   fieldProps: FieldProps;
 }
 
-const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError>({
+const useMultiInputFieldSlotProps = <
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TError,
+>({
   wrapperVariant,
   open,
   actions,
@@ -230,7 +235,11 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError
   return enrichedFieldProps;
 };
 
-const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError>({
+const useSingleInputFieldSlotProps = <
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TError,
+>({
   wrapperVariant,
   open,
   actions,
@@ -328,7 +337,11 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
   return enrichedFieldProps;
 };
 
-export const useEnrichedRangePickerFieldProps = <TDate, TView extends DateOrTimeView, TError>(
+export const useEnrichedRangePickerFieldProps = <
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TError,
+>(
   params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TError>,
 ) => {
   /* eslint-disable react-hooks/rules-of-hooks */
