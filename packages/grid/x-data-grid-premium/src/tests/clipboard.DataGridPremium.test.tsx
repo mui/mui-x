@@ -817,6 +817,45 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
         await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
       });
+
+      it('column type: singleSelect advanced', async () => {
+        const rows = [
+          { id: 0, size: { size: 'M', sizeNumber: 10 } },
+          { id: 1, size: { size: 'L', sizeNumber: 12 } },
+        ];
+        const sizes = [
+          { size: 'S', sizeNumber: 8 },
+          { size: 'M', sizeNumber: 10 },
+          { size: 'L', sizeNumber: 12 },
+        ];
+        const columns: GridColDef[] = [
+          { field: 'id' },
+          {
+            field: 'size',
+            type: 'singleSelect',
+            valueOptions: sizes,
+            valueGetter: (params) => params.value.size,
+            valueSetter: (params) => {
+              const value = sizes.find((option) => option.size === params.value);
+              return { ...params.row, size: value };
+            },
+            getOptionValue: (option: any) => option.size,
+            getOptionLabel: (option: any) => option.size,
+            editable: true,
+          },
+        ];
+
+        render(<CopyPasteTest columns={columns} rows={rows} />);
+
+        const sourceCell = getCell(0, 1);
+        const targetCell = getCell(1, 1);
+        await waitFor(() => expect(targetCell.textContent).not.to.equal(sourceCell.textContent));
+
+        copyCell(sourceCell);
+        pasteIntoCell(targetCell);
+
+        await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
+      });
     });
   });
 });

@@ -112,20 +112,15 @@ const parseCellStringValue = (value: string, colDef: GridColDef) => {
         typeof colDefValueOptions === 'function'
           ? colDefValueOptions({ field: colDef.field })
           : colDefValueOptions || [];
+      const getOptionValue = (colDef as GridSingleSelectColDef).getOptionValue!;
       const valueOption = valueOptions.find((option) => {
-        if (option === value) {
+        if (getOptionValue(option) === value) {
           return true;
-        }
-        // TODO: would it work with valueFormatter?
-        if (typeof option === 'object' && option !== null) {
-          if (String(option.label) === value) {
-            return true;
-          }
         }
         return false;
       });
       if (valueOption) {
-        return valueOption;
+        return value;
       }
       return value;
     }
