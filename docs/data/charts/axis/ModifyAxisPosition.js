@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { Chance } from 'chance';
 
-const data = Array.from({ length: 200 }, (index) => ({
-  id: index,
-  x: -25 + Math.floor(Math.random() * 50),
-  y: -25 + Math.floor(Math.random() * 50),
-}));
+const chance = new Chance(42);
+
+const data = Array.from({ length: 200 }, () => ({
+  x: chance.floating({ min: -25, max: 25 }),
+  y: chance.floating({ min: -25, max: 25 }),
+})).map((d, index) => ({ ...d, id: index }));
 
 export default function ModifyAxisPosition() {
   return (

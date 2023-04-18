@@ -1,12 +1,15 @@
 import * as React from 'react';
 import Slider from '@mui/material/Slider';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { Chance } from 'chance';
 
-const data = Array.from({ length: 200 }, (index) => ({
-  id: index,
-  x: -25 + Math.floor(Math.random() * 50),
-  y: -25 + Math.floor(Math.random() * 50),
-}));
+const chance = new Chance(42);
+
+const data = Array.from({ length: 200 }, () => ({
+  x: chance.floating({ min: -25, max: 25 }),
+  y: chance.floating({ min: -25, max: 25 }),
+})).map((d, index) => ({ ...d, id: index }));
+
 const minDistance = 10;
 
 export default function MinMaxExample() {
