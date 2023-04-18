@@ -5,13 +5,13 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Time, DateRange } from '../internals/components/icons';
+import { DateOrTimeView } from '../models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
-import { DateOrTimeView } from '../models';
 
 type TabValue = 'date' | 'time';
 
