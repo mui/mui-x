@@ -34,7 +34,7 @@ export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsCompon
 }
 
 export interface BaseTimePickerProps<TDate>
-  extends BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
+  extends Omit<BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>, 'views'>,
     ExportedBaseClockProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
@@ -72,10 +72,14 @@ export interface BaseTimePickerProps<TDate>
     PickerViewRendererLookup<
       TDate | null,
       TimeView,
-      TimeViewRendererProps<TimeView, BaseClockProps<TDate>>,
+      TimeViewRendererProps<TimeView, BaseClockProps<TDate, TimeView>>,
       {}
     >
   >;
+  /**
+   * Available views.
+   */
+  views?: readonly Exclude<TimeView, 'meridiem'>[];
 }
 
 type UseTimePickerDefaultizedProps<

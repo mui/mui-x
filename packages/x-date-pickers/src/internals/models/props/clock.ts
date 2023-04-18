@@ -15,8 +15,8 @@ export interface ExportedBaseClockProps<TDate>
   ampm?: boolean;
 }
 
-export interface BaseClockProps<TDate>
-  extends ExportedUseViewsOptions<TimeView>,
+export interface BaseClockProps<TDate, TView extends TimeView>
+  extends ExportedUseViewsOptions<TView>,
     ExportedBaseClockProps<TDate> {
   className?: string;
   /**

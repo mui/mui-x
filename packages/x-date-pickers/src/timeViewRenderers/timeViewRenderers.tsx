@@ -11,7 +11,7 @@ import { isTimeView } from '../internals/utils/time-utils';
 
 export type TimeViewRendererProps<
   TView extends unknown,
-  TComponentProps extends BaseClockProps<any>,
+  TComponentProps extends BaseClockProps<any, any>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;
   onViewChange?: (view: TView) => void;
@@ -48,7 +48,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   autoFocus,
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
-}: TimeViewRendererProps<TimeView, TimeClockProps<TDate>>) => (
+}: TimeViewRendererProps<Exclude<TimeView, 'meridiem'>, TimeClockProps<TDate>>) => (
   <TimeClock<TDate>
     view={view}
     onViewChange={onViewChange}
@@ -111,7 +111,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   autoFocus,
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
-}: TimeViewRendererProps<TimeView, DigitalClockProps<TDate>>) => (
+}: TimeViewRendererProps<Exclude<TimeView, 'meridiem'>, DigitalClockProps<TDate>>) => (
   <DigitalClock<TDate>
     view={view}
     onViewChange={onViewChange}

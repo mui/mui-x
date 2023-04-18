@@ -8,6 +8,7 @@ import {
   ExportedBaseClockProps,
 } from '../internals/models/props/clock';
 import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
+import { TimeView } from '../models';
 
 export interface MultiSectionDigitalClockOption<TValue> {
   isDisabled?: (value: TValue) => boolean;
@@ -37,7 +38,7 @@ export interface MultiSectionDigitalClockSlotsComponentsProps {
 
 export interface MultiSectionDigitalClockProps<TDate>
   extends ExportedMultiSectionDigitalClockProps<TDate>,
-    BaseClockProps<TDate> {
+    BaseClockProps<TDate, TimeView> {
   /**
    * Override or extend the styles applied to the component.
    */

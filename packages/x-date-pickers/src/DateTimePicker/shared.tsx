@@ -65,7 +65,10 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 }
 
 export interface BaseDateTimePickerProps<TDate>
-  extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
+  extends Omit<
+      BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
+      'views'
+    >,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedBaseClockProps<TDate> {
   /**
@@ -113,10 +116,14 @@ export interface BaseDateTimePickerProps<TDate>
       TDate | null,
       DateOrTimeView,
       DateViewRendererProps<TDate, DateOrTimeView> &
-        TimeViewRendererProps<TimeView, BaseClockProps<TDate>>,
+        TimeViewRendererProps<TimeView, BaseClockProps<TDate, Exclude<TimeView, 'meridiem'>>>,
       {}
     >
   >;
+  /**
+   * Available views.
+   */
+  views?: readonly Exclude<DateOrTimeView, 'meridiem'>[];
 }
 
 type UseDateTimePickerDefaultizedProps<

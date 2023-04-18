@@ -7,6 +7,7 @@ import {
   DigitalClockOnlyProps,
   ExportedBaseClockProps,
 } from '../internals/models/props/clock';
+import { TimeView } from '../models';
 
 export interface ExportedDigitalClockProps<TDate>
   extends ExportedBaseClockProps<TDate>,
@@ -26,7 +27,7 @@ export interface DigitalClockSlotsComponentsProps {
 
 export interface DigitalClockProps<TDate>
   extends ExportedDigitalClockProps<TDate>,
-    BaseClockProps<TDate> {
+    BaseClockProps<TDate, Exclude<TimeView, 'meridiem'>> {
   /**
    * Override or extend the styles applied to the component.
    */

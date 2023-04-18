@@ -50,7 +50,11 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   todayButtonLabel: string;
 
   // Clock labels
-  clockLabelText: (view: TimeView, time: TDate | null, adapter: MuiPickersAdapter<TDate>) => string;
+  clockLabelText: (
+    view: Exclude<TimeView, 'meridiem'>,
+    time: TDate | null,
+    adapter: MuiPickersAdapter<TDate>,
+  ) => string;
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
