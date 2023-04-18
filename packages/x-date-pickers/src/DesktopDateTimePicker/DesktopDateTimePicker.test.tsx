@@ -135,20 +135,6 @@ describe('<DesktopDateTimePicker />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
       expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
       expect(onAccept.callCount).to.equal(0);
-
-      // Change the hour (same value)
-      userEvent.mousePress(screen.getByRole('menuitem', { name: '11' }));
-      expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
-      expect(onAccept.callCount).to.equal(0);
-
-      // Change the minutes (same value)
-      userEvent.mousePress(screen.getByRole('menuitem', { name: '55' }));
-      expect(onChange.callCount).to.equal(1); // Don't call onChange again since the value did not change
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
-
-      userEvent.mousePress(screen.getByRole('button', { name: 'OK' }));
-      expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
   });

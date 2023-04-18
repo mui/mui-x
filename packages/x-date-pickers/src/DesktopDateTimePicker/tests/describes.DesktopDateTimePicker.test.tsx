@@ -55,17 +55,13 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
 
       expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, confirmChange } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue } = {}) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
         userEvent.mousePress(
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
-        if (confirmChange) {
-          // click `OK` action to confirm the change and close picker
-          userEvent.mousePress(screen.getByRole('button', { name: 'OK' }));
-        }
       } else {
         const input = getTextbox();
         clickOnInput(input, 5); // Update the day
