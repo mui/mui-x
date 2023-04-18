@@ -31,7 +31,7 @@ const defaultXAxis = {
 // TODO: This is a Proof of Concept.
 // The interaction should be redisigned and improved a bit like Joy is doing is in their lovely component `JoyUsageDemo`
 
-export default function AxisCustomization() {
+export default function AxisCustomizationNoSnap() {
   const [bottomAxis, setBottomAxis] = React.useState({
     axisId: DEFAULT_X_AXIS_KEY,
     ...defaultXAxis,

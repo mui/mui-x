@@ -83,7 +83,7 @@ Those pros can accept three type of value:
 
 To customize how axis are rendered, here is an interactive demonstration of the axis props (Work in progress)
 
-{{"demo": "AxisCustomization.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 ### Composition
 
