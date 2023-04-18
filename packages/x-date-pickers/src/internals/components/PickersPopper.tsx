@@ -20,7 +20,7 @@ import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { getActiveElement } from '../utils/utils';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
-import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
+import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 
 export interface PickersPopperSlotsComponent {
   /**

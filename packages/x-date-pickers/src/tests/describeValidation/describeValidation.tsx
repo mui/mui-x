@@ -6,11 +6,13 @@ import { testMonthViewValidation } from './testMonthViewValidation';
 import { testTextFieldValidation } from './testTextFieldValidation';
 import { testYearViewValidation } from './testYearViewValidation';
 import { DescribeValidationInputOptions } from './describeValidation.types';
+import { testMinutesViewValidation } from './testMinutesViewValidation';
 
 const TEST_SUITES = [
   testYearViewValidation,
   testMonthViewValidation,
   testDayViewValidation,
+  testMinutesViewValidation,
   testTextFieldValidation,
 ];
 

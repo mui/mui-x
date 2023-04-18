@@ -51,7 +51,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         if (!value) {
           expectInputPlaceholder(input, 'MM/DD/YYYY');
         }
-        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '', true);
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '');
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
@@ -72,7 +72,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         );
       } else {
         const input = screen.getAllByRole<HTMLInputElement>('textbox')[0];
-        clickOnInput(input, 9, 11); // Update the day
+        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 
@@ -111,7 +111,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         expectInputPlaceholder(input, expectedValueStr);
       }
 
-      expectInputValue(input, isEmpty ? '' : expectedValueStr, true);
+      expectInputValue(input, isEmpty ? '' : expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
       let newValue: any[];
@@ -131,7 +131,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         );
       } else {
         const input = screen.getByRole<HTMLInputElement>('textbox');
-        clickOnInput(input, 9, 11); // Update the day
+        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

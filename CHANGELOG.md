@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.2.0
+
+_Apr 14, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- Add `@mui/base` as a `peerDependency` of `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` (#8590) @LukasTy
+
+  Both libraries were not working correctly if used without `@mui/base`.
+  Most package manager should automatically use the `@mui/base` version installed for `@mui/material`.
+
+- The value rendered in the picker or field input no longer has spaces around the `/` characters (#8425) @flaviendelangle
+
+  You can use the `formatDensity='spacious'` prop to add it back.
+  More information on [the dedicated doc section](https://mui.com/x/react-date-pickers/custom-field/#change-the-format-density)
+
+- 🌍 Improve French (fr-FR) and Urdu (ur-PK) and locales.
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.2.0` / `@mui/x-data-grid-pro@v6.2.0` / `@mui/x-data-grid-premium@v6.2.0`
+
+#### Changes
+
+- [DataGrid] Reset selection state on `checkboxSelection` toggle (#8522) @MBilalShafi
+- [DataGrid] Use `baseSelect` slot instead of `baseTextField` with `select={true}` (#8110) @cherniavskii
+- [l10n] Improve French (fr-FR) locale (#8537) @vallereaugabriel
+- [l10n] Improve Urdu (ur-PK) locale (#8513) @SFARPak
+
+### `@mui/x-date-pickers@v6.2.0` / `@mui/x-date-pickers-pro@v6.2.0`
+
+#### Changes
+
+- [DateTimePicker] Fix `TimeClock` validation ignoring date by default (#8570) @LukasTy
+- [fields] Fix reliance on section order (#8545) @LukasTy
+- [fields] Make the space between format separators controllable (#8425) @flaviendelangle
+- [pickers] Add `@mui/base` to `peerDependencies` (#8590) @LukasTy
+- [pickers] Fix JSDoc for `formatDensity` prop (#8601) @flaviendelangle
+- [pickers] Improve value lifecycle on non-controlled pickers (#8312) @flaviendelangle
+- [pickers] Migrate `AdapterDayjs` to our repository (#8487) @flaviendelangle
+
+### Docs
+
+- [docs] Fix "Custom day rendering" demo alignment (#8541) @LukasTy
+- [docs] Fix **below** typo (#8576) @alexfauquette
+
+### Core
+
+- [core] Optimize `renovate` rules (#8575) @LukasTy
+- [core] Upgrade monorepo (#8578) @cherniavskii
+- [core] Update last release date (#8569) @DanailH
+
 ## 6.1.0
 
 _Apr 10, 2023_

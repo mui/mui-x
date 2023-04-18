@@ -260,11 +260,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     });
   }, [rowsMeta.currentPageTotalHeight]);
 
-  const handleResize = React.useCallback<GridEventListener<'debouncedResize'>>((params) => {
-    setContainerDimensions({
-      width: params.width,
-      height: params.height,
-    });
+  const handleResize = React.useCallback<GridEventListener<'debouncedResize'>>(() => {
+    if (rootRef.current) {
+      setContainerDimensions({
+        width: rootRef.current.clientWidth,
+        height: rootRef.current.clientHeight,
+      });
+    }
   }, []);
 
   useGridApiEventHandler(apiRef, 'debouncedResize', handleResize);
