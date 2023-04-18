@@ -30,7 +30,7 @@ export const serializeCellValue = (
     if (columnType === 'number') {
       value = String(cellParams.value);
     } else if (columnType === 'date' || columnType === 'dateTime') {
-      value = (cellParams.value as Date)?.toString();
+      value = (cellParams.value as Date)?.toISOString();
     } else if (typeof cellParams.value?.toString === 'function') {
       value = cellParams.value.toString();
     } else {
