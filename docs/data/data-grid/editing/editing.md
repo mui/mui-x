@@ -7,8 +7,8 @@
 The Data Grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
 The following demo shows a full-featured CRUD (Create, Read, Update, Delete) typically found in enterprise applications.
 
-::: info
-You will find the details of each editing API in the next sections.
+:::info
+You will find the details of the editing API in the next sections.
 :::
 
 {{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -18,7 +18,7 @@ You will find the details of each editing API in the next sections.
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/).
 
 This lets the user edit any cell from the specified columns.
-For example, with the code snippet bellow, users can edit cells in the column 'name' but not in the column 'id'.
+For example, with the code snippet below, users can edit cells in the `name` column, but not in the `id` column.
 
 ```tsx
 <DataGrid columns={[{ field: 'id' }, { field: 'name', editable: true }]} />
@@ -111,7 +111,7 @@ When a cell is in `edit` mode, the user can stop editing with any of the followi
   });
   ```
 
-### Listening edit events
+### Editing events
 
 The interactions that [start](#start-editing) and [stop](#stop-editing) trigger `'cellEditStart'` and `'cellEditStop'` [events](/x/react-data-grid/events/), respectively.
 For [row editing](#row-editing), the events are `'rowEditStart'` and `'rowEditStop'`.
