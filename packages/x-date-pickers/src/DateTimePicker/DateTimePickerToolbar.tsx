@@ -13,7 +13,7 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
-import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { DateOrTimeView } from '../models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
@@ -23,7 +23,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 
 export interface DateTimePickerToolbarProps<TDate>
   extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps<TDate | null, DateOrTimeViewWithMeridiem> {
+    BaseToolbarProps<TDate | null, DateOrTimeView> {
   /**
    * Override or extend the styles applied to the component.
    */
