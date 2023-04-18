@@ -147,6 +147,10 @@ This prop is available on all fields and pickers.
 
 {{"demo": "CustomFieldFormat.js"}}
 
+:::info
+You can control the field format spacing using the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
+:::
+
 ### Custom field placeholder
 
 When a section is empty, the fields displays its placeholder instead of an empty value.

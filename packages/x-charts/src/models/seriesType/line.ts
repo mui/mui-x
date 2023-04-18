@@ -16,7 +16,7 @@ export type LineItemIdentifier = {
   type: 'line';
   seriesId: LineSeriesType['id'];
   /**
-   * data Index can be undefined if the mouse is over the area and not a specific item.
+   * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
    */
   dataIndex?: number;
 };

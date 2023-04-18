@@ -10,7 +10,7 @@ import {
   InteractionContext,
   ItemInteractionData,
 } from '../context/InteractionProvider';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { Highlight, HighlightProps } from '../Highlight';
 import { isBandScale } from '../hooks/useScale';
@@ -65,8 +65,13 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
     y: -1,
   });
 
-  const getUpdateY = React.useCallback(
-    (y: number) => {
+  React.useEffect(() => {
+    const element = svgRef.current;
+    if (element === null || trigger !== 'axis') {
+      return () => {};
+    }
+
+    const getUpdateY = (y: number) => {
       if (usedYAxis === null) {
         return null;
       }
@@ -82,12 +87,9 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
         index: dataIndex,
         value: yAxisData![dataIndex],
       };
-    },
-    [usedYAxis, yAxis],
-  );
+    };
 
-  const getUpdateX = React.useCallback(
-    (x: number) => {
+    const getUpdateX = (x: number) => {
       if (usedXAxis === null) {
         return null;
       }
@@ -127,20 +129,17 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
         index: dataIndex,
         value: xAxisData![dataIndex],
       };
-    },
-    [usedXAxis, xAxis],
-  );
-
-  const handleMouseOut = React.useCallback(() => {
-    mousePosition.current = {
-      x: -1,
-      y: -1,
     };
-    dispatch({ type: 'updateAxis', data: { x: null, y: null } });
-  }, [dispatch]);
 
-  const handleMouseMove = React.useCallback(
-    (event: MouseEvent) => {
+    const handleMouseOut = () => {
+      mousePosition.current = {
+        x: -1,
+        y: -1,
+      };
+      dispatch({ type: 'updateAxis', data: { x: null, y: null } });
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
       mousePosition.current = {
         x: event.offsetX,
         y: event.offsetY,
@@ -155,15 +154,7 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
       const newStateY = getUpdateY(event.offsetY);
 
       dispatch({ type: 'updateAxis', data: { x: newStateX, y: newStateY } });
-    },
-    [dispatch, getUpdateX, getUpdateY, height, left, top, width],
-  );
-
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null || trigger !== 'axis') {
-      return () => {};
-    }
+    };
 
     element.addEventListener('mouseout', handleMouseOut);
     element.addEventListener('mousemove', handleMouseMove);
@@ -171,7 +162,7 @@ const useAxisEvents = (trigger: TooltipProps['trigger']) => {
       element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [handleMouseMove, handleMouseOut, svgRef, trigger]);
+  }, [svgRef, trigger, dispatch, left, width, top, height, usedYAxis, yAxis, usedXAxis, xAxis]);
 };
 
 const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
@@ -202,20 +193,15 @@ function AxisTooltipContent(props: AxisInteractionData) {
   const USED_X_AXIS_ID = xAxisIds[0];
   const xAxisName = xAxis[USED_X_AXIS_ID].id;
 
-  const seriesConcerned = React.useMemo(() => {
+  const relevantSeries = React.useMemo(() => {
     const rep: { type: string; id: string; color: string }[] = [];
-
-    // @ts-ignore
-    Object.keys(series).forEach((seriesType) => {
-      // @ts-ignore
-      series[seriesType].seriesOrder.forEach((seriesId: string) => {
-        // @ts-ignore
-        if (series[seriesType].series[seriesId].xAxisKey === USED_X_AXIS_ID) {
+    (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
+      series[seriesType]!.seriesOrder.forEach((seriesId) => {
+        if (series[seriesType]!.series[seriesId].xAxisKey === USED_X_AXIS_ID) {
           rep.push({
             type: seriesType,
             id: seriesId,
-            // @ts-ignore
-            color: series[seriesType].series[seriesId].color,
+            color: series[seriesType]!.series[seriesId].color,
           });
         }
       });
@@ -239,7 +225,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
           <Divider />
         </React.Fragment>
       )}
-      {seriesConcerned.map(({ type, color, id }) => (
+      {relevantSeries.map(({ type, color, id }) => (
         <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
           <svg width={markerSize} height={markerSize}>
             <path
@@ -260,25 +246,11 @@ function AxisTooltipContent(props: AxisInteractionData) {
   );
 }
 
-const useMouseTraker = () => {
+const useMouseTracker = () => {
   const svgRef = React.useContext(SVGContext);
 
   // Use a ref to avoid rerendering on every mousemove event.
   const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
-
-  const handleMouseOut = React.useCallback(() => {
-    setMousePosition(null);
-  }, [setMousePosition]);
-
-  const handleMouseMove = React.useCallback(
-    (event: MouseEvent) => {
-      setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
-      });
-    },
-    [setMousePosition],
-  );
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -286,23 +258,34 @@ const useMouseTraker = () => {
       return () => {};
     }
 
+    const handleMouseOut = () => {
+      setMousePosition(null);
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      setMousePosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+    };
+
     element.addEventListener('mouseout', handleMouseOut);
     element.addEventListener('mousemove', handleMouseMove);
     return () => {
       element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [handleMouseMove, handleMouseOut, svgRef]);
+  }, [svgRef]);
 
   return mousePosition;
 };
 
 export type TooltipProps = {
   /**
-   * Select the kinf of tooltip to display
+   * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows vlaues associated to the hovered x value
-   * - 'none': Does nto display tooltip
+   * - 'axis': Shows values associated with the hovered x value
+   * - 'none': Does not display tooltip
    * @default 'item'
    */
   trigger?: 'item' | 'axis' | 'none';
@@ -312,11 +295,25 @@ export type TooltipProps = {
   highlightProps?: Partial<HighlightProps>;
 };
 
+function getTootipHasData(
+  trigger: TooltipProps['trigger'],
+  displayedData: null | AxisInteractionData | ItemInteractionData,
+): boolean {
+  if (trigger === 'item') {
+    return displayedData !== null;
+  }
+
+  const hasAxisXData = (displayedData as AxisInteractionData).x !== null;
+  const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
+
+  return hasAxisXData || hasAxisYData;
+}
+
 export function Tooltip(props: TooltipProps) {
   const { trigger = 'axis', highlightProps } = props;
 
   useAxisEvents(trigger);
-  const mousePosition = useMouseTraker();
+  const mousePosition = useMouseTracker();
 
   const { item, axis } = React.useContext(InteractionContext);
 
@@ -324,37 +321,31 @@ export function Tooltip(props: TooltipProps) {
 
   const displayedData = trigger === 'item' ? item : axis;
 
-  const popperOpen =
-    mousePosition !== null &&
-    ((trigger === 'item' && displayedData !== null) ||
-      (trigger === 'axis' &&
-        ((displayedData as AxisInteractionData).x !== null ||
-          (displayedData as AxisInteractionData).y !== null)));
+  const tooltipHasData = getTootipHasData(trigger, displayedData);
+  const popperOpen = mousePosition !== null && tooltipHasData;
 
   if (trigger === 'none') {
     return null;
   }
   return (
     <NoSsr>
-      <React.Fragment>
-        {popperOpen && (
-          <Popper
-            open={popperOpen}
-            placement="right-start"
-            anchorEl={generateVirtualElement(mousePosition)}
-            style={{ padding: '16px', pointerEvents: 'none' }}
-          >
-            <Paper sx={{ p: 1 }}>
-              {trigger === 'item' ? (
-                <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
-              ) : (
-                <AxisTooltipContent {...(displayedData as AxisInteractionData)} />
-              )}
-            </Paper>
-          </Popper>
-        )}
-        <Highlight ref={highlightRef} highlight={{ x: true, y: false }} {...highlightProps} />
-      </React.Fragment>
+      {popperOpen && (
+        <Popper
+          open={popperOpen}
+          placement="right-start"
+          anchorEl={generateVirtualElement(mousePosition)}
+          style={{ padding: '16px', pointerEvents: 'none' }}
+        >
+          <Paper sx={{ p: 1 }}>
+            {trigger === 'item' ? (
+              <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
+            ) : (
+              <AxisTooltipContent {...(displayedData as AxisInteractionData)} />
+            )}
+          </Paper>
+        </Popper>
+      )}
+      <Highlight ref={highlightRef} highlight={{ x: true, y: false }} {...highlightProps} />
     </NoSsr>
   );
 }

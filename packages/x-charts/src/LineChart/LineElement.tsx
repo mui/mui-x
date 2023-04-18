@@ -53,17 +53,17 @@ export type LineElementProps = Omit<LineElementOwnerState, 'isNotHighlighted' | 
 export function LineElement(props: LineElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
 
-  const getItemProps = useInteractionItemProps();
+  const getInteractionItemProps = useInteractionItemProps();
 
   const { item } = React.useContext(InteractionContext);
-  const someSerriesIsHighlighted = item !== null;
+  const someSeriesIsHighlighted = item !== null;
   const isHighlighted = item !== null && item.type === 'line' && item.seriesId === id;
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
-    isNotHighlighted: someSerriesIsHighlighted && !isHighlighted,
+    isNotHighlighted: someSeriesIsHighlighted && !isHighlighted,
     isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);
@@ -73,7 +73,7 @@ export function LineElement(props: LineElementProps) {
       {...other}
       ownerState={ownerState}
       className={classes.root}
-      {...getItemProps({ type: 'line', seriesId: id })}
+      {...getInteractionItemProps({ type: 'line', seriesId: id })}
     />
   );
 }

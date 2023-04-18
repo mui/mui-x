@@ -7,7 +7,9 @@ import { ScatterItemIdentifier } from '../models/seriesType/scatter';
 export const useInteractionItemProps = () => {
   const { dispatch } = React.useContext(InteractionContext);
 
-  const getItemProps = (data: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier) => {
+  const getInteractionItemProps = (
+    data: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier,
+  ) => {
     const onMouseEnter = (event: React.MouseEvent) => {
       dispatch({
         type: 'enterItem',
@@ -22,5 +24,5 @@ export const useInteractionItemProps = () => {
       onMouseLeave,
     };
   };
-  return getItemProps;
+  return getInteractionItemProps;
 };

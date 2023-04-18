@@ -14,7 +14,7 @@ export interface ScatterProps {
 export function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, markerSize } = props;
 
-  const getItemProps = useInteractionItemProps();
+  const getInteractionItemProps = useInteractionItemProps();
 
   return (
     <g>
@@ -26,7 +26,7 @@ export function Scatter(props: ScatterProps) {
           r={markerSize}
           transform={`translate(${xScale(x as number)}, ${yScale(y as number)})`}
           fill={color}
-          {...getItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
+          {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
         />
       ))}
     </g>

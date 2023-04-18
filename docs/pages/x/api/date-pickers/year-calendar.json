@@ -27,7 +27,10 @@
   "slots": {},
   "name": "YearCalendar",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
+  "spread": true,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
+  "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "YearCalendar" },
