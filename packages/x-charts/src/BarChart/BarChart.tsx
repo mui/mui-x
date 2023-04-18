@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { BarPlot } from './BarPlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
-import { Axis } from '../Axis';
+import { Axis, AxisProps } from '../Axis';
+
+export interface BarChartProps extends ChartContainerProps, AxisProps {}
 
 export function BarChart(props: ChartContainerProps) {
   const { xAxis, yAxis, series, width, height, margin, colors, sx, tooltip, children } = props;
