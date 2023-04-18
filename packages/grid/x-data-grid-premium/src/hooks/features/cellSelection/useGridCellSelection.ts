@@ -257,23 +257,25 @@ export const useGridCellSelection = (
 
       let deltaX = 0;
       let deltaY = 0;
-      let multiplier = 0;
+      let factor = 0;
 
-      if (mouseY <= AUTO_SCROLL_SENSITIVITY) {
-        // When scrolling up, the multiplier increases as going closer the top edge
-        multiplier = (AUTO_SCROLL_SENSITIVITY - mouseY) / -AUTO_SCROLL_SENSITIVITY;
+      const dimensions = apiRef.current.getRootDimensions();
+
+      if (mouseY <= AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollY) {
+        // When scrolling up, the multiplier increases going closer to the top edge
+        factor = (AUTO_SCROLL_SENSITIVITY - mouseY) / -AUTO_SCROLL_SENSITIVITY;
         deltaY = AUTO_SCROLL_SPEED;
-      } else if (mouseY >= height - AUTO_SCROLL_SENSITIVITY) {
-        // When scrolling down, the multiplier increases as going closer the bottom edge
-        multiplier = (mouseY - (height - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
+      } else if (mouseY >= height - AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollY) {
+        // When scrolling down, the multiplier increases going closer to the bottom edge
+        factor = (mouseY - (height - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
         deltaY = AUTO_SCROLL_SPEED;
-      } else if (mouseX <= AUTO_SCROLL_SENSITIVITY) {
-        // When scrolling left, the multiplier increases as going closer the left edge
-        multiplier = (AUTO_SCROLL_SENSITIVITY - mouseX) / -AUTO_SCROLL_SENSITIVITY;
+      } else if (mouseX <= AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollX) {
+        // When scrolling left, the multiplier increases going closer to the left edge
+        factor = (AUTO_SCROLL_SENSITIVITY - mouseX) / -AUTO_SCROLL_SENSITIVITY;
         deltaX = AUTO_SCROLL_SPEED;
-      } else if (mouseX >= width - AUTO_SCROLL_SENSITIVITY) {
-        // When scrolling right, the multiplier increases as going closer the right edge
-        multiplier = (mouseX - (width - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
+      } else if (mouseX >= width - AUTO_SCROLL_SENSITIVITY && dimensions?.hasScrollX) {
+        // When scrolling right, the multiplier increases going closer to the right edge
+        factor = (mouseX - (width - AUTO_SCROLL_SENSITIVITY)) / AUTO_SCROLL_SENSITIVITY;
         deltaX = AUTO_SCROLL_SPEED;
       }
 
@@ -281,8 +283,8 @@ export const useGridCellSelection = (
         const { scrollLeft, scrollTop } = apiRef.current.virtualScrollerRef.current;
 
         apiRef.current.scroll({
-          top: scrollTop + deltaY * multiplier,
-          left: scrollLeft + deltaX * multiplier,
+          top: scrollTop + deltaY * factor,
+          left: scrollLeft + deltaX * factor,
         });
       }
     }, 20);
