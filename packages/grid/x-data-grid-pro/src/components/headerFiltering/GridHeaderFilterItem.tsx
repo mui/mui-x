@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
 } from '@mui/utils';
 import {
   GridFilterItem,
@@ -235,6 +236,11 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
 
     const isNoInputOperator = NO_INPUT_OPERATORS[colDef.type!]?.includes(item.operator);
     const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
+    const label =
+      OPERATOR_LABEL_MAPPING[item.operator] ??
+      apiRef.current.getLocaleText(
+        `filterOperator${capitalize(item.operator)}` as 'filterOperatorContains',
+      );
 
     return (
       <div
@@ -263,7 +269,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
             fullWidth
             placeholder={apiRef.current.getLocaleText('columnMenuFilter')}
-            label={isFilterActive ? OPERATOR_LABEL_MAPPING[item.operator] : ' '}
+            label={isFilterActive ? capitalize(label) : ' '}
             {...currentOperator?.InputComponentProps}
             {...InputComponentProps}
             InputProps={{

@@ -3,6 +3,7 @@ import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { unstable_capitalize as capitalize } from '@mui/utils';
 import {
   useGridApiContext,
   GridMenu,
@@ -64,19 +65,26 @@ function GridHeaderFilterMenu({
       onExited={hideMenu}
     >
       <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown} autoFocus={open}>
-        {operators.map((op) => (
-          <MenuItem
-            onClick={() => {
-              applyFilterChanges({ ...item, operator: op.value });
-              hideMenu();
-            }}
-            selected={op.value === item.operator}
-            key={`${field}-${op.value}`}
-          >
-            <ListItemIcon>{OPERATOR_SYMBOL_MAPPING[op.value]}</ListItemIcon>
-            <ListItemText>{OPERATOR_LABEL_MAPPING[op.value]}</ListItemText>
-          </MenuItem>
-        ))}
+        {operators.map((op) => {
+          const label = op.label
+            ? OPERATOR_LABEL_MAPPING[op.label]
+            : apiRef.current.getLocaleText(
+                `filterOperator${capitalize(op.value)}` as 'filterOperatorContains',
+              );
+          return (
+            <MenuItem
+              onClick={() => {
+                applyFilterChanges({ ...item, operator: op.value });
+                hideMenu();
+              }}
+              selected={op.value === item.operator}
+              key={`${field}-${op.value}`}
+            >
+              <ListItemIcon>{OPERATOR_SYMBOL_MAPPING[op.value]}</ListItemIcon>
+              <ListItemText>{capitalize(label)}</ListItemText>
+            </MenuItem>
+          );
+        })}
       </MenuList>
     </GridMenu>
   );
