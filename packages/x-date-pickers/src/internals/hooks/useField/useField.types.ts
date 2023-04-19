@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { MuiPickersAdapter } from '../../models';
-import { FieldSectionType, FieldSection, FieldSelectedSections } from '../../../models';
+import {
+  FieldSectionType,
+  FieldSection,
+  FieldSelectedSections,
+  MuiPickersAdapter,
+} from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 
@@ -15,7 +19,7 @@ export interface UseFieldParams<
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
-  fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
+  fieldValueManager: FieldValueManager<TValue, TDate, TSection>;
   validator: Validator<
     TValue,
     TDate,
@@ -55,6 +59,12 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    * Format of the date when rendered in the input(s).
    */
   format: string;
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity?: 'dense' | 'spacious';
   /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
@@ -193,7 +203,7 @@ export type FieldSelectedSectionsIndexes = {
   shouldSelectBoundarySelectors?: boolean;
 };
 
-export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
+export interface FieldValueManager<TValue, TDate, TSection extends FieldSection> {
   /**
    * Creates the section list from the current value.
    * The `prevSections` are used on the range fields to avoid losing the sections of a partially filled date when editing the other date.
@@ -261,13 +271,6 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     value: TValue,
     prevReferenceValue: TValue,
   ) => TValue;
-  /**
-   * Checks if the current error is empty or not.
-   * @template TError
-   * @param {TError} error The current error.
-   * @returns {boolean} `true` if the current error is not empty.
-   */
-  hasError: (error: TError) => boolean;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {

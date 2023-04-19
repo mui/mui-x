@@ -41,7 +41,11 @@ const formatter: Formatter<'line'> = (params) => {
     });
   });
 
-  return { seriesOrder, stackingGroups, series: defaultizeCartesianSeries(completedSeries) };
+  return {
+    seriesOrder,
+    stackingGroups,
+    series: defaultizeCartesianSeries<ChartSeries<'line'>>(completedSeries),
+  };
 };
 
 export default formatter;

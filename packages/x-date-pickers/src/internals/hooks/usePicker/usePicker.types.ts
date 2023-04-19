@@ -3,7 +3,7 @@ import {
   UsePickerValueProps,
   UsePickerValueBaseProps,
   UsePickerValueResponse,
-} from './usePickerValue';
+} from './usePickerValue.types';
 import {
   UsePickerViewsProps,
   UsePickerViewParams,

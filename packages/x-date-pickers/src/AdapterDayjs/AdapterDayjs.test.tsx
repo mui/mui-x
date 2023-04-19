@@ -18,6 +18,11 @@ import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import {
+  describeGregorianAdapter,
+  TEST_DATE_ISO,
+} from 'packages/x-date-pickers/src/tests/describeGregorianAdapter';
+import { AdapterFormats } from '@mui/x-date-pickers';
 
 dayjs.extend(utc);
 
@@ -37,7 +42,79 @@ const localizedTexts = {
   },
 };
 describe('<AdapterDayjs />', () => {
-  describe('Localization', () => {
+  describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss' });
+
+  describe('Adapter localization', () => {
+    describe('Russian', () => {
+      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'ru' });
+      const date = adapter.date(TEST_DATE_ISO)!;
+
+      it('getWeekdays: should start from monday', () => {
+        const result = adapter.getWeekdays();
+        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
+      });
+
+      it('getWeekArray: week should start from monday', () => {
+        const result = adapter.getWeekArray(date);
+        expect(result[0][0].format('dd')).to.equal('пн');
+      });
+
+      it('is12HourCycleInCurrentLocale: properly determine should use meridiem or not', () => {
+        expect(adapter.is12HourCycleInCurrentLocale()).to.equal(false);
+      });
+
+      it('getCurrentLocaleCode: returns locale code', () => {
+        expect(adapter.getCurrentLocaleCode()).to.equal('ru');
+      });
+    });
+
+    describe('English', () => {
+      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'en' });
+      const date = adapter.date(TEST_DATE_ISO)!;
+
+      it('getWeekdays: should start from sunday', () => {
+        const result = adapter.getWeekdays();
+        expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
+      });
+
+      it('getWeekArray: week should start from sunday', () => {
+        const result = adapter.getWeekArray(date);
+        expect(result[0][0].format('dd')).to.equal('Su');
+      });
+
+      it('is12HourCycleInCurrentLocale: properly determine should use meridiem or not', () => {
+        expect(adapter.is12HourCycleInCurrentLocale()).to.equal(true);
+      });
+    });
+
+    it('Formatting', () => {
+      const adapter = new AdapterDayjs({ locale: 'en' });
+      const adapterRu = new AdapterDayjs({ locale: 'ru' });
+
+      const expectDate = (
+        format: keyof AdapterFormats,
+        expectedWithEn: string,
+        expectedWithRu: string,
+      ) => {
+        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+
+        expect(adapter.format(date, format)).to.equal(expectedWithEn);
+        expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
+      };
+
+      expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
+      expectDate('fullDateWithWeekday', 'Saturday, February 1, 2020', 'суббота, 1 февраля 2020 г.');
+      expectDate('fullDateTime', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г., 23:44');
+      expectDate('fullDateTime12h', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г. 11:44 вечера');
+      expectDate('fullDateTime24h', 'Feb 1, 2020 23:44', '1 февр. 2020 г. 23:44');
+      expectDate('keyboardDate', '02/01/2020', '01.02.2020');
+      expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
+      expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
+      expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
+    });
+  });
+
+  describe('Picker localization', () => {
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
@@ -61,7 +138,7 @@ describe('<AdapterDayjs />', () => {
         it('should have well formatted value', () => {
           render(<DateTimePicker value={adapter.date(testDate)} />);
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
+          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
         });
       });
     });
@@ -69,9 +146,9 @@ describe('<AdapterDayjs />', () => {
     it('should return the correct week number', () => {
       const localizedAdapter = new AdapterDayjs({ locale: 'fr' });
 
-      const dateToTest = localizedAdapter.date(new Date(2022, 10, 10));
+      const dateToTest = localizedAdapter.date(new Date(2022, 10, 10))!;
 
-      expect(localizedAdapter.getWeekNumber!(dateToTest)).to.equal(45);
+      expect(localizedAdapter.getWeekNumber(dateToTest)).to.equal(45);
     });
   });
 

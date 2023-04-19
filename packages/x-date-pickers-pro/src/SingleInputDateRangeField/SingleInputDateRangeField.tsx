@@ -19,17 +19,23 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     name: 'MuiSingleInputDateRangeField',
   });
 
-  const { slots, slotProps, components, componentsProps, ...other } = themeProps;
+  const { slots, slotProps, components, componentsProps, InputProps, inputProps, ...other } =
+    themeProps;
 
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
-  const textFieldProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
-    elementType: TextField,
-    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
-    externalForwardedProps: other,
-    ownerState,
-  });
+  const { inputRef: externalInputRef, ...textFieldProps }: SingleInputDateRangeFieldProps<TDate> =
+    useSlotProps({
+      elementType: TextField,
+      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
+      externalForwardedProps: other,
+      ownerState,
+    });
+
+  // TODO: Remove when mui/material-ui#35088 will be merged
+  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
 
   const {
     ref: inputRef,
@@ -39,7 +45,7 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     ...fieldProps
   } = useSingleInputDateRangeField<TDate, typeof textFieldProps>({
     props: textFieldProps,
-    inputRef: textFieldProps.inputRef,
+    inputRef: externalInputRef,
   });
 
   return (
@@ -110,6 +116,12 @@ SingleInputDateRangeField.propTypes = {
    * Format of the date when rendered in the input(s).
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Props applied to the [`FormHelperText`](/material-ui/api/form-helper-text/) element.
    */
