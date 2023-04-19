@@ -384,6 +384,11 @@ DigitalClock.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */

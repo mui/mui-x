@@ -72,6 +72,7 @@
       "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
     },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "skipDisabled": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
