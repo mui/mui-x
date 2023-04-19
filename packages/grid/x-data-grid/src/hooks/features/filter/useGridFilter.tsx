@@ -40,11 +40,43 @@ export const filterStateInitializer: GridStateInitializer<
     ...state,
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
-      visibleRowsLookup: {},
       filteredDescendantCountLookup: {},
     },
   };
 };
+
+function useGridVisibleRowsLookup(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
+  const updateVisibleRowsLookup = React.useCallback(() => {
+    apiRef.current.setState((state) => {
+      const visibleRowsLookup = apiRef.current.applyStrategyProcessor('visibleRowsLookup', {
+        tree: state.rows.tree,
+        filteredRowsLookup: state.filter.filteredRowsLookup,
+      });
+      return {
+        ...state,
+        visibleRowsLookup,
+      };
+    });
+    apiRef.current.forceUpdate();
+  }, [apiRef]);
+
+  const getVisibleRowsLookup = React.useCallback<GridStrategyProcessor<'visibleRowsLookup'>>(
+    (params) => {
+      // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
+      return params.filteredRowsLookup;
+    },
+    [],
+  );
+
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    GRID_DEFAULT_STRATEGY,
+    'visibleRowsLookup',
+    getVisibleRowsLookup,
+  );
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookup);
+  useGridApiEventHandler(apiRef, 'filteredRowsSet', updateVisibleRowsLookup);
+}
 
 /**
  * @requires useGridColumns (method, event)
@@ -385,14 +417,11 @@ export const useGridFilter = (
         }
         return {
           filteredRowsLookup,
-          // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
-          visibleRowsLookup: filteredRowsLookup,
           filteredDescendantCountLookup: {},
         };
       }
 
       return {
-        visibleRowsLookup: {},
         filteredRowsLookup: {},
         filteredDescendantCountLookup: {},
       };
@@ -405,6 +434,8 @@ export const useGridFilter = (
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'filtering', flatFilteringMethod);
+
+  useGridVisibleRowsLookup(apiRef);
 
   /**
    * EVENTS
@@ -435,7 +466,6 @@ export const useGridFilter = (
   // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
   // Otherwise, the state is not consistent during the render
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', apiRef.current.unstable_applyFilters);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
 

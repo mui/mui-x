@@ -17,6 +17,7 @@ import {
   createRowTree,
   updateRowTree,
   RowTreeBuilderGroupingCriterion,
+  getVisibleRowsLookup,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -232,6 +233,12 @@ export const useGridRowGroupingPreProcessors = (
   );
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'filtering', filterRows);
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    ROW_GROUPING_STRATEGY,
+    'visibleRowsLookup',
+    getVisibleRowsLookup,
+  );
 
   /**
    * 1ST RENDER

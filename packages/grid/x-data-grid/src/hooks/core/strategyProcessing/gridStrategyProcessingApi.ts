@@ -1,10 +1,13 @@
 import {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
+  GridRowsState,
 } from '../../features/rows/gridRowsInterfaces';
+import type { GridRowId } from '../../../models/gridRows';
 import {
   GridFilteringMethodParams,
   GridFilteringMethodValue,
+  GridFilterState,
 } from '../../features/filter/gridFilterState';
 import {
   GridSortingMethodParams,
@@ -31,6 +34,14 @@ export interface GridStrategyProcessingLookup {
     group: 'rowTree';
     params: GridSortingMethodParams;
     value: GridSortingMethodValue;
+  };
+  visibleRowsLookup: {
+    group: 'rowTree';
+    params: {
+      tree: GridRowsState['tree'];
+      filteredRowsLookup: GridFilterState['filteredRowsLookup'];
+    };
+    value: Record<GridRowId, boolean>;
   };
 }
 
