@@ -66,3 +66,11 @@ The `DigitalClock` component uses only `minutes` `timeSteps` option, other are i
 :::
 
 {{"demo": "DigitalClockTimeStep.js"}}
+
+## Skip rendering disabled options
+
+The components allow skipping the disabled options from being rendered in the view.
+
+You can use the `skipDisabled` prop to control it.
+
+{{"demo": "DigitalClockSkipDisabled.js"}}
