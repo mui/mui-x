@@ -26,7 +26,7 @@ export interface MultiSectionDigitalClockViewProps<TValue>
 
 export interface MultiSectionDigitalClockSlotsComponent {
   /**
-   * Component responsible for rendering a single digital clock section item.
+   * Component responsible for rendering a single multi section digital clock section item.
    * @default MenuItem from '@mui/material'
    */
   DigitalClockSectionItem?: React.ElementType;

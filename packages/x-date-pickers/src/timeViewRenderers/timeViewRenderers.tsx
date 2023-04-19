@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
+import { TimeView } from '../models';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
 import {
   MultiSectionDigitalClock,
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
-import { TimeView } from '../models';
 import { isTimeView } from '../internals/utils/time-utils';
 import { TimeViewWithMeridiem } from '../internals/models';
 

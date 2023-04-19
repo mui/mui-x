@@ -3,7 +3,6 @@ import {
   DesktopTimePickerSlotsComponent,
   DesktopTimePickerSlotsComponentsProps,
 } from '../DesktopTimePicker';
-import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
@@ -12,23 +11,17 @@ import {
   MobileTimePickerSlotsComponentsProps,
 } from '../MobileTimePicker';
 
-export interface TimePickerSlotsComponents<
-  TDate,
-  TView extends TimeViewWithMeridiem | TimeView = TimeViewWithMeridiem,
-> extends DesktopTimePickerSlotsComponent<TDate, TView>,
-    MobileTimePickerSlotsComponent<TDate, TView> {}
+export interface TimePickerSlotsComponents<TDate>
+  extends DesktopTimePickerSlotsComponent<TDate>,
+    MobileTimePickerSlotsComponent<TDate, TimeViewWithMeridiem> {}
 
-export interface TimePickerSlotsComponentsProps<
-  TDate,
-  TView extends TimeViewWithMeridiem | TimeView = TimeViewWithMeridiem,
-> extends DesktopTimePickerSlotsComponentsProps<TDate, TView>,
-    MobileTimePickerSlotsComponentsProps<TDate, TView> {}
+export interface TimePickerSlotsComponentsProps<TDate>
+  extends DesktopTimePickerSlotsComponentsProps<TDate>,
+    MobileTimePickerSlotsComponentsProps<TDate, TimeViewWithMeridiem> {}
 
-export interface TimePickerProps<
-  TDate,
-  TView extends TimeViewWithMeridiem | TimeView = TimeViewWithMeridiem,
-> extends DesktopTimePickerProps<TDate, TView>,
-    MobileTimePickerProps<TDate, TView> {
+export interface TimePickerProps<TDate>
+  extends DesktopTimePickerProps<TDate>,
+    MobileTimePickerProps<TDate, TimeViewWithMeridiem> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -40,21 +33,21 @@ export interface TimePickerProps<
    * @default {}
    * @deprecated Please use `slots`.
    */
-  components?: TimePickerSlotsComponents<TDate, TView>;
+  components?: TimePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    * @deprecated Please use `slotProps`.
    */
-  componentsProps?: TimePickerSlotsComponentsProps<TDate, TView>;
+  componentsProps?: TimePickerSlotsComponentsProps<TDate>;
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimePickerSlotsComponents<TDate, TView>>;
+  slots?: UncapitalizeObjectKeys<TimePickerSlotsComponents<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: TimePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: TimePickerSlotsComponentsProps<TDate>;
 }

@@ -12,11 +12,11 @@ import { renderTimeViewClock } from '../timeViewRenderers';
 import { TimeView } from '../models';
 
 type MobileTimePickerComponent = (<TDate>(
-  props: MobileTimePickerProps<TDate, TimeView> & React.RefAttributes<HTMLDivElement>,
+  props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
-  inProps: MobileTimePickerProps<TDate, TimeView>,
+  inProps: MobileTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
@@ -32,7 +32,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
-    // meridiem: null,
     ...defaultizedProps.viewRenderers,
   };
   const ampmInClock = defaultizedProps.ampmInClock ?? false;

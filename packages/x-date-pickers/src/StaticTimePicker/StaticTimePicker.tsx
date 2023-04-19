@@ -10,17 +10,17 @@ import { validateTime } from '../internals/hooks/validation/useTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticTimePickerComponent = (<TDate>(
-  props: StaticTimePickerProps<TDate, TimeView> & React.RefAttributes<HTMLDivElement>,
+  props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
-  inProps: StaticTimePickerProps<TDate, TimeView>,
+  inProps: StaticTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeView,
-    StaticTimePickerProps<TDate, TimeView>
+    StaticTimePickerProps<TDate>
   >(inProps, 'MuiStaticTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';

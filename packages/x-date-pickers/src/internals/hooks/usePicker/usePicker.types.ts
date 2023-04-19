@@ -11,7 +11,7 @@ import {
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
-import { DateOrTimeView, FieldSection } from '../../../models';
+import { FieldSection, DateOrTimeView } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**

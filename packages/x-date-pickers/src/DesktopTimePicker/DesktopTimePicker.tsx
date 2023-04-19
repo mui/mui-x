@@ -31,7 +31,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const defaultizedProps = useTimePickerDefaultizedProps<
     TDate,
     TimeViewWithMeridiem,
-    DesktopTimePickerProps<TDate, TimeViewWithMeridiem>
+    DesktopTimePickerProps<TDate>
   >(inProps, 'MuiDesktopTimePicker');
 
   const thresholdToRenderTimeInASingleColumn =

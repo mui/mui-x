@@ -2,12 +2,12 @@ import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/base/utils';
 import { PickersActionBarProps } from '../PickersActionBar';
+import { DateOrTimeView } from '../models';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
-import { DateOrTimeView } from '../models';
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
 

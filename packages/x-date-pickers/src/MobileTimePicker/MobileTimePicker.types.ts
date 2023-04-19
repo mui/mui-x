@@ -9,9 +9,9 @@ import {
   BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
+import { TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import { TimeView } from '../models';
 
 export interface MobileTimePickerSlotsComponent<
   TDate,

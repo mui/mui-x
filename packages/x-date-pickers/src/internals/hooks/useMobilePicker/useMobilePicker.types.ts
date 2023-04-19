@@ -13,8 +13,8 @@ import {
 import { UsePickerParams, UsePickerProps } from '../usePicker';
 import {
   BaseSingleInputFieldProps,
-  DateOrTimeView,
   FieldSection,
+  DateOrTimeView,
   MuiPickersAdapter,
 } from '../../../models';
 import {
