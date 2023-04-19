@@ -26,6 +26,7 @@ extends Omit<GridRenderCellParams, 'api'> {
 function GridActionsCell(props: GridActionsCellProps) {
   const {
     api,
+    aggregation,
     colDef,
     id,
     hasFocus,
