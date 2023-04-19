@@ -14,8 +14,8 @@ const StyledBox = styled(Box, {
   padding: theme.spacing(1),
   justifyContent: 'center',
   ...(isDataGridTest && {
+    width: 500,
     minHeight: 400,
-    maxWidth: 500,
     // Workaround the min-height limitation
     '& .grid-container': {
       position: 'relative',

@@ -147,9 +147,10 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     (isVisible: boolean) => {
       const currentModel = gridColumnVisibilityModelSelector(apiRef);
       const newModel = { ...currentModel };
+      const togglableColumns = getTogglableColumns ? getTogglableColumns(columns) : null;
 
       columns.forEach((col) => {
-        if (col.hideable) {
+        if (col.hideable && (togglableColumns == null || togglableColumns.includes(col.field))) {
           if (isVisible) {
             // delete the key from the model instead of setting it to `true`
             delete newModel[col.field];
@@ -161,7 +162,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
       return apiRef.current.setColumnVisibilityModel(newModel);
     },
-    [apiRef, columns],
+    [apiRef, columns, getTogglableColumns],
   );
 
   const handleSearchValueChange = React.useCallback(
