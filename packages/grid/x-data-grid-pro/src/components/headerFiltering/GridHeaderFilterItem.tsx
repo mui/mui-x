@@ -153,32 +153,17 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         if (isMenuOpen || isNavigationKey(event.key)) {
           return;
         }
-        if (isEditing) {
-          switch (event.key) {
-            case 'Escape':
-              apiRef.current.stopHeaderFilterEditMode();
-              break;
-            case 'Enter':
-              apiRef.current.stopHeaderFilterEditMode();
-              break;
-            case 'Tab': {
-              const fieldToFocus = columnFields[colIndex + (event.shiftKey ? -1 : 1)] ?? null;
-
-              if (fieldToFocus) {
-                apiRef.current.startHeaderFilterEditMode(fieldToFocus);
-                apiRef.current.setColumnHeaderFilterFocus(fieldToFocus, event);
-              }
-              break;
-            }
-            default:
-              break;
-          }
-          return;
-        }
         switch (event.key) {
           case 'Escape':
+            if (isEditing) {
+              apiRef.current.stopHeaderFilterEditMode();
+            }
             break;
           case 'Enter':
+            if (isEditing) {
+              apiRef.current.stopHeaderFilterEditMode();
+              break;
+            }
             if (event.metaKey || event.ctrlKey) {
               headerFilterMenuRef.current = buttonRef.current;
               apiRef.current.showHeaderFilterMenu(colDef.field);
@@ -186,18 +171,23 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             }
             apiRef.current.startHeaderFilterEditMode(colDef.field);
             break;
+          case 'Tab': {
+            if (isEditing) {
+              const fieldToFocus = columnFields[colIndex + (event.shiftKey ? -1 : 1)] ?? null;
 
+              if (fieldToFocus) {
+                apiRef.current.startHeaderFilterEditMode(fieldToFocus);
+                apiRef.current.setColumnHeaderFilterFocus(fieldToFocus, event);
+              }
+            }
+            break;
+          }
           default:
-            if (
-              event.metaKey ||
-              event.ctrlKey ||
-              event.altKey ||
-              event.shiftKey ||
-              event.key === 'Tab'
-            ) {
+            if (isEditing || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
               break;
             }
             apiRef.current.startHeaderFilterEditMode(colDef.field);
+            break;
         }
       },
       [apiRef, colDef.field, colIndex, columnFields, headerFilterMenuRef, isEditing, isMenuOpen],
