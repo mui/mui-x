@@ -140,7 +140,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
-    "globby": "^13.1.3",
+    "globby": "^13.1.4",
     "html-webpack-plugin": "^5.5.1",
     "jsdom": "^21.1.1",
     "jss": "^10.10.0",
