@@ -321,6 +321,7 @@
   { "name": "GridHeaderCheckbox", "kind": "Variable" },
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },
   { "name": "GridIconSlotsComponent", "kind": "Interface" },
+  { "name": "GridInfiniteLoaderApi", "kind": "Interface" },
   { "name": "GridInitialState", "kind": "TypeAlias" },
   { "name": "GridInputRowSelectionModel", "kind": "TypeAlias" },
   { "name": "GridKeyboardArrowRight", "kind": "Variable" },

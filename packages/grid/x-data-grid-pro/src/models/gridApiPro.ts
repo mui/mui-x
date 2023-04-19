@@ -11,6 +11,7 @@ import type {
   GridDetailPanelApi,
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
+  GridInfiniteLoaderApi,
 } from '../hooks';
 
 /**
@@ -22,6 +23,7 @@ export interface GridApiPro
     GridColumnPinningApi,
     GridDetailPanelApi,
     GridRowPinningApi,
+    GridInfiniteLoaderApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi,

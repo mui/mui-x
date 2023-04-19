@@ -329,14 +329,20 @@ describe('<DataGridPro /> - Events Params', () => {
     });
   });
 
-  it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
+  it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
     const handleRowsScrollEnd = spy();
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
     act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
-  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', () => {
+  it('publishing GRID_ROWS_SCROLL should call onFetchRows callback when rows lazy loading is enabled', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
     const handleFetchRows = spy();
     render(
       <TestEvents
