@@ -6,10 +6,10 @@ import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { PickerViewRendererLookup, useLocaleText, validateTime } from '../internals';
+import { TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderTimeViewClock } from '../timeViewRenderers';
-import { TimeView } from '../models';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
