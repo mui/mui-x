@@ -144,6 +144,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         }
         const elementToFocus = focusableElement || cellRef.current;
         elementToFocus?.focus();
+        apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
       }
     }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 
