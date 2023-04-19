@@ -21,7 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-spring": "^9.2.4",
-    "react-virtualized": "^9.22.3",
+    "react-virtualized": "^9.22.5",
     "serve-handler": "^6.1.5",
     "style-loader": "^3.3.2",
     "webpack": "^5.79.0",
