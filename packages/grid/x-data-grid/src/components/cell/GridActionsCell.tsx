@@ -242,6 +242,7 @@ GridActionsCell.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  api: PropTypes.object,
   /**
    * The mode of the cell.
    */
@@ -267,6 +268,9 @@ GridActionsCell.propTypes = {
       }),
     }),
   ]),
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
   formattedValue: PropTypes.any,
   /**
    * If true, the cell is the active element.
@@ -306,6 +310,10 @@ GridActionsCell.propTypes = {
    * the tabIndex value.
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
   value: PropTypes.any,
 } as any;
 
