@@ -1,11 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps & TextFieldProps;
 
-export function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
+function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const { item, applyValue, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const rootProps = useGridRootProps();
@@ -68,3 +69,28 @@ export function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     </rootProps.slots.baseTextField>
   );
 }
+
+GridFilterInputBoolean.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
+  applyValue: PropTypes.func.isRequired,
+  focusElementRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
+  item: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    operator: PropTypes.string.isRequired,
+    value: PropTypes.any,
+  }).isRequired,
+} as any;
+
+export { GridFilterInputBoolean };
