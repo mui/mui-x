@@ -189,7 +189,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
           return false;
         }
 
-        // what do we specify here as the view?
         if (shouldDisableClock?.(utils.toJsDate(valueToCheck).getTime(), 'hours')) {
           return false;
         }

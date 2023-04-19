@@ -154,7 +154,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (!selectedItem) {
         return;
       }
-      if (active) {
+      if (active && autoFocus) {
         selectedItem.focus();
       }
       const offsetTop = selectedItem.offsetTop;
