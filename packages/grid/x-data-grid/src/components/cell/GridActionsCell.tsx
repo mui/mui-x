@@ -17,8 +17,7 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-interface GridActionsCellProps
-extends Omit<GridRenderCellParams, 'api'> {
+interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
   api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
 }
