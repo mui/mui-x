@@ -18,14 +18,14 @@ interface TouchRippleActions {
 }
 
 interface GridActionsCellProps
-  extends Omit<GridRenderCellParams, 'value' | 'formattedValue' | 'api'> {
-  value?: GridRenderCellParams['value'];
-  formattedValue?: GridRenderCellParams['formattedValue'];
+extends Omit<GridRenderCellParams, 'api'> {
+  api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
 }
 
 function GridActionsCell(props: GridActionsCellProps) {
   const {
+    api,
     colDef,
     id,
     hasFocus,
