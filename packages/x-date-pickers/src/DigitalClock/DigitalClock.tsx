@@ -101,6 +101,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     disabled,
     readOnly,
     views = ['hours'],
+    skipDisabled = false,
     ...other
   } = props;
 
@@ -235,19 +236,24 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       {...other}
     >
       <DigitalClockList autoFocusItem={autoFocus || !!focusedView}>
-        {timeOptions.map((option) => (
-          <ClockItem
-            aria-readonly={readOnly}
-            key={utils.toISO(option)}
-            onClick={() => !readOnly && handleItemSelect(option)}
-            selected={utils.isEqual(option, value)}
-            disabled={disabled || isTimeDisabled(option)}
-            disableRipple={readOnly}
-            {...clockItemProps}
-          >
-            {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
-          </ClockItem>
-        ))}
+        {timeOptions.map((option) => {
+          if (skipDisabled && isTimeDisabled(option)) {
+            return null;
+          }
+          return (
+            <ClockItem
+              aria-readonly={readOnly}
+              key={utils.toISO(option)}
+              onClick={() => !readOnly && handleItemSelect(option)}
+              selected={utils.isEqual(option, value)}
+              disabled={disabled || isTimeDisabled(option)}
+              disableRipple={readOnly}
+              {...clockItemProps}
+            >
+              {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
+            </ClockItem>
+          );
+        })}
       </DigitalClockList>
     </DigitalClockRoot>
   );

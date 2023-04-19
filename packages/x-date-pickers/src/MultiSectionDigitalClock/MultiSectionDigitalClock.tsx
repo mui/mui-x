@@ -84,6 +84,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     className,
     disabled,
     readOnly,
+    skipDisabled = false,
     ...other
   } = props;
   const timeSteps = React.useMemo<Required<TimeStepOptions>>(
@@ -376,6 +377,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
           readOnly={readOnly}
           slots={slots ?? components}
           slotProps={slotProps ?? componentsProps}
+          skipDisabled={skipDisabled}
         />
       ))}
     </MultiSectionDigitalClockRoot>

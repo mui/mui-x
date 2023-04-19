@@ -68,4 +68,9 @@ export interface DigitalClockOnlyProps {
    * @default{ hours: 1, minutes: 5, seconds: 5 }
    */
   timeSteps?: TimeStepOptions;
+  /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled?: boolean;
 }
