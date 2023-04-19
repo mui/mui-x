@@ -281,7 +281,13 @@ export const usePickerValue = <
     (dateState.lastControlledValue === undefined ||
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
-    setDateState((prev) => ({ ...prev, lastControlledValue: inValue, draft: inValue }));
+    setDateState((prev) => ({
+      ...prev,
+      lastCommittedValue: inValue,
+      lastPublishedValue: inValue,
+      lastControlledValue: inValue,
+      draft: inValue,
+    }));
   }
 
   const handleClear = useEventCallback(() => {
