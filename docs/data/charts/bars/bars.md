@@ -22,14 +22,11 @@ You can mix all charts together by using composition. The basic structure should
 
 ```jsx
 // Provide data and layout
-<ChartContainer series={series} width={500} height={500}>
-  // If plots are in cartesian coordinates, provide the axis
-  <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
-    // Add the components to render (even your custom ones)
-    <BarPlot />
-    <LinePlot />
-    <XAxis />
-  </CartesianContextProvider>
+<ChartContainer series={series} width={500} height={500} xAxis={xAxis} yAxis={yAxis}>
+  // Add the components to render (even your custom ones)
+  <BarPlot />
+  <LinePlot />
+  <XAxis />
 </ChartContainer>
 ```
 

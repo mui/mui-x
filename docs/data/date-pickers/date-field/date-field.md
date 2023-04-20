@@ -8,7 +8,7 @@ packageName: '@mui/x-date-pickers'
 
 # Date Field
 
-<p class="description">The Date Field component let the user select a date with the keyboard.</p>
+<p class="description">The Date Field component lets the user select a date with the keyboard.</p>
 
 ## Basic usage
 
