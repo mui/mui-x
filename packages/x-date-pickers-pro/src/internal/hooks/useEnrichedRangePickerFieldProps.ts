@@ -5,11 +5,7 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  BaseSingleInputFieldProps,
-  FieldSelectedSections,
-  DateOrTimeView,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
@@ -72,7 +68,7 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
 
 export interface UseEnrichedRangePickerFieldPropsParams<
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
   FieldProps extends BaseFieldProps<DateRange<TDate>, RangeFieldSection, TError> = BaseFieldProps<
     DateRange<TDate>,
@@ -98,11 +94,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   fieldProps: FieldProps;
 }
 
-const useMultiInputFieldSlotProps = <
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
-  TError,
->({
+const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
   wrapperVariant,
   open,
   actions,
@@ -235,11 +227,7 @@ const useMultiInputFieldSlotProps = <
   return enrichedFieldProps;
 };
 
-const useSingleInputFieldSlotProps = <
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
-  TError,
->({
+const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
   wrapperVariant,
   open,
   actions,
@@ -339,7 +327,7 @@ const useSingleInputFieldSlotProps = <
 
 export const useEnrichedRangePickerFieldProps = <
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
 >(
   params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TError>,

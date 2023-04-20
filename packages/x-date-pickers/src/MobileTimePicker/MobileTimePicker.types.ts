@@ -15,20 +15,18 @@ import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface MobileTimePickerSlotsComponent<
   TDate,
-  TView extends TimeViewWithMeridiem | TimeView = TimeView,
+  TView extends TimeViewWithMeridiem = TimeView,
 > extends BaseTimePickerSlotsComponent<TDate>,
     MakeOptional<UseMobilePickerSlotsComponent<TDate, TView>, 'Field'> {}
 
 export interface MobileTimePickerSlotsComponentsProps<
   TDate,
-  TView extends TimeViewWithMeridiem | TimeView = TimeView,
+  TView extends TimeViewWithMeridiem = TimeView,
 > extends BaseTimePickerSlotsComponentsProps,
     ExportedUseMobilePickerSlotsComponentsProps<TDate, TView> {}
 
-export interface MobileTimePickerProps<
-  TDate,
-  TView extends TimeViewWithMeridiem | TimeView = TimeView,
-> extends BaseTimePickerProps<TDate, TView>,
+export interface MobileTimePickerProps<TDate, TView extends TimeViewWithMeridiem = TimeView>
+  extends BaseTimePickerProps<TDate, TView>,
     MobileOnlyPickerProps<TDate> {
   /**
    * Overridable components.

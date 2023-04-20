@@ -11,7 +11,7 @@ import { isTimeView } from '../internals/utils/time-utils';
 import { TimeViewWithMeridiem } from '../internals/models';
 
 export type TimeViewRendererProps<
-  TView extends TimeViewWithMeridiem | TimeView,
+  TView extends TimeViewWithMeridiem,
   TComponentProps extends BaseClockProps<any, any>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;

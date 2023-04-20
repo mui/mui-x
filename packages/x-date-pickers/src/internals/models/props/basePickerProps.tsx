@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
-import { DateOrTimeView } from '../../../models';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { MakeOptional } from '../helpers';
@@ -14,7 +13,7 @@ import { DateOrTimeViewWithMeridiem } from '../common';
 export interface BasePickerProps<
   TValue,
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
@@ -40,7 +39,7 @@ export interface BasePickerProps<
 export interface BasePickerInputProps<
   TValue,
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<
     MakeOptional<BasePickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,

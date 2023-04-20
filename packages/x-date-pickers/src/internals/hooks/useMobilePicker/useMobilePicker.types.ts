@@ -11,12 +11,7 @@ import {
   PickersModalDialogSlotsComponentsProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import {
-  BaseSingleInputFieldProps,
-  FieldSection,
-  DateOrTimeView,
-  MuiPickersAdapter,
-} from '../../../models';
+import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -27,10 +22,8 @@ import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/
 import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
-export interface UseMobilePickerSlotsComponent<
-  TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
-> extends PickersModalDialogSlotsComponent,
+export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends PickersModalDialogSlotsComponent,
     ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {
   /**
    * Component used to enter the date with the keyboard.
@@ -46,7 +39,7 @@ export interface UseMobilePickerSlotsComponent<
 
 export interface ExportedUseMobilePickerSlotsComponentsProps<
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
 > extends PickersModalDialogSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
@@ -59,7 +52,7 @@ export interface ExportedUseMobilePickerSlotsComponentsProps<
 
 export interface UseMobilePickerSlotsComponentsProps<
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
 > extends ExportedUseMobilePickerSlotsComponentsProps<TDate, TView>,
     Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
@@ -71,7 +64,7 @@ export interface MobileOnlyPickerProps<TDate>
 
 export interface UseMobilePickerProps<
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
@@ -90,7 +83,7 @@ export interface UseMobilePickerProps<
 
 export interface UseMobilePickerParams<
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,

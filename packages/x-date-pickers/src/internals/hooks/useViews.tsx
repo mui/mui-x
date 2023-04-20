@@ -2,7 +2,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useControlled as useControlled } from '@mui/utils';
 import type { PickerSelectionState } from './usePicker';
-import { DateOrTimeView } from '../../models';
 import { MakeOptional } from '../models/helpers';
 import { DateOrTimeViewWithMeridiem } from '../models';
 
@@ -11,10 +10,7 @@ export type PickerOnChangeFn<TDate> = (
   selectionState?: PickerSelectionState,
 ) => void;
 
-export interface UseViewsOptions<
-  TValue,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
-> {
+export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Callback fired when the value changes.
    * @template TValue
@@ -64,12 +60,12 @@ export interface UseViewsOptions<
   onFocusedViewChange?: (view: TView | null, hasFocus: boolean) => void;
 }
 
-export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>
+export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem>
   extends MakeOptional<Omit<UseViewsOptions<any, TView>, 'onChange'>, 'openTo' | 'views'> {}
 
 let warnedOnceNotValidView = false;
 
-interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView> {
+interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   view: TView;
   setView: (view: TView) => void;
   focusedView: TView | null;
@@ -85,7 +81,7 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeViewWithMeridiem | Da
   setValueAndGoToView: (value: TValue, newView: TView | null) => void;
 }
 
-export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>({
+export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
   onChange,
   onViewChange,
   openTo,

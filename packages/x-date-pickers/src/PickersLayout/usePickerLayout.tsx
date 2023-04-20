@@ -4,13 +4,12 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
-import { DateOrTimeView } from '../models';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
-function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>(
+function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
 ): toolbarProps is BaseToolbarProps<TValue, TView> {
   return toolbarProps.view !== null;
@@ -34,13 +33,13 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
 interface PickersLayoutPropsWithValueRequired<
   TValue,
   TDate,
-  TView extends DateOrTimeViewWithMeridiem | DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
 > extends PickersLayoutProps<TValue, TDate, TView> {
   value: TValue;
 }
 interface UsePickerLayoutResponse extends SubComponents {}
 
-const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem | DateOrTimeView>(
+const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse => {
   const {

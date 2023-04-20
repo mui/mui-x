@@ -14,7 +14,7 @@ import {
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
 } from './TimePickerToolbar';
-import { TimeValidationError, TimeView } from '../models';
+import { TimeValidationError } from '../models';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
@@ -34,7 +34,7 @@ export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsCompon
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
-export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem | TimeView>
+export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem>
   extends BasePickerInputProps<TDate | null, TDate, TView, TimeValidationError>,
     ExportedBaseClockProps<TDate> {
   /**
@@ -81,7 +81,7 @@ export interface BaseTimePickerProps<TDate, TView extends TimeViewWithMeridiem |
 
 type UseTimePickerDefaultizedProps<
   TDate,
-  TView extends TimeViewWithMeridiem | TimeView,
+  TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
   TDate,
@@ -93,7 +93,7 @@ type UseTimePickerDefaultizedProps<
 
 export function useTimePickerDefaultizedProps<
   TDate,
-  TView extends TimeViewWithMeridiem | TimeView,
+  TView extends TimeViewWithMeridiem,
   Props extends BaseTimePickerProps<TDate, TView>,
 >(props: Props, name: string): UseTimePickerDefaultizedProps<TDate, TView, Props> {
   const utils = useUtils<TDate>();

@@ -1,7 +1,6 @@
-import { DateOrTimeView } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../common';
 
-export interface BaseTabsProps<TView extends DateOrTimeViewWithMeridiem | DateOrTimeView> {
+export interface BaseTabsProps<TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Currently visible picker view.
    */
