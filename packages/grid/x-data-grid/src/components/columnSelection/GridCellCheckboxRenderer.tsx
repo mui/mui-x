@@ -11,7 +11,6 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
-import type { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -25,7 +24,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridCellCheckboxForwardRef = React.forwardRef<HTMLElement, GridRenderCellParams>(
+interface TouchRippleActions {
+  stop: (event: any, callback?: () => void) => void;
+}
+
+const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRenderCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
     const {
       field,
@@ -48,8 +51,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLElement, GridRenderCellP
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
-    const rippleRef: NonNullable<GridSlotsComponentsProps['baseCheckbox']>['touchRippleRef'] =
-      React.useRef(null);
+    const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
 
@@ -70,7 +72,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLElement, GridRenderCellP
         input?.focus({ preventScroll: true });
       } else if (rippleRef.current) {
         // Only available in @mui/material v5.4.1 or later
-        rippleRef.current.stop({} as any);
+        rippleRef.current.stop({});
       }
     }, [hasFocus]);
 
