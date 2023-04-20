@@ -49,6 +49,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TD
   const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
+    valueType: 'date',
     validator: validateDateRange,
     ref,
   });

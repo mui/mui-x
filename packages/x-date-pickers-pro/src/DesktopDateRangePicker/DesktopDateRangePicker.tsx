@@ -57,6 +57,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
+    valueType: 'date',
     validator: validateDateRange,
   });
 

@@ -57,6 +57,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
   const { renderPicker } = useMobileRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
+    valueType: 'date',
     validator: validateDateRange,
   });
 

@@ -3,11 +3,10 @@ import {
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
-  FieldValueType,
   FieldSectionWithoutPosition,
   FieldSectionValueBoundaries,
 } from './useField.types';
-import { FieldSectionType, FieldSection, MuiPickersAdapter } from '../../../models';
+import { FieldSectionType, FieldValueType, FieldSection, MuiPickersAdapter } from '../../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
