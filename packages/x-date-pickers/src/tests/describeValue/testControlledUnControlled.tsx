@@ -52,7 +52,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
       expect(onChange.callCount).to.equal(
-        componentFamily === 'clock' && params.variant === 'mobile' ? 2 : 1,
+        componentFamily === 'clock' && params.variant !== 'desktop' ? 2 : 1,
       );
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
@@ -70,7 +70,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const newValue = setNewValue(values[0]);
 
       expect(onChange.callCount).to.equal(
-        componentFamily === 'clock' && params.variant === 'mobile' ? 2 : 1,
+        componentFamily === 'clock' && params.variant !== 'desktop' ? 2 : 1,
       );
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
