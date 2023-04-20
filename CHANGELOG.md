@@ -31,7 +31,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [pickers] Do not include the time in date components when going to today (#8657) @flaviendelangle
 - [pickers] Sync internal state with controlled value (#8674) @alexfauquette
 
-### `@mui/x-codemod@v6.0.6`
+### `@mui/x-codemod@v6.2.1`
 
 #### Changes
 
