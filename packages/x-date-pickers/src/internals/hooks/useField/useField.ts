@@ -42,13 +42,6 @@ export const useField = <
     placeholder,
   } = useFieldState(params);
 
-  const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
-    sections: state.sections,
-    updateSectionValue,
-    sectionsValueBoundaries,
-    setTempAndroidValueStr,
-  });
-
   const {
     inputRef: inputRefProp,
     internalProps,
@@ -68,6 +61,12 @@ export const useField = <
     validator,
   } = params;
 
+  const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
+    sections: state.sections,
+    updateSectionValue,
+    sectionsValueBoundaries,
+    setTempAndroidValueStr,
+  });
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -158,9 +157,11 @@ export const useField = <
 
       const lettersOnly = /^[a-zA-Z]+$/.test(pastedValue);
       const digitsOnly = /^[0-9]+$/.test(pastedValue);
+      const digitsAndLetterOnly = /^(([a-zA-Z]+)|)([0-9]+)(([a-zA-Z]+)|)$/.test(pastedValue);
       const isValidPastedValue =
         (activeSection.contentType === 'letter' && lettersOnly) ||
-        (activeSection.contentType === 'digit' && digitsOnly);
+        (activeSection.contentType === 'digit' && digitsOnly) ||
+        (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
       if (isValidPastedValue) {
         // Early return to let the paste update section, value
         return;

@@ -20,7 +20,8 @@ export type SingleItemPickerValueManager<
 
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
+  getTodayValue: (utils, valueType) =>
+    valueType === 'date' ? utils.startOfDay(utils.date())! : utils.date()!,
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: areDatesEqual,
   isSameError: (a, b) => a === b,

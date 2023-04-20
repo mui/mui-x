@@ -147,7 +147,7 @@ describe('<DateField /> - Editing', () => {
       testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         key: 'ArrowUp',
-        expectedValue: '1',
+        expectedValue: '01',
       });
     });
 
@@ -165,7 +165,7 @@ describe('<DateField /> - Editing', () => {
         format: adapter.formats.monthAndDate,
         defaultValue: adapter.date(new Date(2022, 5, 30)),
         key: 'ArrowUp',
-        expectedValue: 'June 1',
+        expectedValue: 'June 01',
         // To select the date and not the month
         valueToSelect: '30',
       });
@@ -195,7 +195,7 @@ describe('<DateField /> - Editing', () => {
     describeAdapters(
       `key: ${keyToClearValue}`,
       DateField,
-      ({ render, adapter, adapterName, clickOnInput, testFieldKeyPress, selectSection }) => {
+      ({ render, adapter, clickOnInput, testFieldKeyPress, selectSection }) => {
         it('should clear the selected section when only this section is completed', () => {
           render(<DateField format={adapter.formats.monthAndYear} />);
           const input = getTextbox();
@@ -256,13 +256,13 @@ describe('<DateField /> - Editing', () => {
           clickOnInput(input, 1);
 
           fireEvent.change(input, { target: { value: '2' } }); // press "2"
-          expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
+          expectInputValue(input, '0002');
 
           userEvent.keyPress(input, { key: keyToClearValue });
           expectInputValue(input, 'YYYY');
 
           fireEvent.change(input, { target: { value: '2' } }); // press "2"
-          expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
+          expectInputValue(input, '0002');
         });
 
         it('should not clear the sections when props.readOnly = true', () => {
@@ -350,7 +350,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the day to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
         format: adapter.formats.dayOfMonth,
-        keyStrokes: [{ value: '1', expected: '1' }],
+        keyStrokes: [{ value: '1', expected: '01' }],
       });
     });
 
@@ -359,7 +359,7 @@ describe('<DateField /> - Editing', () => {
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date(new Date(2022, 5, 0)),
         keyStrokes: [
-          { value: '1', expected: '1' },
+          { value: '1', expected: '01' },
           { value: '1', expected: '11' },
         ],
       });
@@ -369,7 +369,7 @@ describe('<DateField /> - Editing', () => {
       testFieldChange({
         format: adapter.formats.dayOfMonth,
         defaultValue: adapter.date(new Date(2022, 5, 4)),
-        keyStrokes: [{ value: '1', expected: '1' }],
+        keyStrokes: [{ value: '1', expected: '01' }],
       });
     });
 
@@ -426,13 +426,13 @@ describe('<DateField /> - Editing', () => {
       testFieldChange({
         format: adapter.formats.year,
         keyStrokes: [
-          { value: '2', expected: adapterName === 'dayjs' ? '2' : '0002' },
-          { value: '0', expected: adapterName === 'dayjs' ? '20' : '0020' },
-          { value: '2', expected: adapterName === 'dayjs' ? '202' : '0202' },
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
           { value: '2', expected: '2022' },
-          { value: '2', expected: adapterName === 'dayjs' ? '2' : '0002' },
-          { value: '0', expected: adapterName === 'dayjs' ? '20' : '0020' },
-          { value: '2', expected: adapterName === 'dayjs' ? '202' : '0202' },
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
           { value: '3', expected: '2023' },
         ],
       });
@@ -443,13 +443,13 @@ describe('<DateField /> - Editing', () => {
         format: adapter.formats.year,
         defaultValue: adapter.date(new Date(2022, 5, 4)),
         keyStrokes: [
-          { value: '2', expected: adapterName === 'dayjs' ? '2' : '0002' },
-          { value: '0', expected: adapterName === 'dayjs' ? '20' : '0020' },
-          { value: '2', expected: adapterName === 'dayjs' ? '202' : '0202' },
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
           { value: '2', expected: '2022' },
-          { value: '2', expected: adapterName === 'dayjs' ? '2' : '0002' },
-          { value: '0', expected: adapterName === 'dayjs' ? '20' : '0020' },
-          { value: '2', expected: adapterName === 'dayjs' ? '202' : '0202' },
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
           { value: '3', expected: '2023' },
         ],
       });
@@ -463,6 +463,7 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: '11' },
           { value: '2', expected: '2' },
         ],
+        shouldRespectLeadingZeros: true,
       });
     });
 
@@ -478,6 +479,30 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: '1st' },
           { value: '2', expected: '12th' },
           { value: '2', expected: '2nd' },
+        ],
+      });
+    });
+
+    it('should respect leading zeros when shouldRespectLeadingZeros = true', () => {
+      testFieldChange({
+        format: ['luxon', 'date-fns'].includes(adapterName) ? 'd' : 'D',
+        shouldRespectLeadingZeros: true,
+        keyStrokes: [
+          { value: '1', expected: '1' },
+          { value: '2', expected: '12' },
+          { value: '2', expected: '2' },
+        ],
+      });
+    });
+
+    it('should not respect leading zeros when shouldRespectLeadingZeros = false', () => {
+      testFieldChange({
+        format: ['luxon', 'date-fns'].includes(adapterName) ? 'd' : 'D',
+        shouldRespectLeadingZeros: false,
+        keyStrokes: [
+          { value: '1', expected: '01' },
+          { value: '2', expected: '12' },
+          { value: '2', expected: '02' },
         ],
       });
     });
@@ -596,13 +621,13 @@ describe('<DateField /> - Editing', () => {
       clickOnInput(input, 1);
 
       fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
-      expectInputValue(input, adapterName === 'luxon' ? '1/DD/YYYY' : '01/DD/YYYY');
+      expectInputValue(input, '01/DD/YYYY');
 
       fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
       expectInputValue(input, '11/DD/YYYY');
 
       fireEvent.change(input, { target: { value: '11/3/YYYY' } }); // Press "3"
-      expectInputValue(input, adapterName === 'luxon' ? '11/3/YYYY' : '11/03/YYYY');
+      expectInputValue(input, '11/03/YYYY');
 
       fireEvent.change(input, { target: { value: '11/31/YYYY' } }); // Press "1"
       expectInputValue(input, '11/31/YYYY');
@@ -626,7 +651,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters('Pasting', DateField, ({ adapter, adapterName, render, clickOnInput }) => {
+  describeAdapters('Pasting', DateField, ({ adapter, render, clickOnInput }) => {
     const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
       act(() => {
         const clipboardEvent = new Event('paste', {
@@ -749,7 +774,7 @@ describe('<DateField /> - Editing', () => {
       const input = getTextbox();
       clickOnInput(input, 1);
 
-      expectInputValue(input, adapterName === 'luxon' ? '1/13/2018' : '01/13/2018');
+      expectInputValue(input, '01/13/2018');
       firePasteEvent(input, '12');
       expectInputValue(input, '12/13/2018');
       expect(onChange.callCount).to.equal(1);
@@ -762,9 +787,9 @@ describe('<DateField /> - Editing', () => {
       const input = getTextbox();
       clickOnInput(input, 1);
 
-      expectInputValue(input, adapterName === 'luxon' ? '1/13/2018' : '01/13/2018');
+      expectInputValue(input, '01/13/2018');
       firePasteEvent(input, 'Jun');
-      expectInputValue(input, adapterName === 'luxon' ? '1/13/2018' : '01/13/2018');
+      expectInputValue(input, '01/13/2018');
       expect(onChange.callCount).to.equal(0);
     });
   });
@@ -772,7 +797,7 @@ describe('<DateField /> - Editing', () => {
   describeAdapters(
     'Do not loose missing section values ',
     DateField,
-    ({ adapter, adapterName, render, clickOnInput }) => {
+    ({ adapter, render, clickOnInput }) => {
       it('should not loose time information when a value is provided', () => {
         const onChange = spy();
 
@@ -806,7 +831,7 @@ describe('<DateField /> - Editing', () => {
         userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
-        expectInputValue(input, adapterName === 'luxon' ? '1/DD/YYYY' : '01/DD/YYYY');
+        expectInputValue(input, '01/DD/YYYY');
 
         fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
         expectInputValue(input, '11/DD/YYYY');
@@ -985,7 +1010,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters('Select all', DateField, ({ adapterName, render, clickOnInput }) => {
+  describeAdapters('Select all', DateField, ({ render, clickOnInput }) => {
     it('should edit the 1st section when all sections are selected', () => {
       render(<DateField />);
       const input = getTextbox();
@@ -997,7 +1022,7 @@ describe('<DateField /> - Editing', () => {
       // When all sections are selected, the value only contains the key pressed
       fireEvent.change(input, { target: { value: '9' } });
 
-      expectInputValue(input, adapterName === 'luxon' ? '9/DD/YYYY' : '09/DD/YYYY');
+      expectInputValue(input, '09/DD/YYYY');
     });
   });
 });

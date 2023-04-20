@@ -135,13 +135,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     );
   });
 
-  it('Method:getPreviousMonth', () => {
+  it('Method: getPreviousMonth', () => {
     expect(adapter.formatByString(adapter.getPreviousMonth(testDate), formatDateTime)).to.equal(
       '2018-09-30 11:44:00',
     );
   });
 
-  it('Method:getMonthArray', () => {
+  it('Method: getMonthArray', () => {
     expect(
       adapter.getMonthArray(testDate).map((date) => adapter.formatByString(date, formatDateTime)),
     ).to.deep.equal([
@@ -160,115 +160,115 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     ]);
   });
 
-  it('Method:getNextMonth', () => {
+  it('Method: getNextMonth', () => {
     expect(adapter.formatByString(adapter.getNextMonth(testDate), formatDateTime)).to.equal(
       '2018-11-30 11:44:00',
     );
   });
 
-  it('Method:getHours', () => {
+  it('Method: getHours', () => {
     expect(adapter.getHours(testDate)).to.equal(new Date(testDateISO).getHours());
   });
 
-  it('Method:getMinutes', () => {
+  it('Method: getMinutes', () => {
     expect(adapter.getMinutes(testDate)).to.equal(44);
   });
 
-  it('Method:getSeconds', () => {
+  it('Method: getSeconds', () => {
     expect(adapter.getSeconds(testDate)).to.equal(0);
   });
 
-  it('Method:getDate', () => {
+  it('Method: getDate', () => {
     expect(adapter.getDate(testDate)).to.equal(30);
   });
 
-  it('Method:getYear', () => {
+  it('Method: getYear', () => {
     expect(adapter.getYear(testDate)).to.equal(2018);
   });
 
-  it('Method:getMonth', () => {
+  it('Method: getMonth', () => {
     expect(adapter.getMonth(testDate)).to.equal(9);
   });
 
-  it('Method:getDaysInMonth', () => {
+  it('Method: getDaysInMonth', () => {
     expect(adapter.getDaysInMonth(testDate)).to.equal(31);
   });
 
-  it('Method:setMonth', () => {
+  it('Method: setMonth', () => {
     const updatedTime = adapter.formatByString(adapter.setMonth(testDate, 4), formatDateTime);
     expect(updatedTime).to.equal('2018-05-30 11:44:00');
   });
 
-  it('Method:setHours', () => {
+  it('Method: setHours', () => {
     const updatedTime = adapter.formatByString(adapter.setHours(testDate, 0), formatDateTime);
     expect(updatedTime).to.equal('2018-10-30 00:44:00');
   });
 
-  it('Method:setMinutes', () => {
+  it('Method: setMinutes', () => {
     const updatedTime = adapter.formatByString(adapter.setMinutes(testDate, 12), formatDateTime);
     expect(updatedTime).to.equal('2018-10-30 11:12:00');
   });
 
-  it('Method:setMinutes', () => {
+  it('Method: setMinutes', () => {
     const updatedTime = adapter.formatByString(adapter.setMinutes(testDate, 12), formatDateTime);
     expect(updatedTime).to.equal('2018-10-30 11:12:00');
   });
 
-  it('Method:setYear', () => {
+  it('Method: setYear', () => {
     const updatedTime = adapter.formatByString(adapter.setYear(testDate, 2011), formatDateTime);
     expect(updatedTime).to.equal('2011-10-30 11:44:00');
   });
 
-  it('Method:setDate', () => {
+  it('Method: setDate', () => {
     const updatedTime = adapter.formatByString(adapter.setDate(testDate, 15), formatDateTime);
     expect(updatedTime).to.equal('2018-10-15 11:44:00');
   });
 
-  it('Method:setSeconds', () => {
+  it('Method: setSeconds', () => {
     const updatedValue = adapter.formatByString(adapter.setSeconds(testDate, 11), formatDateTime);
 
     expect(updatedValue).to.equal('2018-10-30 11:44:11');
   });
 
-  it('Method:isAfter', () => {
+  it('Method: isAfter', () => {
     expect(adapter.isAfter(adapter.date()!, testDate)).to.equal(true);
     expect(adapter.isAfter(testDate, adapter.date()!)).to.equal(false);
   });
 
-  it('Method:isBefore', () => {
+  it('Method: isBefore', () => {
     expect(adapter.isBefore(testDate, adapter.date()!)).to.equal(true);
     expect(adapter.isBefore(adapter.date()!, testDate)).to.equal(false);
   });
 
-  it('Method:isAfterDay', () => {
+  it('Method: isAfterDay', () => {
     const nextDay = adapter.addDays(testDate, 1);
 
     expect(adapter.isAfterDay(nextDay, testDate)).to.equal(true);
     expect(adapter.isAfterDay(testDate, nextDay)).to.equal(false);
   });
 
-  it('Method:isBeforeDay', () => {
+  it('Method: isBeforeDay', () => {
     const previousDay = adapter.addDays(testDate, -1);
 
     expect(adapter.isBeforeDay(testDate, previousDay)).to.equal(false);
     expect(adapter.isBeforeDay(previousDay, testDate)).to.equal(true);
   });
 
-  it('Method:isAfterYear', () => {
+  it('Method: isAfterYear', () => {
     const nextYear = adapter.setYear(testDate, 2019);
 
     expect(adapter.isAfterYear(nextYear, testDate)).to.equal(true);
     expect(adapter.isAfterYear(testDate, nextYear)).to.equal(false);
   });
 
-  it('Method:isBeforeYear', () => {
+  it('Method: isBeforeYear', () => {
     const previousYear = adapter.setYear(testDate, 2017);
 
     expect(adapter.isBeforeYear(testDate, previousYear)).to.equal(false);
     expect(adapter.isBeforeYear(previousYear, testDate)).to.equal(true);
   });
 
-  it('Method:getWeekArray', () => {
+  it('Method: getWeekArray', () => {
     const weekArray = adapter.getWeekArray(testDate);
 
     expect(weekArray).to.have.length(5);
@@ -277,7 +277,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
   });
 
-  it('Method:getYearRange', () => {
+  it('Method: getYearRange', () => {
     const yearRange = adapter.getYearRange(testDate, adapter.setYear(testDate, 2124));
 
     expect(yearRange).to.have.length(107);
