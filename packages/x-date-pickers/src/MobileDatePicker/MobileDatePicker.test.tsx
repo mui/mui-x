@@ -253,7 +253,7 @@ describe('<MobileDatePicker />', () => {
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
       clock.runToLast();
 
-      // Verrify it's still a clean value
+      // Verify it's still a clean value
       expectInputValue(getTextbox(), '');
     });
   });
