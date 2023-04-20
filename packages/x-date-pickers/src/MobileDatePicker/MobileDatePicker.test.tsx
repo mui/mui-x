@@ -251,6 +251,7 @@ describe('<MobileDatePicker />', () => {
       // Open and Dismiss the picker
       userEvent.mousePress(screen.getByRole('textbox'));
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      clock.runToLast();
 
       // Verrify it's still a clean value
       expectInputValue(getTextbox(), '');
