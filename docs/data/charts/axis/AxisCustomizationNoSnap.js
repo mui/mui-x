@@ -1,13 +1,5 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Switch from '@mui/material/Switch';
-import Slider from '@mui/material/Slider';
-import Input from '@mui/material/Input';
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
-
+import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Chance } from 'chance';
@@ -24,146 +16,36 @@ const defaultXAxis = {
   disableTicks: false,
   fill: 'currentColor',
   fontSize: 12,
-  label: '',
+  label: 'my axis',
   labelFontSize: 14,
   stroke: 'currentColor',
   tickSize: 6,
 };
-
-// TODO: This is a Proof of Concept.
-// The interaction should be redisigned and improved a bit like Joy is doing is in their lovely component `JoyUsageDemo`
-
 export default function AxisCustomizationNoSnap() {
-  const [bottomAxis, setBottomAxis] = React.useState({
-    axisId: DEFAULT_X_AXIS_KEY,
-    ...defaultXAxis,
-    label: 'bottom axis',
-  });
   return (
-    <Stack direction="column" sx={{ p: 0, width: '100%' }}>
-      <Stack direction="row" sx={{ p: 0, width: '100%' }}>
-        <Paper sx={{ minWidth: 300, p: 2 }}>
-          <Stack direction="column">
-            {/* disableTicks */}
-            <FormControl
-              size="small"
-              sx={{
-                justifyContent: 'space-between',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <FormLabel>disableTicks</FormLabel>
-              <Switch
-                checked={Boolean(bottomAxis.disableTicks)}
-                onChange={(event) =>
-                  setBottomAxis((latestProps) => ({
-                    ...latestProps,
-                    disableTicks: event.target.checked,
-                  }))
-                }
-              />
-            </FormControl>
-            {/* disableLine */}
-            <FormControl
-              size="small"
-              sx={{
-                justifyContent: 'space-between',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <FormLabel>disableLine</FormLabel>
-              <Switch
-                checked={Boolean(bottomAxis.disableLine)}
-                onChange={(event) =>
-                  setBottomAxis((latestProps) => ({
-                    ...latestProps,
-                    disableLine: event.target.checked,
-                  }))
-                }
-              />
-            </FormControl>
-
-            {/* tickSize */}
-            <FormControl
-              size="small"
-              sx={{
-                justifyContent: 'space-between',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              disabled={Boolean(bottomAxis.disableTicks)}
-            >
-              <FormLabel>tickSize</FormLabel>
-              <Slider
-                sx={{ maxWidth: 100 }}
-                min={1}
-                max={15}
-                value={bottomAxis.tickSize ?? 6}
-                // @ts-ignore
-                onChange={(event, newValue) =>
-                  setBottomAxis((latestProps) => ({
-                    ...latestProps,
-                    tickSize: newValue,
-                  }))
-                }
-              />
-            </FormControl>
-
-            {/* labelFontSize */}
-            <FormControl
-              size="small"
-              sx={{
-                justifyContent: 'space-between',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <FormLabel>labelFontSize</FormLabel>
-              <Slider
-                sx={{ maxWidth: 100 }}
-                min={5}
-                max={25}
-                value={bottomAxis.labelFontSize ?? 14}
-                // @ts-ignore
-                onChange={(event, newValue) =>
-                  setBottomAxis((latestProps) => ({
-                    ...latestProps,
-                    labelFontSize: newValue,
-                  }))
-                }
-              />
-            </FormControl>
-
-            {/* label */}
-            <FormControl
-              size="small"
-              sx={{
-                justifyContent: 'space-between',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <FormLabel>label</FormLabel>
-              <Input
-                sx={{ maxWidth: 150 }}
-                value={bottomAxis.label}
-                onChange={(event) =>
-                  setBottomAxis((latestProps) => ({
-                    ...latestProps,
-                    label: event.target.value,
-                  }))
-                }
-              />
-            </FormControl>
-          </Stack>
-        </Paper>
+    <ChartsUsageDemo
+      componentName="Alert"
+      data={[
+        { propName: 'disableLine', knob: 'switch', defaultValue: false },
+        { propName: 'disableTicks', knob: 'switch', defaultValue: false },
+        {
+          propName: 'fill',
+          knob: 'color',
+          defaultValue: 'currentColor',
+          options: ['red', 'blue', 'currentColor'],
+        },
+        { propName: 'fontSize', knom: 'number', defaultValue: 12 },
+        { propName: 'label', knob: 'input', defaultValue: 'my axis' },
+        { propName: 'labelFontSize', knom: 'number', defaultValue: 14 },
+        {
+          propName: 'stroke',
+          knob: 'color',
+          defaultValue: 'currentColor',
+          options: ['red', 'blue', 'currentColor'],
+        },
+        { propName: 'tickSize', knob: 'number', defaultValue: 6 },
+      ]}
+      renderDemo={(props) => (
         <ScatterChart
           series={[
             {
@@ -174,35 +56,33 @@ export default function AxisCustomizationNoSnap() {
           ]}
           leftAxis={null}
           bottomAxis={{
-            ...bottomAxis,
+            axisId: DEFAULT_X_AXIS_KEY,
+            ...defaultXAxis,
+            ...props,
           }}
           width={400}
           height={300}
         />
-      </Stack>
-      <HighlightedCode
-        code={[
+      )}
+      getCode={({ props }) =>
+        [
           `import { ScatterChart } from '@mui/x-charts/ScatterChart';`,
           '',
           `<ScatterChart`,
           '  {/** ... */}',
           `  bottomAxis={{`,
-          ...Object.keys(defaultXAxis)
-            .filter((prop) => bottomAxis[prop] !== defaultXAxis[prop])
+          ...Object.keys(props)
+            .filter((prop) => props[prop] !== defaultXAxis[prop])
             .map(
               (prop) =>
                 `    ${prop}: ${
-                  typeof bottomAxis[prop] === 'string'
-                    ? `"${bottomAxis[prop]}"`
-                    : bottomAxis[prop]
+                  typeof props[prop] === 'string' ? `"${props[prop]}"` : props[prop]
                 },`,
             ),
           '  }}',
           '/>',
-        ].join('\n')}
-        language="jsx"
-        sx={{ display: { xs: 'none', md: 'block' } }}
-      />
-    </Stack>
+        ].join('\n')
+      }
+    />
   );
 }

@@ -81,7 +81,10 @@ Those pros can accept three type of value:
 
 ### Rendering
 
-To customize how axis are rendered, here is an interactive demonstration of the axis props (Work in progress)
+To customize how axis are rendered, here is an interactive demonstration of the axis props.
+
+Most of those props come from the hackaton.
+Would make sens to remove color and replace them by CSS customization.
 
 {{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
