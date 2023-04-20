@@ -14,7 +14,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 describe('<MobileDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   it('allows to change only year', () => {
     const onChangeMock = spy();
