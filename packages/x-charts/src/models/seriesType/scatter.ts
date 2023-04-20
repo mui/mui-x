@@ -7,6 +7,16 @@ export interface ScatterSeriesType extends CommonSeriesType, CartesianSeriesType
   markerSize?: number;
 }
 
+/**
+ * An object that allows to identify a single line.
+ * Used for item interaction
+ */
+export type ScatterItemIdentifier = {
+  type: 'scatter';
+  seriesId: ScatterSeriesType['id'];
+  dataIndex: number;
+};
+
 export interface DefaultizedScatterSeriesType
   extends DefaultizedProps<ScatterSeriesType, 'xAxisKey' | 'yAxisKey'>,
     DefaultizedCommonSeriesType {}

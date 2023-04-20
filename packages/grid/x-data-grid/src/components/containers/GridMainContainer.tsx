@@ -29,12 +29,14 @@ const GridMainContainerRoot = styled('div', {
   overflow: 'hidden',
 }));
 
-export function GridMainContainer(props: React.PropsWithChildren<{}>) {
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
-  return (
-    <GridMainContainerRoot className={classes.root} ownerState={rootProps}>
-      {props.children}
-    </GridMainContainerRoot>
-  );
-}
+export const GridMainContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
+  (props, ref) => {
+    const rootProps = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
+    return (
+      <GridMainContainerRoot ref={ref} className={classes.root} ownerState={rootProps}>
+        {props.children}
+      </GridMainContainerRoot>
+    );
+  },
+);

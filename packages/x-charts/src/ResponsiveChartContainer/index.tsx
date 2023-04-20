@@ -6,7 +6,12 @@ import {
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { LayoutConfig } from '../models/layout';
-import Surface from '../Surface';
+import { Surface } from '../Surface';
+import {
+  CartesianContextProvider,
+  CartesianContextProviderProps,
+} from '../context/CartesianContextProvider';
+import { InteractionProvider } from '../context/InteractionProvider';
 
 const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, number] => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -33,20 +38,27 @@ const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, 
   return [ref, width, height];
 };
 
-type ChartContainerProps = LayoutConfig & SeriesContextProviderProps;
+type ChartContainerProps = LayoutConfig &
+  SeriesContextProviderProps &
+  CartesianContextProviderProps;
 
 export function ResponsiveChartContainer(props: ChartContainerProps) {
-  const { series, margin, children } = props;
+  const { series, margin, xAxis, yAxis, children } = props;
+  const ref = React.useRef<SVGSVGElement>(null);
 
-  const [ref, width, height] = useChartDimensions();
+  const [containerRef, width, height] = useChartDimensions();
 
   return (
-    <div ref={ref} style={{ width: '100%', height: '100%' }}>
-      <DrawingProvider width={width} height={height} margin={margin}>
+    <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
+      <DrawingProvider width={width} height={height} margin={margin} svgRef={ref}>
         <SeriesContextProvider series={series}>
-          <Surface width={width} height={height}>
-            {children}
-          </Surface>
+          <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
+            <InteractionProvider>
+              <Surface width={width} height={height} ref={ref}>
+                {children}
+              </Surface>
+            </InteractionProvider>
+          </CartesianContextProvider>
         </SeriesContextProvider>
       </DrawingProvider>
     </div>
