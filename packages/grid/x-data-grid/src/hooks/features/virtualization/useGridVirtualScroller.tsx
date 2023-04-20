@@ -479,12 +479,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   };
 
-  const indexOfRowWithFocusedCell = React.useMemo<number>(() => {
-    if (cellFocus !== null) {
-      return currentPage.rows.findIndex((row) => row.id === cellFocus.id);
-    }
-    return -1;
-  }, [cellFocus, currentPage.rows]);
+  // const indexOfRowWithFocusedCell = React.useMemo<number>(() => {
+  //   if (cellFocus !== null) {
+  //     return currentPage.rows.findIndex((row) => row.id === cellFocus.id);
+  //   }
+  //   return -1;
+  // }, [cellFocus, currentPage.rows]);
 
   const getRows = (
     params: {
@@ -555,28 +555,28 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     // we need to render it at either the top or bottom of the rows,
     // depending on whether it is above or below the range.
 
-    let isRowWithFocusedCellNotInRange = false;
+    const isRowWithFocusedCellNotInRange = false;
 
-    if (indexOfRowWithFocusedCell > -1) {
-      const rowWithFocusedCell = currentPage.rows[indexOfRowWithFocusedCell];
-      if (
-        firstRowToRender > indexOfRowWithFocusedCell ||
-        lastRowToRender < indexOfRowWithFocusedCell
-      ) {
-        isRowWithFocusedCellNotInRange = true;
-        if (indexOfRowWithFocusedCell > firstRowToRender) {
-          renderedRows.push(rowWithFocusedCell);
-        } else {
-          renderedRows.unshift(rowWithFocusedCell);
-        }
-        apiRef.current.calculateColSpan({
-          rowId: rowWithFocusedCell.id,
-          minFirstColumn,
-          maxLastColumn,
-          columns: visibleColumns,
-        });
-      }
-    }
+    // if (indexOfRowWithFocusedCell > -1) {
+    //   const rowWithFocusedCell = currentPage.rows[indexOfRowWithFocusedCell];
+    //   if (
+    //     firstRowToRender > indexOfRowWithFocusedCell ||
+    //     lastRowToRender < indexOfRowWithFocusedCell
+    //   ) {
+    //     isRowWithFocusedCellNotInRange = true;
+    //     if (indexOfRowWithFocusedCell > firstRowToRender) {
+    //       renderedRows.push(rowWithFocusedCell);
+    //     } else {
+    //       renderedRows.unshift(rowWithFocusedCell);
+    //     }
+    //     apiRef.current.calculateColSpan({
+    //       rowId: rowWithFocusedCell.id,
+    //       minFirstColumn,
+    //       maxLastColumn,
+    //       columns: visibleColumns,
+    //     });
+    //   }
+    // }
 
     const [initialFirstColumnToRender, lastColumnToRender] = getRenderableIndexes({
       firstIndex: nextRenderContext.firstColumnIndex,

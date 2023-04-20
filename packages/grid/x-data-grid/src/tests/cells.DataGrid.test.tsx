@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
-import { getCell } from 'test/utils/helperFn';
+import { getActiveCell, getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -217,5 +217,36 @@ describe('<DataGrid /> - Cells', () => {
     virtualScroller.scrollTop = scrollTop;
     virtualScroller.dispatchEvent(new Event('scroll'));
     expect(virtualScroller.scrollTop).to.equal(scrollTop);
+  });
+
+  it('focused cell should always be in the dom even if it is not in the viewport', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
+    const rowHeight = 50;
+    const columns = [{ field: 'id' }];
+    const rows = [];
+    for (let i = 0; i < 20; i += 1) {
+      rows.push({ id: i });
+    }
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+
+    userEvent.mousePress(getCell(0, 0));
+
+    const scrollTop = 10 * rowHeight;
+    virtualScroller.scrollTop = scrollTop;
+
+    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    expect(virtualScroller.scrollTop).to.equal(scrollTop + 1);
+    expect(getActiveCell()).to.equal('0-0');
   });
 });
