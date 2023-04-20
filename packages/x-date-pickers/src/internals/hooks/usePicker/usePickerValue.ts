@@ -271,18 +271,24 @@ export const usePickerValue = <
     }
   });
 
-  React.useEffect(() => {
-    if (isOpen) {
-      setDateState((prev) => ({ ...prev, lastCommittedValue: dateState.draft }));
-    }
-  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
-
   if (
     inValue !== undefined &&
     (dateState.lastControlledValue === undefined ||
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
-    setDateState((prev) => ({ ...prev, lastControlledValue: inValue, draft: inValue }));
+    const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+    setDateState((prev) => ({
+      ...prev,
+      lastControlledValue: inValue,
+      ...(isUpdateComingFromPicker
+        ? {}
+        : {
+            lastCommittedValue: inValue,
+            lastPublishedValue: inValue,
+            draft: inValue,
+            hasBeenModifiedSinceMount: true,
+          }),
+    }));
   }
 
   const handleClear = useEventCallback(() => {
