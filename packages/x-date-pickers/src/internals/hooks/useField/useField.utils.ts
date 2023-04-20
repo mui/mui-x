@@ -6,13 +6,19 @@ import {
   FieldSectionWithoutPosition,
   FieldSectionValueBoundaries,
 } from './useField.types';
-import { FieldSectionType, FieldValueType, FieldSection, MuiPickersAdapter } from '../../../models';
+import {
+  FieldSectionType,
+  FieldValueType,
+  FieldSection,
+  MuiPickersAdapter,
+  FieldSectionContentType,
+} from '../../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   formatToken: string,
-): Pick<FieldSection, 'type' | 'contentType'> => {
+): Pick<FieldSection, 'type' | 'contentType'> & { maxLength: number | undefined } => {
   const config = utils.formatTokenMap[formatToken];
 
   if (config == null) {
@@ -28,12 +34,14 @@ export const getDateSectionConfigFromFormatToken = <TDate>(
     return {
       type: config,
       contentType: config === 'meridiem' ? 'letter' : 'digit',
+      maxLength: undefined,
     };
   }
 
   return {
     type: config.sectionType,
     contentType: config.contentType,
+    maxLength: config.maxLength,
   };
 };
 
@@ -97,56 +105,62 @@ export const getLetterEditingOptions = <TDate>(
   }
 };
 
+export const cleanLeadingZeros = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  valueStr: string,
+  size: number,
+) => {
+  let cleanValueStr = valueStr;
+
+  // Remove the leading zeros
+  cleanValueStr = Number(cleanValueStr).toString();
+
+  // Add enough leading zeros to fill the section
+  while (cleanValueStr.length < size) {
+    cleanValueStr = `0${cleanValueStr}`;
+  }
+
+  return cleanValueStr;
+};
+
 export const cleanDigitSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: number,
-  sectionType: FieldSectionType,
-  format: string,
-  hasLeadingZeros: boolean,
   sectionBoundaries: FieldSectionValueBoundaries<TDate, any>,
+  section: Pick<
+    FieldSection,
+    | 'format'
+    | 'type'
+    | 'contentType'
+    | 'hasLeadingZerosInFormat'
+    | 'hasLeadingZerosInInput'
+    | 'maxLength'
+  >,
 ) => {
-  const hasLetter = () => {
-    const startOfYear = utils.startOfYear(utils.date()!);
-    const startOfYearStr = utils.formatByString(startOfYear, format);
-
-    return Number.isNaN(Number(startOfYearStr));
-  };
-
   if (process.env.NODE_ENV !== 'production') {
-    if (sectionType !== 'day' && hasLetter()) {
+    if (section.type !== 'day' && section.contentType === 'digit-with-letter') {
       throw new Error(
         [
-          `MUI: The token "${format}" is a digit format with letter in it.'
+          `MUI: The token "${section.format}" is a digit format with letter in it.'
              This type of format is only supported for 'day' sections`,
         ].join('\n'),
       );
     }
   }
 
-  if (sectionType === 'day' && hasLetter()) {
+  if (section.type === 'day' && section.contentType === 'digit-with-letter') {
     const date = utils.setDate(
       (sectionBoundaries as FieldSectionValueBoundaries<TDate, 'day'>).longestMonth,
       value,
     );
-    return utils.formatByString(date, format);
+    return utils.formatByString(date, section.format);
   }
 
   // queryValue without leading `0` (`01` => `1`)
   const valueStr = value.toString();
 
-  if (hasLeadingZeros) {
-    const size = utils.formatByString(utils.date()!, format).length;
-    let cleanValueStr = valueStr;
-
-    // Remove the leading zeros
-    cleanValueStr = Number(cleanValueStr).toString();
-
-    // Add enough leading zeros to fill the section
-    while (cleanValueStr.length < size) {
-      cleanValueStr = `0${cleanValueStr}`;
-    }
-
-    return cleanValueStr;
+  if (section.hasLeadingZerosInInput) {
+    return cleanLeadingZeros(utils, valueStr, section.maxLength!);
   }
 
   return valueStr;
@@ -173,14 +187,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
     });
 
     const getCleanValue = (value: number) =>
-      cleanDigitSectionValue(
-        utils,
-        value,
-        section.type,
-        section.format,
-        section.hasLeadingZeros,
-        sectionBoundaries,
-      );
+      cleanDigitSectionValue(utils, value, sectionBoundaries, section);
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
@@ -228,7 +235,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
     return options[newOptionIndex];
   };
 
-  if (section.contentType === 'digit') {
+  if (section.contentType === 'digit' || section.contentType === 'digit-with-letter') {
     return adjustDigitSection();
   }
 
@@ -241,6 +248,17 @@ export const getSectionVisibleValue = (
 ) => {
   let value = section.value || section.placeholder;
 
+  const hasLeadingZeros =
+    target === 'non-input' ? section.hasLeadingZerosInFormat : section.hasLeadingZerosInInput;
+
+  if (
+    target === 'non-input' &&
+    section.hasLeadingZerosInInput &&
+    !section.hasLeadingZerosInFormat
+  ) {
+    value = Number(value).toString();
+  }
+
   // In the input, we add an empty character at the end of each section without leading zeros.
   // This makes sure that `onChange` will always be fired.
   // Otherwise, when your input value equals `1/dd/yyyy` (format `M/DD/YYYY` on DayJs),
@@ -249,7 +267,7 @@ export const getSectionVisibleValue = (
   const shouldAddInvisibleSpace =
     ['input-rtl', 'input-ltr'].includes(target) &&
     section.contentType === 'digit' &&
-    !section.hasLeadingZeros &&
+    !hasLeadingZeros &&
     value.length === 1;
 
   if (shouldAddInvisibleSpace) {
@@ -372,9 +390,9 @@ export const changeSectionValueFormat = <TDate>(
 const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
   utils.formatByString(utils.date()!, format).length === 4;
 
-export const doesSectionHaveLeadingZeros = <TDate>(
+export const doesSectionFormatHaveLeadingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  contentType: 'digit' | 'letter',
+  contentType: FieldSectionContentType,
   sectionType: FieldSectionType,
   format: string,
 ) => {
@@ -444,9 +462,11 @@ export const splitFormatIntoSections = <TDate>(
   format: string,
   date: TDate | null,
   formatDensity: 'dense' | 'spacious',
+  shouldRespectLeadingZeros: boolean,
 ) => {
   let startSeparator: string = '';
   const sections: FieldSectionWithoutPosition[] = [];
+  const now = utils.date()!;
 
   const commitToken = (token: string) => {
     if (token === '') {
@@ -454,22 +474,50 @@ export const splitFormatIntoSections = <TDate>(
     }
 
     const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
-    const sectionValue =
-      date == null || !utils.isValid(date) ? '' : utils.formatByString(date, token);
 
-    const hasLeadingZeros = doesSectionHaveLeadingZeros(
+    const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
       utils,
       sectionConfig.contentType,
       sectionConfig.type,
       token,
     );
 
+    const hasLeadingZerosInInput = shouldRespectLeadingZeros
+      ? hasLeadingZerosInFormat
+      : sectionConfig.contentType === 'digit';
+
+    const isValidDate = date != null && utils.isValid(date);
+    let sectionValue = isValidDate ? utils.formatByString(date, token) : '';
+    let maxLength: number | null = null;
+
+    if (hasLeadingZerosInInput) {
+      if (hasLeadingZerosInFormat) {
+        maxLength =
+          sectionValue === '' ? utils.formatByString(now, token).length : sectionValue.length;
+      } else {
+        if (sectionConfig.maxLength == null) {
+          throw new Error(
+            `MUI: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
+          );
+        }
+
+        maxLength = sectionConfig.maxLength;
+
+        if (isValidDate) {
+          sectionValue = cleanLeadingZeros(utils, sectionValue, maxLength);
+        }
+      }
+    }
+
     sections.push({
       ...sectionConfig,
       format: token,
+      maxLength,
       value: sectionValue,
       placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, token),
-      hasLeadingZeros,
+      hasLeadingZeros: hasLeadingZerosInFormat,
+      hasLeadingZerosInFormat,
+      hasLeadingZerosInInput,
       startSeparator: sections.length === 0 ? startSeparator : '',
       endSeparator: '',
       modified: false,
@@ -587,13 +635,11 @@ export const getDateFromDateSections = <TDate>(
 };
 
 export const createDateStrForInputFromSections = (sections: FieldSection[], isRTL: boolean) => {
-  const formattedSections = sections.map(
-    (section) =>
-      `${section.startSeparator}${getSectionVisibleValue(
-        section,
-        isRTL ? 'input-rtl' : 'input-ltr',
-      )}${section.endSeparator}`,
-  );
+  const formattedSections = sections.map((section) => {
+    const dateValue = getSectionVisibleValue(section, isRTL ? 'input-rtl' : 'input-ltr');
+
+    return `${section.startSeparator}${dateValue}${section.endSeparator}`;
+  });
 
   const dateStr = formattedSections.join('');
 
@@ -849,14 +895,7 @@ export const clampDaySectionIfPossible = <TDate, TSection extends FieldSection>(
 
     return {
       ...section,
-      value: cleanDigitSectionValue(
-        utils,
-        dayBoundaries.minimum,
-        section.type,
-        section.format,
-        section.hasLeadingZeros,
-        dayBoundaries,
-      ),
+      value: cleanDigitSectionValue(utils, dayBoundaries.minimum, dayBoundaries, section),
     };
   });
 

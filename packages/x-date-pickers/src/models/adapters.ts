@@ -1,4 +1,4 @@
-import { FieldSectionType } from './fields';
+import { FieldSectionContentType, FieldSectionType } from './fields';
 
 export interface AdapterFormats<TLibFormatToken = string> {
   /** Localized full date @example "Jan 1, 2019" */
@@ -71,7 +71,11 @@ export type AdapterUnits =
 export type FieldFormatTokenMap = {
   [formatToken: string]:
     | FieldSectionType
-    | { sectionType: FieldSectionType; contentType: 'digit' | 'letter' };
+    | {
+        sectionType: FieldSectionType;
+        contentType: FieldSectionContentType;
+        maxLength?: number;
+      };
 };
 
 export interface MuiPickersAdapter<TDate> {
