@@ -10,7 +10,7 @@ import {
 } from './TimeField.types';
 import { validateTime } from '../internals/hooks/validation/useTimeValidation';
 import { useUtils } from '../internals/hooks/useUtils';
-import { extractFieldInternalProps } from '../internals/utils/fields';
+import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 
 const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   props: UseTimeFieldProps<TDate>,
@@ -34,7 +34,7 @@ export const useTimeField = <TDate, TChildProps extends {}>({
 }: UseTimeFieldParams<TDate, TChildProps>) => {
   const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);
 
-  const { forwardedProps, internalProps } = extractFieldInternalProps<
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
     typeof props,
     keyof UseTimeFieldProps<any>
   >(props, 'time');

@@ -15,12 +15,13 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'onChange',
   'readOnly',
   'onError',
+  'shouldRespectLeadingZeros',
   'selectedSections',
   'onSelectedSectionsChange',
   'unstableFieldRef',
 ] as const;
 
-export const extractFieldInternalProps = <
+export const splitFieldInternalAndForwardedProps = <
   TProps extends {},
   TInternalPropNames extends keyof TProps,
 >(

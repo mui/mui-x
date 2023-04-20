@@ -63,7 +63,15 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
   );
   const adapter = useLocalizationContext<TDate>();
 
-  const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
+  const {
+    value: valueProp,
+    defaultValue,
+    format,
+    shouldRespectLeadingZeros,
+    onChange,
+    disabled,
+    readOnly,
+  } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
   const [value, setValue] = useControlled<DateRange<TDate>>({
@@ -118,6 +126,7 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     error: !!validationError[0],
     ...startTextFieldProps,
     format,
+    shouldRespectLeadingZeros,
     disabled,
     readOnly,
     unstableFieldRef: unstableStartFieldRef,
@@ -133,6 +142,7 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,
+    shouldRespectLeadingZeros,
     disabled,
     readOnly,
     unstableFieldRef: unstableEndFieldRef,

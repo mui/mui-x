@@ -6,7 +6,7 @@ import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import {
-  extractFieldInternalProps,
+  splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
@@ -47,10 +47,11 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     name: 'MuiMultiInputDateTimeRangeField',
   });
 
-  const { internalProps: dateTimeFieldInternalProps, forwardedProps } = extractFieldInternalProps<
-    typeof themeProps,
-    keyof Omit<UseDateTimeRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
-  >(themeProps, 'date-time');
+  const { internalProps: dateTimeFieldInternalProps, forwardedProps } =
+    splitFieldInternalAndForwardedProps<
+      typeof themeProps,
+      keyof Omit<UseDateTimeRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+    >(themeProps, 'date-time');
 
   const {
     slots: innerSlots,
@@ -117,6 +118,31 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     },
   } = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: { ...dateTimeFieldInternalProps, disabled },
+    sharedProps: {
+      value,
+      defaultValue,
+      format,
+      formatDensity,
+      shouldRespectLeadingZeros,
+      onChange,
+      readOnly,
+      disabled,
+      onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      minTime,
+      maxTime,
+      minDateTime,
+      maxDateTime,
+      minutesStep,
+      shouldDisableClock,
+      shouldDisableTime,
+      disableFuture,
+      disablePast,
+      selectedSections,
+      onSelectedSectionsChange,
+    },
     startTextFieldProps,
     endTextFieldProps,
     startInputRef: startTextFieldProps.inputRef,
@@ -334,6 +360,21 @@ MultiInputDateTimeRangeField.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   *
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   *
+   * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
+   * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
+   *
+   * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
+   * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
+   *
+   * @default `false`
+   */
+  shouldRespectLeadingZeros: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

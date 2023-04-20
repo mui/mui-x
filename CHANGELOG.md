@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.2.1
+
+_Apr 20, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Add virtualization to row detail panels (#7969) @yaredtsy
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.2.1` / `@mui/x-data-grid-pro@v6.2.1` / `@mui/x-data-grid-premium@v6.2.1`
+
+#### Changes
+
+- [DataGrid] Add `getTogglableColumns` to `Hide all` and `Show all` actions (#8496) @MBilalShafi
+- [DataGrid] Add Grid + Joy UI experiment page (#8067) @cherniavskii
+- [DataGrid] Fix print style when rendering inside Shadow DOM (#8656) @Bwatermelon
+- [DataGrid] Replace `GridAutoSizer` with `ResizeObserver` (#8091) @m4theushw
+- [DataGrid] Use stable ID for the placeholder filter item (#8603) @m4theushw
+- [DataGridPro] Virtualize row detail panels (#7969) @yaredtsy
+
+### `@mui/x-date-pickers@v6.2.1` / `@mui/x-date-pickers-pro@v6.2.1`
+
+#### Changes
+
+- [pickers] Do not include the time in date components when going to today (#8657) @flaviendelangle
+- [pickers] Sync internal state with controlled value (#8674) @alexfauquette
+
+### `@mui/x-codemod@v6.0.6`
+
+#### Changes
+
+- [codemod] Avoid filter failures on object prototype properties (#8647) @LukasTy
+
+### Docs
+
+- [docs] Add no-op service worker to fix stale cache issue (#8598) @cherniavskii
+- [docs] Clarify what `AdapterDayjs` is in the Getting Started page (#8219) @flaviendelangle
+- [docs] Fix typo on picker page description (#8611) @maxolasersquad
+- [docs] Improve section title in Getting Started page (#8648) @flaviendelangle
+- [docs] Inform about input format modification (#8458) @alexfauquette
+
+### Core
+
+- [core] Fix release date (#8618) @flaviendelangle
+- [core] Upgrade monorepo (#8668) @MBilalShafi
+- [charts] Support Tooltip (#8356) @alexfauquette
+
 ## 6.2.0
 
 _Apr 14, 2023_

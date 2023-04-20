@@ -124,7 +124,7 @@ export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { WrapperVariant } from './models/common';
 
 export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
-export { extractFieldInternalProps } from './utils/fields';
+export { splitFieldInternalAndForwardedProps } from './utils/fields';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
