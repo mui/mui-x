@@ -424,7 +424,11 @@ export const useGridCellSelection = (
     if (props.unstable_cellSelectionModel) {
       apiRef.current.unstable_setCellSelectionModel(props.unstable_cellSelectionModel);
     }
-  }, [apiRef, props.unstable_cellSelectionModel]);
+
+    return () => {
+      stopAutoScroll();
+    };
+  }, [apiRef, props.unstable_cellSelectionModel, stopAutoScroll]);
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {
