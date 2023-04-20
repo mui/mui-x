@@ -8,6 +8,7 @@ coverage:
         target: 95%
         paths:
           - 'packages/x-date-pickers/src/AdapterDayjs/AdapterDayjs.ts'
+          - 'packages/x-date-pickers/src/AdapterLuxon/AdapterLuxon.ts'
     patch: off
 
 comment: false
