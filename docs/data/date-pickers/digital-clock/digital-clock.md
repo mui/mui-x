@@ -69,8 +69,8 @@ The `DigitalClock` component uses only `minutes` `timeSteps` option, other are i
 
 ## Skip rendering disabled options
 
-The components allow skipping the disabled options from being rendered in the view.
+With the `skipDisabled` prop, the components don't render options that are not available to the user (e.g. through `minTime`, `maxTime`, `shouldDisabledTime` etc.).
 
-You can use the `skipDisabled` prop to control it.
+The following example combines these properties to customize which options are rendered.
 
 {{"demo": "DigitalClockSkipDisabled.js"}}
