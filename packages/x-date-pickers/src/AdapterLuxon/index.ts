@@ -5,30 +5,30 @@ import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
-  y: 'year',
+  y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
   yy: 'year',
   yyyy: 'year',
 
   // Month
-  L: 'month',
+  L: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
   LL: 'month',
   LLL: { sectionType: 'month', contentType: 'letter' },
   LLLL: { sectionType: 'month', contentType: 'letter' },
-  M: 'month',
+  M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
   MM: 'month',
   MMM: { sectionType: 'month', contentType: 'letter' },
   MMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of the month
-  d: 'day',
+  d: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
   dd: 'day',
 
   // Day of the week
-  c: 'weekDay',
+  c: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ccc: { sectionType: 'weekDay', contentType: 'letter' },
   cccc: { sectionType: 'weekDay', contentType: 'letter' },
   ccccc: { sectionType: 'weekDay', contentType: 'letter' },
-  E: 'weekDay',
+  E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 2 },
   EEE: { sectionType: 'weekDay', contentType: 'letter' },
   EEEE: { sectionType: 'weekDay', contentType: 'letter' },
   EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
@@ -37,17 +37,17 @@ const formatTokenMap: FieldFormatTokenMap = {
   a: 'meridiem',
 
   // Hours
-  H: 'hours',
+  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   HH: 'hours',
-  h: 'hours',
+  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
 
   // Minutes
-  m: 'minutes',
+  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
   mm: 'minutes',
 
   // Seconds
-  s: 'seconds',
+  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
   ss: 'seconds',
 };
 

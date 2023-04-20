@@ -131,6 +131,7 @@ export const usePickerValue = <
 >({
   props,
   valueManager,
+  valueType,
   wrapperVariant,
   validator,
 }: UsePickerValueParams<TValue, TDate, TSection, TExternalProps>): UsePickerValueResponse<
@@ -270,18 +271,24 @@ export const usePickerValue = <
     }
   });
 
-  React.useEffect(() => {
-    if (isOpen) {
-      setDateState((prev) => ({ ...prev, lastCommittedValue: dateState.draft }));
-    }
-  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
-
   if (
     inValue !== undefined &&
     (dateState.lastControlledValue === undefined ||
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
-    setDateState((prev) => ({ ...prev, lastControlledValue: inValue, draft: inValue }));
+    const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+    setDateState((prev) => ({
+      ...prev,
+      lastControlledValue: inValue,
+      ...(isUpdateComingFromPicker
+        ? {}
+        : {
+            lastCommittedValue: inValue,
+            lastPublishedValue: inValue,
+            draft: inValue,
+            hasBeenModifiedSinceMount: true,
+          }),
+    }));
   }
 
   const handleClear = useEventCallback(() => {
@@ -318,7 +325,7 @@ export const usePickerValue = <
 
   const handleSetToday = useEventCallback(() => {
     updateDate({
-      value: valueManager.getTodayValue(utils),
+      value: valueManager.getTodayValue(utils, valueType),
       name: 'setValueFromAction',
       pickerAction: 'today',
     });

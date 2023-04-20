@@ -74,6 +74,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   const { renderPicker } = useDesktopPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date-time',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDateTime,
   });

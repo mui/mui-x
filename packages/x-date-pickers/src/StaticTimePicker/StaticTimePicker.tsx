@@ -51,8 +51,9 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    ref,
+    valueType: 'time',
     validator: validateTime,
+    ref,
   });
 
   return renderPicker();

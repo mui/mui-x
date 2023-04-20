@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Picker
 
-<p class="description">The Date Picker component let the user select a date.</p>
+<p class="description">The Date Picker component lets the user select a date.</p>
 
 ## Basic usage
 

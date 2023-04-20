@@ -21,21 +21,21 @@ const localeNotFoundWarning = buildWarning([
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   YY: 'year',
-  YYYY: 'year',
+  YYYY: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
-  M: 'month',
+  M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
   MM: 'month',
   MMM: { sectionType: 'month', contentType: 'letter' },
   MMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of the month
-  D: 'day',
+  D: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
   DD: 'day',
-  Do: 'day',
+  Do: { sectionType: 'day', contentType: 'digit-with-letter' },
 
   // Day of the week
-  d: 'weekDay',
+  d: { sectionType: 'weekDay', contentType: 'digit', maxLength: 2 },
   dd: { sectionType: 'weekDay', contentType: 'letter' },
   ddd: { sectionType: 'weekDay', contentType: 'letter' },
   dddd: { sectionType: 'weekDay', contentType: 'letter' },
@@ -45,17 +45,17 @@ const formatTokenMap: FieldFormatTokenMap = {
   a: 'meridiem',
 
   // Hours
-  H: 'hours',
+  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   HH: 'hours',
-  h: 'hours',
+  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
 
   // Minutes
-  m: 'minutes',
+  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
   mm: 'minutes',
 
   // Seconds
-  s: 'seconds',
+  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
   ss: 'seconds',
 };
 

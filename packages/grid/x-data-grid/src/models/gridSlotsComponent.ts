@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { UncapitalizeObjectKeys } from '../internals/utils';
-import { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import type { UncapitalizeObjectKeys } from '../internals/utils';
+import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 /**
  * Grid components React prop interface containing all the overridable components.

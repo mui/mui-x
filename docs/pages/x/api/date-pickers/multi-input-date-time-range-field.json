@@ -55,6 +55,7 @@
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "spacing": {

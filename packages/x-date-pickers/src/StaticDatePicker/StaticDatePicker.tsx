@@ -49,6 +49,7 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
   const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date',
     validator: validateDate,
     ref,
   });
