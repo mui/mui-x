@@ -5,7 +5,13 @@ import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  openPicker,
+  getTextbox,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 
 describe('<MobileDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
@@ -228,6 +234,26 @@ describe('<MobileDatePicker />', () => {
       fireEvent.click(screen.getByText('OK', { selector: 'button' }));
 
       expect(onAccept.callCount).to.equal(1);
+    });
+
+    it('should update internal state when controled value is updated', () => {
+      const value = adapterToUse.date(new Date(2019, 0, 1));
+
+      const { setProps } = render(<MobileDatePicker value={value} />);
+
+      // Set a date
+      expectInputValue(getTextbox(), '01/01/2019');
+
+      // Clean value using external control
+      setProps({ value: null });
+      expectInputValue(getTextbox(), '');
+
+      // Open and Dismiss the picker
+      userEvent.mousePress(screen.getByRole('textbox'));
+      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+
+      // Verrify it's still a clean value
+      expectInputValue(getTextbox(), '');
     });
   });
 
