@@ -210,6 +210,25 @@ describe('<MobileDatePicker />', () => {
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
+
+    it('should call `onAccept` even if controlled', () => {
+      const onAccept = spy();
+
+      function ControledMobileDatePicker(props) {
+        const [value, setValue] = React.useState(null);
+
+        return <MobileDatePicker {...props} value={value} onChange={setValue} />;
+      }
+
+      render(<ControledMobileDatePicker onAccept={onAccept} />);
+
+      userEvent.mousePress(screen.getByRole('textbox'));
+
+      fireEvent.click(screen.getByText('15', { selector: 'button' }));
+      fireEvent.click(screen.getByText('OK', { selector: 'button' }));
+
+      expect(onAccept.callCount).to.equal(1);
+    });
   });
 
   describe('localization', () => {
