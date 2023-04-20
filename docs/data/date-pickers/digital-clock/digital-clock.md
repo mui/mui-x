@@ -74,3 +74,7 @@ With the `skipDisabled` prop, the components don't render options that are not a
 The following example combines these properties to customize which options are rendered.
 
 {{"demo": "DigitalClockSkipDisabled.js"}}
+
+## Validation
+
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).

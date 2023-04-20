@@ -45,3 +45,7 @@ You can force a specific format using the `ampm` prop.
 You can find more information about 12h/24h format in the [Date localization page](/x/react-date-pickers/adapters-locale/#12h-24h-format).
 
 {{"demo": "TimeClockAmPm.js"}}
+
+## Validation
+
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
