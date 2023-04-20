@@ -277,7 +277,6 @@ export const usePickerValue = <
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
-
     setDateState((prev) => ({
       ...prev,
       lastControlledValue: inValue,
