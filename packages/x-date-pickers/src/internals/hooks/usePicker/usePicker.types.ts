@@ -46,7 +46,7 @@ export interface UsePickerParams<
   TAdditionalProps extends {},
 > extends Pick<
       UsePickerValueParams<TValue, TDate, TSection, TExternalProps>,
-      'valueManager' | 'wrapperVariant' | 'validator'
+      'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
     >,
     Pick<
       UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,

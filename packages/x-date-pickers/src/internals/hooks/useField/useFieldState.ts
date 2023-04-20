@@ -101,7 +101,7 @@ export const useFieldState = <
       referenceValue: fieldValueManager.updateReferenceValue(
         utils,
         valueFromTheOutside,
-        valueManager.getTodayValue(utils),
+        valueManager.getTodayValue(utils, valueType),
       ),
       tempValueStrAndroid: null,
     };

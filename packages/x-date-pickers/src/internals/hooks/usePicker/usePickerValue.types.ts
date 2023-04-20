@@ -2,7 +2,12 @@ import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
 import { InferError, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
-import { FieldSection, FieldSelectedSections, MuiPickersAdapter } from '../../../models';
+import {
+  FieldSection,
+  FieldSelectedSections,
+  FieldValueType,
+  MuiPickersAdapter,
+} from '../../../models';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -26,9 +31,10 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * Method returning the value to set when clicking the "Today" button
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {FieldValueType} valueType The type of the value being edited.
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
-  getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
+  getTodayValue: (utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) => TValue;
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
    * @template TDate, TValue
@@ -224,6 +230,7 @@ export interface UsePickerValueParams<
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
+  valueType: FieldValueType;
   wrapperVariant: WrapperVariant;
   validator: Validator<
     TValue,
