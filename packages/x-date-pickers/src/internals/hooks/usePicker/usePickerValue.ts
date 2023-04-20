@@ -131,6 +131,7 @@ export const usePickerValue = <
 >({
   props,
   valueManager,
+  valueType,
   wrapperVariant,
   validator,
 }: UsePickerValueParams<TValue, TDate, TSection, TExternalProps>): UsePickerValueResponse<
@@ -318,7 +319,7 @@ export const usePickerValue = <
 
   const handleSetToday = useEventCallback(() => {
     updateDate({
-      value: valueManager.getTodayValue(utils),
+      value: valueManager.getTodayValue(utils, valueType),
       name: 'setValueFromAction',
       pickerAction: 'today',
     });

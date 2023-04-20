@@ -3,12 +3,12 @@ import {
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
-  FieldValueType,
   FieldSectionWithoutPosition,
   FieldSectionValueBoundaries,
 } from './useField.types';
 import {
   FieldSectionType,
+  FieldValueType,
   FieldSection,
   MuiPickersAdapter,
   FieldSectionContentType,

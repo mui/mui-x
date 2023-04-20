@@ -5,6 +5,7 @@ import {
   FieldSelectedSections,
   MuiPickersAdapter,
   FieldSectionContentType,
+  FieldValueType,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
@@ -330,8 +331,6 @@ export type AvailableAdjustKeyCode =
   | 'PageDown'
   | 'Home'
   | 'End';
-
-export type FieldValueType = 'date' | 'time' | 'date-time';
 
 export type SectionNeighbors = {
   [sectionIndex: number]: {
