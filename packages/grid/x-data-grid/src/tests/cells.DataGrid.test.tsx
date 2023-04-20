@@ -233,20 +233,21 @@ describe('<DataGrid /> - Cells', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
+        <DataGrid autoHeight columns={columns} rows={rows} rowHeight={rowHeight} />
       </div>,
     );
 
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
-    userEvent.mousePress(getCell(0, 0));
+    userEvent.mousePress(getCell(1, 0));
+    expect(getActiveCell(), 'getCell focus').to.equal('1-0');
 
-    const scrollTop = 10 * rowHeight;
+    const scrollTop = 6 * rowHeight;
     virtualScroller.scrollTop = scrollTop;
 
     virtualScroller.dispatchEvent(new Event('scroll'));
 
-    expect(virtualScroller.scrollTop).to.equal(scrollTop + 1);
-    expect(getActiveCell()).to.equal('0-0');
+    expect(virtualScroller.scrollTop, 'virtual should scroll').to.equal(scrollTop);
+    expect(getActiveCell()).to.equal('1-0');
   });
 });
