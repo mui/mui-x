@@ -473,18 +473,18 @@ export const splitFormatIntoSections = <TDate>(
       return null;
     }
 
-    const baseSection = getDateSectionConfigFromFormatToken(utils, token);
+    const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
 
     const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
       utils,
-      baseSection.contentType,
-      baseSection.type,
+      sectionConfig.contentType,
+      sectionConfig.type,
       token,
     );
 
     const hasLeadingZerosInInput = shouldRespectLeadingZeros
       ? hasLeadingZerosInFormat
-      : baseSection.contentType === 'digit';
+      : sectionConfig.contentType === 'digit';
 
     const isValidDate = date != null && utils.isValid(date);
     let sectionValue = isValidDate ? utils.formatByString(date, token) : '';
@@ -495,13 +495,13 @@ export const splitFormatIntoSections = <TDate>(
         maxLength =
           sectionValue === '' ? utils.formatByString(now, token).length : sectionValue.length;
       } else {
-        if (baseSection.maxLength == null) {
+        if (sectionConfig.maxLength == null) {
           throw new Error(
             `MUI: The token ${token} should have a 'maxDigitNumber' property on it's adapter`,
           );
         }
 
-        maxLength = baseSection.maxLength;
+        maxLength = sectionConfig.maxLength;
 
         if (isValidDate) {
           sectionValue = cleanLeadingZeros(utils, sectionValue, maxLength);
@@ -510,11 +510,11 @@ export const splitFormatIntoSections = <TDate>(
     }
 
     sections.push({
-      ...baseSection,
+      ...sectionConfig,
       format: token,
       maxLength,
       value: sectionValue,
-      placeholder: getSectionPlaceholder(utils, localeText, baseSection, token),
+      placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, token),
       hasLeadingZeros: hasLeadingZerosInFormat,
       hasLeadingZerosInFormat,
       hasLeadingZerosInInput,
