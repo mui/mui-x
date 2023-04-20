@@ -13,7 +13,7 @@ describe('<DigitalClock /> - Describes', () => {
     render,
     clock,
     views: ['hours'],
-    componentFamily: 'clock',
+    componentFamily: 'digital-clock',
     variant: 'desktop',
   }));
 
@@ -38,7 +38,7 @@ describe('<DigitalClock /> - Describes', () => {
 
   describeValue(DigitalClock, () => ({
     render,
-    componentFamily: 'clock',
+    componentFamily: 'digital-clock',
     type: 'time',
     variant: 'desktop',
     defaultProps: {

@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import { getExpectedOnChangeCount } from 'test/utils/pickers-utils';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
@@ -51,9 +52,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
-      expect(onChange.callCount).to.equal(
-        componentFamily === 'clock' && params.variant !== 'desktop' ? 2 : 1,
-      );
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -69,9 +68,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       render(<ElementToTest value={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
-      expect(onChange.callCount).to.equal(
-        componentFamily === 'clock' && params.variant !== 'desktop' ? 2 : 1,
-      );
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
