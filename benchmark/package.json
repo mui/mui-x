@@ -15,16 +15,16 @@
     "ag-grid-community": "^29.2.0",
     "ag-grid-react": "^29.2.0",
     "css-loader": "^6.7.3",
-    "html-webpack-plugin": "^5.5.0",
+    "html-webpack-plugin": "^5.5.1",
     "mui-plus": "^0.0.15",
-    "playwright": "^1.32.2",
+    "playwright": "^1.32.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-spring": "^9.2.4",
-    "react-virtualized": "^9.22.3",
+    "react-virtualized": "^9.22.5",
     "serve-handler": "^6.1.5",
     "style-loader": "^3.3.2",
-    "webpack": "^5.78.0",
+    "webpack": "^5.79.0",
     "webpack-cli": "^5.0.1"
   }
 }
