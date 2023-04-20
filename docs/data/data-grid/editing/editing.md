@@ -4,7 +4,7 @@
 
 ## Full-featured CRUD
 
-The Data Grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
+The data grid is not only a data visualization tool. It offers built-in editing features for you to manage your data set.
 The following demo shows a full-featured CRUD (Create, Read, Update, Delete) typically found in enterprise applications.
 
 :::info
@@ -34,7 +34,7 @@ Play with it by double-clicking or pressing <kbd class="key">Enter</kbd> on any 
 By default, only one cell can be editable at a time.
 But you can let your user edit all cells in a row simultaneously.
 
-To enable this behavior, set the `editMode` prop on the Data Grid to `"row"`. Note that you'll still need to set the `editable` property in each column definition to specify which of them are editable; the same basic rules for cell editing also apply to row editing.
+To enable this behavior, set the `editMode` prop on the Data Grid to `"row"`. Note that you still need to set the `editable` property in each column definition to specify which of them are editable; the same basic rules for cell editing also apply to row editing.
 
 ```tsx
 <DataGrid editMode="row" columns={[{ field: 'name', editable: true }]} />
@@ -156,7 +156,7 @@ The callback is called with two arguments:
 1. The updated row with the new values returned by the [`valueSetter`](#value-parser-and-value-setter).
 2. The original values of the row before editing.
 
-Please note the `processRowUpdate` must return the row object to update the Data Grid internal state.
+Please note that the `processRowUpdate` must return the row object to update the Data Grid internal state.
 The value returned is used later as an argument on a call to `apiRef.current.updateRows`.
 
 ```tsx
@@ -164,7 +164,7 @@ The value returned is used later as an argument on a call to `apiRef.current.upd
   rows={rows}
   columns={columns}
   processRowUpdate={(updatedRow, originalRow) =>
-    mySaveOnServerFunction(updatedRow, originalRow)
+    mySaveOnServerFunction(updatedRow);
   }
   onProcessRowUpdateError={handleProcessRowUpdateError}
 />
