@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
-import { useTheme } from '@mui/material/styles';
+import { useTheme as useMaterialTheme } from '@mui/material/styles';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
@@ -216,12 +216,10 @@ function SyncThemeMode({ mode }) {
 }
 
 export default function PickerWithJoyField() {
-  const {
-    palette: { mode },
-  } = useTheme();
+  const materialTheme = useMaterialTheme();
   return (
-    <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
-      <SyncThemeMode mode={mode} />
+    <CssVarsProvider theme={{ ...materialTheme, [THEME_ID]: joyTheme }}>
+      <SyncThemeMode mode={materialTheme.palette.mode} />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker', 'DateRangePicker']}>
           <JoyDatePicker />
