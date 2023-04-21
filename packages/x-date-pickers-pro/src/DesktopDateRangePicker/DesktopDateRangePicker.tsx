@@ -57,6 +57,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
+    valueType: 'date',
     validator: validateDateRange,
   });
 
@@ -173,6 +174,12 @@ DesktopDateRangePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    * Ignored if the field has several inputs.

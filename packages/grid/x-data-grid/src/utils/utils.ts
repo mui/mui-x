@@ -38,7 +38,7 @@ export const clamp = (value: number, min: number, max: number) =>
 /**
  * Based on `fast-deep-equal`
  *
- *  MIT License
+ * MIT License
  *
  * Copyright (c) 2017 Evgeny Poberezkin
  *

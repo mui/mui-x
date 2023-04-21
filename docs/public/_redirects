@@ -49,12 +49,9 @@
 /x/api/date-pickers/month-picker/ /x/api/date-pickers/month-calendar/ 301
 /x/api/date-pickers/year-picker/ /x/api/date-pickers/year-calendar/ 301
 /x/react-data-grid/editing-legacy/ https://https://v5.mui.com/x/react-data-grid/editing-legacy/ 301
-/x/api/date-pickers/desktop-next-date-picker/
-/x/api/date-pickers/desktop-date-picker/ 301
+/x/api/date-pickers/desktop-next-date-picker/ /x/api/date-pickers/desktop-date-picker/ 301
 /x/api/date-pickers/next-date-picker/ /x/api/date-pickers/date-picker/ 301
-/x/react-date-pickers/calendar/
-/x/react-date-pickers/date-calendar/ 301
-/x/react-date-pickers/legacy-date-time-picker/
-/x/react-date-pickers/date-time-picker/ 301
+/x/react-date-pickers/calendar/ /x/react-date-pickers/date-calendar/ 301
+/x/react-date-pickers/legacy-date-time-picker/ /x/react-date-pickers/date-time-picker/ 301
 
 # Proxies

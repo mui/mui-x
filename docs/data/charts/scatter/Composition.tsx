@@ -1,24 +1,8 @@
 import * as React from 'react';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
-import { DrawingProvider } from '@mui/x-charts/context/DrawingProvider';
-import { SeriesContextProvider } from '@mui/x-charts/context/SeriesContextProvider';
-import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
-import Surface from '@mui/x-charts/Surface';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { XAxis } from '@mui/x-charts/XAxis';
 import { YAxis } from '@mui/x-charts/YAxis';
-
-// Components that could be exported
-function ChartContainer({ width, height, series, margin, children }: any) {
-  return (
-    <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={series}>
-        <Surface width={width} height={height}>
-          {children}
-        </Surface>
-      </SeriesContextProvider>
-    </DrawingProvider>
-  );
-}
 
 export default function Composition() {
   return (
@@ -55,23 +39,20 @@ export default function Composition() {
       ]}
       width={500}
       height={500}
-    >
-      <CartesianContextProvider
-        yAxis={[
-          {
-            id: 'leftAxis',
+      yAxis={[
+        {
+          id: 'leftAxis',
 
-            max: 4,
-            scaleName: 'sqrt',
-          },
-        ]}
-      >
-        <ScatterPlot />
-        <XAxis label="Bottom X axis" position="bottom" />
-        <XAxis label="Top X axis" position="top" />
-        <YAxis label="Left Y axis" position="left" axisId="leftAxis" />
-        <YAxis label="Right Y axis" position="right" />
-      </CartesianContextProvider>
+          max: 4,
+          scaleName: 'sqrt',
+        },
+      ]}
+    >
+      <ScatterPlot />
+      <XAxis label="Bottom X axis" position="bottom" />
+      <XAxis label="Top X axis" position="top" />
+      <YAxis label="Left Y axis" position="left" axisId="leftAxis" />
+      <YAxis label="Right Y axis" position="right" />
     </ChartContainer>
   );
 }

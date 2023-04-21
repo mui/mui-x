@@ -177,7 +177,13 @@ export function useDateTimePickerDefaultizedProps<
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??
-      Boolean(themeProps.minDateTime || themeProps.maxDateTime),
+      Boolean(
+        themeProps.minDateTime ||
+          themeProps.maxDateTime ||
+          // allow time clock to correctly check time validity: https://github.com/mui/mui-x/issues/8520
+          themeProps.disablePast ||
+          themeProps.disableFuture,
+      ),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(
