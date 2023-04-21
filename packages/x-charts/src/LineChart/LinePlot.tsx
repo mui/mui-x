@@ -7,6 +7,7 @@ import { LineElement } from './LineElement';
 import { AreaElement } from './AreaElement';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { MarkElement } from './MarkElement';
+import { getValueToPositionMapper } from '../hooks/useScale';
 
 export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
@@ -41,7 +42,7 @@ export function LinePlot() {
         {Object.keys(seriesPerAxis).flatMap((key) => {
           const [xAxisKey, yAxisKey] = key.split('-');
 
-          const xScale = xAxis[xAxisKey].scale;
+          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
@@ -83,7 +84,7 @@ export function LinePlot() {
         {Object.keys(seriesPerAxis).flatMap((key) => {
           const [xAxisKey, yAxisKey] = key.split('-');
 
-          const xScale = xAxis[xAxisKey].scale;
+          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
@@ -122,7 +123,7 @@ export function LinePlot() {
         {Object.keys(seriesPerAxis).flatMap((key) => {
           const [xAxisKey, yAxisKey] = key.split('-');
 
-          const xScale = xAxis[xAxisKey].scale;
+          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
