@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
-import { useTheme as useMaterialTheme } from '@mui/material/styles';
+import {
+  useTheme as useMaterialTheme,
+  useColorScheme as useMaterialColorScheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+} from '@mui/material/styles';
 import {
   extendTheme as extendJoyTheme,
   useColorScheme,
@@ -241,23 +245,27 @@ function JoyDatePicker(props: DatePickerProps<Dayjs>) {
  */
 function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
   const { setMode } = useColorScheme();
+  const { setMode: setMaterialMode } = useMaterialColorScheme();
   React.useEffect(() => {
     setMode(mode);
-  }, [mode, setMode]);
+    setMaterialMode(mode);
+  }, [mode, setMode, setMaterialMode]);
   return null;
 }
 
 export default function PickerWithJoyField() {
   const materialTheme = useMaterialTheme();
   return (
-    <CssVarsProvider theme={{ ...materialTheme, [THEME_ID]: joyTheme }}>
-      <SyncThemeMode mode={materialTheme.palette.mode} />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker', 'DateRangePicker']}>
-          <JoyDatePicker />
-          <JoyDateRangePicker />
-        </DemoContainer>
-      </LocalizationProvider>
-    </CssVarsProvider>
+    <MaterialCssVarsProvider>
+      <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+        <SyncThemeMode mode={materialTheme.palette.mode} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker', 'DateRangePicker']}>
+            <JoyDatePicker />
+            <JoyDateRangePicker />
+          </DemoContainer>
+        </LocalizationProvider>
+      </CssVarsProvider>
+    </MaterialCssVarsProvider>
   );
 }
