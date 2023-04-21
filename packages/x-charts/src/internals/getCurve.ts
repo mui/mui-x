@@ -46,6 +46,6 @@ export default function getCurveFactory(curveType?: CurveType) {
       return curveStepAfter;
     }
     default:
-      return curveNatural;
+      return curveMonotoneX;
   }
 }
