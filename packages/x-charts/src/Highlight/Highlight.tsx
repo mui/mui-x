@@ -52,7 +52,7 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
     );
   }
 
-  const getXPosition = getValueToPositionMapper(xScale)
+  const getXPosition = getValueToPositionMapper(xScale);
   return (
     <React.Fragment>
       {xHighlight && axis.x !== null && (
