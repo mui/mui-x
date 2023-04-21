@@ -30,7 +30,7 @@ function convertColor<
   if (color === 'error') {
     return 'danger';
   }
-  if (color === 'default') {
+  if (color === 'default' || color === 'inherit') {
     return 'neutral';
   }
   return color as ColorPaletteProp;
@@ -125,7 +125,7 @@ const IconButton = React.forwardRef<
     <JoyIconButton
       {...props}
       size={convertSize(size)}
-      color={convertColor(color)}
+      color={convertColor(color) ?? 'neutral'}
       variant="plain"
       ref={ref}
       sx={sx as SxProps<Theme>}
@@ -139,9 +139,8 @@ const Switch = React.forwardRef<
 >(function Switch(
   {
     name,
-    checked,
     checkedIcon,
-    color,
+    color: colorProp,
     disableRipple,
     disableFocusRipple,
     disableTouchRipple,
@@ -162,7 +161,7 @@ const Switch = React.forwardRef<
       {...(props as JoySwitchProps)}
       onChange={onChange as JoySwitchProps['onChange']}
       size={convertSize(size)}
-      color={convertColor(color)}
+      color={convertColor(colorProp)}
       ref={ref}
       slotProps={{
         input: {
@@ -177,43 +176,68 @@ const Switch = React.forwardRef<
   );
 });
 
-const Select = React.forwardRef<
-  HTMLDivElement,
-  NonNullable<GridSlotsComponentsProps['baseSelect']>
->(function Select(
-  {
-    labelId,
-    label,
-    inputRef,
-    inputProps,
-    MenuProps,
-    fullWidth,
-    native,
-    color,
-    size,
-    sx,
-    variant,
-    ...props
+const Select = React.forwardRef<any, NonNullable<GridSlotsComponentsProps['baseSelect']>>(
+  function Select(
+    {
+      name,
+      labelId,
+      label,
+      open,
+      onOpen,
+      inputRef,
+      inputProps,
+      MenuProps,
+      fullWidth,
+      native,
+      color,
+      size,
+      sx,
+      variant,
+      onChange,
+      ...props
+    },
+    ref,
+  ) {
+    return (
+      // @ts-expect-error the `onClose` needs to be fixed from the core.
+      <JoySelect
+        {...props}
+        listboxOpen={open}
+        color={convertColor(color)}
+        size={convertSize(size)}
+        variant={convertVariant(variant)}
+        onChange={(event, newValue) => {
+          if (onChange && event) {
+            // Redefine target to allow name and value to be read.
+            // This allows seamless integration with the most popular form libraries.
+            // https://github.com/mui/material-ui/issues/13485#issuecomment-676048492
+            // Clone the event to not override `target` of the original event.
+            const nativeEvent = event?.nativeEvent || event;
+            // @ts-ignore
+            const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
+
+            Object.defineProperty(clonedEvent, 'target', {
+              writable: true,
+              value: { value: newValue, name },
+            });
+            onChange(clonedEvent, null);
+          }
+        }}
+        slotProps={{
+          button: {
+            ...(inputProps as JSX.IntrinsicElements['button']),
+            ref: inputRef,
+          },
+        }}
+        onClose={() => {
+          MenuProps?.onClose?.({}, 'backdropClick');
+        }}
+        ref={ref}
+        sx={sx as SxProps<Theme>}
+      />
+    );
   },
-  ref,
-) {
-  return (
-    <JoySelect
-      {...props}
-      color={convertColor(color)}
-      size={convertSize(size)}
-      variant={convertVariant(variant)}
-      slotProps={{
-        button: {
-          ...(inputProps as JSX.IntrinsicElements['button']),
-          ref: inputRef,
-        },
-      }}
-      ref={ref}
-      sx={sx as SxProps<Theme>}
-    />
-  );
-});
+);
 
 const Option = React.forwardRef<
   HTMLLIElement,
