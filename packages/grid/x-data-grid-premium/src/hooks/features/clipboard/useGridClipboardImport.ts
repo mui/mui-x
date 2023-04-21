@@ -12,7 +12,12 @@ import {
   useGridApiEventHandler,
   GridEventListener,
 } from '@mui/x-data-grid';
-import { buildWarning, getRowIdFromRowModel, getVisibleRows } from '@mui/x-data-grid/internals';
+import {
+  buildWarning,
+  getRowIdFromRowModel,
+  getVisibleRows,
+  getActiveElement,
+} from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -50,7 +55,7 @@ function batchRowUpdates<R>(func: (rows: R[]) => void, wait?: number) {
 
 async function getTextFromClipboard(rootEl: HTMLElement) {
   return new Promise<string>((resolve) => {
-    const focusedCell = document.activeElement;
+    const focusedCell = getActiveElement(document);
 
     const el = document.createElement('input');
     el.style.width = '0px';
