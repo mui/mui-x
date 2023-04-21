@@ -38,7 +38,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
   const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
   const shouldRenderTimeInASingleColumn =
-    (24 * 60) / timeSteps.minutes <= thresholdToRenderTimeInASingleColumn;
+    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
 
   const renderTimeView = shouldRenderTimeInASingleColumn
     ? renderDigitalClockTimeView
@@ -53,9 +53,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   };
 
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  const actionBarActions: PickersActionBarAction[] = !shouldRenderTimeInASingleColumn
-    ? ['accept']
-    : [];
+  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
+    ? []
+    : ['accept'];
   const views: readonly TimeViewWithMeridiem[] = defaultizedProps.ampm
     ? [...defaultizedProps.views, 'meridiem']
     : defaultizedProps.views;

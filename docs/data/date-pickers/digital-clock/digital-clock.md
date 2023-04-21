@@ -40,8 +40,6 @@ By default, only the `hours` and `minutes` views are enabled.
 You can customize the enabled views using the `views` prop.
 Views will appear in the order they're included in the `views` array.
 
-The `DigitalClock` component is built to work only with `hours` view, providing it with any more views will have no effect as the prop value will be ignored.
-
 {{"demo": "DigitalClockViews.js"}}
 
 ## 12h/24h format
