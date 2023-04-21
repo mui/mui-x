@@ -281,7 +281,7 @@ export const useGridClipboardImport = (
         return;
       }
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-      if (String.fromCharCode(event.keyCode) !== 'V' || !isModifierKeyPressed) {
+      if (event.code !== 'KeyV' || !isModifierKeyPressed) {
         return;
       }
 
