@@ -10,7 +10,7 @@ import {
 import { createRenderer, fireEvent, userEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub, SinonStub, spy } from 'sinon';
-import { getCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnValues, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPremium /> - Clipboard', () => {
@@ -577,6 +577,10 @@ describe('<DataGridPremium /> - Clipboard', () => {
         />,
       );
 
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'GBPEUR', 'JPYUSD']);
+      });
+
       const cell = getCell(0, 1);
       cell.focus();
       userEvent.mousePress(cell);
@@ -585,6 +589,60 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       await waitFor(() => {
         expect(getColumnValues(1)).to.deep.equal(['123', 'USDEUR', 'GBPEUR', 'JPYUSD']);
+      });
+    });
+
+    it('should not update the row if `processRowUpdate` throws an error', async () => {
+      render(
+        <Test
+          processRowUpdate={() => {
+            throw new Error();
+          }}
+          onProcessRowUpdateError={() => {}} // suppress error
+        />,
+      );
+
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'GBPEUR', 'JPYUSD']);
+      });
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      paste(cell, '12');
+
+      // wait to make sure that the row is not updated
+      await sleep(200);
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'GBPEUR', 'JPYUSD']);
+      });
+    });
+
+    it('should not update the row if `processRowUpdate` returns a rejected promise', async () => {
+      render(
+        <Test
+          processRowUpdate={() => {
+            return Promise.reject();
+          }}
+          onProcessRowUpdateError={() => {}} // suppress error
+        />,
+      );
+
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'GBPEUR', 'JPYUSD']);
+      });
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      paste(cell, '12');
+
+      // wait to make sure that the row is not updated
+      await sleep(200);
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'GBPEUR', 'JPYUSD']);
       });
     });
 
