@@ -7,8 +7,6 @@ import JoyFormControl from '@mui/joy/FormControl';
 import JoyFormLabel from '@mui/joy/FormLabel';
 import JoyButton from '@mui/joy/Button';
 import JoyIconButton from '@mui/joy/IconButton';
-import JoySelect from '@mui/joy/Select';
-import JoyOption from '@mui/joy/Option';
 import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
@@ -170,80 +168,21 @@ const Switch = React.forwardRef<
           onClick: onClick as JSX.IntrinsicElements['input']['onClick'],
           ref: inputRef,
         },
+        thumb: {
+          children: icon,
+        },
       }}
-      sx={sx as SxProps<Theme>}
+      sx={
+        [
+          {
+            ...(edge === 'start' && { ml: '-8px' }),
+            ...(edge === 'end' && { mr: '-8px' }),
+          },
+          ...(Array.isArray(sx) ? sx : [sx]),
+        ] as SxProps<Theme>
+      }
     />
   );
-});
-
-const Select = React.forwardRef<any, NonNullable<GridSlotsComponentsProps['baseSelect']>>(
-  function Select(
-    {
-      name,
-      labelId,
-      label,
-      open,
-      onOpen,
-      inputRef,
-      inputProps,
-      MenuProps,
-      fullWidth,
-      native,
-      color,
-      size,
-      sx,
-      variant,
-      onChange,
-      ...props
-    },
-    ref,
-  ) {
-    return (
-      // @ts-expect-error the `onClose` needs to be fixed from the core.
-      <JoySelect
-        {...props}
-        listboxOpen={open}
-        color={convertColor(color)}
-        size={convertSize(size)}
-        variant={convertVariant(variant)}
-        onChange={(event, newValue) => {
-          if (onChange && event) {
-            // Redefine target to allow name and value to be read.
-            // This allows seamless integration with the most popular form libraries.
-            // https://github.com/mui/material-ui/issues/13485#issuecomment-676048492
-            // Clone the event to not override `target` of the original event.
-            const nativeEvent = event?.nativeEvent || event;
-            // @ts-ignore
-            const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
-
-            Object.defineProperty(clonedEvent, 'target', {
-              writable: true,
-              value: { value: newValue, name },
-            });
-            onChange(clonedEvent, null);
-          }
-        }}
-        slotProps={{
-          button: {
-            ...(inputProps as JSX.IntrinsicElements['button']),
-            ref: inputRef,
-          },
-        }}
-        onClose={() => {
-          MenuProps?.onClose?.({}, 'backdropClick');
-        }}
-        ref={ref}
-        sx={sx as SxProps<Theme>}
-      />
-    );
-  },
-);
-
-const Option = React.forwardRef<
-  HTMLLIElement,
-  NonNullable<GridSlotsComponentsProps['baseSelectOption']>
->(function Option({ native, ...props }, ref) {
-  return <JoyOption {...props} ref={ref} />;
 });
 
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
@@ -252,9 +191,9 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseButton: Button,
   baseIconButton: IconButton,
   baseSwitch: Switch,
-  baseSelect: Select,
-  baseSelectOption: Option,
   // BaseFormControl: MUIFormControl,
+  // baseSelect: Select,
+  // baseSelectOption: Option,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
 };
