@@ -170,9 +170,9 @@ If the selected value is used to interact with the server, you might want to avo
 Especially if the user is setting the date using the arrow interaction.
 
 In such a case, the recommended UI is to add a button for validating the form.
-If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debouce the `onChange` as follow.
+If for some reason, you need to send the data to the server without having the user pressing a validation button, you can debounce the `onChange` as follows.
 
-In the following demo, `<DateField />` is extended adding an `onAccept` prop which is a debounced version of the `onChange`.
+The following demo shows how to extend the Date Field component by adding an `onAccept` prop, which is a debounced version of `onChange`.
 
 {{"demo": "ServerInteraction.js"}}
 
