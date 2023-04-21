@@ -943,5 +943,41 @@ describe('<DataGridPremium /> - Clipboard', () => {
         await waitFor(() => expect(targetCell.textContent).to.equal(sourceCell.textContent));
       });
     });
+
+    it('should use `unstable_splitClipboardText` prop to parse the clipboard string', async () => {
+      const cellDelimiter = ',';
+      const rowDelimiter = ';\n';
+
+      const splitClipboardText = (text: string) =>
+        text.split(rowDelimiter).map((row) => row.split(cellDelimiter));
+
+      render(<Test rowLength={5} colLength={5} unstable_splitClipboardText={splitClipboardText} />);
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(2, 2), { shiftKey: true });
+
+      const clipboardData = [
+        ['01', '02'],
+        ['11', '12'],
+        ['21', '22'],
+      ]
+        .map((row) => row.join(cellDelimiter))
+        .join(rowDelimiter);
+      paste(cell, clipboardData);
+
+      // selected cells should be updated
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text('01');
+      });
+      expect(getCell(0, 2)).to.have.text('02');
+      expect(getCell(1, 1)).to.have.text('11');
+      expect(getCell(1, 2)).to.have.text('12');
+      expect(getCell(2, 1)).to.have.text('21');
+      expect(getCell(2, 2)).to.have.text('22');
+    });
   });
 });

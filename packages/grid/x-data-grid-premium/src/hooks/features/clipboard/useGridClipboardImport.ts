@@ -255,22 +255,6 @@ class CellValueUpdater {
   }
 }
 
-export function parseClipboardString(
-  string?: string,
-  cellDelimiter: string = '\t',
-  rowDelimiter: string = '\n',
-) {
-  if (!string) {
-    return null;
-  }
-  // support both \n and \r\n
-  const rows = string.replace(/\r/g, '').split(rowDelimiter);
-  const data = rows.map((rowString) => {
-    return rowString.split(cellDelimiter);
-  });
-  return data;
-}
-
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -283,6 +267,7 @@ export const useGridClipboardImport = (
     | 'onClipboardPasteStart'
     | 'onClipboardPasteEnd'
     | 'experimentalFeatures'
+    | 'unstable_splitClipboardText'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
@@ -290,6 +275,8 @@ export const useGridClipboardImport = (
   const getRowId = props.getRowId;
   const enableClipboardPaste = props.experimentalFeatures?.clipboardPaste ?? false;
   const rootEl = apiRef.current.rootElementRef?.current;
+
+  const splitClipboardText = props.unstable_splitClipboardText;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -318,8 +305,11 @@ export const useGridClipboardImport = (
       event.defaultMuiPrevented = true;
 
       const text = await getTextFromClipboard(rootEl);
-      const pastedData = parseClipboardString(text);
+      if (!text) {
+        return;
+      }
 
+      const pastedData = splitClipboardText(text);
       if (!pastedData) {
         return;
       }
@@ -434,6 +424,7 @@ export const useGridClipboardImport = (
       getRowId,
       enableClipboardPaste,
       rootEl,
+      splitClipboardText,
     ],
   );
 

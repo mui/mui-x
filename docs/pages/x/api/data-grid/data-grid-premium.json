@@ -264,7 +264,8 @@
       },
       "default": ": false"
     },
-    "unstable_onCellSelectionModelChange": { "type": { "name": "func" } }
+    "unstable_onCellSelectionModelChange": { "type": { "name": "func" } },
+    "unstable_splitClipboardText": { "type": { "name": "func" } }
   },
   "slots": {
     "baseButton": { "default": "Button", "type": { "name": "elementType" } },

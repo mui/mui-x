@@ -956,4 +956,11 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   unstable_onCellSelectionModelChange: PropTypes.func,
+  /**
+   * The function is used to split the clipboard text into rows and cells.
+   * @param {string} text The text pasted from the clipboard.
+   * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
+   * @default `(text) => text.split(/\r\n|\n|\r/).map((row) => row.split('\t'))`
+   */
+  unstable_splitClipboardText: PropTypes.func,
 } as any;
