@@ -646,6 +646,34 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
     });
 
+    it('should call `onProcessRowUpdateError` if `processRowUpdate` fails', async () => {
+      const onProcessRowUpdateError = spy();
+      const error = new Error('Something went wrong');
+      render(
+        <Test
+          processRowUpdate={() => {
+            throw error;
+          }}
+          onProcessRowUpdateError={onProcessRowUpdateError}
+        />,
+      );
+
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['USDGBP', 'USDEUR', 'GBPEUR', 'JPYUSD']);
+      });
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      paste(cell, '12');
+
+      await waitFor(() => {
+        expect(onProcessRowUpdateError.callCount).to.equal(1);
+        expect(onProcessRowUpdateError.args[0][0]).to.equal(error);
+      });
+    });
+
     it('should emit clipboard paste events', async () => {
       const calls: string[] = [];
       const onClipboardPasteStartSpy = spy(() => {
