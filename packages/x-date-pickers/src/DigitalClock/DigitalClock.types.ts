@@ -27,7 +27,7 @@ export interface DigitalClockSlotsComponentsProps {
 
 export interface DigitalClockProps<TDate>
   extends ExportedDigitalClockProps<TDate>,
-    BaseClockProps<TDate, TimeView> {
+    BaseClockProps<TDate, Extract<TimeView, 'hours'>> {
   /**
    * Override or extend the styles applied to the component.
    */

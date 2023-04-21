@@ -20,24 +20,14 @@
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
-    "focusedView": {
-      "type": {
-        "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
-    },
+    "focusedView": { "type": { "name": "enum", "description": "'hours'" } },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onChange": { "type": { "name": "func" } },
     "onFocusedViewChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
-    "openTo": {
-      "type": {
-        "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
-    },
+    "openTo": { "type": { "name": "enum", "description": "'hours'" } },
     "readOnly": { "type": { "name": "bool" } },
     "shouldDisableClock": {
       "type": { "name": "func" },
@@ -62,18 +52,8 @@
       "default": "{ hours: 1, minutes: 5, seconds: 5 }"
     },
     "value": { "type": { "name": "any" } },
-    "view": {
-      "type": {
-        "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
-    },
-    "views": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      }
-    }
+    "view": { "type": { "name": "enum", "description": "'hours'" } },
+    "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }
   },
   "slots": {
     "DigitalClockItem": {

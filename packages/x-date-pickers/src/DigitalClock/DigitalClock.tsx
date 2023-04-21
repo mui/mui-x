@@ -128,7 +128,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     onChange?.(newValue, 'finish');
   });
 
-  const { setValueAndGoToNextView } = useViews<TDate | null, TimeView>({
+  const { setValueAndGoToNextView } = useViews<TDate | null, Extract<TimeView, 'hours'>>({
     view: inView,
     views,
     openTo,
@@ -320,7 +320,7 @@ DigitalClock.propTypes = {
   /**
    * Controlled focused view.
    */
-  focusedView: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  focusedView: PropTypes.oneOf(['hours']),
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -361,7 +361,7 @@ DigitalClock.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['hours']),
   /**
    * If `true`, the picker views and text field are read-only.
    * @default false
@@ -425,9 +425,9 @@ DigitalClock.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours']),
   /**
    * Available views.
    */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours'])),
 } as any;

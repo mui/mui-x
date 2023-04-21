@@ -113,7 +113,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
-}: TimeViewRendererProps<TimeView, DigitalClockProps<TDate>>) => (
+}: TimeViewRendererProps<Extract<TimeView, 'hours'>, DigitalClockProps<TDate>>) => (
   <DigitalClock<TDate>
     view={view}
     onViewChange={onViewChange}
