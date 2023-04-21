@@ -4,8 +4,8 @@ import { Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useViews, UseViewsOptions } from '../useViews';
-import type { UsePickerValueViewsResponse } from './usePickerValue.types';
-import { isTimeView } from '../../utils/time-utils';
+import type { PickerSelectionState, UsePickerValueViewsResponse } from './usePickerValue.types';
+import { isInternalTimeView, isTimeView } from '../../utils/time-utils';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
@@ -146,7 +146,7 @@ export const usePickerViews = <
   const { views, openTo, onViewChange, disableOpenPicker, viewRenderers } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
-  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
+  const { view, setView, defaultView, focusedView, setFocusedView, goToNextView, nextView } =
     useViews({
       view: undefined,
       views,
@@ -155,6 +155,23 @@ export const usePickerViews = <
       onViewChange,
       autoFocus: autoFocusView,
     });
+
+  const handleChange = useEventCallback(
+    (value: TValue, currentViewSelectionState?: PickerSelectionState) => {
+      // If the next view is of different view kind:
+      // `date` views -> `time` views
+      // `time` views -> `date` views
+      const hasNextDifferentKindView =
+        nextView && isInternalTimeView(view) !== isInternalTimeView(nextView);
+      if (currentViewSelectionState === 'finish') {
+        goToNextView();
+      }
+
+      // handles case of not `DateTimePicker`, where a view might return a `finish` selection state
+      // but we still have views of different kind -> time and overall selection state should be `partial`.
+      onChange(value, hasNextDifferentKindView ? 'partial' : currentViewSelectionState);
+    },
+  );
 
   const { hasUIView, viewModeLookup } = React.useMemo(
     () =>
@@ -265,7 +282,7 @@ export const usePickerViews = <
         ...additionalViewProps,
         ...propsFromPickerValue,
         views,
-        onChange: setValueAndGoToNextView,
+        onChange: handleChange,
         view: popperView,
         onViewChange: setView,
         focusedView,

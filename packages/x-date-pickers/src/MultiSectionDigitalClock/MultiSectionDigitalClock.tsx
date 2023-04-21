@@ -118,10 +118,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     return inViews.includes('meridiem') ? inViews : [...inViews, 'meridiem'];
   }, [ampm, inViews]);
 
-  const { view, setValueAndGoToNextView, setValueAndGoToView, focusedView } = useViews<
-    TDate | null,
-    TimeViewWithMeridiem
-  >({
+  const { view, setValueAndGoToView, focusedView } = useViews<TDate | null, TimeViewWithMeridiem>({
     view: inView,
     views,
     openTo,
@@ -136,10 +133,14 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     [value, now, utils],
   );
 
+  const handleMeridiemValueChange = useEventCallback((newValue: TDate | null) => {
+    setValueAndGoToView(newValue, null);
+  });
+
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
     selectedTimeOrMidnight,
     ampm,
-    setValueAndGoToNextView,
+    handleMeridiemValueChange,
     'finish',
   );
 
