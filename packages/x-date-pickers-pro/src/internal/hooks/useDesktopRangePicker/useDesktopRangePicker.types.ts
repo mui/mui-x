@@ -88,7 +88,7 @@ export interface UseDesktopRangePickerParams<
       TExternalProps,
       DesktopRangePickerAdditionalViewProps
     >,
-    'valueManager' | 'validator'
+    'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
 }

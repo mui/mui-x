@@ -12,9 +12,11 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
   });
 
   it('Method: getFormatHelperText', () => {
-    expect(adapter.getFormatHelperText(adapter.formats.keyboardDate)).to.equal('mm/dd/yyyy');
+    expect(adapter.getFormatHelperText(adapter.formats.keyboardDate)).to.equal(
+      adapter.lib === 'luxon' ? 'm/d/yyyy' : 'mm/dd/yyyy',
+    );
     expect(adapter.getFormatHelperText(adapter.formats.keyboardDateTime12h)).to.equal(
-      'mm/dd/yyyy hh:mm (a|p)m',
+      adapter.lib === 'luxon' ? 'm/d/yyyy hh:mm (a|p)m' : 'mm/dd/yyyy hh:mm (a|p)m',
     );
   });
 };

@@ -12,13 +12,13 @@ const formatTokenMap: FieldFormatTokenMap = {
   jYYYY: 'year',
 
   // Month
-  jM: 'month',
+  jM: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
   jMM: 'month',
   jMMM: { sectionType: 'month', contentType: 'letter' },
   jMMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of the month
-  jD: 'day',
+  jD: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
   jDD: 'day',
 
   // Meridiem
@@ -26,19 +26,19 @@ const formatTokenMap: FieldFormatTokenMap = {
   a: 'meridiem',
 
   // Hours
-  H: 'hours',
+  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   HH: 'hours',
-  h: 'hours',
+  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
-  k: 'hours',
+  k: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   kk: 'hours',
 
   // Minutes
-  m: 'minutes',
+  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
   mm: 'minutes',
 
   // Seconds
-  s: 'seconds',
+  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
   ss: 'seconds',
 };
 

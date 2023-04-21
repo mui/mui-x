@@ -50,7 +50,7 @@ export interface UseStaticRangePickerParams<
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<DateRange<TDate>, TDate, TView, RangeFieldSection, TExternalProps, {}>,
-    'valueManager' | 'validator'
+    'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
   /**

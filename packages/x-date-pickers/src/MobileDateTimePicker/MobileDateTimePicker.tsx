@@ -71,6 +71,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date-time',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDateTime,
   });
