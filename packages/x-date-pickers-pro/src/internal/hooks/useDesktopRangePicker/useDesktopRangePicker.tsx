@@ -35,8 +35,7 @@ export const useDesktopRangePicker = <
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
-  validator,
+  ...pickerParams
 }: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
@@ -76,10 +75,9 @@ export const useDesktopRangePicker = <
     TExternalProps,
     DesktopRangePickerAdditionalViewProps
   >({
+    ...pickerParams,
     props,
-    valueManager,
     wrapperVariant: 'desktop',
-    validator,
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,

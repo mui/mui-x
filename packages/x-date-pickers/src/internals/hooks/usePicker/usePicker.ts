@@ -23,6 +23,7 @@ export const usePicker = <
 >({
   props,
   valueManager,
+  valueType,
   wrapperVariant,
   inputRef,
   additionalViewProps,
@@ -44,6 +45,7 @@ export const usePicker = <
   const pickerValueResponse = usePickerValue({
     props,
     valueManager,
+    valueType,
     wrapperVariant,
     validator,
   });

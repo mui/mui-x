@@ -85,7 +85,7 @@ export interface UseMobileRangePickerParams<
       TExternalProps,
       MobileRangePickerAdditionalViewProps
     >,
-    'valueManager' | 'validator'
+    'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
 }
