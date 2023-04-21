@@ -56,8 +56,10 @@ export const CartesianContext = React.createContext<{
   yAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
+  xAxisIds: string[];
+  yAxisIds: string[];
   // @ts-ignore
-}>({ xAxis: {}, yAxis: {} });
+}>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
 export function CartesianContextProvider({
   xAxis,
@@ -149,7 +151,12 @@ export function CartesianContextProvider({
       };
     });
 
-    return { xAxis: completedXAxis, yAxis: completedYAxis };
+    return {
+      xAxis: completedXAxis,
+      yAxis: completedYAxis,
+      xAxisIds: [...(xAxis ?? []), { id: DEFAULT_X_AXIS_KEY }]?.map(({ id }) => id),
+      yAxisIds: [...(yAxis ?? []), { id: DEFAULT_Y_AXIS_KEY }]?.map(({ id }) => id),
+    };
   }, [
     drawingArea.height,
     drawingArea.left,

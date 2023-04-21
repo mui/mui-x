@@ -46,6 +46,7 @@ function addDeployPreviewUrls() {
     return url
       .replace('data-grid/', 'react-data-grid/')
       .replace('date-pickers/', 'react-date-pickers/')
+      .replace('charts/', 'react-charts/')
       .replace(/\/[^/]+\.md$/, '/');
   }
 
