@@ -7,13 +7,11 @@ packageName: '@mui/x-date-pickers'
 
 # Components lifecycle
 
-<p class="description">This page explains when callbacks like `onChange`, `onAccept`, `onOpen` or `onClose` are called.</p>
+<p class="description">This page explains when the callbacks onChange, onAccept and onClose are called.</p>
 
-## Fields lifecycle
+## When is `onChange` called on fields ?
 
-### When is `onChange` called ?
-
-#### On simple fields
+### On simple fields
 
 :::info
 The information below are applicable on standalone fields (when rendering `<DateField />`),
@@ -33,7 +31,7 @@ In the example below, `onChange` will be called when any of the conditions are t
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
-#### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
 `onChange` will be called if the date you are modifying is matching one of the condition above,
@@ -43,13 +41,15 @@ In the example below, changing the value of the start date section will call `on
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
-## Pickers lifecycle
+## When is `onClose` called on pickers ?
 
-### When is `onClose` called ?
+:::info
+If you are not controlling the `open` prop, then the all the scenarios below describe when the picker closes.
+:::
 
-#### When the last view is completed and `closeOnSelect={true}`
+### When the last view is completed
 
-The `closeOnSelect` prop determines if the picker should close one the last view is completed.
+When the last view is completed, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
 By default, it is set to `true` on desktop and `false` on mobile.
 
 Here are a few examples:
@@ -77,7 +77,7 @@ The example below are using the desktop and mobile variant of the pickers, but t
   **Behavior:** The picker never close when selecting a value.
 
   :::warning
-  If you want to set `closeOnSelect` to `false` on a desktop picker, you should probably also enable the action bar to allow user to validate the value:
+  If you want to set `closeOnSelect` to `false` on a desktop picker, you should probably also enable the action bar to allow the user to validate the value:
 
   ```tsx
   <DesktopDatePicker
@@ -112,47 +112,123 @@ For example, on the `DatePicker`, the `year` and `month` views are not in the de
 so the picker will close even if you never went to those views.
 :::
 
-#### When the picker is manually closed
+### When the picker is manually closed
 
 Pressing <kbd class="key">Escape</kbd> or clicking outside the picker will close the picker.
 
-#### When a value is picked using the action bar
+### When a value is picked using the action bar
 
 Clicking on any built-in button of the action bar will close the picker.
 
-### When is `onChange` called ?
+## When is `onChange` called on pickers ?
 
-#### When the field used calls `onChange`
+### When the field used calls `onChange`
 
 When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` event.
 Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#when-is-onchange-called-on-fields) for more information.
 
-#### When the picker closes automatically
-
-On mobile, the picker will not automatically close, you have to manually close it using the [action bar buttons](/x/)
-
-#### When a view is completed
-
-#### When a value is picked using the action bar
+### When the user interacts with the view
 
 If the component is controlled (i.e: if it has a `value` prop),
-clicking on any built-in actions will call `onChange` if the newly published value is different from the current value.
+clicking on a value will call `onChange` if the value to publish is different from the current value
+(e.g: clicking on the already selected day in the `day` view will not call `onChange`).
 
-If the component is not controlled, clicking on the _Cancel_ button will call `onChange` if the newly published value is different from the current value.
-For the other built-in actions, `onChange` will be called if the newly published value is different from the last published value or if no value has ever be published.
+If the component is not controlled, the behavior is the same, the behavior is the same, except if no value has ever been published, in which case clicking on the current value will fire `onChange`
+(e.g: clicking on the already selected day in the `day` view will call `onChange` if `onChange` has never been called before).
 
-### When is `onAccept` called ?
+Some views can decide not to call `onChange` for some value modifications.
+The most common example are the mobile time views (using the `TimeClock` component) where `onChange` will only be fired once when stop dragging the hands of the clock even though the UI updates on each position change.
 
-#### When the picker closes automatically
+### When value is picked using the action bar
 
-#### When the picker is manually closed
+If the component is controlled (i.e: if it has a `value` prop),
+clicking on any built-in actions will call `onChange` if the value to publish is different from the current value
+
+If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_ and _OK_ action that will be published if no value has ever been published, even if the current value equals the value to publish
+
+## When is `onAccept` called on pickers ?
+
+### When the picker closes after the last view
+
+### When the picker is manually closed
 
 When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, we call `onAccept` with the last
 
 - if the last view has been completed, we call `onAccept` with the current value.
 - if the last view has not been completed, we call `onAccept` with the last validated value
 
-#### When a value is validated using the action bar
+### When a value is validated using the action bar
+
+## Classic scenarios
+
+### Date Picker
+
+#### Controlled `DesktopDatePicker`: basic usage
+
+```tsx
+<DesktopDatePicker value={value} onChange={(newValue) => setValue(newValue)} />
+```
+
+**Action n°1:** Opening the picker
+
+- Opens the picker on the `day` view
+
+**Action n°2:** Clicking on a day
+
+- Fires `onClose` (or closes the picker)
+- Fires `onChange` with the selected day (keeps the time of the previous value)
+- Fires `onAccept` with the selected day (keeps the time of the previous value)
+
+#### Controlled `DesktopDatePicker`: picking year, month and day
+
+```tsx
+<DesktopDatePicker
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+  views={['year', 'month', 'day']}
+/>
+```
+
+**Action n°1:** Opening the picker
+
+- Opens the picker on the `day` view
+
+**Action n°2:** Switch to the `year` view on the header
+
+**Action n°3:** Clicking on a year
+
+- Fires `onChange` with the selected year (keeps the month, date and time of the previous value)
+- Moves to the `month` view
+
+**Action n°4:** Clicking on a month
+
+- Fires `onChange` with the selected month (keeps the date and time of the previous value)
+- Moves to the `day` view
+
+**Action n°4:** Clicking on a day
+
+- Fires `onClose` (or closes the picker)
+- Fires `onChange` with the selected day (keeps the time of the previous value)
+- Fires `onAccept` with the value just passed to `onChange`
+
+#### Controlled `MobileDatePicker`: basic usage
+
+```tsx
+<MobileDatePicker value={value} onChange={(newValue) => setValue(newValue)} />
+```
+
+**Action n°1:** Opening the picker
+
+- Opens the picker on the `day` view
+
+**Action n°2:** Clicking on a day
+
+- Fires `onChange` with the selected day (keeps the time of the previous value)
+
+**Action n°3:** Clicking on the _OK_ action
+
+- Fires `onClose` (or closes the picker)
+- Fires `onAccept` with the value previously passed to `onChange`
 
 ## Only update when the value is valid
 
