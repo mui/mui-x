@@ -8,6 +8,7 @@ import { AreaElement } from './AreaElement';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { MarkElement } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
+import getCurveFactory from '../internals/getCurve';
 
 export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
@@ -59,10 +60,10 @@ export function LinePlot() {
             .x((d) => xScale(d.x))
             .y0((d) => yScale(d.y[0]))
             .y1((d) => yScale(d.y[1]));
-
           return stackingGroups.flatMap((groupIds) => {
             return groupIds.flatMap((seriesId) => {
               const stackedData = series[seriesId].stackedData;
+              const curve = getCurveFactory(series[seriesId].curve);
               const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
               return (
@@ -70,7 +71,7 @@ export function LinePlot() {
                   <AreaElement
                     key={seriesId}
                     id={seriesId}
-                    d={areaPath(d3Data) || undefined}
+                    d={areaPath.curve(curve)(d3Data) || undefined}
                     color={series[seriesId].area.color ?? series[seriesId].color}
                     {...getInteractionItemProps({ type: 'line', seriesId })}
                   />
@@ -104,13 +105,14 @@ export function LinePlot() {
           return stackingGroups.flatMap((groupIds) => {
             return groupIds.flatMap((seriesId) => {
               const stackedData = series[seriesId].stackedData;
+              const curve = getCurveFactory(series[seriesId].curve);
               const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
               return (
                 <LineElement
                   key={seriesId}
                   id={seriesId}
-                  d={linePath(d3Data) || undefined}
+                  d={linePath.curve(curve)(d3Data) || undefined}
                   color={series[seriesId].color}
                   {...getInteractionItemProps({ type: 'line', seriesId })}
                 />
