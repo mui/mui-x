@@ -7,11 +7,13 @@ import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 
 const shouldDisableTime = (value, view) => {
+  const hour = value.hour();
   if (view === 'hours') {
-    return value.hour() % 2 === 0;
+    return hour < 9 || hour > 13;
   }
   if (view === 'minutes') {
-    return value.minute() % 10 === 0;
+    const minute = value.minute();
+    return minute > 20 && hour === 13;
   }
   return false;
 };
@@ -33,7 +35,7 @@ export default function DigitalClockSkipDisabled() {
           <MultiSectionDigitalClock
             skipDisabled
             shouldDisableTime={shouldDisableTime}
-            defaultValue={dayjs('2022-04-17T01:05')}
+            ampm={false}
           />
         </DemoItem>
       </DemoContainer>

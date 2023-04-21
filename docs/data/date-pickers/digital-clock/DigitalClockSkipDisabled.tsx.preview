@@ -11,6 +11,6 @@
   <MultiSectionDigitalClock
     skipDisabled
     shouldDisableTime={shouldDisableTime}
-    defaultValue={dayjs('2022-04-17T01:05')}
+    ampm={false}
   />
 </DemoItem>

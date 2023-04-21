@@ -71,6 +71,9 @@ With the `skipDisabled` prop, the components don't render options that are not a
 
 The following example combines these properties to customize which options are rendered.
 
+- The first component does not show options before `9:00` (the value of `minTime`).
+- The second one shows options between `09:00` and `13:20` thanks to `shouldDisableTime`.
+
 {{"demo": "DigitalClockSkipDisabled.js"}}
 
 ## Validation
