@@ -255,6 +255,22 @@ class CellValueUpdater {
   }
 }
 
+export function parseClipboardString(
+  string?: string,
+  cellDelimiter: string = '\t',
+  rowDelimiter: string = '\n',
+) {
+  if (!string) {
+    return null;
+  }
+  // support both \n and \r\n
+  const rows = string.replace(/\r/g, '').split(rowDelimiter);
+  const data = rows.map((rowString) => {
+    return rowString.split(cellDelimiter);
+  });
+  return data;
+}
+
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -302,7 +318,9 @@ export const useGridClipboardImport = (
       event.defaultMuiPrevented = true;
 
       const text = await getTextFromClipboard(rootEl);
-      if (!text) {
+      const pastedData = parseClipboardString(text);
+
+      if (!pastedData) {
         return;
       }
 
@@ -313,22 +331,18 @@ export const useGridClipboardImport = (
         getRowId,
       });
 
-      // support both \n and \r\n
-      const rowsData = text.replace(/\r/g, '').split('\n');
-
-      const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
+      const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
 
       const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
       if (cellSelectionModel && apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
         Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
-          const rowDataString = rowsData[isSingleValuePasted ? 0 : rowIndex];
-          const hasRowData = isSingleValuePasted ? true : rowDataString !== undefined;
+          const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
+          const hasRowData = isSingleValuePasted ? true : rowDataArr !== undefined;
           if (!hasRowData) {
             return;
           }
-          const rowData = rowDataString.split('\t');
           Object.keys(cellSelectionModel[rowId]).forEach((field, colIndex) => {
-            const cellValue = isSingleValuePasted ? rowsData[0] : rowData[colIndex];
+            const cellValue = isSingleValuePasted ? rowDataArr[0] : rowDataArr[colIndex];
             cellUpdater.updateCell({ rowId, field, pastedCellValue: cellValue });
           });
         });
@@ -348,23 +362,23 @@ export const useGridClipboardImport = (
 
       if (selectedRows.size > 0 && !isSingleValuePasted) {
         // Multiple values are pasted starting from the first and top-most cell
-        const pastedRowsDataCount = rowsData.length;
+        const pastedRowsDataCount = pastedData.length;
 
         // There's no guarantee that the selected rows are in the same order as the pasted rows
         selectedRows.forEach((row, rowId) => {
-          let rowData: string | undefined;
+          let rowData: string[] | undefined;
           if (pastedRowsDataCount === 1) {
             // If only one row is pasted - paste it to all selected rows
-            rowData = rowsData[0];
+            rowData = pastedData[0];
           } else {
-            rowData = rowsData.shift();
+            rowData = pastedData.shift();
           }
 
           if (rowData === undefined) {
             return;
           }
 
-          rowData.split('\t').forEach((newCellValue, cellIndex) => {
+          rowData.forEach((newCellValue, cellIndex) => {
             cellUpdater.updateCell({
               rowId,
               field: visibleColumnFields[cellIndex],
@@ -394,8 +408,7 @@ export const useGridClipboardImport = (
       });
 
       const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
-      rowsData.forEach((rowData, index) => {
-        const parsedData = rowData.split('\t');
+      pastedData.forEach((rowData, index) => {
         const targetRow = visibleRows.rows[selectedRowIndex + index];
 
         if (!targetRow) {
@@ -405,7 +418,7 @@ export const useGridClipboardImport = (
         const rowId = targetRow.id;
         for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
           const field = visibleColumnFields[i];
-          const stringValue = parsedData[i - selectedFieldIndex];
+          const stringValue = rowData[i - selectedFieldIndex];
           cellUpdater.updateCell({ rowId, field, pastedCellValue: stringValue });
         }
       });
