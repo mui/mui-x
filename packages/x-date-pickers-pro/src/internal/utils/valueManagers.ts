@@ -24,7 +24,10 @@ export type RangePickerValueManager<
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  getTodayValue: (utils, valueType) =>
+    valueType === 'date'
+      ? [utils.startOfDay(utils.date())!, utils.startOfDay(utils.date())!]
+      : [utils.date()!, utils.date()!],
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
   areValuesEqual: (utils, a, b) =>
