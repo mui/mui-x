@@ -25,10 +25,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'I dag',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Velg dato',
+  dateTimePickerToolbarTitle: 'Velg dato & klokkeslett',
+  timePickerToolbarTitle: 'Velg klokkeslett',
+  dateRangePickerToolbarTitle: 'Velg datoperiode',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -40,10 +40,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
 
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Ukenummer',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Uke ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

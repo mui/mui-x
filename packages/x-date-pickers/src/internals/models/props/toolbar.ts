@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateOrTimeView } from '../views';
+import { DateOrTimeView } from '../../../models';
 
 export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   extends ExportedBaseToolbarProps {

@@ -234,7 +234,7 @@ However, some types require additional properties to be set to make them work co
   // Without getOptionValue and getOptionLabel
   {
     valueOptions: [
-      { value: 'BR', label: 'Brazil' }
+      { value: 'BR', label: 'Brazil' },
       { value: 'FR', label: 'France' }
     ]
   }
@@ -244,7 +244,7 @@ However, some types require additional properties to be set to make them work co
     getOptionValue: (value: any) => value.code,
     getOptionLabel: (value: any) => value.name,
     valueOptions: [
-      { code: 'BR', name: 'Brazil' }
+      { code: 'BR', name: 'Brazil' },
       { code: 'FR', name: 'France' }
     ]
   }

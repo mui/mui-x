@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import { SlotComponentProps } from '@mui/base/utils';
 import { PickersActionBarProps } from '../PickersActionBar';
-import { DateOrTimeView } from '../internals/models/views';
+import { DateOrTimeView } from '../models';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';

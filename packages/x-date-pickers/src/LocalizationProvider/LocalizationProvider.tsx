@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DateIOFormats } from '@date-io/core/IUtils';
 import { useThemeProps } from '@mui/material/styles';
-import { MuiPickersAdapter } from '../internals/models';
+import { AdapterFormats, MuiPickersAdapter } from '../models';
 import { PickersInputLocaleText } from '../locales';
 
 export interface MuiPickersAdapterContextValue<TDate> {
@@ -30,11 +29,11 @@ export interface LocalizationProviderProps<TDate> {
   children?: React.ReactNode;
   /**
    * Date library adapter class function.
-   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#code-setup code setup section} for more details.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
    */
   dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate>;
   /** Formats that are used for any child pickers */
-  dateFormats?: Partial<DateIOFormats>;
+  dateFormats?: Partial<AdapterFormats>;
   /**
    * Date library instance you are using, if it has some global overrides
    * ```jsx
@@ -149,7 +148,7 @@ LocalizationProvider.propTypes = {
   children: PropTypes.node,
   /**
    * Date library adapter class function.
-   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#code-setup code setup section} for more details.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#setup-your-date-library-adapter date adapter setup section} for more details.
    */
   dateAdapter: PropTypes.func,
   /**

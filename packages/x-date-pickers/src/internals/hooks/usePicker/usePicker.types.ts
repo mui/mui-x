@@ -1,10 +1,9 @@
-import { DateOrTimeView } from '../../models/views';
 import {
   UsePickerValueParams,
   UsePickerValueProps,
   UsePickerValueBaseProps,
   UsePickerValueResponse,
-} from './usePickerValue';
+} from './usePickerValue.types';
 import {
   UsePickerViewsProps,
   UsePickerViewParams,
@@ -12,7 +11,7 @@ import {
   UsePickerViewsBaseProps,
 } from './usePickerViews';
 import { UsePickerLayoutProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
-import { FieldSection } from '../useField';
+import { FieldSection, DateOrTimeView } from '../../../models';
 
 /**
  * Props common to all picker headless implementations.
@@ -47,7 +46,7 @@ export interface UsePickerParams<
   TAdditionalProps extends {},
 > extends Pick<
       UsePickerValueParams<TValue, TDate, TSection, TExternalProps>,
-      'valueManager' | 'wrapperVariant' | 'validator'
+      'valueManager' | 'valueType' | 'wrapperVariant' | 'validator'
     >,
     Pick<
       UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
