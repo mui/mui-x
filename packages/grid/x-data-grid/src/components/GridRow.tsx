@@ -56,7 +56,7 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   tabbableCell: string | null;
   row?: GridRowModel;
   isLastVisible?: boolean;
-  indexOfColumnWithFocusedCellNotInRange?: number;
+  columnWithFocusedCellNotInRange?: GridStateColDef;
   isNotVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -115,7 +115,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     firstColumnToRender,
     lastColumnToRender,
     isLastVisible = false,
-    indexOfColumnWithFocusedCellNotInRange,
+    columnWithFocusedCellNotInRange,
     isNotVisible,
     focusedCell,
     tabbableCell,
@@ -300,8 +300,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       let cellIsNotVisible = false;
 
       if (
-        indexOfColumnWithFocusedCellNotInRange &&
-        visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field
+        columnWithFocusedCellNotInRange &&
+        columnWithFocusedCellNotInRange.field === column.field
       ) {
         cellIsNotVisible = true;
       } else {
@@ -393,8 +393,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       rowReordering,
       sortModel.length,
       focusedCell,
-      indexOfColumnWithFocusedCellNotInRange,
-      visibleColumns,
+      columnWithFocusedCellNotInRange,
       treeDepth,
       editRowsState,
       getCellClassName,
@@ -479,19 +478,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const rowType = apiRef.current.getRowNode(rowId)!.type;
   const cells: JSX.Element[] = [];
 
-  const columnWithFocusedCellNotInRange =
-    indexOfColumnWithFocusedCellNotInRange &&
-    visibleColumns[indexOfColumnWithFocusedCellNotInRange];
-
-  if (columnWithFocusedCellNotInRange) {
-    if (!renderedColumns.includes(columnWithFocusedCellNotInRange) && focusedCell) {
-      renderedColumns.unshift(columnWithFocusedCellNotInRange);
-    }
-    if (renderedColumns.includes(columnWithFocusedCellNotInRange) && !focusedCell) {
-      renderedColumns.shift();
-    }
-  }
-
   for (let i = 0; i < renderedColumns.length; i += 1) {
     const column = renderedColumns[i];
 
@@ -502,8 +488,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       columnWithFocusedCellNotInRange.field === column.field &&
       focusedCell
     ) {
-      indexRelativeToAllColumns = indexOfColumnWithFocusedCellNotInRange;
-    } else if (indexOfColumnWithFocusedCellNotInRange && focusedCell) {
+      indexRelativeToAllColumns = visibleColumns.indexOf(columnWithFocusedCellNotInRange);
+    } else if (columnWithFocusedCellNotInRange && focusedCell) {
       indexRelativeToAllColumns -= 1;
     }
 
@@ -587,7 +573,7 @@ GridRow.propTypes = {
    * If some rows above have expanded children, this index also take those children into account.
    */
   index: PropTypes.number,
-  indexOfColumnWithFocusedCellNotInRange: PropTypes.number,
+  columnWithFocusedCellNotInRange: PropTypes.arrayOf(PropTypes.object),
   isLastVisible: PropTypes.bool,
   isNotVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number,

@@ -162,12 +162,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         const renderedColumns = columns.slice(firstColumnToRender, lastColumnToRender);
 
         if (indexOfColumnWithFocusedCell > -1) {
+          // check if it is not on the left pinned column.
           if (
             firstColumnToRender > indexOfColumnWithFocusedCell &&
             indexOfColumnWithFocusedCell >= minFirstColumn
           ) {
             indexOfColumnWithFocusedCellNotInRange = indexOfColumnWithFocusedCell;
-          } else if (
+          }
+          // check if it is not on the right pinned column.
+          else if (
             lastColumnToRender < indexOfColumnWithFocusedCell &&
             indexOfColumnWithFocusedCell < maxLastColumn
           ) {
@@ -646,6 +649,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       const focusedCell = cellFocus !== null && cellFocus.id === id ? cellFocus.field : null;
 
+      const columnWithFocusedCellNotInRange =
+        indexOfColumnWithFocusedCellNotInRange &&
+        visibleColumns[indexOfColumnWithFocusedCellNotInRange];
+
+      const renderedColumnsWithFocusedCell =
+        columnWithFocusedCellNotInRange && focusedCell
+          ? [columnWithFocusedCellNotInRange, ...renderedColumns]
+          : renderedColumns;
+
       let tabbableCell: GridRowProps['tabbableCell'] = null;
       if (cellTabIndex !== null && cellTabIndex.id === id) {
         const cellParams = apiRef.current.getCellParams(id, cellTabIndex.field);
@@ -668,12 +680,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           key={id}
           row={model}
           rowId={id}
-          indexOfColumnWithFocusedCellNotInRange={indexOfColumnWithFocusedCellNotInRange}
+          columnWithFocusedCellNotInRange={columnWithFocusedCellNotInRange}
           isNotVisible={isRowNotVisible}
           rowHeight={baseRowHeight}
           focusedCell={focusedCell}
           tabbableCell={tabbableCell}
-          renderedColumns={renderedColumns}
+          renderedColumns={renderedColumnsWithFocusedCell}
           visibleColumns={visibleColumns}
           firstColumnToRender={firstColumnToRender}
           lastColumnToRender={lastColumnToRender}
