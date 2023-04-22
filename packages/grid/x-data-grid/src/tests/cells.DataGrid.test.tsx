@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
-import { getActiveCell, getCell } from 'test/utils/helperFn';
+import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

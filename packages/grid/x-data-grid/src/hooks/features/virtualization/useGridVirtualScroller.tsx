@@ -680,7 +680,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           key={id}
           row={model}
           rowId={id}
-          columnWithFocusedCellNotInRange={columnWithFocusedCellNotInRange}
+          indexOfColumnWithFocusedCellNotInRange={indexOfColumnWithFocusedCellNotInRange}
           isNotVisible={isRowNotVisible}
           rowHeight={baseRowHeight}
           focusedCell={focusedCell}
