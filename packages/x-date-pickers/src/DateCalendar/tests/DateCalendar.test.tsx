@@ -243,7 +243,7 @@ describe('<DateCalendar />', () => {
           value={adapterToUse.date(new Date(2019, 0, 1))}
           onChange={onChange}
           shouldDisableDate={(date) =>
-            adapterToUse.getMonth(date) === 3 && adapterToUse.getDate(date) < 5
+            adapterToUse.getMonth(date) === 3 && adapterToUse.getDate(date) < 6
           }
           views={['month', 'day']}
           openTo="month"
