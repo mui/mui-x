@@ -54,10 +54,10 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeViewWithMeridie
   /**
    * Callback fired on focused view change.
    * @template TView
-   * @param {TView | null} view The new view to focus or not.
+   * @param {TView} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
-  onFocusedViewChange?: (view: TView | null, hasFocus: boolean) => void;
+  onFocusedViewChange?: (view: TView, hasFocus: boolean) => void;
 }
 
 export interface ExportedUseViewsOptions<TView extends DateOrTimeViewWithMeridiem>
@@ -155,21 +155,19 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     }
   });
 
-  const handleFocusedViewChange = useEventCallback(
-    (viewToFocus: TView | null, hasFocus: boolean) => {
-      if (hasFocus) {
-        // Focus event
-        setFocusedView(viewToFocus);
-      } else {
-        // Blur event
-        setFocusedView(
-          (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view switching
-        );
-      }
+  const handleFocusedViewChange = useEventCallback((viewToFocus: TView, hasFocus: boolean) => {
+    if (hasFocus) {
+      // Focus event
+      setFocusedView(viewToFocus);
+    } else {
+      // Blur event
+      setFocusedView(
+        (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view switching
+      );
+    }
 
-      onFocusedViewChange?.(viewToFocus, hasFocus);
-    },
-  );
+    onFocusedViewChange?.(viewToFocus, hasFocus);
+  });
 
   const goToNextView = useEventCallback(() => {
     if (nextView) {

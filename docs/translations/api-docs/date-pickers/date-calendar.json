@@ -19,7 +19,7 @@
     "minDate": "Minimal selectable date.",
     "monthsPerRow": "Months rendered per row.",
     "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null, selectionState: PickerSelectionState | undefined) =&gt; void</code><br><em>value:</em> The new value.<br><em>selectionState:</em> Indicates if the date selection is complete.",
-    "onFocusedViewChange": "Callback fired on focused view change.<br><br><strong>Signature:</strong><br><code>function(view: TView | null, hasFocus: boolean) =&gt; void</code><br><em>view:</em> The new view to focus or not.<br><em>hasFocus:</em> <code>true</code> if the view should be focused.",
+    "onFocusedViewChange": "Callback fired on focused view change.<br><br><strong>Signature:</strong><br><code>function(view: TView, hasFocus: boolean) =&gt; void</code><br><em>view:</em> The new view to focus or not.<br><em>hasFocus:</em> <code>true</code> if the view should be focused.",
     "onMonthChange": "Callback fired on month change.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void</code><br><em>month:</em> The new month.",
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: TView) =&gt; void</code><br><em>view:</em> The new view.",
     "onYearChange": "Callback fired on year change.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",

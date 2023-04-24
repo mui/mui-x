@@ -346,7 +346,7 @@ DigitalClock.propTypes = {
   /**
    * Callback fired on focused view change.
    * @template TView
-   * @param {TView | null} view The new view to focus or not.
+   * @param {TView} view The new view to focus or not.
    * @param {boolean} hasFocus `true` if the view should be focused.
    */
   onFocusedViewChange: PropTypes.func,
