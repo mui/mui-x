@@ -277,6 +277,10 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
   });
 
+  it('Method: getWeekNumber', () => {
+    expect(adapter.getWeekNumber!(testDate)).to.equal(44);
+  });
+
   it('Method: getYearRange', () => {
     const yearRange = adapter.getYearRange(testDate, adapter.setYear(testDate, 2124));
 

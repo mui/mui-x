@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { expect } from 'chai';
 import {
   createPickerRenderer,
   expectInputPlaceholder,
@@ -50,13 +48,5 @@ describe('<AdapterDateFns />', () => {
         expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
       });
     });
-  });
-
-  it('should return the correct week number', () => {
-    const adapter = new AdapterDateFns({ locale: fr });
-
-    const dateToTest = adapter.date(new Date(2022, 10, 10));
-
-    expect(adapter.getWeekNumber!(dateToTest)).to.equal(45);
   });
 });

@@ -142,14 +142,6 @@ describe('<AdapterDayjs />', () => {
         });
       });
     });
-
-    it('should return the correct week number', () => {
-      const localizedAdapter = new AdapterDayjs({ locale: 'fr' });
-
-      const dateToTest = localizedAdapter.date(new Date(2022, 10, 10))!;
-
-      expect(localizedAdapter.getWeekNumber(dateToTest)).to.equal(45);
-    });
   });
 
   describe('UTC plugin', () => {
