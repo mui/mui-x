@@ -549,6 +549,7 @@ export interface MuiPickersAdapter<TDate> {
   getMonthArray(value: TDate): TDate[];
   /**
    * Create a date with the date of the first param and the time of the second param.
+   * @deprecated Use `adapter.setHours`, `adapter.setMinutes` and `adapter.setSeconds`.
    * @template TDate
    * @param {TDate} dateParam Param from which we want to get the date.
    * @param {TDate} timeParam Param from which we want to get the time.

@@ -121,3 +121,16 @@ export const getMonthInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TDa
 
   return months;
 };
+
+export const mergeDateAndTime = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateParam: TDate,
+  timeParam: TDate,
+) => {
+  let mergedDate = dateParam;
+  mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
+  mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
+  mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
+
+  return mergedDate;
+};
