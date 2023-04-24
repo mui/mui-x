@@ -54,7 +54,7 @@ The priority of the clipboard paste is the following, from highest to lowest:
    1. If the clipboard contains a single cell, it is pasted to the selected cell
    2. If the clipboard contains multiple cells/rows, the data is pasted starting from the selected cell, but won't leak the selected range
 
-{{"demo": "ClipboardPaste.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "ClipboardPaste.js", "bg": "inline"}}
 
 ### Persisting pasted data
 
@@ -70,3 +70,25 @@ If the callback throws or returns a rejected promise, the row will not be update
 The demo below shows how to persist the pasted data in the browser's `sessionStorage`.
 
 {{"demo": "ClipboardPastePersistence.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Events
+
+The following events are fired during the clipboard paste operation:
+
+- `clipboardPasteStart` - fired when the clipboard paste operation starts
+- `clipboardPasteEnd` - fired when all row updates from clipboard paste have been processed
+
+For convenience, you can also listen to these events using their respective props:
+
+- `onClipboardPasteStart`
+- `onClipboardPasteEnd`
+
+The demo below shows how to use these events to show a loading indicator while the clipboard paste operation is in progress:
+
+{{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
+
+## API
+
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -206,7 +206,11 @@ const useSessionStorageData = () => {
 export default function ClipboardPastePersistence() {
   const [rowSelection, setRowSelection] = React.useState(false);
   const { data, updateRow } = useSessionStorageData();
-  const [loading, setLoading] = React.useState(false);
+
+  const processRowUpdate = (newRow) => {
+    updateRow(newRow);
+    return newRow;
+  };
 
   return (
     <div style={{ width: '100%' }}>
@@ -220,17 +224,11 @@ export default function ClipboardPastePersistence() {
       </div>
       <div style={{ height: 400 }}>
         <DataGridPremium
-          loading={loading}
+          {...data}
           rowSelection={rowSelection}
           checkboxSelection={rowSelection}
           unstable_cellSelection
-          {...data}
-          processRowUpdate={(newRow) => {
-            updateRow(newRow);
-            return newRow;
-          }}
-          onClipboardPasteStart={() => setLoading(true)}
-          onClipboardPasteEnd={() => setLoading(false)}
+          processRowUpdate={processRowUpdate}
           experimentalFeatures={{ clipboardPaste: true }}
           unstable_ignoreValueFormatterDuringExport
         />
