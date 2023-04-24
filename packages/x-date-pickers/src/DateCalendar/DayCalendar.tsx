@@ -322,6 +322,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDayCalendar' });
   const classes = useUtilityClasses(props);
   const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const {
     onFocusedDayChange,
@@ -406,21 +407,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           event.preventDefault();
           break;
         case 'ArrowLeft': {
-          const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? -1 : 1);
-          const nextAvailableMonth =
-            theme.direction === 'ltr' ? utils.getPreviousMonth(day) : utils.getNextMonth(day);
+          const newFocusedDayDefault = utils.addDays(day, isRTL ? 1 : -1);
+          const nextAvailableMonth = utils.addMonths(day, isRTL ? 1 : -1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate:
-              theme.direction === 'ltr'
-                ? utils.startOfMonth(nextAvailableMonth)
-                : newFocusedDayDefault,
-            maxDate:
-              theme.direction === 'ltr'
-                ? newFocusedDayDefault
-                : utils.endOfMonth(nextAvailableMonth),
+            minDate: isRTL ? newFocusedDayDefault : utils.startOfMonth(nextAvailableMonth),
+            maxDate: isRTL ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
             isDateDisabled,
           });
           focusDay(closestDayToFocus || newFocusedDayDefault);
@@ -428,21 +422,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           break;
         }
         case 'ArrowRight': {
-          const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? 1 : -1);
-          const nextAvailableMonth =
-            theme.direction === 'ltr' ? utils.getNextMonth(day) : utils.getPreviousMonth(day);
+          const newFocusedDayDefault = utils.addDays(day, isRTL ? -1 : 1);
+          const nextAvailableMonth = utils.addMonths(day, isRTL ? -1 : 1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate:
-              theme.direction === 'ltr'
-                ? newFocusedDayDefault
-                : utils.startOfMonth(nextAvailableMonth),
-            maxDate:
-              theme.direction === 'ltr'
-                ? utils.endOfMonth(nextAvailableMonth)
-                : newFocusedDayDefault,
+            minDate: isRTL ? utils.startOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+            maxDate: isRTL ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
             isDateDisabled,
           });
           focusDay(closestDayToFocus || newFocusedDayDefault);
@@ -458,11 +445,11 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           event.preventDefault();
           break;
         case 'PageUp':
-          focusDay(utils.getNextMonth(day));
+          focusDay(utils.addMonths(day, 1));
           event.preventDefault();
           break;
         case 'PageDown':
-          focusDay(utils.getPreviousMonth(day));
+          focusDay(utils.addMonths(day, -1));
           event.preventDefault();
           break;
         default:

@@ -109,3 +109,15 @@ export const areDatesEqual = <TDate>(utils: MuiPickersAdapter<TDate>, a: TDate, 
 
   return utils.isEqual(a, b);
 };
+
+export const getMonthInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TDate) => {
+  const firstMonth = utils.startOfYear(year);
+  const months = [firstMonth];
+
+  while (months.length < 12) {
+    const prevMonth = months[months.length - 1];
+    months.push(utils.addMonths(prevMonth, 1));
+  }
+
+  return months;
+};

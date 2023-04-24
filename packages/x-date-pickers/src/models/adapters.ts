@@ -112,7 +112,6 @@ export interface MuiPickersAdapter<TDate> {
   date(value?: any): TDate | null;
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
-   * @deprecate Will be removed in v7.
    * @template TDate
    * @param {TDate} value The value to convert.
    * @returns {Date} the JavaScript date.
