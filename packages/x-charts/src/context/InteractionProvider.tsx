@@ -7,9 +7,7 @@ export interface InteractionProviderProps {
   children: React.ReactNode;
 }
 
-export type ItemInteractionData = {
-  target?: SVGElement;
-} & (BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier);
+export type ItemInteractionData = BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier;
 
 export type AxisInteractionData = {
   x: null | {

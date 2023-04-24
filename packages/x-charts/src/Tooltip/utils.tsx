@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InteractionContext } from '../context/InteractionProvider';
+import { AxisInteractionData, InteractionContext, ItemInteractionData } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../hooks/useScale';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
@@ -185,4 +185,18 @@ export function useMouseTracker() {
   }, [svgRef]);
 
   return mousePosition;
+}
+
+export function getTootipHasData(
+  trigger: TooltipProps['trigger'],
+  displayedData: null | AxisInteractionData | ItemInteractionData,
+): boolean {
+  if (trigger === 'item') {
+    return displayedData !== null;
+  }
+
+  const hasAxisXData = (displayedData as AxisInteractionData).x !== null;
+  const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
+
+  return hasAxisXData || hasAxisYData;
 }

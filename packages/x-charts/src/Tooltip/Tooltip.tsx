@@ -14,14 +14,14 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { Highlight, HighlightProps } from '../Highlight';
 import { getSymbol } from '../internals/utils';
-import { generateVirtualElement, useAxisEvents, useMouseTracker } from './utils';
+import { generateVirtualElement, useAxisEvents, useMouseTracker, getTootipHasData } from './utils';
+import { FormatterResult } from '../models/seriesType/config';
+import { AxisDefaultized } from '../models/axis';
 
 const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
 
-function ItemTooltipContent(props: ItemInteractionData) {
-  const { seriesId, type, dataIndex } = props;
-
-  const series = React.useContext(SeriesContext)[type]!.series[seriesId];
+function DefaultItemContent(props: ItemContentProps) {
+  const { series, dataIndex } = props;
 
   if (dataIndex === undefined) {
     return null;
@@ -29,45 +29,39 @@ function ItemTooltipContent(props: ItemInteractionData) {
 
   const data = series.data[dataIndex];
   return (
-    <p>
-      {seriesId}: {format(data)}
-    </p>
+    <Paper sx={{ p: 1 }}>
+      <p>
+        {series.id}: {format(data)}
+      </p>
+    </Paper>
   );
 }
-function AxisTooltipContent(props: AxisInteractionData) {
-  const dataIndex = props.x && props.x.index;
-  const axisValue = props.x && props.x.value;
 
-  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
-  const series = React.useContext(SeriesContext);
+function ItemTooltipContent(
+  props: ItemInteractionData & {
+    content: TooltipProps['itemContent'];
+  },
+) {
+  const { seriesId, type, dataIndex, content } = props;
 
-  const USED_X_AXIS_ID = xAxisIds[0];
-  const xAxisName = xAxis[USED_X_AXIS_ID].id;
+  const series = React.useContext(SeriesContext)[type]!.series[seriesId];
 
-  const relevantSeries = React.useMemo(() => {
-    const rep: { type: string; id: string; color: string }[] = [];
-    (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
-      series[seriesType]!.seriesOrder.forEach((seriesId) => {
-        if (series[seriesType]!.series[seriesId].xAxisKey === USED_X_AXIS_ID) {
-          rep.push({
-            type: seriesType,
-            id: seriesId,
-            color: series[seriesType]!.series[seriesId].color,
-          });
-        }
-      });
-    });
-    return rep;
-  }, [USED_X_AXIS_ID, series]);
+  const Content = content ?? DefaultItemContent;
+  return <Content seriesId={seriesId} type={type} dataIndex={dataIndex} series={series} />;
+}
 
-  if (dataIndex == null) {
+function DefaultAxisContent(props: AxisContentProps) {
+  const { series, axis, dataIndex, axisValue } = props;
+
+  if (dataIndex === null) {
     return null;
   }
+  const xAxisName = axis.id;
 
   const markerSize = 30; // TODO: allows customization
   const shape = 'square';
   return (
-    <React.Fragment>
+    <Paper sx={{ p: 1 }}>
       {axisValue != null && (
         <React.Fragment>
           <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center' }}>
@@ -76,7 +70,7 @@ function AxisTooltipContent(props: AxisInteractionData) {
           <Divider />
         </React.Fragment>
       )}
-      {relevantSeries.map(({ type, color, id }) => (
+      {series.map(({ color, id, data }) => (
         <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
           <svg width={markerSize} height={markerSize}>
             <path
@@ -90,10 +84,52 @@ function AxisTooltipContent(props: AxisInteractionData) {
             />
           </svg>
           {/* @ts-ignore */}
-          {id}: {format(series[type].series[id].data[dataIndex])}
+          {id}: {format(data[dataIndex])}
         </Typography>
       ))}
-    </React.Fragment>
+    </Paper>
+  );
+}
+
+function AxisTooltipContent(
+  props: AxisInteractionData & {
+    content: TooltipProps['axisContent'];
+  },
+) {
+  const { content, ...other } = props;
+  const dataIndex = props.x && props.x.index;
+  const axisValue = props.x && props.x.value;
+
+  const { xAxisIds, xAxis } = React.useContext(CartesianContext);
+  const series = React.useContext(SeriesContext);
+
+  const USED_X_AXIS_ID = xAxisIds[0];
+
+  const relevantSeries = React.useMemo(() => {
+    const rep: any[] = [];
+    (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
+      series[seriesType]!.seriesOrder.forEach((seriesId) => {
+        if (series[seriesType]!.series[seriesId].xAxisKey === USED_X_AXIS_ID) {
+          rep.push(series[seriesType]!.series[seriesId]);
+        }
+      });
+    });
+    return rep;
+  }, [USED_X_AXIS_ID, series]);
+
+  const relevantAxis = React.useMemo(() => {
+    return xAxis[USED_X_AXIS_ID];
+  }, [USED_X_AXIS_ID, xAxis]);
+
+  const Content = content ?? DefaultAxisContent;
+  return (
+    <Content
+      {...other}
+      series={relevantSeries}
+      axis={relevantAxis}
+      dataIndex={dataIndex}
+      axisValue={axisValue}
+    />
   );
 }
 
@@ -110,24 +146,44 @@ export type TooltipProps = {
    * Props propagate to the highlight
    */
   highlightProps?: Partial<HighlightProps>;
+  /**
+   * Component to override the tooltip content when triger is set to 'item'.
+   */
+  itemContent?: React.ElementType<ItemContentProps>;
+  /**
+   * Component to override the tooltip content when triger is set to 'axis'.
+   */
+  axisContent?: React.ElementType<AxisContentProps>;
 };
 
-function getTootipHasData(
-  trigger: TooltipProps['trigger'],
-  displayedData: null | AxisInteractionData | ItemInteractionData,
-): boolean {
-  if (trigger === 'item') {
-    return displayedData !== null;
-  }
-
-  const hasAxisXData = (displayedData as AxisInteractionData).x !== null;
-  const hasAxisYData = (displayedData as AxisInteractionData).y !== null;
-
-  return hasAxisXData || hasAxisYData;
+interface AxisContentProps extends AxisInteractionData {
+  /**
+   * The series linked to the triggered axis
+   */
+  series: FormatterResult<'bar' | 'line' | 'scatter'>['series'][];
+  /**
+   * The properties of the triggered axis
+   */
+  axis: AxisDefaultized;
+  /**
+   * The index of the data item triggered
+   */
+  dataIndex?: null | number;
+  /**
+   * The value associated to the current mouse position.
+   */
+  axisValue: any;
 }
 
+type ItemContentProps = ItemInteractionData & {
+  /**
+   * The series linked to the triggered axis
+   */
+  series: FormatterResult<'bar' | 'line' | 'scatter'>['series'];
+};
+
 export function Tooltip(props: TooltipProps) {
-  const { trigger = 'axis', highlightProps } = props;
+  const { trigger = 'axis', highlightProps, itemContent, axisContent } = props;
 
   useAxisEvents(trigger);
   const mousePosition = useMouseTracker();
@@ -153,13 +209,11 @@ export function Tooltip(props: TooltipProps) {
           anchorEl={generateVirtualElement(mousePosition)}
           style={{ padding: '16px', pointerEvents: 'none' }}
         >
-          <Paper sx={{ p: 1 }}>
-            {trigger === 'item' ? (
-              <ItemTooltipContent {...(displayedData as ItemInteractionData)} />
-            ) : (
-              <AxisTooltipContent {...(displayedData as AxisInteractionData)} />
-            )}
-          </Paper>
+          {trigger === 'item' ? (
+            <ItemTooltipContent {...(displayedData as ItemInteractionData)} content={itemContent} />
+          ) : (
+            <AxisTooltipContent {...(displayedData as AxisInteractionData)} content={axisContent} />
+          )}
         </Popper>
       )}
       <Highlight ref={highlightRef} highlight={{ x: true, y: false }} {...highlightProps} />
