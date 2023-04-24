@@ -1,4 +1,4 @@
-import { TimeView } from '../../../models';
+import { TimeView } from '../../models';
 
 interface FutureAndPastValidationProps {
   /**
@@ -40,6 +40,7 @@ export interface TimeValidationProps<TDate> {
   minutesStep?: number;
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
@@ -113,8 +114,3 @@ export interface YearValidationProps<TDate> {
    */
   shouldDisableYear?: (year: TDate) => boolean;
 }
-
-/**
- * Common validation error types applicable to both date and time validation
- */
-export type CommonDateTimeValidationError = 'invalidDate' | 'disableFuture' | 'disablePast' | null;
