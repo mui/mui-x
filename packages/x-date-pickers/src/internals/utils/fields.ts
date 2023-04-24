@@ -1,4 +1,4 @@
-import { FieldValueType } from '../hooks/useField/useField.types';
+import { FieldValueType } from '../../models';
 import {
   DATE_TIME_VALIDATION_PROP_NAMES,
   DATE_VALIDATION_PROP_NAMES,
