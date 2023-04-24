@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { useTheme } from '@mui/material/styles';
-import { useValidation } from '../validation/useValidation';
+import { useValidation } from '../useValidation';
 import { useUtils } from '../useUtils';
 import {
   UseFieldParams,

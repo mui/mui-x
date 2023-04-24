@@ -1,6 +1,6 @@
-import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
-import { Validator } from './useValidation';
-import { BaseTimeValidationProps, TimeValidationProps } from './models';
+import { createIsAfterIgnoreDatePart } from '../time-utils';
+import { Validator } from '../../hooks/useValidation';
+import { BaseTimeValidationProps, TimeValidationProps } from '../../models/validation';
 import { TimeValidationError } from '../../../models';
 
 export interface TimeComponentValidationProps<TDate>
