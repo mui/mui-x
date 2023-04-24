@@ -53,6 +53,10 @@ const DigitalClockItem = styled(MenuItem, {
   overridesResolver: (props, styles) => styles.item,
 })({
   padding: '8px 16px',
+  margin: '2px 4px',
+  '&:first-of-type': {
+    marginTop: 4,
+  },
 });
 
 type DigitalClockComponent = (<TDate>(
@@ -152,7 +156,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     }
     const offsetTop = selectedItem.offsetTop;
 
-    containerRef.current.scrollTop = offsetTop;
+    // Subtracting the 4px of extra margin intended for the first visible section item
+    containerRef.current.scrollTop = offsetTop - 4;
   });
 
   const selectedTimeOrMidnight = React.useMemo(

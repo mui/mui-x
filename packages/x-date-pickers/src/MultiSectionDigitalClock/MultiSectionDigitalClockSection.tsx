@@ -59,36 +59,13 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     '&:hover': {
       overflowY: 'auto',
     },
-    '&::-webkit-scrollbar': {
-      width: 10,
-      height: 10,
-      background: theme.vars
-        ? theme.vars.palette.AppBar.defaultBg
-        : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800],
-    },
-    '&::-webkit-scrollbar-thumb': {
-      background: theme.vars
-        ? theme.vars.palette.Chip.defaultBorder
-        : theme.palette.grey[theme.palette.mode === 'light' ? 400 : 600],
-      border: `2px solid ${
-        theme.vars
-          ? theme.vars.palette.AppBar.defaultBg
-          : theme.palette.grey[theme.palette.mode === 'light' ? 100 : 800]
-      }`,
-      borderRadius: 8,
-      '&:hover': {
-        background: theme.vars
-          ? theme.vars.palette.Chip.defaultIconColor
-          : theme.palette.grey[theme.palette.mode === 'light' ? 600 : 400],
-      },
-    },
     '&:not(:first-of-type)': {
       borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
     },
     '&:after': {
       display: 'block',
       content: '""',
-      height: 185,
+      height: 186,
     },
   }),
 );
@@ -99,9 +76,12 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
   overridesResolver: (_, styles) => styles.item,
 })({
   padding: 8,
-  marginInline: 3,
-  width: 50,
+  margin: '2px 4px',
+  width: 48,
   justifyContent: 'center',
+  '&:first-of-type': {
+    marginTop: 4,
+  },
 });
 
 type MultiSectionDigitalClockSectionComponent = <TValue>(
@@ -159,7 +139,8 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       }
       const offsetTop = selectedItem.offsetTop;
 
-      containerRef.current.scrollTop = offsetTop;
+      // Subtracting the 4px of extra margin intended for the first visible section item
+      containerRef.current.scrollTop = offsetTop - 4;
     });
 
     return (
