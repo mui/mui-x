@@ -11,6 +11,15 @@ defaultDayjs.extend(customParseFormatPlugin);
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(isBetweenPlugin);
 
+interface AdapterDayjsOptions {
+  locale?: string;
+  /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
+  instance?: typeof defaultDayjs;
+  formats?: Partial<AdapterFormats>;
+}
+
+type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
+
 const localeNotFoundWarning = buildWarning([
   'Your locale has not been found.',
   'Either the locale key is not a supported one. Locales supported by dayjs are available here: https://github.com/iamkun/dayjs/tree/dev/src/locale',
@@ -58,15 +67,6 @@ const formatTokenMap: FieldFormatTokenMap = {
   s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
   ss: 'seconds',
 };
-
-interface Opts {
-  locale?: string;
-  /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
-  instance?: typeof defaultDayjs;
-  formats?: Partial<AdapterFormats>;
-}
-
-type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
 const defaultFormats: AdapterFormats = {
   normalDateWithWeekday: 'ddd, MMM D',
@@ -129,9 +129,9 @@ const withLocale = (dayjs: any, locale?: string): Constructor =>
 export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
   public isMUIAdapter = true;
 
-  public rawDayJsInstance: typeof defaultDayjs;
-
   public lib = 'dayjs';
+
+  public rawDayJsInstance: typeof defaultDayjs;
 
   public dayjs: Constructor;
 
@@ -139,19 +139,18 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
 
   public formats: AdapterFormats;
 
-  constructor({ locale, formats, instance }: Opts = {}) {
+  public escapedCharacters = { start: '[', end: ']' };
+
+  public formatTokenMap = formatTokenMap;
+
+  constructor({ locale, formats, instance }: AdapterDayjsOptions = {}) {
     this.rawDayJsInstance = instance || defaultDayjs;
     this.dayjs = withLocale(this.rawDayJsInstance, locale);
     this.locale = locale;
-
     this.formats = { ...defaultFormats, ...formats };
 
     defaultDayjs.extend(weekOfYear);
   }
-
-  public escapedCharacters = { start: '[', end: ']' };
-
-  public formatTokenMap = formatTokenMap;
 
   private getLocaleFormats = () => {
     const locales = this.rawDayJsInstance.Ls ?? defaultDayjs.Ls;
@@ -231,28 +230,28 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
   };
 
-  public isNull = (date: Dayjs | null) => {
-    return date === null;
+  public isNull = (value: Dayjs | null) => {
+    return value === null;
   };
 
   public isValid = (value: any) => {
     return this.dayjs(value).isValid();
   };
 
-  public format = (date: Dayjs, formatKey: keyof AdapterFormats) => {
-    return this.formatByString(date, this.formats[formatKey]);
+  public format = (value: Dayjs, formatKey: keyof AdapterFormats) => {
+    return this.formatByString(value, this.formats[formatKey]);
   };
 
-  public formatByString = (date: Dayjs, formatString: string) => {
-    return this.dayjs(date).format(formatString);
+  public formatByString = (value: Dayjs, formatString: string) => {
+    return this.dayjs(value).format(formatString);
   };
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
   };
 
-  public getDiff = (date: Dayjs, comparing: Dayjs, units?: AdapterUnits) => {
-    return date.diff(comparing, units as AdapterUnits);
+  public getDiff = (value: Dayjs, comparing: Dayjs, unit?: AdapterUnits) => {
+    return value.diff(comparing, unit as AdapterUnits);
   };
 
   public isEqual = (value: any, comparing: any) => {
@@ -263,172 +262,172 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return this.dayjs(value).isSame(comparing);
   };
 
-  public isSameYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'year');
+  public isSameYear = (value: Dayjs, comparing: Dayjs) => {
+    return value.isSame(comparing, 'year');
   };
 
-  public isSameMonth = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'month');
+  public isSameMonth = (value: Dayjs, comparing: Dayjs) => {
+    return value.isSame(comparing, 'month');
   };
 
-  public isSameDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'day');
+  public isSameDay = (value: Dayjs, comparing: Dayjs) => {
+    return value.isSame(comparing, 'day');
   };
 
-  public isSameHour = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'hour');
+  public isSameHour = (value: Dayjs, comparing: Dayjs) => {
+    return value.isSame(comparing, 'hour');
   };
 
-  public isAfter = (date: Dayjs, value: Dayjs) => {
-    return date.isAfter(value);
+  public isAfter = (value: Dayjs, comparing: Dayjs) => {
+    return value.isAfter(comparing);
   };
 
-  public isAfterYear = (date: Dayjs, value: Dayjs) => {
-    return date.isAfter(value, 'year');
+  public isAfterYear = (date: Dayjs, comparing: Dayjs) => {
+    return date.isAfter(comparing, 'year');
   };
 
-  public isAfterDay = (date: Dayjs, value: Dayjs) => {
-    return date.isAfter(value, 'day');
+  public isAfterDay = (date: Dayjs, comparing: Dayjs) => {
+    return date.isAfter(comparing, 'day');
   };
 
-  public isBefore = (date: Dayjs, value: Dayjs) => {
-    return date.isBefore(value);
+  public isBefore = (date: Dayjs, comparing: Dayjs) => {
+    return date.isBefore(comparing);
   };
 
-  public isBeforeYear = (date: Dayjs, value: Dayjs) => {
-    return date.isBefore(value, 'year');
+  public isBeforeYear = (date: Dayjs, comparing: Dayjs) => {
+    return date.isBefore(comparing, 'year');
   };
 
-  public isBeforeDay = (date: Dayjs, value: Dayjs) => {
-    return date.isBefore(value, 'day');
+  public isBeforeDay = (date: Dayjs, comparing: Dayjs) => {
+    return date.isBefore(comparing, 'day');
   };
 
   public isWithinRange = (date: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
     return date.isBetween(start, end, null, '[]');
   };
 
-  public startOfYear = (date: Dayjs) => {
-    return date.startOf('year');
+  public startOfYear = (value: Dayjs) => {
+    return value.startOf('year');
   };
 
-  public startOfMonth = (date: Dayjs) => {
-    return date.startOf('month');
+  public startOfMonth = (value: Dayjs) => {
+    return value.startOf('month');
   };
 
-  public endOfYear = (date: Dayjs) => {
-    return date.endOf('year');
+  public startOfWeek = (value: Dayjs) => {
+    return value.startOf('week');
   };
 
-  public startOfWeek = (date: Dayjs) => {
-    return date.startOf('week');
+  public startOfDay = (value: Dayjs) => {
+    return value.startOf('day');
   };
 
-  public startOfDay = (date: Dayjs) => {
-    return date.startOf('day');
+  public endOfYear = (value: Dayjs) => {
+    return value.endOf('year');
   };
 
-  public endOfMonth = (date: Dayjs) => {
-    return date.endOf('month');
+  public endOfMonth = (value: Dayjs) => {
+    return value.endOf('month');
   };
 
-  public endOfWeek = (date: Dayjs) => {
-    return date.endOf('week');
+  public endOfWeek = (value: Dayjs) => {
+    return value.endOf('week');
   };
 
-  public endOfDay = (date: Dayjs) => {
-    return date.endOf('day');
+  public endOfDay = (value: Dayjs) => {
+    return value.endOf('day');
   };
 
-  public addYears = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'year') : date.add(count, 'year');
+  public addYears = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'year') : value.add(amount, 'year');
   };
 
-  public addMonths = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'month') : date.add(count, 'month');
+  public addMonths = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'month') : value.add(amount, 'month');
   };
 
-  public addWeeks = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'week') : date.add(count, 'week');
+  public addWeeks = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'week') : value.add(amount, 'week');
   };
 
-  public addDays = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'day') : date.add(count, 'day');
+  public addDays = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'day') : value.add(amount, 'day');
   };
 
-  public addHours = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'hour') : date.add(count, 'hour');
+  public addHours = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'hour') : value.add(amount, 'hour');
   };
 
-  public addMinutes = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'minute') : date.add(count, 'minute');
+  public addMinutes = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'minute') : value.add(amount, 'minute');
   };
 
-  public addSeconds = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'second') : date.add(count, 'second');
+  public addSeconds = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'second') : value.add(amount, 'second');
   };
 
-  public getYear = (date: Dayjs) => {
-    return date.year();
+  public getYear = (value: Dayjs) => {
+    return value.year();
   };
 
-  public getMonth = (date: Dayjs) => {
-    return date.month();
+  public getMonth = (value: Dayjs) => {
+    return value.month();
   };
 
-  public getDate = (date: Dayjs) => {
-    return date.date();
+  public getDate = (value: Dayjs) => {
+    return value.date();
   };
 
-  public getHours = (date: Dayjs) => {
-    return date.hour();
+  public getHours = (value: Dayjs) => {
+    return value.hour();
   };
 
-  public getMinutes = (date: Dayjs) => {
-    return date.minute();
+  public getMinutes = (value: Dayjs) => {
+    return value.minute();
   };
 
-  public getSeconds = (date: Dayjs) => {
-    return date.second();
+  public getSeconds = (value: Dayjs) => {
+    return value.second();
   };
 
-  public setYear = (date: Dayjs, year: number) => {
-    return date.set('year', year);
+  public setYear = (value: Dayjs, year: number) => {
+    return value.set('year', year);
   };
 
-  public setMonth = (date: Dayjs, count: number) => {
-    return date.set('month', count);
+  public setMonth = (value: Dayjs, month: number) => {
+    return value.set('month', month);
   };
 
-  public setDate = (date: Dayjs, count: number) => {
-    return date.set('date', count);
+  public setDate = (value: Dayjs, date: number) => {
+    return value.set('date', date);
   };
 
-  public setHours = (date: Dayjs, count: number) => {
-    return date.set('hour', count);
+  public setHours = (value: Dayjs, hours: number) => {
+    return value.set('hour', hours);
   };
 
-  public setMinutes = (date: Dayjs, count: number) => {
-    return date.set('minute', count);
+  public setMinutes = (value: Dayjs, minutes: number) => {
+    return value.set('minute', minutes);
   };
 
-  public setSeconds = (date: Dayjs, count: number) => {
-    return date.set('second', count);
+  public setSeconds = (value: Dayjs, seconds: number) => {
+    return value.set('second', seconds);
   };
 
-  public getDaysInMonth = (date: Dayjs) => {
-    return date.daysInMonth();
+  public getDaysInMonth = (value: Dayjs) => {
+    return value.daysInMonth();
   };
 
-  public getNextMonth = (date: Dayjs) => {
-    return date.add(1, 'month');
+  public getNextMonth = (value: Dayjs) => {
+    return value.add(1, 'month');
   };
 
-  public getPreviousMonth = (date: Dayjs) => {
-    return date.subtract(1, 'month');
+  public getPreviousMonth = (value: Dayjs) => {
+    return value.subtract(1, 'month');
   };
 
-  public getMonthArray = (date: Dayjs) => {
-    const firstMonth = date.startOf('year');
+  public getMonthArray = (value: Dayjs) => {
+    const firstMonth = value.startOf('year');
     const monthArray = [firstMonth];
 
     while (monthArray.length < 12) {
@@ -439,8 +438,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return monthArray;
   };
 
-  public mergeDateAndTime = (date: Dayjs, time: Dayjs) => {
-    return date.hour(time.hour()).minute(time.minute()).second(time.second());
+  public mergeDateAndTime = (dateParam: Dayjs, timeParam: Dayjs) => {
+    return dateParam.hour(timeParam.hour()).minute(timeParam.minute()).second(timeParam.second());
   };
 
   public getWeekdays = () => {
@@ -448,9 +447,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return [0, 1, 2, 3, 4, 5, 6].map((diff) => this.formatByString(start.add(diff, 'day'), 'dd'));
   };
 
-  public getWeekArray = (date: Dayjs) => {
-    const start = this.dayjs(date).startOf('month').startOf('week');
-    const end = this.dayjs(date).endOf('month').endOf('week');
+  public getWeekArray = (value: Dayjs) => {
+    const start = value.startOf('month').startOf('week');
+    const end = value.endOf('month').endOf('week');
 
     let count = 0;
     let current = start;
@@ -468,13 +467,13 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return nestedWeeks;
   };
 
-  public getWeekNumber = (date: Dayjs) => {
-    return date.week();
+  public getWeekNumber = (value: Dayjs) => {
+    return value.week();
   };
 
   public getYearRange = (start: Dayjs, end: Dayjs) => {
-    const startDate = this.dayjs(start).startOf('year');
-    const endDate = this.dayjs(end).endOf('year');
+    const startDate = start.startOf('year');
+    const endDate = end.endOf('year');
     const years: Dayjs[] = [];
 
     let current = startDate;

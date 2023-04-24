@@ -45,45 +45,45 @@ describe('<AdapterDayjs />', () => {
   describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss' });
 
   describe('Adapter localization', () => {
-    describe('Russian', () => {
-      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'ru' });
-      const date = adapter.date(TEST_DATE_ISO)!;
-
-      it('getWeekdays: should start from monday', () => {
-        const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
-      });
-
-      it('getWeekArray: week should start from monday', () => {
-        const result = adapter.getWeekArray(date);
-        expect(result[0][0].format('dd')).to.equal('пн');
-      });
-
-      it('is12HourCycleInCurrentLocale: properly determine should use meridiem or not', () => {
-        expect(adapter.is12HourCycleInCurrentLocale()).to.equal(false);
-      });
-
-      it('getCurrentLocaleCode: returns locale code', () => {
-        expect(adapter.getCurrentLocaleCode()).to.equal('ru');
-      });
-    });
-
     describe('English', () => {
       const adapter = new AdapterDayjs({ instance: dayjs, locale: 'en' });
       const date = adapter.date(TEST_DATE_ISO)!;
 
-      it('getWeekdays: should start from sunday', () => {
+      it('getWeekdays: should start from Sunday', () => {
         const result = adapter.getWeekdays();
         expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
       });
 
-      it('getWeekArray: week should start from sunday', () => {
+      it('getWeekArray: should start from Sunday', () => {
         const result = adapter.getWeekArray(date);
         expect(result[0][0].format('dd')).to.equal('Su');
       });
 
-      it('is12HourCycleInCurrentLocale: properly determine should use meridiem or not', () => {
+      it('is12HourCycleInCurrentLocale: should have meridiem', () => {
         expect(adapter.is12HourCycleInCurrentLocale()).to.equal(true);
+      });
+    });
+
+    describe('Russian', () => {
+      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'ru' });
+
+      it('getWeekDays: should start on Monday', () => {
+        const result = adapter.getWeekdays();
+        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
+      });
+
+      it('getWeekArray: should start from monday', () => {
+        const date = adapter.date(TEST_DATE_ISO)!;
+        const result = adapter.getWeekArray(date);
+        expect(result[0][0].format('dd')).to.equal('пн');
+      });
+
+      it('is12HourCycleInCurrentLocale: should not have meridiem', () => {
+        expect(adapter.is12HourCycleInCurrentLocale()).to.equal(false);
+      });
+
+      it('getCurrentLocaleCode: should return locale code', () => {
+        expect(adapter.getCurrentLocaleCode()).to.equal('ru');
       });
     });
 
