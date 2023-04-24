@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
-import type { GridColDef } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
 import { unstable_joySlots } from '@mui/x-data-grid/joy';
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -10,8 +8,9 @@ import {
   THEME_ID as MATERIAL_THEME_ID,
 } from '@mui/material/styles';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
-import type {} from '@mui/material/themeCssVarsAugmentation';
 import DeleteIcon from '@mui/icons-material/Delete';
+import type { GridColDef } from '@mui/x-data-grid';
+import type {} from '@mui/material/themeCssVarsAugmentation';
 
 const materialTheme = materialExtendTheme({
   components: {
@@ -71,14 +70,6 @@ const rows = [
 ];
 
 export default function GridJoyUISlots() {
-  const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 100,
-    maxColumns: 20,
-    editable: true,
-  });
-  console.log('data', data);
-
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
