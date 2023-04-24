@@ -31,7 +31,10 @@ const localizedTexts = {
 };
 
 describe('<AdapterLuxon />', () => {
-  describeGregorianAdapter(AdapterLuxon, { formatDateTime: 'yyyy-MM-dd HH:mm:ss' });
+  describeGregorianAdapter(AdapterLuxon, {
+    formatDateTime: 'yyyy-MM-dd HH:mm:ss',
+    locale: 'en-US',
+  });
 
   describe('Adapter localization', () => {
     describe('English', () => {
@@ -50,7 +53,7 @@ describe('<AdapterLuxon />', () => {
         expect(result).to.deep.equal(['П', 'В', 'С', 'Ч', 'П', 'С', 'В']);
       });
 
-      it('getWeekArray: should start from monday', () => {
+      it('getWeekArray: should start on Monday', () => {
         const date = adapter.date(TEST_DATE_ISO)!;
         const result = adapter.getWeekArray(date);
         expect(result[0][0].toFormat('ccc')).to.equal('пн');
