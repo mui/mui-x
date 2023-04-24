@@ -1,4 +1,5 @@
 import * as React from 'react';
+import moment from 'moment';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
@@ -15,7 +16,6 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers';
 
 const testDate = new Date(2018, 4, 15, 9, 35);
@@ -57,8 +57,16 @@ describe('<AdapterMoment />', () => {
     });
 
     describe('Russian', () => {
-      const adapter = new AdapterDayjs({ locale: 'ru' });
+      const adapter = new AdapterMoment({ locale: 'ru' });
       const date = adapter.date(TEST_DATE_ISO)!;
+
+      beforeEach(() => {
+        moment.locale('ru');
+      });
+
+      afterEach(() => {
+        moment.locale('en');
+      });
 
       it('getWeekdays: should start on Monday', () => {
         const result = adapter.getWeekdays();
@@ -82,6 +90,14 @@ describe('<AdapterMoment />', () => {
     describe('Korean', () => {
       const adapter = new AdapterMoment({ locale: 'ko' });
 
+      beforeEach(() => {
+        moment.locale('ko');
+      });
+
+      afterEach(() => {
+        moment.locale('en');
+      });
+
       it('getMeridiemText: should translate meridiem format', () => {
         expect(adapter.getMeridiemText('am')).to.equal('오전');
         expect(adapter.getMeridiemText('pm')).to.equal('오후');
@@ -89,8 +105,8 @@ describe('<AdapterMoment />', () => {
     });
 
     it('Formatting', () => {
-      const adapter = new AdapterDayjs({ locale: 'en' });
-      const adapterRu = new AdapterDayjs({ locale: 'ru' });
+      const adapter = new AdapterMoment({ locale: 'en' });
+      const adapterRu = new AdapterMoment({ locale: 'ru' });
 
       const expectDate = (
         format: keyof AdapterFormats,
