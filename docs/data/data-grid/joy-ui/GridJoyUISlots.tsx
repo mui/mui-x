@@ -90,6 +90,10 @@ export default function GridJoyUISlots() {
                   '& .MuiDataGrid-filterForm': {
                     alignItems: 'flex-end',
                   },
+                  '& .MuiDataGrid-panelContent': {
+                    // To prevent the Select popup being hidden by the panel
+                    overflow: 'visible',
+                  },
                 },
               },
             }}

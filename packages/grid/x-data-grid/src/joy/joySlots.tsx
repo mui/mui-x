@@ -8,6 +8,8 @@ import JoyFormLabel from '@mui/joy/FormLabel';
 import JoyButton from '@mui/joy/Button';
 import JoyIconButton from '@mui/joy/IconButton';
 import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
+import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
+import JoyOption from '@mui/joy/Option';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 
@@ -81,16 +83,17 @@ const Checkbox = React.forwardRef<
 const TextField = React.forwardRef<
   HTMLDivElement,
   NonNullable<GridSlotsComponentsProps['baseTextField']>
->(({ onChange, label, placeholder, value, inputRef, type }, ref) => {
+>(({ onChange, label, placeholder, value, inputRef, type, size, variant }, ref) => {
   return (
     <JoyFormControl ref={ref}>
-      <JoyFormLabel sx={{ fontSize: 12 }}>{label}</JoyFormLabel>
+      <JoyFormLabel>{label}</JoyFormLabel>
       <JoyInput
         type={type}
         value={value as any}
         onChange={onChange}
         placeholder={placeholder}
-        size="sm"
+        variant={convertVariant(variant) ?? 'plain'}
+        size={convertSize(size)}
         slotProps={{ input: { ref: inputRef } }}
       />
     </JoyFormControl>
@@ -185,15 +188,53 @@ const Switch = React.forwardRef<
   );
 });
 
+const Select = React.forwardRef<
+  HTMLButtonElement,
+  NonNullable<GridSlotsComponentsProps['baseSelect']>
+>(({ value, onChange, size, color, variant, ...props }, ref) => {
+  const handleChange: JoySelectProps<any>['onChange'] = (event, newValue) => {
+    if (event && onChange) {
+      // Same as in https://github.com/mui/material-ui/blob/e5558282a8f36856aef1299f3a36f3235e92e770/packages/mui-material/src/Select/SelectInput.js#L288-L300
+
+      // Redefine target to allow name and value to be read.
+      // This allows seamless integration with the most popular form libraries.
+      // https://github.com/mui/material-ui/issues/13485#issuecomment-676048492
+      // Clone the event to not override `target` of the original event.
+      const nativeEvent = (event as React.SyntheticEvent).nativeEvent || event;
+      // @ts-ignore The nativeEvent is function, not object
+      const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
+
+      Object.defineProperty(clonedEvent, 'target', {
+        writable: true,
+        value: { value: newValue, name: props.name },
+      });
+      onChange(clonedEvent, null);
+    }
+  };
+
+  return (
+    <JoySelect
+      {...(props as JoySelectProps<any>)}
+      size={convertSize(size)}
+      color={convertColor(color)}
+      variant={convertVariant(variant) ?? 'plain'}
+      ref={ref}
+      value={value}
+      onChange={handleChange}
+    />
+  );
+});
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseCheckbox: Checkbox,
   baseTextField: TextField,
   baseButton: Button,
   baseIconButton: IconButton,
   baseSwitch: Switch,
-  // BaseFormControl: MUIFormControl,
-  // baseSelect: Select,
-  // baseSelectOption: Option,
+  baseSelect: Select,
+  baseSelectOption: JoyOption,
+  baseInputLabel: JoyFormLabel,
+  baseFormControl: JoyFormControl,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
 };
