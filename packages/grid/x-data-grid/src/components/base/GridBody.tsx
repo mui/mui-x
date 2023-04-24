@@ -41,6 +41,7 @@ function GridBody(props: GridBodyProps) {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const rootRef = React.useRef<HTMLDivElement>(null);
+  const animationFrame = React.useRef<number | null>();
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
@@ -88,7 +89,9 @@ function GridBody(props: GridBodyProps) {
     }
 
     const observer = new ResizeObserver(() => {
-      apiRef.current.computeSizeAndPublishResizeEvent();
+      animationFrame.current = window.requestAnimationFrame(() => {
+        apiRef.current.computeSizeAndPublishResizeEvent();
+      });
     });
 
     if (elementToObserve) {
@@ -96,6 +99,10 @@ function GridBody(props: GridBodyProps) {
     }
 
     return () => {
+      if (animationFrame.current) {
+        window.cancelAnimationFrame(animationFrame.current);
+      }
+
       if (elementToObserve) {
         observer.unobserve(elementToObserve);
       }
