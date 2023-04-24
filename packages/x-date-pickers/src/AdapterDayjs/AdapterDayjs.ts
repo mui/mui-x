@@ -186,7 +186,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return value.toISOString();
   };
 
-  public parse = (value: any, format: string) => {
+  public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
     }
@@ -302,8 +302,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return date.isBefore(comparing, 'day');
   };
 
-  public isWithinRange = (date: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
-    return date.isBetween(start, end, null, '[]');
+  public isWithinRange = (value: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
+    return value.isBetween(start, end, null, '[]');
   };
 
   public startOfYear = (value: Dayjs) => {

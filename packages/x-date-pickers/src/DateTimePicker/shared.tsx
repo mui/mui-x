@@ -20,10 +20,7 @@ import {
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
 } from './DateTimePickerTabs';
-import {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-} from '../internals/hooks/validation/models';
+import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,

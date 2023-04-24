@@ -6,7 +6,7 @@ import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internal/utils/valueManagers';
-import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { validateDateRange } from '../internal/utils/validation/validateDateRange';
 import { DateRange } from '../internal/models';
 
 type StaticDateRangePickerComponent = (<TDate>(

@@ -8,7 +8,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DateComponentValidationProps } from '../internals/hooks/validation/useDateValidation';
+import { DateComponentValidationProps } from '../internals/utils/validation/validateDate';
 import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
