@@ -25,7 +25,7 @@ describe('<DesktopDatePicker /> - Field', () => {
     expectInputValue(input, 'November DD');
 
     fireEvent.change(input, { target: { value: 'November 4' } }); // Press "1"
-    expectInputValue(input, 'November 4');
+    expectInputValue(input, 'November 04');
 
     userEvent.keyPress(input, { key: 'Backspace' });
     expectInputValue(input, 'November DD');

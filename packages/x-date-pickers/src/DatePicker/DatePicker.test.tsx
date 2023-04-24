@@ -30,7 +30,7 @@ describe('<DatePicker />', () => {
       const input = getTextbox();
 
       fireEvent.change(input, { target: { value: '02/22/2022' } });
-      expectInputValue(input, '02 / 22 / 2022');
+      expectInputValue(input, '02/22/2022');
     });
 
     it('should render in mobile mode when `useMediaQuery` returns `false`', () => {

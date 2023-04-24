@@ -131,12 +131,21 @@ export function DemoContainer(props: DemoGridProps) {
   if (childrenTypes.has('UI-view')) {
     // noop
   } else if (childrenTypes.has('single-input-range-field')) {
-    sx = {
-      ...sx,
-      [`& > .${textFieldClasses.root}`]: {
-        minWidth: { xs: 300, md: 400 },
-      },
-    };
+    if (!childrenSupportedSections.has('date-time')) {
+      sx = {
+        ...sx,
+        [`& > .${textFieldClasses.root}`]: {
+          minWidth: 300,
+        },
+      };
+    } else {
+      sx = {
+        ...sx,
+        [`& > .${textFieldClasses.root}`]: {
+          minWidth: { xs: 300, md: 400 },
+        },
+      };
+    }
   } else if (childrenSupportedSections.has('date-time')) {
     sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 270 } };
   } else {

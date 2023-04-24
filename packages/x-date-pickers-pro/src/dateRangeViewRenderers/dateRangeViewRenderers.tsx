@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateOrTimeView } from '@mui/x-date-pickers/internals';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
 export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeView>

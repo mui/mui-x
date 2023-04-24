@@ -1,6 +1,9 @@
+import * as React from 'react';
 import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { RangePosition } from '../models/range';
+import { RangeFieldSection } from '../models/fields';
 
 export interface UseRangePositionProps {
   /**
@@ -24,9 +27,12 @@ export interface UseRangePositionProps {
 export interface UseRangePositionResponse {
   rangePosition: RangePosition;
   onRangePositionChange: (newPosition: RangePosition) => void;
+  singleInputFieldRef: React.MutableRefObject<FieldRef<RangeFieldSection> | undefined>;
 }
 
 export const useRangePosition = (props: UseRangePositionProps): UseRangePositionResponse => {
+  const singleInputFieldRef = React.useRef<FieldRef<RangeFieldSection>>();
+
   const [rangePosition, setRangePosition] = useControlled({
     name: 'useRangePosition',
     state: 'rangePosition',
@@ -34,10 +40,23 @@ export const useRangePosition = (props: UseRangePositionProps): UseRangePosition
     default: props.defaultRangePosition ?? 'start',
   });
 
+  // When using a single input field,
+  // we want to select the 1st section of the edited date when updating the range position.
+  const syncRangePositionWithSingleInputField = (newRangePosition: RangePosition) => {
+    if (singleInputFieldRef.current == null) {
+      return;
+    }
+
+    const sections = singleInputFieldRef.current.getSections();
+    const targetActiveSectionIndex = newRangePosition === 'start' ? 0 : sections.length / 2;
+    singleInputFieldRef.current.setSelectedSections(targetActiveSectionIndex);
+  };
+
   const handleRangePositionChange = useEventCallback((newRangePosition: RangePosition) => {
     setRangePosition(newRangePosition);
     props.onRangePositionChange?.(newRangePosition);
+    syncRangePositionWithSingleInputField(newRangePosition);
   });
 
-  return { rangePosition, onRangePositionChange: handleRangePositionChange };
+  return { rangePosition, onRangePositionChange: handleRangePositionChange, singleInputFieldRef };
 };

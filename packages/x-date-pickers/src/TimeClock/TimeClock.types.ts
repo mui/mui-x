@@ -6,8 +6,8 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
-import { TimeView } from '../internals/models/views';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+import { TimeView } from '../models';
+import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface ExportedTimeClockProps<TDate>

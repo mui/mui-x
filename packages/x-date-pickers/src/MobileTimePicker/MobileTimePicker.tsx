@@ -5,7 +5,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { PickerViewRendererLookup, TimeView, useLocaleText, validateTime } from '../internals';
+import { PickerViewRendererLookup, useLocaleText, validateTime } from '../internals';
+import { TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderTimeViewClock } from '../timeViewRenderers';
@@ -62,6 +63,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'time',
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
     validator: validateTime,
   });
@@ -147,6 +149,12 @@ MobileTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */

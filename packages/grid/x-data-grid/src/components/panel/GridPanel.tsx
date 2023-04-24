@@ -152,6 +152,7 @@ GridPanel.propTypes = {
    * If `true`, the component is shown.
    */
   open: PropTypes.bool.isRequired,
+  ownerState: PropTypes.object,
 } as any;
 
 export { GridPanel };

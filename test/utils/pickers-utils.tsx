@@ -22,7 +22,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 
@@ -152,10 +152,22 @@ export type OpenPickerParams =
       type: 'date-range';
       variant: 'mobile' | 'desktop';
       initialFocus: 'start' | 'end';
+      /**
+       * @default false
+       */
+      isSingleInput?: boolean;
     };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
+    if (params.isSingleInput) {
+      const target = screen.getByRole<HTMLInputElement>('textbox');
+      userEvent.mousePress(target);
+      const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
+
+      return target.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
     const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
 
     return userEvent.mousePress(target);
@@ -303,21 +315,13 @@ export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
 
-export const expectInputValue = (
-  input: HTMLInputElement,
-  expectedValue: string,
-  shouldRemoveDashSpaces = false,
-) => {
-  let value = cleanText(input.value);
-  if (shouldRemoveDashSpaces) {
-    value = value.replace(/ \/ /g, '/');
-  }
-
+export const expectInputValue = (input: HTMLInputElement, expectedValue: string) => {
+  const value = cleanText(input.value);
   return expect(value).to.equal(expectedValue);
 };
 
 export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
-  const cleanPlaceholder = cleanText(input.placeholder).replace(/ \/ /g, '/');
+  const cleanPlaceholder = cleanText(input.placeholder);
   return expect(cleanPlaceholder).to.equal(placeholder);
 };
 

@@ -11,11 +11,14 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
   FieldSection,
-} from '@mui/x-date-pickers';
+} from '@mui/x-date-pickers/models';
 
 interface AutoCompleteFieldProps
   extends UseDateFieldProps<Dayjs>,
     BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {
+  /**
+   * @typescript-to-proptypes-ignore
+   */
   options?: Dayjs[];
 }
 
@@ -42,7 +45,13 @@ function AutocompleteField(props: AutoCompleteFieldProps) {
       return nonNullAdornments[0];
     }
 
-    return <Stack direction="row">{nonNullAdornments}</Stack>;
+    return (
+      <Stack direction="row">
+        {nonNullAdornments.map((adornment, index) => (
+          <React.Fragment key={index}>{adornment}</React.Fragment>
+        ))}
+      </Stack>
+    );
   };
 
   return (
@@ -90,6 +99,9 @@ function AutocompleteField(props: AutoCompleteFieldProps) {
 }
 
 interface AutocompleteDatePickerProps extends DatePickerProps<Dayjs> {
+  /**
+   * @typescript-to-proptypes-ignore
+   */
   options: Dayjs[];
 }
 

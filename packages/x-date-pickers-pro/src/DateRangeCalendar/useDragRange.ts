@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { DateRangePosition } from './DateRangeCalendar.types';
 import { DateRange } from '../internal/models';
 import { isEndOfRange, isStartOfRange } from '../internal/utils/date-utils';

@@ -6,7 +6,7 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
-import { DateOrTimeView } from '../models/views';
+import { DateOrTimeView } from '../../models';
 
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
   extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {

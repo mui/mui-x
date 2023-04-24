@@ -73,6 +73,16 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
 
+### Use a single input field
+
+You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing:
+
+{{"demo": "SingleInputDateRangePicker.js"}}
+
+:::info
+For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers) page.
+:::
+
 ### Add shortcuts
 
 To simplify range selection, you can add [shortcuts](/x/react-date-pickers/shortcuts/#range-shortcuts).

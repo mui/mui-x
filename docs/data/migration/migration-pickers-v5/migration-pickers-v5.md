@@ -70,6 +70,20 @@ The `inputFormat` prop has been renamed to `format` on all the pickers component
  />
 ```
 
+### Update expected values in tests
+
+The value rendered in the input might have been modified.
+If you are using RTL or if your date contains single digits sections, non-ASCII characters will be added.
+
+If your tests are relying on the input values, you can clean them with the following method.
+
+```ts
+export const cleanString = (dirtyString: string) =>
+  dirtyString
+    .replace(/[\u2066\u2067\u2068\u2069]/g, '') // Remove non-ASCII characters
+    .replace(/ \/ /g, '/'); // Remove extra spaces
+```
+
 ### Update the format of the `value` prop
 
 Previously, it was possible to provide any format that your date management library was able to parse.
@@ -106,7 +120,7 @@ If you were relying on Clock Picker in desktop mode for tests—make sure to che
 You can manually re-enable the clock using the new `viewRenderers` prop.
 The code below enables the `Clock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
 
-Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#default-props) for more information.
+Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#theme-default-props) for more information.
 
 ```tsx
 const theme = createTheme({
@@ -160,9 +174,14 @@ The picker components no longer have a keyboard view to render the input inside 
 At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
 :::
 
-### ✅ Rename `shouldDisableTime` prop
+### ✅ Rename or refactor `shouldDisableTime` prop
 
-The `shouldDisableTime` prop signature has been changed. Either rename the prop to `shouldDisableClock` or refactor usage.
+The `shouldDisableTime` prop signature has been changed.
+Previously it did receive `value` as a `number` of hours, minutes, or seconds. Now it will receive the date object (based on the used adapter).
+This will allow more powerful usage and will be compatible with the future digital time selection view.
+
+Either rename the prop to the newly added, but deprecated `shouldDisableClock` or refactor usage to account for the change in prop type.
+The codemod will take care of renaming the prop to keep the existing functionality but feel free to update to the new `shouldDisableTime` prop on your own.
 
 ```diff
  <DateTimePicker

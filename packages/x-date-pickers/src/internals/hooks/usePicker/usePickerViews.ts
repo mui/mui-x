@@ -3,9 +3,9 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateOrTimeView } from '../../models';
+import { DateOrTimeView } from '../../../models';
 import { useViews, UseViewsOptions } from '../useViews';
-import type { UsePickerValueViewsResponse } from './usePickerValue';
+import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeView>

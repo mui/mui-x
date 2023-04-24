@@ -5,12 +5,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import {
-  DateOrTimeView,
-  PickerViewRendererLookup,
-  useLocaleText,
-  validateDateTime,
-} from '../internals';
+import { PickerViewRendererLookup, useLocaleText, validateDateTime } from '../internals';
+import { DateOrTimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -75,6 +71,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date-time',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDateTime,
   });
@@ -186,6 +183,12 @@ MobileDateTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
