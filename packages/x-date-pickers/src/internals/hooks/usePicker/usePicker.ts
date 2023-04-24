@@ -2,7 +2,7 @@ import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { InferError } from '../validation/useValidation';
+import { InferError } from '../useValidation';
 import { buildWarning } from '../../utils/warning';
 import { FieldSection, DateOrTimeView } from '../../../models';
 

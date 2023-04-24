@@ -22,8 +22,8 @@ import {
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
+} from '../internals/models/validation';
+import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
