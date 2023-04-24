@@ -21,7 +21,7 @@ const MultiInputDateTimeRangeFieldRoot = styled(
 )({});
 
 const MultiInputDateTimeRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
   {
     name: 'MuiMultiInputDateTimeRangeField',
     slot: 'Separator',

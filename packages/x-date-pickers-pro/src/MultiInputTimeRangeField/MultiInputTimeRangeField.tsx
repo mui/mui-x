@@ -21,7 +21,7 @@ const MultiInputTimeRangeFieldRoot = styled(
 )({});
 
 const MultiInputTimeRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
   {
     name: 'MuiMultiInputTimeRangeField',
     slot: 'Separator',
