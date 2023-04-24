@@ -110,7 +110,7 @@ export const areDatesEqual = <TDate>(utils: MuiPickersAdapter<TDate>, a: TDate, 
   return utils.isEqual(a, b);
 };
 
-export const getMonthInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TDate) => {
+export const getMonthsInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TDate) => {
   const firstMonth = utils.startOfYear(year);
   const months = [firstMonth];
 

@@ -14,7 +14,7 @@ import {
   FieldSectionContentType,
 } from '../../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
-import { getMonthInYear } from '../../utils/date-utils';
+import { getMonthsInYear } from '../../utils/date-utils';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -84,7 +84,7 @@ export const getLetterEditingOptions = <TDate>(
 ) => {
   switch (sectionType) {
     case 'month': {
-      return getMonthInYear(utils, utils.date()!).map((month) =>
+      return getMonthsInYear(utils, utils.date()!).map((month) =>
         utils.formatByString(month, format!),
       );
     }
@@ -663,7 +663,7 @@ export const getSectionsBoundaries = <TDate>(
 
   const endOfYear = utils.endOfYear(today);
 
-  const { maxDaysInMonth, longestMonth } = getMonthInYear(utils, today).reduce(
+  const { maxDaysInMonth, longestMonth } = getMonthsInYear(utils, today).reduce(
     (acc, month) => {
       const daysInMonth = utils.getDaysInMonth(month);
 
