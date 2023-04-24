@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import {
@@ -16,8 +17,6 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { AdapterFormats } from '@mui/x-date-pickers';
 
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
@@ -34,10 +33,10 @@ const localizedTexts = {
     value: '15.05.2018 09:35',
   },
 };
-describe.only('<AdapterDateFns />', () => {
+describe('<AdapterDateFns />', () => {
   describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss', locale: enUS });
 
-  describe.only('Adapter localization', () => {
+  describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
       const date = adapter.date(TEST_DATE_ISO)!;
