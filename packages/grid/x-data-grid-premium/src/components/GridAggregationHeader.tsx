@@ -32,7 +32,6 @@ const GridAggregationHeaderRoot = styled(Box, {
   [`&.${gridClasses['aggregationColumnHeader--alignCenter']}`]: {
     alignItems: 'center',
   },
-  position: 'relative',
 });
 
 const GridAggregationFunctionLabel = styled('div', {
