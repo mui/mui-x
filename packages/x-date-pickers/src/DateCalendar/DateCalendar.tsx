@@ -21,7 +21,7 @@ import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/dat
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
