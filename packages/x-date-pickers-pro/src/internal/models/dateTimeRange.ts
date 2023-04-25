@@ -7,7 +7,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
-import { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import { DateTimeRangeValidationError } from '../../models';
 import { RangeFieldSection } from './fields';
 
 export interface UseDateTimeRangeFieldProps<TDate>

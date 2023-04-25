@@ -1,14 +1,12 @@
-import * as React from 'react';
-import { Validator } from './useValidation';
+import { Validator } from '../../hooks/useValidation';
 import {
   BaseDateValidationProps,
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
-} from './models';
+} from '../../models/validation';
 import { DateValidationError } from '../../../models';
-import { useLocalizationContext } from '../useUtils';
-import { applyDefaultDate } from '../../utils/date-utils';
+import { applyDefaultDate } from '../date-utils';
 
 export interface DateComponentValidationProps<TDate>
   extends DayValidationProps<TDate>,
@@ -58,43 +56,4 @@ export const validateDate: Validator<
     default:
       return null;
   }
-};
-
-export const useIsDateDisabled = <TDate>({
-  shouldDisableDate,
-  shouldDisableMonth,
-  shouldDisableYear,
-  minDate,
-  maxDate,
-  disableFuture,
-  disablePast,
-}: DateComponentValidationProps<TDate>) => {
-  const adapter = useLocalizationContext<TDate>();
-
-  return React.useCallback(
-    (day: TDate | null) =>
-      validateDate({
-        adapter,
-        value: day,
-        props: {
-          shouldDisableDate,
-          shouldDisableMonth,
-          shouldDisableYear,
-          minDate,
-          maxDate,
-          disableFuture,
-          disablePast,
-        },
-      }) !== null,
-    [
-      adapter,
-      shouldDisableDate,
-      shouldDisableMonth,
-      shouldDisableYear,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-    ],
-  );
 };
