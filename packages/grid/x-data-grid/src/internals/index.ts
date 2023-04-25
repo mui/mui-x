@@ -73,9 +73,9 @@ export type {
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export {
-  useGridVisibleRowsLookup,
+  useGridVisibleRowsState,
   visibleRowsStateInitializer,
-} from '../hooks/features/rows/useGridVisibleRowsLookup';
+} from '../hooks/features/rows/useGridVisibleRowsState';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
 export {

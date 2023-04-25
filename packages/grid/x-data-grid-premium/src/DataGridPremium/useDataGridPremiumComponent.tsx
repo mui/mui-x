@@ -60,7 +60,7 @@ import {
   columnGroupsStateInitializer,
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
-  useGridVisibleRowsLookup,
+  useGridVisibleRowsState,
   visibleRowsStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
@@ -143,7 +143,7 @@ export const useDataGridPremiumComponent = (
   useGridRowPinning(privateApiRef, props);
   useGridColumns(privateApiRef, props);
   useGridRows(privateApiRef, props);
-  useGridVisibleRowsLookup(privateApiRef);
+  useGridVisibleRowsState(privateApiRef);
   useGridParamsApi(privateApiRef);
   useGridDetailPanel(privateApiRef, props);
   useGridColumnSpanning(privateApiRef);

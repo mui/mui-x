@@ -40,7 +40,7 @@ import {
   rowSelectionStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
-  useGridVisibleRowsLookup,
+  useGridVisibleRowsState,
   visibleRowsStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
@@ -127,7 +127,7 @@ export const useDataGridProComponent = (
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
-  useGridVisibleRowsLookup(apiRef);
+  useGridVisibleRowsState(apiRef);
   useGridParamsApi(apiRef);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);

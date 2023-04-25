@@ -17,8 +17,8 @@ export const visibleRowsStateInitializer: GridStateInitializer = (state) => {
   };
 };
 
-export function useGridVisibleRowsLookup(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
-  const updateVisibleRowsLookup = React.useCallback(() => {
+export function useGridVisibleRowsState(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
+  const updateVisibleRowsState = React.useCallback(() => {
     apiRef.current.setState((state) => {
       const visibleRowsState = apiRef.current.applyStrategyProcessor('visibleRows', {
         tree: state.rows.tree,
@@ -40,6 +40,6 @@ export function useGridVisibleRowsLookup(apiRef: React.MutableRefObject<GridPriv
   }, []);
 
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'visibleRows', getVisibleRows);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookup);
-  useGridApiEventHandler(apiRef, 'filteredRowsSet', updateVisibleRowsLookup);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsState);
+  useGridApiEventHandler(apiRef, 'filteredRowsSet', updateVisibleRowsState);
 }
