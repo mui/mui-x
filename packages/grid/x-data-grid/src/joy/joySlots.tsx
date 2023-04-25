@@ -121,7 +121,7 @@ const Button = React.forwardRef<
 const IconButton = React.forwardRef<
   HTMLButtonElement,
   NonNullable<GridSlotsComponentsProps['baseIconButton']>
->(function IconButton({ color, size, sx, ...props }, ref) {
+>(function IconButton({ color, size, sx, touchRippleRef, ...props }, ref) {
   return (
     <JoyIconButton
       {...props}
