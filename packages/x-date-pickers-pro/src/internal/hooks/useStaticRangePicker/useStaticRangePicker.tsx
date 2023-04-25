@@ -32,9 +32,8 @@ export const useStaticRangePicker = <
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
-  validator,
   ref,
+  ...pickerParams
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
@@ -48,9 +47,8 @@ export const useStaticRangePicker = <
     TExternalProps,
     {}
   >({
+    ...pickerParams,
     props,
-    valueManager,
-    validator,
     autoFocusView: autoFocus ?? false,
     additionalViewProps: {
       rangePosition,

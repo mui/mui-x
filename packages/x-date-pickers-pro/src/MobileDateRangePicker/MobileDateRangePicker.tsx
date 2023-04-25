@@ -8,7 +8,7 @@ import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internal/hooks/useMobileRangePicker';
-import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { validateDateRange } from '../internal/utils/validation/validateDateRange';
 import { DateRange } from '../internal/models';
 
 type MobileDateRangePickerComponent = (<TDate>(
@@ -57,6 +57,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
   const { renderPicker } = useMobileRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
+    valueType: 'date',
     validator: validateDateRange,
   });
 

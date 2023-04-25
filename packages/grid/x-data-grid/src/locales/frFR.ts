@@ -47,7 +47,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Tout supprimer',
   filterPanelDeleteIconLabel: 'Supprimer',
   filterPanelLogicOperator: 'Opérateur logique',
   filterPanelOperator: 'Opérateur',
@@ -80,7 +80,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Afficher les colonnes',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',
   columnMenuHideColumn: 'Cacher',
   columnMenuUnsort: 'Annuler le tri',

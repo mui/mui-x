@@ -1,4 +1,4 @@
-import { FieldSectionType } from './fields';
+import { FieldSectionContentType, FieldSectionType } from './fields';
 
 export interface AdapterFormats<TLibFormatToken = string> {
   /** Localized full date @example "Jan 1, 2019" */
@@ -71,7 +71,11 @@ export type AdapterUnits =
 export type FieldFormatTokenMap = {
   [formatToken: string]:
     | FieldSectionType
-    | { sectionType: FieldSectionType; contentType: 'digit' | 'letter' };
+    | {
+        sectionType: FieldSectionType;
+        contentType: FieldSectionContentType;
+        maxLength?: number;
+      };
 };
 
 export interface MuiPickersAdapter<TDate> {
@@ -560,17 +564,17 @@ export interface MuiPickersAdapter<TDate> {
   /**
    * Create a nested list with all the days of the month of the given date grouped by week.
    * @template TDate
-   * @param {TDate} date The given date.
+   * @param {TDate} value The given date.
    * @returns {TDate[][]} A nested list with all the days of the month grouped by week.
    */
-  getWeekArray(date: TDate): TDate[][];
+  getWeekArray(value: TDate): TDate[][];
   /**
    * Get the number of the week of the given date.
    * @template TDate
-   * @param {TDate} date The given date.
+   * @param {TDate} value The given date.
    * @returns {number} The number of the week of the given date.
    */
-  getWeekNumber(date: TDate): number;
+  getWeekNumber(value: TDate): number;
   // TODO v7: Replace with a single range param `[TDate, TDate]`, to be coherent with `isWithingRange`.
   /**
    * Create a list with all the years between the start end the end date.
