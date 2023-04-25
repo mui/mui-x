@@ -165,10 +165,13 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       <TextField
         fullWidth
         {...startDateProps}
+        InputProps={{
+          ...startDateProps.InputProps,
+          readOnly: startReadOnly,
+        }}
         inputProps={{
           ...startDateProps.inputProps,
           ref: startInputRef,
-          readOnly: startReadOnly,
           inputMode: startInputMode,
           onKeyDown: onStartInputKeyDown,
         }}
@@ -177,6 +180,10 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       <TextField
         fullWidth
         {...endDateProps}
+        InputProps={{
+          ...endDateProps.InputProps,
+          readOnly: endReadOnly,
+        }}
         inputProps={{
           ...endDateProps.inputProps,
           ref: endInputRef,
