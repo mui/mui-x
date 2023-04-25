@@ -8,7 +8,7 @@ import useControlled from '@mui/utils/useControlled';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
@@ -88,6 +88,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const utils = useUtils<TDate>();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
+  const localeText = useLocaleText<TDate>();
 
   const props = useThemeProps({
     props: inProps,
@@ -256,19 +257,27 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <DigitalClockList autoFocusItem={autoFocus || !!focusedView}>
+      <DigitalClockList
+        autoFocusItem={autoFocus || !!focusedView}
+        role="listbox"
+        aria-label={localeText.timePickerToolbarTitle}
+      >
         {timeOptions.map((option) => {
           if (skipDisabled && isTimeDisabled(option)) {
             return null;
           }
+          const isSelected = utils.isEqual(option, value);
           return (
             <ClockItem
-              aria-readonly={readOnly}
               key={utils.toISO(option)}
               onClick={() => !readOnly && handleItemSelect(option)}
-              selected={utils.isEqual(option, value)}
+              selected={isSelected}
               disabled={disabled || isTimeDisabled(option)}
               disableRipple={readOnly}
+              role="option"
+              // aria-readonly is not supported here and does not have any effect
+              aria-disabled={readOnly}
+              aria-selected={isSelected}
               {...clockItemProps}
             >
               {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
