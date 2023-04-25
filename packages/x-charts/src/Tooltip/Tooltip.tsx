@@ -15,19 +15,66 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { Highlight, HighlightProps } from '../Highlight';
 import { getSymbol } from '../internals/utils';
 import { generateVirtualElement, useAxisEvents, useMouseTracker, getTootipHasData } from './utils';
-import { FormatterResult } from '../models/seriesType/config';
+import { ChartSeries, ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 
 const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
 
-function DefaultItemContent(props: ItemContentProps) {
-  const { series, dataIndex } = props;
+export type TooltipProps = {
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse.
+   * - 'axis': Shows values associated with the hovered x value
+   * - 'none': Does not display tooltip
+   * @default 'item'
+   */
+  trigger?: 'item' | 'axis' | 'none';
+  /**
+   * Props propagate to the highlight
+   */
+  highlightProps?: Partial<HighlightProps>;
+  /**
+   * Component to override the tooltip content when triger is set to 'item'.
+   */
+  itemContent?: React.ElementType<ItemContentProps<any>>;
+  /**
+   * Component to override the tooltip content when triger is set to 'axis'.
+   */
+  axisContent?: React.ElementType<AxisContentProps>;
+};
 
-  if (dataIndex === undefined) {
+export type AxisContentProps = {
+  /**
+   * Data identifying the triggered axis.
+   */
+  // eslint-disable-next-line react/no-unused-prop-types
+  axisData: AxisInteractionData;
+  /**
+   * The series linked to the triggered axis.
+   */
+  series: ChartSeries<ChartSeriesType>[];
+  /**
+   * The properties of the triggered axis.
+   */
+  axis: AxisDefaultized;
+  /**
+   * The index of the data item triggered.
+   */
+  dataIndex?: null | number;
+  /**
+   * The value associated to the current mouse position.
+   */
+  axisValue: any;
+};
+
+function DefaultItemContent<T extends ChartSeriesType>(props: ItemContentProps<T>) {
+  const { series, itemData } = props;
+
+  if (itemData.dataIndex === undefined) {
     return null;
   }
 
-  const data = series.data[dataIndex];
+  const data = series.data[itemData.dataIndex];
   return (
     <Paper sx={{ p: 1 }}>
       <p>
@@ -37,17 +84,19 @@ function DefaultItemContent(props: ItemContentProps) {
   );
 }
 
-function ItemTooltipContent(
-  props: ItemInteractionData & {
-    content: TooltipProps['itemContent'];
-  },
-) {
-  const { seriesId, type, dataIndex, content } = props;
+function ItemTooltipContent<T extends ChartSeriesType>(props: {
+  itemData: ItemInteractionData<T>;
+  content?: React.ElementType<ItemContentProps<T>>;
+}) {
+  const { content, itemData } = props;
 
-  const series = React.useContext(SeriesContext)[type]!.series[seriesId];
+  const series = React.useContext(SeriesContext)[itemData.type]!.series[
+    itemData.seriesId
+  ] as ChartSeriesDefaultized<T>;
 
-  const Content = content ?? DefaultItemContent;
-  return <Content seriesId={seriesId} type={type} dataIndex={dataIndex} series={series} />;
+  const Content = content ?? DefaultItemContent<T>;
+
+  return <Content itemData={itemData} series={series} />;
 }
 
 function DefaultAxisContent(props: AxisContentProps) {
@@ -91,14 +140,13 @@ function DefaultAxisContent(props: AxisContentProps) {
   );
 }
 
-function AxisTooltipContent(
-  props: AxisInteractionData & {
-    content: TooltipProps['axisContent'];
-  },
-) {
-  const { content, ...other } = props;
-  const dataIndex = props.x && props.x.index;
-  const axisValue = props.x && props.x.value;
+function AxisTooltipContent(props: {
+  axisData: AxisInteractionData;
+  content: TooltipProps['axisContent'];
+}) {
+  const { content, axisData } = props;
+  const dataIndex = axisData.x && axisData.x.index;
+  const axisValue = axisData.x && axisData.x.value;
 
   const { xAxisIds, xAxis } = React.useContext(CartesianContext);
   const series = React.useContext(SeriesContext);
@@ -124,7 +172,7 @@ function AxisTooltipContent(
   const Content = content ?? DefaultAxisContent;
   return (
     <Content
-      {...other}
+      axisData={axisData}
       series={relevantSeries}
       axis={relevantAxis}
       dataIndex={dataIndex}
@@ -133,53 +181,15 @@ function AxisTooltipContent(
   );
 }
 
-export type TooltipProps = {
+type ItemContentProps<T extends ChartSeriesType> = {
   /**
-   * Select the kind of tooltip to display
-   * - 'item': Shows data about the item below the mouse.
-   * - 'axis': Shows values associated with the hovered x value
-   * - 'none': Does not display tooltip
-   * @default 'item'
+   * The data used to identify the triggered item.
    */
-  trigger?: 'item' | 'axis' | 'none';
+  itemData: ItemInteractionData<T>;
   /**
-   * Props propagate to the highlight
+   * The series linked to the triggered axis.
    */
-  highlightProps?: Partial<HighlightProps>;
-  /**
-   * Component to override the tooltip content when triger is set to 'item'.
-   */
-  itemContent?: React.ElementType<ItemContentProps>;
-  /**
-   * Component to override the tooltip content when triger is set to 'axis'.
-   */
-  axisContent?: React.ElementType<AxisContentProps>;
-};
-
-interface AxisContentProps extends AxisInteractionData {
-  /**
-   * The series linked to the triggered axis
-   */
-  series: FormatterResult<'bar' | 'line' | 'scatter'>['series'][];
-  /**
-   * The properties of the triggered axis
-   */
-  axis: AxisDefaultized;
-  /**
-   * The index of the data item triggered
-   */
-  dataIndex?: null | number;
-  /**
-   * The value associated to the current mouse position.
-   */
-  axisValue: any;
-}
-
-type ItemContentProps = ItemInteractionData & {
-  /**
-   * The series linked to the triggered axis
-   */
-  series: FormatterResult<'bar' | 'line' | 'scatter'>['series'];
+  series: ChartSeriesDefaultized<T>;
 };
 
 export function Tooltip(props: TooltipProps) {
@@ -210,9 +220,15 @@ export function Tooltip(props: TooltipProps) {
           style={{ padding: '16px', pointerEvents: 'none' }}
         >
           {trigger === 'item' ? (
-            <ItemTooltipContent {...(displayedData as ItemInteractionData)} content={itemContent} />
+            <ItemTooltipContent
+              itemData={displayedData as ItemInteractionData<ChartSeriesType>}
+              content={itemContent}
+            />
           ) : (
-            <AxisTooltipContent {...(displayedData as AxisInteractionData)} content={axisContent} />
+            <AxisTooltipContent
+              axisData={displayedData as AxisInteractionData}
+              content={axisContent}
+            />
           )}
         </Popper>
       )}

@@ -4,6 +4,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../hooks/useScale';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 import type { TooltipProps } from './Tooltip';
+import { ChartSeriesType } from '../models/seriesType/config';
 
 export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
   if (mousePosition === null) {
@@ -189,7 +190,7 @@ export function useMouseTracker() {
 
 export function getTootipHasData(
   trigger: TooltipProps['trigger'],
-  displayedData: null | AxisInteractionData | ItemInteractionData,
+  displayedData: null | AxisInteractionData | ItemInteractionData<ChartSeriesType>,
 ): boolean {
   if (trigger === 'item') {
     return displayedData !== null;
