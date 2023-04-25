@@ -56,7 +56,7 @@ const columns: GridColDef[] = [
 
 {{"demo": "ValueGetterGrid.js", "bg": "inline"}}
 
-The value generated is used for filtering, sorting, rendering, etc. unless overridden by a more specific configuration.
+The value generated is used for filtering, sorting, rendering, etc. unless overridden by `valueFormatter` or `renderCell`.
 
 ### Value formatter
 
