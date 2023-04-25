@@ -6,36 +6,40 @@ import {
   GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+
+export const visibleRowsStateInitializer: GridStateInitializer = (state) => {
+  return {
+    ...state,
+    visibleRows: {
+      lookup: {},
+    },
+  };
+};
 
 export function useGridVisibleRowsLookup(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
   const updateVisibleRowsLookup = React.useCallback(() => {
     apiRef.current.setState((state) => {
-      const visibleRowsLookup = apiRef.current.applyStrategyProcessor('visibleRowsLookup', {
+      const visibleRowsState = apiRef.current.applyStrategyProcessor('visibleRows', {
         tree: state.rows.tree,
         filteredRowsLookup: state.filter.filteredRowsLookup,
       });
       return {
         ...state,
-        visibleRowsLookup,
+        visibleRows: visibleRowsState,
       };
     });
     apiRef.current.forceUpdate();
   }, [apiRef]);
 
-  const getVisibleRowsLookup = React.useCallback<GridStrategyProcessor<'visibleRowsLookup'>>(
-    (params) => {
-      // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
-      return params.filteredRowsLookup;
-    },
-    [],
-  );
+  const getVisibleRows = React.useCallback<GridStrategyProcessor<'visibleRows'>>((params) => {
+    // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
+    return {
+      lookup: params.filteredRowsLookup,
+    };
+  }, []);
 
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    GRID_DEFAULT_STRATEGY,
-    'visibleRowsLookup',
-    getVisibleRowsLookup,
-  );
+  useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'visibleRows', getVisibleRows);
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookup);
   useGridApiEventHandler(apiRef, 'filteredRowsSet', updateVisibleRowsLookup);
 }

@@ -36,7 +36,10 @@ import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
-import { useGridVisibleRowsLookup } from '../hooks/features/rows/useGridVisibleRowsLookup';
+import {
+  useGridVisibleRowsLookup,
+  visibleRowsStateInitializer,
+} from '../hooks/features/rows/useGridVisibleRowsLookup';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 import {
@@ -65,6 +68,7 @@ export const useDataGridComponent = (
   useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
   useGridInitializeState(rowsStateInitializer, privateApiRef, props);
+  useGridInitializeState(visibleRowsStateInitializer, privateApiRef, props);
   useGridInitializeState(editingStateInitializer, privateApiRef, props);
   useGridInitializeState(focusStateInitializer, privateApiRef, props);
   useGridInitializeState(sortingStateInitializer, privateApiRef, props);

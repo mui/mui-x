@@ -61,6 +61,7 @@ import {
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
   useGridVisibleRowsLookup,
+  visibleRowsStateInitializer,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -118,6 +119,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
   useGridInitializeState(rowPinningStateInitializer, privateApiRef, props);
   useGridInitializeState(rowsStateInitializer, privateApiRef, props);
+  useGridInitializeState(visibleRowsStateInitializer, privateApiRef, props);
   useGridInitializeState(editingStateInitializer, privateApiRef, props);
   useGridInitializeState(focusStateInitializer, privateApiRef, props);
   useGridInitializeState(sortingStateInitializer, privateApiRef, props);

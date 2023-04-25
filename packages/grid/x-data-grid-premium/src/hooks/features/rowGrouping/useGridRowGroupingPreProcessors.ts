@@ -224,6 +224,12 @@ export const useGridRowGroupingPreProcessors = (
     [apiRef],
   );
 
+  const getVisibleRows = React.useCallback<GridStrategyProcessor<'visibleRows'>>((params) => {
+    return {
+      lookup: getVisibleRowsLookup(params),
+    };
+  }, []);
+
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
     apiRef,
@@ -233,12 +239,7 @@ export const useGridRowGroupingPreProcessors = (
   );
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'filtering', filterRows);
   useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'sorting', sortRows);
-  useGridRegisterStrategyProcessor(
-    apiRef,
-    ROW_GROUPING_STRATEGY,
-    'visibleRowsLookup',
-    getVisibleRowsLookup,
-  );
+  useGridRegisterStrategyProcessor(apiRef, ROW_GROUPING_STRATEGY, 'visibleRows', getVisibleRows);
 
   /**
    * 1ST RENDER

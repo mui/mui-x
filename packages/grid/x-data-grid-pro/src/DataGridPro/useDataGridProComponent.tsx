@@ -41,6 +41,7 @@ import {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
   useGridVisibleRowsLookup,
+  visibleRowsStateInitializer,
 } from '@mui/x-data-grid/internals';
 import { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -105,6 +106,7 @@ export const useDataGridProComponent = (
   useGridInitializeState(columnsStateInitializer, apiRef, props);
   useGridInitializeState(rowPinningStateInitializer, apiRef, props);
   useGridInitializeState(rowsStateInitializer, apiRef, props);
+  useGridInitializeState(visibleRowsStateInitializer, apiRef, props);
   useGridInitializeState(editingStateInitializer, apiRef, props);
   useGridInitializeState(focusStateInitializer, apiRef, props);
   useGridInitializeState(sortingStateInitializer, apiRef, props);

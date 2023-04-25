@@ -17,15 +17,16 @@ import type {
   GridTabIndexState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
+import { GridVisibleRowsState } from '../hooks/features/rows/gridVisibleRowsInterfaces';
 import type { GridEditingState } from './gridEditRowModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
-import type { GridRowId } from './gridRows';
 
 /**
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
   rows: GridRowsState;
+  visibleRows: GridVisibleRowsState;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditingState;
   pagination: GridPaginationState;
@@ -39,12 +40,6 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  /**
-   * Visibility status for each row.
-   * A row is visible if it is passing the filters AND if its parents are expanded.
-   * If a row is not registered in this lookup, it is visible.
-   */
-  visibleRowsLookup: Record<GridRowId, boolean>;
 }
 
 /**

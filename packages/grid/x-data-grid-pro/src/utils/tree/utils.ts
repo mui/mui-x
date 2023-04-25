@@ -1,17 +1,18 @@
 import {
   GRID_ROOT_GROUP_ID,
   GridChildrenFromPathLookup,
+  GridFilterState,
   GridGroupNode,
   GridLeafNode,
   GridRowId,
   GridRowTreeConfig,
+  GridRowsState,
   GridTreeNode,
 } from '@mui/x-data-grid';
 import {
   GridTreeDepths,
   GridRowTreeUpdateGroupAction,
   GridRowTreeUpdatedGroupsManager,
-  GridStrategyProcessor,
 } from '@mui/x-data-grid/internals';
 import { RowTreeBuilderGroupingCriterion } from './models';
 import { DataGridProProps } from '../../models/dataGridProProps';
@@ -230,9 +231,12 @@ export const createUpdatedGroupsManager = (): GridRowTreeUpdatedGroupsManager =>
   },
 });
 
-export const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookup'> = ({
+export const getVisibleRowsLookup = ({
   tree,
   filteredRowsLookup,
+}: {
+  tree: GridRowsState['tree'];
+  filteredRowsLookup: GridFilterState['filteredRowsLookup'];
 }) => {
   if (!filteredRowsLookup) {
     return {};
