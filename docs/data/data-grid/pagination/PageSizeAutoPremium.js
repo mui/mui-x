@@ -123,7 +123,7 @@ function CustomToolbar() {
   );
 }
 
-export default function ExcelExport() {
+export default function PageSizeAutoPremium() {
   return (
     <div style={{ height: 320, width: '100%' }}>
       <DataGridPremium
