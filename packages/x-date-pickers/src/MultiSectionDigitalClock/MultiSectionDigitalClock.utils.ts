@@ -8,6 +8,7 @@ interface IGetHoursSectionOptions<TDate> {
   ampm: boolean;
   isDisabled: (value: number) => boolean;
   timeStep: number;
+  resolveAriaLabel: (value: string) => string;
 }
 
 export const getHourSectionOptions = <TDate>({
@@ -16,6 +17,7 @@ export const getHourSectionOptions = <TDate>({
   utils,
   ampm,
   isDisabled,
+  resolveAriaLabel,
   timeStep,
 }: IGetHoursSectionOptions<TDate>): MultiSectionDigitalClockOption<number>[] => {
   const currentHours = value ? utils.getHours(value) : null;
@@ -41,6 +43,7 @@ export const getHourSectionOptions = <TDate>({
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
     let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
+    const ariaLabel = resolveAriaLabel(label);
 
     label = utils.formatNumber(label);
 
@@ -49,6 +52,7 @@ export const getHourSectionOptions = <TDate>({
       label,
       isSelected,
       isDisabled,
+      ariaLabel,
     });
   }
   return result;
@@ -60,6 +64,7 @@ interface IGetTimeSectionOptions {
   timeStep: number;
   resolveLabel: (value: number) => string;
   hasValue?: boolean;
+  resolveAriaLabel: (value: string) => string;
 }
 
 export const getTimeSectionOptions = ({
@@ -67,6 +72,7 @@ export const getTimeSectionOptions = ({
   isDisabled,
   timeStep,
   resolveLabel,
+  resolveAriaLabel,
   hasValue = true,
 }: IGetTimeSectionOptions): MultiSectionDigitalClockOption<number>[] => {
   const isSelected = (timeValue: number) => {
@@ -85,6 +91,7 @@ export const getTimeSectionOptions = ({
         label: resolveLabel(timeValue),
         isDisabled,
         isSelected,
+        ariaLabel: resolveAriaLabel(timeValue.toString()),
       };
     }),
   ];

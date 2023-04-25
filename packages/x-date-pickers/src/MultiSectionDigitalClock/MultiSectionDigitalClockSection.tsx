@@ -33,6 +33,7 @@ export interface MultiSectionDigitalClockSectionProps<TValue>
   onChange: (value: TValue) => void;
   active?: boolean;
   skipDisabled?: boolean;
+  role?: string;
 }
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockSectionProps<any>) => {
@@ -166,20 +167,26 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
         className={clsx(classes.root, className)}
         ownerState={ownerState}
         autoFocusItem={autoFocus && active}
+        role="listbox"
         {...other}
       >
         {items.map((option) => {
           if (skipDisabled && option.isDisabled?.(option.value)) {
             return null;
           }
+          const isSelected = option.isSelected(option.value);
           return (
             <DigitalClockSectionItem
-              aria-readonly={readOnly}
               key={option.label}
               onClick={() => !readOnly && onChange(option.value)}
-              selected={option.isSelected(option.value)}
+              selected={isSelected}
               disabled={disabled ?? option.isDisabled?.(option.value)}
               disableRipple={readOnly}
+              role="option"
+              // aria-readonly is not supported here and does not have any effect
+              aria-disabled={readOnly}
+              aria-label={option.ariaLabel}
+              aria-selected={isSelected}
               {...slotProps?.digitalClockSectionItem}
             >
               {option.label}

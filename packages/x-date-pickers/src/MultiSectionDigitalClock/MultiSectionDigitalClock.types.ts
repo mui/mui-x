@@ -15,6 +15,7 @@ export interface MultiSectionDigitalClockOption<TValue> {
   isSelected: (value: TValue) => boolean;
   label: string;
   value: TValue;
+  ariaLabel: string;
 }
 
 export interface ExportedMultiSectionDigitalClockProps<TDate>
