@@ -36,6 +36,7 @@ import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
+import { useGridVisibleRowsLookup } from '../hooks/features/rows/useGridVisibleRowsLookup';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 import {
@@ -79,6 +80,7 @@ export const useDataGridComponent = (
   useGridRowSelection(privateApiRef, props);
   useGridColumns(privateApiRef, props);
   useGridRows(privateApiRef, props);
+  useGridVisibleRowsLookup(privateApiRef);
   useGridParamsApi(privateApiRef);
   useGridColumnSpanning(privateApiRef);
   useGridColumnGrouping(privateApiRef, props);
