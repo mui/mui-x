@@ -54,9 +54,13 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "ValueGetterGrid.js", "bg": "inline"}}
+The value returned by `valueGetter` is used for:
 
-The value generated is used for filtering, sorting, rendering, etc. unless overridden by `valueFormatter` or `renderCell`.
+- filtering
+- sorting
+- rendering (unless overridden by [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) or [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells))
+
+{{"demo": "ValueGetterGrid.js", "bg": "inline"}}
 
 ### Value formatter
 
