@@ -191,38 +191,76 @@ const Switch = React.forwardRef<
 const Select = React.forwardRef<
   HTMLButtonElement,
   NonNullable<GridSlotsComponentsProps['baseSelect']>
->(({ value, onChange, size, color, variant, ...props }, ref) => {
-  const handleChange: JoySelectProps<any>['onChange'] = (event, newValue) => {
-    if (event && onChange) {
-      // Same as in https://github.com/mui/material-ui/blob/e5558282a8f36856aef1299f3a36f3235e92e770/packages/mui-material/src/Select/SelectInput.js#L288-L300
+>(
+  (
+    {
+      value,
+      onChange,
+      size,
+      color,
+      variant,
+      inputProps,
+      MenuProps,
+      inputRef,
+      error,
+      native,
+      fullWidth,
+      labelId,
+      ...props
+    },
+    ref,
+  ) => {
+    const handleChange: JoySelectProps<any>['onChange'] = (event, newValue) => {
+      if (event && onChange) {
+        // Same as in https://github.com/mui/material-ui/blob/e5558282a8f36856aef1299f3a36f3235e92e770/packages/mui-material/src/Select/SelectInput.js#L288-L300
 
-      // Redefine target to allow name and value to be read.
-      // This allows seamless integration with the most popular form libraries.
-      // https://github.com/mui/material-ui/issues/13485#issuecomment-676048492
-      // Clone the event to not override `target` of the original event.
-      const nativeEvent = (event as React.SyntheticEvent).nativeEvent || event;
-      // @ts-ignore The nativeEvent is function, not object
-      const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
+        // Redefine target to allow name and value to be read.
+        // This allows seamless integration with the most popular form libraries.
+        // https://github.com/mui/material-ui/issues/13485#issuecomment-676048492
+        // Clone the event to not override `target` of the original event.
+        const nativeEvent = (event as React.SyntheticEvent).nativeEvent || event;
+        // @ts-ignore The nativeEvent is function, not object
+        const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
 
-      Object.defineProperty(clonedEvent, 'target', {
-        writable: true,
-        value: { value: newValue, name: props.name },
-      });
-      onChange(clonedEvent, null);
-    }
-  };
+        Object.defineProperty(clonedEvent, 'target', {
+          writable: true,
+          value: { value: newValue, name: props.name },
+        });
+        onChange(clonedEvent, null);
+      }
+    };
 
-  return (
-    <JoySelect
-      {...(props as JoySelectProps<any>)}
-      size={convertSize(size)}
-      color={convertColor(color)}
-      variant={convertVariant(variant) ?? 'plain'}
-      ref={ref}
-      value={value}
-      onChange={handleChange}
-    />
-  );
+    return (
+      <JoySelect
+        {...(props as JoySelectProps<any>)}
+        size={convertSize(size)}
+        color={convertColor(color)}
+        variant={convertVariant(variant) ?? 'plain'}
+        ref={ref}
+        value={value}
+        onChange={handleChange}
+        slotProps={{
+          button: {
+            'aria-labelledby': labelId,
+          },
+        }}
+      />
+    );
+  },
+);
+
+const Option = React.forwardRef<
+  HTMLLIElement,
+  NonNullable<GridSlotsComponentsProps['baseSelectOption']>
+>(({ native, ...props }, ref) => {
+  return <JoyOption {...props} ref={ref} />;
+});
+
+const InputLabel = React.forwardRef<
+  HTMLLabelElement,
+  NonNullable<GridSlotsComponentsProps['baseInputLabel']>
+>(({ shrink, variant, sx, ...props }, ref) => {
+  return <JoyFormLabel {...props} ref={ref} sx={sx as SxProps<Theme>} />;
 });
 
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
@@ -232,8 +270,8 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseIconButton: IconButton,
   baseSwitch: Switch,
   baseSelect: Select,
-  baseSelectOption: JoyOption,
-  baseInputLabel: JoyFormLabel,
+  baseSelectOption: Option,
+  baseInputLabel: InputLabel,
   baseFormControl: JoyFormControl,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
