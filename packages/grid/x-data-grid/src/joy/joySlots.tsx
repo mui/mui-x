@@ -10,6 +10,7 @@ import JoyIconButton from '@mui/joy/IconButton';
 import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
 import JoyOption from '@mui/joy/Option';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 
@@ -83,9 +84,13 @@ const Checkbox = React.forwardRef<
 const TextField = React.forwardRef<
   HTMLDivElement,
   NonNullable<GridSlotsComponentsProps['baseTextField']>
->(({ onChange, label, placeholder, value, inputRef, type, size, variant }, ref) => {
+>(({ onChange, label, placeholder, value, inputRef, type, size, variant, ...props }, ref) => {
+  const rootRef = useForkRef(ref, props.InputProps?.ref);
+  const inputForkRef = useForkRef(inputRef, props?.inputProps?.ref);
+  const { startAdornment, endAdornment } = props.InputProps || {};
+
   return (
-    <JoyFormControl ref={ref}>
+    <JoyFormControl ref={rootRef}>
       <JoyFormLabel>{label}</JoyFormLabel>
       <JoyInput
         type={type}
@@ -94,7 +99,9 @@ const TextField = React.forwardRef<
         placeholder={placeholder}
         variant={convertVariant(variant) ?? 'plain'}
         size={convertSize(size)}
-        slotProps={{ input: { ref: inputRef } }}
+        slotProps={{ input: { ...props?.inputProps, ref: inputForkRef } }}
+        startDecorator={startAdornment}
+        endDecorator={endAdornment}
       />
     </JoyFormControl>
   );
