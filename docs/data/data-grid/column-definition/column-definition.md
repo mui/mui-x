@@ -33,26 +33,54 @@ But for some columns, it can be useful to manually get and format the value to r
 
 ### Value getter
 
-Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.
+Sometimes a column might not have a desired value.
+You can use the `valueGetter` attribute of `GridColDef` to:
 
-To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
+1. Transform the value
 
-```tsx
-function getFullName(params) {
-  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
-}
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'taxRate',
+       valueGetter: (params) => {
+         if (!params.value) {
+           return params.value;
+         }
+         // Convert the decimal value to a percentage
+         return params.value * 100;
+       },
+     },
+   ];
+   ```
 
-const columns: GridColDef[] = [
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    width: 160,
-    valueGetter: getFullName,
-  },
-];
-```
+2. Render a combination of different fields
+
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'fullName',
+       valueGetter: (params) => {
+         return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+       },
+     },
+   ];
+   ```
+
+3. Derive a value from a complex value
+
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'profit',
+       valueGetter: ({ row }) => {
+         if (!row.gross || !row.costs) {
+           return null;
+         }
+         return row.gross - row.costs;
+       },
+     },
+   ];
+   ```
 
 The value returned by `valueGetter` is used for:
 
@@ -60,7 +88,7 @@ The value returned by `valueGetter` is used for:
 - sorting
 - rendering (unless overridden by [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) or [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells))
 
-{{"demo": "ValueGetterGrid.js", "bg": "inline"}}
+{{"demo": "ValueGetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Value formatter
 
