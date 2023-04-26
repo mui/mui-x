@@ -45,6 +45,6 @@ export function ItemTooltipContent<T extends ChartSeriesType>(props: {
   ] as ChartSeriesDefaultized<T>;
 
   const Content = content ?? DefaultItemContent<T>;
-
+  
   return <Content itemData={itemData} series={series} />;
 }

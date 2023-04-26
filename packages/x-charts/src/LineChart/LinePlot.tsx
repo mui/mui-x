@@ -71,7 +71,6 @@ export function LinePlot() {
                     id={seriesId}
                     d={areaPath(d3Data) || undefined}
                     color={series[seriesId].area.color ?? series[seriesId].color}
-                    {...getInteractionItemProps({ type: 'line', seriesId })}
                   />
                 )
               );
@@ -111,7 +110,6 @@ export function LinePlot() {
                   id={seriesId}
                   d={linePath(d3Data) || undefined}
                   color={series[seriesId].color}
-                  {...getInteractionItemProps({ type: 'line', seriesId })}
                 />
               );
             });
