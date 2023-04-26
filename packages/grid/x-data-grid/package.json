@@ -47,10 +47,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.21.0",
-    "@mui/utils": "^5.11.13",
+    "@mui/utils": "^5.12.0",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.7"
+    "reselect": "^4.1.8"
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",

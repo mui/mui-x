@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { adapterToUse } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
@@ -28,7 +29,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onClose={onClose}
             defaultValue={values[0]}
             open
-            componentsProps={{ actionBar: { actions: ['clear'] } }}
+            slotProps={{ actionBar: { actions: ['clear'] } }}
           />,
         );
 
@@ -64,7 +65,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onAccept={onAccept}
             onClose={onClose}
             open
-            componentsProps={{ actionBar: { actions: ['clear'] } }}
+            slotProps={{ actionBar: { actions: ['clear'] } }}
             value={emptyValue}
           />,
         );
@@ -90,7 +91,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onClose={onClose}
             open
             value={values[0]}
-            componentsProps={{ actionBar: { actions: ['cancel'] } }}
+            slotProps={{ actionBar: { actions: ['cancel'] } }}
             closeOnSelect={false}
           />,
         );
@@ -124,7 +125,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onClose={onClose}
             open
             value={values[0]}
-            componentsProps={{ actionBar: { actions: ['cancel'] } }}
+            slotProps={{ actionBar: { actions: ['cancel'] } }}
             closeOnSelect={false}
           />,
         );
@@ -150,7 +151,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onClose={onClose}
             open
             defaultValue={values[0]}
-            componentsProps={{ actionBar: { actions: ['accept'] } }}
+            slotProps={{ actionBar: { actions: ['accept'] } }}
             closeOnSelect={false}
           />,
         );
@@ -177,7 +178,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onClose={onClose}
             open
             defaultValue={values[0]}
-            componentsProps={{ actionBar: { actions: ['accept'] } }}
+            slotProps={{ actionBar: { actions: ['accept'] } }}
             closeOnSelect={false}
           />,
         );
@@ -201,7 +202,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
             onClose={onClose}
             open
             value={values[0]}
-            componentsProps={{ actionBar: { actions: ['accept'] } }}
+            slotProps={{ actionBar: { actions: ['accept'] } }}
             closeOnSelect={false}
           />,
         );
@@ -210,6 +211,48 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         userEvent.mousePress(screen.getByText(/ok/i));
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
+        expect(onClose.callCount).to.equal(1);
+      });
+    });
+
+    describe('today action', () => {
+      it("should call onClose, onChange with today's value and onAccept with today's value", () => {
+        const onChange = spy();
+        const onAccept = spy();
+        const onClose = spy();
+
+        render(
+          <ElementToTest
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            defaultValue={values[0]}
+            open
+            slotProps={{ actionBar: { actions: ['today'] } }}
+          />,
+        );
+
+        userEvent.mousePress(screen.getByText(/today/i));
+
+        const startOfToday =
+          type === 'date' ? adapterToUse.startOfDay(adapterToUse.date()) : adapterToUse.date();
+
+        expect(onChange.callCount).to.equal(1);
+        if (type === 'date-range') {
+          onChange.lastCall.args[0].forEach((value) => {
+            expect(value).toEqualDateTime(startOfToday);
+          });
+        } else {
+          expect(onChange.lastCall.args[0]).toEqualDateTime(startOfToday);
+        }
+        expect(onAccept.callCount).to.equal(1);
+        if (type === 'date-range') {
+          onAccept.lastCall.args[0].forEach((value) => {
+            expect(value).toEqualDateTime(startOfToday);
+          });
+        } else {
+          expect(onAccept.lastCall.args[0]).toEqualDateTime(startOfToday);
+        }
         expect(onClose.callCount).to.equal(1);
       });
     });

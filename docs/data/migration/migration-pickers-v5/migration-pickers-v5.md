@@ -453,7 +453,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  renderInput={(inputProps) => <TextField {...props} variant="outlined" />}
-  +  componentsProps={{ textField: { variant: 'outlined' } }}
+  +  slotProps={{ textField: { variant: 'outlined' } }}
    />
 
    <DateRangePicker
@@ -464,7 +464,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} variant="outlined" />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ textField: { variant: 'outlined' } }}
+  +  slotProps={{ textField: { variant: 'outlined' } }}
    />
   ```
 
@@ -479,18 +479,18 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ fieldSeparator: { children: 'to' } }}
+  +  slotProps={{ fieldSeparator: { children: 'to' } }}
    />
   ```
 
 ### Toolbar (`ToolbarComponent`)
 
-- ✅ The `ToolbarComponent` has been replaced by a `Toolbar` component slot:
+- ✅ The `ToolbarComponent` has been replaced by a `toolbar` component slot:
 
   ```diff
    <DatePicker
   -  ToolbarComponent={MyToolbar}
-  +  components={{ Toolbar: MyToolbar }}
+  +  slots={{ toolbar: MyToolbar }}
    />
   ```
 
@@ -501,7 +501,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -  toolbarPlaceholder="__"
   -  toolbarFormat="DD / MM / YYYY"
   -  showToolbar
-  +  componentsProps={{
+  +  slotProps={{
   +    toolbar: {
   +      toolbarPlaceholder: '__',
   +      toolbarFormat: 'DD / MM / YYYY',
@@ -554,8 +554,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
    <DatePicker
   -  ToolbarComponent={CustomToolbarComponent}
-  +  components={{
-  +    Toolbar: CustomToolbarComponent
+  +  slots={{
+  +    toolbar: CustomToolbarComponent
   +  }}
    />
   ```
@@ -573,8 +573,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    )
    <DateRangePicker
   -  ToolbarComponent={CustomToolbarComponent}
-  +  components={{
-  +    Toolbar: CustomToolbarComponent
+  +  slots={{
+  +    toolbar: CustomToolbarComponent
   +  }}
    />
   ```
@@ -589,7 +589,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -  hideTabs={false}
   -  dateRangeIcon={<LightModeIcon />}
   -  timeIcon={<AcUnitIcon />}
-  +  componentsProps={{
+  +  slotProps={{
   +    tabs: {
   +      hidden: false,
   +      dateIcon: <LightModeIcon />,
@@ -616,8 +616,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
      </div>
    )
    <DateTimePicker
-     components={{
-       Tabs: CustomTabsComponent
+     slots={{
+       tabs: CustomTabsComponent
      }}
    />
   ```
@@ -629,25 +629,33 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   ```diff
    <DatePicker
-     componentsProps={{
+  -  componentsProps={{
   -     actionBar: {
   -       actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
   -     },
+  -  }}
+  +  componentsProps={{
   +     actionBar: ({ wrapperVariant }) => ({
   +       actions: wrapperVariant === 'desktop' ? [] : ['clear'],
   +     }),
-     }}
+  +  }}
+     // or using the new `slots` prop
+  +  slotProps={{
+  +     actionBar: ({ wrapperVariant }) => ({
+  +       actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+  +     }),
+  +  }}
    />
   ```
 
 ### Day (`renderDay`)
 
-- The `renderDay` prop has been replaced by a `Day` component slot:
+- The `renderDay` prop has been replaced by a `day` component slot:
 
   ```diff
    <DatePicker
   -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
-  +  components={{ Day: CustomDay }}
+  +  slots={{ day: CustomDay }}
    />
   ```
 
@@ -667,8 +675,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
       <DatePicker
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        components={{ Day: CustomDay }}
-        componentsProps={{
+        slots={{ day: CustomDay }}
+        slotProps={{
           day: { selectedDay: value },
         }}
       />
@@ -683,18 +691,18 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PopperProps={{ onClick: handleClick }}
-  +  componentsProps={{ popper: { onClick: handleClick } }}
+  +  slotProps={{ popper: { onClick: handleClick } }}
    />
   ```
 
 ### ✅ Desktop transition (`TransitionComponent`)
 
-- The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot:
+- The `TransitionComponent` prop has been replaced by a `desktopTransition` component slot:
 
   ```diff
    <DatePicker
   -  TransitionComponent={Fade}
-  +  components={{ DesktopTransition: Fade }}
+  +  slots={{ desktopTransition: Fade }}
    />
   ```
 
@@ -705,7 +713,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  DialogProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ dialog: { backgroundColor: 'red' }}}
+  +  slotProps={{ dialog: { backgroundColor: 'red' }}}
    />
   ```
 
@@ -716,7 +724,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' } }}
+  +  slotProps={{ desktopPaper: { backgroundColor: 'red' } }}
    />
   ```
 
@@ -727,7 +735,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  TrapFocusProps={{ isEnabled: () => false }}
-  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false } }}
+  +  slotProps={{ desktopTrapFocus: { isEnabled: () => false } }}
    />
   ```
 
@@ -765,10 +773,16 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    function App() {
      return (
        <DatePicker
-          components={{
+  -       components={{
   -         PaperContent: MyCustomLayout,
+  -       }}
+  +       components={{
   +         Layout: MyCustomLayout,
-          }}
+  +       }}
+          // or using the new `slots` prop
+  +       slots={{
+  +         layout: MyCustomLayout,
+  +       }}
        />
      );
    }
@@ -778,19 +792,31 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 - The component slot `LeftArrowButton` has been renamed to `PreviousIconButton`:
 
-```diff
- <DatePicker
-   components={{
--    LeftArrowButton: CustomButton,
-+    PreviousIconButton: CustomButton,
-   }}
+  ```diff
+   <DatePicker
+  -  components={{
+  -    LeftArrowButton: CustomButton,
+  -  }}
+  +  components={{
+  +    PreviousIconButton: CustomButton,
+  +  }}
+     // or using the new `slots` prop
+  +  slots={{
+  +    previousIconButton: CustomButton,
+  +  }}
 
-   componentsProps={{
--    leftArrowButton: {},
-+    previousIconButton: {},
-   }}
- />
-```
+  -  componentsProps={{
+  -    leftArrowButton: {},
+  -  }}
+  +  componentsProps={{
+  +    previousIconButton: {},
+  +  }}
+     // or using the new `slotProps` prop
+  +  slotProps={{
+  +    previousIconButton: {},
+  +  }}
+   />
+  ```
 
 ### ✅ Right arrow button
 
@@ -798,15 +824,27 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   ```diff
    <DatePicker
-     components={{
+  -  components={{
   -    RightArrowButton: CustomButton,
+  -  }}
+  +  components={{
   +    NextIconButton: CustomButton,
-     }}
+  +  }}
+     // or using the new `slots` prop
+  +  slots={{
+  +    nextIconButton: CustomButton,
+  +  }}
 
-     componentsProps={{
+  -  componentsProps={{
   -    rightArrowButton: {},
+  -  }}
+  +  componentsProps={{
   +    nextIconButton: {},
-     }}
+  +  }}
+     // or using the new `slotProps` prop
+  +  slotProps={{
+  +    nextIconButton: {},
+  +  }}
    />
   ```
 
@@ -818,7 +856,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  InputProps={{ color: 'primary' }}
-  +  componentsProps={{ textField: { InputProps: { color: 'primary' } } }}
+  +  slotProps={{ textField: { InputProps: { color: 'primary' } } }}
    />
   ```
 
@@ -829,7 +867,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  InputAdornmentProps={{ position: 'start' }}
-  +  componentsProps={{ inputAdornment: { position: 'start' } }}
+  +  slotProps={{ inputAdornment: { position: 'start' } }}
    />
   ```
 
@@ -840,7 +878,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  OpenPickerButtonProps={{ ref: buttonRef }}
-  +  componentsProps={{ openPickerButton: { ref: buttonRef } }}
+  +  slotProps={{ openPickerButton: { ref: buttonRef } }}
    />
   ```
 
@@ -908,3 +946,26 @@ npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
+
+:::warning
+If this codemod is applied on a component with both a `slots` and a `components` prop, the output will contain two `slots` props.
+You are then responsible for merging those two props manually.
+
+For example:
+
+```tsx
+// Before running the codemod
+<DatePicker
+  slots={{ textField: MyTextField }}
+  components={{ toolbar: MyToolbar }}
+/>
+
+// After running the codemod
+<DatePicker
+  slots={{ textField: MyTextField }}
+  slots={{ toolbar: MyToolbar }}
+/>
+```
+
+The same applies to `slotProps` and `componentsProps`.
+:::
