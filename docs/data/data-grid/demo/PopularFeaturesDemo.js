@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, ThemeProvider } from '@mui/material/styles';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -246,6 +246,19 @@ RowDemo.propTypes = {
   row: PropTypes.object.isRequired,
 };
 
+function CustomSizeAggregationFooter(props) {
+  const theme = useTheme();
+  return (
+    <ThemeProvider theme={theme}>
+      <Typography color="textPrimary">Total: {props.value}</Typography>
+    </ThemeProvider>
+  );
+}
+
+CustomSizeAggregationFooter.propTypes = {
+  value: PropTypes.number.isRequired,
+};
+
 const columns = [
   {
     field: 'name',
@@ -258,46 +271,53 @@ const columns = [
       if (!params.value) {
         return '';
       }
-      return (
-        <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
-            <Link
-              href={`/x/react-data-grid${params.row.detailPage}`}
-              target="_blank"
-            >
-              {params.value}
-            </Link>
-          </Typography>
-          {params.row.newBadge && (
-            <Box
-              sx={{
-                width: 'fit-content',
-                height: 'fit-content',
-                fontSize: '0.8em',
-                fontWeight: 600,
-                position: 'absolute',
-                textAlign: 'center',
-                top: -13,
-                left: -20,
-                background: '#fcf0a0',
-                color: '#af5b00',
-                px: 1,
-                borderRadius: 10,
-              }}
-            >
-              New
-            </Box>
-          )}
-        </Box>
-      );
+
+      switch (typeof params.value) {
+        case 'string':
+          return;
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
+              <Link
+                href={`/x/react-data-grid${params.row.detailPage}`}
+                target="_blank"
+              >
+                {params.value}
+              </Link>
+            </Typography>
+            {params.row.newBadge && (
+              <Box
+                sx={{
+                  width: 'fit-content',
+                  height: 'fit-content',
+                  fontSize: '0.8em',
+                  fontWeight: 600,
+                  position: 'absolute',
+                  textAlign: 'center',
+                  top: -13,
+                  left: -20,
+                  background: '#fcf0a0',
+                  color: '#af5b00',
+                  px: 1,
+                  borderRadius: 10,
+                }}
+              >
+                New
+              </Box>
+            )}
+          </Box>;
+        case 'number':
+          return <CustomSizeAggregationFooter value={params.value} />;
+        default:
+          return '';
+      }
     },
   },
   {
@@ -319,7 +339,7 @@ const columns = [
         case 'string':
           return <PlanTag plan={params.value} />;
         case 'number':
-          return params.value;
+          return <CustomSizeAggregationFooter value={params.value} />;
         default:
           return '';
       }
