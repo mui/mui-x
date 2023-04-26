@@ -5,10 +5,16 @@ import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { LineElement } from './LineElement';
 import { AreaElement } from './AreaElement';
+import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { MarkElement } from './MarkElement';
+import { getValueToPositionMapper } from '../hooks/useScale';
+import getCurveFactory from '../internals/getCurve';
 
 export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
+
+  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -37,7 +43,7 @@ export function LinePlot() {
         {Object.keys(seriesPerAxis).flatMap((key) => {
           const [xAxisKey, yAxisKey] = key.split('-');
 
-          const xScale = xAxis[xAxisKey].scale;
+          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
@@ -54,10 +60,10 @@ export function LinePlot() {
             .x((d) => xScale(d.x))
             .y0((d) => yScale(d.y[0]))
             .y1((d) => yScale(d.y[1]));
-
           return stackingGroups.flatMap((groupIds) => {
             return groupIds.flatMap((seriesId) => {
               const stackedData = series[seriesId].stackedData;
+              const curve = getCurveFactory(series[seriesId].curve);
               const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
               return (
@@ -65,8 +71,9 @@ export function LinePlot() {
                   <AreaElement
                     key={seriesId}
                     id={seriesId}
-                    d={areaPath(d3Data) || undefined}
+                    d={areaPath.curve(curve)(d3Data) || undefined}
                     color={series[seriesId].area.color ?? series[seriesId].color}
+                    {...getInteractionItemProps({ type: 'line', seriesId })}
                   />
                 )
               );
@@ -78,7 +85,7 @@ export function LinePlot() {
         {Object.keys(seriesPerAxis).flatMap((key) => {
           const [xAxisKey, yAxisKey] = key.split('-');
 
-          const xScale = xAxis[xAxisKey].scale;
+          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
@@ -98,16 +105,55 @@ export function LinePlot() {
           return stackingGroups.flatMap((groupIds) => {
             return groupIds.flatMap((seriesId) => {
               const stackedData = series[seriesId].stackedData;
+              const curve = getCurveFactory(series[seriesId].curve);
               const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
               return (
                 <LineElement
                   key={seriesId}
                   id={seriesId}
-                  d={linePath(d3Data) || undefined}
+                  d={linePath.curve(curve)(d3Data) || undefined}
                   color={series[seriesId].color}
+                  {...getInteractionItemProps({ type: 'line', seriesId })}
                 />
               );
+            });
+          });
+        })}
+      </g>
+      <g>
+        {Object.keys(seriesPerAxis).flatMap((key) => {
+          const [xAxisKey, yAxisKey] = key.split('-');
+
+          const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
+          const yScale = yAxis[yAxisKey].scale;
+          const xData = xAxis[xAxisKey].data;
+
+          if (xData === undefined) {
+            throw new Error(
+              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+            );
+          }
+
+          return stackingGroups.flatMap((groupIds) => {
+            return groupIds.flatMap((seriesId) => {
+              const stackedData = series[seriesId].stackedData;
+
+              return xData?.map((x, index) => {
+                const y = stackedData[index][1];
+                return (
+                  <MarkElement
+                    key={`${seriesId}-${index}`}
+                    id={seriesId}
+                    dataIndex={index}
+                    shape="circle"
+                    color={series[seriesId].color}
+                    x={xScale(x)}
+                    y={yScale(y)}
+                    {...getInteractionItemProps({ type: 'line', seriesId, dataIndex: index })}
+                  />
+                );
+              });
             });
           });
         })}

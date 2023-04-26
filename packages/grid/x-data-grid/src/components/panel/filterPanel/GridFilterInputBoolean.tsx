@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
+import { unstable_useId as useId } from '@mui/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -7,6 +8,9 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
   const { item, applyValue, apiRef, focusElementRef, ...others } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const rootProps = useGridRootProps();
+
+  const labelId = useId();
+  const selectId = useId();
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
@@ -26,43 +30,53 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
     setFilterValueState(item.value || '');
   }, [item.value]);
 
+  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+
   return (
-    <rootProps.slots.baseTextField
-      // TODO: use baseSelect slot
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      value={filterValueState}
-      onChange={onFilterChange}
-      select
-      variant="standard"
-      SelectProps={{
-        native: isSelectNative,
-        displayEmpty: true,
-        ...rootProps.slotProps?.baseSelect,
-      }}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputRef={focusElementRef}
-      {...others}
-      {...rootProps.slotProps?.baseTextField}
-    >
-      <rootProps.slots.baseSelectOption {...baseSelectOptionProps} native={isSelectNative} value="">
-        {apiRef.current.getLocaleText('filterValueAny')}
-      </rootProps.slots.baseSelectOption>
-      <rootProps.slots.baseSelectOption
-        {...baseSelectOptionProps}
-        native={isSelectNative}
-        value="true"
+    <React.Fragment>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        shrink
+        variant="standard"
       >
-        {apiRef.current.getLocaleText('filterValueTrue')}
-      </rootProps.slots.baseSelectOption>
-      <rootProps.slots.baseSelectOption
-        {...baseSelectOptionProps}
+        {label}
+      </rootProps.slots.baseInputLabel>
+      <rootProps.slots.baseSelect
+        labelId={labelId}
+        id={selectId}
+        label={label}
+        value={filterValueState}
+        onChange={onFilterChange}
+        variant="standard"
         native={isSelectNative}
-        value="false"
+        displayEmpty
+        inputProps={{ ref: focusElementRef }}
+        {...others}
+        {...baseSelectProps}
       >
-        {apiRef.current.getLocaleText('filterValueFalse')}
-      </rootProps.slots.baseSelectOption>
-    </rootProps.slots.baseTextField>
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value=""
+        >
+          {apiRef.current.getLocaleText('filterValueAny')}
+        </rootProps.slots.baseSelectOption>
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value="true"
+        >
+          {apiRef.current.getLocaleText('filterValueTrue')}
+        </rootProps.slots.baseSelectOption>
+        <rootProps.slots.baseSelectOption
+          {...baseSelectOptionProps}
+          native={isSelectNative}
+          value="false"
+        >
+          {apiRef.current.getLocaleText('filterValueFalse')}
+        </rootProps.slots.baseSelectOption>
+      </rootProps.slots.baseSelect>
+    </React.Fragment>
   );
 }
