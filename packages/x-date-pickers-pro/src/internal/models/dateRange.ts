@@ -5,7 +5,7 @@ import {
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from './range';
-import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
+import type { DateRangeValidationError } from '../../models';
 import { RangeFieldSection } from './fields';
 
 /**

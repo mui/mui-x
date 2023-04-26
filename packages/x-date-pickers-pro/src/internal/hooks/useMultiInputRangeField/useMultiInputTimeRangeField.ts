@@ -17,10 +17,10 @@ import { TimeValidationError } from '@mui/x-date-pickers/models';
 import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import {
-  TimeRangeValidationError,
-  TimeRangeComponentValidationProps,
   validateTimeRange,
-} from '../validation/useTimeRangeValidation';
+  TimeRangeComponentValidationProps,
+} from '../../utils/validation/validateTimeRange';
+import { TimeRangeValidationError } from '../../../models';
 import type {
   UseMultiInputTimeRangeFieldDefaultizedProps,
   UseMultiInputTimeRangeFieldParams,
