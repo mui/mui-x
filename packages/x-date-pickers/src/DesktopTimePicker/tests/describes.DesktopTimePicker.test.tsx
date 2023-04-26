@@ -12,11 +12,19 @@ import {
   expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopTimePicker });
+
+  describePicker(DesktopTimePicker, {
+    render,
+    fieldType: 'single-input',
+    variant: 'desktop',
+    hasNoView: true,
+  });
 
   describeValidation(DesktopTimePicker, () => ({
     render,

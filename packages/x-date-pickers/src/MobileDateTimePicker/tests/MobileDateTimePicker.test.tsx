@@ -10,21 +10,9 @@ import {
   openPicker,
   getClockTouchEvent,
 } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<MobileDateTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
-  });
-
-  describeValidation(MobileDateTimePicker, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day', 'hours', 'minutes'],
-    componentFamily: 'picker',
-    variant: 'mobile',
-  }));
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   it('should render date and time by default', () => {
     render(
@@ -68,7 +56,7 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByMuiTest('seconds')).to.have.text('22');
   });
 
-  describe('Component slots: Tabs', () => {
+  describe('Component slot: Tabs', () => {
     it('should not render tabs when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
@@ -85,24 +73,7 @@ describe('<MobileDateTimePicker />', () => {
     });
   });
 
-  describe('Slots: Tabs', () => {
-    it('should not render tabs when `hidden` is `true`', () => {
-      render(
-        <MobileDateTimePicker
-          open
-          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-          slotProps={{
-            tabs: { hidden: true },
-          }}
-        />,
-      );
-
-      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
-      expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
-    });
-  });
-
-  describe('Component slots: Toolbar', () => {
+  describe('Component slot: Toolbar', () => {
     it('should not render only toolbar when `hidden` is `true`', () => {
       render(
         <MobileDateTimePicker
@@ -157,6 +128,7 @@ describe('<MobileDateTimePicker />', () => {
       // Change the year view
       userEvent.mousePress(screen.getByLabelText(/switch to year view/));
       userEvent.mousePress(screen.getByText('2010', { selector: 'button' }));
+
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 1));
 
@@ -184,15 +156,6 @@ describe('<MobileDateTimePicker />', () => {
       );
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
-    });
-  });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<MobileDateTimePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

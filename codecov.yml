@@ -10,6 +10,7 @@ coverage:
           - 'packages/x-date-pickers/src/AdapterDayjs/AdapterDayjs.ts'
           - 'packages/x-date-pickers/src/AdapterLuxon/AdapterLuxon.ts'
           - 'packages/x-date-pickers/src/AdapterMoment/AdapterMoment.ts'
+          - 'packages/x-date-pickers/src/AdapterDateFns/AdapterDateFns.ts'
     patch: off
 
 comment: false
