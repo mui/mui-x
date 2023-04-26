@@ -41,7 +41,6 @@ function GridBody(props: GridBodyProps) {
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const animationFrame = React.useRef<number | null>();
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
@@ -88,8 +87,10 @@ function GridBody(props: GridBodyProps) {
       return () => {};
     }
 
+    let animationFrame: number;
     const observer = new ResizeObserver(() => {
-      animationFrame.current = window.requestAnimationFrame(() => {
+      // See https://github.com/mui/mui-x/issues/8733
+      animationFrame = window.requestAnimationFrame(() => {
         apiRef.current.computeSizeAndPublishResizeEvent();
       });
     });
@@ -99,8 +100,8 @@ function GridBody(props: GridBodyProps) {
     }
 
     return () => {
-      if (animationFrame.current) {
-        window.cancelAnimationFrame(animationFrame.current);
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
       }
 
       if (elementToObserve) {
