@@ -946,3 +946,26 @@ npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
+
+:::warning
+If this codemod is applied on a component with both a `slots` and a `components` prop, the output will contain two `slots` props.
+You are then responsible to merge those two props manually.
+
+For example:
+
+```tsx
+// Before running the codemod
+<DatePicker
+  slots={{ textField: MyTextField }}
+  components={{ toolbar: MyToolbar }}
+/>
+
+// After running the codemod
+<DatePicker
+  slots={{ textField: MyTextField }}
+  slots={{ toolbar: MyToolbar }}
+/>
+```
+
+The same applies for `slotProps` and `componentsProps`.
+:::
