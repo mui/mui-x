@@ -52,7 +52,7 @@ describe('<DigitalClock /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const selectedItem = document.querySelector('[role="menuitem"].Mui-selected');
+      const selectedItem = screen.queryByRole('option', { selected: true });
       if (!expectedValue) {
         expect(selectedItem).to.equal(null);
       } else {
@@ -67,7 +67,7 @@ describe('<DigitalClock /> - Describes', () => {
         value,
         hasMeridiem ? 'fullTime12h' : 'fullTime24h',
       );
-      userEvent.mousePress(screen.getByRole('menuitem', { name: formattedLabel }));
+      userEvent.mousePress(screen.getByRole('option', { name: formattedLabel }));
 
       return value;
     },

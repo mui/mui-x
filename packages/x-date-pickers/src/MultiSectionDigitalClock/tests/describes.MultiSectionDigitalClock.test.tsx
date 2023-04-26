@@ -49,7 +49,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const selectedItems = document.querySelectorAll('[role="menuitem"].Mui-selected');
+      const selectedItems = screen.queryAllByRole('option', { selected: true });
       if (!expectedValue) {
         expect(selectedItems).to.have.length(0);
       } else {
@@ -71,11 +71,11 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hoursLabel = adapterToUse.format(value, hasMeridiem ? 'hours12h' : 'hours24h');
       const minutesLabel = adapterToUse.getMinutes(value).toString();
-      userEvent.mousePress(screen.getByRole('menuitem', { name: hoursLabel }));
-      userEvent.mousePress(screen.getByRole('menuitem', { name: minutesLabel }));
+      userEvent.mousePress(screen.getByRole('option', { name: `${hoursLabel} hours` }));
+      userEvent.mousePress(screen.getByRole('option', { name: `${minutesLabel} minutes` }));
       if (hasMeridiem) {
         userEvent.mousePress(
-          screen.getByRole('menuitem', {
+          screen.getByRole('option', {
             name: adapterToUse.getMeridiemText(adapterToUse.getHours(value) > 12 ? 'pm' : 'am'),
           }),
         );

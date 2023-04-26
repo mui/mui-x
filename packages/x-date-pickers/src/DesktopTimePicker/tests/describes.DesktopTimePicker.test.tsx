@@ -79,12 +79,12 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        userEvent.mousePress(screen.getByRole('menuitem', { name: hours }));
+        userEvent.mousePress(screen.getByRole('option', { name: `${hours} hours` }));
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopTimePicker`
           // we need to click it to finish selection
           userEvent.mousePress(
-            screen.getByRole('menuitem', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
+            screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
           );
         }
       } else {
