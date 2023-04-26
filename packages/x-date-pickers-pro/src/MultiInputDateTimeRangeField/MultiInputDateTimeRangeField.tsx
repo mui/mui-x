@@ -21,7 +21,7 @@ const MultiInputDateTimeRangeFieldRoot = styled(
 )({});
 
 const MultiInputDateTimeRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
   {
     name: 'MuiMultiInputDateTimeRangeField',
     slot: 'Separator',
@@ -165,10 +165,13 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       <TextField
         fullWidth
         {...startDateProps}
+        InputProps={{
+          ...startDateProps.InputProps,
+          readOnly: startReadOnly,
+        }}
         inputProps={{
           ...startDateProps.inputProps,
           ref: startInputRef,
-          readOnly: startReadOnly,
           inputMode: startInputMode,
           onKeyDown: onStartInputKeyDown,
         }}
@@ -177,6 +180,10 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       <TextField
         fullWidth
         {...endDateProps}
+        InputProps={{
+          ...endDateProps.InputProps,
+          readOnly: endReadOnly,
+        }}
         inputProps={{
           ...endDateProps.inputProps,
           ref: endInputRef,
@@ -364,6 +371,7 @@ MultiInputDateTimeRangeField.propTypes = {
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

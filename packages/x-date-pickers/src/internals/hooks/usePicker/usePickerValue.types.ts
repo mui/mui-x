@@ -1,5 +1,5 @@
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
-import { InferError, Validator } from '../validation/useValidation';
+import { InferError, Validator } from '../useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
 import {

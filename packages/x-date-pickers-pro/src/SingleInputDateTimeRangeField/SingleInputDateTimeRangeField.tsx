@@ -53,7 +53,8 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
     <TextField
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
+      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
     />
   );
 }) as DateRangeFieldComponent;
@@ -306,6 +307,7 @@ SingleInputDateTimeRangeField.propTypes = {
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

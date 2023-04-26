@@ -1,6 +1,6 @@
-import { Validator } from './useValidation';
-import { validateDate, DateComponentValidationProps } from './useDateValidation';
-import { validateTime, TimeComponentValidationProps } from './useTimeValidation';
+import { Validator } from '../../hooks/useValidation';
+import { validateDate, DateComponentValidationProps } from './validateDate';
+import { validateTime, TimeComponentValidationProps } from './validateTime';
 import { DateTimeValidationError } from '../../../models';
 
 export interface DateTimeComponentValidationProps<TDate>
