@@ -7,10 +7,8 @@ import { AxisInteractionData } from '../context/InteractionProvider';
 import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { getSymbol } from '../internals/utils';
-import { ChartSeries, ChartSeriesType } from '../models/seriesType/config';
+import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
-
-const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
 
 export type AxisContentProps = {
   /**
@@ -21,7 +19,7 @@ export type AxisContentProps = {
   /**
    * The series linked to the triggered axis.
    */
-  series: ChartSeries<ChartSeriesType>[];
+  series: ChartSeriesDefaultized<ChartSeriesType>[];
   /**
    * The properties of the triggered axis.
    */
@@ -55,7 +53,7 @@ export function DefaultAxisContent(props: AxisContentProps) {
           <Divider />
         </React.Fragment>
       )}
-      {series.map(({ color, id, label, data }) => (
+      {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
         <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
           <svg width={markerSize} height={markerSize}>
             <path
@@ -68,7 +66,7 @@ export function DefaultAxisContent(props: AxisContentProps) {
               transform={`translate(${markerSize / 2}, ${markerSize / 2})`}
             />
           </svg>
-          {label ?? id}: {format(data[dataIndex])}
+          {label ?? id}: {valueFormatter(data[dataIndex])}
         </Typography>
       ))}
     </Paper>

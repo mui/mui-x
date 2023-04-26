@@ -4,8 +4,6 @@ import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 
-const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
-
 export type ItemContentProps<T extends ChartSeriesType> = {
   /**
    * The data used to identify the triggered item.
@@ -24,11 +22,14 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
     return null;
   }
 
-  const data = series.data[itemData.dataIndex];
+  const displayedLabel = series.label ?? series.id;
+  // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
+  // @ts-ignore
+  const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
     <Paper sx={{ p: 1 }}>
       <p>
-        {series.label ?? series.id}: {format(data)}
+        {displayedLabel}: {formattedValue}
       </p>
     </Paper>
   );
@@ -45,6 +46,6 @@ export function ItemTooltipContent<T extends ChartSeriesType>(props: {
   ] as ChartSeriesDefaultized<T>;
 
   const Content = content ?? DefaultItemContent<T>;
-  
+
   return <Content itemData={itemData} series={series} />;
 }

@@ -20,4 +20,4 @@ export type BarItemIdentifier = {
 
 export interface DefaultizedBarSeriesType
   extends DefaultizedProps<BarSeriesType, 'xAxisKey' | 'yAxisKey'>,
-    DefaultizedCommonSeriesType {}
+    DefaultizedCommonSeriesType<number> {}
