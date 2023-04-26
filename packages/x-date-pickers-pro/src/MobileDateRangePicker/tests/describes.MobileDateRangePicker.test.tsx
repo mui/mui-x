@@ -1,4 +1,9 @@
-import { screen, userEvent, fireDiscreteEvent } from '@mui/monorepo/test/utils';
+import {
+  describeConformance,
+  screen,
+  userEvent,
+  fireDiscreteEvent,
+} from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
@@ -8,7 +13,10 @@ import {
   expectInputPlaceholder,
   expectInputValue,
   openPicker,
+  wrapPickerMount,
 } from 'test/utils/pickers-utils';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
+import * as React from 'react';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -16,12 +24,33 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
   });
 
+  describePicker(MobileDateRangePicker, { render, fieldType: 'multi-input', variant: 'mobile' });
+
   describeRangeValidation(MobileDateRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',
     views: ['day'],
     variant: 'mobile',
+  }));
+
+  describeConformance(<MobileDateRangePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiMobileDateRangePicker',
+    wrapMount: wrapPickerMount,
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+      'rootClass',
+      'reactTestRenderer',
+    ],
   }));
 
   describeValue(MobileDateRangePicker, () => ({

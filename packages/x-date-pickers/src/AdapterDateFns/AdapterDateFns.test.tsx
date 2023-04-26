@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
@@ -9,6 +9,10 @@ import {
   expectInputPlaceholder,
   expectInputValue,
 } from 'test/utils/pickers-utils';
+import enUS from 'date-fns/locale/en-US';
+import fr from 'date-fns/locale/fr';
+import de from 'date-fns/locale/de';
+import ru from 'date-fns/locale/ru';
 import {
   describeGregorianAdapter,
   TEST_DATE_ISO,
@@ -29,16 +33,23 @@ const localizedTexts = {
     value: '15.05.2018 09:35',
   },
 };
-
-describe('<AdapterLuxon />', () => {
-  describeGregorianAdapter(AdapterLuxon, {
-    formatDateTime: 'yyyy-MM-dd HH:mm:ss',
-    locale: 'en-US',
-  });
+describe('<AdapterDateFns />', () => {
+  describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss', locale: enUS });
 
   describe('Adapter localization', () => {
     describe('English', () => {
-      const adapter = new AdapterLuxon({ locale: 'en-US' });
+      const adapter = new AdapterDateFns({ locale: enUS });
+      const date = adapter.date(TEST_DATE_ISO)!;
+
+      it('getWeekdays: should start on Sunday', () => {
+        const result = adapter.getWeekdays();
+        expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
+      });
+
+      it('getWeekArray: should start on Sunday', () => {
+        const result = adapter.getWeekArray(date);
+        expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('Su');
+      });
 
       it('is12HourCycleInCurrentLocale: should have meridiem', () => {
         expect(adapter.is12HourCycleInCurrentLocale()).to.equal(true);
@@ -46,17 +57,17 @@ describe('<AdapterLuxon />', () => {
     });
 
     describe('Russian', () => {
-      const adapter = new AdapterLuxon({ locale: 'ru' });
+      const adapter = new AdapterDateFns({ locale: ru });
 
       it('getWeekDays: should start on Monday', () => {
         const result = adapter.getWeekdays();
-        expect(result).to.deep.equal(['П', 'В', 'С', 'Ч', 'П', 'С', 'В']);
+        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
       });
 
       it('getWeekArray: should start on Monday', () => {
         const date = adapter.date(TEST_DATE_ISO)!;
         const result = adapter.getWeekArray(date);
-        expect(result[0][0].toFormat('ccc')).to.equal('пн');
+        expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('пн');
       });
 
       it('is12HourCycleInCurrentLocale: should not have meridiem', () => {
@@ -68,9 +79,9 @@ describe('<AdapterLuxon />', () => {
       });
     });
 
-    describe('Formatting', () => {
-      const adapter = new AdapterLuxon({ locale: 'en-US' });
-      const adapterRu = new AdapterLuxon({ locale: 'ru' });
+    it('Formatting', () => {
+      const adapter = new AdapterDateFns({ locale: enUS });
+      const adapterRu = new AdapterDateFns({ locale: ru });
 
       const expectDate = (
         format: keyof AdapterFormats,
@@ -83,27 +94,31 @@ describe('<AdapterLuxon />', () => {
         expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
       };
 
-      expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
-      expectDate('fullDateWithWeekday', 'Saturday, February 1, 2020', 'суббота, 1 февраля 2020 г.');
-      expectDate('fullDateTime', 'Feb 1, 2020, 11:44 PM', '1 февр. 2020 г., 23:44');
-      expectDate('fullDateTime12h', 'Feb 1, 2020, 11:44 PM', '1 февр. 2020 г., 11:44 PM');
-      expectDate('fullDateTime24h', 'Feb 1, 2020, 23:44', '1 февр. 2020 г., 23:44');
-      expectDate('keyboardDate', '2/1/2020', '01.02.2020');
-      expectDate('keyboardDateTime', '2/1/2020 11:44 PM', '01.02.2020 23:44');
-      expectDate('keyboardDateTime12h', '2/1/2020 11:44 PM', '01.02.2020 11:44 PM');
-      expectDate('keyboardDateTime24h', '2/1/2020 23:44', '01.02.2020 23:44');
+      expectDate('fullDate', 'Feb 1, 2020', '1 фев. 2020 г.');
+      expectDate(
+        'fullDateWithWeekday',
+        'Saturday, February 1st, 2020',
+        'суббота, 1 февраля 2020 г.',
+      );
+      expectDate('fullDateTime', 'Feb 1, 2020 11:44 PM', '1 фев. 2020 г. 23:44');
+      expectDate('fullDateTime12h', 'Feb 1, 2020 11:44 PM', '1 фев. 2020 г. 11:44 ПП');
+      expectDate('fullDateTime24h', 'Feb 1, 2020 23:44', '1 фев. 2020 г. 23:44');
+      expectDate('keyboardDate', '02/01/2020', '01.02.2020');
+      expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
+      expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 ПП');
+      expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
     });
   });
 
   describe('Picker localization', () => {
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
-      const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
+      const localeObject = localeKey === 'undefined' ? undefined : { fr, de }[localeKey];
 
       describe(`test with the ${localeName} locale`, () => {
         const { render, adapter } = createPickerRenderer({
           clock: 'fake',
-          adapterName: 'luxon',
+          adapterName: 'date-fns',
           locale: localeObject,
         });
 

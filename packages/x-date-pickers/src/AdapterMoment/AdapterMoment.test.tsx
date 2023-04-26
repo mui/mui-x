@@ -2,6 +2,7 @@ import * as React from 'react';
 import moment from 'moment';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import {
@@ -16,7 +17,6 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
-import { AdapterFormats } from '@mui/x-date-pickers';
 
 describe('<AdapterMoment />', () => {
   describeGregorianAdapter(AdapterMoment, { formatDateTime: 'YYYY-MM-DD HH:mm:ss', locale: 'en' });

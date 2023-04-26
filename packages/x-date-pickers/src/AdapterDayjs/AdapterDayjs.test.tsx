@@ -5,6 +5,7 @@ import utc from 'dayjs/plugin/utc';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -22,7 +23,6 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO,
 } from 'packages/x-date-pickers/src/tests/describeGregorianAdapter';
-import { AdapterFormats } from '@mui/x-date-pickers';
 
 dayjs.extend(utc);
 
