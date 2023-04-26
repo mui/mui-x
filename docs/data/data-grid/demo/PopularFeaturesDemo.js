@@ -268,7 +268,7 @@ const columns = [
     groupable: false,
     renderCell: (params) => {
       if (params.aggregation) {
-        return undefined;
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
       }
       if (!params.value) {
         return '';
