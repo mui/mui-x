@@ -1,4 +1,4 @@
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
@@ -8,8 +8,11 @@ import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
+  wrapPickerMount,
 } from 'test/utils/pickers-utils';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import * as React from 'react';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -23,11 +26,32 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     Component: DesktopDateRangePicker,
   });
 
+  describePicker(DesktopDateRangePicker, { render, fieldType: 'multi-input', variant: 'desktop' });
+
   describeRangeValidation(DesktopDateRangePicker, () => ({
     render,
     clock,
     componentFamily: 'picker',
     views: ['day'],
+  }));
+
+  describeConformance(<DesktopDateRangePicker />, () => ({
+    classes: {} as any,
+    render,
+    muiName: 'MuiDesktopDateRangePicker',
+    wrapMount: wrapPickerMount,
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+      'rootClass',
+      'reactTestRenderer',
+    ],
   }));
 
   describeValue(DesktopDateRangePicker, () => ({

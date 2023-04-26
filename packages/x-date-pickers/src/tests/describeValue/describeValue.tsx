@@ -40,6 +40,6 @@ type DescribeValue = {
 };
 
 /**
- * Tests various aspects of the picker value.
+ * Tests various aspects of component value.
  */
 export const describeValue = createDescribe('Value API', innerDescribeValue) as DescribeValue;

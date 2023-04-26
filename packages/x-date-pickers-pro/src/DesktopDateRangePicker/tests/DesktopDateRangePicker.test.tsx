@@ -1,20 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  describeConformance,
-  screen,
-  fireEvent,
-  userEvent,
-  act,
-  getByRole,
-} from '@mui/monorepo/test/utils';
+import { screen, fireEvent, userEvent, act, getByRole } from '@mui/monorepo/test/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
-  wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
   AdapterClassToUse,
@@ -29,32 +20,6 @@ describe('<DesktopDateRangePicker />', () => {
     clock: 'fake',
     clockConfig: new Date(2018, 0, 10),
   });
-
-  describeConformance(<DesktopDateRangePicker />, () => ({
-    classes: {} as any,
-    render,
-    muiName: 'MuiDesktopDateRangePicker',
-    wrapMount: wrapPickerMount,
-    refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
-    ],
-  }));
-
-  describeRangeValidation(DesktopDateRangePicker, () => ({
-    render,
-    clock,
-    componentFamily: 'picker',
-    views: ['day'],
-  }));
 
   it('should scroll current month to the active selection when focusing appropriate field', () => {
     render(
@@ -119,34 +84,7 @@ describe('<DesktopDateRangePicker />', () => {
     expect(screen.queryByText('Fim')).not.to.equal(null);
   });
 
-  describe('Component slots: Popper', () => {
-    it('should forward onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
-        <DesktopDateRangePicker
-          open
-          slotProps={{
-            popper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-              // @ts-expect-error `data-*` attributes are not recognized in props objects
-              'data-testid': 'popper',
-            },
-          }}
-        />,
-      );
-      const popper = screen.getByTestId('popper');
-
-      fireEvent.click(popper);
-      fireEvent.touchStart(popper);
-
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
-    });
-  });
-
-  describe('Slots: Popper', () => {
+  describe('Component slot: Popper', () => {
     it('should forward onClick and onTouchStart', () => {
       const handleClick = spy();
       const handleTouchStart = spy();
@@ -671,20 +609,6 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('15')).not.to.have.attribute('disabled');
       expect(getPickerDay('16')).to.have.attribute('disabled');
       expect(getPickerDay('17')).to.have.attribute('disabled');
-    });
-  });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(
-        <DesktopDateRangePicker
-          localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          slotProps={{ actionBar: { actions: ['cancel'] } }}
-        />,
-      );
-      openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });
   });
 });

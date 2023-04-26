@@ -19,6 +19,13 @@ describe('<DateField /> - Describes', () => {
 
   const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateField });
 
+  describeValidation(DateField, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    componentFamily: 'field',
+  }));
+
   describeConformance(<DateField />, () => ({
     classes: {} as any,
     inheritComponent: TextField,
@@ -35,13 +42,6 @@ describe('<DateField /> - Describes', () => {
       'themeStyleOverrides',
       'themeVariants',
     ],
-  }));
-
-  describeValidation(DateField, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'field',
   }));
 
   describeValue(DateField, () => ({
