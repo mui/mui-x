@@ -252,11 +252,10 @@ function RowDemo(props: { row: Row }) {
 }
 
 function CustomSizeAggregationFooter(props: { value: number }) {
-  const theme = useTheme();
   return (
-    <ThemeProvider theme={theme}>
-      <Typography color="textPrimary">Total: {props.value}</Typography>
-    </ThemeProvider>
+    <Typography sx={{ fontWeight: 500, fontSize: '1em' }} color="primary">
+      Total: {props.value}
+    </Typography>
   );
 }
 

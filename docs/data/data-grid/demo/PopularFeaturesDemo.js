@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import ArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import { useTheme, ThemeProvider } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import AggregationRowGrouping from '../aggregation/AggregationRowGrouping';
 import BasicColumnPinning from '../column-pinning/BasicColumnPinning';
 import ColumnSelectorGrid from '../column-visibility/ColumnSelectorGrid';
@@ -247,11 +247,10 @@ RowDemo.propTypes = {
 };
 
 function CustomSizeAggregationFooter(props) {
-  const theme = useTheme();
   return (
-    <ThemeProvider theme={theme}>
-      <Typography color="textPrimary">Total: {props.value}</Typography>
-    </ThemeProvider>
+    <Typography sx={{ fontWeight: 500, fontSize: '1em' }} color="primary">
+      Total: {props.value}
+    </Typography>
   );
 }
 
