@@ -4,7 +4,7 @@ import {
   DATE_VALIDATION_PROP_NAMES,
   SHARED_VALIDATION_PROP_NAMES,
   TIME_VALIDATION_PROP_NAMES,
-} from './validation';
+} from './validation/extractValidationProps';
 
 const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   ...SHARED_VALIDATION_PROP_NAMES,
