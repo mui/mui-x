@@ -255,7 +255,7 @@ function CustomSizeAggregationFooter(props) {
 }
 
 CustomSizeAggregationFooter.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  value: PropTypes.string,
 };
 
 const columns = [
@@ -268,7 +268,7 @@ const columns = [
     groupable: false,
     renderCell: (params) => {
       if (params.aggregation) {
-        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+        return undefined;
       }
       if (!params.value) {
         return '';
