@@ -148,7 +148,9 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       if (containerRef.current === null) {
         return;
       }
-      const selectedItem = containerRef.current.querySelector<HTMLElement>('li.Mui-selected');
+      const selectedItem = containerRef.current.querySelector<HTMLElement>(
+        '[role="option"][aria-selected="true"]',
+      );
       if (!selectedItem) {
         return;
       }

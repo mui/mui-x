@@ -168,7 +168,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (containerRef.current === null) {
       return;
     }
-    const selectedItem = containerRef.current.querySelector<HTMLElement>(`ul li.Mui-selected`);
+    const selectedItem = containerRef.current.querySelector<HTMLElement>(
+      '[role="listbox"] [role="option"][aria-selected="true"]',
+    );
     if (!selectedItem) {
       return;
     }
