@@ -209,7 +209,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     );
   };
 
-  // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
   };
