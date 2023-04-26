@@ -46,7 +46,7 @@ describe('<DigitalClock /> - Describes', () => {
     },
     values: [
       adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 16, 15)),
+      adapterToUse.date(new Date(2018, 0, 1, 17, 0)),
     ],
     emptyValue: null,
     clock,
