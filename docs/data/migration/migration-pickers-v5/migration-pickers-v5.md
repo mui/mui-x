@@ -949,7 +949,7 @@ Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for mo
 
 :::warning
 If this codemod is applied on a component with both a `slots` and a `components` prop, the output will contain two `slots` props.
-You are then responsible to merge those two props manually.
+You are then responsible for merging those two props manually.
 
 For example:
 
@@ -967,5 +967,5 @@ For example:
 />
 ```
 
-The same applies for `slotProps` and `componentsProps`.
+The same applies to `slotProps` and `componentsProps`.
 :::
