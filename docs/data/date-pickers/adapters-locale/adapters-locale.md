@@ -151,12 +151,12 @@ This prop is available on all fields and pickers.
 You can control the field format spacing using the [formatDensity](/x/react-date-pickers/custom-field/#change-the-format-density) prop.
 :::
 
-#### Supported formats
+### Field-supported formats
 
-Some format might not yet be supported by the fields.
+Some formats might not yet be supported by the fields.
 For example, they don't support day of the year or quarter.
 
-Here is the list of the formats currently supported:
+Here is the list of the currently supported formats:
 
 - The year
   - ✅ 2-digits values (e.g: `23`)
@@ -192,7 +192,7 @@ Here is the list of the formats currently supported:
 
 - The meridiem
 
-If you need to use some formats that is not yet compatible, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) describing what is your exact use case.
+If you need to use some format that is not yet supported, please [open an issue](https://github.com/mui/mui-x/issues/new/choose) describing what is your exact use case.
 Some new formats might be supported in the future, depending on the complexity of the implementation.
 
 ### Respect leading zeros in fields
