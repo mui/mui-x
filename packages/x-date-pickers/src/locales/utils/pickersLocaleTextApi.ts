@@ -1,4 +1,4 @@
-import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { TimeViewWithMeridiem } from '../../internals/models';
 import { DateView, TimeView, MuiPickersAdapter, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
