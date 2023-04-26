@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import {
-  ItemInteractionData,
-} from '../context/InteractionProvider';
+import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 
@@ -30,7 +28,7 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
   return (
     <Paper sx={{ p: 1 }}>
       <p>
-        {series.id}: {format(data)}
+        {series.label ?? series.id}: {format(data)}
       </p>
     </Paper>
   );

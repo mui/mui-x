@@ -6,6 +6,7 @@ export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
   data: number[];
   stack?: string;
   area?: any;
+  label?: string;
 }
 
 /**

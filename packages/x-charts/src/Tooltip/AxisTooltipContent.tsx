@@ -10,6 +10,8 @@ import { getSymbol } from '../internals/utils';
 import { ChartSeries, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 
+const format = (data: any) => (typeof data === 'object' ? `(${data.x}, ${data.y})` : data);
+
 export type AxisContentProps = {
   /**
    * Data identifying the triggered axis.
@@ -36,7 +38,7 @@ export type AxisContentProps = {
 export function DefaultAxisContent(props: AxisContentProps) {
   const { series, axis, dataIndex, axisValue } = props;
 
-  if (dataIndex === null) {
+  if (dataIndex == null) {
     return null;
   }
   const xAxisName = axis.id;
@@ -53,7 +55,7 @@ export function DefaultAxisContent(props: AxisContentProps) {
           <Divider />
         </React.Fragment>
       )}
-      {series.map(({ color, id, data }) => (
+      {series.map(({ color, id, label, data }) => (
         <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
           <svg width={markerSize} height={markerSize}>
             <path
@@ -66,8 +68,7 @@ export function DefaultAxisContent(props: AxisContentProps) {
               transform={`translate(${markerSize / 2}, ${markerSize / 2})`}
             />
           </svg>
-          {/* @ts-ignore */}
-          {id}: {format(data[dataIndex])}
+          {label ?? id}: {format(data[dataIndex])}
         </Typography>
       ))}
     </Paper>

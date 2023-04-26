@@ -5,6 +5,7 @@ export interface BarSeriesType extends CommonSeriesType, CartesianSeriesType {
   type: 'bar';
   data: number[];
   stack?: string;
+  label?: string;
 }
 
 /**
