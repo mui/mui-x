@@ -142,7 +142,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
       return DateTime.fromJSDate(new Date(value), { locale: this.locale });
     }
 
-    if (value instanceof DateTime) {
+    if (DateTime.isDateTime(value)) {
       return value;
     }
 
@@ -220,8 +220,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    if (value instanceof DateTime) {
+  public isValid = (value: any): boolean => {
+    if (DateTime.isDateTime(value)) {
       return value.isValid;
     }
 
@@ -229,7 +229,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
       return false;
     }
 
-    return this.date(value)!.isValid;
+    return this.isValid(this.date(value));
   };
 
   public format = (value: DateTime, formatKey: keyof AdapterFormats) => {

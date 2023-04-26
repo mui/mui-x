@@ -26,7 +26,7 @@ const MultiInputDateRangeFieldRoot = styled(
 )({});
 
 const MultiInputDateRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
   {
     name: 'MuiMultiInputDateRangeField',
     slot: 'Separator',
@@ -131,10 +131,13 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       <TextField
         fullWidth
         {...startDateProps}
+        InputProps={{
+          ...startDateProps.InputProps,
+          readOnly: startReadOnly,
+        }}
         inputProps={{
           ...startDateProps.inputProps,
           ref: startInputRef,
-          readOnly: startReadOnly,
           inputMode: startInputMode,
           onKeyDown: onStartInputKeyDown,
         }}
@@ -143,6 +146,10 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       <TextField
         fullWidth
         {...endDateProps}
+        InputProps={{
+          ...endDateProps.InputProps,
+          readOnly: endReadOnly,
+        }}
         inputProps={{
           ...endDateProps.inputProps,
           ref: endInputRef,

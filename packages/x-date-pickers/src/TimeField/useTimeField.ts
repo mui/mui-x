@@ -8,7 +8,7 @@ import {
   UseTimeFieldDefaultizedProps,
   UseTimeFieldParams,
 } from './TimeField.types';
-import { validateTime } from '../internals/hooks/validation/useTimeValidation';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { useUtils } from '../internals/hooks/useUtils';
 import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 

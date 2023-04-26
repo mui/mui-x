@@ -1,7 +1,7 @@
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { TimeClockClasses } from './timeClockClasses';
-import { TimeValidationProps, BaseTimeValidationProps } from '../internals/hooks/validation/models';
+import { TimeValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
 import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
