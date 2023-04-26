@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
-import { deepmerge } from '@mui/utils';
-import { blue, grey } from '@mui/material/colors';
 import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  experimental_extendTheme as extendMuiTheme,
-  useTheme,
-  useColorScheme,
+  useTheme as useMaterialTheme,
+  useColorScheme as useMaterialColorScheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
 } from '@mui/material/styles';
-import { extendTheme as extendJoyTheme, styled } from '@mui/joy/styles';
+import {
+  extendTheme as extendJoyTheme,
+  useColorScheme,
+  styled,
+  CssVarsProvider,
+  THEME_ID,
+} from '@mui/joy/styles';
 import { useSlotProps } from '@mui/base/utils';
 import Input, { InputProps } from '@mui/joy/Input';
 import Stack, { StackProps } from '@mui/joy/Stack';
@@ -40,107 +43,8 @@ import {
   FieldSection,
 } from '@mui/x-date-pickers-pro';
 
-const muiTheme = extendMuiTheme();
+const joyTheme = extendJoyTheme();
 
-const joyTheme = extendJoyTheme({
-  cssVarPrefix: 'mui',
-  colorSchemes: {
-    light: {
-      palette: {
-        primary: {
-          ...blue,
-          solidColor: 'var(--mui-palette-primary-contrastText)',
-          solidBg: 'var(--mui-palette-primary-main)',
-          solidHoverBg: 'var(--mui-palette-primary-dark)',
-          plainColor: 'var(--mui-palette-primary-main)',
-          plainHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          plainActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-          outlinedBorder: 'rgba(var(--mui-palette-primary-mainChannel) / 0.5)',
-          outlinedColor: 'var(--mui-palette-primary-main)',
-          outlinedHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          outlinedHoverBorder: 'var(--mui-palette-primary-main)',
-          outlinedActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-        },
-        neutral: {
-          ...grey,
-        },
-        divider: 'var(--mui-palette-divider)',
-        text: {
-          tertiary: 'rgba(0 0 0 / 0.56)',
-        },
-      },
-    },
-    dark: {
-      palette: {
-        primary: {
-          ...blue,
-          solidColor: 'var(--mui-palette-primary-contrastText)',
-          solidBg: 'var(--mui-palette-primary-main)',
-          solidHoverBg: 'var(--mui-palette-primary-dark)',
-          plainColor: 'var(--mui-palette-primary-main)',
-          plainHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          plainActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-          outlinedBorder: 'rgba(var(--mui-palette-primary-mainChannel) / 0.5)',
-          outlinedColor: 'var(--mui-palette-primary-main)',
-          outlinedHoverBg:
-            'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-hoverOpacity))',
-          outlinedHoverBorder: 'var(--mui-palette-primary-main)',
-          outlinedActiveBg: 'rgba(var(--mui-palette-primary-mainChannel) / 0.3)',
-        },
-        neutral: {
-          ...grey,
-        },
-        divider: 'var(--mui-palette-divider)',
-        text: {
-          tertiary: 'rgba(255 255 255 / 0.5)',
-        },
-      },
-    },
-  },
-  fontFamily: {
-    display: '"Roboto","Helvetica","Arial",sans-serif',
-    body: '"Roboto","Helvetica","Arial",sans-serif',
-  },
-  shadow: {
-    xs: `var(--mui-shadowRing), ${muiTheme.shadows[1]}`,
-    sm: `var(--mui-shadowRing), ${muiTheme.shadows[2]}`,
-    md: `var(--mui-shadowRing), ${muiTheme.shadows[4]}`,
-    lg: `var(--mui-shadowRing), ${muiTheme.shadows[8]}`,
-    xl: `var(--mui-shadowRing), ${muiTheme.shadows[12]}`,
-  },
-});
-
-const mergedTheme = {
-  ...joyTheme,
-  ...muiTheme,
-  colorSchemes: deepmerge(joyTheme.colorSchemes, muiTheme.colorSchemes),
-  typography: {
-    ...joyTheme.typography,
-    ...muiTheme.typography,
-  },
-  zIndex: {
-    ...joyTheme.zIndex,
-    ...muiTheme.zIndex,
-  },
-} as unknown as ReturnType<typeof extendMuiTheme>;
-
-mergedTheme.generateCssVars = (colorScheme) => ({
-  css: {
-    ...joyTheme.generateCssVars(colorScheme).css,
-    ...muiTheme.generateCssVars(colorScheme).css,
-  },
-  vars: deepmerge(
-    joyTheme.generateCssVars(colorScheme).vars,
-    muiTheme.generateCssVars(colorScheme).vars,
-  ) as any,
-});
-mergedTheme.unstable_sxConfig = {
-  ...muiTheme.unstable_sxConfig,
-  ...joyTheme.unstable_sxConfig,
-};
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   InputProps?: {
@@ -170,7 +74,12 @@ const JoyField = React.forwardRef(
       <FormControl
         disabled={disabled}
         id={id}
-        sx={{ flexGrow: 1, ...formControlSx }}
+        sx={[
+          {
+            flexGrow: 1,
+          },
+          ...(Array.isArray(formControlSx) ? formControlSx : [formControlSx]),
+        ]}
         ref={containerRef}
       >
         <FormLabel>{label}</FormLabel>
@@ -336,25 +245,27 @@ function JoyDatePicker(props: DatePickerProps<Dayjs>) {
  */
 function SyncThemeMode({ mode }: { mode: 'light' | 'dark' }) {
   const { setMode } = useColorScheme();
+  const { setMode: setMaterialMode } = useMaterialColorScheme();
   React.useEffect(() => {
     setMode(mode);
-  }, [mode, setMode]);
+    setMaterialMode(mode);
+  }, [mode, setMode, setMaterialMode]);
   return null;
 }
 
 export default function PickerWithJoyField() {
-  const {
-    palette: { mode },
-  } = useTheme();
+  const materialTheme = useMaterialTheme();
   return (
-    <CssVarsProvider theme={mergedTheme}>
-      <SyncThemeMode mode={mode} />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker', 'DateRangePicker']}>
-          <JoyDatePicker />
-          <JoyDateRangePicker />
-        </DemoContainer>
-      </LocalizationProvider>
-    </CssVarsProvider>
+    <MaterialCssVarsProvider>
+      <CssVarsProvider theme={{ [THEME_ID]: joyTheme }}>
+        <SyncThemeMode mode={materialTheme.palette.mode} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={['DatePicker', 'DateRangePicker']}>
+            <JoyDatePicker />
+            <JoyDateRangePicker />
+          </DemoContainer>
+        </LocalizationProvider>
+      </CssVarsProvider>
+    </MaterialCssVarsProvider>
   );
 }

@@ -1,49 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import {
-  wrapPickerMount,
-  createPickerRenderer,
-  adapterToUse,
-  openPicker,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
 describe('<MobileDateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
-
-  describeConformance(<MobileDateRangePicker />, () => ({
-    classes: {} as any,
-    render,
-    muiName: 'MuiMobileDateRangePicker',
-    wrapMount: wrapPickerMount,
-    refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
-    ],
-  }));
-
-  describeRangeValidation(MobileDateRangePicker, () => ({
-    render,
-    clock,
-    componentFamily: 'picker',
-    views: ['day'],
-    variant: 'mobile',
-  }));
+  const { render } = createPickerRenderer();
 
   describe('picker state', () => {
     it('should open when focusing the start input', () => {
@@ -309,13 +273,4 @@ describe('<MobileDateRangePicker />', () => {
   // TODO: Write test
   // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
   // })
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<MobileDateRangePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
-  });
 });

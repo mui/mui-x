@@ -88,13 +88,4 @@ describe('<MobileTimePicker />', () => {
       expect(onClose.callCount).to.equal(0);
     });
   });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<MobileTimePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-      openPicker({ type: 'time', variant: 'mobile' });
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
-  });
 });

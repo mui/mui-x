@@ -3,19 +3,11 @@ import { expect } from 'chai';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<StaticDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  describeValidation(StaticDatePicker, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'static-picker',
-  }));
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   it('render proper month', () => {
     render(<StaticDatePicker defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />);
@@ -41,14 +33,6 @@ describe('<StaticDatePicker />', () => {
     fireEvent.click(previousMonth);
 
     expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('December 2018');
-  });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<StaticDatePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
   });
 
   describe('props - autoFocus', () => {

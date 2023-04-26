@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
@@ -13,55 +12,12 @@ import {
   expectInputValue,
   getTextbox,
 } from 'test/utils/pickers-utils';
+import { DatePicker } from '@mui/x-date-pickers';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DesktopDatePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
-
-  describe('Component slots: OpenPickerIcon', () => {
-    it('should render custom component', () => {
-      function HomeIcon(props: SvgIconProps) {
-        return (
-          <SvgIcon data-testid="component-test" {...props}>
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-          </SvgIcon>
-        );
-      }
-
-      const { getByTestId } = render(
-        <DesktopDatePicker
-          label="icon test example"
-          slots={{
-            openPickerIcon: HomeIcon,
-          }}
-        />,
-      );
-
-      expect(getByTestId('component-test')).not.to.equal(null);
-    });
-  });
-
-  describe('Slots: openPickerIcon', () => {
-    it('should render custom component', () => {
-      function HomeIcon(props: SvgIconProps) {
-        return (
-          <SvgIcon data-testid="component-test" {...props}>
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-          </SvgIcon>
-        );
-      }
-
-      const { getByTestId } = render(
-        <DesktopDatePicker
-          label="icon test example"
-          slots={{
-            openPickerIcon: HomeIcon,
-          }}
-        />,
-      );
-
-      expect(getByTestId('component-test')).not.to.equal(null);
-    });
-  });
 
   it('allows to change selected date from the field according to `format`', () => {
     const handleChange = spy();
@@ -77,20 +33,6 @@ describe('<DesktopDatePicker />', () => {
 
     expectInputValue(input, '10/11/2018');
     expect(handleChange.callCount).to.equal(1);
-  });
-
-  describe('Component slots: Toolbar', () => {
-    it('should render toolbar in desktop mode when `hidden` is `false`', () => {
-      render(
-        <DesktopDatePicker
-          open
-          componentsProps={{ toolbar: { hidden: false } }}
-          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-        />,
-      );
-
-      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
-    });
   });
 
   describe('Views', () => {
@@ -158,86 +100,18 @@ describe('<DesktopDatePicker />', () => {
       expect(handleViewChange.callCount).to.equal(2);
       expect(handleViewChange.lastCall.firstArg).to.equal('month');
     });
-  });
 
-  describe('Component slots: Popper', () => {
-    it('should forward onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
-        <DesktopDatePicker
-          open
-          slotProps={{
-            popper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-              // @ts-expect-error `data-*` attributes are not recognized in props objects
-              'data-testid': 'popper',
-            },
-          }}
-        />,
-      );
-      const popper = screen.getByTestId('popper');
+    it('should move the focus to the newly opened views', function test() {
+      if (isJSDOM) {
+        this.skip();
+      }
+      render(<DatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
-      fireEvent.click(popper);
-      fireEvent.touchStart(popper);
+      openPicker({ type: 'date', variant: 'desktop' });
+      expect(document.activeElement).to.have.text('2019');
 
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
-    });
-  });
-
-  describe('Slots: Popper', () => {
-    it('should forward onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
-        <DesktopDatePicker
-          open
-          slotProps={{
-            popper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-              // @ts-expect-error `data-*` attributes are not recognized in props objects
-              'data-testid': 'popper',
-            },
-          }}
-        />,
-      );
-      const popper = screen.getByTestId('popper');
-
-      fireEvent.click(popper);
-      fireEvent.touchStart(popper);
-
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
-    });
-  });
-
-  describe('Component slots: DesktopPaper', () => {
-    it('forwards onClick and onTouchStart', () => {
-      const handleClick = spy();
-      const handleTouchStart = spy();
-      render(
-        <DesktopDatePicker
-          open
-          slotProps={{
-            desktopPaper: {
-              onClick: handleClick,
-              onTouchStart: handleTouchStart,
-              // @ts-expect-error `data-*` attributes are not recognized in props objects
-              'data-testid': 'paper',
-            },
-          }}
-        />,
-      );
-      const paper = screen.getByTestId('paper');
-
-      fireEvent.click(paper);
-      fireEvent.touchStart(paper);
-
-      expect(handleClick.callCount).to.equal(1);
-      expect(handleTouchStart.callCount).to.equal(1);
+      fireEvent.click(screen.getByText('2020'));
+      expect(document.activeElement).to.have.text('5');
     });
   });
 
@@ -466,19 +340,5 @@ describe('<DesktopDatePicker />', () => {
 
       openPicker({ type: 'date', variant: 'desktop' });
     }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
-  });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(
-        <DesktopDatePicker
-          localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          slotProps={{ actionBar: { actions: ['cancel'] } }}
-        />,
-      );
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
   });
 });

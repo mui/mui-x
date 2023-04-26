@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
-import { D3Scale } from '../hooks/useScale';
+import { D3Scale, getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 export interface ScatterProps {
@@ -14,6 +14,8 @@ export interface ScatterProps {
 export function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, markerSize } = props;
 
+  const getXPosition = getValueToPositionMapper(xScale);
+  const getYPosition = getValueToPositionMapper(yScale);
   const getInteractionItemProps = useInteractionItemProps();
 
   return (
@@ -24,7 +26,7 @@ export function Scatter(props: ScatterProps) {
           cx={0}
           cy={0}
           r={markerSize}
-          transform={`translate(${xScale(x as number)}, ${yScale(y as number)})`}
+          transform={`translate(${getXPosition(x)}, ${getYPosition(y)})`}
           fill={color}
           {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
         />
