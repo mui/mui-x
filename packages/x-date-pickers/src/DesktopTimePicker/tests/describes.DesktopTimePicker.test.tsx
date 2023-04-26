@@ -23,7 +23,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
     render,
     fieldType: 'single-input',
     variant: 'desktop',
-    hasNoView: true,
   });
 
   describeValidation(DesktopTimePicker, () => ({
