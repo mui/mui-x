@@ -39,8 +39,13 @@ export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem>
    * @template TDate
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
-  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
+  onChange?: (
+    value: TDate | null,
+    selectionState?: PickerSelectionState,
+    selectedView?: TView,
+  ) => void;
   /**
    * If `true`, the picker views and text field are disabled.
    * @default false

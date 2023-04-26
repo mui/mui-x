@@ -4,9 +4,6 @@ import { DateOrTimeViewWithMeridiem } from '../models';
 const timeViews = ['hours', 'minutes', 'seconds'];
 export const isTimeView = (view: DateOrTimeViewWithMeridiem) => timeViews.includes(view);
 
-export const isInternalTimeView = (view: DateOrTimeViewWithMeridiem) =>
-  timeViews.includes(view) || view === 'meridiem';
-
 export type Meridiem = 'am' | 'pm';
 
 export const getMeridiem = <TDate>(

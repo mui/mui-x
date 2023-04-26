@@ -106,9 +106,13 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   });
 
   const handleValueChange = useEventCallback(
-    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+    (
+      newValue: TDate | null,
+      selectionState?: PickerSelectionState,
+      selectedView?: TimeViewWithMeridiem,
+    ) => {
       setValue(newValue);
-      onChange?.(newValue, selectionState);
+      onChange?.(newValue, selectionState, selectedView);
     },
   );
 
@@ -135,7 +139,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
   );
 
   const handleMeridiemValueChange = useEventCallback((newValue: TDate | null) => {
-    setValueAndGoToView(newValue, null);
+    setValueAndGoToView(newValue, null, 'meridiem');
   });
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
@@ -256,7 +260,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     (sectionView: TimeViewWithMeridiem, newValue: TDate | null) => {
       const viewIndex = views.indexOf(sectionView);
       const nextView = views[viewIndex + 1];
-      setValueAndGoToView(newValue, nextView);
+      setValueAndGoToView(newValue, nextView, sectionView);
     },
   );
 
