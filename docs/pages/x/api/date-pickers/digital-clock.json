@@ -44,13 +44,7 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "timeSteps": {
-      "type": {
-        "name": "shape",
-        "description": "{ hours?: number, minutes?: number, seconds?: number }"
-      },
-      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
-    },
+    "timeStep": { "type": { "name": "number" }, "default": "30" },
     "value": { "type": { "name": "any" } },
     "view": { "type": { "name": "enum", "description": "'hours'" } },
     "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }

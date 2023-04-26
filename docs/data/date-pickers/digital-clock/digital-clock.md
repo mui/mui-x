@@ -54,14 +54,16 @@ You can find more information about 12h/24h format in the [Date localization pag
 
 ## Time steps
 
-By default, the components list the time options in `5` unit (`minutes` or `seconds`) intervals.
+By default, the components list the time options in the following way:
 
-You can set the desired interval using the `timeSteps` prop.
-The prop accepts values for `hours`, `minutes`, or `seconds` units.
+- `DigitalClock` in `30` minutes intervals;
+- `MultiSectionDigitalClock` component in `5` unit (`minutes` or `seconds`) intervals;
 
-:::info
-The `DigitalClock` component uses only `minutes` `timeSteps` option, other are ignored.
-:::
+You can set the desired interval using the `timeStep` and `timeSteps` props.
+The prop accepts:
+
+- The `DigitalClock` component accepts a `number` value `timeStep` prop;
+- The `MultiSectionDigitalClock` component accepts a `timeSteps` prop with `number` values for `hours`, `minutes`, or `seconds` units;
 
 {{"demo": "DigitalClockTimeStep.js"}}
 

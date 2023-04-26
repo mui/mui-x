@@ -9,6 +9,7 @@ import {
 } from '../MultiSectionDigitalClock';
 import { isTimeView } from '../internals/utils/time-utils';
 import { TimeViewWithMeridiem } from '../internals/models';
+import type { TimePickerProps } from '../TimePicker/TimePicker.types';
 
 export type TimeViewRendererProps<
   TView extends TimeViewWithMeridiem,
@@ -113,7 +114,10 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
-}: TimeViewRendererProps<Extract<TimeView, 'hours'>, DigitalClockProps<TDate>>) => (
+}: TimeViewRendererProps<
+  Extract<TimeView, 'hours'>,
+  Omit<DigitalClockProps<TDate>, 'timeStep'> & Pick<TimePickerProps<TDate>, 'timeSteps'>
+>) => (
   <DigitalClock<TDate>
     view={view}
     onViewChange={onViewChange}
@@ -142,7 +146,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     sx={sx}
     autoFocus={autoFocus}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
-    timeSteps={timeSteps}
+    timeStep={timeSteps?.minutes}
     skipDisabled={skipDisabled}
   />
 );
@@ -177,7 +181,12 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
-}: TimeViewRendererProps<TimeViewWithMeridiem, MultiSectionDigitalClockProps<TDate>>) => (
+}: TimeViewRendererProps<
+  TimeViewWithMeridiem,
+  Omit<MultiSectionDigitalClockProps<TDate>, 'timeSteps'> &
+    Omit<DigitalClockProps<TDate>, 'timeStep'> &
+    Pick<TimePickerProps<TDate>, 'timeSteps'>
+>) => (
   <MultiSectionDigitalClock<TDate>
     view={view}
     onViewChange={onViewChange}

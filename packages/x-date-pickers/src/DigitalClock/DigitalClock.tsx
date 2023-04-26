@@ -97,7 +97,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const {
     ampm = utils.is12HourCycleInCurrentLocale(),
-    timeSteps,
+    timeStep = 30,
     autoFocus,
     components,
     componentsProps,
@@ -127,7 +127,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ...other
   } = props;
 
-  const minuteTimeStep = React.useMemo(() => timeSteps?.minutes ?? 5, [timeSteps]);
   const ownerState = React.useMemo(
     () => ({ ...props, alreadyRendered: !!containerRef.current }),
     [props],
@@ -246,12 +245,12 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     const startOfDay = utils.startOfDay(selectedTimeOrMidnight);
     return [
       startOfDay,
-      ...Array.from({ length: Math.ceil((24 * 60) / minuteTimeStep) - 1 }, (_, index) =>
-        utils.addMinutes(startOfDay, minuteTimeStep * (index + 1)),
+      ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
+        utils.addMinutes(startOfDay, timeStep * (index + 1)),
       ),
       utils.endOfDay(selectedTimeOrMidnight),
     ];
-  }, [selectedTimeOrMidnight, minuteTimeStep, utils]);
+  }, [selectedTimeOrMidnight, timeStep, utils]);
 
   return (
     <DigitalClockRoot
@@ -442,15 +441,11 @@ DigitalClock.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The time steps between two time unit options.
-   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
-   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   * The time steps between two time options.
+   * For example, if `timeStep = 45`, then the available time options will be `[00:00, 00:45, 01:30, 02:15, 03:00, etc.]`.
+   * @default 30
    */
-  timeSteps: PropTypes.shape({
-    hours: PropTypes.number,
-    minutes: PropTypes.number,
-    seconds: PropTypes.number,
-  }),
+  timeStep: PropTypes.number,
   /**
    * The selected value.
    * Used when the component is controlled.

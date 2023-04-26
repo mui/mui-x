@@ -26,9 +26,7 @@ export default function DigitalClockSkipDisabled() {
           <DigitalClock
             skipDisabled
             minTime={dayjs('2022-04-17T09:00')}
-            timeSteps={{
-              minutes: 60,
-            }}
+            timeStep={60}
           />
         </DemoItem>
         <DemoItem label="Multi section digital clock">

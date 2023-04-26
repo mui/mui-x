@@ -4,8 +4,8 @@ import { MultiSectionDigitalClockClasses } from './multiSectionDigitalClockClass
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   BaseClockProps,
-  DigitalClockOnlyProps,
   ExportedBaseClockProps,
+  MultiSectionDigitalClockOnlyProps,
 } from '../internals/models/props/clock';
 import { MultiSectionDigitalClockSectionProps } from './MultiSectionDigitalClockSection';
 import { TimeViewWithMeridiem } from '../internals/models';
@@ -20,7 +20,7 @@ export interface MultiSectionDigitalClockOption<TValue> {
 
 export interface ExportedMultiSectionDigitalClockProps<TDate>
   extends ExportedBaseClockProps<TDate>,
-    DigitalClockOnlyProps {}
+    MultiSectionDigitalClockOnlyProps {}
 
 export interface MultiSectionDigitalClockViewProps<TValue>
   extends Pick<MultiSectionDigitalClockSectionProps<TValue>, 'onChange' | 'items'> {}
