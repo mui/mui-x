@@ -5,7 +5,7 @@ title: Charts - Lines
 
 # Charts - Lines
 
-<p class="description">Chart lines can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
+<p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
 
 ## Overview
 

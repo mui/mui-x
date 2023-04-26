@@ -6,7 +6,7 @@ import { FieldSectionsValueBoundaries } from './useField.types';
 import {
   changeSectionValueFormat,
   cleanDigitSectionValue,
-  doesSectionHaveLeadingZeros,
+  doesSectionFormatHaveLeadingZeros,
   getDateSectionConfigFromFormatToken,
   getDaysInWeekStr,
   getLetterEditingOptions,
@@ -263,16 +263,21 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   const applyNumericEditing: CharacterEditingApplier = (params) => {
     const getNewSectionValue = (
       queryValue: string,
-      sectionType: FieldSectionType,
-      format: string,
-      hasLeadingZeros: boolean,
-      contentType: 'digit' | 'letter',
+      section: Pick<
+        FieldSection,
+        | 'format'
+        | 'type'
+        | 'contentType'
+        | 'hasLeadingZerosInFormat'
+        | 'hasLeadingZerosInInput'
+        | 'maxLength'
+      >,
     ): ReturnType<QueryApplier<TSection>> => {
       const queryValueNumber = Number(`${queryValue}`);
-      const sectionBoundaries = sectionsValueBoundaries[sectionType]({
+      const sectionBoundaries = sectionsValueBoundaries[section.type]({
         currentDate: null,
-        format,
-        contentType,
+        format: section.format,
+        contentType: section.contentType,
       });
 
       if (queryValueNumber > sectionBoundaries.maximum) {
@@ -293,10 +298,8 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       const newSectionValue = cleanDigitSectionValue(
         utils,
         queryValueNumber,
-        sectionType,
-        format,
-        hasLeadingZeros,
         sectionBoundaries,
+        section,
       );
 
       return { sectionValue: newSectionValue, shouldGoToNextSection };
@@ -306,26 +309,31 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       queryValue,
       activeSection,
     ) => {
-      if (activeSection.contentType === 'digit') {
-        return getNewSectionValue(
-          queryValue,
-          activeSection.type,
-          activeSection.format,
-          activeSection.hasLeadingZeros,
-          activeSection.contentType,
-        );
+      if (
+        activeSection.contentType === 'digit' ||
+        activeSection.contentType === 'digit-with-letter'
+      ) {
+        return getNewSectionValue(queryValue, activeSection);
       }
 
       // When editing a letter-format month and the user presses a digit,
       // We can support the numeric editing by using the digit-format month and re-formatting the result.
       if (activeSection.type === 'month') {
-        const response = getNewSectionValue(
-          queryValue,
-          activeSection.type,
-          'MM',
-          doesSectionHaveLeadingZeros(utils, 'digit', 'month', 'MM'),
+        const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
+          utils,
           'digit',
+          'month',
+          'MM',
         );
+
+        const response = getNewSectionValue(queryValue, {
+          type: activeSection.type,
+          format: 'MM',
+          hasLeadingZerosInFormat,
+          hasLeadingZerosInInput: true,
+          contentType: 'digit',
+          maxLength: 2,
+        });
 
         if (isQueryResponseWithoutValue(response)) {
           return response;
@@ -346,13 +354,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       // When editing a letter-format weekDay and the user presses a digit,
       // We can support the numeric editing by returning the nth day in the week day array.
       if (activeSection.type === 'weekDay') {
-        const response = getNewSectionValue(
-          queryValue,
-          activeSection.type,
-          activeSection.format,
-          activeSection.hasLeadingZeros,
-          activeSection.contentType,
-        );
+        const response = getNewSectionValue(queryValue, activeSection);
         if (isQueryResponseWithoutValue(response)) {
           return response;
         }

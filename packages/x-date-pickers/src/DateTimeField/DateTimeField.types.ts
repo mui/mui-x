@@ -11,8 +11,9 @@ import {
   MonthValidationProps,
   TimeValidationProps,
   YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
+} from '../internals/models/validation';
+import { FieldsTextFieldProps } from '../internals/models/fields';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;

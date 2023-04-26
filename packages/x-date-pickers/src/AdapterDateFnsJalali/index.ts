@@ -7,23 +7,25 @@ import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
-  y: 'year',
+  y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
   yy: 'year',
-  yyy: 'year',
+  yyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
   yyyy: 'year',
 
   // Month
-  M: 'month',
+  M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
   MM: 'month',
   MMMM: { sectionType: 'month', contentType: 'letter' },
   MMM: { sectionType: 'month', contentType: 'letter' },
+  L: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
+  LL: 'month',
   LLL: { sectionType: 'month', contentType: 'letter' },
   LLLL: { sectionType: 'month', contentType: 'letter' },
 
   // Day of the month
-  d: 'day',
+  d: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
   dd: 'day',
-  do: 'day',
+  do: { sectionType: 'day', contentType: 'digit-with-letter' },
 
   // Day of the week
   E: { sectionType: 'weekDay', contentType: 'letter' },
@@ -31,17 +33,17 @@ const formatTokenMap: FieldFormatTokenMap = {
   EEE: { sectionType: 'weekDay', contentType: 'letter' },
   EEEE: { sectionType: 'weekDay', contentType: 'letter' },
   EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  i: 'weekDay',
+  i: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ii: 'weekDay',
   iii: { sectionType: 'weekDay', contentType: 'letter' },
   iiii: { sectionType: 'weekDay', contentType: 'letter' },
-  e: 'weekDay',
+  e: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ee: 'weekDay',
   eee: { sectionType: 'weekDay', contentType: 'letter' },
   eeee: { sectionType: 'weekDay', contentType: 'letter' },
   eeeee: { sectionType: 'weekDay', contentType: 'letter' },
   eeeeee: { sectionType: 'weekDay', contentType: 'letter' },
-  c: 'weekDay',
+  c: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   cc: 'weekDay',
   ccc: { sectionType: 'weekDay', contentType: 'letter' },
   cccc: { sectionType: 'weekDay', contentType: 'letter' },
@@ -54,15 +56,17 @@ const formatTokenMap: FieldFormatTokenMap = {
   aaa: 'meridiem',
 
   // Hours
-  H: 'hours',
+  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   HH: 'hours',
-  h: 'hours',
+  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
 
   // Minutes
+  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
   mm: 'minutes',
 
   // Seconds
+  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
   ss: 'seconds',
 };
 
