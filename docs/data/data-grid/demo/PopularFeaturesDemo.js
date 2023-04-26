@@ -255,7 +255,7 @@ function CustomSizeAggregationFooter(props) {
 }
 
 CustomSizeAggregationFooter.propTypes = {
-  value: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
 const columns = [
@@ -267,56 +267,52 @@ const columns = [
     minWidth: 100,
     groupable: false,
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
-
-      switch (typeof params.value) {
-        case 'string':
-          return;
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
-              <Link
-                href={`/x/react-data-grid${params.row.detailPage}`}
-                target="_blank"
-              >
-                {params.value}
-              </Link>
-            </Typography>
-            {params.row.newBadge && (
-              <Box
-                sx={{
-                  width: 'fit-content',
-                  height: 'fit-content',
-                  fontSize: '0.8em',
-                  fontWeight: 600,
-                  position: 'absolute',
-                  textAlign: 'center',
-                  top: -13,
-                  left: -20,
-                  background: '#fcf0a0',
-                  color: '#af5b00',
-                  px: 1,
-                  borderRadius: 10,
-                }}
-              >
-                New
-              </Box>
-            )}
-          </Box>;
-        case 'number':
-          return <CustomSizeAggregationFooter value={params.value} />;
-        default:
-          return '';
-      }
+      return (
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Typography sx={{ fontSize: '1rem', fontWeight: '500' }}>
+            <Link
+              href={`/x/react-data-grid${params.row.detailPage}`}
+              target="_blank"
+            >
+              {params.value}
+            </Link>
+          </Typography>
+          {params.row.newBadge && (
+            <Box
+              sx={{
+                width: 'fit-content',
+                height: 'fit-content',
+                fontSize: '0.8em',
+                fontWeight: 600,
+                position: 'absolute',
+                textAlign: 'center',
+                top: -13,
+                left: -20,
+                background: '#fcf0a0',
+                color: '#af5b00',
+                px: 1,
+                borderRadius: 10,
+              }}
+            >
+              New
+            </Box>
+          )}
+        </Box>
+      );
     },
   },
   {
@@ -334,14 +330,13 @@ const columns = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params) => {
-      switch (typeof params.value) {
-        case 'string':
-          return <PlanTag plan={params.value} />;
-        case 'number':
-          return <CustomSizeAggregationFooter value={params.value} />;
-        default:
-          return '';
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
       }
+      if (!params.value) {
+        return '';
+      }
+      return <PlanTag plan={params.value} />;
     },
     sortComparator: (p1, p2) => {
       function getSortingValue(plan) {
