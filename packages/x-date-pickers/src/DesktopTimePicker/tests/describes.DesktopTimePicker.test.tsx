@@ -79,7 +79,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
         const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
         const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
         const hoursNumber = adapterToUse.getHours(newValue);
-        userEvent.mousePress(screen.getByRole('option', { name: `${hours} hours` }));
+        userEvent.mousePress(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
         if (hasMeridiem) {
           // meridiem is an extra view on `DesktopTimePicker`
           // we need to click it to finish selection

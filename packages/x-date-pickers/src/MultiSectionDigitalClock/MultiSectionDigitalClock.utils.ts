@@ -43,7 +43,7 @@ export const getHourSectionOptions = <TDate>({
   const endHour = ampm ? 11 : 23;
   for (let hour = 0; hour <= endHour; hour += timeStep) {
     let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
-    const ariaLabel = resolveAriaLabel(label);
+    const ariaLabel = resolveAriaLabel(parseInt(label, 10).toString());
 
     label = utils.formatNumber(label);
 

@@ -69,7 +69,10 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     },
     setNewValue: (value) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const hoursLabel = adapterToUse.format(value, hasMeridiem ? 'hours12h' : 'hours24h');
+      const hoursLabel = parseInt(
+        adapterToUse.format(value, hasMeridiem ? 'hours12h' : 'hours24h'),
+        10,
+      );
       const minutesLabel = adapterToUse.getMinutes(value).toString();
       userEvent.mousePress(screen.getByRole('option', { name: `${hoursLabel} hours` }));
       userEvent.mousePress(screen.getByRole('option', { name: `${minutesLabel} minutes` }));
