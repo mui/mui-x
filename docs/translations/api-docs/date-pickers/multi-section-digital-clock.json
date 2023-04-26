@@ -15,7 +15,7 @@
     "maxTime": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
     "minTime": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
     "minutesStep": "Step over minutes.",
-    "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null, selectionState: PickerSelectionState | undefined) =&gt; void</code><br><em>value:</em> The new value.<br><em>selectionState:</em> Indicates if the date selection is complete.",
+    "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) =&gt; void</code><br><em>value:</em> The new value.<br><em>selectionState:</em> Indicates if the date selection is complete.<br><em>selectedView:</em> Indicates the view in which the selection has been made.",
     "onFocusedViewChange": "Callback fired on focused view change.<br><br><strong>Signature:</strong><br><code>function(view: TView, hasFocus: boolean) =&gt; void</code><br><em>view:</em> The new view to focus or not.<br><em>hasFocus:</em> <code>true</code> if the view should be focused.",
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: TView) =&gt; void</code><br><em>view:</em> The new view.",
     "openTo": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list.",
