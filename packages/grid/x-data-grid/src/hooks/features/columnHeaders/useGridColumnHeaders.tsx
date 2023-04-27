@@ -129,9 +129,12 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         return;
       }
 
-      if (event.deltaX !== 0) {
+      const previousScrollLeft = virtualScroller.scrollLeft;
+      virtualScroller.scrollLeft += event.deltaX;
+
+      // If the scroll position hasn't changed - it's the end of the scroll
+      if (virtualScroller.scrollLeft !== previousScrollLeft) {
         event.preventDefault();
-        virtualScroller.scrollLeft += event.deltaX;
       }
     };
     rootElement.addEventListener('wheel', callback);
