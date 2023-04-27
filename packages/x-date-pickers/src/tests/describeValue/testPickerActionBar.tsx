@@ -9,14 +9,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
   getOptions,
 ) => {
-  const { componentFamily, render, values, emptyValue, setNewValue, variant, type } = getOptions();
+  const { componentFamily, render, values, emptyValue, setNewValue, type } = getOptions();
 
   if (componentFamily !== 'picker') {
-    return;
-  }
-
-  // No view to test
-  if (variant === 'desktop' && type === 'time') {
     return;
   }
 
