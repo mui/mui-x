@@ -161,6 +161,16 @@ export const useGridCellEditing = (
           return; // Space scrolls to the last row
         }
 
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'cell' },
+        );
+
+        if (!canStartEditing) {
+          return;
+        }
+
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {

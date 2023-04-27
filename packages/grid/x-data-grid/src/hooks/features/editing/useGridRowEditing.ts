@@ -229,6 +229,16 @@ export const useGridRowEditing = (
           return; // Space scrolls to the last row
         }
 
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'row' },
+        );
+
+        if (!canStartEditing) {
+          return;
+        }
+
         if (isPrintableKey(event)) {
           reason = GridRowEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {

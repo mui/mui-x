@@ -16,6 +16,8 @@ import {
   getRowIdFromRowModel,
   getVisibleRows,
   getActiveElement,
+  GridPipeProcessor,
+  useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
@@ -55,6 +57,7 @@ function batchRowUpdates<R>(func: (rows: R[]) => void, wait?: number) {
 async function getTextFromClipboard(rootEl: HTMLElement) {
   return new Promise<string>((resolve) => {
     const focusedCell = getActiveElement(document);
+    const parent = focusedCell || rootEl;
 
     const el = document.createElement('input');
     el.style.width = '0px';
@@ -78,7 +81,7 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
     };
 
     el.addEventListener('paste', handlePasteEvent);
-    rootEl.appendChild(el);
+    parent.appendChild(el);
     el.focus({ preventScroll: true });
   });
 }
@@ -205,6 +208,14 @@ class CellValueUpdater {
   }
 }
 
+function isPasteShortcut(event: React.KeyboardEvent) {
+  const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
+  if (event.code === 'KeyV' && isModifierKeyPressed) {
+    return true;
+  }
+  return false;
+}
+
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -233,8 +244,7 @@ export const useGridClipboardImport = (
       if (!enableClipboardPaste) {
         return;
       }
-      const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-      if (event.code !== 'KeyV' || !isModifierKeyPressed) {
+      if (!isPasteShortcut(event)) {
         return;
       }
 
@@ -250,9 +260,6 @@ export const useGridClipboardImport = (
       if (!rootEl) {
         return;
       }
-
-      // Do not enter cell edit mode on paste
-      event.defaultMuiPrevented = true;
 
       const text = await getTextFromClipboard(rootEl);
       if (!text) {
@@ -378,8 +385,21 @@ export const useGridClipboardImport = (
     ],
   );
 
+  const checkIfCanStartEditing = React.useCallback<GridPipeProcessor<'canStartEditing'>>(
+    (initialValue, { event }) => {
+      if (isPasteShortcut(event) && enableClipboardPaste) {
+        // Do not enter cell edit mode on paste
+        return false;
+      }
+      return initialValue;
+    },
+    [enableClipboardPaste],
+  );
+
   useGridApiEventHandler(apiRef, 'cellKeyDown', handlePaste);
 
   useGridApiOptionHandler(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
   useGridApiOptionHandler(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
+
+  useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 };

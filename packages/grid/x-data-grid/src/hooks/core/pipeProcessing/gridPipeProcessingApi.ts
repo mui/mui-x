@@ -5,6 +5,7 @@ import {
   GridColDef,
   GridCellCoordinates,
   GridCellParams,
+  GridEditMode,
 } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
@@ -53,6 +54,10 @@ export interface GridPipeProcessingLookup {
     context: { event: MouseEvent | React.KeyboardEvent; cell: GridCellParams | null };
   };
   clipboardCopy: { value: string };
+  canStartEditing: {
+    value: boolean;
+    context: { event: React.KeyboardEvent; cellParams: GridCellParams; editMode: GridEditMode };
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (
