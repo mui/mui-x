@@ -87,8 +87,12 @@ function GridBody(props: GridBodyProps) {
       return () => {};
     }
 
+    let animationFrame: number;
     const observer = new ResizeObserver(() => {
-      apiRef.current.computeSizeAndPublishResizeEvent();
+      // See https://github.com/mui/mui-x/issues/8733
+      animationFrame = window.requestAnimationFrame(() => {
+        apiRef.current.computeSizeAndPublishResizeEvent();
+      });
     });
 
     if (elementToObserve) {
@@ -96,6 +100,10 @@ function GridBody(props: GridBodyProps) {
     }
 
     return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
       if (elementToObserve) {
         observer.unobserve(elementToObserve);
       }

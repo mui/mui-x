@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  waitFor,
+} from '@mui/monorepo/test/utils';
 import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
@@ -62,7 +69,7 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Row Grouping', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -77,6 +84,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   }
 
   describe('Setting grouping criteria', () => {
+    clock.withFakeTimers();
+
     describe('initialState: rowGrouping.model', () => {
       it('should allow to initialize the row grouping', () => {
         render(
@@ -199,6 +208,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: rowGroupingColumnMode', () => {
+    clock.withFakeTimers();
+
     it('should gather all the grouping criteria into a single column when rowGroupingColumnMode is not defined', () => {
       render(
         <Test
@@ -476,6 +487,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: disableRowGrouping', () => {
+    clock.withFakeTimers();
+
     it('should disable the row grouping when `prop.disableRowGrouping = true`', () => {
       render(
         <Test
@@ -514,6 +527,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: defaultGroupingExpansionDepth', () => {
+    clock.withFakeTimers();
+
     it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
       render(
         <Test
@@ -610,6 +625,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: isGroupExpandedByDefault', () => {
+    clock.withFakeTimers();
+
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
         (node: GridGroupNode) => node.groupingKey === 'Cat A' && node.groupingField === 'category1',
@@ -659,6 +676,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: groupingColDef when groupingColumnMode = "single"', () => {
+    clock.withFakeTimers();
+
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -995,6 +1014,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: groupingColDef when groupingColumnMode = "multiple"', () => {
+    clock.withFakeTimers();
+
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -1461,6 +1482,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('colDef: groupingValueGetter & valueGetter', () => {
+    clock.withFakeTimers();
+
     it('should use groupingValueGetter to group rows when defined', () => {
       render(
         <Test
@@ -1575,6 +1598,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('column menu', () => {
+    clock.withFakeTimers();
+
     it('should add a "Group by {field}" menu item on ungrouped columns when coLDef.groupable is not defined', () => {
       render(
         <Test
@@ -1774,6 +1799,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('sorting', () => {
+    clock.withFakeTimers();
+
     describe('prop: rowGroupingColumnMode = "single"', () => {
       it('should use the top level grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
         render(
@@ -2435,6 +2462,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: addRowGroupingCriteria', () => {
+    clock.withFakeTimers();
+
     it('should add grouping criteria to model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current.addRowGroupingCriteria('category2'));
@@ -2449,6 +2478,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: removeRowGroupingCriteria', () => {
+    clock.withFakeTimers();
+
     it('should remove field from model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current.removeRowGroupingCriteria('category1'));
@@ -2457,6 +2488,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: setRowGroupingCriteriaIndex', () => {
+    clock.withFakeTimers();
+
     it('should change the grouping criteria order', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />);
       act(() => apiRef.current.setRowGroupingCriteriaIndex('category1', 1));
@@ -2465,6 +2498,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: getRowGroupChildren', () => {
+    clock.withFakeTimers();
+
     it('should return the rows in group of depth 0 of length 1 from tree of depth 1', () => {
       render(
         <Test
@@ -2582,5 +2617,21 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         2,
       ]);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/8626
+  it('should properly update the rows when they change', async () => {
+    render(
+      <Test
+        columns={[{ field: 'id' }, { field: 'group' }, { field: 'username', width: 150 }]}
+        rows={[{ id: 1, group: 'A', username: 'username' }]}
+        rowGroupingModel={['group']}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+
+    act(() => apiRef.current.updateRows([{ id: 1, group: 'A', username: 'username 2' }]));
+
+    await waitFor(() => expect(getCell(1, 3).textContent).to.equal('username 2'));
   });
 });
