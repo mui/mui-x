@@ -52,7 +52,7 @@ export interface PickersComponentsPropsList {
   MuiDateTimePickerToolbar: DateTimePickerToolbarProps<unknown>;
   MuiDayCalendar: DayCalendarProps<unknown>;
   MuiDayCalendarSkeleton: DayCalendarSkeletonProps;
-  MuiLocalizationProvider: LocalizationProviderProps<unknown>;
+  MuiLocalizationProvider: LocalizationProviderProps<unknown, unknown>;
   MuiMonthCalendar: MonthCalendarProps<unknown>;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
   MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;

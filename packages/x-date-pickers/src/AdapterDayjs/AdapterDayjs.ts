@@ -4,19 +4,18 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import { FieldFormatTokenMap, MuiPickersAdapter, AdapterFormats, AdapterUnits } from '../models';
+import {
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+  AdapterFormats,
+  AdapterUnits,
+  AdapterOptions,
+} from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
 defaultDayjs.extend(customParseFormatPlugin);
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(isBetweenPlugin);
-
-interface AdapterDayjsOptions {
-  locale?: string;
-  /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
-  instance?: typeof defaultDayjs;
-  formats?: Partial<AdapterFormats>;
-}
 
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
@@ -126,7 +125,7 @@ const withLocale = (dayjs: any, locale?: string): Constructor =>
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
+export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public isMUIAdapter = true;
 
   public lib = 'dayjs';
@@ -143,7 +142,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats, instance }: AdapterDayjsOptions = {}) {
+  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultDayjs> = {}) {
     this.rawDayJsInstance = instance || defaultDayjs;
     this.dayjs = withLocale(this.rawDayJsInstance, locale);
     this.locale = locale;
