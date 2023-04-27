@@ -118,7 +118,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       // TODO: uncomment before merging
       // return undefined;
     }
-    const rootElement = innerRef?.current;
+    const rootElement = apiRef.current.columnHeadersContainerElementRef?.current;
     if (!rootElement) {
       return undefined;
     }
