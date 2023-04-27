@@ -7,7 +7,8 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 # Data Grid
 
-<p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
+<p class="description">A extendable and fast react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
+- Very fast!
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
