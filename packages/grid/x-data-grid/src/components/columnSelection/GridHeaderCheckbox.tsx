@@ -90,7 +90,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const params: GridHeaderSelectionCheckboxParams = {
-        value: event.target.checked,
+        value: isIndeterminate ? !event.target.checked : event.target.checked,
       };
 
       apiRef.current.publishEvent('headerSelectionCheckboxChange', params);
