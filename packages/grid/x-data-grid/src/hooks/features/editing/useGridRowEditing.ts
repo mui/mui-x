@@ -225,10 +225,6 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
-        if (event.key === ' ') {
-          return; // Space scrolls to the last row
-        }
-
         const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
           'canStartEditing',
           true,
