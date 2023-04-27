@@ -201,6 +201,8 @@ const Select = React.forwardRef<
 >(
   (
     {
+      open,
+      onOpen,
       value,
       onChange,
       size,
@@ -240,6 +242,14 @@ const Select = React.forwardRef<
     return (
       <JoySelect
         {...(props as JoySelectProps<any>)}
+        listboxOpen={open}
+        onListboxOpenChange={(isOpen) => {
+          if (isOpen) {
+            onOpen?.({} as React.SyntheticEvent);
+          } else {
+            MenuProps?.onClose?.({} as React.KeyboardEvent, undefined as any);
+          }
+        }}
         size={convertSize(size)}
         color={convertColor(color)}
         variant={convertVariant(variant) ?? 'plain'}
@@ -249,6 +259,10 @@ const Select = React.forwardRef<
         slotProps={{
           button: {
             'aria-labelledby': labelId,
+            ref: inputRef,
+          },
+          listbox: {
+            disablePortal: false,
           },
         }}
       />
