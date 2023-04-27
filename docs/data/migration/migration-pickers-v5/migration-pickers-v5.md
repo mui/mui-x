@@ -24,7 +24,8 @@ Described below are the steps needed to migrate from v5 to v6.
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v6.0.0/preset-safe` to target Data Grid as well.
-It should be only applied **once per folder.**
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```sh
 // Date and Time Pickers specific
