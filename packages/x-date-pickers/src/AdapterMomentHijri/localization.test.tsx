@@ -45,7 +45,6 @@ describe('<AdapterMomentHijri />', () => {
 
   it('should return the correct week number', () => {
     const adapter = new AdapterMomentHijri();
-
     const dateToTest = adapter.date(new Date(2022, 10, 10));
 
     expect(adapter.getWeekNumber!(dateToTest)).to.equal(16);

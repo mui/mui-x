@@ -49,7 +49,6 @@
     "@date-io/date-fns": "^2.16.0",
     "@date-io/date-fns-jalali": "^2.16.0",
     "@date-io/hijri": "^2.16.1",
-    "@date-io/jalaali": "^2.16.1",
     "@date-io/moment": "^2.16.1",
     "@mui/utils": "^5.12.0",
     "@types/react-transition-group": "^4.4.5",
@@ -104,6 +103,7 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.3.0",
+    "@types/moment-jalaali": "^0.7.6",
     "date-fns": "^2.29.3",
     "date-fns-jalali": "^2.13.0-0",
     "dayjs": "^1.11.7",

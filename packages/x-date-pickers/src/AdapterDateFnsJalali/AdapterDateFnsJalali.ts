@@ -1,65 +1,65 @@
 /* eslint-disable class-methods-use-this */
-import addDays from 'date-fns/addDays';
-import addSeconds from 'date-fns/addSeconds';
-import addMinutes from 'date-fns/addMinutes';
-import addHours from 'date-fns/addHours';
-import addWeeks from 'date-fns/addWeeks';
-import addMonths from 'date-fns/addMonths';
-import addYears from 'date-fns/addYears';
-import differenceInYears from 'date-fns/differenceInYears';
-import differenceInQuarters from 'date-fns/differenceInQuarters';
-import differenceInMonths from 'date-fns/differenceInMonths';
-import differenceInWeeks from 'date-fns/differenceInWeeks';
-import differenceInDays from 'date-fns/differenceInDays';
-import differenceInHours from 'date-fns/differenceInHours';
-import differenceInMinutes from 'date-fns/differenceInMinutes';
-import differenceInSeconds from 'date-fns/differenceInSeconds';
-import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
-import eachDayOfInterval from 'date-fns/eachDayOfInterval';
-import endOfDay from 'date-fns/endOfDay';
-import endOfWeek from 'date-fns/endOfWeek';
-import endOfYear from 'date-fns/endOfYear';
-import dateFnsFormat from 'date-fns/format';
-import getDate from 'date-fns/getDate';
-import getDay from 'date-fns/getDay';
-import getDaysInMonth from 'date-fns/getDaysInMonth';
-import getHours from 'date-fns/getHours';
-import getMinutes from 'date-fns/getMinutes';
-import getMonth from 'date-fns/getMonth';
-import getSeconds from 'date-fns/getSeconds';
-import getWeek from 'date-fns/getWeek';
-import getYear from 'date-fns/getYear';
-import isAfter from 'date-fns/isAfter';
-import isBefore from 'date-fns/isBefore';
-import isEqual from 'date-fns/isEqual';
-import isSameDay from 'date-fns/isSameDay';
-import isSameYear from 'date-fns/isSameYear';
-import isSameMonth from 'date-fns/isSameMonth';
-import isSameHour from 'date-fns/isSameHour';
-import isValid from 'date-fns/isValid';
-import dateFnsParse from 'date-fns/parse';
-import setDate from 'date-fns/setDate';
-import setHours from 'date-fns/setHours';
-import setMinutes from 'date-fns/setMinutes';
-import setMonth from 'date-fns/setMonth';
-import setSeconds from 'date-fns/setSeconds';
-import setYear from 'date-fns/setYear';
-import startOfDay from 'date-fns/startOfDay';
-import startOfMonth from 'date-fns/startOfMonth';
-import endOfMonth from 'date-fns/endOfMonth';
-import startOfWeek from 'date-fns/startOfWeek';
-import startOfYear from 'date-fns/startOfYear';
-import parseISO from 'date-fns/parseISO';
-import formatISO from 'date-fns/formatISO';
-import isWithinInterval from 'date-fns/isWithinInterval';
-import defaultLocale from 'date-fns/locale/en-US';
+import addSeconds from 'date-fns-jalali/addSeconds';
+import addMinutes from 'date-fns-jalali/addMinutes';
+import addHours from 'date-fns-jalali/addHours';
+import addDays from 'date-fns-jalali/addDays';
+import addWeeks from 'date-fns-jalali/addWeeks';
+import addMonths from 'date-fns-jalali/addMonths';
+import addYears from 'date-fns-jalali/addYears';
+import differenceInYears from 'date-fns-jalali/differenceInYears';
+import differenceInQuarters from 'date-fns-jalali/differenceInQuarters';
+import differenceInMonths from 'date-fns-jalali/differenceInMonths';
+import differenceInWeeks from 'date-fns-jalali/differenceInWeeks';
+import differenceInDays from 'date-fns-jalali/differenceInDays';
+import differenceInHours from 'date-fns-jalali/differenceInHours';
+import differenceInMinutes from 'date-fns-jalali/differenceInMinutes';
+import differenceInSeconds from 'date-fns-jalali/differenceInSeconds';
+import differenceInMilliseconds from 'date-fns-jalali/differenceInMilliseconds';
+import eachDayOfInterval from 'date-fns-jalali/eachDayOfInterval';
+import endOfDay from 'date-fns-jalali/endOfDay';
+import endOfWeek from 'date-fns-jalali/endOfWeek';
+import endOfYear from 'date-fns-jalali/endOfYear';
+import dateFnsFormat from 'date-fns-jalali/format';
+import formatISO from 'date-fns-jalali/formatISO';
+import getHours from 'date-fns-jalali/getHours';
+import getSeconds from 'date-fns-jalali/getSeconds';
+import getWeek from 'date-fns-jalali/getWeek';
+import getYear from 'date-fns-jalali/getYear';
+import getMonth from 'date-fns-jalali/getMonth';
+import getDate from 'date-fns-jalali/getDate';
+import getDay from 'date-fns-jalali/getDay';
+import getDaysInMonth from 'date-fns-jalali/getDaysInMonth';
+import getMinutes from 'date-fns-jalali/getMinutes';
+import isAfter from 'date-fns-jalali/isAfter';
+import isBefore from 'date-fns-jalali/isBefore';
+import isEqual from 'date-fns-jalali/isEqual';
+import isSameDay from 'date-fns-jalali/isSameDay';
+import isSameYear from 'date-fns-jalali/isSameYear';
+import isSameMonth from 'date-fns-jalali/isSameMonth';
+import isSameHour from 'date-fns-jalali/isSameHour';
+import isValid from 'date-fns-jalali/isValid';
+import dateFnsParse from 'date-fns-jalali/parse';
+import parseISO from 'date-fns-jalali/parseISO';
+import setDate from 'date-fns-jalali/setDate';
+import setHours from 'date-fns-jalali/setHours';
+import setMinutes from 'date-fns-jalali/setMinutes';
+import setMonth from 'date-fns-jalali/setMonth';
+import setSeconds from 'date-fns-jalali/setSeconds';
+import setYear from 'date-fns-jalali/setYear';
+import startOfDay from 'date-fns-jalali/startOfDay';
+import startOfMonth from 'date-fns-jalali/startOfMonth';
+import endOfMonth from 'date-fns-jalali/endOfMonth';
+import startOfWeek from 'date-fns-jalali/startOfWeek';
+import startOfYear from 'date-fns-jalali/startOfYear';
+import isWithinInterval from 'date-fns-jalali/isWithinInterval';
+import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 // @ts-ignore
-import longFormatters from 'date-fns/_lib/format/longFormatters';
+import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 type DateFnsLocale = typeof defaultLocale;
 
-interface AdapterDateFnsOptions {
+interface AdapterDateFnsJalaliOptions {
   locale?: DateFnsLocale;
   formats?: Partial<AdapterFormats>;
 }
@@ -131,13 +131,13 @@ const formatTokenMap: FieldFormatTokenMap = {
 
 const defaultFormats: AdapterFormats = {
   dayOfMonth: 'd',
-  fullDate: 'PP',
+  fullDate: 'PPP',
   fullDateWithWeekday: 'PPPP',
-  fullDateTime: 'PP p',
-  fullDateTime12h: 'PP hh:mm aa',
-  fullDateTime24h: 'PP HH:mm',
+  fullDateTime: 'PPP p',
+  fullDateTime12h: 'PPP hh:mm aa',
+  fullDateTime24h: 'PPP HH:mm',
   fullTime: 'p',
-  fullTime12h: 'hh:mm aa',
+  fullTime12h: 'hh:mm aaa',
   fullTime24h: 'HH:mm',
   hours12h: 'hh',
   hours24h: 'HH',
@@ -147,47 +147,35 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'P HH:mm',
   minutes: 'mm',
   month: 'LLLL',
-  monthAndDate: 'MMMM d',
+  monthAndDate: 'd MMMM',
   monthAndYear: 'LLLL yyyy',
   monthShort: 'MMM',
   weekday: 'EEEE',
   weekdayShort: 'EEE',
   normalDate: 'd MMMM',
-  normalDateWithWeekday: 'EEE, MMM d',
+  normalDateWithWeekday: 'EEE, d MMMM',
   seconds: 'ss',
-  shortDate: 'MMM d',
+  shortDate: 'd MMM',
   year: 'yyyy',
 };
 
-/**
- * Based on `@date-io/date-fns`
- *
- * MIT License
- *
- * Copyright (c) 2017 Dmitriy Kovalenko
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-export class AdapterDateFns implements MuiPickersAdapter<Date> {
+const NUMBER_SYMBOL_MAP = {
+  '1': '۱',
+  '2': '۲',
+  '3': '۳',
+  '4': '۴',
+  '5': '۵',
+  '6': '۶',
+  '7': '۷',
+  '8': '۸',
+  '9': '۹',
+  '0': '۰',
+};
+
+export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
   public isMUIAdapter = true;
 
-  public lib = 'date-fns';
+  public lib = 'date-fns-jalali';
 
   public locale?: DateFnsLocale;
 
@@ -197,7 +185,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  constructor({ locale, formats }: AdapterDateFnsOptions = {}) {
+  constructor({ locale, formats }: AdapterDateFnsJalaliOptions = {}) {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
@@ -235,7 +223,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
   };
 
   public getCurrentLocaleCode = () => {
-    return this.locale?.code || 'en-US';
+    return this.locale?.code || 'fa-IR';
   };
 
   // Note: date-fns input types are more lenient than this adapter, so we need to expose our more
@@ -245,21 +233,20 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
       return /a/.test(this.locale.formatLong!.time());
     }
 
-    // By default, date-fns is using en-US locale with am/pm enabled
+    // By default, date-fns-jalali is using fa-IR locale with am/pm enabled
     return true;
   };
 
   public expandFormat = (format: string) => {
-    const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
-
     // @see https://github.com/date-fns/date-fns/blob/master/src/format/index.js#L31
+    const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
+    const locale = this.locale ?? defaultLocale;
     return format
       .match(longFormatRegexp)!
-      .map((token: string) => {
+      .map((token) => {
         const firstCharacter = token[0];
         if (firstCharacter === 'p' || firstCharacter === 'P') {
           const longFormatter = longFormatters[firstCharacter];
-          const locale = this.locale || defaultLocale;
           return longFormatter(token, locale.formatLong, {});
         }
         return token;
@@ -290,7 +277,9 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
   };
 
   public formatNumber = (numberToFormat: string) => {
-    return numberToFormat;
+    return numberToFormat
+      .replace(/\d/g, (match) => NUMBER_SYMBOL_MAP[match as keyof typeof NUMBER_SYMBOL_MAP])
+      .replace(/,/g, '،');
   };
 
   public getDiff = (value: Date, comparing: Date | string, unit?: AdapterUnits) => {
@@ -541,8 +530,8 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
     return nestedWeeks;
   };
 
-  public getWeekNumber = (value: Date) => {
-    return getWeek(value, { locale: this.locale });
+  public getWeekNumber = (date: Date) => {
+    return getWeek(date, { locale: this.locale });
   };
 
   public getYearRange = (start: Date, end: Date) => {
@@ -560,6 +549,6 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
   };
 
   public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am' ? 'AM' : 'PM';
+    return ampm === 'am' ? 'ق.ظ' : 'ب.ظ';
   };
 }

@@ -1259,13 +1259,6 @@
   dependencies:
     "@date-io/moment" "^2.16.1"
 
-"@date-io/jalaali@^2.16.1":
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/@date-io/jalaali/-/jalaali-2.16.1.tgz#c53323fc429f8fe6ab205d36c003d6de071f17e8"
-  integrity sha512-GLw87G/WJ1DNrQHW8p/LqkqAqTUSqBSRin0H1pRPwCccB5Fh7GT64sadjzEvjW56lPJ0aq2vp5yI2eIjZajfrw==
-  dependencies:
-    "@date-io/moment" "^2.16.1"
-
 "@date-io/luxon@^2.16.1":
   version "2.16.1"
   resolved "https://registry.yarnpkg.com/@date-io/luxon/-/luxon-2.16.1.tgz#b08786614cb58831c729a15807753011e4acb966"
@@ -3058,6 +3051,13 @@
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/moment-hijri/-/moment-hijri-2.1.0.tgz#ac79f3d97d74bf10afe6631cd33c19ad3f329d56"
   integrity sha512-2+jaCpPqiwcrejg8oCex7jITtRDjcQIu8s7GAY7uVlDoAaq3LiyLDoe1l9EiWZRCECahtdUDmdZHHS5THRC/hA==
+  dependencies:
+    moment ">=2.14.0"
+
+"@types/moment-jalaali@^0.7.6":
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/@types/moment-jalaali/-/moment-jalaali-0.7.6.tgz#8debf51f7bc265a00ac98c4bbd77b260c71b46d8"
+  integrity sha512-TyqrJVGpuqadpQt49sPdBlWqLDYU2W3PzAoJ934CjE/u8iNf/wi/oIYv9x9vKB1XU6PhzFOXerDZn43LW1K8xA==
   dependencies:
     moment ">=2.14.0"
 
