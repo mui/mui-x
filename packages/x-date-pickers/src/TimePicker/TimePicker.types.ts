@@ -21,7 +21,7 @@ export interface TimePickerSlotsComponentsProps<TDate>
 
 export interface TimePickerProps<TDate>
   extends DesktopTimePickerProps<TDate>,
-    MobileTimePickerProps<TDate, TimeViewWithMeridiem> {
+    Omit<MobileTimePickerProps<TDate, TimeViewWithMeridiem>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'

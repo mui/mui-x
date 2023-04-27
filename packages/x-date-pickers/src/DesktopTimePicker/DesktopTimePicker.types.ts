@@ -17,6 +17,7 @@ import {
   MultiSectionDigitalClockSlotsComponent,
   MultiSectionDigitalClockSlotsComponentsProps,
 } from '../MultiSectionDigitalClock';
+import { TimeView } from '../models';
 
 export interface DesktopTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
@@ -37,6 +38,10 @@ export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate, TimeViewWithMeridiem>,
     DesktopOnlyPickerProps<TDate>,
     DesktopOnlyTimePickerProps<TDate> {
+  /**
+   * Available views.
+   */
+  views?: readonly TimeView[];
   /**
    * Overridable components.
    * @default {}
