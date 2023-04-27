@@ -3,6 +3,7 @@
   { "name": "AdapterUnits", "kind": "TypeAlias" },
   { "name": "BaseSingleInputFieldProps", "kind": "Interface" },
   { "name": "beBY", "kind": "Variable" },
+  { "name": "caES", "kind": "Variable" },
   { "name": "clockClasses", "kind": "Variable" },
   { "name": "ClockClasses", "kind": "Interface" },
   { "name": "ClockClassKey", "kind": "TypeAlias" },
