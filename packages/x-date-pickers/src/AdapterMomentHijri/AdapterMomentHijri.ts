@@ -170,20 +170,20 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return this.moment(value).isSame(comparing);
   };
 
-  public startOfYear = (date: Moment) => {
-    return date.clone().startOf('iYear');
+  public startOfYear = (value: Moment) => {
+    return value.clone().startOf('iYear');
   };
 
-  public startOfMonth = (date: Moment) => {
-    return date.clone().startOf('iMonth');
+  public startOfMonth = (value: Moment) => {
+    return value.clone().startOf('iMonth');
   };
 
-  public endOfYear = (date: Moment) => {
-    return date.clone().endOf('iYear');
+  public endOfYear = (value: Moment) => {
+    return value.clone().endOf('iYear');
   };
 
-  public endOfMonth = (date: Moment) => {
-    return date.clone().endOf('iMonth');
+  public endOfMonth = (value: Moment) => {
+    return value.clone().endOf('iMonth');
   };
 
   public addYears = (value: Moment, amount: number) => {
@@ -257,8 +257,8 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     return nestedWeeks;
   };
 
-  public getWeekNumber = (date: Moment) => {
-    return date.iWeek();
+  public getWeekNumber = (value: Moment) => {
+    return value.iWeek();
   };
 
   public getYearRange = (start: Moment, end: Moment) => {

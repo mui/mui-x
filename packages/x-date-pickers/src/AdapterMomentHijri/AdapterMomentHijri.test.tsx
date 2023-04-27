@@ -27,10 +27,10 @@ describe('<AdapterMomentHijri />', () => {
     it('Formatting', () => {
       const adapter = new AdapterMomentHijri();
 
-      const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
+      const expectDate = (format: keyof AdapterFormats, expectedWithArSA: string) => {
         const date = adapter.date('2020-01-01T23:44:00.000Z')!;
 
-        expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
+        expect(adapter.format(date, format)).to.equal(expectedWithArSA);
       };
 
       expectDate('keyboardDate', '١٤٤١/٠٥/٠٦');
