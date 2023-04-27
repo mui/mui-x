@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'horas',
+  minutes: 'minutos',
+  seconds: 'segundos',
+  meridiem: 'meridiano',
+};
 
 const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -32,7 +40,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selecione ${view}. ${
+    `Selecione ${timeViews[view]}. ${
       time === null
         ? 'Hora não selecionada'
         : `Selecionado a hora ${adapter.format(time, 'fullTime')}`
@@ -40,6 +48,9 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} horas`,
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Selecione ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Número da semana',

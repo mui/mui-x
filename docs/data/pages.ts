@@ -199,6 +199,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
           { pathname: '/x/react-date-pickers/time-field', title: 'Time Field', newFeature: true },
           { pathname: '/x/react-date-pickers/time-clock', title: 'Time Clock' },
+          {
+            pathname: '/x/react-date-pickers/digital-clock',
+            title: 'Digital Clock',
+            newFeature: true,
+          },
         ],
       },
       {
@@ -338,6 +343,7 @@ const pages: MuiPage[] = [
             title: 'DesktopDateTimePicker',
           },
           { pathname: '/x/api/date-pickers/desktop-time-picker', title: 'DesktopTimePicker' },
+          { pathname: '/x/api/date-pickers/digital-clock', title: 'DigitalClock' },
           { pathname: '/x/api/date-pickers/localization-provider', title: 'LocalizationProvider' },
           { pathname: '/x/api/date-pickers/mobile-date-picker', title: 'MobileDatePicker' },
           {
@@ -351,6 +357,10 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
           { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
+          {
+            pathname: '/x/api/date-pickers/multi-section-digital-clock',
+            title: 'MultiSectionDigitalClock',
+          },
           {
             pathname: '/x/api/date-pickers/multi-input-date-range-field',
             title: 'MultiInputDateRangeField',
