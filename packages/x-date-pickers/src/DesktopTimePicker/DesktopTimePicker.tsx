@@ -390,7 +390,7 @@ DesktopTimePicker.propTypes = {
   /**
    * Available views.
    */
-  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired),
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;
 
 export { DesktopTimePicker };
