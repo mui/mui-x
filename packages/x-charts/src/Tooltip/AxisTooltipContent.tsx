@@ -1,14 +1,11 @@
 import * as React from 'react';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { getSymbol } from '../internals/utils';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
+import { TooltipCell, TooltipPaper, TooltipTable, TooltipMark } from './TooltipTable';
 
 export type AxisContentProps = {
   /**
@@ -39,37 +36,36 @@ export function DefaultAxisContent(props: AxisContentProps) {
   if (dataIndex == null) {
     return null;
   }
-  const xAxisName = axis.id;
-
-  const markerSize = 30; // TODO: allows customization
-  const shape = 'square';
+  const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
-    <Paper sx={{ p: 1 }}>
-      {axisValue != null && (
-        <React.Fragment>
-          <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center' }}>
-            {xAxisName}: {axisValue.toLocaleString()}
-          </Typography>
-          <Divider />
-        </React.Fragment>
-      )}
-      {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
-        <Typography variant="caption" key={id} sx={{ display: 'flex', alignItems: 'center' }}>
-          <svg width={markerSize} height={markerSize}>
-            <path
-              // @ts-ignore TODO: Fix me
-              d={d3Symbol(d3SymbolsFill[getSymbol(shape)], markerSize)()!}
-              // TODO: Should be customizable. Maybe owner state would make more sense
-              // fill={invertMarkers ? d.stroke : d.fill}
-              // stroke={invertMarkers ? d.fill : d.stroke}
-              fill={color}
-              transform={`translate(${markerSize / 2}, ${markerSize / 2})`}
-            />
-          </svg>
-          {label ?? id}: {valueFormatter(data[dataIndex])}
-        </Typography>
-      ))}
-    </Paper>
+    <TooltipPaper>
+      <TooltipTable>
+        {axisValue != null && (
+          <thead>
+            <TooltipCell colSpan={3}>
+              <Typography variant="caption">{axisFormatter(axisValue)}</Typography>
+            </TooltipCell>
+          </thead>
+        )}
+        <tbody>
+          {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
+            <tr key={id}>
+              <TooltipCell>
+                <TooltipMark ownerState={{ color }} />
+              </TooltipCell>
+
+              <TooltipCell>
+                <Typography variant="caption">{label ?? id}</Typography>
+              </TooltipCell>
+
+              <TooltipCell>
+                <Typography variant="caption">{valueFormatter(data[dataIndex])}</Typography>
+              </TooltipCell>
+            </tr>
+          ))}
+        </tbody>
+      </TooltipTable>
+    </TooltipPaper>
   );
 }
 

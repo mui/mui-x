@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Paper from '@mui/material/Paper';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import { TooltipTable, TooltipCell, TooltipMark, TooltipPaper } from './TooltipTable';
 
 export type ItemContentProps<T extends ChartSeriesType> = {
   /**
@@ -23,15 +23,24 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
   }
 
   const displayedLabel = series.label ?? series.id;
+  const color = series.color;
   // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
-    <Paper sx={{ p: 1 }}>
-      <p>
-        {displayedLabel}: {formattedValue}
-      </p>
-    </Paper>
+    <TooltipPaper >
+      <TooltipTable>
+        <tr>
+          <TooltipCell>
+            <TooltipMark ownerState={{ color }} />
+          </TooltipCell>
+
+          <TooltipCell>{displayedLabel}</TooltipCell>
+
+          <TooltipCell>{formattedValue}</TooltipCell>
+        </tr>
+      </TooltipTable>
+    </TooltipPaper>
   );
 }
 

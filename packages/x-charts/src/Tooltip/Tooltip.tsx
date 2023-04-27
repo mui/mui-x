@@ -60,7 +60,7 @@ export function Tooltip(props: TooltipProps) {
           open={popperOpen}
           placement="right-start"
           anchorEl={generateVirtualElement(mousePosition)}
-          style={{ padding: '16px', pointerEvents: 'none' }}
+          style={{ pointerEvents: 'none' }}
         >
           {trigger === 'item' ? (
             <ItemTooltipContent
