@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TimeView } from '@mui/x-date-pickers/internals';
+import { TimeView } from '../models';
 import { StaticTimePickerProps } from './StaticTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateTime } from '../internals/hooks/validation/useTimeValidation';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticTimePickerComponent = (<TDate>(
@@ -23,6 +23,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
+  const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
     hours: renderTimeViewClock,
@@ -36,10 +37,12 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    ampmInClock,
     slotProps: {
       ...defaultizedProps.slotProps,
       toolbar: {
         hidden: displayStaticWrapperAs === 'desktop',
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
@@ -48,8 +51,9 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    ref,
+    valueType: 'time',
     validator: validateTime,
+    ref,
   });
 
   return renderPicker();
@@ -67,7 +71,7 @@ StaticTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -82,7 +86,7 @@ StaticTimePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -145,22 +149,30 @@ StaticTimePicker.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value is accepted.
-   * @template TValue
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when component requests to be closed.
+   * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
+   * @deprecated Please avoid using as it will be removed in next major version.
+   */
+  onClose: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error describing why the current value is not valid.
    * @param {TValue} value The value associated to the error.
    */
@@ -192,6 +204,7 @@ StaticTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
@@ -203,7 +216,7 @@ StaticTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

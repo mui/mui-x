@@ -10,7 +10,7 @@ import {
   UseSingleInputDateRangeFieldProps,
 } from './SingleInputDateRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
-import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { validateDateRange } from '../internal/utils/validation/validateDateRange';
 
 export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateRangeFieldProps<TDate>,
@@ -36,6 +36,8 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     value,
     defaultValue,
     format,
+    formatDensity,
+    shouldRespectLeadingZeros,
     onChange,
     readOnly,
     onError,
@@ -46,16 +48,19 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    unstableFieldRef,
     ...other
   } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
-    forwardedProps: other as unknown as TChildProps,
+    forwardedProps: other as Omit<TChildProps, keyof UseSingleInputDateRangeFieldProps<TDate>>,
     internalProps: {
       value,
       defaultValue,
       format,
+      formatDensity,
+      shouldRespectLeadingZeros,
       onChange,
       readOnly,
       onError,
@@ -66,6 +71,7 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      unstableFieldRef,
     },
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,

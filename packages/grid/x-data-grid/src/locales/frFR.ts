@@ -47,6 +47,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
+  filterPanelRemoveAll: 'Tout supprimer',
   filterPanelDeleteIconLabel: 'Supprimer',
   filterPanelLogicOperator: 'Opérateur logique',
   filterPanelOperator: 'Opérateur',
@@ -69,7 +70,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
-  filterOperatorIsAnyOf: 'fait parti de',
+  filterOperatorIsAnyOf: 'fait partie de',
 
   // Filter values text
   filterValueAny: 'tous',
@@ -79,7 +80,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Afficher les colonnes',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',
   columnMenuHideColumn: 'Cacher',
   columnMenuUnsort: 'Annuler le tri',
@@ -143,12 +144,12 @@ const frFRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Positionnement des lignes',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agrégation',
+  aggregationFunctionLabelSum: 'Somme',
+  aggregationFunctionLabelAvg: 'Moyenne',
+  aggregationFunctionLabelMin: 'Minimum',
+  aggregationFunctionLabelMax: 'Maximum',
+  aggregationFunctionLabelSize: "Nombre d'éléments",
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

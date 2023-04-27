@@ -13,7 +13,8 @@ describe('<StaticDateRangePicker />', () => {
   });
 
   describeConformance(<StaticDateRangePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiStaticDateRangePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: undefined,
@@ -68,19 +69,11 @@ describe('<StaticDateRangePicker />', () => {
       />,
     );
 
-    // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+    // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
     expect(
       document.querySelector(
         '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
       ),
     ).to.have.text('1');
-  });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<StaticDateRangePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
   });
 });

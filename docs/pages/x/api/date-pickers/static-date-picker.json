@@ -40,6 +40,11 @@
     },
     "onAccept": { "type": { "name": "func" } },
     "onChange": { "type": { "name": "func" } },
+    "onClose": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Please avoid using as it will be removed in next major version."
+    },
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },

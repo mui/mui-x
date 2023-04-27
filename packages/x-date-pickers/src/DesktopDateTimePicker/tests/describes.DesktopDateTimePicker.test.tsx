@@ -6,19 +6,29 @@ import {
   adapterToUse,
   expectInputValue,
   buildFieldInteractions,
+  getTextbox,
+  expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({
+    clock,
+    render,
+    Component: DesktopDateTimePicker,
+  });
+
+  describePicker(DesktopDateTimePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
   describeValidation(DesktopDateTimePicker, () => ({
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeValue(DesktopDateTimePicker, () => ({
@@ -35,28 +45,29 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-        );
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
       }
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(
+            expectedValue,
+            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+          )
+        : '';
 
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
         userEvent.mousePress(
-          screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }),
+          screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
-        const input = screen.getByRole('textbox');
-        clickOnInput(input, 10); // Update the day
+        const input = getTextbox();
+        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

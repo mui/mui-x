@@ -13,7 +13,7 @@ export default function BasicExampleDataGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} components={{ Toolbar: GridToolbar }} />
+      <DataGrid {...data} slots={{ toolbar: GridToolbar }} />
     </div>
   );
 }

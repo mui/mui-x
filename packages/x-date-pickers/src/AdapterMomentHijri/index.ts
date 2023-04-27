@@ -2,46 +2,41 @@
 import BaseAdapterMomentHijri from '@date-io/hijri';
 // @ts-ignore
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
+  // Year
+  iY: { sectionType: 'year', contentType: 'letter' },
+  iYY: { sectionType: 'year', contentType: 'letter' },
+  iYYYY: { sectionType: 'year', contentType: 'letter' },
+
   // Month
   iM: 'month',
-  iMo: 'month',
   iMM: 'month',
-  iMMM: { sectionName: 'month', contentType: 'letter' },
-  iMMMM: { sectionName: 'month', contentType: 'letter' },
+  iMMM: { sectionType: 'month', contentType: 'letter' },
+  iMMMM: { sectionType: 'month', contentType: 'letter' },
 
-  // Day of Month
-  iD: 'day',
-  iDo: 'day',
+  // Day of the month
+  iD: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
   iDD: 'day',
 
-  // Year
-  iY: 'year',
-  iYY: 'year',
-  iYYYY: 'year',
-  iYYYYYY: 'year',
-
-  // AM / PM
+  // Meridiem
   A: 'meridiem',
   a: 'meridiem',
 
-  // Hour
-  H: 'hours',
+  // Hours
+  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   HH: 'hours',
-  h: 'hours',
+  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
-  k: 'hours',
-  kk: 'hours',
 
-  // Minute
-  m: 'minutes',
+  // Minutes
+  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
   mm: 'minutes',
 
-  // Second
-  s: 'seconds',
+  // Seconds
+  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
   ss: 'seconds',
 };
 

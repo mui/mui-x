@@ -28,7 +28,7 @@ export interface TimePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -40,7 +40,7 @@ export interface TimePickerProps<TDate>
    */
   componentsProps?: TimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<TimePickerSlotsComponents<TDate>>;

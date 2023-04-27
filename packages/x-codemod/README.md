@@ -201,7 +201,7 @@ If you were always using the same text value in all your components, consider mo
  </LocalizationProvider>
 ```
 
-You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
+You can find more details about Date and Time breaking changes in [the migration guide](https://mui.com/x/migration/migration-pickers-v5/).
 
 #### `replace-tabs-props`
 
@@ -381,7 +381,7 @@ Rename toolbar related translation keys, removing `Default` part from them to be
 npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 ```
 
-#### `rename-components-to-slots`
+#### `rename-components-to-slots-pickers`
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
@@ -416,7 +416,11 @@ The list includes these transformers
 - [`row-selection-props-rename`](#row-selection-props-rename)
 - [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
+- [`rename-linkOperators-logicOperators`](#rename-linkOperators-logicOperators)
+- [`rename-filter-item-props`](#rename-filter-item-props)
 - [`rename-selectors-and-events`](#rename-selectors-and-events)
+- [`remove-stabilized-experimentalFeatures`](#remove-stabilized-experimentalFeatures)
+- [`replace-onCellFocusOut-prop`](#replace-onCellFocusOut-prop)
 
 #### `column-menu-components-rename`
 
@@ -497,13 +501,109 @@ Remove `disableExtendRowFullWidth` prop which is no longer supported.
 npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
 ```
 
+#### `rename-linkOperators-logicOperators`
+
+Rename `linkOperators` related props to `logicOperators` and rename classes.
+
+```diff
+ const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    items: [],
+-   linkOperator: GridLinkOperator.Or,
+-   quickFilterLogicOperator: GridLinkOperator.Or,
++   logicOperator: GridLogicOperator.Or,
++   quickFilterLogicOperator: GridLogicOperator.Or,
+  });
+- apiRef.current.setFilterLinkOperator('and')
+- const localeText = apiRef.current.getLocaleText('filterPanelLinkOperator')
++ apiRef.current.setFilterLogicOperator('and')
++ const localeText = apiRef.current.getLocaleText('filterPanelLogicOperator')
+ <DataGrid
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [],
+-       linkOperator: GridLinkOperator.Or,
+-       quickFilterLogicOperator: GridLinkOperator.Or,
++       logicOperator: GridLogicOperator.Or,
++       quickFilterLogicOperator: GridLogicOperator.Or,
+      },
+    },
+  }}
+  filterModel={filterModel}
+  componentsProps={{
+    filter: {
+-     linkOperators: [GridLinkOperator.And],
++     logicOperators: [GridLogicOperator.And],
+      filterFormProps: {
+-       linkOperatorInputProps: {
++       logicOperatorInputProps: {
+          variant: 'outlined',
+          size: 'small',
+        },
+      },
+    },
+  }}
+  sx={{
+-   '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
+-   '& .MuiDataGrid-withBorder': { borderColor: '#456' },
++   '& .MuiDataGrid-filterFormLogicOperatorInput': { mr: 2 },
++   '& .MuiDataGrid-withBorderColor': { borderColor: '#456' },
+  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-linkOperators-logicOperators <path>
+```
+
+#### `rename-filter-item-props`
+
+Rename filter item props to the new values.
+
+```diff
+ <DataGrid
+  columns={columns}
+  rows={rows}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [
+          {
+-           columnField: 'column',
+-           operatorValue: 'contains',
++           field: 'column',
++           operator: 'contains',
+            value: 'a',
+          },
+        ],
+      },
+    },
+  }}
+  filterModel={{
+    items: [
+      {
+-       columnField: 'column',
+-       operatorValue: 'contains',
++       field: 'column',
++       operator: 'contains',
+        value: 'a',
+      },
+    ],
+  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-filter-item-props <path>
+```
+
 #### `rename-selectors-and-events`
 
 Rename selectors and events.
 
 ```diff
  function App() {
--  useGridApiEventHandler('selectionChange', handleEvent);
+-  useGridApiEventHandler(apiRef, 'selectionChange', handleEvent);
 -  apiRef.current.subscribeEvent('selectionChange', handleEvent);
 -  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 -  const sortedRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
@@ -511,7 +611,12 @@ Rename selectors and events.
 -  const rowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
 -  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridVisibleSortedTopLevelRowEntriesSelector);
 -  const topLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
-+  useGridApiEventHandler('rowSelectionChange', handleEvent);
+-  const allGridColumnsFields = useGridSelector(apiRef, allGridColumnsFieldsSelector);
+-  const allGridColumns = useGridSelector(apiRef, allGridColumnsSelector);
+-  const visibleGridColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+-  const filterableGridColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+-  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericColumnOperators);
++  useGridApiEventHandler(apiRef, 'rowSelectionChange', handleEvent);
 +  apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
 +  const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
 +  const sortedRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);
@@ -519,6 +624,11 @@ Rename selectors and events.
 +  const rowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
 +  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridFilteredSortedTopLevelRowEntriesSelector);
 +  const topLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
++  const allGridColumnsFields = useGridSelector(apiRef, gridColumnFieldsSelector);
++  const allGridColumns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
++  const visibleGridColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
++  const filterableGridColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
++  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericOperators);
  }
 ```
 
@@ -526,4 +636,67 @@ Rename selectors and events.
 npx @mui/x-codemod v6.0.0/data-grid/rename-selectors-and-events <path>
 ```
 
-You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
+#### `remove-stabilized-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGrid
+-  experimentalFeatures={{
+-    newEditingApi: true,
+-  }}
+ />
+```
+
+```diff
+ <DataGrid
+  experimentalFeatures={{
+-   newEditingApi: true,
+    columnGrouping: true,
+  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
+
+#### `replace-onCellFocusOut-prop`
+
+Replace `onCellFocusOut` prop with `componentsProps.cell.onBlur`.
+
+```diff
+ <DataGrid
+-  onCellFocusOut={handleBlur}
++  componentsProps={{
++    cell: {
++      onBlur: handleBlur,
++    },
++  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
+```
+
+#### `rename-components-to-slots-data-grid`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects data grid components.
+
+```diff
+ <DataGrid
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+```
+
+You can find more details about Data Grid breaking change in [the migration guide](https://mui.com/x/migration/migration-data-grid-v5/).

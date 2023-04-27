@@ -6,8 +6,8 @@ import { renderTimeViewClock } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView } from '../internals/models';
-import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
+import { DateOrTimeView } from '../models';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticDateTimePickerComponent = (<TDate>(
@@ -24,6 +24,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
   >(inProps, 'MuiStaticDateTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
+  const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,
@@ -40,6 +41,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    ampmInClock,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
     slotProps: {
       ...defaultizedProps.slotProps,
@@ -49,6 +51,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
       },
       toolbar: {
         hidden: displayStaticWrapperAs === 'desktop',
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
@@ -57,8 +60,9 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
   const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    ref,
+    valueType: 'date-time',
     validator: validateDateTime,
+    ref,
   });
 
   return renderPicker();
@@ -76,7 +80,7 @@ StaticDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -91,7 +95,7 @@ StaticDateTimePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -207,31 +211,38 @@ StaticDateTimePicker.propTypes = {
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
-   * @template TValue
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when component requests to be closed.
+   * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
+   * @deprecated Please avoid using as it will be removed in next major version.
+   */
+  onClose: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error describing why the current value is not valid.
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -241,7 +252,7 @@ StaticDateTimePicker.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
@@ -292,6 +303,7 @@ StaticDateTimePicker.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
@@ -321,7 +333,7 @@ StaticDateTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

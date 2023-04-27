@@ -28,5 +28,3 @@ export type {
 export type { ExportedSlideTransitionProps } from './PickersSlideTransition';
 
 export type { PickersCalendarHeaderProps } from './PickersCalendarHeader';
-
-export type { DateView } from '../internals/models';

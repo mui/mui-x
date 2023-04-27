@@ -4,7 +4,7 @@ title: Date and Time Picker React components
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
-waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
 # Date and Time Pickers
@@ -13,9 +13,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
+## Overview
+
 {{"demo": "CommonlyUsedComponents.js"}}
 
-## Community or Pro Plan ?
+## Community or Pro Plan?
 
 The Date and Time Pickers are available in two packages:
 
@@ -40,6 +42,16 @@ The Date and Time Pickers currently support the following date libraries:
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
+:::warning
+The Date and Time Pickers are not working well with Luxon macro-token (`D`, `DD`, `T`, `TT`, ...),
+because of [how they are expanded](https://github.com/mui/mui-x/issues/7615).
+
+If your application is using only a single locale, the easiest solution is to manually [provide a format](/x/react-date-pickers/adapters-locale/#custom-formats) that does not contain any macro-token
+(e.g. `M/d/yyyy` instead of `D` for the english locale).
+
+As soon as a solution is found the built-in support will be improved.
+:::
+
 :::info
 If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
 :::
@@ -53,20 +65,20 @@ If you don't have your own requirements or don't manipulate dates outside of MUI
 
 Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
 
-| **Library**       | **Gzipped size** |
-| ----------------- | ---------------- |
-| `dayjs@1.11.5`    | 6.77kb           |
-| `date-fns@2.29.3` | 19.39kb          |
-| `luxon@3.0.4`     | 23.26kb          |
-| `moment@2.29.4`   | 20.78kb          |
+| Library           | Gzipped size |
+| :---------------- | -----------: |
+| `dayjs@1.11.5`    |       6.77kB |
+| `date-fns@2.29.3` |      19.39kB |
+| `luxon@3.0.4`     |      23.26kB |
+| `moment@2.29.4`   |      20.78kB |
 
 :::info
 The results above were obtained in October 2022 with the latest version of each library.
-The bundling strategy was taken care of by a Create React App, and no locale was loaded for any of the libraries.
+The bundling of the JavaScript modules was done by a Create React App, and no locale was loaded for any of the libraries.
 
-The results may vary in your application depending on the version of each library, the locale, and the bundling strategy used.
+The results may vary in your application depending on the version of each library, the locale, and the bundler used.
 :::
 
-## What's next ?
+## What's next?
 
 Continue to the [next page](/x/react-date-pickers/getting-started/) and learn how to prepare your application for the Date and Time Pickers.

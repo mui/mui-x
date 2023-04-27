@@ -13,13 +13,33 @@ export interface PickersProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDateRangePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerToolbar'];
   };
+
+  // Multi input range fields
   MuiMultiInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
     styleOverrides?: ComponentsOverrides['MuiMultiInputDateRangeField'];
   };
+  MuiMultiInputDateTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputDateTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiMultiInputDateTimeRangeField'];
+  };
+  MuiMultiInputTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiMultiInputTimeRangeField'];
+  };
+
+  // Single input range fields
   MuiSingleInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
     styleOverrides?: ComponentsOverrides['MuiSingleInputDateRangeField'];
+  };
+  MuiSingleInputDateTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiSingleInputDateTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiSingleInputDateTimeRangeField'];
+  };
+  MuiSingleInputTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiSingleInputTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiSingleInputTimeRangeField'];
   };
 
   // Date Range Pickers

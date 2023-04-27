@@ -1,12 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -22,7 +22,7 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScrollerRenderZone',
   overridesResolver: (props, styles) => styles.virtualScrollerRenderZone,
-})({
+})<{ ownerState: OwnerState }>({
   position: 'absolute',
   display: 'flex', // Prevents margin collapsing when using `getRowSpacing`
   flexDirection: 'column',
@@ -34,11 +34,15 @@ const GridVirtualScrollerRenderZone = React.forwardRef<
 >(function GridVirtualScrollerRenderZone(props, ref) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
   return (
-    <VirtualScrollerRenderZoneRoot ref={ref} className={clsx(classes.root, className)} {...other} />
+    <VirtualScrollerRenderZoneRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={rootProps}
+      {...other}
+    />
   );
 });
 

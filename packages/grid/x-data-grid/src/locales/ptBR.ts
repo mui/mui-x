@@ -47,6 +47,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Excluir',
   filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operador',
@@ -79,7 +80,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Exibir colunas',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Gerir colunas',
   columnMenuFilter: 'Filtrar',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desfazer ordenação',
@@ -143,12 +144,12 @@ const ptBRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Reorganizar linhas',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agrupar',
+  aggregationFunctionLabelSum: 'soma',
+  aggregationFunctionLabelAvg: 'média',
+  aggregationFunctionLabelMin: 'mín',
+  aggregationFunctionLabelMax: 'máx',
+  aggregationFunctionLabelSize: 'tamanho',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

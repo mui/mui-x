@@ -2,6 +2,15 @@
 
 <p class="description">The options to apply on the Print export.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Print export](/x/react-data-grid/export/#print-export)
+
+:::
+
 ## Import
 
 ```js

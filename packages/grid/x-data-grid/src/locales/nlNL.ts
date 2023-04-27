@@ -47,6 +47,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
+  filterPanelRemoveAll: 'Alles verwijderen',
   filterPanelDeleteIconLabel: 'Verwijderen',
   filterPanelLogicOperator: 'Logische operator',
   filterPanelOperator: 'Operatoren',
@@ -79,7 +80,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Toon kolommen',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Kolommen beheren',
   columnMenuFilter: 'Filteren',
   columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Annuleer sortering',
@@ -135,7 +136,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stop groeperen op ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Detailmenu in- of uitklappen',
   expandDetailPanel: 'Uitklappen',
   collapseDetailPanel: 'Inklappen',
 
@@ -143,12 +144,12 @@ const nlNLGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Rijen hersorteren',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregatie',
+  aggregationFunctionLabelSum: 'som',
+  aggregationFunctionLabelAvg: 'gem',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'grootte',
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

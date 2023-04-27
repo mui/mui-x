@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
+import { DateTimeValidationError, FieldSection } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
@@ -11,8 +11,9 @@ import {
   MonthValidationProps,
   TimeValidationProps,
   YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
+} from '../internals/models/validation';
+import { FieldsTextFieldProps } from '../internals/models/fields';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
@@ -20,7 +21,10 @@ export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
 }
 
 export interface UseDateTimeFieldProps<TDate>
-  extends MakeOptional<UseFieldInternalProps<TDate | null, DateTimeValidationError>, 'format'>,
+  extends MakeOptional<
+      UseFieldInternalProps<TDate | null, FieldSection, DateTimeValidationError>,
+      'format'
+    >,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
@@ -56,7 +60,7 @@ export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit
 export interface DateTimeFieldProps<TDate>
   extends UseDateTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -68,7 +72,7 @@ export interface DateTimeFieldProps<TDate>
    */
   componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DateTimeFieldSlotsComponent>;

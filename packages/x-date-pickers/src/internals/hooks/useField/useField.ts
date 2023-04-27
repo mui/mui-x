@@ -2,38 +2,32 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { useValidation } from '../validation/useValidation';
+import { useTheme } from '@mui/material/styles';
+import { useValidation } from '../useValidation';
 import { useUtils } from '../useUtils';
 import {
-  FieldSection,
   UseFieldParams,
   UseFieldResponse,
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.types';
-import {
-  adjustDateSectionValue,
-  adjustInvalidDateSectionValue,
-  isAndroid,
-  cleanString,
-} from './useField.utils';
+import { adjustSectionValue, isAndroid, cleanString, getSectionOrder } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { getActiveElement } from '../../utils/utils';
+import { FieldSection } from '../../../models';
 
 export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
   const utils = useUtils<TDate>();
-  if (!utils.formatTokenMap) {
-    throw new Error('This adapter is not compatible with the field components');
-  }
 
   const {
     state,
@@ -44,30 +38,51 @@ export const useField = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
-    sectionOrder,
+    sectionsValueBoundaries,
+    placeholder,
   } = useFieldState(params);
-
-  const applyCharacterEditing = useFieldCharacterEditing<TDate, TSection>({
-    sections: state.sections,
-    updateSectionValue,
-  });
 
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false },
-    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
+    internalProps: { readOnly = false, unstableFieldRef },
+    forwardedProps: {
+      onClick,
+      onKeyDown,
+      onFocus,
+      onBlur,
+      onMouseUp,
+      onPaste,
+      error,
+      ...otherForwardedProps
+    },
     fieldValueManager,
     valueManager,
     validator,
-    valueType,
   } = params;
 
+  const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
+    sections: state.sections,
+    updateSectionValue,
+    sectionsValueBoundaries,
+    setTempAndroidValueStr,
+  });
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
+
+  const sectionOrder = React.useMemo(
+    () => getSectionOrder(state.sections, isRTL),
+    [state.sections, isRTL],
+  );
 
   const syncSelectionFromDOM = () => {
+    if (readOnly) {
+      setSelectedSections(null);
+      return;
+    }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     const nextSectionIndex =
       browserStartIndex <= state.sections[0].startInInput
@@ -94,7 +109,7 @@ export const useField = <
 
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
-    // The ref is guaranteed to be resolved that this point.
+    // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
     clearTimeout(focusTimeoutRef.current);
@@ -104,11 +119,15 @@ export const useField = <
         return;
       }
 
-      if (selectedSectionIndexes != null) {
+      if (selectedSectionIndexes != null || readOnly) {
         return;
       }
 
-      if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
+      if (
+        // avoid selecting all sections when focusing empty field without value
+        input.value.length &&
+        Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length
+      ) {
         setSelectedSections('all');
       } else {
         syncSelectionFromDOM();
@@ -122,6 +141,8 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
+    onPaste?.(event);
+
     if (readOnly) {
       event.preventDefault();
       return;
@@ -136,9 +157,11 @@ export const useField = <
 
       const lettersOnly = /^[a-zA-Z]+$/.test(pastedValue);
       const digitsOnly = /^[0-9]+$/.test(pastedValue);
+      const digitsAndLetterOnly = /^(([a-zA-Z]+)|)([0-9]+)(([a-zA-Z]+)|)$/.test(pastedValue);
       const isValidPastedValue =
         (activeSection.contentType === 'letter' && lettersOnly) ||
-        (activeSection.contentType === 'digit' && digitsOnly);
+        (activeSection.contentType === 'digit' && digitsOnly) ||
+        (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
       if (isValidPastedValue) {
         // Early return to let the paste update section, value
         return;
@@ -170,41 +193,52 @@ export const useField = <
       return;
     }
 
-    const prevValueStr = cleanString(fieldValueManager.getValueStrFromSections(state.sections));
+    let keyPressed: string;
+    if (
+      selectedSectionIndexes.startIndex === 0 &&
+      selectedSectionIndexes.endIndex === state.sections.length - 1
+    ) {
+      keyPressed = cleanValueStr;
+    } else {
+      const prevValueStr = cleanString(
+        fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+      );
 
-    let startOfDiffIndex = -1;
-    let endOfDiffIndex = -1;
-    for (let i = 0; i < prevValueStr.length; i += 1) {
-      if (startOfDiffIndex === -1 && prevValueStr[i] !== cleanValueStr[i]) {
-        startOfDiffIndex = i;
+      let startOfDiffIndex = -1;
+      let endOfDiffIndex = -1;
+      for (let i = 0; i < prevValueStr.length; i += 1) {
+        if (startOfDiffIndex === -1 && prevValueStr[i] !== cleanValueStr[i]) {
+          startOfDiffIndex = i;
+        }
+
+        if (
+          endOfDiffIndex === -1 &&
+          prevValueStr[prevValueStr.length - i - 1] !== cleanValueStr[cleanValueStr.length - i - 1]
+        ) {
+          endOfDiffIndex = i;
+        }
       }
 
-      if (
-        endOfDiffIndex === -1 &&
-        prevValueStr[prevValueStr.length - i - 1] !== cleanValueStr[cleanValueStr.length - i - 1]
-      ) {
-        endOfDiffIndex = i;
+      const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+      const hasDiffOutsideOfActiveSection =
+        startOfDiffIndex < activeSection.start ||
+        prevValueStr.length - endOfDiffIndex - 1 > activeSection.end;
+
+      if (hasDiffOutsideOfActiveSection) {
+        // TODO: Support if the new date is valid
+        return;
       }
+
+      // The active section being selected, the browser has replaced its value with the key pressed by the user.
+      const activeSectionEndRelativeToNewValue =
+        cleanValueStr.length -
+        prevValueStr.length +
+        activeSection.end -
+        cleanString(activeSection.endSeparator || '').length;
+
+      keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
     }
-
-    const activeSection = state.sections[selectedSectionIndexes.startIndex];
-
-    const hasDiffOutsideOfActiveSection =
-      startOfDiffIndex < activeSection.start ||
-      prevValueStr.length - endOfDiffIndex - 1 > activeSection.end;
-
-    if (hasDiffOutsideOfActiveSection) {
-      // TODO: Support if the new date is valid
-      return;
-    }
-
-    // The active section being selected, the browser has replaced its value with the key pressed by the user.
-    const activeSectionEndRelativeToNewValue =
-      cleanValueStr.length -
-      prevValueStr.length +
-      activeSection.end -
-      cleanString(activeSection.endSeparator || '').length;
-    const keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
       setTempAndroidValueStr(valueStr);
@@ -281,6 +315,7 @@ export const useField = <
         } else {
           clearActiveSection();
         }
+        resetCharacterQuery();
         break;
       }
 
@@ -293,35 +328,24 @@ export const useField = <
         }
 
         const activeSection = state.sections[selectedSectionIndexes.startIndex];
+        const activeDateManager = fieldValueManager.getActiveDateManager(
+          utils,
+          state,
+          activeSection,
+        );
+
+        const newSectionValue = adjustSectionValue(
+          utils,
+          activeSection,
+          event.key as AvailableAdjustKeyCode,
+          sectionsValueBoundaries,
+          activeDateManager.date,
+        );
 
         updateSectionValue({
           activeSection,
-          setSectionValueOnDate: (activeDate) => {
-            let date = adjustDateSectionValue(
-              utils,
-              activeDate,
-              activeSection.dateSectionName,
-              event.key as AvailableAdjustKeyCode,
-            );
-
-            // If the field only supports time editing, then we should never go to the previous / next day.
-            if (valueType === 'time') {
-              date = utils.mergeDateAndTime(activeDate, date);
-            }
-
-            return {
-              date,
-              shouldGoToNextSection: false,
-            };
-          },
-          setSectionValueOnSections: () => ({
-            sectionValue: adjustInvalidDateSectionValue(
-              utils,
-              activeSection,
-              event.key as AvailableAdjustKeyCode,
-            ),
-            shouldGoToNextSection: false,
-          }),
+          newSectionValue,
+          shouldGoToNextSection: false,
         });
         break;
       }
@@ -330,6 +354,12 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
+      if (inputRef.current!.scrollLeft) {
+        // Ensure that input content is not marked as selected.
+        // setting selection range to 0 causes issues in Safari.
+        // https://bugs.webkit.org/show_bug.cgi?id=224425
+        inputRef.current!.scrollLeft = 0;
+      }
       return;
     }
 
@@ -347,7 +377,11 @@ export const useField = <
       selectionStart !== inputRef.current!.selectionStart ||
       selectionEnd !== inputRef.current!.selectionEnd
     ) {
+      // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
+      const currentScrollTop = inputRef.current!.scrollTop;
       inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      // Even reading this variable seems to do the trick, but also setting it just to make use of it
+      inputRef.current!.scrollTop = currentScrollTop;
     }
   });
 
@@ -358,10 +392,15 @@ export const useField = <
     valueManager.defaultErrorState,
   );
 
-  const inputError = React.useMemo(
-    () => fieldValueManager.hasError(validationError),
-    [fieldValueManager, validationError],
-  );
+  const inputError = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (error !== undefined) {
+      return error;
+    }
+
+    return valueManager.hasError(validationError);
+  }, [valueManager, validationError, error]);
 
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
@@ -372,9 +411,21 @@ export const useField = <
     return () => window.clearTimeout(focusTimeoutRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // If `state.tempValueStrAndroid` is still defined when running `useEffect`,
+  // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.
+  // This causes a small flickering on Android,
+  // But we can't use `useEnhancedEffect` which is always called before the second `onChange` call and then would cause false positives.
+  React.useEffect(() => {
+    if (state.tempValueStrAndroid != null && selectedSectionIndexes != null) {
+      resetCharacterQuery();
+      clearActiveSection();
+    }
+  }, [state.tempValueStrAndroid]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const valueStr = React.useMemo(
-    () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid],
+    () =>
+      state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections, isRTL),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid, isRTL],
   );
 
   const inputMode = React.useMemo(() => {
@@ -389,9 +440,35 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
+  const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
+  const shouldShowPlaceholder =
+    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
+
+  React.useImperativeHandle(unstableFieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: () => {
+      const browserStartIndex = inputRef.current!.selectionStart ?? 0;
+      const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
+      if (browserStartIndex === 0 && browserEndIndex === 0) {
+        return null;
+      }
+
+      const nextSectionIndex =
+        browserStartIndex <= state.sections[0].startInInput
+          ? 1 // Special case if browser index is in invisible characters at the beginning.
+          : state.sections.findIndex(
+              (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+            );
+      return nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+    },
+    setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
+  }));
+
   return {
+    placeholder,
+    autoComplete: 'off',
     ...otherForwardedProps,
-    value: valueStr,
+    value: shouldShowPlaceholder ? '' : valueStr,
     inputMode,
     readOnly,
     onClick: handleInputClick,

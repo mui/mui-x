@@ -12,7 +12,6 @@ import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { PickersLayoutProps } from '../PickersLayout';
 import {
-  CalendarOrClockPickerProps,
   DayCalendarProps,
   ExportedPickersArrowSwitcherProps,
   PickerPopperProps,
@@ -21,7 +20,7 @@ import {
   ExportedCalendarHeaderProps,
   ExportedPickersToolbarTextProps,
 } from '../internals';
-import { DateOrTimeView } from '../internals/models';
+import { DateOrTimeView } from '../models';
 
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
@@ -43,7 +42,6 @@ import { MobileTimePickerProps } from '../MobileTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
 
 export interface PickersComponentsPropsList {
-  MuiCalendarOrClockPicker: CalendarOrClockPickerProps<unknown, DateOrTimeView>;
   MuiClock: ClockProps<unknown>;
   MuiClockNumber: ClockNumberProps;
   MuiClockPointer: ClockPointerProps;
@@ -63,7 +61,7 @@ export interface PickersComponentsPropsList {
   MuiPickersMonth: ExportedPickersMonthProps;
   MuiPickersPopper: PickerPopperProps;
   MuiPickersSlideTransition: ExportedSlideTransitionProps;
-  MuiPickersToolbar: PickersToolbarProps<unknown, unknown>;
+  MuiPickersToolbar: PickersToolbarProps<unknown, DateOrTimeView>;
   MuiPickersToolbarButton: PickersToolbarButtonProps;
   MuiPickersToolbarText: ExportedPickersToolbarTextProps;
   MuiPickersLayout: PickersLayoutProps<unknown, unknown, DateOrTimeView>;

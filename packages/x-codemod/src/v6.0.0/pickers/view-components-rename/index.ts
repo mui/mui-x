@@ -70,14 +70,14 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // + import { MonthCalendar } from '@mui/x-date-pickers/MonthPicker'
   matchingImports
     .find(j.ImportSpecifier)
-    .filter((path) => !!VARIABLES[path.node.imported.name])
+    .filter((path) => VARIABLES.hasOwnProperty(path.node.imported.name))
     .replaceWith((path) => j.importSpecifier(j.identifier(VARIABLES[path.node.imported.name])));
 
   // Rename the nested import declarations
   // - import {} from '@mui/x-date-pickers/MonthPicker'
   // + import {} from '@mui/x-date-pickers/MonthCalendar'
   matchingImports
-    .filter((path) => !!SUB_PACKAGES[matchImport(path)?.[3] ?? ''])
+    .filter((path) => SUB_PACKAGES.hasOwnProperty(matchImport(path)?.[3] ?? ''))
     .replaceWith((path) => {
       const subPackage = matchImport(path)![3];
       const importPath = path.node.source.value?.toString() ?? '';
@@ -93,7 +93,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // + <DateCalendar />
   root
     .find(j.Identifier)
-    .filter((path) => !!VARIABLES[path.node.name])
+    .filter((path) => VARIABLES.hasOwnProperty(path.node.name))
     .replaceWith((path) => j.identifier(VARIABLES[path.node.name]));
 
   return root.toSource(printOptions);

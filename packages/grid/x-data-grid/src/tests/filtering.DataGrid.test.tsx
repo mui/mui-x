@@ -1,10 +1,10 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
+  GridToolbarFilterButton,
   GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
@@ -206,7 +206,7 @@ describe('<DataGrid /> - Filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
       clock.runToLast();
@@ -1102,6 +1102,68 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+    });
+  });
+
+  describe('custom `filterOperators`', () => {
+    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+      render(
+        <div style={{ width: '100%', height: '400px' }}>
+          <DataGrid
+            filterModel={{
+              items: [{ field: 'name', operator: 'contains', value: 'John' }],
+            }}
+            rows={[
+              {
+                id: 0,
+                name: 'John Doe',
+              },
+              {
+                id: 1,
+                name: 'Mike Smith',
+              },
+            ]}
+            columns={[
+              {
+                field: 'name',
+                type: 'string',
+                filterOperators: [
+                  {
+                    label: 'Contains',
+                    value: 'contains',
+                    getApplyFilterFn: (filterItem) => {
+                      return (params) => {
+                        if (
+                          !filterItem.field ||
+                          !filterItem.value ||
+                          !filterItem.operator ||
+                          !params.value
+                        ) {
+                          return null;
+                        }
+                        return params.value.includes(filterItem.value);
+                      };
+                    },
+                    getValueAsString: (value) => `"${value}" text string`,
+                  },
+                ],
+              },
+            ]}
+            components={{ Toolbar: GridToolbarFilterButton }}
+          />
+        </div>,
+      );
+
+      const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
+
+      const tooltip = screen.getByRole('tooltip');
+
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('"John" text string');
     });
   });
 

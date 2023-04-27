@@ -15,7 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 
 function ProLabel({ children }) {
   return (
-    <Stack direction="row" spacing={0.5}>
+    <Stack direction="row" spacing={0.5} component="span">
       <Tooltip title="Included in Pro package">
         <a href="/x/introduction/licensing/#pro-plan">
           <span className="plan-pro" />
@@ -44,20 +44,20 @@ export default function ComponentFamilies() {
         ]}
       >
         <DemoItem label="Date">
-          <DateField defaultValue={dayjs('2022-04-07')} />
+          <DateField defaultValue={dayjs('2022-04-17')} />
         </DemoItem>
         <DemoItem label="Time">
-          <TimeField defaultValue={dayjs('2022-04-07T15:30')} />
+          <TimeField defaultValue={dayjs('2022-04-17T15:30')} />
         </DemoItem>
         <DemoItem label="Date Time">
-          <DateTimeField defaultValue={dayjs('2022-04-07T15:30')} />
+          <DateTimeField defaultValue={dayjs('2022-04-17T15:30')} />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Range</ProLabel>}
           component="MultiInputDateRangeField"
         >
           <MultiInputDateRangeField
-            defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+            defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
           />
         </DemoItem>
         <DemoItem
@@ -65,7 +65,7 @@ export default function ComponentFamilies() {
           component="MultiInputTimeRangeField"
         >
           <MultiInputTimeRangeField
-            defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
+            defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-17T18:30')]}
           />
         </DemoItem>
         <DemoItem
@@ -73,7 +73,7 @@ export default function ComponentFamilies() {
           component="MultiInputDateTimeRangeField"
         >
           <MultiInputDateTimeRangeField
-            defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-10T18:30')]}
+            defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-21T18:30')]}
           />
         </DemoItem>
       </DemoContainer>

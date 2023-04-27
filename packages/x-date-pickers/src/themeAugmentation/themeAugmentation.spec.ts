@@ -38,6 +38,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiDateCalendar class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiDayCalendarSkeleton: {
@@ -52,6 +56,10 @@ createTheme({
           [`.${dayCalendarSkeletonClasses.week}`]: {
             backgroundColor: 'green',
           },
+        },
+        // @ts-expect-error invalid MuiDayCalendarSkeleton class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -68,6 +76,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiClock class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiClockNumber: {
@@ -82,6 +94,10 @@ createTheme({
           [`&.${clockNumberClasses.selected}`]: {
             backgroundColor: 'green',
           },
+        },
+        // @ts-expect-error invalid MuiClockNumber class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -98,12 +114,16 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiClockPointer class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiDatePickerToolbar: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiDatePicker prop
+        // @ts-expect-error invalid MuiDatePickerToolbar prop
         someRandomProp: true,
       },
       styleOverrides: {
@@ -112,6 +132,10 @@ createTheme({
           [`.${datePickerToolbarClasses.title}`]: {
             backgroundColor: 'green',
           },
+        },
+        // @ts-expect-error invalid MuiDatePickerToolbar class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -124,6 +148,10 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiDateTimePickerTabs class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -140,6 +168,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiDateTimePickerToolbar class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiDayCalendar: {
@@ -155,6 +187,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiDayCalendar class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiMonthCalendar: {
@@ -166,6 +202,10 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiMonthCalendar class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -182,6 +222,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiPickersArrowSwitcher class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiPickersCalendarHeader: {
@@ -197,6 +241,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiPickersCalendarHeader class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiPickersFadeTransitionGroup: {
@@ -208,6 +256,10 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiPickersFadeTransitionGroup class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -224,6 +276,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiPickersDay class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiPickersMonth: {
@@ -238,6 +294,10 @@ createTheme({
           [`.${pickersMonthClasses.monthButton}`]: {
             backgroundColor: 'green',
           },
+        },
+        // @ts-expect-error invalid MuiPickersMonth class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -254,6 +314,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiPickersPopper class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiPickersSlideTransition: {
@@ -268,6 +332,10 @@ createTheme({
           [`.${pickersSlideTransitionClasses.slideExit}`]: {
             backgroundColor: 'green',
           },
+        },
+        // @ts-expect-error invalid MuiPickersSlideTransition class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -284,6 +352,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiPickersToolbar class key
+        contentWrapper: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiPickersToolbarButton: {
@@ -296,6 +368,10 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
+        // @ts-expect-error invalid MuiPickersToolbarButton class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiPickersToolbarText: {
@@ -307,6 +383,10 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiPickersToolbarText class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -323,6 +403,10 @@ createTheme({
         contentWrapper: {
           backgroundColor: 'red',
         },
+        // @ts-expect-error invalid MuiPickersLayout class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiPickersYear: {
@@ -334,6 +418,10 @@ createTheme({
       styleOverrides: {
         yearButton: {
           backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiPickersYear class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },
@@ -350,6 +438,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiTimeClock class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiTimePickerToolbar: {
@@ -365,6 +457,10 @@ createTheme({
             backgroundColor: 'green',
           },
         },
+        // @ts-expect-error invalid MuiTimePickerToolbar class key
+        content: {
+          backgroundColor: 'blue',
+        },
       },
     },
     MuiYearCalendar: {
@@ -376,6 +472,10 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid MuiYearCalendar class key
+        content: {
+          backgroundColor: 'blue',
         },
       },
     },

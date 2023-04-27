@@ -22,7 +22,7 @@ import { gridExpandedSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
-import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
@@ -110,8 +110,6 @@ export const useGridRowSelection = (
     checkboxSelection,
     disableMultipleRowSelection,
     disableRowSelectionOnClick,
-    pagination,
-    paginationMode,
     isRowSelectable: propIsRowSelectable,
   } = props;
 
@@ -585,46 +583,14 @@ export const useGridRowSelection = (
   }, [apiRef, isRowSelectable, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
-    if (!props.rowSelection) {
+    if (!props.rowSelection || isStateControlled) {
       return;
     }
 
     const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
-
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
-      const { rows: currentPageRows } = getVisibleRows(apiRef, {
-        pagination,
-        paginationMode,
-      });
-
-      const currentPageRowsLookup = currentPageRows.reduce<Record<GridRowId, true>>(
-        (acc, { id }) => {
-          acc[id] = true;
-          return acc;
-        },
-        {},
-      );
-
-      const firstSelectableRow = currentSelection.find((id) => {
-        let isSelectable = true;
-        if (isRowSelectable) {
-          isSelectable = isRowSelectable(id);
-        }
-        return isSelectable && currentPageRowsLookup[id]; // Check if the row is in the current page
-      });
-
-      apiRef.current.setRowSelectionModel(
-        firstSelectableRow !== undefined ? [firstSelectableRow] : [],
-      );
+      // See https://github.com/mui/mui-x/issues/8455
+      apiRef.current.setRowSelectionModel([]);
     }
-  }, [
-    apiRef,
-    canHaveMultipleSelection,
-    checkboxSelection,
-    disableMultipleRowSelection,
-    isRowSelectable,
-    pagination,
-    paginationMode,
-    props.rowSelection,
-  ]);
+  }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
 };

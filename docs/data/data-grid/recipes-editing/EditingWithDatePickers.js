@@ -175,8 +175,8 @@ const GridEditDateInput = styled(InputBase)({
 });
 
 function WrappedGridEditDateInput(props) {
-  const { inputRef, InputProps, ...other } = props;
-  return <GridEditDateInput fullWidth ref={inputRef} {...InputProps} {...other} />;
+  const { InputProps, ...other } = props;
+  return <GridEditDateInput fullWidth {...InputProps} {...other} />;
 }
 
 WrappedGridEditDateInput.propTypes = {
@@ -187,15 +187,6 @@ WrappedGridEditDateInput.propTypes = {
    * component depending on the `variant` prop value.
    */
   InputProps: PropTypes.object,
-  /**
-   * Pass a ref to the `input` element.
-   */
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
 };
 
 function GridEditDateCell({ id, field, value, colDef }) {

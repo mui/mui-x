@@ -1,17 +1,19 @@
 import * as React from 'react';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
-import {
-  DateOrTimeView,
   BasePickerProps,
   UsePickerParams,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
+import {
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { DateRange } from '../../models/range';
+import { UseRangePositionProps } from '../useRangePosition';
+import { RangeFieldSection } from '../../models/fields';
 
 export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
@@ -21,7 +23,7 @@ export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends D
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps {}
+export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRangePositionProps {}
 
 export interface UseStaticRangePickerProps<
   TDate,
@@ -31,7 +33,7 @@ export interface UseStaticRangePickerProps<
 > extends BasePickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
     StaticRangeOnlyPickerProps {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<UseStaticRangePickerSlotsComponent<TDate, TView>>;
@@ -47,8 +49,8 @@ export interface UseStaticRangePickerParams<
   TView extends DateOrTimeView,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<DateRange<TDate>, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'validator'
+    UsePickerParams<DateRange<TDate>, TDate, TView, RangeFieldSection, TExternalProps, {}>,
+    'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
   /**

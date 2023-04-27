@@ -1,35 +1,14 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import type { UseFieldInternalProps } from '../hooks/useField';
+import type { FieldSection } from '../../models';
 
-export interface BaseFieldProps<TValue, TError>
-  extends Omit<UseFieldInternalProps<TValue, TError>, 'format'> {
+export interface BaseFieldProps<TValue, TSection extends FieldSection, TError>
+  extends Omit<UseFieldInternalProps<TValue, TSection, TError>, 'format'> {
   className?: string;
-  sx?: SxProps<Theme>;
   format?: string;
-  inputRef?: React.Ref<HTMLInputElement>;
+  disabled?: boolean;
   ref?: React.Ref<HTMLDivElement>;
-  /**
-   * @deprecated Please use `slots`.
-   */
-  components?: {
-    TextField?: React.ElementType<TextFieldProps>;
-  };
-  /**
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: {
-    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  };
-  slots?: {
-    textField?: React.ElementType<TextFieldProps>;
-  };
-  slotProps?: {
-    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  };
 }
 
 export interface FieldsTextFieldProps

@@ -14,21 +14,31 @@ import {
   openPicker,
   wrapPickerMount,
   getClockTouchEvent,
+  expectInputPlaceholder,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+  });
+
+  describePicker(MobileTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileTimePicker, () => ({
     render,
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   describeConformance(<MobileTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiMobileTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
@@ -61,17 +71,15 @@ describe('<MobileTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'fullTime12h' : 'fullTime24h',
-        );
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+        : '';
 
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {

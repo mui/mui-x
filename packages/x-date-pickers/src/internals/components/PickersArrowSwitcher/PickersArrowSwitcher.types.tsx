@@ -7,19 +7,7 @@ import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 export interface ExportedPickersArrowSwitcherProps {
   /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: PickersArrowSwitcherSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: PickersArrowSwitcherSlotsComponentsProps;
-  /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersArrowSwitcherSlotsComponent>;

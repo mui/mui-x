@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, userEvent, describeConformance } from '@mui/monorepo/test/utils';
+import { userEvent, describeConformance } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
@@ -8,23 +8,35 @@ import {
   expectInputValue,
   buildFieldInteractions,
   wrapPickerMount,
+  getTextbox,
+  expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopTimePicker });
+
+  describePicker(DesktopTimePicker, {
+    render,
+    fieldType: 'single-input',
+    variant: 'desktop',
+    hasNoView: true,
+  });
 
   describeValidation(DesktopTimePicker, () => ({
     render,
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeConformance(<DesktopTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiDesktopTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
@@ -54,16 +66,16 @@ describe('<DesktopTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'fullTime12h' : 'fullTime24h',
-        );
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(
+        input,
+        expectedValue
+          ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+          : '',
+      );
     },
     setNewValue: (value, { isOpened } = {}) => {
       const newValue = adapterToUse.addHours(value, 1);
@@ -72,7 +84,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
         throw new Error("Can't test UI views on DesktopTimePicker");
       }
 
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 1); // Update the hour
       userEvent.keyPress(input, { key: 'ArrowUp' });
 

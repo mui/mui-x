@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { DateOrTimeView } from '../internals/models';
+import { DateOrTimeView, DateTimeValidationError } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlotsComponent,
@@ -20,17 +20,13 @@ import {
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
 } from './DateTimePickerTabs';
-import {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-} from '../internals/hooks/validation/models';
+import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
   DateTimePickerToolbarProps,
   ExportedDateTimePickerToolbarProps,
 } from './DateTimePickerToolbar';
-import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
@@ -70,10 +66,10 @@ export interface BaseDateTimePickerProps<TDate>
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
   /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true on desktop, false on mobile
    */
-  ampm?: boolean;
+  ampmInClock?: boolean;
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
@@ -83,7 +79,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   maxDateTime?: TDate;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -95,7 +91,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseDateTimePickerSlotsComponent<TDate>>;
@@ -129,7 +125,6 @@ type UseDateTimePickerDefaultizedProps<
     | 'views'
     | 'openTo'
     | 'orientation'
-    | 'ampmInClock'
     | 'ampm'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
@@ -176,11 +171,16 @@ export function useDateTimePickerDefaultizedProps<
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
-    ampmInClock: themeProps.ampmInClock ?? true,
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??
-      Boolean(themeProps.minDateTime || themeProps.maxDateTime),
+      Boolean(
+        themeProps.minDateTime ||
+          themeProps.maxDateTime ||
+          // allow time clock to correctly check time validity: https://github.com/mui/mui-x/issues/8520
+          themeProps.disablePast ||
+          themeProps.disableFuture,
+      ),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(
@@ -204,7 +204,6 @@ export function useDateTimePickerDefaultizedProps<
       ...slotProps,
       toolbar: {
         ampm,
-        ampmInClock: themeProps.ampmInClock,
         ...slotProps?.toolbar,
       },
     },

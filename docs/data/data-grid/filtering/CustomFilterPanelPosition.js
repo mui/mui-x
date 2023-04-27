@@ -34,10 +34,10 @@ export default function CustomFilterPanelPosition() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          Toolbar: CustomToolbar,
+        slots={{
+          toolbar: CustomToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           panel: {
             anchorEl: filterButtonEl,
           },

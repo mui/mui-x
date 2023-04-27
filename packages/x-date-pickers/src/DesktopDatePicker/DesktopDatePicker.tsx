@@ -4,11 +4,12 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
 import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import { DateView, useLocaleText, useUtils, validateDate } from '../internals';
+import { useLocaleText, useUtils, validateDate } from '../internals';
+import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { DateField } from '../DateField';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
@@ -64,6 +65,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
   const { renderPicker } = useDesktopPicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDate,
   });
@@ -93,7 +95,7 @@ DesktopDatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -161,6 +163,12 @@ DesktopDatePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
    * Pass a ref to the `input` element.
    */
   inputRef: PropTypes.oneOfType([
@@ -199,41 +207,42 @@ DesktopDatePicker.propTypes = {
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
-   * @template TValue
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
+   * Use in controlled mode (see `open`).
    */
   onClose: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error describing why the current value is not valid.
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
+   * Use in controlled mode (see `open`).
    */
   onOpen: PropTypes.func,
   /**
@@ -248,7 +257,7 @@ DesktopDatePicker.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
@@ -285,7 +294,7 @@ DesktopDatePicker.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -345,7 +354,7 @@ DesktopDatePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

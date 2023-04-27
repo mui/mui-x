@@ -8,7 +8,7 @@ import {
   UseDateFieldDefaultizedProps,
   UseDateFieldParams,
 } from './DateField.types';
-import { validateDate } from '../internals/hooks/validation/useDateValidation';
+import { validateDate } from '../internals/utils/validation/validateDate';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 
@@ -36,6 +36,8 @@ export const useDateField = <TDate, TChildProps extends {}>({
     value,
     defaultValue,
     format,
+    formatDensity,
+    shouldRespectLeadingZeros,
     onChange,
     readOnly,
     onError,
@@ -48,16 +50,19 @@ export const useDateField = <TDate, TChildProps extends {}>({
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    unstableFieldRef,
     ...other
   } = useDefaultizedDateField<TDate, TChildProps>(props);
 
   return useField({
     inputRef,
-    forwardedProps: other as unknown as TChildProps,
+    forwardedProps: other as Omit<TChildProps, keyof UseDateFieldProps<TDate>>,
     internalProps: {
       value,
       defaultValue,
       format,
+      formatDensity,
+      shouldRespectLeadingZeros,
       onChange,
       readOnly,
       onError,
@@ -70,6 +75,7 @@ export const useDateField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      unstableFieldRef,
     },
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,

@@ -31,10 +31,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: "Aujourd'hui",
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Choisir une date',
+  dateTimePickerToolbarTitle: "Choisir la date et l'heure",
+  timePickerToolbarTitle: "Choisir l'heure",
+  dateRangePickerToolbarTitle: 'Choisir la plage de dates',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -48,10 +48,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} secondes`,
 
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Semaine',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Semaine ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -68,14 +68,14 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'choix de la date',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
+  fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'JJ',
   // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const frFR = getPickersLocalization(frFRPickers);

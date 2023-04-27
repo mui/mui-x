@@ -36,6 +36,10 @@
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },

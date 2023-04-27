@@ -50,7 +50,7 @@ function Day(props) {
     <CustomPickersDay
       {...other}
       day={day}
-      disableMargin
+      sx={dayIsBetween ? { px: 2.5, mx: 0 } : {}}
       dayIsBetween={dayIsBetween}
       isFirstDay={isFirstDay}
       isLastDay={isLastDay}
@@ -67,7 +67,7 @@ Day.propTypes = {
 };
 
 export default function CustomDay() {
-  const [value, setValue] = React.useState(dayjs('2022-04-07'));
+  const [value, setValue] = React.useState(dayjs('2022-04-17'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

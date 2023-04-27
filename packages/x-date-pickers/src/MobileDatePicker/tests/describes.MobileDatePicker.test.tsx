@@ -6,11 +6,16 @@ import {
   adapterToUse,
   expectInputValue,
   openPicker,
+  expectInputPlaceholder,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describePicker(MobileDatePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileDatePicker, () => ({
     render,
@@ -28,9 +33,14 @@ describe('<MobileDatePicker /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const expectedValueStr =
-        expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, 'MM/DD/YYYY');
+      }
+      expectInputValue(
+        input,
+        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
+      );
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {
@@ -38,7 +48,9 @@ describe('<MobileDatePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
-      userEvent.mousePress(screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }));
+      userEvent.mousePress(
+        screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
+      );
 
       // Close the picker to return to the initial state
       if (!isOpened) {

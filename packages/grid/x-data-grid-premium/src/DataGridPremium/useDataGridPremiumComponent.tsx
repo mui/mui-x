@@ -161,7 +161,7 @@ export const useDataGridPremiumComponent = (
   useGridColumnMenu(privateApiRef);
   useGridCsvExport(privateApiRef);
   useGridPrintExport(privateApiRef, props);
-  useGridExcelExport(privateApiRef);
+  useGridExcelExport(privateApiRef, props);
   useGridClipboard(privateApiRef);
   useGridDimensions(privateApiRef, props);
   useGridEvents(privateApiRef, props);

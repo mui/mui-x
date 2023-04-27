@@ -22,7 +22,7 @@ import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/dat
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
@@ -208,8 +208,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       disableFuture,
       reduceAnimations,
       labelId: gridLabelId,
-      components,
-      componentsProps,
       slots,
       slotProps,
     } as PickersCalendarHeaderProps<TDate>,
@@ -408,7 +406,7 @@ DateCalendar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -503,10 +501,9 @@ DateCalendar.propTypes = {
    */
   onFocusedViewChange: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -516,7 +513,7 @@ DateCalendar.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
@@ -581,7 +578,7 @@ DateCalendar.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

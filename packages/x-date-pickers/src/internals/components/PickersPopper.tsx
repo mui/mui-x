@@ -19,8 +19,8 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { getActiveElement } from '../utils/utils';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../utils/slots-migration';
-import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
+import { UncapitalizeObjectKeys } from '../utils/slots-migration';
+import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 
 export interface PickersPopperSlotsComponent {
   /**
@@ -29,7 +29,7 @@ export interface PickersPopperSlotsComponent {
    */
   DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
-   * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions).
+   * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
    * @default Grow from @mui/material
    */
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
@@ -72,11 +72,10 @@ export interface PickerPopperProps extends UsePickerValueActions {
   role: 'tooltip' | 'dialog';
   anchorEl: MuiPopperProps['anchorEl'];
   open: MuiPopperProps['open'];
+  placement?: MuiPopperProps['placement'];
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
-  components?: PickersPopperSlotsComponent;
-  componentsProps?: PickersPopperSlotsComponentsProps;
   slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
   slotProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
@@ -271,13 +270,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
     onDismiss,
     open,
     role,
-    components,
-    componentsProps,
-    slots: innerSlots,
-    slotProps: innerSlotProps,
+    placement,
+    slots,
+    slotProps,
   } = props;
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
@@ -360,6 +356,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
       role,
       open,
       anchorEl,
+      placement,
       onKeyDown: handleKeyDown,
     },
     className: classes.root,
@@ -368,7 +365,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   return (
     <Popper {...popperProps}>
-      {({ TransitionProps, placement }) => (
+      {({ TransitionProps, placement: popperPlacement }) => (
         <TrapFocus
           open={open}
           disableAutoFocus
@@ -391,7 +388,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
                 onPaperTouchStart(event);
                 paperProps.onTouchStart?.(event);
               }}
-              ownerState={{ ...ownerState, placement }}
+              ownerState={{ ...ownerState, placement: popperPlacement }}
             >
               {children}
             </Paper>

@@ -46,7 +46,7 @@ module.exports = {
     ...webpackBaseConfig.resolve,
     alias: {
       ...webpackBaseConfig.resolve.alias,
-      docs: false, // Disable this alias as it creates a circual resolution loop with the docsx alias
+      docs: false, // Disable this alias as it creates a circular resolution loop with the docsx alias
     },
   },
   // TODO: 'browserslist:modern'

@@ -27,6 +27,10 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultRangePosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'start'"
+    },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
@@ -42,6 +46,14 @@
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
+    "inputRef": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
+    },
+    "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
@@ -52,8 +64,10 @@
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onOpen": { "type": { "name": "func" } },
+    "onRangePositionChange": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
@@ -110,6 +124,8 @@
   },
   "name": "DateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateRangePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",

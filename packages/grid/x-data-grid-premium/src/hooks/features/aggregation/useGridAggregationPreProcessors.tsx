@@ -25,11 +25,7 @@ export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    | 'aggregationFunctions'
-    | 'disableAggregation'
-    | 'getAggregationPosition'
-    | 'componentsProps'
-    | 'components'
+    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition' | 'slotProps' | 'slots'
   >,
 ) => {
   // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
@@ -124,7 +120,7 @@ export const useGridAggregationPreProcessors = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuAggregationItem'];
+      return [...columnMenuItems, 'columnMenuAggregationItem'];
     },
     [props.aggregationFunctions, props.disableAggregation],
   );

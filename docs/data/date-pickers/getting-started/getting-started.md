@@ -4,7 +4,7 @@ title: Date and Time Picker - Getting started
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
-waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
 # Date and Time Pickers - Getting Started
@@ -52,10 +52,10 @@ npm install @mui/material @mui/styled-engine-sc styled-components
 yarn add @mui/material @mui/styled-engine-sc styled-components
 ```
 
-## Code setup
+## Setup your date library adapter
 
 Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
-This component receives your chosen date library's adapter and makes it accessible to all the Date and Time Pickers component using React context.
+This component receives your chosen [date library's adapter](https://mui.com/x/react-date-pickers/#date-library) (the doc uses `AdapterDayjs` which is based on [dayjs](https://day.js.org/)) and makes it accessible to all the Date and Time Pickers component using React context.
 
 Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
 This is **not** a pattern to reproduce.
@@ -94,6 +94,6 @@ To make sure that everything is set up correctly, try rendering a simple `DatePi
 
 {{"demo": "FirstComponent.js"}}
 
-## What's next ?
+## What's next?
 
 Continue to the [next page](/x/react-date-pickers/base-concepts/) and discover the components available and how to use them.

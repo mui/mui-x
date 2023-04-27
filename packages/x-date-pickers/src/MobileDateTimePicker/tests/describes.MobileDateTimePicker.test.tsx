@@ -7,17 +7,26 @@ import {
   expectInputValue,
   openPicker,
   getClockTouchEvent,
+  expectInputPlaceholder,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+  });
+
+  describePicker(MobileDateTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileDateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day'],
+    views: ['year', 'day', 'hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   describeValue(MobileDateTimePicker, () => ({
@@ -33,17 +42,18 @@ describe('<MobileDateTimePicker /> - Describes', () => {
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-        );
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
       }
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(
+            expectedValue,
+            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+          )
+        : '';
 
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {
