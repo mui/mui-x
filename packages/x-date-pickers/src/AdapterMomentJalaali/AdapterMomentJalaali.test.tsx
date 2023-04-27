@@ -1,4 +1,5 @@
 import * as React from 'react';
+import moment from 'moment';
 import jMoment from 'moment-jalaali';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
@@ -10,7 +11,6 @@ import {
   expectInputValue,
 } from 'test/utils/pickers-utils';
 import 'moment/locale/fa';
-import moment from 'moment';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliAdapter';
 
