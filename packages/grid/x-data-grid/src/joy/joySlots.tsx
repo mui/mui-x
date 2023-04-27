@@ -51,10 +51,10 @@ function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard'
   return (
     variant
       ? {
+          standard: 'outlined',
           outlined: 'outlined',
           contained: 'solid',
           text: 'plain',
-          standard: 'plain',
           filled: 'soft',
         }[variant]
       : variant
