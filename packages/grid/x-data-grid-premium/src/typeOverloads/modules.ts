@@ -45,7 +45,6 @@ interface GridEventLookupPremium extends GridEventLookupPro {
   clipboardPasteEnd: {};
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * If `true`, the cells of the column can be aggregated based.
