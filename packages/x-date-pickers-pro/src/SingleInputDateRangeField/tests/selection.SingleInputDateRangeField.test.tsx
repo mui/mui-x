@@ -48,8 +48,8 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       render(<SingleInputDateRangeField autoFocus />);
       const input = getTextbox();
 
-      expectInputValue(input, 'MM / DD / YYYY – MM / DD / YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY – MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY – MM/DD/YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY – MM/DD/YYYY');
     });
 
     it('should select all on <Tab> focus', () => {
@@ -62,8 +62,8 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       clock.runToLast();
       input.select();
 
-      expectInputValue(input, 'MM / DD / YYYY – MM / DD / YYYY');
-      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY – MM / DD / YYYY');
+      expectInputValue(input, 'MM/DD/YYYY – MM/DD/YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM/DD/YYYY – MM/DD/YYYY');
     });
   });
 

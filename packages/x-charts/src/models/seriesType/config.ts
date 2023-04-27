@@ -1,29 +1,32 @@
-import { ScatterSeriesType } from './scatter';
-import { LineSeriesType } from './line';
-import { BarSeriesType } from './bar';
+import { ScatterSeriesType, DefaultizedScatterSeriesType } from './scatter';
+import { LineSeriesType, DefaultizedLineSeriesType } from './line';
+import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { AxisConfig } from '../axis';
 
 interface ChartsSeriesConfig {
   bar: {
-    series: BarSeriesType;
+    seriesInput: BarSeriesType & { color: string };
+    series: DefaultizedBarSeriesType;
     canBeStacked: true;
   };
   line: {
-    series: LineSeriesType;
+    seriesInput: LineSeriesType & { color: string };
+    series: DefaultizedLineSeriesType;
     canBeStacked: true;
   };
   scatter: {
-    series: ScatterSeriesType;
+    seriesInput: ScatterSeriesType & { color: string };
+    series: DefaultizedScatterSeriesType;
   };
 }
 
-export type ChartSeriesType = keyof ChartsSeriesConfig;
+export type ChartSeriesType = 'bar' | 'line' | 'scatter';
 
 export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;
 }
-  ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
-  : ChartsSeriesConfig[T]['series'];
+  ? ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
+  : ChartsSeriesConfig[T]['seriesInput'];
 
 type ExtremumGetterParams<T extends ChartSeriesType> = {
   series: { [id: string]: ChartSeries<T> };
@@ -36,12 +39,12 @@ export type ExtremumGetter<T extends ChartSeriesType> = (
   params: ExtremumGetterParams<T>,
 ) => ExtremumGetterResult;
 
-type FormatterParams<T extends ChartSeriesType> = {
-  series: { [id: string]: ChartsSeriesConfig[T]['series'] };
+export type FormatterParams<T extends ChartSeriesType> = {
+  series: { [id: string]: ChartsSeriesConfig[T]['seriesInput'] };
   seriesOrder: string[];
 };
 
-type FormatterResult<T extends ChartSeriesType> = {
+export type FormatterResult<T extends ChartSeriesType> = {
   series: { [id: string]: ChartSeries<T> };
   seriesOrder: string[];
 } & (ChartsSeriesConfig[T] extends {

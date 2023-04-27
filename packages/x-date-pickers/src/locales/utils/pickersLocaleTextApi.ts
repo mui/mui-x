@@ -1,5 +1,4 @@
-import { MuiPickersAdapter } from '../../internals/models';
-import { DateView, TimeView } from '../../models';
+import { DateView, TimeView, MuiPickersAdapter, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
@@ -66,9 +65,9 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
 
   // Field section placeholders
   fieldYearPlaceholder: (params: { digitAmount: number }) => string;
-  fieldMonthPlaceholder: (params: { contentType: 'letter' | 'digit' }) => string;
+  fieldMonthPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
   fieldDayPlaceholder: () => string;
-  fieldWeekDayPlaceholder: (params: { contentType: 'letter' | 'digit' }) => string;
+  fieldWeekDayPlaceholder: (params: { contentType: FieldSectionContentType }) => string;
   fieldHoursPlaceholder: () => string;
   fieldMinutesPlaceholder: () => string;
   fieldSecondsPlaceholder: () => string;

@@ -34,8 +34,7 @@ export const useMobileRangePicker = <
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
-  validator,
+  ...pickerParams
 }: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
@@ -45,6 +44,7 @@ export const useMobileRangePicker = <
     className,
     sx,
     format,
+    formatDensity,
     label,
     inputRef,
     readOnly,
@@ -71,10 +71,9 @@ export const useMobileRangePicker = <
     TExternalProps,
     MobileRangePickerAdditionalViewProps
   >({
+    ...pickerParams,
     props,
-    valueManager,
     wrapperVariant: 'mobile',
-    validator,
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,
@@ -99,6 +98,7 @@ export const useMobileRangePicker = <
       className,
       sx,
       format,
+      formatDensity,
       ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,

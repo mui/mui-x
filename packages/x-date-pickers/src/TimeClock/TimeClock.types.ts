@@ -1,13 +1,13 @@
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { TimeClockClasses } from './timeClockClasses';
-import { TimeValidationProps, BaseTimeValidationProps } from '../internals/hooks/validation/models';
+import { TimeValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
 import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { TimeView } from '../models';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface ExportedTimeClockProps<TDate>

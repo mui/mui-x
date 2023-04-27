@@ -10,7 +10,7 @@ import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../validation/useValidation';
+import { InferError } from '../useValidation';
 import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
 
 /**
@@ -25,9 +25,8 @@ export const useDesktopPicker = <
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
   getOpenDialogAriaText,
-  validator,
+  ...pickerParams
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
   const {
     slots,
@@ -35,6 +34,7 @@ export const useDesktopPicker = <
     className,
     sx,
     format,
+    formatDensity,
     label,
     inputRef,
     readOnly,
@@ -58,10 +58,9 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
+    ...pickerParams,
     props,
     inputRef: internalInputRef,
-    valueManager,
-    validator,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
@@ -108,6 +107,7 @@ export const useDesktopPicker = <
       className,
       sx,
       format,
+      formatDensity,
       label,
       autoFocus: autoFocus && !props.open,
     },

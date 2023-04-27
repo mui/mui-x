@@ -26,9 +26,8 @@ export const useStaticPicker = <
   TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
-  validator,
   ref,
+  ...pickerParams
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
@@ -40,9 +39,8 @@ export const useStaticPicker = <
     TExternalProps,
     {}
   >({
+    ...pickerParams,
     props,
-    valueManager,
-    validator,
     autoFocusView: autoFocus ?? false,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
