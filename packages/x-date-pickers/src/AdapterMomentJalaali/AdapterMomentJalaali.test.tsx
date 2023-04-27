@@ -37,10 +37,10 @@ describe('<AdapterMomentJalaali />', () => {
     it('Formatting', () => {
       const adapter = new AdapterMomentJalaali();
 
-      const expectDate = (format: keyof AdapterFormats, expectedWithEn: string) => {
+      const expectDate = (format: keyof AdapterFormats, expectedWithFaIR: string) => {
         const date = adapter.date('2020-02-01T23:44:00.000Z')!;
 
-        expect(adapter.format(date, format)).to.equal(expectedWithEn);
+        expect(adapter.format(date, format)).to.equal(expectedWithFaIR);
       };
 
       expectDate('fullDate', '۱۳۹۸، بهمن ۱م');
