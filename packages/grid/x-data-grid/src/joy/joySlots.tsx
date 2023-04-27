@@ -9,7 +9,7 @@ import JoyButton from '@mui/joy/Button';
 import JoyIconButton from '@mui/joy/IconButton';
 import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
-import JoyOption from '@mui/joy/Option';
+import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
@@ -260,7 +260,7 @@ const Option = React.forwardRef<
   HTMLLIElement,
   NonNullable<GridSlotsComponentsProps['baseSelectOption']>
 >(({ native, ...props }, ref) => {
-  return <JoyOption {...props} ref={ref} />;
+  return <JoyOption {...(props as JoyOptionProps)} ref={ref} />;
 });
 
 const InputLabel = React.forwardRef<
