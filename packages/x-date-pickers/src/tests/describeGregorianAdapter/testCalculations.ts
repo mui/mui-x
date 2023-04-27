@@ -296,7 +296,9 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.getDiff(testDate, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
       -86400000,
     );
-    expect(adapter.getDiff(testDate, '2018-10-31T11:44:00.000Z')).to.equal(-86400000);
+    expect(adapter.getDiff(testDate, adapter.date('2018-10-31T11:44:00.000Z')!)).to.equal(
+      -86400000,
+    );
 
     // With units
     expect(adapter.getDiff(testDate, adapter.date('2017-09-29T11:44:00.000Z')!, 'years')).to.equal(

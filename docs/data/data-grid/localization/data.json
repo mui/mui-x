@@ -27,7 +27,7 @@
     "languageTag": "zh-CN",
     "importName": "zhCN",
     "localeName": "Chinese (Simplified)",
-    "missingKeysCount": 2,
+    "missingKeysCount": 0,
     "totalKeysCount": 94,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/zhCN.ts"
   },
