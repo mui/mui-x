@@ -132,6 +132,19 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
     });
 
+    ['ctrlKey', 'metaKey'].forEach((key) => {
+      it(`should not enter row edit mode when ${key} + V is pressed`, () => {
+        render(<Test editMode="row" />);
+
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStart', listener);
+        const cell = getCell(0, 1);
+        userEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'v', code: 'KeyV', keyCode: 86, [key]: true }); // Ctrl+V
+        expect(listener.callCount).to.equal(0);
+      });
+    });
+
     describe('cell selection', () => {
       it('should paste into each cell of the range when single value is pasted', async () => {
         render(<Test />);
