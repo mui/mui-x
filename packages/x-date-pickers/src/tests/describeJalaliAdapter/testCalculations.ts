@@ -9,7 +9,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter, test
 
   it('Method: parse', () => {
     expect(adapter.parse('', adapter.formats.keyboardDate)).to.equal(null);
-    expect(adapter.parse('01/01/1395', adapter.formats.keyboardDate)).to.not.equal(null);
+    expect(adapter.parse('01/01/1395', adapter.formats.keyboardDate)).not.to.equal(null);
   });
 
   it('Method: isEqual', () => {
@@ -19,12 +19,12 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter, test
     expect(adapter.isEqual(null, null)).to.equal(true);
   });
 
-  it('Methods: isAfterYear', () => {
+  it('Method: isAfterYear', () => {
     const afterYear = adapter.addYears(testDate, 2);
     expect(adapter.isAfterYear(afterYear, testDate)).to.equal(true);
   });
 
-  it('Methods: isBeforeYear', () => {
+  it('Method: isBeforeYear', () => {
     const afterYear = adapter.addYears(testDate, 2);
     expect(adapter.isBeforeYear(testDate, afterYear)).to.equal(true);
   });
@@ -45,7 +45,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter, test
     expect(adapter.endOfMonth(testDate)).toEqualDateTime(new Date('2018-11-21T23:59:59.999Z'));
   });
 
-  it('Methods: getYear', () => {
+  it('Method: getYear', () => {
     expect(adapter.getYear(testDate)).to.equal(1397);
   });
 
