@@ -46,7 +46,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Hepsini kaldır',
   filterPanelDeleteIconLabel: 'Kaldır',
   filterPanelLogicOperator: 'Mantıksal operatörler',
   filterPanelOperator: 'Operatör',
@@ -79,7 +79,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Sütunları göster',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Sütunları yönet',
   columnMenuFilter: 'Filtre uygula',
   columnMenuHideColumn: 'Gizle',
   columnMenuUnsort: 'Sıralama',
