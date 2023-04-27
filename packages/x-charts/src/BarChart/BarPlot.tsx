@@ -63,13 +63,11 @@ export function BarPlot() {
               return (
                 <rect
                   key={`${seriesId}-${dataIndex}`}
-                  // @ts-ignore I don't get why this warning
-                  x={xScale(xAxis[xAxisKey].data[dataIndex]) + groupIndex * barWidth + offset}
+                  x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * barWidth + offset}
                   y={yScale(value)}
                   height={yScale(baseline) - yScale(value)}
                   width={barWidth}
                   fill={color}
-                  rx="5px"
                   {...getInteractionItemProps({ type: 'bar', seriesId, dataIndex })}
                 />
               );
