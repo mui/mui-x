@@ -46,7 +46,6 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [pickers] Use `en dash` instead of `em dash` in multi input range fields (#8738) @flaviendelangle
 - [l10n] Improve Chinese (zh-CN) locale (#8753) @SakumyZ
 
-
 ### Docs
 
 - [docs] Add icons for charts menu (#8752) @alexfauquette
