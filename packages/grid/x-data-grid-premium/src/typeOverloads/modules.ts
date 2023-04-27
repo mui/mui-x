@@ -1,4 +1,4 @@
-import { GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
+import { GridCellParams, GridKeyValue, GridValidRowModel } from '@mui/x-data-grid-pro';
 import type {
   GridControlledStateEventLookupPro,
   GridApiCachesPro,
@@ -65,6 +65,13 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
   groupingValueGetter?: (
     params: GridGroupingValueGetterParams<R, V>,
   ) => GridKeyValue | null | undefined;
+  /**
+   * Function that takes the clipboard-pasted value and converts it to a value used internally.
+   * @param {string} value The pasted value.
+   * @param {GridCellParams<R, V, F>} params The cell params.
+   * @returns {V} The converted value.
+   */
+  pastedValueParser?: (value: string, params: GridCellParams<R, V, F>) => V | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

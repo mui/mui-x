@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   GridColDef,
   GridRowId,
-  GridSingleSelectColDef,
   GridValidRowModel,
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
@@ -84,61 +83,6 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
   });
 }
 
-const stringToBoolean = (value: string) => {
-  switch (value.toLowerCase().trim()) {
-    case 'true':
-    case 'yes':
-    case '1':
-      return true;
-
-    case 'false':
-    case 'no':
-    case '0':
-    case 'null':
-    case 'undefined':
-      return false;
-
-    default:
-      return undefined;
-  }
-};
-
-const parseCellStringValue = (value: string, colDef: GridColDef) => {
-  switch (colDef.type) {
-    case 'number': {
-      return Number(value);
-    }
-    case 'boolean': {
-      return stringToBoolean(value);
-    }
-    case 'singleSelect': {
-      const colDefValueOptions = (colDef as GridSingleSelectColDef).valueOptions;
-      const valueOptions =
-        typeof colDefValueOptions === 'function'
-          ? colDefValueOptions({ field: colDef.field })
-          : colDefValueOptions || [];
-      const getOptionValue = (colDef as GridSingleSelectColDef).getOptionValue!;
-      const valueOption = valueOptions.find((option) => {
-        if (getOptionValue(option) === value) {
-          return true;
-        }
-        return false;
-      });
-      if (valueOption) {
-        return value;
-      }
-      return value;
-    }
-    case 'date':
-    case 'dateTime': {
-      const date = new Date(value);
-      return date;
-    }
-    default:
-      return value;
-  }
-};
-
 // Keeps track of updated rows during clipboard paste
 class CellValueUpdater {
   rowsToUpdate: {
@@ -182,10 +126,16 @@ class CellValueUpdater {
       return;
     }
 
-    let parsedValue = parseCellStringValue(pastedCellValue, colDef);
+    const cellParams = apiRef.current.getCellParams(rowId, field);
+
+    let parsedValue = pastedCellValue;
+
+    if (colDef.pastedValueParser) {
+      parsedValue = colDef.pastedValueParser(pastedCellValue, cellParams);
+    }
 
     if (colDef.valueParser) {
-      parsedValue = colDef.valueParser(parsedValue, apiRef.current.getCellParams(rowId, field));
+      parsedValue = colDef.valueParser(parsedValue, cellParams);
     }
 
     if (parsedValue === undefined) {
