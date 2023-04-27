@@ -68,6 +68,7 @@ export function BarPlot() {
                   height={yScale(baseline) - yScale(value)}
                   width={barWidth}
                   fill={color}
+                  shapeRendering="crispEdges"
                   {...getInteractionItemProps({ type: 'bar', seriesId, dataIndex })}
                 />
               );
