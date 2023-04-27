@@ -140,6 +140,12 @@ DateTimePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
    * Pass a ref to the `input` element.
    */
   inputRef: PropTypes.oneOfType([
@@ -334,6 +340,7 @@ DateTimePicker.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

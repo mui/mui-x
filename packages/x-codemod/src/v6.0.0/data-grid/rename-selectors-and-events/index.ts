@@ -39,7 +39,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     // + import { gridRowSelectionStateSelector } from '@mui/x-data-grid'
     root
       .find(j.Identifier)
-      .filter((path) => !!renamedSelectors[path.node.name])
+      .filter((path) => renamedSelectors.hasOwnProperty(path.node.name))
       .replaceWith((path) => j.identifier(renamedSelectors[path.node.name]));
 
     // Rename the usage of renamed event literals
@@ -50,7 +50,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     root
       .find(j.CallExpression)
       .find(j.Literal)
-      .filter((path) => !!renamedEvents[path.node.value as any])
+      .filter((path) => renamedEvents.hasOwnProperty(path.node.value as any))
       .replaceWith((path) => j.literal(renamedEvents[path.node.value as any]));
   }
 

@@ -36,7 +36,7 @@ export interface GridCoreApi {
    * Unique identifier for each component instance in a page.
    * @ignore - do not document.
    */
-  instanceId: number;
+  instanceId: { id: number };
 }
 
 export interface GridCorePrivateApi<

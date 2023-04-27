@@ -27,6 +27,10 @@
     "disablePast": { "type": { "name": "bool" } },
     "divider": { "type": { "name": "node" } },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
@@ -46,6 +50,7 @@
       "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
     },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "spacing": {
@@ -61,6 +66,7 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "useFlexGap": { "type": { "name": "bool" } },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {

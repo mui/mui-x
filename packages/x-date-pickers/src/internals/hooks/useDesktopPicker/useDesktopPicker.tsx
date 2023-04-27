@@ -5,15 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
-import { DateOrTimeView } from '../../models/views';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../validation/useValidation';
-import { FieldSection } from '../useField';
+import { InferError } from '../useValidation';
+import { FieldSection, BaseSingleInputFieldProps, DateOrTimeView } from '../../../models';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -27,9 +25,8 @@ export const useDesktopPicker = <
   TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
   getOpenDialogAriaText,
-  validator,
+  ...pickerParams
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
   const {
     slots,
@@ -37,6 +34,7 @@ export const useDesktopPicker = <
     className,
     sx,
     format,
+    formatDensity,
     label,
     inputRef,
     readOnly,
@@ -60,10 +58,9 @@ export const useDesktopPicker = <
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
+    ...pickerParams,
     props,
     inputRef: internalInputRef,
-    valueManager,
-    validator,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
@@ -110,6 +107,7 @@ export const useDesktopPicker = <
       className,
       sx,
       format,
+      formatDensity,
       label,
       autoFocus: autoFocus && !props.open,
     },

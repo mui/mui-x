@@ -12,17 +12,26 @@ import {
   expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopTimePicker });
 
+  describePicker(DesktopTimePicker, {
+    render,
+    fieldType: 'single-input',
+    variant: 'desktop',
+    hasNoView: true,
+  });
+
   describeValidation(DesktopTimePicker, () => ({
     render,
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeConformance(<DesktopTimePicker />, () => ({
@@ -66,7 +75,6 @@ describe('<DesktopTimePicker /> - Describes', () => {
         expectedValue
           ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
           : '',
-        true,
       );
     },
     setNewValue: (value, { isOpened } = {}) => {

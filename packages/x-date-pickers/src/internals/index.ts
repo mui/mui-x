@@ -56,7 +56,6 @@ export {
   useField,
   createDateStrForInputFromSections,
   addPositionPropertiesToSections,
-  splitFormatIntoSections,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
@@ -64,18 +63,17 @@ export type {
   UseFieldResponse,
   UseFieldForwardedProps,
   FieldValueManager,
-  FieldSection,
   FieldChangeHandler,
   FieldChangeHandlerContext,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
-export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
+export type { UsePickerResponse, UsePickerParams, UsePickerProps } from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,
   PickerSelectionState,
-} from './hooks/usePicker/usePickerValue';
+} from './hooks/usePicker/usePickerValue.types';
 export type {
   UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,
@@ -95,27 +93,8 @@ export {
   useNow,
 } from './hooks/useUtils';
 export type { ExportedUseViewsOptions } from './hooks/useViews';
-export type {
-  BaseDateValidationProps,
-  BaseTimeValidationProps,
-  TimeValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-  DayValidationProps,
-} from './hooks/validation/models';
-export { useValidation } from './hooks/validation/useValidation';
-export type {
-  ValidationCommonProps,
-  ValidationProps,
-  Validator,
-  InferError,
-} from './hooks/validation/useValidation';
-export { validateDate } from './hooks/validation/useDateValidation';
-export { validateTime } from './hooks/validation/useTimeValidation';
-export { validateDateTime } from './hooks/validation/useDateTimeValidation';
-export type { DateValidationError } from './hooks/validation/useDateValidation';
-export type { TimeValidationError } from './hooks/validation/useTimeValidation';
-export type { DateTimeValidationError } from './hooks/validation/useDateTimeValidation';
+export { useValidation } from './hooks/useValidation';
+export type { ValidationProps, Validator, InferError } from './hooks/useValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
 export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
@@ -125,10 +104,16 @@ export type {
   BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
-export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
-export type { DateOrTimeView, DateView, TimeView } from './models/views';
 export type { WrapperVariant } from './models/common';
+export type {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  TimeValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+  DayValidationProps,
+} from './models/validation';
 
 export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
 export {
@@ -138,7 +123,10 @@ export {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
-export { extractValidationProps } from './utils/validation';
+export { extractValidationProps } from './utils/validation/extractValidationProps';
+export { validateDate } from './utils/validation/validateDate';
+export { validateDateTime } from './utils/validation/validateDateTime';
+export { validateTime } from './utils/validation/validateTime';
 export { buildDeprecatedPropsWarning } from './utils/warning';
 export { uncapitalizeObjectKeys } from './utils/slots-migration';
 export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';

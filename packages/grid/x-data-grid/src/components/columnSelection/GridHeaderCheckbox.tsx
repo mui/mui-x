@@ -4,15 +4,15 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
-import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
+import type { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
 import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
-import { GridRowId } from '../../models/gridRows';
+import type { GridRowId } from '../../models/gridRows';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -105,7 +105,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     }, [tabIndex, apiRef, props.field]);
 
     const handleKeyDown = React.useCallback(
-      (event: React.KeyboardEvent<HTMLInputElement>) => {
+      (event: React.KeyboardEvent) => {
         if (event.key === ' ') {
           // imperative toggle the checkbox because Space is disable by some preventDefault
           apiRef.current.publishEvent('headerSelectionCheckboxChange', {

@@ -5,10 +5,11 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { TimeView, useLocaleText, validateTime } from '../internals';
+import { useLocaleText, validateTime } from '../internals';
+import { TimeView } from '../models';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type DesktopTimePickerComponent = (<TDate>(
@@ -65,6 +66,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const { renderPicker } = useDesktopPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'time',
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
     validator: validateTime,
   });
@@ -150,6 +152,12 @@ DesktopTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -281,6 +289,7 @@ DesktopTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

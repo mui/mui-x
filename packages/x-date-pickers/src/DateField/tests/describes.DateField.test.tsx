@@ -19,6 +19,13 @@ describe('<DateField /> - Describes', () => {
 
   const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateField });
 
+  describeValidation(DateField, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    componentFamily: 'field',
+  }));
+
   describeConformance(<DateField />, () => ({
     classes: {} as any,
     inheritComponent: TextField,
@@ -37,13 +44,6 @@ describe('<DateField /> - Describes', () => {
     ],
   }));
 
-  describeValidation(DateField, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'field',
-  }));
-
   describeValue(DateField, () => ({
     render,
     componentFamily: 'field',
@@ -58,13 +58,12 @@ describe('<DateField /> - Describes', () => {
       expectInputValue(
         input,
         expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
-        true,
       );
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);
       const input = getTextbox();
-      clickOnInput(input, 10); // Update the day
+      clickOnInput(input, 5); // Update the day
       userEvent.keyPress(input, { key: 'ArrowUp' });
       return newValue;
     },

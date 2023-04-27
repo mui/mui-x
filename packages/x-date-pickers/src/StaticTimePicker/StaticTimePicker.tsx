@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { TimeView } from '@mui/x-date-pickers/internals';
+import { TimeView } from '../models';
 import { StaticTimePickerProps } from './StaticTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { renderTimeViewClock } from '../timeViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { validateTime } from '../internals/hooks/validation/useTimeValidation';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticTimePickerComponent = (<TDate>(
@@ -51,8 +51,9 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    ref,
+    valueType: 'time',
     validator: validateTime,
+    ref,
   });
 
   return renderPicker();
@@ -203,6 +204,7 @@ StaticTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

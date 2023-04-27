@@ -21,7 +21,7 @@ const MultiInputTimeRangeFieldRoot = styled(
 )({});
 
 const MultiInputTimeRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
   {
     name: 'MuiMultiInputTimeRangeField',
     slot: 'Separator',
@@ -50,6 +50,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     value,
     defaultValue,
     format,
+    formatDensity,
+    shouldRespectLeadingZeros,
     onChange,
     readOnly,
     disabled,
@@ -125,6 +127,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       value,
       defaultValue,
       format,
+      formatDensity,
+      shouldRespectLeadingZeros,
       onChange,
       readOnly,
       disabled,
@@ -152,10 +156,13 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       <TextField
         fullWidth
         {...startDateProps}
+        InputProps={{
+          ...startDateProps.InputProps,
+          readOnly: startReadOnly,
+        }}
         inputProps={{
           ...startDateProps.inputProps,
           ref: startInputRef,
-          readOnly: startReadOnly,
           inputMode: startInputMode,
           onKeyDown: onStartInputKeyDown,
         }}
@@ -164,6 +171,10 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       <TextField
         fullWidth
         {...endDateProps}
+        InputProps={{
+          ...endDateProps.InputProps,
+          readOnly: endReadOnly,
+        }}
         inputProps={{
           ...endDateProps.inputProps,
           ref: endInputRef,
@@ -243,6 +254,12 @@ MultiInputTimeRangeField.propTypes = {
    */
   format: PropTypes.string,
   /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
@@ -321,11 +338,27 @@ MultiInputTimeRangeField.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * If `true`, the format will respect the leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `8/16/2018`)
+   * If `false`, the format will always add leading zeroes (e.g: on dayjs, the format `M/D/YYYY` will render `08/16/2018`)
+   *
+   * Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: "DD"), so `shouldRespectLeadingZeros={true}` might lead to inconsistencies when using `AdapterLuxon`.
+   *
+   * Warning n°2: When `shouldRespectLeadingZeros={true}`, the field will add an invisible character on the sections containing a single digit to make sure `onChange` is fired.
+   * If you need to get the clean value from the input, you can remove this character using `input.value.replace(/\u200e/g, '')`.
+   *
+   * Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros.
+   * This mean that when using `shouldRespectLeadingZeros={false}`, if you retrieve the value directly from the input (not listening to `onChange`) and your format contains tokens without leading zeros, the value will not be parsed by your library.
+   *
+   * @default `false`
+   */
+  shouldRespectLeadingZeros: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -357,6 +390,16 @@ MultiInputTimeRangeField.propTypes = {
   ]),
   unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  /**
+   * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
+   *
+   * While CSS `gap` removes the [known limitations](https://mui.com/joy-ui/react-stack/#limitations),
+   * it is not fully supported in some browsers. We recommend checking https://caniuse.com/?search=flex%20gap before using this flag.
+   *
+   * To enable this flag globally, follow the [theme's default props](https://mui.com/material-ui/customization/theme-components/#default-props) configuration.
+   * @default false
+   */
+  useFlexGap: PropTypes.bool,
   /**
    * The selected value.
    * Used when the component is controlled.

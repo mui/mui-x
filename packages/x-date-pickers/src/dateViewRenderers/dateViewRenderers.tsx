@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
-import { DateOrTimeView, DateView } from '../internals';
+import { DateOrTimeView, DateView } from '../models';
 
 const isDatePickerView = (view: unknown): view is DateView =>
   view === 'year' || view === 'month' || view === 'day';

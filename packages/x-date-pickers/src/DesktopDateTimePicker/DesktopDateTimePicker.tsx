@@ -6,10 +6,11 @@ import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
-import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
+import { useLocaleText, validateDateTime } from '../internals';
+import { DateOrTimeView } from '../models';
 import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type DesktopDateTimePickerComponent = (<TDate>(
@@ -73,6 +74,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   const { renderPicker } = useDesktopPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date-time',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDateTime,
   });
@@ -184,6 +186,12 @@ DesktopDateTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -379,6 +387,7 @@ DesktopDateTimePicker.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

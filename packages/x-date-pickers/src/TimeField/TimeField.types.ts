@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldSection, UseFieldInternalProps } from '../internals/hooks/useField';
-import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
+import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
+import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { FieldsTextFieldProps } from '../internals/models/fields';
+import { FieldSection, TimeValidationError } from '../models';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseTimeFieldComponentProps<TDate, TChildProps>;

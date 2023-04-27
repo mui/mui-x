@@ -9,11 +9,13 @@ import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
 import localeNames from './localeNames';
+import nextConfig from '../docs/next.config';
 
 const MyOctokit = Octokit.plugin(retry);
 
 const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
+// https://github.com/mui/mui-x/issues/3211
 const L10N_ISSUE_ID = 3211;
 const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
 
@@ -308,7 +310,6 @@ const generateDocReport = async (
       if (info == null) {
         return;
       }
-      const githubLink = `${SOURCE_CODE_REPO}/blob/-/${info.path}/`;
 
       const languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName
         .slice(2)
@@ -329,7 +330,7 @@ const generateDocReport = async (
         localeName,
         missingKeysCount: infoPerPackage[packageKey].missingKeys.length,
         totalKeysCount: baseTranslationsNumber[packageKey],
-        githubLink,
+        githubLink: `${nextConfig.env.SOURCE_CODE_ROOT_URL}/${info.path}`,
       });
     });
 

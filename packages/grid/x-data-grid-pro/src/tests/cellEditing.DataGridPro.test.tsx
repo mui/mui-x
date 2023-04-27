@@ -186,6 +186,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
+          unstable_updateValueOnRender: false,
         });
       });
 

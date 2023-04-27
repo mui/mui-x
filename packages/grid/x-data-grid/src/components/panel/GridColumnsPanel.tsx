@@ -83,6 +83,14 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * @default false
    */
   disableShowAllButton?: boolean;
+  /**
+   * Returns the list of togglable columns.
+   * If used, only those columns will be displayed in the panel
+   * which are passed as the return value of the function.
+   * @param {GridColDef[]} columns The `ColDef` list of all columns.
+   * @returns {GridColDef['field'][]} The list of togglable columns' field names.
+   */
+  getTogglableColumns?: (columns: GridColDef[]) => GridColDef['field'][];
 }
 
 const collator = new Intl.Collator();
@@ -109,6 +117,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     autoFocusSearchField = true,
     disableHideAllButton = false,
     disableShowAllButton = false,
+    getTogglableColumns,
     ...other
   } = props;
 
@@ -138,9 +147,10 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     (isVisible: boolean) => {
       const currentModel = gridColumnVisibilityModelSelector(apiRef);
       const newModel = { ...currentModel };
+      const togglableColumns = getTogglableColumns ? getTogglableColumns(columns) : null;
 
       columns.forEach((col) => {
-        if (col.hideable) {
+        if (col.hideable && (togglableColumns == null || togglableColumns.includes(col.field))) {
           if (isVisible) {
             // delete the key from the model instead of setting it to `true`
             delete newModel[col.field];
@@ -152,7 +162,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
       return apiRef.current.setColumnVisibilityModel(newModel);
     },
-    [apiRef, columns],
+    [apiRef, columns, getTogglableColumns],
   );
 
   const handleSearchValueChange = React.useCallback(
@@ -163,12 +173,20 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   );
 
   const currentColumns = React.useMemo(() => {
+    const togglableColumns = getTogglableColumns ? getTogglableColumns(sortedColumns) : null;
+
+    const togglableSortedColumns = togglableColumns
+      ? sortedColumns.filter(({ field }) => togglableColumns.includes(field))
+      : sortedColumns;
+
     if (!searchValue) {
-      return sortedColumns;
+      return togglableSortedColumns;
     }
-    const searchValueToCheck = searchValue.toLowerCase();
-    return sortedColumns.filter((column) => searchPredicate(column, searchValueToCheck));
-  }, [sortedColumns, searchValue, searchPredicate]);
+
+    return togglableSortedColumns.filter((column) =>
+      searchPredicate(column, searchValue.toLowerCase()),
+    );
+  }, [sortedColumns, searchValue, searchPredicate, getTogglableColumns]);
 
   const firstSwitchRef = React.useRef<HTMLInputElement>(null);
 
@@ -277,6 +295,14 @@ GridColumnsPanel.propTypes = {
   autoFocusSearchField: PropTypes.bool,
   disableHideAllButton: PropTypes.bool,
   disableShowAllButton: PropTypes.bool,
+  /**
+   * Returns the list of togglable columns.
+   * If used, only those columns will be displayed in the panel
+   * which are passed as the return value of the function.
+   * @param {GridColDef[]} columns The `ColDef` list of all columns.
+   * @returns {GridColDef['field'][]} The list of togglable columns' field names.
+   */
+  getTogglableColumns: PropTypes.func,
   searchPredicate: PropTypes.func,
   slotProps: PropTypes.object,
   sort: PropTypes.oneOf(['asc', 'desc']),

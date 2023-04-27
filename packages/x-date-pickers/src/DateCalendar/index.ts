@@ -26,5 +26,3 @@ export type {
   PickersSlideTransitionClasses,
 } from './pickersSlideTransitionClasses';
 export type { ExportedSlideTransitionProps } from './PickersSlideTransition';
-
-export type { DateView } from '../internals/models';

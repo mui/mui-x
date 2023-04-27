@@ -16,6 +16,7 @@
     "disableOpenPicker": "If <code>true</code>, the open picker button will not be rendered (renders only the field).",
     "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "format": "Format of the date when rendered in the input(s). Defaults to localized format based on the used <code>views</code>.",
+    "formatDensity": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
     "inputRef": "Pass a ref to the <code>input</code> element.",
     "label": "The label content.",
     "localeText": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>.",

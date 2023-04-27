@@ -4,7 +4,8 @@ import { StaticDatePickerProps } from './StaticDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateView, validateDate } from '../internals';
+import { validateDate } from '../internals';
+import { DateView } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
@@ -48,6 +49,7 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
   const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date',
     validator: validateDate,
     ref,
   });

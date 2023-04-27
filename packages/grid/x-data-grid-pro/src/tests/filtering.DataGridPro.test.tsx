@@ -13,6 +13,7 @@ import {
   FilterColumnsArgs,
   GridToolbar,
   gridExpandedSortedRowEntriesSelector,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
@@ -357,6 +358,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).not.to.equal(null);
   });
 
   it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
@@ -375,6 +377,7 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).not.to.equal(null);
     expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
   });
 
@@ -842,5 +845,23 @@ describe('<DataGridPro /> - Filter', () => {
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
     });
+  });
+
+  it('should give a stable ID to the filter item used as placeholder', function test() {
+    if (isJSDOM) {
+      this.skip(); // It's not re-rendering the filter panel correctly
+    }
+
+    const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
+    const filtersButton = screen.getByRole('button', { name: /Filters/i });
+    fireEvent.click(filtersButton);
+
+    let filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    const oldId = filterForm!.dataset.id;
+
+    rerender(<TestCase slots={{ toolbar: GridToolbar }} rows={[{ id: 0, brand: 'ADIDAS' }]} />);
+    filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    const newId = filterForm!.dataset.id;
+    expect(oldId).to.equal(newId);
   });
 });
