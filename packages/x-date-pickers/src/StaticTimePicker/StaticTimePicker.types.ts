@@ -20,7 +20,7 @@ export interface StaticTimePickerSlotsComponentsProps<TDate>
     UseStaticPickerSlotsComponentsProps<TDate, TimeView> {}
 
 export interface StaticTimePickerProps<TDate>
-  extends BaseTimePickerProps<TDate>,
+  extends BaseTimePickerProps<TDate, TimeView>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable components.

@@ -10,16 +10,18 @@ import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateOrTimeView } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
 import { RangeFieldSection } from '../../models/fields';
 
-export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
+export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
 
-export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
+export interface UseStaticRangePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -27,7 +29,7 @@ export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRa
 
 export interface UseStaticRangePickerProps<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends BasePickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
@@ -46,7 +48,7 @@ export interface UseStaticRangePickerProps<
 
 export interface UseStaticRangePickerParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<DateRange<TDate>, TDate, TView, RangeFieldSection, TExternalProps, {}>,

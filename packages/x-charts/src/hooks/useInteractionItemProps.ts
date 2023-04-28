@@ -10,10 +10,10 @@ export const useInteractionItemProps = () => {
   const getInteractionItemProps = (
     data: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier,
   ) => {
-    const onMouseEnter = (event: React.MouseEvent) => {
+    const onMouseEnter = () => {
       dispatch({
         type: 'enterItem',
-        data: { ...data, target: event?.target as SVGElement },
+        data,
       });
     };
     const onMouseLeave = () => {

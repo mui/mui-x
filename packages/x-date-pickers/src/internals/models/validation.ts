@@ -114,3 +114,17 @@ export interface YearValidationProps<TDate> {
    */
   shouldDisableYear?: (year: TDate) => boolean;
 }
+
+/**
+ * Props used to validate a date time value.
+ */
+export interface DateTimeValidationProps<TDate> {
+  /**
+   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
+   */
+  minDateTime?: TDate;
+  /**
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   */
+  maxDateTime?: TDate;
+}

@@ -5,11 +5,8 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  BaseSingleInputFieldProps,
-  FieldSelectedSections,
-  DateOrTimeView,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -71,7 +68,7 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
 
 export interface UseEnrichedRangePickerFieldPropsParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
   FieldProps extends BaseFieldProps<DateRange<TDate>, RangeFieldSection, TError> = BaseFieldProps<
     DateRange<TDate>,
@@ -97,7 +94,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   fieldProps: FieldProps;
 }
 
-const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError>({
+const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
   wrapperVariant,
   open,
   actions,
@@ -230,7 +227,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError
   return enrichedFieldProps;
 };
 
-const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError>({
+const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
   wrapperVariant,
   open,
   actions,
@@ -328,7 +325,11 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
   return enrichedFieldProps;
 };
 
-export const useEnrichedRangePickerFieldProps = <TDate, TView extends DateOrTimeView, TError>(
+export const useEnrichedRangePickerFieldProps = <
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+>(
   params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TError>,
 ) => {
   /* eslint-disable react-hooks/rules-of-hooks */

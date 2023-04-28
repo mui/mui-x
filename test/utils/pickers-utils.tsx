@@ -25,6 +25,7 @@ import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
 
 export type AdapterName =
   | 'date-fns'
@@ -546,3 +547,14 @@ export class MockedDataTransfer implements DataTransfer {
     this.yOffset = yOffset;
   }
 }
+
+export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+  switch (componentFamily) {
+    case 'clock':
+      return 2;
+    case 'multi-section-digital-clock':
+      return 3;
+    default:
+      return 1;
+  }
+};
