@@ -132,9 +132,13 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
+        if (item.value && !updatedItem.value) {
+          apiRef.current.deleteFilterItem(updatedItem);
+          return;
+        }
         apiRef.current.upsertFilterItem(updatedItem);
       },
-      [apiRef],
+      [apiRef, item],
     );
 
     React.useLayoutEffect(() => {
