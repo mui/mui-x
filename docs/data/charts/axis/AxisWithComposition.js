@@ -6,7 +6,7 @@ export default function AxisWithComposition() {
     <ChartContainer
       xAxis={[
         {
-          scaleName: 'band',
+          scaleType: 'band',
           data: ['Q1', 'Q2', 'Q3', 'Q4'],
           id: 'quarters',
         },

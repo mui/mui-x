@@ -27,7 +27,7 @@ And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
 
 ### Axis type
 
-The axis type is specified by its property `scaleName` which expect one of the following values:
+The axis type is specified by its property `scaleType` which expect one of the following values:
 
 - `'band'`: Split the axis in equal band. Mostly used for bar charts.
 - `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
@@ -36,7 +36,7 @@ The axis type is specified by its property `scaleName` which expect one of the f
 ### Axis data
 
 The axis definition object also includes a `data` property.
-Which expects an array of value coherent with the `scaleName`:
+Which expects an array of value coherent with the `scaleType`:
 
 - For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
 - For `'time'` or `'utc'` it should contain `Date()` objects
@@ -45,7 +45,7 @@ Which expects an array of value coherent with the `scaleName`:
 Some series types also require specific axis attributes:
 
 - line plots require an `xAxis` to have `data` provided
-- bar plots require an `xAxis` with `scaleName='band'` and some `data` provided.
+- bar plots require an `xAxis` with `scaleType='band'` and some `data` provided.
 
 ### Axis sub domain
 

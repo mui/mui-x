@@ -43,17 +43,17 @@ export default function CompositionResponsive() {
           {
             id: 'years',
             data: [2010, 2011, 2012, 2013, 2014],
-            scaleName: 'band',
+            scaleType: 'band',
           },
         ]}
         yAxis={[
           {
             id: 'eco',
-            scaleName: 'linear',
+            scaleType: 'linear',
           },
           {
             id: 'pib',
-            scaleName: 'log',
+            scaleType: 'log',
           },
         ]}
       >

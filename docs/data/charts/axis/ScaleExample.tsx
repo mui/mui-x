@@ -13,12 +13,12 @@ export default function ScaleExample() {
       yAxis={[
         {
           id: 'linearAxis',
-          scaleName: 'linear',
+          scaleType: 'linear',
           max: 110,
         },
         {
           id: 'logAxis',
-          scaleName: 'log',
+          scaleType: 'log',
           max: 110,
         },
       ]}

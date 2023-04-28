@@ -57,7 +57,7 @@ const GermanyGDPperCapita = [
 export default function StackedAreas() {
   return (
     <LineChart
-      xAxis={[{ id: 'Years', data: years, scaleName: 'time' }]}
+      xAxis={[{ id: 'Years', data: years, scaleType: 'time' }]}
       series={[
         {
           type: 'line',
