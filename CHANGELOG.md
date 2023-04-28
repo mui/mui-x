@@ -7,10 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 28, 2023_
 
-We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 New [time-picking UI](https://mui.com/x/react-date-pickers/digital-clock/) designed for desktops (#7958) @LukasTy
-- 🌍 Improve Chinese (zh-CN) and French (fr-FR) locales
+- 🌍 Improve Chinese (zh-CN), French (fr-FR), and Turkish (tr-TR) locales
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -19,13 +19,15 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 #### Changes
 
 - [DataGrid] Add overlay classes to `gridClasses` (#8686) @lindapaiste
+- [DataGrid] Avoid passing `api` prop to div (#8679) @someden
 - [DataGrid] Fix 'ResizeObserver loop limit exceeded' error (#8744) @m4theushw
+- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
+- [DataGrid] Fix aggregation label alignment (#8694) @joserodolfofreitas
 - [DataGridPremium] Fix infinite loop when updating grouped rows (#8693) @cherniavskii
 - [DataGridPro] Fix error after updating `columns` and `columnGroupingModel` at once (#8730) @cherniavskii
 - [l10n] Improve Chinese (zh-CN) locale (#8753) @SakumyZ
 - [l10n] Improve French (fr-FR) locale (#8704) @Jul13nT
-- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
-- [DataGrid] Fix aggregation label alignment (#8694) @joserodolfofreitas
+- [l10n] Improve Turkish (tr-TR) locale (#8783) @cccaaannn
 
 ### `@mui/x-date-pickers@v6.3.0` / `@mui/x-date-pickers-pro@v6.3.0`
 
@@ -39,12 +41,13 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [pickers] Fix date calendar `selected` & `disabled` day style (#8773) @LukasTy
 - [pickers] Migrate `AdapterDateFns` to our repository (#8736) @flaviendelangle
 - [pickers] Migrate `AdapterLuxon` to our repository (#8600) @flaviendelangle
+- [pickers] Migrate `AdapterMomentHijri` to our repository (#8776) @flaviendelangle
 - [pickers] Migrate `AdapterMomentJalaali` and `AdapterDateFnsJalali` to our repository (#8741) @flaviendelangle
 - [pickers] Migrate `AdapterMoment` to our repository (#8700) @flaviendelangle
-- [pickers] Migrate `MomentHijri` to our repository (#8776) @flaviendelangle
 - [pickers] Refactor the validation files (#8622) @flaviendelangle
 - [pickers] Use `en dash` instead of `em dash` in multi input range fields (#8738) @flaviendelangle
 - [l10n] Improve Chinese (zh-CN) locale (#8753) @SakumyZ
+- [l10n] Improve Turkish (tr-TR) locale (#8783) @cccaaannn
 
 ### Docs
 
