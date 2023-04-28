@@ -200,6 +200,8 @@ GridFilterInputSingleSelect.propTypes = {
    * @returns {string} The value to be used.
    */
   getOptionValue: PropTypes.func,
+  headerFilterMenu: PropTypes.node,
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
