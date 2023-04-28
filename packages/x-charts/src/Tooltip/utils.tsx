@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { AxisInteractionData, InteractionContext, ItemInteractionData } from '../context/InteractionProvider';
+import {
+  AxisInteractionData,
+  InteractionContext,
+  ItemInteractionData,
+} from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../hooks/useScale';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';

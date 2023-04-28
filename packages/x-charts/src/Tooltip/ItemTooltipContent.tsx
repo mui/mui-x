@@ -28,7 +28,7 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
-    <TooltipPaper >
+    <TooltipPaper>
       <TooltipTable>
         <tr>
           <TooltipCell>

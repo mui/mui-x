@@ -18,7 +18,7 @@ export type AxisInteractionData = {
   };
 };
 
-type InteractionActions<T extends ChartSeriesType=ChartSeriesType>  =
+type InteractionActions<T extends ChartSeriesType = ChartSeriesType> =
   | {
       type: 'enterItem';
       data: ItemInteractionData<T>;
