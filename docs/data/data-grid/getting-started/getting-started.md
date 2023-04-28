@@ -183,7 +183,8 @@ The enterprise components come in two plans: Pro and Premium.
 | **Import & export**                                                                    |           |                                    |                                            |
 | [CSV export](/x/react-data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Print](/x/react-data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
-| [Clipboard](/x/react-data-grid/export/#clipboard)                                      |    ❌     |                 🚧                 |                     🚧                     |
+| [Clipboard copy](/x/react-data-grid/clipboard/#clipboard-copy)                         |    ✅     |                 ✅                 |                     ✅                     |
+| [Clipboard paste](/x/react-data-grid/clipboard/#clipboard-paste)                       |    ❌     |                 ❌                 |                     ✅                     |
 | [Excel export](/x/react-data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     ✅                     |
 | **Rendering**                                                                          |           |                                    |                                            |
 | [Customizable components](/x/react-data-grid/components/)                              |    ✅     |                 ✅                 |                     ✅                     |
