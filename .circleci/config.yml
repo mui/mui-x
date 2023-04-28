@@ -205,6 +205,8 @@ jobs:
           destination: artifact-file
   test_types:
     <<: *defaults
+    environment:
+      NODE_OPTIONS: --max-old-space-size=3584
     steps:
       - checkout
       - install_js
