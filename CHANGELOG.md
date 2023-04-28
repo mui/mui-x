@@ -5,11 +5,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.3.0
 
-_Apr 27, 2023_
+_Apr 28, 2023_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Add new `DigitalClock` desktop [time picking experience](https://mui.com/x/react-date-pickers/digital-clock/) (#7958) @LukasTy
+- 🚀 New [time-picking UI](https://mui.com/x/react-date-pickers/digital-clock/) designed for desktops (#7958) @LukasTy
 - 🌍 Improve Chinese (zh-CN) and French (fr-FR) locales
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -62,7 +62,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 - [core] Cleanup picker tests (#8652) @flaviendelangle
 - [core] Use `adapter.lib` instead of `adapterName` in `describeAdapters` (#8779) @flaviendelangle
-- [charts] Adapt line and scatter the band scale (#8701) @alexfauquette
+- [charts] Adapt line and scatter plot to the "band" scale type (#8701) @alexfauquette
 - [charts] Link the Gantt Charts issue in the docs (#8739) @flaviendelangle
 
 ## 6.2.1
