@@ -176,6 +176,7 @@ function GridBody(props: GridBodyProps) {
           disableVirtualization={isVirtualizationDisabled}
         />
       )}
+
       {children}
     </GridMainContainer>
   );
@@ -186,6 +187,7 @@ GridBody.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  children: PropTypes.node,
   ColumnHeadersProps: PropTypes.object,
   VirtualScrollerComponent: PropTypes.elementType.isRequired,
 } as any;
