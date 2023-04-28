@@ -65,7 +65,14 @@ export default function CSSCustomization() {
           fill: "url('#myGradient')",
         },
       }}
-      xAxis={[{ id: 'Years', data: years, scaleType: 'time' }]}
+      xAxis={[
+        {
+          id: 'Years',
+          data: years,
+          scaleType: 'time',
+          valueFormatter: (date) => date.getFullYear(),
+        },
+      ]}
       series={[
         {
           type: 'line',

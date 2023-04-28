@@ -55,7 +55,7 @@ export function LinePlot() {
 
             if (xData === undefined) {
               throw new Error(
-                `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+                `Axis of id "${xAxisKey}" should have data property to be able to display a line plot.`,
               );
             }
 
@@ -77,7 +77,6 @@ export function LinePlot() {
                   id={seriesId}
                   d={areaPath.curve(curve)(d3Data) || undefined}
                   color={series[seriesId].area.color ?? series[seriesId].color}
-                  {...getInteractionItemProps({ type: 'line', seriesId })}
                 />
               )
             );
