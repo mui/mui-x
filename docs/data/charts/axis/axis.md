@@ -5,16 +5,16 @@ title: Charts - Axis
 
 # Charts - Axis
 
-<p class="description">Axis provides associate values to element positions</p>
+<p class="description">Axis provides associate values to element positions.</p>
 
-Axis are used in the following charts: `<LineChart />`, `<BarChart />`, `<ScatterChart />`.
+Axes are used in the following charts: `<LineChart />`, `<BarChart />`, `<ScatterChart />`.
 
 ## Defining axis
 
-Like your data, axis definition play a central role in the charts rendering.
-It's responsible of the mapping between your data and elements positions.
+Like your data, axis definition plays a central role in the chart rendering.
+It's responsible for the mapping between your data and element positions.
 
-You can define custom axis by using `xAxis` and `yAxis` props.
+You can define custom axes by using `xAxis` and `yAxis` props.
 Those props expect an array of objects.
 
 Here is a demonstration with two lines with the same data.
@@ -31,26 +31,26 @@ The axis type is specified by its property `scaleName` which expect one of the f
 
 - `'band'`: Split the axis in equal band. Mostly used for bar charts.
 - `'linear'`, `'log'`, `'sqrt'`: Map numerical values to the space available for the chart. `'linear'` is the default behavior.
-- `'time'`, `'utc'`: Map javascript `Date()` object to the space available for the chart.
+- `'time'`, `'utc'`: Map JavaScript `Date()` object to the space available for the chart.
 
 ### Axis data
 
-The axis definition object also includes a `data` properties.
+The axis definition object also includes a `data` property.
 Which expects an array of value coherent with the `scaleName`:
 
 - For `'linear'`, `'log'`, or `'sqrt'` it should contain numerical values
 - For `'time'` or `'utc'` it should contain `Date()` objects
 - For `'band'` it can contain `string`, or numerical values
 
-Moreover, some series types require specific axis types:
+Some series types also require specific axis attributes:
 
-- line plots require a x-axis to have `data` provided
-- bar blots require a x-axis with `scaleName='band'` and some `data` provided.
+- line plots require an `xAxis` to have `data` provided
+- bar plots require an `xAxis` with `scaleName='band'` and some `data` provided.
 
 ### Axis sub domain
 
-By default, the axis domain is computed such that all your data are visible.
-To show a specific range of values, you can provide properties `min` and/or `max` to axis definitions.
+By default, the axis domain is computed such that all your data is visible.
+To show a specific range of values, you can provide properties `min` and/or `max` to the axis definition.
 
 ```js
 xAxis={[
@@ -66,14 +66,14 @@ xAxis={[
 
 ## Axis customization
 
-Beside the impact of axis definition on the rendered chart, you can also customize the axis rendering.
+You can further customize the axis rendering besides the axis definition.
 
 ### Position
 
-To do that, charts components provide 4 props names `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowsing to define the 4 axis of the chart.
+Charts components provide 4 props: `topAxis`, `rightAxis`, `bottomAxis`, and `leftAxis` allowing to define the 4 axes of the chart.
 Those pros can accept three type of value:
 
-- `null` to do not display any axis
+- `null` to not display the axis
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
 - `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
 
@@ -81,10 +81,7 @@ Those pros can accept three type of value:
 
 ### Rendering
 
-To customize how axis are rendered, here is an interactive demonstration of the axis props.
-
-Most of those props come from the hackaton.
-Would make sens to remove color and replace them by CSS customization.
+Axes rendering can be further customized. Below is an interactive demonstration of the axis props.
 
 {{"demo": "AxisCustomizationNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
@@ -92,10 +89,10 @@ Would make sens to remove color and replace them by CSS customization.
 
 If you are using composition, you have to provide the axis settings in the `<ChartContainer />` by using `xAxis` and `yAxis` props.
 
-It will provides all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>`.
-Those components require a props `axisId` to link them to an axis you defined in the `<ChartContainer />`.
+It will provide all the scaling properties to its children, and allows you to use `<XAxis/>` and `<YAxis/>` components as children.
+Those components require an `axisId` prop to link them to an axis you defined in the `<ChartContainer />`.
 
-You can chose their position with `position` props which accept `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
-Other props are similar to the one defined in the [previous section](/x/react-charts/axis/#rendering).
+You can choose their position with `position` props which accept `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
+Other props are similar to the ones defined in the [previous section](/x/react-charts/axis/#rendering).
 
 {{"demo": "AxisWithComposition.js", "bg": "inline"}}

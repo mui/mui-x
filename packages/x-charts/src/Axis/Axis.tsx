@@ -56,16 +56,16 @@ export function Axis(props: AxisProps) {
   const rightId = getAxisId(rightAxis);
 
   if (topId !== null && !xAxis[topId]) {
-    throw Error(`MUI: id used to top axis "${topId}" is not defined`);
+    throw Error(`MUI: id used for top axis "${topId}" is not defined`);
   }
   if (leftId !== null && !yAxis[leftId]) {
-    throw Error(`MUI: id used to left axis "${leftId}" is not defined`);
+    throw Error(`MUI: id used for left axis "${leftId}" is not defined`);
   }
   if (rightId !== null && !yAxis[rightId]) {
-    throw Error(`MUI: id used to right axis "${rightId}" is not defined`);
+    throw Error(`MUI: id used for right axis "${rightId}" is not defined`);
   }
   if (bottomId !== null && !xAxis[bottomId]) {
-    throw Error(`MUI: id used to bottom axis "${bottomId}" is not defined`);
+    throw Error(`MUI: id used for bottom axis "${bottomId}" is not defined`);
   }
 
   return (

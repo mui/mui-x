@@ -8,30 +8,30 @@ export default function AxisWithComposition() {
         {
           scaleName: 'band',
           data: ['Q1', 'Q2', 'Q3', 'Q4'],
-          id: 'quaters',
+          id: 'quarters',
         },
       ]}
-      yAxis={[{ id: 'money' }, { id: 'quantites' }]}
+      yAxis={[{ id: 'money' }, { id: 'quantities' }]}
       series={[
         {
           type: 'line',
           id: 'revenue',
-          xAxisKey: 'quaters',
+          xAxisKey: 'quarters',
           yAxisKey: 'money',
           data: [5645, 7542, 9135, 12221],
         },
         {
           type: 'bar',
           id: 'cookies',
-          xAxisKey: 'quaters',
-          yAxisKey: 'quantites',
+          xAxisKey: 'quarters',
+          yAxisKey: 'quantities',
           data: [3205, 2542, 3135, 8374],
         },
         {
           type: 'bar',
           id: 'icecream',
-          xAxisKey: 'quaters',
-          yAxisKey: 'quantites',
+          xAxisKey: 'quarters',
+          yAxisKey: 'quantities',
           data: [1645, 5542, 5146, 3735],
         },
       ]}
@@ -40,8 +40,8 @@ export default function AxisWithComposition() {
     >
       <BarPlot />
       <LinePlot />
-      <XAxis axisId="quaters" label="2021 quaters" labelFontSize={18} />
-      <YAxis axisId="quantites" label="# unit sold" />
+      <XAxis axisId="quarters" label="2021 quarters" labelFontSize={18} />
+      <YAxis axisId="quantities" label="# units sold" />
       <YAxis axisId="money" position="right" label="revenu" />
     </ChartContainer>
   );
