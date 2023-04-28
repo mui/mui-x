@@ -1,8 +1,10 @@
 import { expect } from 'chai';
 import { DescribeJalaliAdapterTestSuite } from './describeJalaliAdapter.types';
-import { TEST_DATE_ISO } from '../describeGregorianAdapter';
+import { TEST_DATE_ISO_STRING } from '../describeGregorianAdapter';
 
-export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter, testDate }) => {
+export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) => {
+  const testDate = adapter.date(TEST_DATE_ISO_STRING)!;
+
   it('Method: date', () => {
     expect(adapter.date(null)).to.equal(null);
   });
@@ -13,7 +15,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter, test
   });
 
   it('Method: isEqual', () => {
-    const anotherDate = adapter.date(TEST_DATE_ISO);
+    const anotherDate = adapter.date(TEST_DATE_ISO_STRING);
 
     expect(adapter.isEqual(testDate, anotherDate)).to.equal(true);
     expect(adapter.isEqual(null, null)).to.equal(true);
@@ -30,19 +32,19 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter, test
   });
 
   it('Method: startOfYear', () => {
-    expect(adapter.startOfYear(testDate)).toEqualDateTime(new Date('2018-03-21T00:00:00.000Z'));
+    expect(adapter.startOfYear(testDate)).toEqualDateTime('2018-03-21T00:00:00.000Z');
   });
 
   it('Method: startOfMonth', () => {
-    expect(adapter.startOfMonth(testDate)).toEqualDateTime(new Date('2018-10-23T00:00:00.000Z'));
+    expect(adapter.startOfMonth(testDate)).toEqualDateTime('2018-10-23T00:00:00.000Z');
   });
 
   it('Method: endOfYear', () => {
-    expect(adapter.endOfYear(testDate)).toEqualDateTime(new Date('2019-03-20T23:59:59.999Z'));
+    expect(adapter.endOfYear(testDate)).toEqualDateTime('2019-03-20T23:59:59.999Z');
   });
 
   it('Method: endOfMonth', () => {
-    expect(adapter.endOfMonth(testDate)).toEqualDateTime(new Date('2018-11-21T23:59:59.999Z'));
+    expect(adapter.endOfMonth(testDate)).toEqualDateTime('2018-11-21T23:59:59.999Z');
   });
 
   it('Method: getYear', () => {
@@ -58,15 +60,15 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter, test
   });
 
   it('Method: setYear', () => {
-    expect(adapter.setYear(testDate, 1398)).toEqualDateTime(new Date('2019-10-30T11:44:00.000Z'));
+    expect(adapter.setYear(testDate, 1398)).toEqualDateTime('2019-10-30T11:44:00.000Z');
   });
 
   it('Method: setDate', () => {
-    expect(adapter.setDate(testDate, 9)).toEqualDateTime(new Date('2018-10-31T11:44:00.000Z'));
+    expect(adapter.setDate(testDate, 9)).toEqualDateTime('2018-10-31T11:44:00.000Z');
   });
 
   it('Method: getNextMonth', () => {
-    expect(adapter.getNextMonth(testDate)).toEqualDateTime(new Date('2018-11-29T11:44:00.000Z'));
+    expect(adapter.getNextMonth(testDate)).toEqualDateTime('2018-11-29T11:44:00.000Z');
   });
 
   it('Method: getPreviousMonth', () => {

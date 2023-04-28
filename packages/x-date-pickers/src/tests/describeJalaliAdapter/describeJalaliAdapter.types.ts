@@ -9,5 +9,4 @@ export interface DescribeJalaliAdapterParams {
 
 export type DescribeJalaliAdapterTestSuite = <TDate>(params: {
   adapter: MuiPickersAdapter<TDate>;
-  testDate: TDate;
 }) => void;

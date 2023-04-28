@@ -311,7 +311,8 @@ export const stubMatchMedia = (matches = true) =>
 export const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
-export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+export const cleanText = (text) =>
+  text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '').replace(/\u202f/g, ' ');
 
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));

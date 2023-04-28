@@ -15,7 +15,7 @@ import 'moment/locale/fr';
 import 'moment/locale/ko';
 import {
   describeGregorianAdapter,
-  TEST_DATE_ISO,
+  TEST_DATE_ISO_STRING,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterMoment />', () => {
@@ -24,7 +24,7 @@ describe('<AdapterMoment />', () => {
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterMoment({ locale: 'en' });
-      const date = adapter.date(TEST_DATE_ISO)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('getWeekdays: should start on Monday', () => {
         const result = adapter.getWeekdays();
@@ -43,7 +43,7 @@ describe('<AdapterMoment />', () => {
 
     describe('Russian', () => {
       const adapter = new AdapterMoment({ locale: 'ru' });
-      const date = adapter.date(TEST_DATE_ISO)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       beforeEach(() => {
         moment.locale('ru');

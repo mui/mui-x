@@ -5,30 +5,15 @@ import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import {
+  cleanText,
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
 } from 'test/utils/pickers-utils';
 import {
   describeGregorianAdapter,
-  TEST_DATE_ISO,
+  TEST_DATE_ISO_STRING,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
-
-const testDate = new Date(2018, 4, 15, 9, 35);
-const localizedTexts = {
-  undefined: {
-    placeholder: 'MM/DD/YYYY hh:mm aa',
-    value: '05/15/2018 09:35 AM',
-  },
-  fr: {
-    placeholder: 'DD/MM/YYYY hh:mm',
-    value: '15/05/2018 09:35',
-  },
-  de: {
-    placeholder: 'DD.MM.YYYY hh:mm',
-    value: '15.05.2018 09:35',
-  },
-};
 
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {
@@ -54,7 +39,7 @@ describe('<AdapterLuxon />', () => {
       });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING)!;
         const result = adapter.getWeekArray(date);
         expect(result[0][0].toFormat('ccc')).to.equal('пн');
       });
@@ -79,8 +64,8 @@ describe('<AdapterLuxon />', () => {
       ) => {
         const date = adapter.date('2020-02-01T23:44:00.000Z')!;
 
-        expect(adapter.format(date, format)).to.equal(expectedWithEn);
-        expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
+        expect(cleanText(adapter.format(date, format))).to.equal(expectedWithEn);
+        expect(cleanText(adapterRu.format(date, format))).to.equal(expectedWithRu);
       };
 
       expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
@@ -96,6 +81,22 @@ describe('<AdapterLuxon />', () => {
   });
 
   describe('Picker localization', () => {
+    const testDate = new Date(2018, 4, 15, 9, 35);
+    const localizedTexts = {
+      undefined: {
+        placeholder: 'MM/DD/YYYY hh:mm aa',
+        value: '05/15/2018 09:35 AM',
+      },
+      fr: {
+        placeholder: 'DD/MM/YYYY hh:mm',
+        value: '15/05/2018 09:35',
+      },
+      de: {
+        placeholder: 'DD.MM.YYYY hh:mm',
+        value: '15.05.2018 09:35',
+      },
+    };
+
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };

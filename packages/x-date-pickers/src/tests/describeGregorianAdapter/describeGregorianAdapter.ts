@@ -5,8 +5,6 @@ import { testLocalization } from './testLocalization';
 import { testFormat } from './testFormat';
 import { DescribeGregorianAdapterParams } from './describeGregorianAdapter.types';
 
-export const TEST_DATE_ISO = '2018-10-30T11:44:00.000Z';
-
 function innerGregorianDescribeAdapter<TDate>(
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
   params: DescribeGregorianAdapterParams,
@@ -17,8 +15,6 @@ function innerGregorianDescribeAdapter<TDate>(
     const testSuitParams = {
       ...params,
       adapter,
-      testDateISO: TEST_DATE_ISO,
-      testDate: adapter.date(TEST_DATE_ISO),
     };
 
     testCalculations(testSuitParams);

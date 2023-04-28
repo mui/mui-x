@@ -83,7 +83,7 @@ export interface MuiPickersAdapter<TDate> {
    * A boolean confirming that the adapter used is an MUI adapter.
    */
   isMUIAdapter: boolean;
-  formats: AdapterFormats<any>;
+  formats: AdapterFormats;
   locale?: any;
   moment?: any;
   dayjs?: any;

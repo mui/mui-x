@@ -8,7 +8,4 @@ export interface DescribeGregorianAdapterParams {
 
 export type DescribeGregorianAdapterTestSuite = <TDate>(params: {
   adapter: MuiPickersAdapter<TDate>;
-  testDate: TDate;
-  testDateISO: string;
-  formatDateTime: string;
 }) => void;
