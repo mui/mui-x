@@ -54,6 +54,8 @@
 ### Clocks
 
 - [TimeClock](/x/api/date-pickers/time-clock/)
+- [DigitalClock](/x/api/date-pickers/digital-clock/)
+- [MultiSectionDigitalClock](/x/api/date-pickers/multi-section-digital-clock/)
 
 ### Toolbars
 

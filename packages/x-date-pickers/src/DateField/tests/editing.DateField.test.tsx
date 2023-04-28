@@ -346,7 +346,7 @@ describe('<DateField /> - Editing', () => {
     );
   });
 
-  describeAdapters('Digit editing', DateField, ({ adapter, adapterName, testFieldChange }) => {
+  describeAdapters('Digit editing', DateField, ({ adapter, testFieldChange }) => {
     it('should set the day to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
         format: adapter.formats.dayOfMonth,
@@ -395,7 +395,7 @@ describe('<DateField /> - Editing', () => {
     it('should support 2-digits year format', () => {
       testFieldChange({
         // This format is not present in any of the adapter formats
-        format: adapterName.includes('moment') || adapterName.includes('dayjs') ? 'YY' : 'yy',
+        format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
         keyStrokes: [
           // 1st year: 22
           { value: '2', expected: '02' },
@@ -412,7 +412,7 @@ describe('<DateField /> - Editing', () => {
     it('should support 2-digits year format when a value is provided', () => {
       testFieldChange({
         // This format is not present in any of the adapter formats
-        format: adapterName.includes('moment') || adapterName.includes('dayjs') ? 'YY' : 'yy',
+        format: adapter.lib.includes('moment') || adapter.lib.includes('dayjs') ? 'YY' : 'yy',
         defaultValue: adapter.date(new Date(2022, 5, 4)),
         keyStrokes: [
           { value: '2', expected: '02' },
@@ -469,12 +469,12 @@ describe('<DateField /> - Editing', () => {
 
     it('should support day with letter suffix', function test() {
       // Luxon don't have any day format with a letter suffix
-      if (adapterName === 'luxon') {
+      if (adapter.lib === 'luxon') {
         this.skip();
       }
 
       testFieldChange({
-        format: adapterName === 'date-fns' ? 'do' : 'Do',
+        format: adapter.lib === 'date-fns' ? 'do' : 'Do',
         keyStrokes: [
           { value: '1', expected: '1st' },
           { value: '2', expected: '12th' },
@@ -485,7 +485,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should respect leading zeros when shouldRespectLeadingZeros = true', () => {
       testFieldChange({
-        format: ['luxon', 'date-fns'].includes(adapterName) ? 'd' : 'D',
+        format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: true,
         keyStrokes: [
           { value: '1', expected: '1' },
@@ -497,7 +497,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should not respect leading zeros when shouldRespectLeadingZeros = false', () => {
       testFieldChange({
-        format: ['luxon', 'date-fns'].includes(adapterName) ? 'd' : 'D',
+        format: ['luxon', 'date-fns'].includes(adapter.lib) ? 'd' : 'D',
         shouldRespectLeadingZeros: false,
         keyStrokes: [
           { value: '1', expected: '01' },
@@ -612,7 +612,7 @@ describe('<DateField /> - Editing', () => {
     },
   );
 
-  describeAdapters('Full editing scenarios', DateField, ({ adapterName, render, clickOnInput }) => {
+  describeAdapters('Full editing scenarios', DateField, ({ render, adapter, clickOnInput }) => {
     it('should move to the last day of the month when the current day exceeds it', () => {
       const onChange = spy();
 
@@ -633,7 +633,7 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, '11/31/YYYY');
 
       // TODO: Fix this behavior on day.js (`clampDaySection` generates an invalid date for the start of the month).
-      if (adapterName === 'dayjs') {
+      if (adapter.lib === 'dayjs') {
         return;
       }
 

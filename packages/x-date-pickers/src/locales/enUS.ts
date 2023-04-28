@@ -41,6 +41,9 @@ const enUSPickers: PickersLocaleText<any> = {
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} seconds`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Select ${view}`,
+
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Week number',
   calendarWeekNumberHeaderText: '#',

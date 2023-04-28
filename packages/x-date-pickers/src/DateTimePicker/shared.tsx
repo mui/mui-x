@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { DateOrTimeView, DateTimeValidationError } from '../models';
+import { DateOrTimeView, DateTimeValidationError, TimeView } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlotsComponent,
@@ -11,7 +11,6 @@ import {
 import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
-  ExportedTimeClockProps,
 } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -32,6 +31,7 @@ import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -64,7 +64,7 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
-    ExportedTimeClockProps<TDate> {
+    ExportedBaseClockProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
@@ -109,7 +109,8 @@ export interface BaseDateTimePickerProps<TDate>
     PickerViewRendererLookup<
       TDate | null,
       DateOrTimeView,
-      DateViewRendererProps<TDate, DateOrTimeView> & TimeViewRendererProps<TDate, DateOrTimeView>,
+      DateViewRendererProps<TDate, DateOrTimeView> &
+        TimeViewRendererProps<TimeView, BaseClockProps<TDate, TimeView>>,
       {}
     >
   >;

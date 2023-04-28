@@ -11,24 +11,19 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 <p class="description">The Time Picker component lets the user select a time.</p>
 
-:::info
-The component by default currently does not ship with **time** picker view experience on **desktop**.
-It was a conscious decision and a first step towards having a more user friendly desktop experience [discussed in #4483](https://github.com/mui/mui-x/issues/4483).
-If a desktop view experience is essential, you can revert to it by following the suggestion [in the migration guide](/x/migration/migration-pickers-v5/#stop-rendering-a-clock-on-desktop).
-:::
-
 ## Basic usage
 
 {{"demo": "BasicTimePicker.js"}}
 
 ## Component composition
 
-The component is built using the `TimeField` for the keyboard editing and the `TimeClock` for the view editing.
+The component is built using the `TimeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
 All the documented props of those two components can also be passed to the Time Picker component.
 
 Check-out their documentation page for more information:
 
 - [Time Field](/x/react-date-pickers/time-field/)
+- [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
 
 ## Uncontrolled vs. Controlled

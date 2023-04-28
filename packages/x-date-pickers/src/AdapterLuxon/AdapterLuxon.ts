@@ -31,11 +31,9 @@ const formatTokenMap: FieldFormatTokenMap = {
   c: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ccc: { sectionType: 'weekDay', contentType: 'letter' },
   cccc: { sectionType: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 2 },
   EEE: { sectionType: 'weekDay', contentType: 'letter' },
   EEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
 
   // Meridiem
   a: 'meridiem',
@@ -211,7 +209,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     );
   };
 
-  // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
   };

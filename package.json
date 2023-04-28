@@ -1,5 +1,5 @@
 {
-  "version": "6.2.1",
+  "version": "6.3.0",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
@@ -106,8 +106,8 @@
     "@types/requestidlecallback": "^0.3.5",
     "@types/sinon": "^10.0.14",
     "@types/yargs": "^17.0.24",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
-    "@typescript-eslint/parser": "^5.58.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
     "axe-core": "4.7.0",
     "babel-loader": "^9.1.2",
     "babel-plugin-istanbul": "^6.1.1",
@@ -169,7 +169,7 @@
     "string-replace-loader": "^3.1.0",
     "typescript": "^5.0.4",
     "util": "^0.12.5",
-    "webpack": "^5.79.0",
+    "webpack": "^5.81.0",
     "webpack-cli": "^5.0.2",
     "yargs": "^17.7.1",
     "yarn-deduplicate": "^6.0.1"

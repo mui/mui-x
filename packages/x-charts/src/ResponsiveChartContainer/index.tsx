@@ -43,7 +43,7 @@ type ChartContainerProps = LayoutConfig &
   CartesianContextProviderProps;
 
 export function ResponsiveChartContainer(props: ChartContainerProps) {
-  const { series, margin, xAxis, yAxis, children } = props;
+  const { series, margin, xAxis, colors, yAxis, children } = props;
   const ref = React.useRef<SVGSVGElement>(null);
 
   const [containerRef, width, height] = useChartDimensions();
@@ -51,7 +51,7 @@ export function ResponsiveChartContainer(props: ChartContainerProps) {
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
       <DrawingProvider width={width} height={height} margin={margin} svgRef={ref}>
-        <SeriesContextProvider series={series}>
+        <SeriesContextProvider series={series} colors={colors}>
           <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
             <InteractionProvider>
               <Surface width={width} height={height} ref={ref}>
