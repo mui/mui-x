@@ -455,6 +455,7 @@ const pages: MuiPage[] = [
           icon: ChartIcon,
           children: [
             { pathname: '/x/react-charts', title: '🚧 Overview' },
+            { pathname: '/x/react-charts/styling', title: 'Styling' },
             { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
             { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
             { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
