@@ -69,7 +69,7 @@ export default function CSSCustomization() {
         {
           id: 'Years',
           data: years,
-          scaleName: 'time',
+          scaleType: 'time',
           valueFormatter: (date) => date.getFullYear(),
         },
       ]}

@@ -1,17 +1,12 @@
 import * as React from 'react';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { DrawingProvider } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
-import { LayoutConfig } from '../models/layout';
+import { SeriesContextProvider } from '../context/SeriesContextProvider';
 import { Surface } from '../Surface';
-import {
-  CartesianContextProvider,
-  CartesianContextProviderProps,
-} from '../context/CartesianContextProvider';
+import { CartesianContextProvider } from '../context/CartesianContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
+import { ChartContainerProps } from '../ChartContainer';
+import { Tooltip } from '../Tooltip';
 
 const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, number] => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -38,12 +33,10 @@ const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, 
   return [ref, width, height];
 };
 
-type ChartContainerProps = LayoutConfig &
-  SeriesContextProviderProps &
-  CartesianContextProviderProps;
+export type ResponsiveChartContainerProps = Omit<ChartContainerProps, 'width' | 'height'>;
 
-export function ResponsiveChartContainer(props: ChartContainerProps) {
-  const { series, margin, xAxis, colors, yAxis, children } = props;
+export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
+  const { series, margin, xAxis, yAxis, colors, sx, title, desc, tooltip, children } = props;
   const ref = React.useRef<SVGSVGElement>(null);
 
   const [containerRef, width, height] = useChartDimensions();
@@ -54,8 +47,9 @@ export function ResponsiveChartContainer(props: ChartContainerProps) {
         <SeriesContextProvider series={series} colors={colors}>
           <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
             <InteractionProvider>
-              <Surface width={width} height={height} ref={ref}>
+              <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
                 {children}
+                <Tooltip {...tooltip} />
               </Surface>
             </InteractionProvider>
           </CartesianContextProvider>
