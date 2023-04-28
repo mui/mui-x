@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
   <img src="https://user-images.githubusercontent.com/4941090/235072007-de39a397-e4a4-4c98-8e10-5ee4ad440108.gif" width="494" />
 
-- ✨ Picker fields [will include a leading zero](https://mui.com/x/react-date-pickers/adapters-locale/#respect-leading-zeros-in-fields) on digit sections (#8527) @flaviendelangle
+- ✨ Picker fields [now always include a leading zero](https://mui.com/x/react-date-pickers/adapters-locale/#respect-leading-zeros-in-fields) on digit sections (#8527) @flaviendelangle
 - 🌍 Improve Chinese (zh-CN), French (fr-FR), and Turkish (tr-TR) locales
 - 🐞 Bugfixes
 - 📚 Documentation improvements
