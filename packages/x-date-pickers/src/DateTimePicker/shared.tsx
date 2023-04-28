@@ -19,7 +19,11 @@ import {
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
 } from './DateTimePickerTabs';
-import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  DateTimeValidationProps,
+} from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
@@ -64,20 +68,13 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
-    ExportedBaseClockProps<TDate> {
+    ExportedBaseClockProps<TDate>,
+    DateTimeValidationProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
    */
   ampmInClock?: boolean;
-  /**
-   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
-   */
-  minDateTime?: TDate;
-  /**
-   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
-   */
-  maxDateTime?: TDate;
   /**
    * Overridable components.
    * @default {}
