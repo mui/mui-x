@@ -27,6 +27,7 @@ import {
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 
 interface GridBodyProps {
+  children?: React.ReactNode;
   ColumnHeadersProps?: Record<string, any>;
   VirtualScrollerComponent: React.JSXElementConstructor<
     React.HTMLAttributes<HTMLDivElement> & {
@@ -37,7 +38,7 @@ interface GridBodyProps {
 }
 
 function GridBody(props: GridBodyProps) {
-  const { VirtualScrollerComponent, ColumnHeadersProps } = props;
+  const { VirtualScrollerComponent, ColumnHeadersProps, children } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -175,6 +176,7 @@ function GridBody(props: GridBodyProps) {
           disableVirtualization={isVirtualizationDisabled}
         />
       )}
+      {children}
     </GridMainContainer>
   );
 }
