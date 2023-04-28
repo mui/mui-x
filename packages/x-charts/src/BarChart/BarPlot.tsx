@@ -59,7 +59,9 @@ export function BarPlot() {
             // @ts-ignore TODO: fix when adding a correct API for customisation
             const { stackedData, color } = series[seriesId];
 
-            return stackedData.map(([baseline, value], dataIndex: number) => {
+            return stackedData.map((values, dataIndex: number) => {
+              const baseline = Math.min(...values);
+              const value = Math.max(...values);
               return (
                 <rect
                   key={`${seriesId}-${dataIndex}`}
