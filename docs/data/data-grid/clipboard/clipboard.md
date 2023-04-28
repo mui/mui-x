@@ -87,6 +87,22 @@ The demo below shows how to use these events to show a loading indicator while t
 
 {{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
 
+### Format of the pasted data
+
+By default, the clipboard paste expects specific format of the clipboard content: the cell values should be separated by a tab (`\t`) character and the rows should be separated by a new line (`\n`) character.
+
+You can use the `unstable_splitClipboardText` prop to support a different format:
+
+```tsx
+<DataGridPremium
+  {...otherProps}
+  // support comma separated values
+  unstable_splitClipboardText={(text) =>
+    text.split('\n').map((row) => row.split(','))
+  }
+/>
+```
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
