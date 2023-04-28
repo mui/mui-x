@@ -73,6 +73,9 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({ adapter })
       '2018-10-30T00:00:00.000Z',
     );
 
+    // Empty string
+    expect(adapter.parse('', adapter.formats.keyboardDate)).to.equal(null);
+
     // Invalid input
     expect(adapter.isValid(adapter.parse('99/99/9999', adapter.formats.keyboardDate))).to.equal(
       false,
@@ -148,6 +151,14 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({ adapter })
       expect(adapter.getDiff(testDateLocale, adapter.date('2018-05-29')!, 'quarters')).to.equal(1);
       expect(adapter.getDiff(testDateLocale, adapter.date('2018-09-29')!, 'days')).to.equal(31);
       expect(adapter.getDiff(testDateLocale, adapter.date('2018-09-29')!, 'weeks')).to.equal(4);
+    });
+
+    it('should compute the diff with string "comparing" param', () => {
+      expect(adapter.getDiff(testDateLocale, '2017-09-29', 'years')).to.equal(1);
+      expect(adapter.getDiff(testDateLocale, '2018-08-29', 'months')).to.equal(2);
+      expect(adapter.getDiff(testDateLocale, '2018-05-29', 'quarters')).to.equal(1);
+      expect(adapter.getDiff(testDateLocale, '2018-09-29', 'days')).to.equal(31);
+      expect(adapter.getDiff(testDateLocale, '2018-09-29', 'weeks')).to.equal(4);
     });
   });
 

@@ -14,14 +14,17 @@ import {
   expectInputValue,
   MockedDataTransfer,
 } from 'test/utils/pickers-utils';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/de';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
 } from 'packages/x-date-pickers/src/tests/describeGregorianAdapter';
+
+import 'dayjs/locale/fr';
+import 'dayjs/locale/de';
+// We import it here just to have the typing
+import 'dayjs/plugin/utc';
 
 describe('<AdapterDayjs />', () => {
   describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss', locale: 'en' });
@@ -93,6 +96,13 @@ describe('<AdapterDayjs />', () => {
       expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
+    });
+
+    it('should warn when trying to use a non-loaded locale', () => {
+      const adapter = new AdapterDayjs({ locale: 'pl' });
+      expect(() => adapter.is12HourCycleInCurrentLocale()).toWarnDev(
+        'Your locale has not been found.',
+      );
     });
   });
 
