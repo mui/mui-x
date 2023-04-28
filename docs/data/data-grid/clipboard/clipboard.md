@@ -38,21 +38,10 @@ The paste operation only affects cells in the [columns that are `editable`](/x/r
 Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.
 See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and-value-setter) editing section for more details.
 
-The priority of the clipboard paste is the following, from highest to lowest:
+The behavior of the clipboard paste operation depends on the selection state of the data grid and the data pasted from clipboard.
+The priority is the following, from highest to lowest:
 
-1. If more than one cell is selected (see [Cell selection<span class="plan-premium" title="Premium plan"></span>](/x/react-data-grid/cell-selection/)):
-
-   1. If the clipboard contains a single cell, it is pasted to each selected cell
-   2. If the clipboard contains multiple cells/rows, they are pasted starting from the first selected cell, but won't leak the selected range
-
-2. If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)):
-
-   1. If the clipboard contains a single row, it is pasted to each selected row
-   2. If the clipboard contains multiple rows, they are pasted starting from the first selected row, but won't leak the selected range
-
-3. If a single cell is selected:
-   1. If the clipboard contains a single cell, it is pasted to the selected cell
-   2. If the clipboard contains multiple cells/rows, the data is pasted starting from the selected cell, but won't leak the selected range
+{{"demo": "ClipboardPastePriority.js", "bg": "inline", "hideToolbar": true}}
 
 {{"demo": "ClipboardPaste.js", "bg": "inline"}}
 
