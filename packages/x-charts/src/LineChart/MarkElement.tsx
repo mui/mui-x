@@ -50,7 +50,6 @@ const MarkElementPath = styled('path', {
   fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
   stroke: ownerState.color,
   strokeWidth: 2,
-  pointerEvents: 'none',
 }));
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &

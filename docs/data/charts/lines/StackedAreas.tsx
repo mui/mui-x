@@ -57,11 +57,19 @@ const GermanyGDPperCapita = [
 export default function StackedAreas() {
   return (
     <LineChart
-      xAxis={[{ id: 'Years', data: years, scaleName: 'time' }]}
+      xAxis={[
+        {
+          id: 'Years',
+          data: years,
+          scaleName: 'time',
+          valueFormatter: (date) => date.getFullYear(),
+        },
+      ]}
       series={[
         {
           type: 'line',
           id: 'France',
+          label: 'French GDP per capite',
           xAxisKey: 'Years',
           data: FranceGDPperCapita,
           stack: 'total',
@@ -70,6 +78,7 @@ export default function StackedAreas() {
         {
           type: 'line',
           id: 'Germany',
+          label: 'German GDP per capite',
           xAxisKey: 'Years',
           data: GermanyGDPperCapita,
           stack: 'total',
@@ -78,6 +87,7 @@ export default function StackedAreas() {
         {
           type: 'line',
           id: 'United Kingdom',
+          label: 'UK GDP per capite',
           xAxisKey: 'Years',
           data: UKGDPperCapita,
           stack: 'total',

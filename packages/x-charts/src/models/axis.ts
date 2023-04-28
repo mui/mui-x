@@ -35,17 +35,19 @@ export type AxisScaleMapping =
       scale: ScaleLinear<any, any>;
     };
 
-export type AxisConfig = {
+export type AxisConfig<V = any> = {
   id: string;
   scaleName?: ScaleName;
   min?: number;
   max?: number;
-  data?: any[];
+  data?: V[];
+  valueFormatter?: (value: V) => string;
 };
 
-export type AxisDefaultized = {
+export type AxisDefaultized<V = any> = {
   id: string;
   min?: number;
   max?: number;
-  data?: any[];
+  data?: V[];
+  valueFormatter?: (value: V) => string;
 } & AxisScaleMapping;
