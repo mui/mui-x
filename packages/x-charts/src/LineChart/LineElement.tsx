@@ -41,7 +41,7 @@ const LineElementPath = styled('path', {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: LineElementOwnerState }>(({ ownerState }) => ({
   stroke: ownerState.color,
-  strokeWidth: 5,
+  strokeWidth: 2,
   strokeLinejoin: 'round',
   fill: 'none',
   opacity: ownerState.isNotHighlighted ? 0.3 : 1,

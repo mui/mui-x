@@ -7,7 +7,7 @@ import { expectInputValue, getCleanedSelectedContent, getTextbox } from 'test/ut
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<TimeField /> - Editing', () => {
-  describeAdapters('key: ArrowDown', TimeField, ({ adapter, adapterName, testFieldKeyPress }) => {
+  describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (ArrowDown)', () => {
       it('should set the hour to 23 when no value is provided', () => {
         testFieldKeyPress({
@@ -77,7 +77,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 0, 12, 25)),
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '11:12 am' : '11:12 AM',
+          expectedValue: '11:12 AM',
         });
       });
 
@@ -85,7 +85,7 @@ describe('<TimeField /> - Editing', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? 'hh:mm pm' : 'hh:mm PM',
+          expectedValue: 'hh:mm PM',
           valueToSelect: 'aa',
         });
       });
@@ -95,8 +95,8 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM',
-          valueToSelect: adapterName === 'date-fns' ? 'am' : 'AM',
+          expectedValue: '02:12 PM',
+          valueToSelect: 'AM',
         });
       });
 
@@ -105,14 +105,14 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '02:12 am' : '02:12 AM',
-          valueToSelect: adapterName === 'date-fns' ? 'pm' : 'PM',
+          expectedValue: '02:12 AM',
+          valueToSelect: 'PM',
         });
       });
     });
   });
 
-  describeAdapters('key: ArrowUp', TimeField, ({ adapter, adapterName, testFieldKeyPress }) => {
+  describeAdapters('key: ArrowUp', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (ArrowUp)', () => {
       it('should set the hour to 0 when no value is provided', () => {
         testFieldKeyPress({
@@ -173,7 +173,7 @@ describe('<TimeField /> - Editing', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? 'hh:mm am' : 'hh:mm AM',
+          expectedValue: 'hh:mm AM',
           cursorPosition: 14,
         });
       });
@@ -183,7 +183,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM',
+          expectedValue: '02:12 PM',
           cursorPosition: 14,
         });
       });
@@ -193,7 +193,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '02:12 am' : '02:12 AM',
+          expectedValue: '02:12 AM',
           cursorPosition: 14,
         });
       });
@@ -281,7 +281,7 @@ describe('<TimeField /> - Editing', () => {
     },
   );
 
-  describeAdapters('Letter editing', TimeField, ({ adapter, adapterName, testFieldChange }) => {
+  describeAdapters('Letter editing', TimeField, ({ adapter, testFieldChange }) => {
     it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
@@ -297,9 +297,7 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
         readOnly: true,
         // Press "a"
-        keyStrokes: [
-          { value: '02:12 a', expected: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM' },
-        ],
+        keyStrokes: [{ value: '02:12 a', expected: '02:12 PM' }],
       });
     });
 
@@ -308,9 +306,7 @@ describe('<TimeField /> - Editing', () => {
         format: adapter.formats.fullTime12h,
         cursorPosition: 17,
         // Press "a"
-        keyStrokes: [
-          { value: 'hh:mm a', expected: adapterName === 'date-fns' ? 'hh:mm am' : 'hh:mm AM' },
-        ],
+        keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm AM' }],
       });
     });
 
@@ -319,9 +315,7 @@ describe('<TimeField /> - Editing', () => {
         format: adapter.formats.fullTime12h,
         cursorPosition: 17,
         // Press "p"
-        keyStrokes: [
-          { value: 'hh:mm p', expected: adapterName === 'date-fns' ? 'hh:mm pm' : 'hh:mm PM' },
-        ],
+        keyStrokes: [{ value: 'hh:mm p', expected: 'hh:mm PM' }],
       });
     });
 
@@ -331,9 +325,7 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
         cursorPosition: 17,
         // Press "a"
-        keyStrokes: [
-          { value: '02:12 a', expected: adapterName === 'date-fns' ? '02:12 am' : '02:12 AM' },
-        ],
+        keyStrokes: [{ value: '02:12 a', expected: '02:12 AM' }],
       });
     });
 
@@ -343,9 +335,7 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
         cursorPosition: 17,
         // Press "p"
-        keyStrokes: [
-          { value: '02:12 p', expected: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM' },
-        ],
+        keyStrokes: [{ value: '02:12 p', expected: '02:12 PM' }],
       });
     });
   });

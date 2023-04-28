@@ -25,6 +25,8 @@ Described below are the steps needed to migrate from v5 to v6.
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
 
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
+
 ```sh
 // Data Grid specific
 npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
