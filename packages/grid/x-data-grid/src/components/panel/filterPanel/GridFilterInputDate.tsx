@@ -6,12 +6,28 @@ import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
-  TextFieldProps & { type?: 'date' | 'datetime-local' };
+  TextFieldProps & {
+    type?: 'date' | 'datetime-local';
+    headerFilterMenu?: React.ReactNode | null;
+    isFilterActive?: boolean;
+  };
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
 function GridFilterInputDate(props: GridFilterInputDateProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, InputProps, ...other } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    InputProps,
+    headerFilterMenu,
+    isFilterActive,
+    tabIndex,
+    disabled,
+    ...other
+  } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
@@ -60,9 +76,12 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       inputRef={focusElementRef}
       InputProps={{
         ...(applying ? { endAdornment: <rootProps.slots.loadIcon /> } : {}),
+        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
+        disabled,
         ...InputProps,
         inputProps: {
           max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
+          tabIndex,
           ...InputProps?.inputProps,
         },
       }}

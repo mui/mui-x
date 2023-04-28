@@ -10,10 +10,24 @@ export const SUBMIT_FILTER_STROKE_TIME = 500;
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'text' | 'number' | 'date' | 'datetime-local';
+    isFilterActive?: boolean;
+    headerFilterMenu?: React.ReactNode | null;
   };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    tabIndex,
+    disabled,
+    isFilterActive,
+    headerFilterMenu,
+    InputProps,
+    ...others
+  } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
@@ -46,8 +60,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     setFilterValueState(String(itemValue));
   }, [item.value]);
 
-  const InputProps = applying ? { endAdornment: <rootProps.slots.loadIcon /> } : others.InputProps;
-
   return (
     <rootProps.slots.baseTextField
       id={id}
@@ -57,7 +69,16 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       onChange={onFilterChange}
       variant="standard"
       type={type || 'text'}
-      InputProps={InputProps}
+      InputProps={{
+        ...(applying ? { endAdornment: <rootProps.slots.loadIcon /> } : {}),
+        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
+        disabled,
+        ...InputProps,
+        inputProps: {
+          tabIndex,
+          ...InputProps?.inputProps,
+        },
+      }}
       InputLabelProps={{
         shrink: true,
       }}

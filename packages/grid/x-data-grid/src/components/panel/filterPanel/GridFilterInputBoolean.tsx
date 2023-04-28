@@ -5,10 +5,24 @@ import { unstable_useId as useId } from '@mui/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
-export type GridFilterInputBooleanProps = GridFilterInputValueProps & TextFieldProps;
+export type GridFilterInputBooleanProps = GridFilterInputValueProps &
+  TextFieldProps & {
+    headerFilterMenu?: React.ReactNode | null;
+    isFilterActive?: boolean;
+  };
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
-  const { item, applyValue, apiRef, focusElementRef, ...others } = props;
+  const {
+    item,
+    applyValue,
+    apiRef,
+    focusElementRef,
+    headerFilterMenu,
+    isFilterActive,
+    tabIndex,
+    label: labelProp,
+    ...others
+  } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const rootProps = useGridRootProps();
 
@@ -33,10 +47,10 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     setFilterValueState(item.value || '');
   }, [item.value]);
 
-  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+  const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <React.Fragment>
+    <rootProps.slots.baseFormControl fullWidth>
       <rootProps.slots.baseInputLabel
         {...rootProps.slotProps?.baseInputLabel}
         id={labelId}
@@ -54,7 +68,8 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
         variant="standard"
         native={isSelectNative}
         displayEmpty
-        inputProps={{ ref: focusElementRef }}
+        startAdornment={isFilterActive ? headerFilterMenu : null}
+        inputProps={{ ref: focusElementRef, tabIndex }}
         {...others}
         {...baseSelectProps}
       >
@@ -80,7 +95,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           {apiRef.current.getLocaleText('filterValueFalse')}
         </rootProps.slots.baseSelectOption>
       </rootProps.slots.baseSelect>
-    </React.Fragment>
+    </rootProps.slots.baseFormControl>
   );
 }
 

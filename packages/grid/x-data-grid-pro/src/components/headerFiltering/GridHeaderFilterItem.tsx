@@ -271,31 +271,23 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             applyValue={applyFilterChanges}
             onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
             onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
-            fullWidth
             placeholder={apiRef.current.getLocaleText('columnMenuFilter')}
             label={isFilterActive ? capitalize(label) : ' '}
+            isFilterActive={isFilterActive}
+            headerFilterMenu={
+              <GridHeaderFilterAdorment
+                operators={filterOperators!}
+                item={item}
+                field={colDef.field}
+                applyFilterChanges={applyFilterChanges}
+                headerFilterMenuRef={headerFilterMenuRef}
+                buttonRef={buttonRef}
+              />
+            }
+            disabled={isNoInputOperator}
+            tabIndex={-1}
             {...currentOperator?.InputComponentProps}
             {...InputComponentProps}
-            InputProps={{
-              disabled: isNoInputOperator,
-              componentsProps: {
-                input: {
-                  tabIndex: -1,
-                },
-              },
-              startAdornment: isFilterActive ? (
-                <GridHeaderFilterAdorment
-                  operators={filterOperators!}
-                  item={item}
-                  field={colDef.field}
-                  applyFilterChanges={applyFilterChanges}
-                  headerFilterMenuRef={headerFilterMenuRef}
-                  buttonRef={buttonRef}
-                />
-              ) : null,
-              ...currentOperator?.InputComponentProps?.InputProps,
-              ...InputComponentProps?.InputProps,
-            }}
           />
         ) : null}
       </div>

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
@@ -43,6 +44,8 @@ const renderSingleSelectOptions = ({
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps &
   Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
+    headerFilterMenu?: React.ReactNode;
+    isFilterActive?: boolean;
     type?: 'singleSelect';
   };
 
@@ -55,6 +58,11 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     focusElementRef,
     getOptionLabel: getOptionLabelProp,
     getOptionValue: getOptionValueProp,
+    placeholder,
+    tabIndex,
+    label: labelProp,
+    headerFilterMenu,
+    isFilterActive,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -85,7 +93,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   }, [resolvedColumn]);
 
   const onFilterChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (event: SelectChangeEvent) => {
       let value = event.target.value;
 
       // NativeSelect casts the value to a string.
@@ -124,10 +132,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     return null;
   }
 
-  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+  const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <React.Fragment>
+    <rootProps.slots.baseFormControl>
       <rootProps.slots.baseInputLabel
         {...rootProps.slotProps?.baseInputLabel}
         id={labelId}
@@ -142,11 +150,13 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         labelId={labelId}
         value={filterValueState}
         onChange={onFilterChange}
+        startAdornment={isFilterActive ? headerFilterMenu : null}
         variant="standard"
         type={type || 'text'}
         inputProps={{
+          tabIndex,
           ref: focusElementRef,
-          placeholder: apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+          placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
         }}
         native={isSelectNative}
         {...others}
@@ -161,7 +171,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
         })}
       </rootProps.slots.baseSelect>
-    </React.Fragment>
+    </rootProps.slots.baseFormControl>
   );
 }
 
