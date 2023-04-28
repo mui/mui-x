@@ -31,11 +31,6 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const props = useDataGridProProps(inProps);
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
-  const headerFiltersRef = React.useRef<HTMLDivElement>(null);
-
-  privateApiRef.current.register('private', {
-    headerFiltersElementRef: headerFiltersRef,
-  });
 
   const columnHeaderFilterTabIndexState = useGridSelector(
     privateApiRef,
@@ -70,7 +65,6 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
           VirtualScrollerComponent={DataGridProVirtualScroller}
           ColumnHeadersProps={{
             pinnedColumns,
-            headerFiltersRef,
             columnHeaderFilterTabIndexState,
             hasOtherElementInTabSequence,
           }}

@@ -20,7 +20,6 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 export interface UseGridColumnHeadersProProps extends UseGridColumnHeadersProps {
   columnHeaderFilterTabIndexState: GridColumnIdentifier | null;
-  headerFiltersRef: React.RefObject<HTMLDivElement>;
 }
 
 type OwnerState = DataGridProProcessedProps;
@@ -36,8 +35,12 @@ const GridHeaderFilterRow = styled('div', {
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
   const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity(props);
-  const { headerFiltersRef, headerGroupingMaxDepth } = props;
+  const { headerGroupingMaxDepth } = props;
   const apiRef = useGridPrivateApiContext();
+  const headerFiltersRef = React.useRef<HTMLDivElement>(null);
+  apiRef.current.register('private', {
+    headerFiltersElementRef: headerFiltersRef,
+  });
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps() as DataGridProProcessedProps;
   const disableHeaderFiltering = !rootProps.experimentalFeatures?.headerFiltering;
