@@ -1,3 +1,4 @@
+import { CurveType } from '../../internals/getCurve';
 import { DefaultizedProps } from '../helpers';
 import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
 
@@ -6,6 +7,8 @@ export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
   data: number[];
   stack?: string;
   area?: any;
+  label?: string;
+  curve?: CurveType;
 }
 
 /**
@@ -23,4 +26,4 @@ export type LineItemIdentifier = {
 
 export interface DefaultizedLineSeriesType
   extends DefaultizedProps<LineSeriesType, 'xAxisKey' | 'yAxisKey'>,
-    DefaultizedCommonSeriesType {}
+    DefaultizedCommonSeriesType<number> {}

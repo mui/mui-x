@@ -1,12 +1,25 @@
 import * as React from 'react';
 import { ScatterPlot } from './ScatterPlot';
-import { XAxis } from '../XAxis/XAxis';
-import { YAxis } from '../YAxis/YAxis';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { Axis, AxisProps } from '../Axis';
 
-export function ScatterChart(props: Omit<ChartContainerProps, 'children'>) {
-  const { xAxis, yAxis, series, width, height, margin, colors } = props;
+export interface ScatterChartProps extends ChartContainerProps, AxisProps {}
+export function ScatterChart(props: ScatterChartProps) {
+  const {
+    xAxis,
+    yAxis,
+    series,
+    width,
+    height,
+    margin,
+    colors,
+    sx,
+    topAxis,
+    leftAxis,
+    rightAxis,
+    bottomAxis,
+    children,
+  } = props;
 
   return (
     <ChartContainer
@@ -17,25 +30,12 @@ export function ScatterChart(props: Omit<ChartContainerProps, 'children'>) {
       colors={colors}
       xAxis={xAxis}
       yAxis={yAxis}
+      sx={sx}
       tooltip={{ trigger: 'item' }}
     >
       <ScatterPlot />
-      <XAxis
-        label="Bottom X axis"
-        position="bottom"
-        axisId={xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
-      />
-      <XAxis
-        label="Top X axis"
-        position="top"
-        axisId={xAxis?.[1]?.id ?? xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
-      />
-      <YAxis label="Left Y axis" position="left" axisId={yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY} />
-      <YAxis
-        label="Right Y axis"
-        position="right"
-        axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
-      />
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      {children}
     </ChartContainer>
   );
 }

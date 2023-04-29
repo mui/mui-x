@@ -1,7 +1,7 @@
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { YearCalendarClasses } from './yearCalendarClasses';
-import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
+import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
 
 export interface ExportedYearCalendarProps {
   /**

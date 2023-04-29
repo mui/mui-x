@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { isBandScale } from '../hooks/useScale';
+import { getValueToPositionMapper, isBandScale } from '../hooks/useScale';
 
 export type HighlightProps = {
   highlight: {
@@ -32,7 +32,7 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
   //   interactionApi?.listenYAxis(USED_Y_AXIS_ID);
   // }, [USED_X_AXIS_ID, USED_Y_AXIS_ID, interactionApi]);
 
-  if (isBandScale(xScale)) {
+  if (isBandScale(xScale) && !xHighlight) {
     if (axis.x === null) {
       return null;
     }
@@ -51,11 +51,13 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
       />
     );
   }
+
+  const getXPosition = getValueToPositionMapper(xScale);
   return (
     <React.Fragment>
       {xHighlight && axis.x !== null && (
         <path
-          d={`M ${xScale(axis.x.value)} ${yScale(yScale.domain()[0])} L ${xScale(
+          d={`M ${getXPosition(axis.x.value)} ${yScale(yScale.domain()[0])} L ${getXPosition(
             axis.x.value,
           )} ${yScale(yScale.domain().at(-1))}`}
           stroke="black"

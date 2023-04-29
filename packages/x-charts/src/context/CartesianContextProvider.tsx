@@ -111,20 +111,20 @@ export function CartesianContextProvider({
 
     const allXAxis: AxisConfig[] = [
       ...(xAxis ?? []),
-      { id: DEFAULT_X_AXIS_KEY, scaleName: 'linear' },
+      { id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' },
     ];
 
     const completedXAxis: DefaultizedAxisConfig = {};
     allXAxis.forEach((axis) => {
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters);
 
-      const scaleName = axis.scaleName ?? 'linear';
+      const scaleType = axis.scaleType ?? 'linear';
       completedXAxis[axis.id] = {
         ...axis,
-        scaleName,
-        scale: getScale(scaleName)
+        scaleType,
+        scale: getScale(scaleType)
           // @ts-ignore
-          .domain(scaleName === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
           // @ts-ignore
           .range([drawingArea.left, drawingArea.left + drawingArea.width]),
       };
@@ -132,20 +132,20 @@ export function CartesianContextProvider({
 
     const allYAxis: AxisConfig[] = [
       ...(yAxis ?? []),
-      { id: DEFAULT_Y_AXIS_KEY, scaleName: 'linear' },
+      { id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' },
     ];
 
     const completedYAxis: DefaultizedAxisConfig = {};
     allYAxis.forEach((axis) => {
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters);
 
-      const scaleName: ScaleName = axis.scaleName ?? 'linear';
+      const scaleType: ScaleName = axis.scaleType ?? 'linear';
       completedYAxis[axis.id] = {
         ...axis,
-        scaleName,
-        scale: getScale(scaleName)
+        scaleType,
+        scale: getScale(scaleType)
           // @ts-ignore
-          .domain(scaleName === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
           // @ts-ignore
           .range([drawingArea.top + drawingArea.height, drawingArea.top]),
       };

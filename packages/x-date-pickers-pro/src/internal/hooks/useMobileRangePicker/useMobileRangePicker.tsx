@@ -13,8 +13,8 @@ import {
   ExportedBaseToolbarProps,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
-import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import useId from '@mui/utils/useId';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
@@ -30,12 +30,11 @@ const releaseInfo = getReleaseInfo();
 
 export const useMobileRangePicker = <
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
-  validator,
+  ...pickerParams
 }: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
@@ -72,10 +71,9 @@ export const useMobileRangePicker = <
     TExternalProps,
     MobileRangePickerAdditionalViewProps
   >({
+    ...pickerParams,
     props,
-    valueManager,
     wrapperVariant: 'mobile',
-    validator,
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,
