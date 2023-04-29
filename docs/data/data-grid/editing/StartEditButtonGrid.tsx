@@ -130,6 +130,10 @@ export default function StartEditButtonGrid() {
     [cellMode],
   );
 
+  const handleCellEditStop: GridEventListener<'cellEditStop'> = (params, event) => {
+    event.defaultMuiPrevented = true;
+  };
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
@@ -137,6 +141,7 @@ export default function StartEditButtonGrid() {
         columns={columns}
         onCellKeyDown={handleCellKeyDown}
         cellModesModel={cellModesModel}
+        onCellEditStop={handleCellEditStop}
         onCellModesModelChange={(model) => setCellModesModel(model)}
         slots={{
           toolbar: EditToolbar,
