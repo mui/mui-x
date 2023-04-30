@@ -165,6 +165,26 @@ function SingleSelectColDef() {
             type: 'singleSelect',
             valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
           },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            valueOptions: [
+              { value: 'UK', label: 'United Kingdom' },
+              { value: 'ES', label: 'Spain' },
+              { value: 'BR', label: 'Brazil' },
+            ],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            getOptionValue: (value: any) => value.code,
+            getOptionLabel: (value: any) => value.label,
+            valueOptions: [
+              { code: 'UK', name: 'United Kingdom' },
+              { code: 'ES', name: 'Spain' },
+              { code: 'BR', name: 'Brazil' },
+            ],
+          },
         ]}
       />
     </div>

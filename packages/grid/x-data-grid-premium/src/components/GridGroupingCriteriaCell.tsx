@@ -43,8 +43,8 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.components.GroupingCriteriaCollapseIcon
-    : rootProps.components.GroupingCriteriaExpandIcon;
+    ? rootProps.slots.groupingCriteriaCollapseIcon
+    : rootProps.slots.groupingCriteriaExpandIcon;
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {
@@ -78,7 +78,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     <Box className={classes.root} sx={{ ml: marginLeft }}>
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
-          <rootProps.components.BaseIconButton
+          <rootProps.slots.baseIconButton
             size="small"
             onClick={handleClick}
             onKeyDown={handleKeyDown}
@@ -88,10 +88,10 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
                 ? apiRef.current.getLocaleText('treeDataCollapse')
                 : apiRef.current.getLocaleText('treeDataExpand')
             }
-            {...rootProps.componentsProps?.baseIconButton}
+            {...rootProps.slotProps?.baseIconButton}
           >
             <Icon fontSize="inherit" />
-          </rootProps.components.BaseIconButton>
+          </rootProps.slots.baseIconButton>
         )}
       </div>
       {cellContent}

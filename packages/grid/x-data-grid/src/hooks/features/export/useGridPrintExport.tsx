@@ -38,6 +38,15 @@ type PrintWindowOnLoad = (
   >,
 ) => void;
 
+function buildPrintWindow(title?: string): HTMLIFrameElement {
+  const iframeEl = document.createElement('iframe');
+  iframeEl.style.position = 'absolute';
+  iframeEl.style.width = '0px';
+  iframeEl.style.height = '0px';
+  iframeEl.title = title || document.title;
+  return iframeEl;
+}
+
 /**
  * @requires useGridColumns (state)
  * @requires useGridFilter (state)
@@ -85,18 +94,6 @@ export const useGridPrintExport = (
       }),
     [apiRef],
   );
-
-  // TODO move outside of this scope and remove React.useCallback
-  const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
-    const iframeEl = document.createElement('iframe');
-
-    iframeEl.style.position = 'absolute';
-    iframeEl.style.width = '0px';
-    iframeEl.style.height = '0px';
-    iframeEl.title = title || document.title;
-
-    return iframeEl;
-  }, []);
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
     (printWindow, options): void => {
@@ -180,7 +177,12 @@ export const useGridPrintExport = (
       }
 
       if (normalizeOptions.copyStyles) {
-        const headStyleElements = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
+        const rootCandidate = gridRootElement!.getRootNode();
+        const root =
+          rootCandidate.constructor.name === 'ShadowRoot'
+            ? (rootCandidate as ShadowRoot)
+            : doc.current;
+        const headStyleElements = root!.querySelectorAll("style, link[rel='stylesheet']");
 
         for (let i = 0; i < headStyleElements.length; i += 1) {
           const node = headStyleElements[i];
@@ -290,7 +292,6 @@ export const useGridPrintExport = (
       props,
       logger,
       apiRef,
-      buildPrintWindow,
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,
       updateGridColumnsForPrint,

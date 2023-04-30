@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'timmar',
+  minutes: 'minuter',
+  seconds: 'sekunder',
+  meridiem: 'meridiem',
+};
 
 const svSEPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -25,25 +33,28 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Idag',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Välj datum',
+  dateTimePickerToolbarTitle: 'Välj datum & tid',
+  timePickerToolbarTitle: 'Välj tid',
+  dateRangePickerToolbarTitle: 'Välj datumintervall',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
+    `Välj ${timeViews[view]}. ${
       time === null ? 'Ingen tid vald' : `Vald tid är ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} timmar`,
   minutesClockNumberText: (minutes) => `${minutes} minuter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Välj ${timeViews[view]}`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Vecka nummer',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Vecka ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

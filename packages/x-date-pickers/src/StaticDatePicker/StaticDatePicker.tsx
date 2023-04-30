@@ -4,7 +4,8 @@ import { StaticDatePickerProps } from './StaticDatePicker.types';
 import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateView, validateDate } from '../internals';
+import { validateDate } from '../internals';
+import { DateView } from '../models';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
@@ -48,6 +49,7 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
   const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date',
     validator: validateDate,
     ref,
   });
@@ -72,7 +74,7 @@ StaticDatePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -173,6 +175,12 @@ StaticDatePicker.propTypes = {
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired when component requests to be closed.
+   * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
+   * @deprecated Please avoid using as it will be removed in next major version.
+   */
+  onClose: PropTypes.func,
+  /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
@@ -260,7 +268,7 @@ StaticDatePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

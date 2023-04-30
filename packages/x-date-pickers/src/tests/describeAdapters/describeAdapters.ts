@@ -9,8 +9,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 type AdapterTestRunner<P extends {}> = (
-  params: ReturnType<typeof createPickerRenderer> &
-    BuildFieldInteractionsResponse<P> & { adapterName: AdapterName },
+  params: ReturnType<typeof createPickerRenderer> & BuildFieldInteractionsResponse<P>,
 ) => void;
 
 const ADAPTERS: AdapterName[] = ['dayjs', 'date-fns', 'luxon', 'moment'];
@@ -21,11 +20,12 @@ function innerDescribeAdapters<P extends {}>(
   testRunner: AdapterTestRunner<P>,
 ) {
   ADAPTERS.forEach((adapterName) => {
-    describe(`${title} - adapter: ${adapterName}`, () => {
-      if (adapterName === 'moment') {
-        moment.locale('en');
-      }
+    // TODO: Set locale moment before the 1st test run
+    if (adapterName === 'moment') {
+      moment.locale('en');
+    }
 
+    describe(`${title} - adapter: ${adapterName}`, () => {
       const pickerRendererResponse = createPickerRenderer({
         adapterName,
         clock: 'fake',
@@ -38,7 +38,7 @@ function innerDescribeAdapters<P extends {}>(
         Component: FieldComponent,
       });
 
-      testRunner({ adapterName, ...pickerRendererResponse, ...fieldInteractions });
+      testRunner({ ...pickerRendererResponse, ...fieldInteractions });
     });
   });
 }

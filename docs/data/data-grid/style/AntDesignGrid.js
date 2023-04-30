@@ -139,8 +139,8 @@ export default function AntDesignGrid() {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[PAGE_SIZE]}
-        components={{
-          Pagination: CustomPagination,
+        slots={{
+          pagination: CustomPagination,
         }}
         {...data}
       />

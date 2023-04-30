@@ -124,7 +124,7 @@ const rows = [
   },
 ];
 
-type Customer = typeof rows[number];
+type Customer = (typeof rows)[number];
 
 export default function FormDetailPanel() {
   const getDetailPanelContent = React.useCallback(

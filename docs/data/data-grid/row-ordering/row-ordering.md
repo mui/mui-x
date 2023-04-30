@@ -48,8 +48,8 @@ To change the icon used for the row reordering, you can provide a different comp
 
 ```tsx
 <DataGridPro
-  components={{
-    RowReorderIcon: CustomMoveIcon,
+  slots={{
+    rowReorderIcon: CustomMoveIcon,
   }}
 />
 ```
@@ -74,7 +74,7 @@ To start with our suggested configuration, spread `GRID_REORDER_COL_DEF` when de
 This approach can also be used to change the location of the toggle column.
 
 :::warning
-For now, row reordering is disabled if sorting is applied to the grid.
+For now, row reordering is disabled if sorting is applied to the data grid.
 :::
 
 ## Reordering rows with row grouping 🚧

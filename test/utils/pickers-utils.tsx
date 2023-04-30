@@ -22,9 +22,10 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
 
 export type AdapterName =
   | 'date-fns'
@@ -94,8 +95,10 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   adapterName?: AdapterName;
 }
 
-export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
-  return (node: React.ReactNode) =>
+export function wrapPickerMount(
+  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
+) {
+  return (node: React.ReactElement) =>
     mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
 }
 
@@ -150,10 +153,22 @@ export type OpenPickerParams =
       type: 'date-range';
       variant: 'mobile' | 'desktop';
       initialFocus: 'start' | 'end';
+      /**
+       * @default false
+       */
+      isSingleInput?: boolean;
     };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
+    if (params.isSingleInput) {
+      const target = screen.getByRole<HTMLInputElement>('textbox');
+      userEvent.mousePress(target);
+      const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
+
+      return target.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
     const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
 
     return userEvent.mousePress(target);
@@ -294,24 +309,21 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 export const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
 
-export const expectInputValue = (
-  input: HTMLInputElement,
-  expectedValue: string,
-  shouldRemoveDashSpaces: boolean = false,
-) => {
-  let value = cleanText(input.value);
-  if (shouldRemoveDashSpaces) {
-    value = value.replace(/ \/ /g, '/');
-  }
-
+export const expectInputValue = (input: HTMLInputElement, expectedValue: string) => {
+  const value = cleanText(input.value);
   return expect(value).to.equal(expectedValue);
+};
+
+export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
+  const cleanPlaceholder = cleanText(input.placeholder);
+  return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
 interface BuildFieldInteractionsParams<P extends {}> {
@@ -344,6 +356,8 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
   ) => void;
 }
 
+export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
+
 export const buildFieldInteractions = <P extends {}>({
   clock,
   render,
@@ -354,11 +368,14 @@ export const buildFieldInteractions = <P extends {}>({
     cursorStartPosition,
     cursorEndPosition = cursorStartPosition,
   ) => {
+    if (document.activeElement !== input) {
+      act(() => {
+        input.focus();
+      });
+      clock.runToLast();
+    }
     act(() => {
       fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
       fireEvent.mouseUp(input);
       input.setSelectionRange(cursorStartPosition, cursorEndPosition);
       fireEvent.click(input);
@@ -395,7 +412,15 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
+
+    // focus input to trigger setting placeholder as value if no value is present
+    act(() => {
+      input.focus();
+    });
+    // make sure the value of the input is rendered before proceeding
+    clock.runToLast();
+
     const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
     if (clickPosition === -1) {
       throw new Error(
@@ -413,7 +438,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     clickOnInput(input, cursorPosition);
 
     keyStrokes.forEach((keyStroke) => {
@@ -522,3 +547,14 @@ export class MockedDataTransfer implements DataTransfer {
     this.yOffset = yOffset;
   }
 }
+
+export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+  switch (componentFamily) {
+    case 'clock':
+      return 2;
+    case 'multi-section-digital-clock':
+      return 3;
+    default:
+      return 1;
+  }
+};

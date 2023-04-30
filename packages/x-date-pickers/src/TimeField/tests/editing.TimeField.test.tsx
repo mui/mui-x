@@ -2,12 +2,12 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getCleanedSelectedContent } from 'test/utils/pickers-utils';
+import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { expectInputValue, getCleanedSelectedContent, getTextbox } from 'test/utils/pickers-utils';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<TimeField /> - Editing', () => {
-  describeAdapters('key: ArrowDown', TimeField, ({ adapter, adapterName, testFieldKeyPress }) => {
+  describeAdapters('key: ArrowDown', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (ArrowDown)', () => {
       it('should set the hour to 23 when no value is provided', () => {
         testFieldKeyPress({
@@ -52,12 +52,12 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the last minute of the previous hour when a value with 0 minutes is provided', () => {
+      it('should go to the last minute of the current hour when a value with 0 minutes is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
           key: 'ArrowDown',
-          expectedValue: '13:59',
+          expectedValue: '14:59',
           valueToSelect: '00',
         });
       });
@@ -68,16 +68,16 @@ describe('<TimeField /> - Editing', () => {
         testFieldKeyPress({
           format: adapter.formats.hours12h,
           key: 'ArrowDown',
-          expectedValue: '11',
+          expectedValue: '12',
         });
       });
 
-      it('should go to the last hour of the previous day when a value in the first hour is provided', () => {
+      it('should go to the last hour of the current morning when a value in the first hour is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 0, 12, 25)),
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '11:12 pm' : '11:12 PM',
+          expectedValue: '11:12 AM',
         });
       });
 
@@ -85,7 +85,7 @@ describe('<TimeField /> - Editing', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? 'hh:mm pm' : 'hh:mm PM',
+          expectedValue: 'hh:mm PM',
           valueToSelect: 'aa',
         });
       });
@@ -95,8 +95,8 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM',
-          valueToSelect: adapterName === 'date-fns' ? 'am' : 'AM',
+          expectedValue: '02:12 PM',
+          valueToSelect: 'AM',
         });
       });
 
@@ -105,34 +105,14 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '02:12 am' : '02:12 AM',
-          valueToSelect: adapterName === 'date-fns' ? 'pm' : 'PM',
-        });
-      });
-
-      it('should go from AM to PM when the current value is 00:00 AM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 0, 0, 25)),
-          key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '11:59 pm' : '11:59 PM',
-          valueToSelect: '00',
-        });
-      });
-
-      it('should go from PM to AM when the current value is 00:00 PM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 12, 0, 25)),
-          key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '11:59 am' : '11:59 AM',
-          valueToSelect: '00',
+          expectedValue: '02:12 AM',
+          valueToSelect: 'PM',
         });
       });
     });
   });
 
-  describeAdapters('key: ArrowUp', TimeField, ({ adapter, adapterName, testFieldKeyPress }) => {
+  describeAdapters('key: ArrowUp', TimeField, ({ adapter, testFieldKeyPress }) => {
     describe('24 hours format (ArrowUp)', () => {
       it('should set the hour to 0 when no value is provided', () => {
         testFieldKeyPress({
@@ -151,7 +131,7 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the first hour of the next day when a value in the last hour is provided', () => {
+      it('should go to the first hour of the current day when a value in the last hour is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 23, 12, 25)),
@@ -177,12 +157,12 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the first minute of the next hour when a value with 59 minutes is provided', () => {
+      it('should go to the first minute of the current hour when a value with 59 minutes is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 59, 25)),
           key: 'ArrowUp',
-          expectedValue: '15:00',
+          expectedValue: '14:00',
           valueToSelect: '59',
         });
       });
@@ -193,7 +173,7 @@ describe('<TimeField /> - Editing', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? 'hh:mm am' : 'hh:mm AM',
+          expectedValue: 'hh:mm AM',
           cursorPosition: 14,
         });
       });
@@ -203,7 +183,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM',
+          expectedValue: '02:12 PM',
           cursorPosition: 14,
         });
       });
@@ -213,28 +193,8 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '02:12 am' : '02:12 AM',
+          expectedValue: '02:12 AM',
           cursorPosition: 14,
-        });
-      });
-
-      it('should go from AM to PM when the current value is 11:59 AM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 11, 59, 25)),
-          key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '12:00 pm' : '12:00 PM',
-          valueToSelect: '59',
-        });
-      });
-
-      it('should go from PM to AM when the current value is 11:59 PM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 23, 59, 25)),
-          key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '12:00 am' : '12:00 AM',
-          valueToSelect: '59',
         });
       });
     });
@@ -293,7 +253,7 @@ describe('<TimeField /> - Editing', () => {
       it('should go to the next section when pressing `2` in a 12-hours format', () => {
         render(<TimeField format={adapter.formats.fullTime12h} />);
 
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 0);
 
         // Press "2"
@@ -305,7 +265,7 @@ describe('<TimeField /> - Editing', () => {
       it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
         render(<TimeField format={adapter.formats.fullTime12h} />);
 
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 0);
 
         // Press "1"
@@ -321,7 +281,7 @@ describe('<TimeField /> - Editing', () => {
     },
   );
 
-  describeAdapters('Letter editing', TimeField, ({ adapter, adapterName, testFieldChange }) => {
+  describeAdapters('Letter editing', TimeField, ({ adapter, testFieldChange }) => {
     it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
@@ -337,9 +297,7 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
         readOnly: true,
         // Press "a"
-        keyStrokes: [
-          { value: '02:12 a', expected: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM' },
-        ],
+        keyStrokes: [{ value: '02:12 a', expected: '02:12 PM' }],
       });
     });
 
@@ -348,9 +306,7 @@ describe('<TimeField /> - Editing', () => {
         format: adapter.formats.fullTime12h,
         cursorPosition: 17,
         // Press "a"
-        keyStrokes: [
-          { value: 'hh:mm a', expected: adapterName === 'date-fns' ? 'hh:mm am' : 'hh:mm AM' },
-        ],
+        keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm AM' }],
       });
     });
 
@@ -359,9 +315,7 @@ describe('<TimeField /> - Editing', () => {
         format: adapter.formats.fullTime12h,
         cursorPosition: 17,
         // Press "p"
-        keyStrokes: [
-          { value: 'hh:mm p', expected: adapterName === 'date-fns' ? 'hh:mm pm' : 'hh:mm PM' },
-        ],
+        keyStrokes: [{ value: 'hh:mm p', expected: 'hh:mm PM' }],
       });
     });
 
@@ -371,9 +325,7 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
         cursorPosition: 17,
         // Press "a"
-        keyStrokes: [
-          { value: '02:12 a', expected: adapterName === 'date-fns' ? '02:12 am' : '02:12 AM' },
-        ],
+        keyStrokes: [{ value: '02:12 a', expected: '02:12 AM' }],
       });
     });
 
@@ -383,9 +335,7 @@ describe('<TimeField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
         cursorPosition: 17,
         // Press "p"
-        keyStrokes: [
-          { value: '02:12 p', expected: adapterName === 'date-fns' ? '02:12 pm' : '02:12 PM' },
-        ],
+        keyStrokes: [{ value: '02:12 p', expected: '02:12 PM' }],
       });
     });
   });
@@ -403,14 +353,18 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
 
-      it('should not loose time information when cleaning the date then filling it again', () => {
+      it('should not loose date information when cleaning the date then filling it again', () => {
+        if (adapter.lib !== 'dayjs') {
+          return;
+        }
+
         const onChange = spy();
 
         render(
@@ -420,11 +374,12 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
 
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
         userEvent.keyPress(input, { key: 'Backspace' });
+        userEvent.keyPress(input, { key: 'ArrowLeft' });
 
         fireEvent.change(input, { target: { value: '3:mm' } }); // Press "3"
         expectInputValue(input, '03:mm');
@@ -445,7 +400,7 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
 

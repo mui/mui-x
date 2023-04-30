@@ -1,4 +1,4 @@
-import renameCSSClasses from 'packages/x-codemod/src/util/renameCSSClasses';
+import renameCSSClasses from '../../../util/renameCSSClasses';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import renameIdentifiers, { PreRequisiteUsage, matchImport } from '../../../util/renameIdentifiers';
 
@@ -8,6 +8,7 @@ const renamedIdentifiers = {
   linkOperator: 'logicOperator',
   linkOperators: 'logicOperators',
   setFilterLinkOperator: 'setFilterLogicOperator',
+  getRowIndex: 'getRowIndexRelativeToVisibleRows',
 };
 
 const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
@@ -32,6 +33,14 @@ const preRequisiteUsages: { [identifierName: string]: PreRequisiteUsage } = {
   },
   linkOperators: {
     possiblePaths: ['componentsProps.filter'],
+    components: GridComponents,
+    packageRegex: PACKAGE_REGEXP,
+  },
+  setFilterLinkOperator: {
+    components: GridComponents,
+    packageRegex: PACKAGE_REGEXP,
+  },
+  getRowIndex: {
     components: GridComponents,
     packageRegex: PACKAGE_REGEXP,
   },
@@ -83,7 +92,7 @@ export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI
     // + apiRef.current.getLocaleText('filterPanelLogicOperator')
     root
       .find(j.Literal)
-      .filter((path) => !!renamedLiterals[path.node.value as any])
+      .filter((path) => renamedLiterals.hasOwnProperty(path.node.value as any))
       .replaceWith((path) => j.literal(renamedLiterals[path.node.value as any]));
 
     // Rename the classes

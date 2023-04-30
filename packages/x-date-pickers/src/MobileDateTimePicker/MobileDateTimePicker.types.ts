@@ -9,7 +9,7 @@ import {
   BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView } from '../internals/models/views';
+import { DateOrTimeView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface MobileDateTimePickerSlotsComponent<TDate>
@@ -24,7 +24,7 @@ export interface MobileDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
     MobileOnlyPickerProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -36,7 +36,7 @@ export interface MobileDateTimePickerProps<TDate>
    */
   componentsProps?: MobileDateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<MobileDateTimePickerSlotsComponent<TDate>>;

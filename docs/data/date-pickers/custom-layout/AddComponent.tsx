@@ -17,7 +17,7 @@ import {
   PickersLayoutRoot,
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateView } from '@mui/x-date-pickers';
+import { DateView } from '@mui/x-date-pickers/models';
 
 function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -65,6 +65,7 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) 
     <PickersLayoutRoot
       ownerState={props}
       sx={{
+        overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,

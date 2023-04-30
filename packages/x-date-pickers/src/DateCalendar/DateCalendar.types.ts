@@ -16,10 +16,10 @@ import {
   YearValidationProps,
   MonthValidationProps,
   DayValidationProps,
-} from '../internals/hooks/validation/models';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+} from '../internals/models/validation';
+import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView } from '../internals/models/views';
+import { DateView } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';

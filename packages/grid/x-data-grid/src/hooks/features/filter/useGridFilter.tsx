@@ -60,8 +60,8 @@ export const useGridFilter = (
     | 'onFilterModelChange'
     | 'filterMode'
     | 'disableMultipleColumnsFiltering'
-    | 'components'
-    | 'componentsProps'
+    | 'slots'
+    | 'slotProps'
     | 'disableColumnFilter'
   >,
 ): void => {
@@ -103,7 +103,7 @@ export const useGridFilter = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuFilterItem'];
+      return [...columnMenuItems, 'columnMenuFilterItem'];
     },
     [props.disableColumnFilter],
   );
@@ -169,6 +169,11 @@ export const useGridFilter = (
         const filterModel = gridFilterModelSelector(apiRef);
         const filterItemsWithValue = filterModel.items.filter((item) => {
           if (item.value !== undefined) {
+            // Some filters like `isAnyOf` support array as `item.value`.
+            // If array is empty, we want to remove it from the filter model.
+            if (Array.isArray(item.value) && item.value.length === 0) {
+              return false;
+            }
             return true;
           }
 
@@ -346,13 +351,13 @@ export const useGridFilter = (
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.filters) {
-        const FilterPanel = props.components.FilterPanel;
-        return <FilterPanel {...props.componentsProps?.filterPanel} />;
+        const FilterPanel = props.slots.filterPanel;
+        return <FilterPanel {...props.slotProps?.filterPanel} />;
       }
 
       return initialValue;
     },
-    [props.components.FilterPanel, props.componentsProps?.filterPanel],
+    [props.slots.filterPanel, props.slotProps?.filterPanel],
   );
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(

@@ -8,23 +8,34 @@ import {
   expectInputValue,
   buildFieldInteractions,
   wrapPickerMount,
+  getTextbox,
+  expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopTimePicker });
 
+  describePicker(DesktopTimePicker, {
+    render,
+    fieldType: 'single-input',
+    variant: 'desktop',
+  });
+
   describeValidation(DesktopTimePicker, () => ({
     render,
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeConformance(<DesktopTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiDesktopTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
@@ -46,6 +57,9 @@ describe('<DesktopTimePicker /> - Describes', () => {
     componentFamily: 'picker',
     type: 'time',
     variant: 'desktop',
+    defaultProps: {
+      views: ['hours'],
+    },
     values: [
       adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
       adapterToUse.date(new Date(2018, 0, 1, 18, 30)),
@@ -54,27 +68,37 @@ describe('<DesktopTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'fullTime12h' : 'fullTime24h',
-        );
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(
+        input,
+        expectedValue
+          ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+          : '',
+      );
     },
-    setNewValue: (value, { isOpened } = {}) => {
-      const newValue = adapterToUse.addHours(value, 1);
+    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+      const newValue = applySameValue ? value : adapterToUse.addHours(value, 1);
 
       if (isOpened) {
-        throw new Error("Can't test UI views on DesktopTimePicker");
+        const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+        const hours = adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h');
+        const hoursNumber = adapterToUse.getHours(newValue);
+        userEvent.mousePress(screen.getByRole('option', { name: `${parseInt(hours, 10)} hours` }));
+        if (hasMeridiem) {
+          // meridiem is an extra view on `DesktopTimePicker`
+          // we need to click it to finish selection
+          userEvent.mousePress(
+            screen.getByRole('option', { name: hoursNumber >= 12 ? 'PM' : 'AM' }),
+          );
+        }
+      } else {
+        const input = getTextbox();
+        clickOnInput(input, 1); // Update the hour
+        userEvent.keyPress(input, { key: 'ArrowUp' });
       }
-
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1); // Update the hour
-      userEvent.keyPress(input, { key: 'ArrowUp' });
 
       return newValue;
     },

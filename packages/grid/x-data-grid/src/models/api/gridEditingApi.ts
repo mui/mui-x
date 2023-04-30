@@ -19,6 +19,10 @@ export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
 export interface GridEditCellMeta {
   changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue';
+  /**
+   * Determines if `setEditCellValue` should be called on the first render to sync the value.
+   */
+  unstable_updateValueOnRender?: boolean;
 }
 
 export interface GridEditingSharedApi {
@@ -58,7 +62,7 @@ export interface GridEditingSharedApi {
 
 export interface GridEditingSharedPrivateApi {
   /**
-   * Immediatelly updates the value of the cell, without waiting for the debounce.
+   * Immediately updates the value of the cell, without waiting for the debounce.
    * @param {GridRowId} id The row id.
    * @param {string} field The field to update. If not passed, updates all fields in the given row id.
    */

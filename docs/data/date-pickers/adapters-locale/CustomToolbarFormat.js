@@ -9,7 +9,7 @@ export default function CustomToolbarFormat() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
         displayStaticWrapperAs="desktop"
-        defaultValue={dayjs('2022-04-07')}
+        defaultValue={dayjs('2022-04-17')}
         slotProps={{
           toolbar: { toolbarFormat: 'ddd DD MMMM', hidden: false },
         }}

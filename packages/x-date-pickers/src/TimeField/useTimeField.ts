@@ -8,7 +8,7 @@ import {
   UseTimeFieldDefaultizedProps,
   UseTimeFieldParams,
 } from './TimeField.types';
-import { validateTime } from '../internals/hooks/validation/useTimeValidation';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { useUtils } from '../internals/hooks/useUtils';
 
 const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
@@ -35,6 +35,8 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     value,
     defaultValue,
     format,
+    formatDensity,
+    shouldRespectLeadingZeros,
     onChange,
     readOnly,
     onError,
@@ -49,6 +51,7 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     selectedSections,
     onSelectedSectionsChange,
     ampm,
+    unstableFieldRef,
     ...other
   } = useDefaultizedTimeField<TDate, TChildProps>(props);
 
@@ -59,6 +62,8 @@ export const useTimeField = <TDate, TChildProps extends {}>({
       value,
       defaultValue,
       format,
+      formatDensity,
+      shouldRespectLeadingZeros,
       onChange,
       readOnly,
       onError,
@@ -73,6 +78,7 @@ export const useTimeField = <TDate, TChildProps extends {}>({
       selectedSections,
       onSelectedSectionsChange,
       ampm,
+      unstableFieldRef,
     },
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,

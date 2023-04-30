@@ -4,5 +4,5 @@
   loading={loading}
   disableRowSelectionOnClick
   initialState={initialState}
-  components={{ Toolbar: GridToolbar }}
+  slots={{ toolbar: GridToolbar }}
 />

@@ -1,13 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-
-// This object is not Partial<PickersLocaleText> because it is the default values
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'Hodiny',
   minutes: 'Minuty',
   seconds: 'Sekundy',
+  meridiem: 'Odpoledne',
 };
 
 const csCZPickers: Partial<PickersLocaleText<any>> = {
@@ -47,6 +47,9 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} hodin`,
   minutesClockNumberText: (minutes) => `${minutes} minut`,
   secondsClockNumberText: (seconds) => `${seconds} sekund`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Vyberte ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Týden v roce',

@@ -58,7 +58,7 @@ apiRef.current.subscribeEvent(
 );
 
 // Hook subscription (only available inside the scope of the grid)
-useGridApiEventHandler('${event.name}', handleEvent);
+useGridApiEventHandler(apiRef, '${event.name}', handleEvent);
 ${propExample}
 `;
   }, [event]);
@@ -141,8 +141,8 @@ export default function CatalogOfEventsNoSnap() {
       getRowHeight={() => 'auto'}
       disableRowSelection
       hideFooter
-      components={{
-        Toolbar,
+      slots={{
+        toolbar: Toolbar,
       }}
       sx={{
         '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },

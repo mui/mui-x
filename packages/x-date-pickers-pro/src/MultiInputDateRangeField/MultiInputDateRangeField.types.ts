@@ -3,20 +3,23 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import { UseDateRangeFieldProps } from '../internal/models/dateRange';
 import { RangePosition } from '../internal/models/range';
+import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internal/models/fields';
 
-export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate>> &
-    UseMultiInputDateRangeFieldProps<TDate>;
-  startTextFieldProps: TChildProps;
-  endTextFieldProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
+export type UseMultiInputDateRangeFieldParams<
+  TDate,
+  TTextFieldSlotProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputDateRangeFieldProps<TDate>, TTextFieldSlotProps>;
+
+export interface UseMultiInputDateRangeFieldProps<TDate>
+  extends Omit<UseDateRangeFieldProps<TDate>, 'unstableFieldRef'> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
-
-export interface UseMultiInputDateRangeFieldProps<TDate> extends UseDateRangeFieldProps<TDate> {}
 
 export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -25,12 +28,10 @@ export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends
   UseMultiInputDateRangeFieldProps<TDate>;
 
 export interface MultiInputDateRangeFieldProps<TDate>
-  extends UseMultiInputDateRangeFieldComponentProps<
-    TDate,
-    Omit<StackProps, 'position'> & { autoFocus?: boolean }
-  > {
+  extends UseMultiInputDateRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+  autoFocus?: boolean;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -42,7 +43,7 @@ export interface MultiInputDateRangeFieldProps<TDate>
    */
   componentsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<MultiInputDateRangeFieldSlotsComponent>;

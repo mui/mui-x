@@ -20,10 +20,6 @@ Using your favorite package manager, install:
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
 
-:::warning
-Note we're using the `next` tag to download the latest v6 **beta** version.
-:::
-
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 :::info
@@ -56,10 +52,10 @@ npm install @mui/material @mui/styled-engine-sc styled-components
 yarn add @mui/material @mui/styled-engine-sc styled-components
 ```
 
-## Code setup
+## Setup your date library adapter
 
 Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
-This component receives your chosen date library's adapter and makes it accessible to all the Date and Time Pickers component using React context.
+This component receives your chosen [date library's adapter](https://mui.com/x/react-date-pickers/#date-library) (the doc uses `AdapterDayjs` which is based on [dayjs](https://day.js.org/)) and makes it accessible to all the Date and Time Pickers component using React context.
 
 Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
 This is **not** a pattern to reproduce.

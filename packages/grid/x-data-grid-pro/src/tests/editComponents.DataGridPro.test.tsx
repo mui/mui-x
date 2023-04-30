@@ -10,7 +10,6 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
@@ -247,6 +246,20 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect((spiedSetEditCellValue.lastCall.args[0].value! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
+    });
+
+    it('should call setEditCellValue when entering the edit mode by pressing a digit', () => {
+      render(<TestCase />);
+      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      userEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: '5' });
+
+      expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
+      expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
+      expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.be.instanceOf(Date);
     });
 
     it('should call setEditCellValue with null when entered an empty value', () => {
@@ -592,7 +605,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
-      fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
       resolveCallback!();

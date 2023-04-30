@@ -5,7 +5,7 @@ import {
   UseSingleInputTimeRangeFieldProps,
 } from './SingleInputTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
-import { validateTimeRange } from '../internal/hooks/validation/useTimeRangeValidation';
+import { validateTimeRange } from '../internal/utils/validation/validateTimeRange';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputTimeRangeFieldProps<TDate>,
@@ -31,6 +31,8 @@ export const useSingleInputTimeRangeField = <TDate, TChildProps extends {}>({
     value,
     defaultValue,
     format,
+    formatDensity,
+    shouldRespectLeadingZeros,
     onChange,
     readOnly,
     onError,
@@ -42,6 +44,7 @@ export const useSingleInputTimeRangeField = <TDate, TChildProps extends {}>({
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    unstableFieldRef,
     ...other
   } = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(props);
 
@@ -52,6 +55,8 @@ export const useSingleInputTimeRangeField = <TDate, TChildProps extends {}>({
       value,
       defaultValue,
       format,
+      formatDensity,
+      shouldRespectLeadingZeros,
       onChange,
       readOnly,
       onError,
@@ -63,6 +68,7 @@ export const useSingleInputTimeRangeField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      unstableFieldRef,
     },
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
