@@ -117,9 +117,9 @@ export default function StartEditButtonGrid() {
     [cellMode],
   );
 
-  const handleCellEditStop = (params, event) => {
+  const handleCellEditStop = React.useCallback((params, event) => {
     event.defaultMuiPrevented = true;
-  };
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
