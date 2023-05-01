@@ -20,7 +20,7 @@ const columns = [
     filterable: false,
     hideable: false,
     renderCell: (params) => {
-      if (params.value === 'Range of cells') {
+      if (params.value === selectionTypes.rangeOfCells) {
         return (
           <div>
             <div style={{ fontWeight: 500 }}>{params.value}</div>
@@ -31,7 +31,7 @@ const columns = [
           </div>
         );
       }
-      if (params.value === 'One or more rows') {
+      if (params.value === selectionTypes.rangeOfRows) {
         return (
           <div>
             <div style={{ fontWeight: 500 }}>{params.value}</div>
@@ -47,7 +47,7 @@ const columns = [
   {
     field: 'singleRowSingleCell',
     flex: 1,
-    headerName: 'Single row with a single cell',
+    headerName: 'A single cell',
     sortable: false,
     filterable: false,
     hideable: false,
@@ -84,7 +84,7 @@ const columns = [
 
 const columnGroupingModel = [
   {
-    groupId: 'Data pasted from clipboard',
+    groupId: 'Clipboard pasted data',
     headerAlign: 'center',
     children: [
       { field: 'singleRowSingleCell' },
@@ -98,10 +98,16 @@ const columnGroupingModel = [
   },
 ];
 
+const selectionTypes = {
+  singleCell: 'Single cell',
+  rangeOfCells: 'More than one cell',
+  rangeOfRows: 'One or more rows',
+};
+
 const rows = [
   {
     id: 1,
-    selection: 'Range of cells',
+    selection: selectionTypes.rangeOfCells,
     singleRowSingleCell: 'The cell value is pasted into each selected cell.',
     singleRowMultipleCells:
       'Cell values are pasted starting from the first selected cell.\nCells outside of the selection are not impacted.',
@@ -109,7 +115,7 @@ const rows = [
   },
   {
     id: 2,
-    selection: 'One or more rows',
+    selection: selectionTypes.rangeOfRows,
     singleRowSingleCell:
       'The row data is pasted into each selected row.\nRows outside of the selection are not impacted.',
     singleRowMultipleCells: '---',
@@ -118,7 +124,7 @@ const rows = [
   },
   {
     id: 3,
-    selection: 'Single cell',
+    selection: selectionTypes.singleCell,
     singleRowSingleCell: 'The cell value is pasted into the selected cell.',
     singleRowMultipleCells:
       'Cells values are pasted starting from the selected cell.\nCells outside of the selection might be impacted.',
@@ -145,7 +151,6 @@ export default function ClipboardPastePriority() {
         experimentalFeatures={{ columnGrouping: true }}
         columnGroupingModel={columnGroupingModel}
         showCellVerticalBorder
-        // showColumnVerticalBorder
         disableRowSelectionOnClick
       />
     </div>
