@@ -47,18 +47,19 @@ function convertSize<T extends 'small' | 'medium' | 'large'>(size: T | undefined
 
 function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard' | 'filled'>(
   variant: T | undefined,
+  defaultVariant: VariantProp = 'plain',
 ) {
-  return (
-    variant
-      ? {
-          standard: 'outlined',
-          outlined: 'outlined',
-          contained: 'solid',
-          text: 'plain',
-          filled: 'soft',
-        }[variant]
-      : variant
-  ) as VariantProp;
+  if (!variant) {
+    return defaultVariant;
+  }
+
+  return ({
+    standard: 'outlined',
+    outlined: 'outlined',
+    contained: 'solid',
+    text: 'plain',
+    filled: 'soft',
+  }[variant] || defaultVariant) as VariantProp;
 }
 
 const Checkbox = React.forwardRef<
@@ -97,7 +98,7 @@ const TextField = React.forwardRef<
         value={value as any}
         onChange={onChange}
         placeholder={placeholder}
-        variant={convertVariant(variant) ?? 'plain'}
+        variant={convertVariant(variant, 'outlined')}
         size={convertSize(size)}
         slotProps={{ input: { ...props?.inputProps, ref: inputForkRef } }}
         startDecorator={startAdornment}
@@ -116,7 +117,7 @@ const Button = React.forwardRef<
       {...props}
       size={convertSize(size)}
       color={convertColor(color)}
-      variant={convertVariant(variant) ?? 'plain'}
+      variant={convertVariant(variant)}
       ref={ref}
       startDecorator={startIcon}
       endDecorator={endIcon}
@@ -252,7 +253,7 @@ const Select = React.forwardRef<
         }}
         size={convertSize(size)}
         color={convertColor(color)}
-        variant={convertVariant(variant) ?? 'plain'}
+        variant={convertVariant(variant, 'outlined')}
         ref={ref}
         value={value}
         onChange={handleChange}
