@@ -28,7 +28,7 @@
     "datetimepicker"
   ],
   "scripts": {
-    "typescript": "cross-env node ../../scripts/logHeapSize.mjs && tsc -p tsconfig.json",
+    "typescript": "tsc -p tsconfig.json",
     "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
     "build:legacy": "node ../../scripts/build.mjs legacy",
     "build:modern": "node ../../scripts/build.mjs modern",
