@@ -264,6 +264,9 @@ const Select = React.forwardRef<
           },
           listbox: {
             disablePortal: false,
+            sx: {
+              zIndex: 1350,
+            },
           },
         }}
       />
