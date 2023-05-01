@@ -41,6 +41,10 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDayCalendarSkeleton'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDayCalendarSkeleton'];
   };
+  MuiDigitalClock?: {
+    defaultProps?: ComponentsProps['MuiDigitalClock'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDigitalClock'];
+  };
   MuiLocalizationProvider?: {
     defaultProps?: ComponentsProps['MuiLocalizationProvider'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiLocalizationProvider'];
@@ -48,6 +52,14 @@ export interface PickerComponents<Theme = unknown> {
   MuiMonthCalendar?: {
     defaultProps?: ComponentsProps['MuiMonthCalendar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMonthCalendar'];
+  };
+  MuiMultiSectionDigitalClock?: {
+    defaultProps?: ComponentsProps['MuiMultiSectionDigitalClock'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiSectionDigitalClock'];
+  };
+  MuiMultiSectionDigitalClockSection?: {
+    defaultProps?: ComponentsProps['MuiMultiSectionDigitalClockSection'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMultiSectionDigitalClockSection'];
   };
   MuiPickersArrowSwitcher?: {
     defaultProps?: ComponentsProps['MuiPickersArrowSwitcher'];

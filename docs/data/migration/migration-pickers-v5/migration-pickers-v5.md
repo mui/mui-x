@@ -24,7 +24,8 @@ Described below are the steps needed to migrate from v5 to v6.
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v6.0.0/preset-safe` to target Data Grid as well.
-It should be only applied **once per folder.**
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```sh
 // Date and Time Pickers specific
@@ -112,13 +113,13 @@ import { DateTime } from 'luxon';
 
 ### Stop rendering a clock on desktop
 
-In desktop mode, the `DateTimePicker` and `TimePicker` components will not display the clock.
-This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).
+In desktop mode, the `DateTimePicker` and `TimePicker` components will no longer render the [`TimeClock`](/x/react-date-pickers/time-clock/) component.
+The `DateTimePicker` component currently has no replacement, but on `TimePicker` a new [`DigitalClock`](/x/react-date-pickers/digital-clock/) component has been introduced instead.
 The behavior on mobile mode is still the same.
 If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/base-concepts/#testing-caveats) to choose the best replacement for it.
 
-You can manually re-enable the clock using the new `viewRenderers` prop.
-The code below enables the `Clock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
+You can manually re-enable the previous clock component using the new `viewRenderers` prop.
+The code below enables the `TimeClock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
 
 Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#theme-default-props) for more information.
 

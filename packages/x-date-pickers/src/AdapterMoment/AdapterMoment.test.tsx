@@ -18,21 +18,6 @@ import {
   TEST_DATE_ISO,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
-const testDate = new Date(2018, 4, 15, 9, 35);
-const localizedTexts = {
-  en: {
-    placeholder: 'MM/DD/YYYY hh:mm aa',
-    value: '05/15/2018 09:35 AM',
-  },
-  fr: {
-    placeholder: 'DD/MM/YYYY hh:mm',
-    value: '15/05/2018 09:35',
-  },
-  de: {
-    placeholder: 'DD.MM.YYYY hh:mm',
-    value: '15.05.2018 09:35',
-  },
-};
 describe('<AdapterMoment />', () => {
   describeGregorianAdapter(AdapterMoment, { formatDateTime: 'YYYY-MM-DD HH:mm:ss', locale: 'en' });
 
@@ -132,6 +117,23 @@ describe('<AdapterMoment />', () => {
   });
 
   describe('Picker localization', () => {
+    const testDate = new Date(2018, 4, 15, 9, 35);
+
+    const localizedTexts = {
+      en: {
+        placeholder: 'MM/DD/YYYY hh:mm aa',
+        value: '05/15/2018 09:35 AM',
+      },
+      fr: {
+        placeholder: 'DD/MM/YYYY hh:mm',
+        value: '15/05/2018 09:35',
+      },
+      de: {
+        placeholder: 'DD.MM.YYYY hh:mm',
+        value: '15.05.2018 09:35',
+      },
+    };
+
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeObject = { code: localeKey };
 
@@ -157,14 +159,6 @@ describe('<AdapterMoment />', () => {
           expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
         });
       });
-    });
-
-    it('should return the correct week number', () => {
-      const adapter = new AdapterMoment({ locale: 'fr' });
-
-      const dateToTest = adapter.date(new Date(2022, 10, 10))!;
-
-      expect(adapter.getWeekNumber!(dateToTest)).to.equal(45);
     });
   });
 });

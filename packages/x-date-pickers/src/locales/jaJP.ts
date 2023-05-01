@@ -1,11 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: '時間',
   minutes: '分',
   seconds: '秒',
+  meridiem: 'メリディム',
 };
 
 const jaJPPickers: Partial<PickersLocaleText<any>> = {
@@ -47,6 +49,9 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,
+
+  // Digital clock labels
+  selectViewText: (view) => `を選択 ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: '週番号',

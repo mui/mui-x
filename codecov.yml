@@ -7,10 +7,13 @@ coverage:
       adapters:
         target: 95%
         paths:
+          - 'packages/x-date-pickers/src/AdapterDateFns/AdapterDateFns.ts'
+          - 'packages/x-date-pickers/src/AdapterDateFnsJalali/AdapterDateFnsJalali.ts'
           - 'packages/x-date-pickers/src/AdapterDayjs/AdapterDayjs.ts'
           - 'packages/x-date-pickers/src/AdapterLuxon/AdapterLuxon.ts'
           - 'packages/x-date-pickers/src/AdapterMoment/AdapterMoment.ts'
-          - 'packages/x-date-pickers/src/AdapterDateFns/AdapterDateFns.ts'
+          - 'packages/x-date-pickers/src/AdapterMomentHijri/AdapterMomentHijri.ts'
+          - 'packages/x-date-pickers/src/AdapterMomentJalaali/AdapterMomentJalaali.ts'
     patch: off
 
 comment: false
