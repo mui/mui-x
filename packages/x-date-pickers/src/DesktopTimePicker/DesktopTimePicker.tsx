@@ -56,9 +56,13 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
     ? []
     : ['accept'];
-  const views: readonly TimeViewWithMeridiem[] = defaultizedProps.ampm
-    ? [...defaultizedProps.views, 'meridiem']
-    : defaultizedProps.views;
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views: readonly TimeViewWithMeridiem[] =
+    defaultizedProps.ampm && shouldHoursRendererContainMeridiemView
+      ? [...defaultizedProps.views, 'meridiem']
+      : defaultizedProps.views;
 
   // Props with the default values specific to the desktop variant
   const props = {
