@@ -34,8 +34,8 @@ export const getNodePathInTree = ({
   let node = tree[id] as GridGroupNode | GridLeafNode;
 
   while (node.id !== GRID_ROOT_GROUP_ID) {
-    path.push({
-      field: (node as GridGroupNode).groupingField,
+    path.unshift({
+      field: node.type === 'leaf' ? null : node.groupingField,
       key: node.groupingKey,
     });
 
