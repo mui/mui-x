@@ -181,12 +181,7 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
-}: TimeViewRendererProps<
-  TimeViewWithMeridiem,
-  Omit<MultiSectionDigitalClockProps<TDate>, 'timeSteps'> &
-    Omit<DigitalClockProps<TDate>, 'timeStep'> &
-    Pick<TimePickerProps<TDate>, 'timeSteps'>
->) => (
+}: TimeViewRendererProps<TimeViewWithMeridiem, MultiSectionDigitalClockProps<TDate>>) => (
   <MultiSectionDigitalClock<TDate>
     view={view}
     onViewChange={onViewChange}
