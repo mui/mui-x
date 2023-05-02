@@ -64,8 +64,8 @@ function GridHeaderFilterMenu({
       onClickAway={hideMenu}
       onExited={hideMenu}
     >
-      <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown} autoFocus={open}>
-        {operators.map((op) => {
+      <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>
+        {operators.map((op, i) => {
           const label = op.label
             ? OPERATOR_LABEL_MAPPING[op.label]
             : apiRef.current.getLocaleText(
@@ -77,6 +77,7 @@ function GridHeaderFilterMenu({
                 applyFilterChanges({ ...item, operator: op.value });
                 hideMenu();
               }}
+              autoFocus={i === 0 ? open : false}
               selected={op.value === item.operator}
               key={`${field}-${op.value}`}
             >
