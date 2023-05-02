@@ -202,8 +202,22 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "headerFilterBlur",
+    "description": "Fired when a column header filter is blurred",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "headerFilterClick",
     "description": "Fired when a column header filter is clicked",
+    "params": "GridColumnHeaderParams",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "headerFilterFocus",
+    "description": "Fired when a column header filter is focused",
     "params": "GridColumnHeaderParams",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
