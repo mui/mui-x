@@ -17,6 +17,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/material';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 
 export const isNavigationKey = (key: string) =>
@@ -152,10 +153,19 @@ const getChildren = (parentPath: string[]) => {
 const fakeDataFetcher = (parentPath: string[] = []) =>
   new Promise<GridRowModel<Row>[]>((resolve) => {
     setTimeout(() => {
-      const rows = getChildren(parentPath).map((row) => ({
-        ...row,
-        descendantCount: getChildren(row.hierarchy).length,
-      }));
+      const rows = getChildren(parentPath).reduce<any[]>((acc, row) => {
+        const descendantCount = getChildren(row.hierarchy).length;
+        acc.push({ ...row, descendantCount });
+
+        if (descendantCount > 0) {
+          acc.push({
+            id: `placeholder-children-${row.id}`,
+            hierarchy: [...row.hierarchy, ''],
+          });
+        }
+
+        return acc;
+      }, []);
       resolve(rows);
     }, 500 + Math.random() * 300);
   });
@@ -185,6 +195,8 @@ interface GroupingCellWithLazyLoadingProps
 function GroupingCellWithLazyLoading(props: GroupingCellWithLazyLoadingProps) {
   const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses({ classes: rootProps.classes });
@@ -193,29 +205,39 @@ function GroupingCellWithLazyLoading(props: GroupingCellWithLazyLoadingProps) {
     ? rootProps.slots.treeDataCollapseIcon
     : rootProps.slots.treeDataExpandIcon;
 
+  React.useEffect(() => {
+    setIsLoading((prev) => prev === true && false);
+  }, [rowNode.childrenExpanded]);
+
   const handleClick: IconButtonProps['onClick'] = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
+    if (!rowNode.childrenExpanded) {
+      setIsLoading(true);
+    }
   };
 
   return (
     <Box className={classes.root} sx={{ ml: rowNode.depth * 2 }}>
       <div className={classes.toggle}>
-        {row.descendantCount > 0 && (
-          <IconButton
-            size="small"
-            onClick={handleClick}
-            tabIndex={-1}
-            aria-label={
-              rowNode.childrenExpanded
-                ? apiRef.current.getLocaleText('treeDataCollapse')
-                : apiRef.current.getLocaleText('treeDataExpand')
-            }
-          >
-            <Icon fontSize="inherit" />
-          </IconButton>
-        )}
+        {row.descendantCount > 0 &&
+          (isLoading ? (
+            <CircularProgress size="1.5rem" />
+          ) : (
+            <IconButton
+              size="small"
+              onClick={handleClick}
+              tabIndex={-1}
+              aria-label={
+                rowNode.childrenExpanded
+                  ? apiRef.current.getLocaleText('treeDataCollapse')
+                  : apiRef.current.getLocaleText('treeDataExpand')
+              }
+            >
+              <Icon fontSize="inherit" />
+            </IconButton>
+          ))}
       </div>
       <span>
         {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
