@@ -13,7 +13,6 @@ export default function SimpleCharts() {
       ]}
       series={[
         {
-          type: 'bar',
           xAxisKey: 'barCategories',
           data: [2, 5, 3],
         },

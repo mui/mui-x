@@ -75,7 +75,6 @@ export default function CSSCustomization() {
       ]}
       series={[
         {
-          type: 'line',
           id: 'France',
           xAxisKey: 'Years',
           data: FranceGDPperCapita,
@@ -83,7 +82,6 @@ export default function CSSCustomization() {
           area: {},
         },
         {
-          type: 'line',
           id: 'Germany',
           xAxisKey: 'Years',
           data: GermanyGDPperCapita,
@@ -91,7 +89,6 @@ export default function CSSCustomization() {
           area: {},
         },
         {
-          type: 'line',
           id: 'United Kingdom',
           xAxisKey: 'Years',
           data: UKGDPperCapita,

@@ -2,8 +2,12 @@ import * as React from 'react';
 import { LinePlot } from './LinePlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis/Axis';
+import { LineSeriesType } from '../models/seriesType/line';
+import { MakeOptional } from '../models/helpers';
 
-export interface LineChartProps extends ChartContainerProps, AxisProps {}
+export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+  series: MakeOptional<LineSeriesType, 'type'>[];
+}
 export function LineChart(props: LineChartProps) {
   const {
     xAxis,
@@ -24,7 +28,7 @@ export function LineChart(props: LineChartProps) {
 
   return (
     <ChartContainer
-      series={series}
+      series={series.map((s) => ({ ...s, type: 'line' }))}
       width={width}
       height={height}
       margin={margin}

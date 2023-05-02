@@ -2,8 +2,12 @@ import * as React from 'react';
 import { BarPlot } from './BarPlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis';
+import { BarSeriesType } from '../models/seriesType/bar';
+import { MakeOptional } from '../models/helpers';
 
-export interface BarChartProps extends ChartContainerProps, AxisProps {}
+export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+  series: MakeOptional<BarSeriesType, 'type'>[];
+}
 
 export function BarChart(props: BarChartProps) {
   const {
@@ -25,7 +29,7 @@ export function BarChart(props: BarChartProps) {
 
   return (
     <ChartContainer
-      series={series}
+      series={series.map((s) => ({ ...s, type: 'bar' }))}
       width={width}
       height={height}
       margin={margin}

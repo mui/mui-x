@@ -25,7 +25,6 @@ export default function TestLinesTime() {
       ]}
       series={[
         {
-          type: 'line',
           id: 's1',
           stack: '1',
           area: {},
@@ -34,14 +33,12 @@ export default function TestLinesTime() {
           data: [2, 5, 3, 4, 1],
         },
         {
-          type: 'line',
           id: 's2',
           xAxisKey: 'lineCategories',
           yAxisKey: 'lineCategoriesY',
           data: [10, 3, 1, 2, 10],
         },
         {
-          type: 'line',
           id: 's3',
           xAxisKey: 'lineCategories',
           yAxisKey: 'lineCategoriesY',
