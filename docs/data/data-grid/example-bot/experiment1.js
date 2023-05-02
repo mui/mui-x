@@ -28,7 +28,7 @@ export default function ExampleBot() {
       <Markprompt
         projectKey="ofZOVFDmWanOxAHGuXDkwoZGrIRYx2zJ"
         iDontKnowMessage="Sorry, I'm not trained in this content yet!"
-        placeholder="I want an example for..."
+        placeholder="How can I..."
       />
     </MyPrompt>
   );
