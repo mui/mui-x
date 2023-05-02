@@ -42,15 +42,6 @@ This component has the following peer dependencies that you will need to install
 },
 ```
 
-If you need to use `js-joda`, `date-fns-jalali`, `jalaali`, or `hijri` library, you should be able to find the corresponding date-library from [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
-In such a case, you will have to install both the date-library and the corresponding @date-io adapter.
-
-```jsx
-// To use moment-jalaali
-npm install moment-jalaali
-npm install @date-io/jalaali
-```
-
 After installation completed, you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly.
 The supported adapters are exported from `@mui/x-date-pickers`.
 

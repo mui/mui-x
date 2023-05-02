@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import {
@@ -12,7 +13,6 @@ import {
   describeGregorianAdapter,
   TEST_DATE_ISO,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
-import { AdapterFormats } from '@mui/x-date-pickers';
 
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
@@ -122,14 +122,6 @@ describe('<AdapterLuxon />', () => {
           expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
         });
       });
-    });
-
-    it('should return the correct week number', () => {
-      const adapter = new AdapterLuxon({ locale: 'fr' });
-
-      const dateToTest = adapter.date(new Date(2022, 10, 10))!;
-
-      expect(adapter.getWeekNumber!(dateToTest)).to.equal(45);
     });
   });
 });

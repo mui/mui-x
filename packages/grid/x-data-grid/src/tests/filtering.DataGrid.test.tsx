@@ -1105,8 +1105,59 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('filter button tooltip', () => {
+    it('should display `falsy` value', () => {
+      const { setProps } = render(
+        <DataGrid
+          filterModel={{
+            items: [{ id: 0, field: 'isAdmin', operator: 'is', value: false }],
+          }}
+          autoHeight
+          rows={[
+            {
+              id: 0,
+              isAdmin: false,
+              level: 0,
+            },
+          ]}
+          columns={[
+            {
+              field: 'isAdmin',
+              type: 'singleSelect',
+              valueOptions: [
+                {
+                  value: false,
+                  label: false,
+                },
+              ],
+            },
+            {
+              field: 'level',
+              type: 'number',
+            },
+          ]}
+          components={{ Toolbar: GridToolbarFilterButton }}
+        />,
+      );
+
+      const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
+
+      const tooltip = screen.getByRole('tooltip');
+
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('false');
+
+      setProps({ filterModel: { items: [{ id: 0, field: 'level', operator: '=', value: 0 }] } });
+      expect(tooltip.textContent).to.contain('0');
+    });
+  });
+
   describe('custom `filterOperators`', () => {
-    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+    it('should allow to customize filter tooltip using `filterOperator.getValueAsString`', () => {
       render(
         <div style={{ width: '100%', height: '400px' }}>
           <DataGrid

@@ -32,16 +32,18 @@ const materialTheme = materialExtendTheme({
 });
 
 const columns: GridColDef[] = [
-  { field: 'name', editable: true, type: 'string' },
-  { field: 'number', editable: true, type: 'number' },
-  { field: 'date', editable: true, type: 'date' },
-  { field: 'dateTime', editable: true, type: 'dateTime' },
-  { field: 'boolean', editable: true, type: 'boolean' },
+  { field: 'name', editable: true, type: 'string', minWidth: 140 },
+  { field: 'number', editable: true, type: 'number', flex: 1 },
+  { field: 'date', editable: true, type: 'date', minWidth: 100 },
+  { field: 'dateTime', editable: true, type: 'dateTime', minWidth: 160 },
+  { field: 'boolean', editable: true, type: 'boolean', flex: 1 },
   {
     field: 'singleSelect',
     editable: true,
     type: 'singleSelect',
     valueOptions: ['Item1', 'Item2', 'Item3'],
+    minWidth: 100,
+    flex: 1,
   },
   {
     field: 'actions',
@@ -55,6 +57,8 @@ const columns: GridColDef[] = [
       <GridActionsCellItem onClick={() => {}} label="Print" showInMenu />,
       <GridActionsCellItem label="Duplicate User" showInMenu />,
     ],
+    minWidth: 80,
+    flex: 1,
   },
 ];
 const rows = [
@@ -89,6 +93,10 @@ export default function GridJoyUISlots() {
                 sx: {
                   '& .MuiDataGrid-filterForm': {
                     alignItems: 'flex-end',
+                  },
+                  '& .MuiDataGrid-panelContent': {
+                    // To prevent the Select popup being hidden by the panel
+                    overflow: 'visible',
                   },
                 },
               },

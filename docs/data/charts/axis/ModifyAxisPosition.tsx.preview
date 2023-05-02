@@ -1,0 +1,15 @@
+<ScatterChart
+  series={[
+    {
+      type: 'scatter',
+      id: 'linear',
+      data,
+    },
+  ]}
+  leftAxis={null}
+  bottomAxis={null}
+  topAxis={DEFAULT_X_AXIS_KEY}
+  rightAxis={DEFAULT_Y_AXIS_KEY}
+  width={600}
+  height={500}
+/>

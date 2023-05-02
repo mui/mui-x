@@ -76,12 +76,4 @@ describe('<StaticDateRangePicker />', () => {
       ),
     ).to.have.text('1');
   });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<StaticDateRangePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
-  });
 });

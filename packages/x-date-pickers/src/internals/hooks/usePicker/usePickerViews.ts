@@ -3,17 +3,17 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { DateOrTimeView } from '../../../models';
 import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
-interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeView>
+interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
   extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
 
 export type PickerViewsRendererProps<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = TExternalProps &
@@ -27,7 +27,7 @@ export type PickerViewsRendererProps<
 
 type PickerViewRenderer<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = (
@@ -36,7 +36,7 @@ type PickerViewRenderer<
 
 export type PickerViewRendererLookup<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = {
@@ -48,7 +48,7 @@ export type PickerViewRendererLookup<
  */
 export interface UsePickerViewsBaseProps<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 > extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'> {
@@ -80,7 +80,7 @@ export interface UsePickerViewsNonStaticProps {
  */
 export interface UsePickerViewsProps<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 > extends UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
@@ -91,7 +91,7 @@ export interface UsePickerViewsProps<
 
 export interface UsePickerViewParams<
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
   TAdditionalProps extends {},
 > {
@@ -102,7 +102,7 @@ export interface UsePickerViewParams<
   autoFocusView: boolean;
 }
 
-export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
+export interface UsePickerViewsResponse<TView extends DateOrTimeViewWithMeridiem> {
   /**
    * Does the picker have at least one view that should be rendered in UI mode ?
    * If not, we can hide the icon to open the picker.
@@ -113,7 +113,7 @@ export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
   layoutProps: UsePickerViewsLayoutResponse<TView>;
 }
 
-export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeView> {
+export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMeridiem> {
   view: TView | null;
   onViewChange: (view: TView) => void;
   views: readonly TView[];
@@ -127,7 +127,7 @@ export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeView> {
  */
 export const usePickerViews = <
   TValue,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 >({

@@ -1,10 +1,13 @@
 import { DefaultizedProps } from '../helpers';
 import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
 
+type ScatterValueType = { x: unknown; y: unknown; id: string | number };
+
 export interface ScatterSeriesType extends CommonSeriesType, CartesianSeriesType {
   type: 'scatter';
-  data: { x: unknown; y: unknown; id: string | number }[];
+  data: ScatterValueType[];
   markerSize?: number;
+  label?: string;
 }
 
 /**
@@ -19,4 +22,4 @@ export type ScatterItemIdentifier = {
 
 export interface DefaultizedScatterSeriesType
   extends DefaultizedProps<ScatterSeriesType, 'xAxisKey' | 'yAxisKey'>,
-    DefaultizedCommonSeriesType {}
+    DefaultizedCommonSeriesType<ScatterValueType> {}

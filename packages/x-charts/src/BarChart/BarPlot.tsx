@@ -59,17 +59,18 @@ export function BarPlot() {
             // @ts-ignore TODO: fix when adding a correct API for customisation
             const { stackedData, color } = series[seriesId];
 
-            return stackedData.map(([baseline, value], dataIndex: number) => {
+            return stackedData.map((values, dataIndex: number) => {
+              const baseline = Math.min(...values);
+              const value = Math.max(...values);
               return (
                 <rect
                   key={`${seriesId}-${dataIndex}`}
-                  // @ts-ignore I don't get why this warning
-                  x={xScale(xAxis[xAxisKey].data[dataIndex]) + groupIndex * barWidth + offset}
+                  x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * barWidth + offset}
                   y={yScale(value)}
                   height={yScale(baseline) - yScale(value)}
                   width={barWidth}
                   fill={color}
-                  rx="5px"
+                  shapeRendering="crispEdges"
                   {...getInteractionItemProps({ type: 'bar', seriesId, dataIndex })}
                 />
               );
