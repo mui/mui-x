@@ -218,7 +218,6 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
     const onClick = React.useCallback(
       (event: React.MouseEvent) => {
         if (!hasFocus) {
-          apiRef.current.startHeaderFilterEditMode(colDef.field);
           apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);
         }
       },
@@ -229,6 +228,8 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
       () => ({
         onKeyDown: publish('headerFilterKeyDown', onKeyDown),
         onClick: publish('headerFilterClick', onClick),
+        onBlur: publish('headerFilterBlur'),
+        onFocus: publish('headerFilterFocus'),
       }),
       [onClick, onKeyDown, publish],
     );

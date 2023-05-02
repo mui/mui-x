@@ -194,6 +194,20 @@ export interface GridColumnHeaderEventLookup {
 
 export interface GridHeaderFilterEventLookup {
   /**
+   * Fired when a column header filter is focused
+   */
+  headerFilterFocus: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column header filter is blurred
+   */
+  headerFilterBlur: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
    * Fired when a column header filter is clicked
    */
   headerFilterClick: {
