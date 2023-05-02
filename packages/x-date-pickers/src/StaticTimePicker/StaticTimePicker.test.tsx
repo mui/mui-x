@@ -13,7 +13,10 @@ import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<StaticTimePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+  });
 
   describeValidation(StaticTimePicker, () => ({
     render,
@@ -144,13 +147,5 @@ describe('<StaticTimePicker />', () => {
     // meridiem are disabled
     expect(screen.getByRole('button', { name: /AM/i })).to.have.attribute('disabled');
     expect(screen.getByRole('button', { name: /PM/i })).to.have.attribute('disabled');
-  });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<StaticTimePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
   });
 });

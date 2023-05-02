@@ -6,6 +6,7 @@ import {
 import defaultizeCartesianSeries from '../internals/defaultizeCartesianSeries';
 import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, Formatter } from '../models/seriesType/config';
+import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
 
 // For now it's a copy past of bar charts formatter, but maybe will diverge later
 const formatter: Formatter<'line'> = (params) => {
@@ -41,7 +42,14 @@ const formatter: Formatter<'line'> = (params) => {
     });
   });
 
-  return { seriesOrder, stackingGroups, series: defaultizeCartesianSeries(completedSeries) };
+  return {
+    seriesOrder,
+    stackingGroups,
+    series: defaultizeValueFormatter(
+      defaultizeCartesianSeries<ChartSeries<'line'>>(completedSeries),
+      (v) => v.toLocaleString(),
+    ),
+  };
 };
 
 export default formatter;

@@ -20,6 +20,7 @@
     "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar.",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
     "format": "Format of the date when rendered in the input(s). Defaults to localized format based on the used <code>views</code>.",
+    "formatDensity": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
     "inputRef": "Pass a ref to the <code>input</code> element.",
     "label": "The label content.",
     "loading": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar.",

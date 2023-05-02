@@ -2,8 +2,9 @@ import * as React from 'react';
 import useChartDimensions from '../hooks/useChartDimensions';
 import { LayoutConfig } from '../models/layout';
 
-interface DrawingProviderProps extends LayoutConfig {
+export interface DrawingProviderProps extends LayoutConfig {
   children: React.ReactNode;
+  svgRef: React.RefObject<SVGSVGElement>;
 }
 
 /**
@@ -22,9 +23,14 @@ export const DrawingContext = React.createContext<DrawingArea>({
   height: 300,
   width: 400,
 });
+export const SVGContext = React.createContext<React.RefObject<SVGSVGElement>>({ current: null });
 
-export function DrawingProvider({ width, height, margin, children }: DrawingProviderProps) {
+export function DrawingProvider({ width, height, margin, svgRef, children }: DrawingProviderProps) {
   const drawingArea = useChartDimensions(width, height, margin);
 
-  return <DrawingContext.Provider value={drawingArea}>{children}</DrawingContext.Provider>;
+  return (
+    <SVGContext.Provider value={svgRef}>
+      <DrawingContext.Provider value={drawingArea}>{children}</DrawingContext.Provider>
+    </SVGContext.Provider>
+  );
 }

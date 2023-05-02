@@ -233,6 +233,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
+          unstable_updateValueOnRender: false,
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];
@@ -243,6 +244,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           value: 1,
           error: false,
           isProcessingProps: true,
+          unstable_updateValueOnRender: false,
         });
       });
 

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { DrawingProvider } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
-import { LayoutConfig } from '../models/layout';
-import Surface from '../Surface';
+import { SeriesContextProvider } from '../context/SeriesContextProvider';
+import { Surface } from '../Surface';
+import { CartesianContextProvider } from '../context/CartesianContextProvider';
+import { InteractionProvider } from '../context/InteractionProvider';
+import { ChartContainerProps } from '../ChartContainer';
+import { Tooltip } from '../Tooltip';
 
 const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, number] => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -33,20 +33,26 @@ const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, 
   return [ref, width, height];
 };
 
-type ChartContainerProps = LayoutConfig & SeriesContextProviderProps;
+export type ResponsiveChartContainerProps = Omit<ChartContainerProps, 'width' | 'height'>;
 
-export function ResponsiveChartContainer(props: ChartContainerProps) {
-  const { series, margin, children } = props;
+export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
+  const { series, margin, xAxis, yAxis, colors, sx, title, desc, tooltip, children } = props;
+  const ref = React.useRef<SVGSVGElement>(null);
 
-  const [ref, width, height] = useChartDimensions();
+  const [containerRef, width, height] = useChartDimensions();
 
   return (
-    <div ref={ref} style={{ width: '100%', height: '100%' }}>
-      <DrawingProvider width={width} height={height} margin={margin}>
-        <SeriesContextProvider series={series}>
-          <Surface width={width} height={height}>
-            {children}
-          </Surface>
+    <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
+      <DrawingProvider width={width} height={height} margin={margin} svgRef={ref}>
+        <SeriesContextProvider series={series} colors={colors}>
+          <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
+            <InteractionProvider>
+              <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
+                {children}
+                <Tooltip {...tooltip} />
+              </Surface>
+            </InteractionProvider>
+          </CartesianContextProvider>
         </SeriesContextProvider>
       </DrawingProvider>
     </div>

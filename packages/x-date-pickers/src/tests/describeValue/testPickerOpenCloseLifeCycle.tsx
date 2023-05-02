@@ -15,11 +15,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     return;
   }
 
-  // No view to test
-  if (pickerParams.variant === 'desktop' && pickerParams.type === 'time') {
-    return;
-  }
-
   const viewWrapperRole =
     pickerParams.type === 'date-range' && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
 
@@ -147,7 +142,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           onAccept={onAccept}
           onClose={onClose}
           open
-          defaultValue={values[0]}
+          value={values[0]}
           closeOnSelect
         />,
       );
@@ -242,10 +237,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose when clicking outside of the picker without prior change', () => {
+    it('should call onClose when clicking outside of the picker without prior change', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
       if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
-        return;
+        this.skip();
       }
 
       const onChange = spy();
@@ -257,7 +252,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          defaultValue={values[0]}
+          value={values[0]}
           open
           closeOnSelect={false}
         />,
@@ -270,10 +265,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
       if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
-        return;
+        this.skip();
       }
 
       const onChange = spy();

@@ -251,6 +251,14 @@ function RowDemo(props: { row: Row }) {
   );
 }
 
+function CustomSizeAggregationFooter(props: { value: string | undefined }) {
+  return (
+    <Typography sx={{ fontWeight: 500, fontSize: '1em' }} color="primary">
+      Total: {props.value}
+    </Typography>
+  );
+}
+
 const columns: GridColDef[] = [
   {
     field: 'name',
@@ -260,6 +268,9 @@ const columns: GridColDef[] = [
     minWidth: 100,
     groupable: false,
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
@@ -320,6 +331,9 @@ const columns: GridColDef[] = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params: GridRenderCellParams<any, string>) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
