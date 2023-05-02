@@ -9,7 +9,6 @@ import { YAxis } from '@mui/x-charts/YAxis';
 const series = [
   {
     type: 'bar',
-    id: 'Eco-1',
     stack: '',
     xAxisKey: 'years',
     yAxisKey: 'eco',
@@ -18,7 +17,6 @@ const series = [
   },
   {
     type: 'bar',
-    id: 'Eco-2',
     stack: '',
     xAxisKey: 'years',
     yAxisKey: 'eco',
@@ -27,7 +25,6 @@ const series = [
   },
   {
     type: 'line',
-    id: 'pib',
     xAxisKey: 'years',
     yAxisKey: 'pib',
     data: [1000, 1500, 3000, 5000, 10000],

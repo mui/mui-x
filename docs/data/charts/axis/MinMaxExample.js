@@ -45,7 +45,6 @@ export default function MinMaxExample() {
         ]}
         series={[
           {
-            type: 'scatter',
             id: 'linear',
             xAxisKey: 'x',
             data,

@@ -67,7 +67,6 @@ export default function StackedAreas() {
       ]}
       series={[
         {
-          type: 'line',
           id: 'France',
           label: 'French GDP per capite',
           xAxisKey: 'Years',
@@ -76,7 +75,6 @@ export default function StackedAreas() {
           area: {},
         },
         {
-          type: 'line',
           id: 'Germany',
           label: 'German GDP per capite',
           xAxisKey: 'Years',
@@ -85,7 +83,6 @@ export default function StackedAreas() {
           area: {},
         },
         {
-          type: 'line',
           id: 'United Kingdom',
           label: 'UK GDP per capite',
           xAxisKey: 'Years',
