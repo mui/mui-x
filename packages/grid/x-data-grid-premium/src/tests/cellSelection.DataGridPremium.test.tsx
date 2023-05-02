@@ -341,7 +341,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
       expect(virtualScroller.scrollTop).to.equal(0);
       const cell71 = getCell(7, 1);
-      fireEvent.mouseOver(cell71, { clientX: 0, clientY: rect.y + rect.height - 25 }); // 25=half speed
+      fireEvent.mouseOver(cell71, { clientX: rect.x, clientY: rect.y + rect.height - 25 }); // 25=half speed
       clock.tick(20);
       expect(virtualScroller.scrollTop).to.equal(10);
 
@@ -349,7 +349,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       virtualScroller.dispatchEvent(new Event('scroll'));
 
       expect(virtualScroller.scrollTop).to.equal(0);
-      fireEvent.mouseOver(cell71, { clientX: 0, clientY: rect.y + rect.height - 0 }); // 0=full speed
+      fireEvent.mouseOver(cell71, { clientX: rect.x, clientY: rect.y + rect.height - 0 }); // 0=full speed
       clock.tick(20);
       expect(virtualScroller.scrollTop).to.equal(20);
     });
@@ -379,11 +379,11 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       expect(virtualScroller.scrollTop).to.equal(30);
 
       const cell11 = getCell(1, 1);
-      fireEvent.mouseOver(cell11, { clientX: 0, clientY: rect.y + 25 }); // 25=half speed
+      fireEvent.mouseOver(cell11, { clientX: rect.x, clientY: rect.y + 25 }); // 25=half speed
       clock.tick(20);
       expect(virtualScroller.scrollTop).to.equal(20);
 
-      fireEvent.mouseOver(cell11, { clientX: 0, clientY: rect.y }); // 0=full speed
+      fireEvent.mouseOver(cell11, { clientX: rect.x, clientY: rect.y }); // 0=full speed
       clock.tick(20);
       expect(virtualScroller.scrollTop).to.equal(0);
     });
