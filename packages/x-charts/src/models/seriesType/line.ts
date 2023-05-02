@@ -26,4 +26,4 @@ export type LineItemIdentifier = {
 
 export interface DefaultizedLineSeriesType
   extends DefaultizedProps<LineSeriesType, 'xAxisKey' | 'yAxisKey' | 'id'>,
-    DefaultizedCommonSeriesType<number>  {}
+    DefaultizedCommonSeriesType<number> {}
