@@ -111,7 +111,10 @@ export function CartesianContextProvider({
 
     const allXAxis: AxisConfig[] = [
       ...(xAxis ?? []),
-      { id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' },
+      // Allows to specify an axis with id=DEFAULT_X_AXIS_KEY
+      ...(xAxis === undefined || xAxis.findIndex(({ id }) => id === DEFAULT_X_AXIS_KEY) === -1
+        ? [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
+        : []),
     ];
 
     const completedXAxis: DefaultizedAxisConfig = {};
@@ -132,7 +135,9 @@ export function CartesianContextProvider({
 
     const allYAxis: AxisConfig[] = [
       ...(yAxis ?? []),
-      { id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' },
+      ...(yAxis === undefined || yAxis.findIndex(({ id }) => id === DEFAULT_Y_AXIS_KEY) === -1
+        ? [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
+        : []),
     ];
 
     const completedYAxis: DefaultizedAxisConfig = {};
@@ -154,8 +159,8 @@ export function CartesianContextProvider({
     return {
       xAxis: completedXAxis,
       yAxis: completedYAxis,
-      xAxisIds: [...(xAxis ?? []), { id: DEFAULT_X_AXIS_KEY }]?.map(({ id }) => id),
-      yAxisIds: [...(yAxis ?? []), { id: DEFAULT_Y_AXIS_KEY }]?.map(({ id }) => id),
+      xAxisIds: allXAxis.map(({ id }) => id),
+      yAxisIds: allYAxis.map(({ id }) => id),
     };
   }, [
     drawingArea.height,
