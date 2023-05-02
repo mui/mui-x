@@ -9,10 +9,15 @@ const MyPrompt = styled(Box)(
     border: 1px solid lightgray;
     border-radius:10px;
     overflow:hidden;
+    min-height: 400px;
+    padding:10px;
+
     input {
         font-size:1.5rem;
         width:100%;
-        border-bottom
+        outline: none;
+        border: 0px;
+        border-bottom: 1px solid darkgray;
     }
   `,
 );
