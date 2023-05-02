@@ -4,6 +4,7 @@ import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis/Axis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 
 export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
@@ -32,7 +33,17 @@ export function LineChart(props: LineChartProps) {
       width={width}
       height={height}
       margin={margin}
-      xAxis={xAxis}
+      xAxis={
+        xAxis ?? [
+          {
+            id: DEFAULT_X_AXIS_KEY,
+            scaleType: 'band',
+            data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
+              (_, index) => index,
+            ),
+          },
+        ]
+      }
       yAxis={yAxis}
       colors={colors}
       sx={sx}
