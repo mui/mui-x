@@ -10,7 +10,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Density selector toolbar button text
   toolbarDensity: 'Densité',
   toolbarDensityLabel: 'Densité',
-  toolbarDensityCompact: 'Compact',
+  toolbarDensityCompact: 'Compacte',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Confortable',
 
