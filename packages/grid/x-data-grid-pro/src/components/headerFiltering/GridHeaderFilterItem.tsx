@@ -32,11 +32,12 @@ import { OPERATOR_LABEL_MAPPING, NO_INPUT_OPERATORS, TYPES_WITH_NO_FILTER_CELL }
 type GridHeaderFilterItemConditionalProps =
   | {
       operator: 'contains' | 'startsWith' | 'endsWith' | 'equals';
-      colType: 'string' | string;
+      colType: 'string';
       InputComponentProps?: GridTypeFilterInputValueProps;
     }
   | {
       operator: 'isEmpty' | 'isNotEmpty';
+      colType: string;
       InputComponentProps?: null;
     }
   | {
@@ -99,6 +100,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
   (props, ref) => {
     const {
       colIndex,
+      colType,
       height,
       hasFocus,
       headerFilterComponent,
@@ -238,7 +240,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
 
     const classes = useUtilityClasses(ownerState as OwnerState);
 
-    const isNoInputOperator = NO_INPUT_OPERATORS[colDef.type!]?.includes(item.operator);
+    const isNoInputOperator = NO_INPUT_OPERATORS[colType!]?.includes(item.operator);
     const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
     const label =
       OPERATOR_LABEL_MAPPING[item.operator] ??
@@ -263,7 +265,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
         {...mouseEventsHandlers}
       >
         {headerFilterComponent}
-        {InputComponent && !headerFilterComponent ? (
+        {InputComponent && headerFilterComponent === undefined ? (
           <InputComponent
             apiRef={apiRef}
             item={item}
