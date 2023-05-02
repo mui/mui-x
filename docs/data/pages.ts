@@ -36,7 +36,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/demo' },
       {
         pathname: '/x/react-data-grid/experiments/example-bot',
-        title: 'Ask me for a custom example',
+        title: 'Ask the bot for a custom example',
         plan: 'pro',
       },
       { pathname: '/x/react-data-grid/getting-started' },
