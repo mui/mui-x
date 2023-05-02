@@ -84,9 +84,9 @@ You can use the `valueGetter` attribute of `GridColDef` to:
 
 The value returned by `valueGetter` is used for:
 
-- filtering
-- sorting
-- rendering (unless overridden by [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) or [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells))
+- Filtering
+- Sorting
+- Rendering (unless enhanced further by [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) or [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells))
 
 {{"demo": "ValueGetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
