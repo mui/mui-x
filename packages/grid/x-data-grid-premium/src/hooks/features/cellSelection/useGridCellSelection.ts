@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEventCallback } from '@mui/material/utils';
+import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import {
   GridPipeProcessor,
   GridStateInitializer,
@@ -216,12 +216,36 @@ export const useGridCellSelection = (
     [apiRef, hasClickedValidCellForRangeSelection],
   );
 
+  const handleMouseOut = useEventCallback((event: MouseEvent) => {
+    const virtualScrollerRect = apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
+
+    if (!virtualScrollerRect) {
+      return;
+    }
+
+    const isInsideVirtualScroller =
+      event.clientX <= virtualScrollerRect.right &&
+      event.clientX >= virtualScrollerRect.left &&
+      event.clientY >= virtualScrollerRect.top &&
+      event.clientY <= virtualScrollerRect.bottom;
+
+    if (!isInsideVirtualScroller) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      stopAutoScroll();
+    }
+  });
+
   const stopAutoScroll = React.useCallback(() => {
     if (autoScrollInterval.current) {
       clearTimeout(autoScrollInterval.current);
       autoScrollInterval.current = null;
     }
-  }, []);
+
+    if (apiRef.current.virtualScrollerRef?.current) {
+      const document = ownerDocument(apiRef.current.virtualScrollerRef.current);
+      document.removeEventListener('mouseover', handleMouseOut);
+    }
+  }, [apiRef, handleMouseOut]);
 
   const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>(() => {
     lastMouseDownCell.current = null;
@@ -239,6 +263,13 @@ export const useGridCellSelection = (
     if (autoScrollInterval.current) {
       return;
     }
+
+    if (!apiRef.current.virtualScrollerRef?.current) {
+      return;
+    }
+
+    const document = ownerDocument(apiRef.current.virtualScrollerRef.current);
+    document.addEventListener('mouseover', handleMouseOut);
 
     autoScrollInterval.current = setInterval(() => {
       if (!apiRef.current.virtualScrollerRef?.current) {
@@ -288,7 +319,7 @@ export const useGridCellSelection = (
         });
       }
     }, 20);
-  }, [apiRef]);
+  }, [apiRef, handleMouseOut]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
