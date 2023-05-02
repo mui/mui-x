@@ -91,7 +91,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       cell.focus();
       userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.click(getCell(2, 1), { shiftKey: true });
+      userEvent.mousePress(getCell(2, 1), { shiftKey: true });
       expect(document.querySelectorAll('.Mui-selected')).to.have.length(3 * 2); // 3 rows with 2 cells each
     });
 
