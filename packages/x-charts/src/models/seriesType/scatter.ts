@@ -21,5 +21,5 @@ export type ScatterItemIdentifier = {
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, 'xAxisKey' | 'yAxisKey' | 'id'>,
+  extends DefaultizedProps<ScatterSeriesType, 'id'>,
     DefaultizedCommonSeriesType<ScatterValueType> {}

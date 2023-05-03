@@ -13,13 +13,15 @@ export function ScatterPlot() {
     return null;
   }
   const { series, seriesOrder } = seriesData;
-  const { xAxis, yAxis } = axisData;
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
 
   const seriesPerAxis: { [key: string]: ScatterSeriesType[] } = {};
 
   seriesOrder.forEach((seriesId) => {
-    const xAxisKey = series[seriesId].xAxisKey;
-    const yAxisKey = series[seriesId].yAxisKey;
+    const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
+    const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
 
     const key = `${xAxisKey}-${yAxisKey}`;
 

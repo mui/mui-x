@@ -7,7 +7,6 @@ import { LineElement } from './LineElement';
 import { AreaElement } from './AreaElement';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { MarkElement } from './MarkElement';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
@@ -21,13 +20,15 @@ export function LinePlot() {
     return null;
   }
   const { series, seriesOrder, stackingGroups } = seriesData;
-  const { xAxis, yAxis } = axisData;
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
 
   const seriesPerAxis: { [key: string]: LineSeriesType[] } = {};
 
   seriesOrder.forEach((seriesId) => {
-    const xAxisKey = series[seriesId].xAxisKey; // ?? DEFAULT_X_AXIS_KEY;
-    const yAxisKey = series[seriesId].yAxisKey; // ?? DEFAULT_Y_AXIS_KEY;
+    const xAxisKey = series[seriesId].xAxisKey; // ?? defaultXAxisId;
+    const yAxisKey = series[seriesId].yAxisKey; // ?? defaultYAxisId;
 
     const key = `${xAxisKey}-${yAxisKey}`;
 
@@ -44,8 +45,8 @@ export function LinePlot() {
         {stackingGroups.flatMap((groupIds) => {
           return groupIds.flatMap((seriesId) => {
             const {
-              xAxisKey = DEFAULT_X_AXIS_KEY,
-              yAxisKey = DEFAULT_Y_AXIS_KEY,
+              xAxisKey = defaultXAxisId,
+              yAxisKey = defaultYAxisId,
               stackedData,
             } = series[seriesId];
 
@@ -87,8 +88,8 @@ export function LinePlot() {
         {stackingGroups.flatMap((groupIds) => {
           return groupIds.flatMap((seriesId) => {
             const {
-              xAxisKey = DEFAULT_X_AXIS_KEY,
-              yAxisKey = DEFAULT_Y_AXIS_KEY,
+              xAxisKey = defaultXAxisId,
+              yAxisKey = defaultYAxisId,
               stackedData,
             } = series[seriesId];
 
@@ -127,8 +128,8 @@ export function LinePlot() {
         {stackingGroups.flatMap((groupIds) => {
           return groupIds.flatMap((seriesId) => {
             const {
-              xAxisKey = DEFAULT_X_AXIS_KEY,
-              yAxisKey = DEFAULT_Y_AXIS_KEY,
+              xAxisKey = defaultXAxisId,
+              yAxisKey = defaultYAxisId,
               stackedData,
             } = series[seriesId];
 
