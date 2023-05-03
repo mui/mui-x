@@ -12,7 +12,6 @@ export default function Composition() {
         {
           type: 'scatter',
           id: 's1',
-          yAxisKey: 'leftAxis',
           markerSize: 5,
           data: [
             { x: 0, y: 0, id: 0 },
