@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { line as d3Line, area as d3Area } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { LineElement } from './LineElement';
 import { AreaElement } from './AreaElement';
@@ -19,25 +18,10 @@ export function LinePlot() {
   if (seriesData === undefined) {
     return null;
   }
-  const { series, seriesOrder, stackingGroups } = seriesData;
+  const { series, stackingGroups } = seriesData;
   const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
-
-  const seriesPerAxis: { [key: string]: LineSeriesType[] } = {};
-
-  seriesOrder.forEach((seriesId) => {
-    const xAxisKey = series[seriesId].xAxisKey; // ?? defaultXAxisId;
-    const yAxisKey = series[seriesId].yAxisKey; // ?? defaultYAxisId;
-
-    const key = `${xAxisKey}-${yAxisKey}`;
-
-    if (seriesPerAxis[key] === undefined) {
-      seriesPerAxis[key] = [series[seriesId]];
-    } else {
-      seriesPerAxis[key].push(series[seriesId]);
-    }
-  });
 
   return (
     <React.Fragment>
