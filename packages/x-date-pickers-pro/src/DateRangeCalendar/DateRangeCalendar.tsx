@@ -534,7 +534,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               slots={slots}
               slotProps={slotProps}
             >
-              <Typography variant="subtitle1" component="span">
+              <Typography variant="body1" fontWeight="medium" component="span">
                 {utils.format(visibleMonths[month], 'monthAndYear')}
               </Typography>
             </DateRangeCalendarArrowSwitcher>
