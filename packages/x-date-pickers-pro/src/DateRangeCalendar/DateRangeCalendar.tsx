@@ -67,7 +67,7 @@ const DateRangeCalendarRoot = styled('div', {
 
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
-  slot: 'Container',
+  slot: 'MonthContainer',
   overridesResolver: (_, styles) => styles.monthContainer,
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
@@ -76,8 +76,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
-  padding: '16px 16px 8px 16px',
-  display: 'flex',
+  margin: 16,
   alignItems: 'center',
   justifyContent: 'space-between',
 });

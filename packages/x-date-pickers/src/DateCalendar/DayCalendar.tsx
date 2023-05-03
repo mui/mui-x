@@ -124,13 +124,24 @@ const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
+const PickersCalendarDayRoot = styled('div', {
+  name: 'MuiDayCalendar',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
+  display: 'flex',
+  flexDirection: 'column',
+  margin: '0 16px',
+  gap: 16,
+});
+
 const PickersCalendarDayHeader = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Header',
   overridesResolver: (_, styles) => styles.header,
 })({
   display: 'flex',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   alignItems: 'center',
 });
 
@@ -213,7 +224,7 @@ const PickersCalendarWeek = styled('div', {
 })({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
 });
 
 function WrappedDay<TDate extends unknown>({
@@ -535,7 +546,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   }, [currentMonth, fixedWeekNumber, utils]);
 
   return (
-    <div role="grid" aria-labelledby={gridLabelId}>
+    <PickersCalendarDayRoot role="grid" aria-labelledby={gridLabelId}>
       <PickersCalendarDayHeader role="row" className={classes.header}>
         {displayWeekNumber && (
           <PickersCalendarWeekNumberLabel
@@ -623,6 +634,6 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           </PickersCalendarWeekContainer>
         </PickersCalendarSlideTransition>
       )}
-    </div>
+    </PickersCalendarDayRoot>
   );
 }
