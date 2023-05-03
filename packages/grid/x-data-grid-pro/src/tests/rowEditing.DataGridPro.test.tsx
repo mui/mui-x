@@ -959,7 +959,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         apiRef.current.subscribeEvent('rowEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(listener.lastCall.args[0].reason).to.equal('rowFocusOut');
       });
@@ -968,7 +968,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         render(<TestCase />);
         const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
         fireEvent.doubleClick(getCell(0, 1));
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
@@ -987,7 +987,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         });
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
