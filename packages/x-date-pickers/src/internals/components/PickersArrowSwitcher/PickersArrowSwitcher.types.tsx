@@ -31,6 +31,7 @@ export interface PickersArrowSwitcherProps
   isNextHidden?: boolean;
   onGoToNext: () => void;
   nextLabel: string;
+  hideControls?: boolean;
 }
 
 export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;

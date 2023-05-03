@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -139,6 +138,7 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
   marginRight: 'auto',
   ...theme.typography.body1,
   fontWeight: theme.typography.fontWeightMedium,
+  margin: '0 auto',
 }));
 
 const PickersCalendarHeaderLabel = styled('div', {
@@ -260,47 +260,46 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   return (
     <PickersCalendarHeaderRoot ownerState={ownerState} className={classes.root}>
-      <Fade in={view === 'day'}>
-        <PickersCalendarHeaderArrowSwitcher
-          slots={slots}
-          slotProps={slotProps}
-          onGoToPrevious={selectPreviousMonth}
-          isPreviousDisabled={isPreviousMonthDisabled}
-          previousLabel={localeText.previousMonth}
-          onGoToNext={selectNextMonth}
-          isNextDisabled={isNextMonthDisabled}
-          nextLabel={localeText.nextMonth}
-          className={classes.arrowSwitcher}
+      <PickersCalendarHeaderArrowSwitcher
+        slots={slots}
+        slotProps={slotProps}
+        onGoToPrevious={selectPreviousMonth}
+        isPreviousDisabled={isPreviousMonthDisabled}
+        previousLabel={localeText.previousMonth}
+        onGoToNext={selectNextMonth}
+        isNextDisabled={isNextMonthDisabled}
+        nextLabel={localeText.nextMonth}
+        className={classes.arrowSwitcher}
+        hideControls={view !== 'day'}
+      >
+        <PickersCalendarHeaderLabelContainer
+          role="presentation"
+          onClick={handleToggleView}
+          ownerState={ownerState}
+          // putting this on the label item element below breaks when using transition
+          aria-live="polite"
+          className={classes.labelContainer}
         >
-          <PickersCalendarHeaderLabelContainer
-            role="presentation"
-            onClick={handleToggleView}
-            ownerState={ownerState}
-            // putting this on the label item element below breaks when using transition
-            aria-live="polite"
-            className={classes.labelContainer}
+          <PickersFadeTransitionGroup
+            reduceAnimations={reduceAnimations}
+            transKey={utils.format(month, 'monthAndYear')}
           >
-            <PickersFadeTransitionGroup
-              reduceAnimations={reduceAnimations}
-              transKey={utils.format(month, 'monthAndYear')}
+            <PickersCalendarHeaderLabel
+              id={labelId}
+              data-mui-test="calendar-month-and-year-text"
+              ownerState={ownerState}
+              className={classes.label}
             >
-              <PickersCalendarHeaderLabel
-                id={labelId}
-                data-mui-test="calendar-month-and-year-text"
-                ownerState={ownerState}
-                className={classes.label}
-              >
-                {utils.format(month, 'monthAndYear')}
-              </PickersCalendarHeaderLabel>
-            </PickersFadeTransitionGroup>
-            {views.length > 1 && !disabled && (
-              <SwitchViewButton {...switchViewButtonProps}>
-                <SwitchViewIcon {...switchViewIconProps} />
-              </SwitchViewButton>
-            )}
-          </PickersCalendarHeaderLabelContainer>
-        </PickersCalendarHeaderArrowSwitcher>
-      </Fade>
+              {utils.format(month, 'monthAndYear')}
+            </PickersCalendarHeaderLabel>
+          </PickersFadeTransitionGroup>
+          {views.length > 1 && !disabled && (
+            <SwitchViewButton {...switchViewButtonProps}>
+              <SwitchViewIcon {...switchViewIconProps} />
+            </SwitchViewButton>
+          )}
+        </PickersCalendarHeaderLabelContainer>
+      </PickersCalendarHeaderArrowSwitcher>
     </PickersCalendarHeaderRoot>
   );
 }

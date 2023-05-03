@@ -30,6 +30,7 @@ import {
   UncapitalizeObjectKeys,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from '@mui/x-date-pickers/internals';
+import Typography from '@mui/material/Typography';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -533,7 +534,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               slots={slots}
               slotProps={slotProps}
             >
-              {utils.format(visibleMonths[month], 'monthAndYear')}
+              <Typography variant="subtitle1" component="span">
+                {utils.format(visibleMonths[month], 'monthAndYear')}
+              </Typography>
             </DateRangeCalendarArrowSwitcher>
           )}
 

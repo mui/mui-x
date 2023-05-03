@@ -1,10 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import Typography from '@mui/material/Typography';
 import { useTheme, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
+import Fade from '@mui/material/Fade';
 import { ArrowLeft, ArrowRight } from '../icons';
 import {
   PickersArrowSwitcherOwnerState,
@@ -77,6 +77,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     isPreviousHidden,
     onGoToPrevious,
     previousLabel,
+    hideControls,
     ...other
   } = props;
 
@@ -155,27 +156,27 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      <PreviousIconButton {...previousIconButtonProps}>
-        {isRTL ? (
-          <RightArrowIcon {...rightArrowIconProps} />
-        ) : (
-          <LeftArrowIcon {...leftArrowIconProps} />
-        )}
-      </PreviousIconButton>
-      {children ? (
-        <Typography variant="subtitle1" component="span">
-          {children}
-        </Typography>
-      ) : (
+      <Fade in={!hideControls}>
+        <PreviousIconButton {...previousIconButtonProps}>
+          {isRTL ? (
+            <RightArrowIcon {...rightArrowIconProps} />
+          ) : (
+            <LeftArrowIcon {...leftArrowIconProps} />
+          )}
+        </PreviousIconButton>
+      </Fade>
+      {children || (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      <NextIconButton {...nextIconButtonProps}>
-        {isRTL ? (
-          <LeftArrowIcon {...leftArrowIconProps} />
-        ) : (
-          <RightArrowIcon {...rightArrowIconProps} />
-        )}
-      </NextIconButton>
+      <Fade in={!hideControls}>
+        <NextIconButton {...nextIconButtonProps}>
+          {isRTL ? (
+            <LeftArrowIcon {...leftArrowIconProps} />
+          ) : (
+            <RightArrowIcon {...rightArrowIconProps} />
+          )}
+        </NextIconButton>
+      </Fade>
     </PickersArrowSwitcherRoot>
   );
 });
