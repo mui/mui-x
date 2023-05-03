@@ -22,10 +22,11 @@ import {
   ExtremumGetter,
   ExtremumGetterResult,
 } from '../models/seriesType/config';
+import { MakeOptional } from '../models/helpers';
 
 export type CartesianContextProviderProps = {
-  xAxis?: AxisConfig[];
-  yAxis?: AxisConfig[];
+  xAxis?: MakeOptional<AxisConfig, 'id'>[];
+  yAxis?: MakeOptional<AxisConfig, 'id'>[];
   children: React.ReactNode;
 };
 
@@ -113,7 +114,7 @@ export function CartesianContextProvider({
     };
 
     const allXAxis: AxisConfig[] = [
-      ...(xAxis ?? []),
+      ...(xAxis?.map((axis, index) => ({ id: `deaultized-x-axis-${index}`, ...axis })) ?? []),
       // Allows to specify an axis with id=DEFAULT_X_AXIS_KEY
       ...(xAxis === undefined || xAxis.findIndex(({ id }) => id === DEFAULT_X_AXIS_KEY) === -1
         ? [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
@@ -138,7 +139,7 @@ export function CartesianContextProvider({
     });
 
     const allYAxis: AxisConfig[] = [
-      ...(yAxis ?? []),
+      ...(yAxis?.map((axis, index) => ({ id: `deaultized-y-axis-${index}`, ...axis })) ?? []),
       ...(yAxis === undefined || yAxis.findIndex(({ id }) => id === DEFAULT_Y_AXIS_KEY) === -1
         ? [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
         : []),
