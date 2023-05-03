@@ -1,0 +1,6 @@
+<DataGridPro
+  {...data}
+  columns={columns}
+  disableColumnFilter
+  experimentalFeatures={{ headerFiltering: true }}
+/>

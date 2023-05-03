@@ -63,7 +63,7 @@ type GridHeaderFilterCellConditionalProps =
 export type GridHeaderFilterCellOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
   GridHeaderFilterCellConditionalProps;
 
-type GridHeaderFilterCellProps = GridHeaderFilterCellOverridableProps & {
+export type GridHeaderFilterCellProps = GridHeaderFilterCellOverridableProps & {
   colIndex: number;
   height: number;
   sortIndex?: number;

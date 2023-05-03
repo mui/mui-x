@@ -47,7 +47,7 @@ To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` o
 
 {{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Header filtering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `headerFiltering` experimental feature flag.
@@ -66,13 +66,28 @@ You can switch between different operators by clicking the operator button in th
 
 {{"demo": "HeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::info
-**Tip:** You can render custom components in the header filtering row by using the `colDef.renderHeaderFilter` method.
+### Customize header filters
+
+There are multiple ways to customize header filters.
+
+#### `headerFilterCell` slot
+
+You can use `slots.headerFilterCell` to customize the header filter cell completely. Additionally, `slots.headerFilterAdornment` and `slots.headerFilterMenu` could also be used to customize the adornment and the menu of the header filter cell respectively.
+
+```tsx
+<DataGridPro {...data} slots={{ headerFilterCell: MyCustomHeaderFilterCell }} />
+```
+
+{{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### `renderHeaderFilter` method
+
+You can also use the `renderHeaderFilter` method of the `GridColDef` to customize the header filter cell for a specific column.
 
 ```tsx
 const columns: GridColDef[] = [
   {
-    field: 'name',
+    field: 'isAdmin',
     renderHeaderFilter: (params: GridColumnHeaderParams<R, V, F>) => (
       <MyCustomHeaderFilter {...params} />
     ),
@@ -80,7 +95,15 @@ const columns: GridColDef[] = [
 ];
 ```
 
-:::
+Following demo uses the `renderHeaderFilter` method to customize the header filter cell for the `isAdmin` column and hide the filter cell for the `phone` column.
+
+{{"demo": "CustomHeaderFilterSingleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Customize using `filterOperators`
+
+You can also update the `InputComponent` of the `filterOperator` using `GridColDef.filterOperators` to customize the header filter cell for a specific operator type.
+
+{{"demo": "CustomHeaderFilterOperatorDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Pass filters to the Data Grid
 
