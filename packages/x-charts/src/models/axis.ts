@@ -11,33 +11,33 @@ export type ScaleName = 'linear' | 'band' | 'log' | 'point' | 'pow' | 'sqrt' | '
 
 export type AxisScaleMapping =
   | {
-      scaleName: 'band';
+      scaleType: 'band';
       scale: ScaleBand<any>;
     }
   | {
-      scaleName: 'log';
+      scaleType: 'log';
       scale: ScaleLogarithmic<any, any>;
     }
   | {
-      scaleName: 'point';
+      scaleType: 'point';
       scale: ScalePoint<any>;
     }
   | {
-      scaleName: 'pow' | 'sqrt';
+      scaleType: 'pow' | 'sqrt';
       scale: ScalePower<any, any>;
     }
   | {
-      scaleName: 'time' | 'utc';
+      scaleType: 'time' | 'utc';
       scale: ScaleTime<any, any>;
     }
   | {
-      scaleName: 'linear';
+      scaleType: 'linear';
       scale: ScaleLinear<any, any>;
     };
 
 export type AxisConfig<V = any> = {
   id: string;
-  scaleName?: ScaleName;
+  scaleType?: ScaleName;
   min?: number;
   max?: number;
   data?: V[];

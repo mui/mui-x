@@ -13,7 +13,7 @@ export default function TestLines() {
       yAxis={[
         {
           id: 'lineCategoriesY',
-          scaleName: 'linear',
+          scaleType: 'linear',
         },
       ]}
       series={[

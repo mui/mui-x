@@ -39,23 +39,21 @@ export default function CompositionResponsive() {
     <div style={{ width: '100%', height: '500px' }}>
       <ResponsiveChartContainer
         series={series}
-        width={500}
-        height={500}
         xAxis={[
           {
             id: 'years',
             data: [2010, 2011, 2012, 2013, 2014],
-            scaleName: 'band',
+            scaleType: 'band',
           },
         ]}
         yAxis={[
           {
             id: 'eco',
-            scaleName: 'linear',
+            scaleType: 'linear',
           },
           {
             id: 'pib',
-            scaleName: 'log',
+            scaleType: 'log',
           },
         ]}
       >

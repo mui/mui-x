@@ -14,13 +14,13 @@ export default function TestLinesTime() {
             new Date(2012, 2, 10),
             new Date(2012, 2, 15),
           ],
-          scaleName: 'time',
+          scaleType: 'time',
         },
       ]}
       yAxis={[
         {
           id: 'lineCategoriesY',
-          scaleName: 'linear',
+          scaleType: 'linear',
         },
       ]}
       series={[
