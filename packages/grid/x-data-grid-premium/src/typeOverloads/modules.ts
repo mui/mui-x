@@ -38,7 +38,7 @@ interface GridEventLookupPremium extends GridEventLookupPro {
   /**
    * Fired when the clipboard paste operation starts.
    */
-  clipboardPasteStart: {};
+  clipboardPasteStart: { params: { data: string[][] } };
   /**
    * Fired when the clipboard paste operation ends.
    */

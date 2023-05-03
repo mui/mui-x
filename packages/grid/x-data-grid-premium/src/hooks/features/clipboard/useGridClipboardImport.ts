@@ -167,8 +167,6 @@ class CellValueUpdater {
       return;
     }
 
-    apiRef.current.publishEvent('clipboardPasteStart');
-
     const handleRowUpdate = async (rowId: GridRowId) => {
       const newRow = rowsToUpdate[rowId];
 
@@ -275,6 +273,10 @@ export const useGridClipboardImport = (
         processRowUpdate,
         onProcessRowUpdateError,
         getRowId,
+      });
+
+      apiRef.current.publishEvent('clipboardPasteStart', {
+        data: pastedData,
       });
 
       const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
