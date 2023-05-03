@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Scatter } from './Scatter';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import { ScatterSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 
 export function ScatterPlot() {
   const seriesData = React.useContext(SeriesContext).scatter;
@@ -17,28 +15,13 @@ export function ScatterPlot() {
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
-  const seriesPerAxis: { [key: string]: ScatterSeriesType[] } = {};
-
-  seriesOrder.forEach((seriesId) => {
-    const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
-    const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
-
-    const key = `${xAxisKey}-${yAxisKey}`;
-
-    if (seriesPerAxis[key] === undefined) {
-      seriesPerAxis[key] = [series[seriesId]];
-    } else {
-      seriesPerAxis[key].push(series[seriesId]);
-    }
-  });
-
   return (
     <React.Fragment>
       {seriesOrder.map((seriesId) => {
         const { id, xAxisKey, yAxisKey, markerSize, color } = series[seriesId];
 
-        const xScale = xAxis[xAxisKey ?? DEFAULT_X_AXIS_KEY].scale;
-        const yScale = yAxis[yAxisKey ?? DEFAULT_Y_AXIS_KEY].scale;
+        const xScale = xAxis[xAxisKey ?? defaultXAxisId].scale;
+        const yScale = yAxis[yAxisKey ?? defaultYAxisId].scale;
         return (
           <Scatter
             key={id}
