@@ -68,7 +68,7 @@ export default function StackedAreas() {
       series={[
         {
           id: 'France',
-          l abel: 'French GDP per capita',
+          label: 'French GDP per capita',
           data: FranceGDPperCapita,
           stack: 'total',
           area: {},
