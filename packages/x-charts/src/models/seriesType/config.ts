@@ -41,6 +41,7 @@ export type ChartItemIdentifier<T extends ChartSeriesType> =
 type ExtremumGetterParams<T extends ChartSeriesType> = {
   series: { [id: string]: ChartSeries<T> };
   axis: AxisConfig;
+  isDefaultAxis: boolean;
 };
 
 export type ExtremumGetterResult = [number, number] | [null, null];
