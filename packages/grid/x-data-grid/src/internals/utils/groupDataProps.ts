@@ -7,12 +7,18 @@ export function groupDataProps<T extends {
 }>(
   props: T
 ): T {
-  const newProps = {} as Record<string, unknown>;
-  let dataProps: Record<string, unknown> | undefined = props.dataProps ?? undefined;
+  const keys = Object.keys(props);
 
-  for (const key of Object.keys(props)) {
+  if (!keys.some(key => key.startsWith('data-')))
+    return props;
+
+  const newProps = {} as Record<string, unknown>;
+  const dataProps: Record<string, unknown> = props.dataProps ?? {};
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+
     if (key.startsWith('data-')) {
-      dataProps ??= {}
       dataProps[key] = props[key]
     } else {
       newProps[key] = props[key]
