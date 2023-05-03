@@ -10,10 +10,6 @@ import {
   GridContextProvider,
   GridValidRowModel,
   useGridSelector,
-  unstable_gridTabIndexColumnHeaderFilterSelector,
-  gridTabIndexColumnHeaderSelector,
-  gridTabIndexCellSelector,
-  unstable_gridTabIndexColumnGroupHeaderSelector,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
@@ -32,29 +28,6 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
-  const columnHeaderFilterTabIndexState = useGridSelector(
-    privateApiRef,
-    unstable_gridTabIndexColumnHeaderFilterSelector,
-  );
-
-  const columnHeaderTabIndexState = useGridSelector(
-    privateApiRef,
-    gridTabIndexColumnHeaderSelector,
-  );
-
-  const cellTabIndexState = useGridSelector(privateApiRef, gridTabIndexCellSelector);
-  const columnGroupHeaderTabIndexState = useGridSelector(
-    privateApiRef,
-    unstable_gridTabIndexColumnGroupHeaderSelector,
-  );
-
-  const hasOtherElementInTabSequence = !(
-    columnGroupHeaderTabIndexState === null &&
-    columnHeaderFilterTabIndexState === null &&
-    columnHeaderTabIndexState === null &&
-    cellTabIndexState === null
-  );
-
   const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
 
   return (
@@ -63,11 +36,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         <GridHeader />
         <GridBody
           VirtualScrollerComponent={DataGridProVirtualScroller}
-          ColumnHeadersProps={{
-            pinnedColumns,
-            columnHeaderFilterTabIndexState,
-            hasOtherElementInTabSequence,
-          }}
+          ColumnHeadersProps={{ pinnedColumns }}
         >
           <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
         </GridBody>

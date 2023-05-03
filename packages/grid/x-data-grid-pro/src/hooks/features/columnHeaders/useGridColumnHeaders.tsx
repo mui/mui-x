@@ -4,8 +4,8 @@ import {
   unstable_gridFocusColumnHeaderFilterSelector,
   useGridSelector,
   getGridFilter,
-  GridColumnIdentifier,
   gridFilterModelSelector,
+  unstable_gridTabIndexColumnHeaderFilterSelector,
 } from '@mui/x-data-grid';
 import { styled } from '@mui/system';
 import {
@@ -18,10 +18,6 @@ import {
 import { GridHeaderFilterItem } from '../../../components/headerFiltering/GridHeaderFilterItem';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-export interface UseGridColumnHeadersProProps extends UseGridColumnHeadersProps {
-  columnHeaderFilterTabIndexState: GridColumnIdentifier | null;
-}
-
 type OwnerState = DataGridProProcessedProps;
 
 const GridHeaderFilterRow = styled('div', {
@@ -33,10 +29,19 @@ const GridHeaderFilterRow = styled('div', {
   borderTop: '1px solid rgba(224, 224, 224, 1)',
 }));
 
-export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
-  const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity(props);
-  const { headerGroupingMaxDepth } = props;
+export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
+
+  const { headerGroupingMaxDepth, hasOtherElementInTabSequence } = props;
+  const columnHeaderFilterTabIndexState = useGridSelector(
+    apiRef,
+    unstable_gridTabIndexColumnHeaderFilterSelector,
+  );
+  const { getColumnsToRender, getRootProps, ...otherProps } = useGridColumnHeadersCommunity({
+    ...props,
+    hasOtherElementInTabSequence:
+      hasOtherElementInTabSequence || columnHeaderFilterTabIndexState !== null,
+  });
   const headerFiltersRef = React.useRef<HTMLDivElement>(null);
   apiRef.current.register('private', {
     headerFiltersElementRef: headerFiltersRef,
@@ -74,7 +79,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProProps) => {
       const columnIndex = firstColumnToRender + i;
       const hasFocus = columnHeaderFilterFocus?.field === colDef.field;
       const isFirstColumn = columnIndex === 0;
-      const tabIndexField = props.columnHeaderFilterTabIndexState?.field;
+      const tabIndexField = columnHeaderFilterTabIndexState?.field;
       const tabIndex =
         tabIndexField === colDef.field || (isFirstColumn && !props.hasOtherElementInTabSequence)
           ? 0
