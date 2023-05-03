@@ -10,7 +10,6 @@ const series = [
   {
     type: 'bar',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
     color: 'red',
     data: [2, 5, 3, 4, 1],
@@ -18,14 +17,12 @@ const series = [
   {
     type: 'bar',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
     color: 'blue',
     data: [5, 6, 2, 8, 9],
   },
   {
     type: 'line',
-    xAxisKey: 'years',
     yAxisKey: 'pib',
     data: [1000, 1500, 3000, 5000, 10000],
   },
