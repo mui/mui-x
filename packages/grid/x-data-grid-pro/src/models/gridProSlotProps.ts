@@ -1,6 +1,6 @@
 import { GridSlotsComponentsProps } from '@mui/x-data-grid/internals';
-import type { GridHeaderFilterItemOverridableProps } from '../components/headerFiltering/GridHeaderFilterItem';
+import type { GridHeaderFilterCellOverridableProps } from '../components/headerFiltering/GridHeaderFilterCell';
 
 export interface GridProSlotProps extends GridSlotsComponentsProps {
-  headerFilter?: GridHeaderFilterItemOverridableProps;
+  headerFilter?: GridHeaderFilterCellOverridableProps;
 }

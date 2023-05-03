@@ -11,16 +11,17 @@ import {
   useGridApiEventHandler,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
-import { GridBaseColumnHeaders, GridColumnHeadersInner } from '@mui/x-data-grid/internals';
+import {
+  GridBaseColumnHeaders,
+  GridColumnHeadersInner,
+  UseGridColumnHeadersProps,
+} from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPinnedPosition, GridPinnedColumns } from '../hooks/features/columnPinning';
 import { filterColumns } from './DataGridProVirtualScroller';
-import {
-  useGridColumnHeaders,
-  UseGridColumnHeadersProProps,
-} from '../hooks/features/columnHeaders/useGridColumnHeaders';
+import { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 type OwnerState = DataGridProProcessedProps & {
   leftPinnedColumns: GridPinnedColumns['left'];
@@ -111,7 +112,7 @@ GridColumnHeadersPinnedColumnHeaders.propTypes = {
 
 interface DataGridProColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    Omit<UseGridColumnHeadersProProps, 'innerRef'> {
+    Omit<UseGridColumnHeadersProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
   pinnedColumns: GridPinnedColumns;
 }
@@ -127,7 +128,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       filterColumnLookup,
       columnPositions,
       columnHeaderTabIndexState,
-      columnHeaderFilterTabIndexState,
       columnGroupHeaderTabIndexState,
       columnHeaderFocus,
       columnGroupHeaderFocus,
@@ -185,7 +185,6 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
       filterColumnLookup,
       columnPositions,
       columnHeaderTabIndexState,
-      columnHeaderFilterTabIndexState,
       hasOtherElementInTabSequence,
       columnGroupHeaderTabIndexState,
       columnHeaderFocus,
@@ -323,16 +322,51 @@ GridColumnHeaders.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  columnGroupHeaderFocus: PropTypes.shape({
+    depth: PropTypes.number.isRequired,
+    field: PropTypes.string.isRequired,
+  }),
+  columnGroupHeaderTabIndexState: PropTypes.shape({
+    depth: PropTypes.number.isRequired,
+    field: PropTypes.string.isRequired,
+  }),
+  columnGroupsHeaderStructure: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        columnFields: PropTypes.arrayOf(PropTypes.string).isRequired,
+        groupId: PropTypes.string,
+      }),
+    ),
+  ).isRequired,
+  columnHeaderFocus: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+  }),
+  columnHeaderTabIndexState: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+  }),
+  columnMenuState: PropTypes.shape({
+    field: PropTypes.string,
+    open: PropTypes.bool.isRequired,
+  }).isRequired,
+  columnPositions: PropTypes.arrayOf(PropTypes.number).isRequired,
+  columnVisibility: PropTypes.object.isRequired,
+  densityFactor: PropTypes.number.isRequired,
+  filterColumnLookup: PropTypes.object.isRequired,
+  hasOtherElementInTabSequence: PropTypes.bool.isRequired,
+  headerGroupingMaxDepth: PropTypes.number.isRequired,
   innerRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.object,
     }),
   ]),
+  minColumnIndex: PropTypes.number,
   pinnedColumns: PropTypes.shape({
     left: PropTypes.arrayOf(PropTypes.string),
     right: PropTypes.arrayOf(PropTypes.string),
-  }),
+  }).isRequired,
+  sortColumnLookup: PropTypes.object.isRequired,
+  visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
 export { GridColumnHeaders };

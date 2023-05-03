@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   unstable_useForkRef as useForkRef,
@@ -25,11 +26,10 @@ import {
   unstable_gridHeaderFilteringMenuSelector,
   isNavigationKey,
 } from '@mui/x-data-grid/internals';
-import { GridHeaderFilterAdorment } from './GridHeaderFilterAdorment';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { OPERATOR_LABEL_MAPPING, NO_INPUT_OPERATORS, TYPES_WITH_NO_FILTER_CELL } from './constants';
 
-type GridHeaderFilterItemConditionalProps =
+type GridHeaderFilterCellConditionalProps =
   | {
       operator: 'contains' | 'startsWith' | 'endsWith' | 'equals';
       colType: 'string';
@@ -60,10 +60,10 @@ type GridHeaderFilterItemConditionalProps =
       InputComponentProps?: GridFilterInputBooleanProps;
     };
 
-export type GridHeaderFilterItemOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
-  GridHeaderFilterItemConditionalProps;
+export type GridHeaderFilterCellOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
+  GridHeaderFilterCellConditionalProps;
 
-type GridHeaderFilterItemProps = GridHeaderFilterItemOverridableProps & {
+type GridHeaderFilterCellProps = GridHeaderFilterCellOverridableProps & {
   colIndex: number;
   height: number;
   sortIndex?: number;
@@ -77,7 +77,7 @@ type GridHeaderFilterItemProps = GridHeaderFilterItemOverridableProps & {
   item: GridFilterItem;
 };
 
-type OwnerState = DataGridProProcessedProps & GridHeaderFilterItemProps;
+type OwnerState = DataGridProProcessedProps & GridHeaderFilterCellProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { colDef, classes, showColumnVerticalBorder } = ownerState;
@@ -96,7 +96,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterItemProps>(
+const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCellProps>(
   (props, ref) => {
     const {
       colIndex,
@@ -116,7 +116,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
 
     const apiRef = useGridPrivateApiContext();
     const columnFields = gridVisibleColumnFieldsSelector(apiRef);
-    const rootProps = useGridRootProps();
+    const rootProps = useGridRootProps() as DataGridProProcessedProps;
     const cellRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(ref, cellRef);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -208,6 +208,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             apiRef.current.getColumnHeaderParams(colDef.field),
             event as any,
           );
+
           if (propHandler) {
             propHandler(event);
           }
@@ -278,7 +279,7 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
             label={isFilterActive ? capitalize(label) : ' '}
             isFilterActive={isFilterActive}
             headerFilterMenu={
-              <GridHeaderFilterAdorment
+              <rootProps.slots.headerFilterAdornment
                 operators={filterOperators!}
                 item={item}
                 field={colDef.field}
@@ -298,4 +299,45 @@ const GridHeaderFilterItem = React.forwardRef<HTMLDivElement, GridHeaderFilterIt
   },
 );
 
-export { GridHeaderFilterItem };
+GridHeaderFilterCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  colDef: PropTypes.object.isRequired,
+  colIndex: PropTypes.number.isRequired,
+  colType: PropTypes.string.isRequired,
+  filterOperators: PropTypes.arrayOf(
+    PropTypes.shape({
+      getApplyFilterFn: PropTypes.func.isRequired,
+      getValueAsString: PropTypes.func,
+      InputComponent: PropTypes.elementType,
+      InputComponentProps: PropTypes.object,
+      label: PropTypes.string,
+      requiresFilterValue: PropTypes.bool,
+      value: PropTypes.string.isRequired,
+    }),
+  ),
+  hasFocus: PropTypes.bool,
+  /**
+   * Class name that will be added in the column header cell.
+   */
+  headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  headerFilterComponent: PropTypes.node,
+  headerFilterMenuRef: PropTypes.shape({
+    current: PropTypes.object,
+  }).isRequired,
+  height: PropTypes.number.isRequired,
+  InputComponentProps: PropTypes.object,
+  item: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    operator: PropTypes.string.isRequired,
+    value: PropTypes.any,
+  }).isRequired,
+  sortIndex: PropTypes.number,
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  width: PropTypes.number.isRequired,
+} as any;
+
+export { GridHeaderFilterCell };

@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid';
 import { OPERATOR_SYMBOL_MAPPING, OPERATOR_LABEL_MAPPING } from './constants';
 
-export interface GridHeaderFilterMenuProps {
+interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
   applyFilterChanges: (item: GridFilterItem) => void;
   operators: GridFilterOperator<any, any, any>[];
@@ -21,13 +21,13 @@ export interface GridHeaderFilterMenuProps {
   open: boolean;
   id: string;
   labelledBy: string;
-  target: HTMLElement | null;
+  targetRef: React.MutableRefObject<HTMLElement | null>;
 }
 
 function GridHeaderFilterMenu({
   open,
   field,
-  target,
+  targetRef,
   applyFilterChanges,
   operators,
   item,
@@ -52,7 +52,7 @@ function GridHeaderFilterMenu({
     [hideMenu],
   );
 
-  if (!target) {
+  if (!targetRef.current) {
     return null;
   }
 
@@ -60,7 +60,7 @@ function GridHeaderFilterMenu({
     <GridMenu
       placement="bottom-start"
       open={open}
-      target={target}
+      target={targetRef.current}
       onClickAway={hideMenu}
       onExited={hideMenu}
     >
@@ -71,6 +71,7 @@ function GridHeaderFilterMenu({
             : apiRef.current.getLocaleText(
                 `filterOperator${capitalize(op.value)}` as 'filterOperatorContains',
               );
+
           return (
             <MenuItem
               onClick={() => {

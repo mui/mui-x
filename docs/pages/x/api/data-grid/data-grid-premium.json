@@ -352,6 +352,12 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
+    "headerFilterAdornment": {
+      "default": "GridHeaderFilterAdornment",
+      "type": { "name": "elementType" }
+    },
+    "headerFilterCell": { "default": "GridHeaderFilterCell", "type": { "name": "elementType" } },
+    "headerFilterMenu": { "default": "GridHeaderFilterMenu", "type": { "name": "elementType" } },
     "loadIcon": { "default": "GridLoadIcon", "type": { "name": "elementType" } },
     "loadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "moreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },

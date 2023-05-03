@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import InputAdornment from '@mui/material/InputAdornment';
 import {
   GridFilterItem,
@@ -9,10 +10,10 @@ import {
 } from '@mui/x-data-grid';
 import { unstable_useId as useId } from '@mui/utils';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
-import { GridHeaderFilterMenu } from './GridHeaderFilterMenu';
+import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
-function GridHeaderFilterAdorment(props: {
+function GridHeaderFilterAdornment(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
   item: GridFilterItem;
@@ -25,11 +26,12 @@ function GridHeaderFilterAdorment(props: {
   const buttonId = useId();
   const menuId = useId();
 
-  const rootProps = useGridRootProps();
+  const rootProps = useGridRootProps() as DataGridProProcessedProps;
   const apiRef = useGridApiContext();
   const open = Boolean(
     unstable_gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,
   );
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     headerFilterMenuRef.current = event.currentTarget;
     apiRef.current.showHeaderFilterMenu(field);
@@ -53,11 +55,11 @@ function GridHeaderFilterAdorment(props: {
           {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? ''}
         </rootProps.slots.baseIconButton>
       </InputAdornment>
-      <GridHeaderFilterMenu
+      <rootProps.slots.headerFilterMenu
         field={field}
         open={open}
         item={item}
-        target={headerFilterMenuRef.current}
+        targetRef={headerFilterMenuRef}
         operators={operators}
         labelledBy={buttonId!}
         id={menuId!}
@@ -67,4 +69,39 @@ function GridHeaderFilterAdorment(props: {
   );
 }
 
-export { GridHeaderFilterAdorment };
+GridHeaderFilterAdornment.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  applyFilterChanges: PropTypes.func.isRequired,
+  buttonRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  field: PropTypes.string.isRequired,
+  headerFilterMenuRef: PropTypes.shape({
+    current: PropTypes.object,
+  }).isRequired,
+  item: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    operator: PropTypes.string.isRequired,
+    value: PropTypes.any,
+  }).isRequired,
+  operators: PropTypes.arrayOf(
+    PropTypes.shape({
+      getApplyFilterFn: PropTypes.func.isRequired,
+      getValueAsString: PropTypes.func,
+      InputComponent: PropTypes.elementType,
+      InputComponentProps: PropTypes.object,
+      label: PropTypes.string,
+      requiresFilterValue: PropTypes.bool,
+      value: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+} as any;
+
+export { GridHeaderFilterAdornment };

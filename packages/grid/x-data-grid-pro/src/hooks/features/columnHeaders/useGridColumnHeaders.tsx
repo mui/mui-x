@@ -15,7 +15,6 @@ import {
   getTotalHeaderHeight,
   useGridPrivateApiContext,
 } from '@mui/x-data-grid/internals';
-import { GridHeaderFilterItem } from '../../../components/headerFiltering/GridHeaderFilterItem';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
@@ -106,7 +105,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         getGridFilter(colDef as any);
 
       filters.push(
-        <GridHeaderFilterItem
+        <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
           height={headerHeight}
