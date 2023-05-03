@@ -75,7 +75,7 @@ export function CartesianContextProvider({
       chartType: T,
       axis: AxisConfig,
       getters: { [T2 in ChartSeriesType]: ExtremumGetter<T2> },
-      isDefaultAxis,
+      isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
       const series = (formattedSeries[chartType]?.series as { [id: string]: ChartSeries<T> }) ?? {};
