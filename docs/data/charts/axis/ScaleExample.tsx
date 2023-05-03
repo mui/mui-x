@@ -25,13 +25,11 @@ export default function ScaleExample() {
       series={[
         {
           id: 'linear',
-          xAxisKey: 'x',
           yAxisKey: 'linearAxis',
           data: [1, 10, 30, 50, 70, 90, 100],
         },
         {
           id: 'log',
-          xAxisKey: 'x',
           yAxisKey: 'logAxis',
           data: [1, 10, 30, 50, 70, 90, 100],
         },

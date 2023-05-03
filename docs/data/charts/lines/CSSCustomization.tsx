@@ -76,21 +76,18 @@ export default function CSSCustomization() {
       series={[
         {
           id: 'France',
-          xAxisKey: 'Years',
           data: FranceGDPperCapita,
           stack: 'total',
           area: {},
         },
         {
           id: 'Germany',
-          xAxisKey: 'Years',
           data: GermanyGDPperCapita,
           stack: 'total',
           area: {},
         },
         {
           id: 'United Kingdom',
-          xAxisKey: 'Years',
           data: UKGDPperCapita,
           stack: 'total',
           area: {},

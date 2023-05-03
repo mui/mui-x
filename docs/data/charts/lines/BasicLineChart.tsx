@@ -8,7 +8,6 @@ export default function BasicLineChart() {
       series={[
         {
           id: 'y',
-          xAxisKey: 'x',
           data: [0, 5, 2, 8, 1, 1],
         },
       ]}

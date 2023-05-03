@@ -50,7 +50,6 @@ export default function MinMaxExample() {
         series={[
           {
             id: 'linear',
-            xAxisKey: 'x',
             data,
           },
         ]}
