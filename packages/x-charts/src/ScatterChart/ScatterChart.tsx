@@ -28,7 +28,7 @@ export function ScatterChart(props: ScatterChartProps) {
 
   return (
     <ChartContainer
-      series={series.map((s) => ({ ...s, type: 'scatter' }))}
+      series={series.map((s) => ({ type: 'scatter', ...s }))}
       width={width}
       height={height}
       margin={margin}

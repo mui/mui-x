@@ -29,7 +29,7 @@ export function LineChart(props: LineChartProps) {
 
   return (
     <ChartContainer
-      series={series.map((s) => ({ ...s, type: 'line' }))}
+      series={series.map((s) => ({ type: 'line', ...s }))}
       width={width}
       height={height}
       margin={margin}

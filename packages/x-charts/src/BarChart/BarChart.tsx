@@ -30,7 +30,7 @@ export function BarChart(props: BarChartProps) {
 
   return (
     <ChartContainer
-      series={series.map((s) => ({ ...s, type: 'bar' }))}
+      series={series.map((s) => ({ type: 'bar', ...s }))}
       width={width}
       height={height}
       margin={margin}
