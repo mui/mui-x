@@ -18,7 +18,13 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.dataProps}
+      >
         <GridHeader />
         <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
         <GridFooterPlaceholder />
@@ -126,6 +132,10 @@ DataGridRaw.propTypes = {
    * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
+  /**
+   * Data attributes for the grid root element.
+   */
+  dataProps: PropTypes.object,
   /**
    * Set the density of the grid.
    * @default "standard"

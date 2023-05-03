@@ -164,6 +164,10 @@ export interface DataGridPropsWithDefaultValues {
    */
   columnThreshold: number;
   /**
+   * Data attributes for the grid root element.
+   */
+  dataProps?: Record<string, unknown>;
+  /**
    * Set the density of the grid.
    * @default "standard"
    */

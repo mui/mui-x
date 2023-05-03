@@ -33,7 +33,13 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.dataProps}
+      >
         <GridHeader />
         <GridBody
           VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -162,6 +168,10 @@ DataGridPremiumRaw.propTypes = {
    * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
+  /**
+   * Data attributes for the grid root element.
+   */
+  dataProps: PropTypes.object,
   /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
