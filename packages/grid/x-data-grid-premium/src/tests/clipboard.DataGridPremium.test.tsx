@@ -300,6 +300,22 @@ describe('<DataGridPremium /> - Clipboard', () => {
           expect(getColumnValues(2)).to.deep.equal(['1', '11', '21', '31']);
         });
       });
+
+      it('should paste into selected rows when checkbox selection cell is focused', async () => {
+        render(<Test checkboxSelection />);
+
+        const checkboxInput = getCell(0, 0).querySelector('input')!;
+        userEvent.mousePress(checkboxInput!);
+
+        const clipboardData = ['p01', 'p02', 'p03'].join('\t');
+        paste(checkboxInput, clipboardData);
+
+        await waitFor(() => {
+          // the first column (id) is not editable and won't be updated
+          expect(getCell(0, 2).textContent).to.equal('p02');
+          expect(getCell(0, 3).textContent).to.equal('p03');
+        });
+      });
     });
 
     it('should work well with `getRowId` prop', async () => {

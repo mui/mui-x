@@ -57,7 +57,6 @@ function batchRowUpdates<R>(func: (rows: R[]) => void, wait?: number) {
 async function getTextFromClipboard(rootEl: HTMLElement) {
   return new Promise<string>((resolve) => {
     const focusedCell = getActiveElement(document);
-    const parent = focusedCell || rootEl;
 
     const el = document.createElement('input');
     el.style.width = '0px';
@@ -81,7 +80,7 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
     };
 
     el.addEventListener('paste', handlePasteEvent);
-    parent.appendChild(el);
+    rootEl.appendChild(el);
     el.focus({ preventScroll: true });
   });
 }
