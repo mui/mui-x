@@ -70,19 +70,9 @@ You can switch between different operators by clicking the operator button in th
 
 There are multiple ways to customize header filters.
 
-#### `headerFilterCell` slot
-
-You can use `slots.headerFilterCell` to customize the header filter cell completely. Additionally, `slots.headerFilterAdornment` and `slots.headerFilterMenu` could also be used to customize the adornment and the menu of the header filter cell respectively.
-
-```tsx
-<DataGridPro {...data} slots={{ headerFilterCell: MyCustomHeaderFilterCell }} />
-```
-
-{{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
-
 #### `renderHeaderFilter` method
 
-You can also use the `renderHeaderFilter` method of the `GridColDef` to customize the header filter cell for a specific column.
+You can use the `renderHeaderFilter` method of the `GridColDef` to customize the header filter cell for a specific column.
 
 ```tsx
 const columns: GridColDef[] = [
@@ -104,6 +94,18 @@ Following demo uses the `renderHeaderFilter` method to customize the header filt
 You can also update the `InputComponent` of the `filterOperator` using `GridColDef.filterOperators` to customize the header filter cell for a specific operator type.
 
 {{"demo": "CustomHeaderFilterOperatorDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### `headerFilterCell` slot
+
+You can use `slots.headerFilterCell` to customize the header filter cell completely. Since the default slot component handles keyboard navigation and focus management, you may have to handle them yourself if you are using a custom component.
+
+Additionally, `slots.headerFilterAdornment` and `slots.headerFilterMenu` could also be used to customize the adornment and the menu of the header filter cell respectively.
+
+```tsx
+<DataGridPro {...data} slots={{ headerFilterCell: MyCustomHeaderFilterCell }} />
+```
+
+{{"demo": "CustomHeaderFilterDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Pass filters to the Data Grid
 

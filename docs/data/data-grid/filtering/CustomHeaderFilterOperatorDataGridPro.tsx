@@ -36,8 +36,9 @@ function RatingInputValue(
           display: 'inline-flex',
           flexDirection: 'row',
           alignItems: 'center',
-          height: 48,
+          height: 20,
           pl: '10px',
+          bl: '1px solid lightgrey',
         }}
       >
         <Rating
@@ -66,6 +67,7 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
         if (colDef.field === 'rating') {
           return {
             ...colDef,
+            minWidth: 180,
             filterOperators: getGridNumericOperators()
               .filter((operator) => operator.value !== 'isAnyOf')
               .map((operator) => ({
