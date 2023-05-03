@@ -22,6 +22,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { GridPinnedPosition, GridPinnedColumns } from '../hooks/features/columnPinning';
 import { filterColumns } from './DataGridProVirtualScroller';
+import { GridScrollArea } from './GridScrollArea';
 
 type OwnerState = DataGridProProcessedProps & {
   leftPinnedColumns: GridPinnedColumns['left'];
@@ -256,6 +257,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
           </GridColumnHeadersPinnedColumnHeaders>
         )}
 
+        <GridScrollArea scrollDirection="left" />
         <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
           {getColumnGroupHeaders({
             renderContext,
@@ -268,6 +270,7 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHead
             maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
           })}
         </GridColumnHeadersInner>
+        <GridScrollArea scrollDirection="right" />
         {rightRenderContext && (
           <GridColumnHeadersPinnedColumnHeaders
             ownerState={{
