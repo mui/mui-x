@@ -14,6 +14,7 @@ import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
+import { DIALOG_WIDTH } from '../internals';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -56,8 +57,7 @@ const MonthCalendarRoot = styled('div', {
   display: 'flex',
   flexWrap: 'wrap',
   alignContent: 'stretch',
-  padding: '0 4px',
-  width: 320,
+  width: DIALOG_WIDTH,
 });
 
 type MonthCalendarComponent = (<TDate>(
