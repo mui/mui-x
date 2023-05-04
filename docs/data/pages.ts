@@ -454,7 +454,10 @@ const pages: MuiPage[] = [
           title: 'Charts 🚧',
           icon: ChartIcon,
           children: [
-            { pathname: '/x/react-charts', title: '🚧 Overview' },
+            { pathname: '/x/react-charts', title: 'Overview' },
+            { pathname: '/x/react-charts/bars', title: 'Bars' },
+            { pathname: '/x/react-charts/lines', title: 'Lines' },
+            { pathname: '/x/react-charts/scatter', title: 'Scatter' },
             {
               pathname: '',
               title: 'Common components',
@@ -464,10 +467,7 @@ const pages: MuiPage[] = [
                 { pathname: '/x/react-charts/styling', title: 'Styling' },
               ],
             },
-            { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
-            { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
             { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
-            { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
             { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
             { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
             { pathname: '/x/react-charts/gantt', title: '🚧 Gantt' },
