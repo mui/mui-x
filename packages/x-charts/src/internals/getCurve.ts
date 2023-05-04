@@ -8,16 +8,7 @@ import {
   curveStepAfter,
   curveStepBefore,
 } from 'd3-shape';
-
-export type CurveType =
-  | 'catmullRom'
-  | 'linear'
-  | 'monotoneX'
-  | 'monotoneY'
-  | 'natural'
-  | 'step'
-  | 'stepBefore'
-  | 'stepAfter';
+import { CurveType } from '../models/seriesType/line';
 
 export default function getCurveFactory(curveType?: CurveType) {
   switch (curveType) {
