@@ -20,6 +20,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGrid] Fix falsy filter values not showing in filter button tooltip (#8550) @ithrforu
 - [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
 - [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
+- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
 
 ### `@mui/x-date-pickers@v6.3.1` / `@mui/x-date-pickers-pro@v6.3.1`
 
@@ -45,6 +46,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [charts] Clean some styling (#8778) @alexfauquette
 - [charts] Improve tooltip (#8792) @alexfauquette
 - [charts] Improvement and docs on axis (#8654) @alexfauquette
+- [charts] Defaultize attributes (#8788) @alexfauquette
 
 ## 6.3.0
 
