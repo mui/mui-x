@@ -24,10 +24,11 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
       ) {
         apiRef.current.hidePreferences();
       } else {
-        apiRef.current.showPreferences(GridPreferencePanelsValue.columns, {
-          panelId: columnPanelId,
-          buttonId: columnButtonId,
-        });
+        apiRef.current.showPreferences(
+          GridPreferencePanelsValue.columns,
+          columnPanelId,
+          columnButtonId,
+        );
       }
 
       onClick?.(event);
@@ -38,7 +39,7 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
       return null;
     }
 
-    const isOpen = preferencePanel.open && preferencePanel.ids?.panelId === columnPanelId;
+    const isOpen = preferencePanel.open && preferencePanel.panelId === columnPanelId;
 
     return (
       <rootProps.slots.baseButton

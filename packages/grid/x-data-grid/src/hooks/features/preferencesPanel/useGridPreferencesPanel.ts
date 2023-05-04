@@ -57,7 +57,7 @@ export const useGridPreferencesPanel = (
   }, [hidePreferences]);
 
   const showPreferences = React.useCallback<GridPreferencesPanelApi['showPreferences']>(
-    (newValue, ids = {}) => {
+    (newValue, panelId, labelId) => {
       logger.debug('Opening Preferences Panel');
       doNotHidePanel();
       apiRef.current.setState((state) => ({
@@ -66,7 +66,8 @@ export const useGridPreferencesPanel = (
           ...state.preferencePanel,
           open: true,
           openedPanelValue: newValue,
-          ids,
+          panelId,
+          labelId,
         },
       }));
       apiRef.current.publishEvent('preferencePanelOpen', {

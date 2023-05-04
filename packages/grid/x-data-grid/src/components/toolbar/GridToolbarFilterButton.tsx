@@ -36,7 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
-  overridesResolver: (props, styles) => styles.toolbarFilterList,
+  overridesResolver: (_props, styles) => styles.toolbarFilterList,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   margin: theme.spacing(1, 1, 0.5),
   padding: theme.spacing(0, 1),
@@ -113,10 +113,11 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef.current.hidePreferences();
       } else {
-        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, {
-          panelId: filterPanelId,
-          buttonId: filterButtonId,
-        });
+        apiRef.current.showPreferences(
+          GridPreferencePanelsValue.filters,
+          filterPanelId,
+          filterButtonId
+        );
       }
       buttonProps.onClick?.(event);
     };
@@ -126,7 +127,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       return null;
     }
 
-    const isOpen = preferencePanel.open && preferencePanel.ids?.panelId === filterPanelId;
+    const isOpen = preferencePanel.open && preferencePanel.panelId === filterPanelId;
     return (
       <rootProps.slots.baseTooltip
         title={tooltipContentNode}
