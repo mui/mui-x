@@ -1,8 +1,9 @@
 import * as React from 'react';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { XAxis, XAxisProps } from '../XAxis';
-import { YAxis, YAxisProps } from '../YAxis';
+import { XAxis } from '../XAxis';
+import { YAxis } from '../YAxis';
+import { XAxisProps, YAxisProps } from '../models/axis';
 
 export interface AxisProps {
   /**

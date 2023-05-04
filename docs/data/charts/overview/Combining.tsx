@@ -9,26 +9,20 @@ import { YAxis } from '@mui/x-charts/YAxis';
 const series = [
   {
     type: 'bar',
-    id: 'Eco-1',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
     color: 'red',
     data: [2, 5, 3, 4, 1],
   },
   {
     type: 'bar',
-    id: 'Eco-2',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
     color: 'blue',
     data: [5, 6, 2, 8, 9],
   },
   {
     type: 'line',
-    id: 'pib',
-    xAxisKey: 'years',
     yAxisKey: 'pib',
     data: [1000, 1500, 3000, 5000, 10000],
   },
