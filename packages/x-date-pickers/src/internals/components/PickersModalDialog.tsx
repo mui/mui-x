@@ -5,7 +5,6 @@ import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/ma
 import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
-import { DIALOG_WIDTH } from '../constants/dimensions';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 
@@ -62,7 +61,6 @@ const PickersModalDialogRoot = styled(MuiDialog)({
   },
   [`& .${dialogClasses.paper}`]: {
     outline: 0,
-    minWidth: DIALOG_WIDTH,
   },
 });
 
