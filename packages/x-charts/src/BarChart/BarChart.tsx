@@ -21,6 +21,7 @@ export function BarChart(props: BarChartProps) {
     colors,
     sx,
     tooltip,
+    highlight,
     topAxis,
     leftAxis,
     rightAxis,
@@ -49,6 +50,7 @@ export function BarChart(props: BarChartProps) {
       colors={colors}
       sx={sx}
       tooltip={tooltip}
+      highlight={highlight}
     >
       <BarPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />

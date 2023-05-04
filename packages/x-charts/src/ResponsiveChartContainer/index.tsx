@@ -7,6 +7,8 @@ import { CartesianContextProvider } from '../context/CartesianContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
 import { ChartContainerProps } from '../ChartContainer';
 import { Tooltip } from '../Tooltip';
+import { Highlight } from '../Highlight';
+import { AxisInteractionListener } from '../hooks/useAxisEvents';
 
 const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, number] => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -36,7 +38,8 @@ const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, 
 export type ResponsiveChartContainerProps = Omit<ChartContainerProps, 'width' | 'height'>;
 
 export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
-  const { series, margin, xAxis, yAxis, colors, sx, title, desc, tooltip, children } = props;
+  const { series, margin, xAxis, yAxis, colors, sx, title, desc, tooltip, highlight, children } =
+    props;
   const ref = React.useRef<SVGSVGElement>(null);
 
   const [containerRef, width, height] = useChartDimensions();
@@ -49,6 +52,14 @@ export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
             <InteractionProvider>
               <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
                 {children}
+                <AxisInteractionListener
+                  listen={
+                    tooltip?.trigger === 'axis' ||
+                    highlight?.x !== 'none' ||
+                    highlight?.y !== 'none'
+                  }
+                />
+                <Highlight {...highlight} />
                 <Tooltip {...tooltip} />
               </Surface>
             </InteractionProvider>

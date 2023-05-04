@@ -14,6 +14,8 @@ export function ScatterChart(props: ScatterChartProps) {
     xAxis,
     yAxis,
     series,
+    tooltip,
+    highlight,
     width,
     height,
     margin,
@@ -36,7 +38,8 @@ export function ScatterChart(props: ScatterChartProps) {
       xAxis={xAxis}
       yAxis={yAxis}
       sx={sx}
-      tooltip={{ trigger: 'item' }}
+      tooltip={{ trigger: 'item', ...tooltip }}
+      highlight={{ x: 'none', y: 'none', ...highlight }}
     >
       <ScatterPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />

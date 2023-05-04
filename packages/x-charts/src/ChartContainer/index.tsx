@@ -11,6 +11,8 @@ import {
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
 import { Tooltip, TooltipProps } from '../Tooltip';
+import { Highlight, HighlightProps } from '../Highlight';
+import { AxisInteractionListener } from '../hooks/useAxisEvents';
 
 export type ChartContainerProps = Omit<
   SurfaceProps &
@@ -18,7 +20,7 @@ export type ChartContainerProps = Omit<
     Omit<DrawingProviderProps, 'svgRef'> &
     CartesianContextProviderProps,
   'children'
-> & { children?: React.ReactNode; tooltip?: TooltipProps };
+> & { children?: React.ReactNode; tooltip?: TooltipProps; highlight?: HighlightProps };
 
 export function ChartContainer(props: ChartContainerProps) {
   const {
@@ -33,6 +35,7 @@ export function ChartContainer(props: ChartContainerProps) {
     title,
     desc,
     tooltip,
+    highlight = { x: 'line', y: 'none' },
     children,
   } = props;
   const ref = React.useRef<SVGSVGElement>(null);
@@ -43,7 +46,13 @@ export function ChartContainer(props: ChartContainerProps) {
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <InteractionProvider>
             <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
+              <AxisInteractionListener
+                listen={
+                  tooltip?.trigger === 'axis' || highlight?.x !== 'none' || highlight?.y !== 'none'
+                }
+              />
               {children}
+              <Highlight {...highlight} />
               <Tooltip {...tooltip} />
             </Surface>
           </InteractionProvider>

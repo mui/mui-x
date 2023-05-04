@@ -20,6 +20,7 @@ export function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
+    highlight,
     topAxis,
     leftAxis,
     rightAxis,
@@ -48,6 +49,7 @@ export function LineChart(props: LineChartProps) {
       colors={colors}
       sx={sx}
       tooltip={tooltip}
+      highlight={highlight}
     >
       <LinePlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
