@@ -7,6 +7,7 @@ import {
   pickersYearClasses,
   PickersYearClasses,
 } from './pickersYearClasses';
+import { DAY_SIZE } from '../internals';
 
 export interface ExportedPickersYearProps {
   classes?: Partial<PickersYearClasses>;
@@ -65,8 +66,8 @@ const PickersYearButton = styled('button', {
   outline: 0,
   ...theme.typography.subtitle1,
   margin: '8px 0',
-  height: 36,
-  width: 72,
+  height: DAY_SIZE,
+  width: '100%',
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
