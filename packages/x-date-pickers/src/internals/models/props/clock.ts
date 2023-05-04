@@ -61,7 +61,7 @@ export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem>
 
 export interface DesktopOnlyTimePickerProps<TDate>
   extends Omit<ExportedDigitalClockProps<TDate>, 'timeStep'>,
-    Omit<ExportedMultiSectionDigitalClockProps<TDate>, 'timeStep'> {
+    Omit<ExportedMultiSectionDigitalClockProps<TDate>, 'timeSteps'> {
   /**
    * Amount of time options below or at which the single column time renderer is used.
    * @default 24

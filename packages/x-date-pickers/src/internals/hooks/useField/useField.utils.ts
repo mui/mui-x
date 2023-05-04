@@ -463,6 +463,7 @@ export const splitFormatIntoSections = <TDate>(
   date: TDate | null,
   formatDensity: 'dense' | 'spacious',
   shouldRespectLeadingZeros: boolean,
+  isRTL: boolean,
 ) => {
   let startSeparator: string = '';
   const sections: FieldSectionWithoutPosition[] = [];
@@ -585,7 +586,7 @@ export const splitFormatIntoSections = <TDate>(
   return sections.map((section) => {
     const cleanSeparator = (separator: string) => {
       let cleanedSeparator = separator;
-      if (cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
+      if (isRTL && cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
         cleanedSeparator = `\u2069${cleanedSeparator}\u2066`;
       }
 

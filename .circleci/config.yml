@@ -217,6 +217,8 @@ jobs:
       - run:
           name: Tests TypeScript definitions
           command: yarn typescript:ci
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3072
   test_e2e:
     <<: *defaults
     docker:
