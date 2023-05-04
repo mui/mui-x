@@ -7,7 +7,7 @@ import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/picke
 import { DateRange } from '@mui/x-date-pickers-pro';
 
 describe('<MobileDateRangePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('picker state', () => {
     it('should open when focusing the start input', () => {
