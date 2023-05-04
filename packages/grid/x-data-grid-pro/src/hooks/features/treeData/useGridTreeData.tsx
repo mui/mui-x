@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  useGridApiEventHandler,
-  GridEventListener,
-  gridFilteredDescendantCountLookupSelector,
-} from '@mui/x-data-grid';
+import { useGridApiEventHandler, GridEventListener } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
 
 export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
@@ -14,10 +10,7 @@ export const useGridTreeData = (apiRef: React.MutableRefObject<GridApiPro>) => {
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
       if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ' && !event.shiftKey) {
-        const filteredDescendantCount =
-          gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
-
-        if (filteredDescendantCount === 0) {
+        if (params.rowNode.type !== 'group') {
           return;
         }
 

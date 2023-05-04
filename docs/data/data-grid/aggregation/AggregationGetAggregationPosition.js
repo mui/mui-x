@@ -64,10 +64,11 @@ export default function AggregationGetAggregationPosition() {
         {...data}
         apiRef={apiRef}
         columns={COLUMNS}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
-        getAggregationPosition={(groupNode) => (groupNode == null ? null : 'footer')}
-        experimentalFeatures={{ aggregation: true }}
+        getAggregationPosition={(groupNode) =>
+          groupNode.depth === -1 ? null : 'footer'
+        }
       />
     </div>
   );

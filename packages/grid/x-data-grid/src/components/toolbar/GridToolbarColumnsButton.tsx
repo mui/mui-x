@@ -41,7 +41,7 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     const isOpen = preferencePanel.open && preferencePanel.ids?.panelId === columnPanelId;
 
     return (
-      <rootProps.components.BaseButton
+      <rootProps.slots.baseButton
         ref={ref}
         id={columnButtonId}
         size="small"
@@ -49,13 +49,13 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
         aria-controls={isOpen ? columnPanelId : undefined}
         aria-expanded={isOpen}
         aria-haspopup
-        startIcon={<rootProps.components.ColumnSelectorIcon />}
+        startIcon={<rootProps.slots.columnSelectorIcon />}
         {...other}
         onClick={showColumns}
-        {...rootProps.componentsProps?.baseButton}
+        {...rootProps.slotProps?.baseButton}
       >
         {apiRef.current.getLocaleText('toolbarColumns')}
-      </rootProps.components.BaseButton>
+      </rootProps.slots.baseButton>
     );
   },
 );

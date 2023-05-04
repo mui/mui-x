@@ -10,7 +10,7 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
-const Footer = () => {
+function Footer() {
   const [message, setMessage] = React.useState('');
   const apiRef = useGridApiContext();
 
@@ -26,7 +26,7 @@ const Footer = () => {
       {message && <Alert severity="info">{message}</Alert>}
     </React.Fragment>
   );
-};
+}
 
 export default function SubscribeToEventsHook() {
   const data = useMovieData();
@@ -34,7 +34,7 @@ export default function SubscribeToEventsHook() {
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Box sx={{ height: 350, width: '100%' }}>
-        <DataGrid {...data} components={{ Footer }} />
+        <DataGrid {...data} slots={{ footer: Footer }} />
       </Box>
     </Stack>
   );

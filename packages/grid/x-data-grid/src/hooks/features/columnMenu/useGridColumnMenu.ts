@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
-import { GridColumnMenuApi, GridEventListener } from '../../../models';
+import { GridColumnMenuApi } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { gridClasses } from '../../../constants/gridClasses';
+import {
+  gridColumnLookupSelector,
+  gridColumnVisibilityModelSelector,
+  gridColumnFieldsSelector,
+} from '../columns/gridColumnsSelector';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -15,7 +19,9 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumnResize (event)
  * @requires useGridInfiniteLoader (event)
  */
-export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
+export const useGridColumnMenu = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   /**
@@ -45,6 +51,34 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
   );
 
   const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
+    const columnMenuState = gridColumnMenuSelector(apiRef.current.state);
+
+    if (columnMenuState.field) {
+      const columnLookup = gridColumnLookupSelector(apiRef);
+      const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
+      const orderedFields = gridColumnFieldsSelector(apiRef);
+      let fieldToFocus = columnMenuState.field;
+
+      // If the column was removed from the grid, we need to find the closest visible field
+      if (!columnLookup[fieldToFocus]) {
+        fieldToFocus = orderedFields[0];
+      }
+
+      // If the field to focus is hidden, we need to find the closest visible field
+      if (columnVisibilityModel[fieldToFocus] === false) {
+        // contains visible column fields + the field that was just hidden
+        const visibleOrderedFields = orderedFields.filter((field) => {
+          if (field === fieldToFocus) {
+            return true;
+          }
+          return columnVisibilityModel[field] !== false;
+        });
+        const fieldIndex = visibleOrderedFields.indexOf(fieldToFocus);
+        fieldToFocus = visibleOrderedFields[fieldIndex + 1] || visibleOrderedFields[fieldIndex - 1];
+      }
+      apiRef.current.setColumnHeaderFocus(fieldToFocus);
+    }
+
     const shouldUpdate = apiRef.current.setState((state) => {
       if (!state.columnMenu.open && state.columnMenu.field === undefined) {
         return state;
@@ -82,37 +116,9 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
     toggleColumnMenu,
   };
 
-  useGridApiMethod(apiRef, columnMenuApi, 'GridColumnMenuApi');
-
-  /**
-   * EVENTS
-   */
-  const handleColumnHeaderFocus = React.useCallback<GridEventListener<'columnHeaderFocus'>>(
-    (params, event) => {
-      // Check if the column menu button received focus
-      if (!event.target.classList.contains(gridClasses.menuIconButton)) {
-        return;
-      }
-
-      // Check if there's an element which lost focus
-      if (!event.relatedTarget) {
-        return;
-      }
-
-      // `true` if the focus was on the column menu itself, not on any item
-      const columnMenuLostFocus = event.relatedTarget.classList.contains(gridClasses.menuList);
-      // `true` if the focus was on an item from the column menu
-      const columnMenuItemLostFocus = event.relatedTarget.getAttribute('role') === 'menuitem';
-
-      if (columnMenuLostFocus || columnMenuItemLostFocus) {
-        apiRef.current.setColumnHeaderFocus(params.field);
-      }
-    },
-    [apiRef],
-  );
+  useGridApiMethod(apiRef, columnMenuApi, 'public');
 
   useGridApiEventHandler(apiRef, 'columnResizeStart', hideColumnMenu);
-  useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
   useGridApiEventHandler(apiRef, 'virtualScrollerWheel', apiRef.current.hideColumnMenu);
   useGridApiEventHandler(apiRef, 'virtualScrollerTouchMove', apiRef.current.hideColumnMenu);
 };

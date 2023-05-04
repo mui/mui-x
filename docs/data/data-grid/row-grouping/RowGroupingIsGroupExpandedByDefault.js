@@ -28,7 +28,7 @@ export default function RowGroupingIsGroupExpandedByDefault() {
         {...data}
         apiRef={apiRef}
         isGroupExpandedByDefault={isGroupExpandedByDefault}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
       />
     </div>

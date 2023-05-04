@@ -1,0 +1,4 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DateField value={value} onChange={(newValue) => setValue(newValue)} />
+</LocalizationProvider>
+<Typography>Value: {value == null ? 'null' : value.format('L')}</Typography>

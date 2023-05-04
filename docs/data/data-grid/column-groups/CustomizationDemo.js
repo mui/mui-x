@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -49,7 +49,7 @@ const HeaderWithIconRoot = styled('div')(({ theme }) => ({
   },
 }));
 
-const HeaderWithIcon = (props) => {
+function HeaderWithIcon(props) {
   const { icon, ...params } = props;
 
   return (
@@ -57,7 +57,7 @@ const HeaderWithIcon = (props) => {
       <span>{params.headerName ?? params.groupId}</span> {icon}
     </HeaderWithIconRoot>
   );
-};
+}
 
 HeaderWithIcon.propTypes = {
   /**
@@ -112,12 +112,12 @@ export default function CustomizationDemo() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
     </Box>

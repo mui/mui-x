@@ -1,8 +1,10 @@
 import { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
-import type { GridColumns } from '../colDef/gridColDef';
+import type { GridColDef } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the row callbacks.
+ * @demos
+ *   - [Master detail](/x/react-data-grid/master-detail/)
  */
 export interface GridRowParams<R extends GridValidRowModel = any> {
   /**
@@ -16,15 +18,7 @@ export interface GridRowParams<R extends GridValidRowModel = any> {
   /**
    * All grid columns.
    */
-  columns: GridColumns;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: (id: GridRowId, field: string) => any;
+  columns: GridColDef[];
 }
 
 interface GridRowVisibilityParams {
@@ -45,6 +39,8 @@ interface GridRowVisibilityParams {
 
 /**
  * Object passed as parameter in the row `getRowClassName` callback prop.
+ * @demos
+ *   - [Styling rows](/x/react-data-grid/style/#styling-rows)
  */
 export interface GridRowClassNameParams<R extends GridValidRowModel = any>
   extends GridRowParams<R>,
@@ -79,14 +75,16 @@ export interface GridRowEditStartParams<R extends GridValidRowModel = any>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   field?: string;
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridRowEditStartReasons;
+  /**
+   * If the reason is related to a keyboard event, it contains which key was pressed.
+   */
+  key?: string;
 }
 
 enum GridRowEditStopReasons {
@@ -100,18 +98,18 @@ enum GridRowEditStopReasons {
 export interface GridRowEditStopParams<R extends GridValidRowModel = any> extends GridRowParams<R> {
   /**
    * Which field triggered this event.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   field?: string;
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridRowEditStopReasons;
 }
 
 /**
  * Object passed as parameter in the row `getRowSpacing` callback prop.
+ * @demos
+ *   - [Row spacing](/x/react-data-grid/row-height/#row-spacing)
  */
 export interface GridRowSpacingParams extends GridRowEntry, GridRowVisibilityParams {}
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridLinkOperator } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridLogicOperator } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
@@ -115,12 +115,12 @@ export default function TreeDataDisableChildrenFiltering() {
   const [disableChildrenFiltering, setDisableChildrenFiltering] =
     React.useState(true);
   const [filterModel, setFilterModel] = React.useState({
-    linkOperator: GridLinkOperator.Or,
+    logicOperator: GridLogicOperator.Or,
     items: [
       {
         id: 0,
-        columnField: 'recruitmentDate',
-        operatorValue: 'before',
+        field: 'recruitmentDate',
+        operator: 'before',
         value: '2018-01-01',
       },
     ],

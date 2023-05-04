@@ -1,6 +1,5 @@
 import type * as Excel from 'exceljs';
 import {
-  GridStateColDef,
   GridRowId,
   GridColDef,
   GridValueFormatterParams,
@@ -9,12 +8,24 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid-pro';
-import { buildWarning } from '@mui/x-data-grid/internals';
-import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
+import {
+  buildWarning,
+  GridStateColDef,
+  GridSingleSelectColDef,
+  isObject,
+  GridColumnGroupLookup,
+  isSingleSelectColDef,
+} from '@mui/x-data-grid/internals';
+import {
+  GridExceljsProcessInput,
+  ColumnsStylesInterface,
+  GridExcelExportOptions,
+} from '../gridExcelExportInterface';
+import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
-  const { default: excelJsDefault } = await import('exceljs');
-  return excelJsDefault;
+  const excelJsModule = await import('exceljs');
+  return excelJsModule.default ?? excelJsModule;
 };
 
 const warnInvalidFormattedValue = buildWarning([
@@ -23,7 +34,7 @@ const warnInvalidFormattedValue = buildWarning([
 ]);
 
 const getFormattedValueOptions = (
-  colDef: GridColDef,
+  colDef: GridSingleSelectColDef,
   valueOptions: ValueOptions[],
   api: GridApi,
 ) => {
@@ -47,21 +58,28 @@ const getFormattedValueOptions = (
   );
 };
 
-const serializeRow = (
+interface SerializedRow {
+  row: Record<string, undefined | number | boolean | string | Date>;
+  dataValidation: Record<string, Excel.DataValidation>;
+  outlineLevel: number;
+  mergedCells: { leftIndex: number; rightIndex: number }[];
+}
+
+export const serializeRow = (
   id: GridRowId,
   columns: GridStateColDef[],
-  api: GridApi,
-  defaultValueOptionsFormulae: { [field: string]: string },
-) => {
-  const row: { [colField: string]: undefined | number | boolean | string | Date } = {};
-  const dataValidation: { [key: string]: Excel.DataValidation } = {};
-  const mergedCells: { leftIndex: number; rightIndex: number }[] = [];
+  api: GridPrivateApiPremium,
+  defaultValueOptionsFormulae: { [field: string]: { address: string } },
+): SerializedRow => {
+  const row: SerializedRow['row'] = {};
+  const dataValidation: SerializedRow['dataValidation'] = {};
+  const mergedCells: SerializedRow['mergedCells'] = [];
 
   const firstCellParams = api.getCellParams(id, columns[0].field);
   const outlineLevel = firstCellParams.rowNode.depth;
 
   // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
-  api.unstable_calculateColSpan({
+  api.calculateColSpan({
     rowId: id,
     minFirstColumn: 0,
     maxLastColumn: columns.length,
@@ -84,16 +102,17 @@ const serializeRow = (
 
     switch (cellParams.colDef.type) {
       case 'singleSelect': {
-        if (typeof cellParams.colDef.valueOptions === 'function') {
+        const castColumn = cellParams.colDef as GridSingleSelectColDef;
+        if (typeof castColumn.valueOptions === 'function') {
           // If value option depends on the row, set specific options to the cell
           // This dataValidation is buggy with LibreOffice and does not allow to have coma
-          const valueOptions = cellParams.colDef.valueOptions({ id, row, field: cellParams.field });
-          const formattedValueOptions = getFormattedValueOptions(
-            cellParams.colDef,
-            valueOptions,
-            api,
-          );
-          dataValidation[column.field] = {
+          const valueOptions = castColumn.valueOptions({
+            id,
+            row,
+            field: cellParams.field,
+          });
+          const formattedValueOptions = getFormattedValueOptions(castColumn, valueOptions, api);
+          dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
             formulae: [
@@ -103,45 +122,51 @@ const serializeRow = (
             ],
           };
         } else {
+          const address = defaultValueOptionsFormulae[column.field].address;
+
           // If value option is defined for the column, refer to another sheet
-          dataValidation[column.field] = {
+          dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
-            formulae: [defaultValueOptionsFormulae[column.field]],
+            formulae: [address],
           };
         }
 
-        const formattedValue = api.getCellParams(id, column.field).formattedValue;
+        const formattedValue = api.getCellParams(id, castColumn.field).formattedValue;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
           }
         }
-        row[column.field] = formattedValue?.label ?? formattedValue;
+        if (isObject<{ label: any }>(formattedValue)) {
+          row[castColumn.field] = formattedValue?.label;
+        } else {
+          row[castColumn.field] = formattedValue as any;
+        }
         break;
       }
       case 'boolean':
       case 'number':
-        row[column.field] = api.getCellParams(id, column.field).value;
+        row[column.field] = api.getCellParams(id, column.field).value as any;
         break;
       case 'date':
       case 'dateTime': {
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const date = api.getCellParams(id, column.field).value;
+        const value = api.getCellParams<any, Date>(id, column.field).value;
         // value may be `undefined` in auto-generated grouping rows
-        if (!date) {
+        if (!value) {
           break;
         }
         const utcDate = new Date(
           Date.UTC(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            date.getHours(),
-            date.getMinutes(),
-            date.getSeconds(),
+            value.getFullYear(),
+            value.getMonth(),
+            value.getDate(),
+            value.getHours(),
+            value.getMinutes(),
+            value.getSeconds(),
           ),
         );
         row[column.field] = utcDate;
@@ -150,7 +175,7 @@ const serializeRow = (
       case 'actions':
         break;
       default:
-        row[column.field] = api.getCellParams(id, column.field).formattedValue;
+        row[column.field] = api.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
@@ -159,6 +184,7 @@ const serializeRow = (
         break;
     }
   });
+
   return {
     row,
     dataValidation,
@@ -172,11 +198,12 @@ const defaultColumnsStyles = {
   [GRID_DATETIME_COL_DEF.type as string]: { numFmt: 'dd.mm.yyyy hh:mm' },
 };
 
-const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesInterface) => {
+export const serializeColumn = (column: GridColDef, columnsStyles: ColumnsStylesInterface) => {
   const { field, type } = column;
 
   return {
     key: field,
+    headerText: column.headerName ?? column.field,
     // Excel width must stay between 0 and 255 (https://support.microsoft.com/en-us/office/change-the-column-width-and-row-height-72f5e3cc-994d-43e8-ae58-9774a0905f46)
     // From the example of column width behavior (https://docs.microsoft.com/en-US/office/troubleshoot/excel/determine-column-widths#example-of-column-width-behavior)
     // a value of 10 corresponds to 75px. This is an approximation, because column width depends on the the font-size
@@ -185,10 +212,160 @@ const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesIn
   };
 };
 
+const addColumnGroupingHeaders = (
+  worksheet: Excel.Worksheet,
+  columns: SerializedColumns,
+  columnGroupPaths: Record<string, string[]>,
+  columnGroupDetails: GridColumnGroupLookup,
+) => {
+  const maxDepth = Math.max(...columns.map(({ key }) => columnGroupPaths[key]?.length ?? 0));
+  if (maxDepth === 0) {
+    return;
+  }
+
+  for (let rowIndex = 0; rowIndex < maxDepth; rowIndex += 1) {
+    const row = columns.map(({ key }) => {
+      const groupingPath = columnGroupPaths[key];
+      if (groupingPath.length <= rowIndex) {
+        return { groupId: null, parents: groupingPath };
+      }
+      return {
+        ...columnGroupDetails[groupingPath[rowIndex]],
+        parents: groupingPath.slice(0, rowIndex),
+      };
+    });
+
+    const newRow = worksheet.addRow(
+      row.map((group) => (group.groupId === null ? null : group?.headerName ?? group.groupId)),
+    );
+
+    // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
+    const lastRowIndex = newRow.worksheet.rowCount;
+    let leftIndex = 0;
+    let rightIndex = 1;
+    while (rightIndex < columns.length) {
+      const { groupId: leftGroupId, parents: leftParents } = row[leftIndex];
+      const { groupId: rightGroupId, parents: rightParents } = row[rightIndex];
+
+      const areInSameGroup =
+        leftGroupId === rightGroupId &&
+        leftParents.length === rightParents.length &&
+        leftParents.every((leftParent, index) => rightParents[index] === leftParent);
+      if (areInSameGroup) {
+        rightIndex += 1;
+      } else {
+        if (rightIndex - leftIndex > 1) {
+          worksheet.mergeCells(lastRowIndex, leftIndex + 1, lastRowIndex, rightIndex);
+        }
+        leftIndex = rightIndex;
+        rightIndex += 1;
+      }
+    }
+    if (rightIndex - leftIndex > 1) {
+      worksheet.mergeCells(lastRowIndex, leftIndex + 1, lastRowIndex, rightIndex);
+    }
+  }
+};
+
+type SerializedColumns = Array<{
+  key: string;
+  width: number;
+  style: Excel.Style;
+  headerText: string;
+}>;
+
+export function serializeColumns(
+  columns: GridStateColDef[],
+  styles: ColumnsStylesInterface,
+): SerializedColumns {
+  return columns.map((column) => serializeColumn(column, styles));
+}
+
+type ValueOptionsData = Record<string, { values: (string | number)[]; address: string }>;
+
+export async function getDataForValueOptionsSheet(
+  columns: GridStateColDef[],
+  valueOptionsSheetName: string,
+  api: GridPrivateApiPremium,
+): Promise<ValueOptionsData> {
+  const candidateColumns = columns.filter(
+    (column) => isSingleSelectColDef(column) && Array.isArray(column.valueOptions),
+  );
+
+  // Creates a temp worksheet to obtain the column letters
+  const excelJS = await getExcelJs();
+  const workbook: Excel.Workbook = new excelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Sheet1');
+
+  worksheet.columns = candidateColumns.map((column) => ({ key: column.field }));
+
+  return candidateColumns.reduce<Record<string, { values: (string | number)[]; address: string }>>(
+    (acc, column) => {
+      const singleSelectColumn = column as GridSingleSelectColDef;
+      const formattedValueOptions = getFormattedValueOptions(
+        singleSelectColumn,
+        singleSelectColumn.valueOptions as Array<ValueOptions>,
+        api,
+      );
+      const header = column.headerName ?? column.field;
+      const values = [header, ...formattedValueOptions];
+
+      const letter = worksheet.getColumn(column.field).letter;
+      const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${values.length}`;
+
+      acc[column.field] = { values, address };
+
+      return acc;
+    },
+    {},
+  );
+}
+
+function addSerializedRowToWorksheet(serializedRow: SerializedRow, worksheet: Excel.Worksheet) {
+  const { row, dataValidation, outlineLevel, mergedCells } = serializedRow;
+
+  const newRow = worksheet.addRow(row);
+
+  Object.keys(dataValidation).forEach((field) => {
+    newRow.getCell(field).dataValidation = {
+      ...dataValidation[field],
+    };
+  });
+
+  if (outlineLevel) {
+    newRow.outlineLevel = outlineLevel;
+  }
+
+  // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
+  const lastRowIndex = newRow.worksheet.rowCount;
+  mergedCells.forEach((mergedCell) => {
+    worksheet.mergeCells(lastRowIndex, mergedCell.leftIndex, lastRowIndex, mergedCell.rightIndex);
+  });
+}
+
+async function createValueOptionsSheetIfNeeded(
+  valueOptionsData: ValueOptionsData,
+  sheetName: string,
+  workbook: Excel.Workbook,
+) {
+  if (Object.keys(valueOptionsData).length === 0) {
+    return;
+  }
+
+  const valueOptionsWorksheet = workbook.addWorksheet(sheetName);
+
+  valueOptionsWorksheet.columns = Object.keys(valueOptionsData).map((key) => ({ key }));
+
+  Object.entries(valueOptionsData).forEach(([field, { values }]) => {
+    valueOptionsWorksheet.getColumn(field).values = values;
+  });
+}
+
 interface BuildExcelOptions {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
   includeHeaders: boolean;
+  includeColumnGroupsHeaders: boolean;
   valueOptionsSheetName: string;
   exceljsPreProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
   exceljsPostProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
@@ -197,13 +374,14 @@ interface BuildExcelOptions {
 
 export async function buildExcel(
   options: BuildExcelOptions,
-  api: GridApi,
+  api: GridPrivateApiPremium,
 ): Promise<Excel.Workbook> {
   const {
     columns,
     rowIds,
     includeHeaders,
-    valueOptionsSheetName,
+    includeColumnGroupsHeaders,
+    valueOptionsSheetName = 'Options',
     exceljsPreProcess,
     exceljsPostProcess,
     columnsStyles = {},
@@ -213,7 +391,8 @@ export async function buildExcel(
   const workbook: Excel.Workbook = new excelJS.Workbook();
   const worksheet = workbook.addWorksheet('Sheet1');
 
-  worksheet.columns = columns.map((column) => serializeColumn(column, columnsStyles));
+  const serializedColumns = serializeColumns(columns, columnsStyles);
+  worksheet.columns = serializedColumns;
 
   if (exceljsPreProcess) {
     await exceljsPreProcess({
@@ -222,68 +401,30 @@ export async function buildExcel(
     });
   }
 
+  if (includeColumnGroupsHeaders) {
+    const columnGroupPaths = columns.reduce<Record<string, string[]>>((acc, column) => {
+      acc[column.field] = api.unstable_getColumnGroupPath(column.field);
+      return acc;
+    }, {});
+
+    addColumnGroupingHeaders(
+      worksheet,
+      serializedColumns,
+      columnGroupPaths,
+      api.unstable_getAllGroupDetails(),
+    );
+  }
+
   if (includeHeaders) {
-    worksheet.addRow(columns.map((column) => column.headerName || column.field));
+    worksheet.addRow(columns.map((column) => column.headerName ?? column.field));
   }
 
-  const columnsWithArrayValueOptions = columns.filter(
-    (column) =>
-      column.type === 'singleSelect' &&
-      column.valueOptions &&
-      typeof column.valueOptions !== 'function',
-  );
-  const defaultValueOptionsFormulae: { [field: string]: string } = {};
-
-  if (columnsWithArrayValueOptions.length) {
-    const valueOptionsWorksheet = workbook.addWorksheet(valueOptionsSheetName);
-
-    valueOptionsWorksheet.columns = columnsWithArrayValueOptions.map(({ field }) => ({
-      key: field,
-    }));
-    columnsWithArrayValueOptions.forEach((column) => {
-      const formattedValueOptions = getFormattedValueOptions(
-        column,
-        column.valueOptions as ValueOptions[],
-        api,
-      );
-      valueOptionsWorksheet.getColumn(column.field).values = [
-        column.headerName || column.field,
-        ...formattedValueOptions,
-      ];
-
-      const columnLetter = valueOptionsWorksheet.getColumn(column.field).letter;
-      defaultValueOptionsFormulae[
-        column.field
-      ] = `${valueOptionsSheetName}!$${columnLetter}$2:$${columnLetter}$${
-        1 + formattedValueOptions.length
-      }`;
-    });
-  }
+  const valueOptionsData = await getDataForValueOptionsSheet(columns, valueOptionsSheetName, api);
+  createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
 
   rowIds.forEach((id) => {
-    const { row, dataValidation, outlineLevel, mergedCells } = serializeRow(
-      id,
-      columns,
-      api,
-      defaultValueOptionsFormulae,
-    );
-    const newRow = worksheet.addRow(row);
-
-    Object.keys(dataValidation).forEach((field) => {
-      newRow.getCell(field).dataValidation = {
-        ...dataValidation[field],
-      };
-    });
-
-    if (outlineLevel) {
-      newRow.outlineLevel = outlineLevel;
-    }
-
-    // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
-    const lastRowIndex = newRow.worksheet.rowCount;
-    mergedCells.forEach((mergedCell) => {
-      worksheet.mergeCells(lastRowIndex, mergedCell.leftIndex, lastRowIndex, mergedCell.rightIndex);
-    });
+    const serializedRow = serializeRow(id, columns, api, valueOptionsData);
+    addSerializedRowToWorksheet(serializedRow, worksheet);
   });
 
   if (exceljsPostProcess) {
@@ -294,4 +435,67 @@ export async function buildExcel(
   }
 
   return workbook;
+}
+
+export interface ExcelExportInitEvent {
+  serializedColumns: SerializedColumns;
+  serializedRows: SerializedRow[];
+  valueOptionsSheetName: string;
+  columnGroupPaths: Record<string, string[]>;
+  columnGroupDetails: GridColumnGroupLookup;
+  valueOptionsData: ValueOptionsData;
+  options: Omit<
+    GridExcelExportOptions,
+    'exceljsPreProcess' | 'exceljsPostProcess' | 'columnsStyles' | 'valueOptionsSheetName'
+  >;
+}
+
+export function setupExcelExportWebWorker(
+  workerOptions: Pick<GridExcelExportOptions, 'exceljsPostProcess' | 'exceljsPreProcess'> = {},
+) {
+  // eslint-disable-next-line no-restricted-globals
+  addEventListener('message', async (event: MessageEvent<ExcelExportInitEvent>) => {
+    const {
+      serializedColumns,
+      serializedRows,
+      options,
+      valueOptionsSheetName,
+      valueOptionsData,
+      columnGroupDetails,
+      columnGroupPaths,
+    } = event.data;
+
+    const { exceljsPostProcess, exceljsPreProcess } = workerOptions;
+
+    const excelJS = await getExcelJs();
+    const workbook: Excel.Workbook = new excelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sheet1');
+
+    worksheet.columns = serializedColumns;
+
+    if (exceljsPreProcess) {
+      await exceljsPreProcess({ workbook, worksheet });
+    }
+
+    if (options.includeColumnGroupsHeaders) {
+      addColumnGroupingHeaders(worksheet, serializedColumns, columnGroupPaths, columnGroupDetails);
+    }
+
+    const includeHeaders = options.includeHeaders ?? true;
+    if (includeHeaders) {
+      worksheet.addRow(serializedColumns.map((column) => column.headerText));
+    }
+
+    createValueOptionsSheetIfNeeded(valueOptionsData, valueOptionsSheetName, workbook);
+
+    serializedRows.forEach((serializedRow) => {
+      addSerializedRowToWorksheet(serializedRow, worksheet);
+    });
+
+    if (exceljsPostProcess) {
+      await exceljsPostProcess({ workbook, worksheet });
+    }
+
+    postMessage(await workbook.xlsx.writeBuffer());
+  });
 }

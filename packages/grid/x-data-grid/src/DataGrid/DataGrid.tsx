@@ -1,19 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@mui/utils';
-import {
-  GridBody,
-  GridErrorHandler,
-  GridFooterPlaceholder,
-  GridHeaderPlaceholder,
-  GridRoot,
-} from '../components';
+import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
+import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
-import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
@@ -21,19 +14,14 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const apiRef = useDataGridComponent(props);
+  const privateApiRef = useDataGridComponent(props.apiRef, props);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeaderPlaceholder />
-          <GridBody
-            ColumnHeadersComponent={DataGridColumnHeaders}
-            VirtualScrollerComponent={DataGridVirtualScroller}
-          />
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
+        <GridHeader />
+        <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />
+        <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
   );
@@ -53,6 +41,12 @@ DataGridRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
+   */
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }),
   /**
    * The label of the grid.
    */
@@ -91,7 +85,12 @@ DataGridRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Sets the height in pixel of the column headers in the grid.
+   * @default 56
+   */
+  columnHeaderHeight: PropTypes.number,
+  /**
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
     // @ts-ignore because otherwise `build:api` doesn't work
@@ -113,20 +112,18 @@ DataGridRaw.propTypes = {
    */
   columnThreshold: PropTypes.number,
   /**
-   * Extend native column types with your new column types.
-   */
-  columnTypes: PropTypes.object,
-  /**
    * Set the column visibility model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overrideable components.
+   * Overridable components.
+   * @deprecated Use `slots` instead.
    */
   components: PropTypes.object,
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
   /**
@@ -155,20 +152,10 @@ DataGridRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: PropTypes.bool,
-  /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
-  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
-  disableSelectionOnClick: PropTypes.bool,
+  disableRowSelectionOnClick: PropTypes.bool,
   /**
    * If `true`, the virtualization is disabled.
    * @default false
@@ -180,21 +167,11 @@ DataGridRaw.propTypes = {
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
   /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel: PropTypes.object,
-  /**
-   * An error that will turn the grid into its error state and display the error component.
-   */
-  error: PropTypes.any,
-  /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
-    newEditingApi: PropTypes.bool,
-    preventCommitWhileValidating: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -209,13 +186,13 @@ DataGridRaw.propTypes = {
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        columnField: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        operatorValue: PropTypes.string,
+        operator: PropTypes.string.isRequired,
         value: PropTypes.any,
       }),
     ).isRequired,
-    linkOperator: PropTypes.oneOf(['and', 'or']),
+    logicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
@@ -261,11 +238,6 @@ DataGridRaw.propTypes = {
    * @returns {GridRowSpacing} The row spacing values.
    */
   getRowSpacing: PropTypes.func,
-  /**
-   * Set the height in pixel of the column headers in the grid.
-   * @default 56
-   */
-  headerHeight: PropTypes.number,
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -349,13 +321,6 @@ DataGridRaw.propTypes = {
    */
   onCellDoubleClick: PropTypes.func,
   /**
-   * Callback fired when the cell changes are committed.
-   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellEditCommit: PropTypes.func,
-  /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent | React.MouseEvent>} event The event that caused this prop to be called.
@@ -368,13 +333,6 @@ DataGridRaw.propTypes = {
    */
   onCellEditStop: PropTypes.func,
   /**
-   * Callback fired when a cell loses focus.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellFocusOut: PropTypes.func,
-  /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
@@ -383,7 +341,7 @@ DataGridRaw.propTypes = {
   onCellKeyDown: PropTypes.func,
   /**
    * Callback fired when the `cellModesModel` prop changes.
-   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCellModesModel} cellModesModel Object containing which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
@@ -437,41 +395,11 @@ DataGridRaw.propTypes = {
    */
   onColumnOrderChange: PropTypes.func,
   /**
-   * Callback fired when a column visibility changes.
-   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
-   * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onColumnVisibilityModelChange` instead.
-   */
-  onColumnVisibilityChange: PropTypes.func,
-  /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityModelChange: PropTypes.func,
-  /**
-   * Callback fired when the edit cell value changes.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
-   */
-  onEditCellPropsChange: PropTypes.func,
-  /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onEditRowsModelChange: PropTypes.func,
-  /**
-   * Callback fired when an exception is thrown in the grid.
-   * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onError: PropTypes.func,
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
@@ -493,17 +421,11 @@ DataGridRaw.propTypes = {
    */
   onMenuOpen: PropTypes.func,
   /**
-   * Callback fired when the current page has changed.
-   * @param {number} page Index of the page displayed on the Grid.
+   * Callback fired when the pagination model has changed.
+   * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPageChange: PropTypes.func,
-  /**
-   * Callback fired when the page size has changed.
-   * @param {number} pageSize Size of the page displayed on the Grid.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onPageSizeChange: PropTypes.func,
+  onPaginationModelChange: PropTypes.func,
   /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].
@@ -565,16 +487,16 @@ DataGridRaw.propTypes = {
   onRowEditStop: PropTypes.func,
   /**
    * Callback fired when the `rowModesModel` prop changes.
-   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowModesModelChange: PropTypes.func,
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
+   * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSelectionModelChange: PropTypes.func,
+  onRowSelectionModelChange: PropTypes.func,
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
@@ -590,28 +512,10 @@ DataGridRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
-   * The zero-based index of the current page.
-   * @default 0
+   * Select the pageSize dynamically using the component UI.
+   * @default [25, 50, 100]
    */
-  page: PropTypes.number,
-  /**
-   * Set the number of rows in one page.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
-   * @default 100
-   */
-  pageSize: chainPropTypes(PropTypes.number, (props: any) => {
-    if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
-      return new Error(
-        [
-          `MUI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
-          `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  }),
+  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
@@ -633,8 +537,14 @@ DataGridRaw.propTypes = {
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
   /**
+   * The pagination model of type [[GridPaginationModel]] which refers to current `page` and `pageSize`.
+   */
+  paginationModel: PropTypes.shape({
+    page: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+  }),
+  /**
    * Callback called before updating a row with new values in the row and cell editing.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
@@ -652,7 +562,7 @@ DataGridRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
@@ -663,17 +573,25 @@ DataGridRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.array.isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
+  /**
+   * Sets the row selection model of the grid.
+   */
+  rowSelectionModel: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
+    PropTypes.number,
+    PropTypes.string,
+  ]),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Select the pageSize dynamically using the component UI.
-   * @default [25, 50, 100]
-   */
-  rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3
@@ -684,40 +602,23 @@ DataGridRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * Set the selection model of the grid.
-   */
-  selectionModel: chainPropTypes(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
-    (props: any) => {
-      if (
-        !props.checkboxSelection &&
-        Array.isArray(props.selectionModel) &&
-        props.selectionModel.length > 1
-      ) {
-        return new Error(
-          [
-            `MUI: \`<DataGrid selectionModel={${JSON.stringify(
-              props.selectionModel,
-            )}} />\` is not a valid prop.`,
-            'selectionModel can only be of 1 item in DataGrid.',
-            '',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
-          ].join('\n'),
-        );
-      }
-      return null;
-    },
-  ),
-  /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable components.
+   */
+  slots: PropTypes.object,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

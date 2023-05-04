@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
 import {
+  unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/material/utils';
+} from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -56,7 +56,6 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
     isEditable,
     tabIndex,
     className,
-    getValue,
     hasFocus,
     isValidating,
     isProcessingProps,
@@ -99,13 +98,13 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
 
   return (
     <label htmlFor={id} className={clsx(classes.root, className)} {...other}>
-      <rootProps.components.BaseCheckbox
+      <rootProps.slots.baseCheckbox
         id={id}
         inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
-        {...rootProps.componentsProps?.baseCheckbox}
+        {...rootProps.slotProps?.baseCheckbox}
       />
     </label>
   );
@@ -118,13 +117,13 @@ GridEditBooleanCell.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -137,14 +136,6 @@ GridEditBooleanCell.propTypes = {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any,
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
   /**
    * If true, the cell is the active element.
    */
@@ -169,7 +160,7 @@ GridEditBooleanCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

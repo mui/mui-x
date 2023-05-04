@@ -22,20 +22,21 @@ export interface GridDetailPanelApi {
    * @param {GridRowId[]} ids The ids of the rows to open the detail panel.
    */
   setExpandedDetailPanels: (ids: GridRowId[]) => void;
+}
+
+export interface GridDetailPanelPrivateApi {
   /**
    * Stores the panel height measurement and triggers the row height pre-processing.
    * @param {GridRowId} id The id of the row.
    * @param {number} height The new height.
-   * @ignore - do not document.
    */
-  unstable_storeDetailPanelHeight: (id: GridRowId, height: number) => void;
+  storeDetailPanelHeight: (id: GridRowId, height: number) => void;
   /**
    * Determines if the height of a detail panel is "auto".
    * @param {GridRowId} id The id of the row.
-   * @return {boolean} `true` if the detail panel height is "auto".
-   * @ignore - do not document.
+   * @returns {boolean} `true` if the detail panel height is "auto".
    */
-  unstable_detailPanelHasAutoHeight: (id: GridRowId) => boolean;
+  detailPanelHasAutoHeight: (id: GridRowId) => boolean;
 }
 
 export interface GridDetailPanelState {

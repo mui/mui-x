@@ -1,10 +1,17 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  waitFor,
+} from '@mui/monorepo/test/utils';
 import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
+  getCell,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -16,11 +23,11 @@ import {
   GridGroupingValueGetterParams,
   GridPreferencePanelsValue,
   GridRowsProp,
-  GridRowTreeNodeConfig,
   useGridApiRef,
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
-  GridLinkOperator,
+  GridLogicOperator,
+  GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
 
@@ -62,11 +69,11 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Row Grouping', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const Test = (props: Partial<DataGridPremiumProps>) => {
+  function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
 
     return (
@@ -74,9 +81,11 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   describe('Setting grouping criteria', () => {
+    clock.withFakeTimers();
+
     describe('initialState: rowGrouping.model', () => {
       it('should allow to initialize the row grouping', () => {
         render(
@@ -199,6 +208,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: rowGroupingColumnMode', () => {
+    clock.withFakeTimers();
+
     it('should gather all the grouping criteria into a single column when rowGroupingColumnMode is not defined', () => {
       render(
         <Test
@@ -233,7 +244,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
           defaultGroupingExpansionDepth={-1}
-          rowGroupingColumnMode="single"
         />,
       );
 
@@ -407,7 +417,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         <Test
           initialState={{ rowGrouping: { model: ['category2', 'category1'] } }}
           defaultGroupingExpansionDepth={-1}
-          rowGroupingColumnMode="single"
         />,
       );
 
@@ -478,6 +487,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: disableRowGrouping', () => {
+    clock.withFakeTimers();
+
     it('should disable the row grouping when `prop.disableRowGrouping = true`', () => {
       render(
         <Test
@@ -516,6 +527,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: defaultGroupingExpansionDepth', () => {
+    clock.withFakeTimers();
+
     it('should not expand any row if defaultGroupingExpansionDepth = 0', () => {
       render(
         <Test
@@ -612,10 +625,11 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('prop: isGroupExpandedByDefault', () => {
+    clock.withFakeTimers();
+
     it('should expand groups according to isGroupExpandedByDefault when defined', () => {
       const isGroupExpandedByDefault = spy(
-        (node: GridRowTreeNodeConfig) =>
-          node.groupingKey === 'Cat A' && node.groupingField === 'category1',
+        (node: GridGroupNode) => node.groupingKey === 'Cat A' && node.groupingField === 'category1',
       );
 
       render(
@@ -625,7 +639,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         />,
       );
       expect(isGroupExpandedByDefault.callCount).to.equal(12); // Should not be called on leaves
-      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A;
+      const { childrenExpanded, ...node } = apiRef.current.state.rows.tree.A as GridGroupNode;
       const callForNodeA = isGroupExpandedByDefault
         .getCalls()
         .find(
@@ -642,7 +656,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
 
     it('should have priority over defaultGroupingExpansionDepth when both defined', () => {
-      const isGroupExpandedByDefault = (node: GridRowTreeNodeConfig) =>
+      const isGroupExpandedByDefault = (node: GridGroupNode) =>
         node.groupingKey === 'Cat A' && node.groupingField === 'category1';
 
       render(
@@ -661,12 +675,13 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
   });
 
-  describe('prop: groupingColDef when groupingColumMode = "single"', () => {
+  describe('prop: groupingColDef when groupingColumnMode = "single"', () => {
+    clock.withFakeTimers();
+
     it('should not allow to override the field', () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
-          rowGroupingColumnMode="single"
           groupingColDef={{
             // @ts-expect-error
             field: 'custom-field',
@@ -679,11 +694,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
 
     it('should react to groupingColDef update', () => {
       const { setProps } = render(
-        <Test
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-          rowGroupingColumnMode="single"
-          groupingColDef={{}}
-        />,
+        <Test initialState={{ rowGrouping: { model: ['category1'] } }} groupingColDef={{}} />,
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal([
@@ -710,7 +721,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
-          rowGroupingColumnMode="single"
           groupingColDef={{ width: 200 }}
         />,
       );
@@ -738,7 +748,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ leafField: 'id' }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -775,7 +784,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               },
             ]}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ leafField: 'id' }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -808,7 +816,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               },
             ]}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ leafField: 'id' }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -826,6 +833,33 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           'Custom leaf',
         ]);
       });
+
+      // See https://github.com/mui/mui-x/issues/7949
+      it('should correctly pass `hasFocus` to `renderCell` defined on the leafColDef', () => {
+        const renderIdCell = spy((params) => `Focused: ${params.hasFocus}`);
+
+        render(
+          <Test
+            columns={[
+              {
+                field: 'id',
+                type: 'number',
+                renderCell: renderIdCell,
+              },
+              {
+                field: 'category1',
+              },
+            ]}
+            initialState={{ rowGrouping: { model: ['category1'] } }}
+            groupingColDef={{ leafField: 'id' }}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        userEvent.mousePress(getCell(1, 0));
+        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
+        expect(getCell(1, 0)).to.have.text('Focused: true');
+      });
     });
 
     describe('prop: groupColDef.headerName', () => {
@@ -833,7 +867,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               headerName: 'Main category',
             }}
@@ -852,7 +885,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={(params) =>
               params.fields.includes('category1')
                 ? {
@@ -877,11 +909,14 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={1}
             groupingColDef={{
               valueFormatter: (params) => {
                 const node = apiRef.current.getRowNode(params.id!)!;
+                if (node.type !== 'group') {
+                  return '';
+                }
+
                 return `${node.groupingField} / ${node.groupingKey}`;
               },
             }}
@@ -902,11 +937,14 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={1}
             groupingColDef={() => ({
               valueFormatter: (params) => {
                 const node = apiRef.current.getRowNode(params.id!)!;
+                if (node.type !== 'group') {
+                  return '';
+                }
+
                 return `${node.groupingField} / ${node.groupingKey}`;
               },
             })}
@@ -929,7 +967,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ hideDescendantCount: false }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -954,7 +991,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ hideDescendantCount: true }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -977,7 +1013,9 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
   });
 
-  describe('prop: groupingColDef when groupingColumMode = "multiple"', () => {
+  describe('prop: groupingColDef when groupingColumnMode = "multiple"', () => {
+    clock.withFakeTimers();
+
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -1292,6 +1330,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             groupingColDef={{
               valueFormatter: (params) => {
                 const node = apiRef.current.getRowNode(params.id!)!;
+                if (node.type !== 'group') {
+                  return '';
+                }
+
                 return `${node.groupingField} / ${node.groupingKey}`;
               },
             }}
@@ -1330,6 +1372,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               return {
                 valueFormatter: (params) => {
                   const node = apiRef.current.getRowNode(params.id!)!;
+                  if (node.type !== 'group') {
+                    return '';
+                  }
+
                   return `${node.groupingField} / ${node.groupingKey}`;
                 },
               };
@@ -1436,6 +1482,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('colDef: groupingValueGetter & valueGetter', () => {
+    clock.withFakeTimers();
+
     it('should use groupingValueGetter to group rows when defined', () => {
       render(
         <Test
@@ -1528,9 +1576,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             {
               field: 'category1',
-              hide: true,
               valueGetter: (params) => `value ${params.row.category1}`,
-              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
+              groupingValueGetter: (params: GridGroupingValueGetterParams<any, string>) =>
                 `groupingValue ${params.row.category1}`,
             },
           ]}
@@ -1551,6 +1598,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('column menu', () => {
+    clock.withFakeTimers();
+
     it('should add a "Group by {field}" menu item on ungrouped columns when coLDef.groupable is not defined', () => {
       render(
         <Test
@@ -1567,7 +1616,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItem = screen.queryByRole('menuitem', { name: 'Group by category1' });
+      const menuItem = screen.getByRole('menuitem', { name: 'Group by category1' });
       fireEvent.click(menuItem);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category1']);
     });
@@ -1613,7 +1662,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItem = screen.queryByRole('menuitem', { name: 'Stop grouping by category1' });
+      const menuItem = screen.getByRole('menuitem', { name: 'Stop grouping by category1' });
       fireEvent.click(menuItem);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
     });
@@ -1644,7 +1693,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category1__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory1 = screen.queryByRole('menuitem', {
+      const menuItemCategory1 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category1',
       });
       fireEvent.click(menuItemCategory1);
@@ -1657,14 +1706,14 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category2__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory2 = screen.queryByRole('menuitem', {
+      const menuItemCategory2 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category2',
       });
       fireEvent.click(menuItemCategory2);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
     });
 
-    it('should add a "Stop grouping {field} menu item for each grouping criteria on the grouping column when prop.rowGroupingColumnMode = "single"', () => {
+    it('should add a "Stop grouping {field}" menu item for each grouping criteria on the grouping column when prop.rowGroupingColumnMode = "single"', () => {
       render(
         <Test
           columns={[
@@ -1683,19 +1732,18 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               model: ['category1', 'category2'],
             },
           }}
-          rowGroupingColumnMode="single"
         />,
       );
 
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory1 = screen.queryByRole('menuitem', {
+      const menuItemCategory1 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category1',
       });
       fireEvent.click(menuItemCategory1);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2']);
-      const menuItemCategory2 = screen.queryByRole('menuitem', {
+      const menuItemCategory2 = screen.getByRole('menuitem', {
         name: 'Stop grouping by category2',
       });
       fireEvent.click(menuItemCategory2);
@@ -1751,12 +1799,13 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('sorting', () => {
+    clock.withFakeTimers();
+
     describe('prop: rowGroupingColumnMode = "single"', () => {
       it('should use the top level grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -1781,7 +1830,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category2',
@@ -1809,7 +1857,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
             }}
@@ -1837,7 +1884,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category3',
@@ -1867,7 +1913,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           <Test
             rows={unbalancedRows}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
             defaultGroupingExpansionDepth={-1}
             groupingColDef={{ mainGroupingCriteria: 'category1', leafField: 'id' }}
@@ -1891,7 +1936,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           <Test
             rows={unbalancedRows}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
             defaultGroupingExpansionDepth={-1}
             groupingColDef={{ leafField: 'id' }}
@@ -2012,7 +2056,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2039,7 +2082,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category2',
@@ -2070,7 +2112,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
             }}
@@ -2096,7 +2137,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category3',
@@ -2123,11 +2163,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               filter: {
                 filterModel: {
-                  items: [{ columnField: 'id', operatorValue: '=', value: 2 }],
+                  items: [{ field: 'id', operator: '=', value: 2 }],
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2148,7 +2187,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2168,7 +2206,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2189,7 +2226,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2210,7 +2246,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2227,15 +2262,14 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 filterModel: {
                   items: [
                     {
-                      columnField: 'category2',
-                      operatorValue: 'equals',
+                      field: 'category2',
+                      operator: 'equals',
                       value: 'Cat 1',
                     },
                   ],
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2244,7 +2278,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 
-      it('should manage link operator OR accros group and leaf columns', () => {
+      it('should manage link operator OR across group and leaf columns', () => {
         render(
           <Test
             initialState={{
@@ -2254,22 +2288,21 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                   items: [
                     {
                       id: 2,
-                      columnField: 'category2',
-                      operatorValue: 'equals',
+                      field: 'category2',
+                      operator: 'equals',
                       value: 'Cat 1',
                     },
                     {
                       id: 1,
-                      columnField: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-                      operatorValue: 'equals',
+                      field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                      operator: 'equals',
                       value: 'Cat A',
                     },
                   ],
-                  linkOperator: GridLinkOperator.Or,
+                  logicOperator: GridLogicOperator.Or,
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2385,7 +2418,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               filter: {
                 filterModel: {
-                  items: [{ columnField: 'id', operatorValue: '=', value: 2 }],
+                  items: [{ field: 'id', operator: '=', value: 2 }],
                 },
               },
             }}
@@ -2408,8 +2441,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 filterModel: {
                   items: [
                     {
-                      columnField: '__row_group_by_columns_group_category1__',
-                      operatorValue: 'equals',
+                      field: '__row_group_by_columns_group_category1__',
+                      operator: 'equals',
                       value: 'Cat A',
                     },
                   ],
@@ -2429,6 +2462,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: addRowGroupingCriteria', () => {
+    clock.withFakeTimers();
+
     it('should add grouping criteria to model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current.addRowGroupingCriteria('category2'));
@@ -2443,6 +2478,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: removeRowGroupingCriteria', () => {
+    clock.withFakeTimers();
+
     it('should remove field from model', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1'] } }} />);
       act(() => apiRef.current.removeRowGroupingCriteria('category1'));
@@ -2451,6 +2488,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: setRowGroupingCriteriaIndex', () => {
+    clock.withFakeTimers();
+
     it('should change the grouping criteria order', () => {
       render(<Test initialState={{ rowGrouping: { model: ['category1', 'category2'] } }} />);
       act(() => apiRef.current.setRowGroupingCriteriaIndex('category1', 1));
@@ -2459,6 +2498,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
   });
 
   describe('apiRef: getRowGroupChildren', () => {
+    clock.withFakeTimers();
+
     it('should return the rows in group of depth 0 of length 1 from tree of depth 1', () => {
       render(
         <Test
@@ -2469,7 +2510,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+                items: [{ field: 'id', operator: '>=', value: '1' }],
               },
             },
           }}
@@ -2503,7 +2544,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+                items: [{ field: 'id', operator: '>=', value: '1' }],
               },
             },
           }}
@@ -2557,7 +2598,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '>=', value: '2' }],
+                items: [{ field: 'id', operator: '>=', value: '2' }],
               },
             },
           }}
@@ -2576,5 +2617,21 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         2,
       ]);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/8626
+  it('should properly update the rows when they change', async () => {
+    render(
+      <Test
+        columns={[{ field: 'id' }, { field: 'group' }, { field: 'username', width: 150 }]}
+        rows={[{ id: 1, group: 'A', username: 'username' }]}
+        rowGroupingModel={['group']}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+
+    act(() => apiRef.current.updateRows([{ id: 1, group: 'A', username: 'username 2' }]));
+
+    await waitFor(() => expect(getCell(1, 3).textContent).to.equal('username 2'));
   });
 });

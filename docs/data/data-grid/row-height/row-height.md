@@ -1,15 +1,11 @@
----
-title: Data Grid - Row height
----
-
-# Data grid - Row height
+# Data Grid - Row height
 
 <p class="description">Customize the height of your rows.</p>
 
 ## Static row height
 
 By default, the rows have a height of 52 pixels.
-This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
+This matches the normal height in the [Material Design guidelines](https://m2.material.io/components/data-tables).
 
 Use the `rowHeight` prop to change this default value, as shown below:
 
@@ -41,7 +37,7 @@ const getRowHeight = React.useCallback(() => { ... }, []);
 
 ## Dynamic row height
 
-Instead of a fixed row height, you can let the grid calculate the height of each row based on its content.
+Instead of a fixed row height, you can let the data grid calculate the height of each row based on its content.
 To do so, return `"auto"` on the function passed to the `getRowHeight` prop.
 
 ```tsx
@@ -52,7 +48,7 @@ The following demo shows this feature in action:
 
 {{"demo": "DynamicRowHeightGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-The dynamic row height implementaion is based on a lazy approach, which means that the rows are measured as they are rendered.
+The dynamic row height implementation is based on a lazy approach, which means that the rows are measured as they are rendered.
 Because of this, you may see the size of the scrollbar thumb changing during scroll.
 This side effect happens because a row height estimation is used while a row is not rendered, then this value is replaced once the true measurement is obtained.
 You can configure the estimated value used by passing a function to the `getEstimatedRowHeight` prop.
@@ -85,7 +81,7 @@ Add padding to the cells to increase the space between the content and the cell 
 ## Row density
 
 Give your users the option to change the default row density to match their preferences—compact, standard, or comfortable.
-Density is calculated based on the `rowHeight` and/or `headerHeight` props, when present.
+Density is calculated based on the `rowHeight` and/or `columnHeaderHeight` props, when present.
 See [Density](https://mui.com/x/react-data-grid/accessibility/#density) for details.
 
 ## Row spacing

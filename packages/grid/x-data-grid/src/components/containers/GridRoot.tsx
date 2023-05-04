@@ -2,24 +2,22 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
-  useForkRef,
+  unstable_useForkRef as useForkRef,
   unstable_useEnhancedEffect as useEnhancedEffect,
-  capitalize,
-} from '@mui/material/utils';
+  unstable_capitalize as capitalize,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
 import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import {
-  gridDensityHeaderGroupingMaxDepthSelector,
-  gridDensityValueSelector,
-} from '../../hooks/features/density/densitySelector';
+import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
+import { gridColumnGroupsHeaderMaxDepthSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import {
   gridPinnedRowsCountSelector,
   gridRowCountSelector,
@@ -34,17 +32,20 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
 }
 
-type OwnerState = {
+type OwnerState = DataGridProcessedProps & {
   density: GridDensity;
-  autoHeight: DataGridProcessedProps['autoHeight'];
-  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, density, classes } = ownerState;
 
   const slots = {
-    root: ['root', autoHeight && 'autoHeight', `root--density${capitalize(density)}`],
+    root: [
+      'root',
+      autoHeight && 'autoHeight',
+      `root--density${capitalize(density)}`,
+      'withBorderColor',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -53,36 +54,29 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
-  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
   const ownerState = {
+    ...rootProps,
     density: densityValue,
-    classes: rootProps.classes,
-    autoHeight: rootProps.autoHeight,
   };
 
   const classes = useUtilityClasses(ownerState);
 
-  apiRef.current.rootElementRef = rootContainerRef;
+  apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);
   useEnhancedEffect(() => {
     setMountedState(true);
   }, []);
-
-  useEnhancedEffect(() => {
-    if (mountedState) {
-      apiRef.current.unstable_updateGridDimensionsRef();
-    }
-  }, [apiRef, mountedState]);
 
   if (!mountedState) {
     return null;
@@ -92,10 +86,11 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
     <GridRootStyles
       ref={handleRef}
       className={clsx(className, classes.root)}
+      ownerState={ownerState}
       role="grid"
       aria-colcount={visibleColumns.length}
       aria-rowcount={headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount}
-      aria-multiselectable={!rootProps.disableMultipleSelection}
+      aria-multiselectable={!rootProps.disableMultipleRowSelection}
       aria-label={rootProps['aria-label']}
       aria-labelledby={rootProps['aria-labelledby']}
       {...other}

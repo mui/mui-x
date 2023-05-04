@@ -1,19 +1,18 @@
 ---
-title: React Date Range Field component
+product: date-pickers
+title: React Date Range Field components
+components: MultiInputDateRangeField, SingleInputDateRangeField
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date range field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Date Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-<p class="description">The date field let the user select a date range with the keyboard.</p>
-
-:::warning
-This component is in a very early stage.
-It should not be used in a production setup.
-:::
+<p class="description">The Date Range Field components let the user select a date range with the keyboard.</p>
 
 ## Basic usage
 
-You can render your date range field with either one input using `SingleInputDateRangeField`
+You can render your Date Range Field with either one input using `SingleInputDateRangeField`
 or two inputs using `MultiInputDateRangeField` as show below.
 
 :::info
@@ -24,6 +23,6 @@ All the topics covered below are applicable to both `SingleInputDateRangeField` 
 
 ## Uncontrolled vs. Controlled
 
-The component can be controlled or uncontrolled
+The component can be uncontrolled or controlled.
 
 {{"demo": "DateRangeFieldValue.js"}}

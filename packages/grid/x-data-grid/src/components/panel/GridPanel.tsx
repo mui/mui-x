@@ -1,14 +1,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { MUIStyledCommonProps } from '@mui/system';
-import { styled, Theme } from '@mui/material/styles';
-import { generateUtilityClasses, InternalStandardProps as StandardProps } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { unstable_generateUtilityClasses as generateUtilityClasses } from '@mui/utils';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import Popper from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
+import { gridClasses } from '../../constants/gridClasses';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+
+type OwnerState = DataGridProcessedProps;
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -17,8 +21,7 @@ export interface GridPanelClasses {
   paper: string;
 }
 
-export interface GridPanelProps
-  extends StandardProps<MUIStyledCommonProps<Theme> & PopperProps, 'children'> {
+export interface GridPanelProps extends Partial<React.ComponentProps<typeof GridPanelRoot>> {
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
@@ -36,7 +39,7 @@ const GridPanelRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
@@ -44,8 +47,8 @@ const GridPaperRoot = styled(Paper, {
   name: 'MuiDataGrid',
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
-})(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  backgroundColor: (theme.vars || theme).palette.background.paper,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',
@@ -54,6 +57,7 @@ const GridPaperRoot = styled(Paper, {
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
 
@@ -91,7 +95,17 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     [],
   );
 
-  const anchorEl = apiRef.current.columnHeadersContainerElementRef?.current;
+  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+
+  React.useEffect(() => {
+    const columnHeadersElement = apiRef.current.rootElementRef?.current?.querySelector(
+      `.${gridClasses.columnHeaders}`,
+    );
+
+    if (columnHeadersElement) {
+      setAnchorEl(columnHeadersElement);
+    }
+  }, [apiRef]);
 
   if (!anchorEl) {
     return null;
@@ -102,12 +116,18 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       ref={ref}
       placement="bottom-start"
       className={clsx(className, classes.panel)}
+      ownerState={rootProps}
       anchorEl={anchorEl}
       modifiers={modifiers}
       {...other}
     >
       <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
-        <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
+        <GridPaperRoot
+          className={classes.paper}
+          ownerState={rootProps}
+          elevation={8}
+          onKeyDown={handleKeyDown}
+        >
           {isPlaced && children}
         </GridPaperRoot>
       </ClickAwayListener>
@@ -120,6 +140,9 @@ GridPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Popper render function or node.
+   */
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.
@@ -129,6 +152,7 @@ GridPanel.propTypes = {
    * If `true`, the component is shown.
    */
   open: PropTypes.bool.isRequired,
+  ownerState: PropTypes.object,
 } as any;
 
 export { GridPanel };

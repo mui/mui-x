@@ -3,12 +3,11 @@ import {
   DataGridPro,
   GridRenderCellParams,
   useGridApiContext,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   DataGridProProps,
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
-  GridColDef,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
@@ -20,7 +19,7 @@ export const isNavigationKey = (key: string) =>
   key.indexOf('Page') === 0 ||
   key === ' ';
 
-const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
+function CustomGridTreeDataGroupingCell(props: GridRenderCellParams) {
   const { id, field, rowNode } = props;
   const apiRef = useGridApiContext();
   const filteredDescendantCountLookup = useGridSelector(
@@ -29,16 +28,11 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
   );
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
-  const handleKeyDown: ButtonProps['onKeyDown'] = (event) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-    }
-  };
-
   const handleClick: ButtonProps['onClick'] = (event) => {
+    if (rowNode.type !== 'group') {
+      return;
+    }
+
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
     event.stopPropagation();
@@ -48,12 +42,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
     <Box sx={{ ml: rowNode.depth * 4 }}>
       <div>
         {filteredDescendantCount > 0 ? (
-          <Button
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
-            tabIndex={-1}
-            size="small"
-          >
+          <Button onClick={handleClick} tabIndex={-1} size="small">
             See {filteredDescendantCount} employees
           </Button>
         ) : (
@@ -62,7 +51,7 @@ const CustomGridTreeDataGroupingCell = (props: GridRenderCellParams) => {
       </div>
     </Box>
   );
-};
+}
 
 interface Row {
   hierarchy: string[];
@@ -164,7 +153,7 @@ const rows: GridRowsProp<Row> = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Name',

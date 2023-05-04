@@ -6,8 +6,8 @@ export function isFunction(value: any): value is Function {
   return typeof value === 'function';
 }
 
-export function isObject(value: any): value is Record<string, any> {
-  return typeof value === 'object';
+export function isObject<TObject = Record<PropertyKey, any>>(value: unknown): value is TObject {
+  return typeof value === 'object' && value !== null;
 }
 
 export function localStorageAvailable() {
@@ -38,7 +38,7 @@ export const clamp = (value: number, min: number, max: number) =>
 /**
  * Based on `fast-deep-equal`
  *
- *  MIT License
+ * MIT License
  *
  * Copyright (c) 2017 Evgeny Poberezkin
  *
@@ -186,4 +186,11 @@ function mulberry32(a: number): () => number {
 export function randomNumberBetween(seed: number, min: number, max: number): () => number {
   const random = mulberry32(seed);
   return () => min + (max - min) * random();
+}
+
+export function deepClone(obj: Record<string, any>) {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(obj);
+  }
+  return JSON.parse(JSON.stringify(obj));
 }

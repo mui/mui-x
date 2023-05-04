@@ -1,13 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass, useGridSelector, GridRenderCellParams } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { gridDetailPanelExpandedRowsContentCacheSelector } from '../hooks/features/detailPanel/gridDetailPanelSelector';
-import { GridApiPro } from '../models/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
 
@@ -21,11 +19,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
+function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const { id, value: isExpanded } = props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext<GridApiPro>();
+  const apiRef = useGridApiContext();
   const ownerState: OwnerState = { classes: rootProps.classes, isExpanded };
   const classes = useUtilityClasses(ownerState);
 
@@ -33,11 +31,11 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
   const hasContent = React.isValidElement(contentCache[id]);
 
   const Icon = isExpanded
-    ? rootProps.components.DetailPanelCollapseIcon
-    : rootProps.components.DetailPanelExpandIcon;
+    ? rootProps.slots.detailPanelCollapseIcon
+    : rootProps.slots.detailPanelExpandIcon;
 
   return (
-    <IconButton
+    <rootProps.slots.baseIconButton
       size="small"
       tabIndex={-1}
       disabled={!hasContent}
@@ -47,11 +45,12 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
           ? apiRef.current.getLocaleText('collapseDetailPanel')
           : apiRef.current.getLocaleText('expandDetailPanel')
       }
+      {...rootProps.slotProps?.baseIconButton}
     >
       <Icon fontSize="inherit" />
-    </IconButton>
+    </rootProps.slots.baseIconButton>
   );
-};
+}
 
 GridDetailPanelToggleCell.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -60,9 +59,8 @@ GridDetailPanelToggleCell.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
@@ -93,14 +91,6 @@ GridDetailPanelToggleCell.propTypes = {
    */
   formattedValue: PropTypes.any,
   /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
-  /**
    * If true, the cell is the active element.
    */
   hasFocus: PropTypes.bool.isRequired,
@@ -115,7 +105,7 @@ GridDetailPanelToggleCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */

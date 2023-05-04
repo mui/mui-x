@@ -34,7 +34,9 @@ export default function FullyCustomSortComparator() {
         {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           sorting: {
+            ...data.initialState?.sorting,
             sortModel: [
               {
                 field: 'dateCreatedCustom',

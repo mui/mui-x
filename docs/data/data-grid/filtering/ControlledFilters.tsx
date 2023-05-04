@@ -14,8 +14,8 @@ export default function ControlledFilters() {
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
       {
-        columnField: 'rating',
-        operatorValue: '>',
+        field: 'rating',
+        operator: '>',
         value: '2.5',
       },
     ],
@@ -25,8 +25,8 @@ export default function ControlledFilters() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
         filterModel={filterModel}
         onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowsProp,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
@@ -106,7 +106,7 @@ const rows: GridRowsProp = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',
@@ -122,12 +122,12 @@ export default function TreeDataDisableChildrenFiltering() {
   const [disableChildrenFiltering, setDisableChildrenFiltering] =
     React.useState(true);
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
-    linkOperator: GridLinkOperator.Or,
+    logicOperator: GridLogicOperator.Or,
     items: [
       {
         id: 0,
-        columnField: 'recruitmentDate',
-        operatorValue: 'before',
+        field: 'recruitmentDate',
+        operator: 'before',
         value: '2018-01-01',
       },
     ],

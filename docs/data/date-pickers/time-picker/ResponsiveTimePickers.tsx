@@ -1,43 +1,37 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 
 export default function ResponsiveTimePickers() {
-  const [value, setValue] = React.useState<Dayjs | null>(
-    dayjs('2018-01-01T00:00:00.000Z'),
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3}>
-        <MobileTimePicker
-          label="For mobile"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <DesktopTimePicker
-          label="For desktop"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <TimePicker
-          value={value}
-          onChange={setValue}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </Stack>
+      <DemoContainer
+        components={[
+          'TimePicker',
+          'MobileTimePicker',
+          'DesktopTimePicker',
+          'StaticTimePicker',
+        ]}
+      >
+        <DemoItem label="Desktop variant">
+          <DesktopTimePicker defaultValue={dayjs('2022-04-17T15:30')} />
+        </DemoItem>
+        <DemoItem label="Mobile variant">
+          <MobileTimePicker defaultValue={dayjs('2022-04-17T15:30')} />
+        </DemoItem>
+        <DemoItem label="Responsive variant">
+          <TimePicker defaultValue={dayjs('2022-04-17T15:30')} />
+        </DemoItem>
+        <DemoItem label="Static variant">
+          <StaticTimePicker defaultValue={dayjs('2022-04-17T15:30')} />
+        </DemoItem>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

@@ -1,12 +1,8 @@
----
-title: Data Grid - Sorting
----
-
-# Data grid - Sorting
+# Data Grid - Sorting
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
-Sorting is enabled by default to the grid users and works out of the box without any explicit configuration.
+Sorting is enabled by default to the data grid users and works out of the box without any explicit configuration.
 Users can set a sorting rule simply by clicking on a column header.
 Following clicks change the column's sorting direction. You can see the applied direction on the header's arrow indicator.
 
@@ -28,15 +24,15 @@ Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <
 
 {{"demo": "BasicExampleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass sorting rules to the grid
+## Pass sorting rules to the data grid
 
 ### Structure of the model
 
 The sort model is a list of sorting items.
 Each item represents a sorting rule and is composed of several elements:
 
-- `sortingItem.field`: the field on which we want to apply the rule
-- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule will not be applied.
+- `sortingItem.field`: the field on which the rule applies.
+- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule doesn't apply.
 
 ### Initialize the sort model
 
@@ -138,17 +134,17 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 
 {{"demo": "ServerSortingGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the data grid.
 :::
 
 {{"demo": "SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Selectors
 
-{{"demo": "SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Sorting"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 

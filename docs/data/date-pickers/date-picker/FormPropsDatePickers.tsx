@@ -1,36 +1,16 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Stack from '@mui/material/Stack';
 
 export default function FormPropsDatePickers() {
-  const [value, setValue] = React.useState<Dayjs | null>(null);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3}>
-        <DatePicker
-          label="disabled"
-          disabled
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <DatePicker
-          label="read-only"
-          readOnly
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </Stack>
+      <DemoContainer components={['DatePicker', 'DatePicker']}>
+        <DatePicker label="disabled" disabled />
+        <DatePicker label="readOnly" readOnly />
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

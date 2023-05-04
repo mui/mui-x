@@ -33,7 +33,7 @@ export default function RowGroupingColDefCanBeGrouped() {
         {...data}
         apiRef={apiRef}
         columns={columnWithNoDirectorGroup}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
       />
     </div>

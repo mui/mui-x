@@ -1,10 +1,10 @@
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, act, GridApiPro } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
-import { useData } from 'packages/storybook/src/hooks/useData';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { GridApiPro } from '../models/gridApiPro';
 
 describe('<DataGridPro /> - Pagination', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -13,8 +13,8 @@ describe('<DataGridPro /> - Pagination', () => {
     it('should apply valid value', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
-      const GridTest = () => {
-        const basicData = useData(20, 2);
+      function GridTest() {
+        const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
         return (
@@ -23,12 +23,12 @@ describe('<DataGridPro /> - Pagination', () => {
               {...basicData}
               apiRef={apiRef}
               pagination
-              pageSize={1}
-              rowsPerPageOptions={[1]}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+              pageSizeOptions={[1]}
             />
           </div>
         );
-      };
+      }
 
       render(<GridTest />);
 
@@ -42,8 +42,8 @@ describe('<DataGridPro /> - Pagination', () => {
 
     it('should apply last page if trying to go to a non-existing page', () => {
       let apiRef: React.MutableRefObject<GridApi>;
-      const GridTest = () => {
-        const basicData = useData(20, 2);
+      function GridTest() {
+        const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
         return (
@@ -52,12 +52,12 @@ describe('<DataGridPro /> - Pagination', () => {
               {...basicData}
               apiRef={apiRef}
               pagination
-              pageSize={1}
-              rowsPerPageOptions={[1]}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+              pageSizeOptions={[1]}
             />
           </div>
         );
-      };
+      }
 
       render(<GridTest />);
 
@@ -73,9 +73,8 @@ describe('<DataGridPro /> - Pagination', () => {
   describe('setPageSize', () => {
     it('should apply value', () => {
       let apiRef: React.MutableRefObject<GridApiPro>;
-      const GridTest = () => {
-        const [pageSize, setPageSize] = React.useState(5);
-        const basicData = useData(20, 2);
+      function GridTest() {
+        const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
         return (
@@ -83,15 +82,14 @@ describe('<DataGridPro /> - Pagination', () => {
             <DataGridPro
               {...basicData}
               apiRef={apiRef}
-              pageSize={pageSize}
-              rowsPerPageOptions={[pageSize]}
-              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+              pageSizeOptions={[2, 5]}
               pagination
               disableVirtualization
             />
           </div>
         );
-      };
+      }
 
       render(<GridTest />);
       clock.runToLast();

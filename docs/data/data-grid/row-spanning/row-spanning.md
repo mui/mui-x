@@ -1,8 +1,4 @@
----
-title: Data Grid - Row spanning
----
-
-# Data grid - Row spanning
+# Data Grid - Row spanning
 
 <p class="description">Span cells across several columns.</p>
 

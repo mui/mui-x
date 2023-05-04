@@ -93,8 +93,8 @@ export default function createDetectElementResize(nonce, hostWindow) {
     ' { from { opacity: 0; } to { opacity: 0; } } ';
   var animationStyle = keyframeprefix + 'animation: 1ms ' + animationName + '; ';
 
-  var createStyles = function createStyles(doc) {
-    if (!doc.getElementById('muiDetectElementResize')) {
+  var createStyles = function createStyles(doc, root) {
+    if (!root.getElementById('muiDetectElementResize')) {
       //opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
       var css =
           (animationKeyframes ? animationKeyframes : '') +
@@ -102,7 +102,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
           (animationStyle ? animationStyle : '') +
           'visibility: hidden; opacity: 0; } ' +
           '.Mui-resizeTriggers, .Mui-resizeTriggers > div, .contract-trigger:before { content: " "; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; z-index: -1; } .Mui-resizeTriggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }',
-        head = doc.head || doc.getElementsByTagName('head')[0],
+        container = root.constructor.name === 'ShadowRoot' ? root : doc.head || doc.getElementsByTagName('head')[0],
         style = doc.createElement('style');
 
       style.id = 'muiDetectElementResize';
@@ -118,7 +118,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
         style.appendChild(doc.createTextNode(css));
       }
 
-      head.appendChild(style);
+      container.appendChild(style);
     }
   };
 
@@ -129,7 +129,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
       if (elementStyle && elementStyle.position == 'static') {
         element.style.position = 'relative';
       }
-      createStyles(doc);
+      createStyles(doc, element.getRootNode());
       element.__resizeLast__ = {};
       element.__resizeListeners__ = [];
       (element.__resizeTriggers__ = doc.createElement('div')).className = 'Mui-resizeTriggers';

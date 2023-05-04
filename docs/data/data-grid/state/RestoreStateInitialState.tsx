@@ -13,11 +13,11 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const GridCustomToolbar = ({
+function GridCustomToolbar({
   syncState,
 }: {
   syncState: (stateToSave: GridInitialState) => void;
-}) => {
+}) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
 
@@ -27,15 +27,15 @@ const GridCustomToolbar = ({
       <GridToolbarDensitySelector />
       <Button
         size="small"
-        startIcon={<rootProps.components.ColumnSelectorIcon />}
+        startIcon={<rootProps.slots.columnSelectorIcon />}
         onClick={() => syncState(apiRef.current.exportState())}
-        {...rootProps.componentsProps?.baseButton}
+        {...rootProps.slotProps?.baseButton}
       >
         Recreate the 2nd grid
       </Button>
     </GridToolbarContainer>
   );
-};
+}
 
 export default function RestoreStateInitialState() {
   const { data, loading } = useDemoData({
@@ -63,8 +63,8 @@ export default function RestoreStateInitialState() {
         <DataGridPro
           {...data}
           loading={loading}
-          components={{ Toolbar: GridCustomToolbar }}
-          componentsProps={{ toolbar: { syncState } }}
+          slots={{ toolbar: GridCustomToolbar }}
+          slotProps={{ toolbar: { syncState } }}
         />
       </Box>
       <Box sx={{ height: 300 }}>

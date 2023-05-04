@@ -13,8 +13,8 @@ export default function CustomLoadingOverlayGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        components={{
-          LoadingOverlay: LinearProgress,
+        slots={{
+          loadingOverlay: LinearProgress,
         }}
         loading
         {...data}

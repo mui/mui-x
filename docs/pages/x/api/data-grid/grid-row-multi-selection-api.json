@@ -1,0 +1,16 @@
+{
+  "name": "GridRowMultiSelectionApi",
+  "description": "",
+  "properties": [
+    {
+      "name": "selectRowRange",
+      "description": "Change the selection state of all the selectable rows in a range.",
+      "type": "(range: { startId: GridRowId; endId: GridRowId }, isSelected?: boolean, resetSelection?: boolean) => void"
+    },
+    {
+      "name": "selectRows",
+      "description": "Change the selection state of multiple rows.",
+      "type": "(ids: GridRowId[], isSelected?: boolean, resetSelection?: boolean) => void"
+    }
+  ]
+}

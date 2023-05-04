@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
@@ -95,7 +95,7 @@ const rows: GridRowsProp<File> = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'size',
     headerName: 'Size',
@@ -157,9 +157,6 @@ export default function AggregationTreeData() {
               updatedAt: 'max',
             },
           },
-        }}
-        experimentalFeatures={{
-          aggregation: true,
         }}
       />
     </div>

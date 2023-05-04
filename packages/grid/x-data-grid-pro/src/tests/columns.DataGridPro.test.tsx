@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -12,6 +11,7 @@ import {
   gridColumnFieldsSelector,
   GridApi,
 } from '@mui/x-data-grid-pro';
+import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -40,14 +40,14 @@ describe('<DataGridPro /> - Columns', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
-  };
+  }
 
   describe('showColumnMenu', () => {
     it('should open the column menu', async () => {
@@ -62,7 +62,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(screen.queryByRole('menu')).to.equal(null);
       act(() => apiRef.current.showColumnMenu('brand'));
       clock.runToLast();
-      const menu = screen.queryByRole('menu');
+      const menu = screen.getByRole('menu');
       expect(menu.id).to.match(/:r[0-9a-z]+:/);
       expect(menu.getAttribute('aria-labelledby')).to.match(/:r[0-9a-z]+:/);
     });
@@ -93,7 +93,7 @@ describe('<DataGridPro /> - Columns', () => {
 
     it('should allow to resize columns with the mouse', () => {
       render(<Test columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseUp(separator);
@@ -125,7 +125,7 @@ describe('<DataGridPro /> - Columns', () => {
     it('should call onColumnResize during resizing', () => {
       const onColumnResize = spy();
       render(<Test onColumnResize={onColumnResize} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
@@ -138,7 +138,7 @@ describe('<DataGridPro /> - Columns', () => {
     it('should call onColumnWidthChange after resizing', () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
-      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });
       fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
@@ -187,7 +187,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -244,7 +244,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -267,7 +267,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 50, buttons: 1 });
@@ -307,7 +307,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(1).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 100 });
         fireEvent.mouseMove(separator, { clientX: 150, buttons: 1 });
@@ -329,7 +329,7 @@ describe('<DataGridPro /> - Columns', () => {
 
         const separator = getColumnHeaderCell(0).querySelector(
           `.${gridClasses['columnSeparator--resizable']}`,
-        );
+        )!;
 
         fireEvent.mouseDown(separator, { clientX: 200 });
         fireEvent.mouseMove(separator, { clientX: 100, buttons: 1 });
@@ -347,42 +347,54 @@ describe('<DataGridPro /> - Columns', () => {
   });
 
   describe('column pipe processing', () => {
+    type GridPrivateApiContextRef = ReturnType<typeof useGridPrivateApiContext>;
     it('should not loose column width when re-applying pipe processing', () => {
-      render(<Test checkboxSelection />);
+      let privateApi: GridPrivateApiContextRef;
+      function Footer() {
+        privateApi = useGridPrivateApiContext();
+        return null;
+      }
+      render(<Test checkboxSelection components={{ Footer }} />);
+
       act(() => apiRef.current.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
-      act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
     });
 
     it('should not loose column index when re-applying pipe processing', () => {
-      render(<Test checkboxSelection columns={[{ field: 'id' }, { field: 'brand' }]} />);
+      let privateApi: GridPrivateApiContextRef;
+      function Footer() {
+        privateApi = useGridPrivateApiContext();
+        return null;
+      }
+      render(
+        <Test
+          checkboxSelection
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          components={{ Footer }}
+        />,
+      );
+
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(2);
       act(() => apiRef.current.setColumnIndex('brand', 1));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
-      act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef).indexOf('brand')).to.equal(1);
     });
 
     it('should not loose imperatively added columns when re-applying pipe processing', () => {
-      render(<Test checkboxSelection />);
-      act(() => apiRef.current.updateColumn({ field: 'id' }));
+      let privateApi: GridPrivateApiContextRef;
+      function Footer() {
+        privateApi = useGridPrivateApiContext();
+        return null;
+      }
+      render(<Test checkboxSelection components={{ Footer }} />);
+
+      act(() => apiRef.current.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
-      act(() => apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns'));
+      act(() => privateApi.current.requestPipeProcessorsApplication('hydrateColumns'));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
-  });
-
-  it('should warn if unsupported column type is used', () => {
-    const singleColumns = [{ field: 'brand', type: 'str' }];
-
-    expect(() => {
-      render(<Test columns={singleColumns} />);
-    }).toWarnDev(
-      [
-        `MUI: The column type "str" you are using is not supported.`,
-        `Column type "string" is being used instead.`,
-      ].join('\n'),
-    );
   });
 });

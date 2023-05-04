@@ -1,6 +1,10 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export interface TimePickerToolbarClasses {
+  root: string;
   separator: string;
   hourMinuteLabel: string;
   hourMinuteLabelLandscape: string;

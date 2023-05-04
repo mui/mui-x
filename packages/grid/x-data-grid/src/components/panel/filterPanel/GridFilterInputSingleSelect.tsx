@@ -1,76 +1,100 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/material/utils';
-import MenuItem from '@mui/material/MenuItem';
+import { unstable_useId as useId } from '@mui/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
-import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { getValueFromValueOptions } from './filterPanelUtils';
+import { getValueFromValueOptions, isSingleSelectColDef } from './filterPanelUtils';
+import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 
-const renderSingleSelectOptions = (
-  { valueOptions, valueFormatter, field }: GridColDef,
-  api: GridApiCommunity,
-  OptionComponent: React.ElementType,
-) => {
+const renderSingleSelectOptions = ({
+  column: { valueOptions, field },
+  OptionComponent,
+  getOptionLabel,
+  getOptionValue,
+  isSelectNative,
+  baseSelectOptionProps,
+}: {
+  column: GridSingleSelectColDef;
+  OptionComponent: React.ElementType;
+  getOptionLabel: NonNullable<GridSingleSelectColDef['getOptionLabel']>;
+  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>;
+  isSelectNative: boolean;
+  baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
+}) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
       : ['', ...(valueOptions || [])];
 
   return iterableColumnValues.map((option) => {
-    const isOptionTypeObject = typeof option === 'object';
-
-    const key = isOptionTypeObject ? option.value : option;
-    const value = isOptionTypeObject ? option.value : option;
-
-    const formattedValue =
-      valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
-    const content = isOptionTypeObject ? option.label : formattedValue;
+    const value = getOptionValue(option);
+    const label = getOptionLabel(option);
 
     return (
-      <OptionComponent key={key} value={value}>
-        {content}
+      <OptionComponent {...baseSelectOptionProps} native={isSelectNative} key={value} value={value}>
+        {label}
       </OptionComponent>
     );
   });
 };
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
-  TextFieldProps & { type?: 'singleSelect' };
+  TextFieldProps &
+  Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
+    type?: 'singleSelect';
+  };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    getOptionLabel: getOptionLabelProp,
+    getOptionValue: getOptionValueProp,
+    ...others
+  } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();
+  const labelId = useId();
   const rootProps = useGridRootProps();
 
-  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
-  const isSelectNative = baseSelectProps.native ?? true;
+  const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? true;
 
-  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+  let resolvedColumn: GridSingleSelectColDef | null = null;
+  if (item.field) {
+    const column = apiRef.current.getColumn(item.field);
+    if (isSingleSelectColDef(column)) {
+      resolvedColumn = column;
+    }
+  }
+
+  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
+  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
 
   const currentValueOptions = React.useMemo(() => {
-    if (currentColumn === null) {
+    if (!resolvedColumn) {
       return undefined;
     }
-    return typeof currentColumn.valueOptions === 'function'
-      ? currentColumn.valueOptions({ field: currentColumn.field })
-      : currentColumn.valueOptions;
-  }, [currentColumn]);
+    return typeof resolvedColumn.valueOptions === 'function'
+      ? resolvedColumn.valueOptions({ field: resolvedColumn.field })
+      : resolvedColumn.valueOptions;
+  }, [resolvedColumn]);
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       let value = event.target.value;
 
       // NativeSelect casts the value to a string.
-      value = getValueFromValueOptions(value, currentValueOptions);
+      value = getValueFromValueOptions(value, currentValueOptions, getOptionValue);
 
       setFilterValueState(String(value));
       applyValue({ ...item, value });
     },
-    [applyValue, item, currentValueOptions],
+    [currentValueOptions, getOptionValue, applyValue, item],
   );
 
   React.useEffect(() => {
@@ -78,7 +102,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
     if (currentValueOptions !== undefined) {
       // sanitize if valueOptions are provided
-      itemValue = getValueFromValueOptions(item.value, currentValueOptions);
+      itemValue = getValueFromValueOptions(item.value, currentValueOptions, getOptionValue);
       if (itemValue !== item.value) {
         applyValue({ ...item, value: itemValue });
         return;
@@ -90,35 +114,54 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     itemValue = itemValue ?? '';
 
     setFilterValueState(String(itemValue));
-  }, [item, currentValueOptions, applyValue]);
+  }, [item, currentValueOptions, applyValue, getOptionValue]);
+
+  if (!isSingleSelectColDef(resolvedColumn)) {
+    return null;
+  }
+
+  if (!isSingleSelectColDef(resolvedColumn)) {
+    return null;
+  }
+
+  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <rootProps.components.BaseTextField
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState}
-      onChange={onFilterChange}
-      variant="standard"
-      type={type || 'text'}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputRef={focusElementRef}
-      select
-      SelectProps={{
-        native: isSelectNative,
-        ...rootProps.componentsProps?.baseSelect,
-      }}
-      {...others}
-      {...rootProps.componentsProps?.baseTextField}
-    >
-      {renderSingleSelectOptions(
-        apiRef.current.getColumn(item.columnField),
-        apiRef.current,
-        isSelectNative ? 'option' : MenuItem,
-      )}
-    </rootProps.components.BaseTextField>
+    <React.Fragment>
+      <rootProps.slots.baseInputLabel
+        {...rootProps.slotProps?.baseInputLabel}
+        id={labelId}
+        shrink
+        variant="standard"
+      >
+        {label}
+      </rootProps.slots.baseInputLabel>
+      <rootProps.slots.baseSelect
+        id={id}
+        label={label}
+        labelId={labelId}
+        value={filterValueState}
+        onChange={onFilterChange}
+        variant="standard"
+        type={type || 'text'}
+        inputProps={{
+          ref: focusElementRef,
+          placeholder: apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+        }}
+        native={isSelectNative}
+        {...others}
+        {...rootProps.slotProps?.baseSelect}
+      >
+        {renderSingleSelectOptions({
+          column: resolvedColumn,
+          OptionComponent: rootProps.slots.baseSelectOption,
+          getOptionLabel,
+          getOptionValue,
+          isSelectNative,
+          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+        })}
+      </rootProps.slots.baseSelect>
+    </React.Fragment>
   );
 }
 
@@ -135,10 +178,22 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Used to determine the label displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   */
+  getOptionLabel: PropTypes.func,
+  /**
+   * Used to determine the value used for a value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The value to be used.
+   */
+  getOptionValue: PropTypes.func,
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
 } as any;

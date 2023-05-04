@@ -2,38 +2,31 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import {
-  DateTimePicker,
-  DateTimePickerTabs,
-} from '@mui/x-date-pickers/DateTimePicker';
+import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
+import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
-const CustomTabs = (props) => (
-  <React.Fragment>
-    <DateTimePickerTabs {...props} />
-    <Box sx={{ backgroundColor: 'blueviolet', height: 5 }} />
-  </React.Fragment>
-);
+function CustomTabs(props) {
+  return (
+    <React.Fragment>
+      <DateTimePickerTabs {...props} />
+      <Box sx={{ backgroundColor: 'blueviolet', height: 5 }} />
+    </React.Fragment>
+  );
+}
 
 export default function Tabs() {
-  const [value, setValue] = React.useState(dayjs());
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateTimePicker
-        label="Tabs"
-        renderInput={(params) => <TextField {...params} />}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        hideTabs={false}
-        components={{ Tabs: CustomTabs }}
-        componentsProps={{
+      <StaticDateTimePicker
+        defaultValue={dayjs('2022-04-17')}
+        slots={{ tabs: CustomTabs }}
+        slotProps={{
           tabs: {
-            dateRangeIcon: <LightModeIcon />,
+            hidden: false,
+            dateIcon: <LightModeIcon />,
             timeIcon: <AcUnitIcon />,
           },
         }}

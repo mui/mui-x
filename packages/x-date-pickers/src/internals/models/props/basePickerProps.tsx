@@ -1,31 +1,80 @@
-import { PickerStateProps } from '../../hooks/usePickerState';
+import * as React from 'react';
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
+import { UsePickerBaseProps } from '../../hooks/usePicker';
+import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
+import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
+import { MakeOptional } from '../helpers';
+import { DateOrTimeViewWithMeridiem } from '../common';
 
-export interface BasePickerProps<TInputValue, TValue>
-  extends PickerStateProps<TInputValue, TValue> {
+/**
+ * Props common to all pickers after applying the default props on each picker.
+ */
+export interface BasePickerProps<
+  TValue,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TAdditionalProps extends {},
+> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps, TAdditionalProps> {
   /**
-   * className applied to the root component.
+   * Class name applied to the root element.
    */
   className?: string;
   /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
+   * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  disabled?: boolean;
+  sx?: SxProps<Theme>;
   /**
-   * Format string.
+   * Locale for components texts.
+   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
-  inputFormat?: string;
+  localeText?: PickersInputComponentLocaleText<TDate>;
+}
+
+/**
+ * Props common to all pickers before applying the default props on each picker.
+ */
+export interface BasePickerInputProps<
+  TValue,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+> extends Omit<
+    MakeOptional<BasePickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
+    'viewRenderers'
+  > {}
+
+/**
+ * Props common to all non-static pickers.
+ * These props are handled by the headless wrappers.
+ */
+export interface BaseNonStaticPickerProps {
   /**
-   * Force rendering in particular orientation.
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
    */
-  orientation?: 'portrait' | 'landscape';
+  format?: string;
   /**
-   * Make picker read only.
-   * @default false
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
    */
-  readOnly?: boolean;
+  formatDensity?: 'dense' | 'spacious';
+}
+
+/**
+ * Props common to all non-range non-static pickers.
+ * These props are handled by the headless wrappers.
+ */
+export interface BaseNonRangeNonStaticPickerProps {
   /**
-   * If `true`, show the toolbar even in desktop mode.
+   * The label content.
    */
-  showToolbar?: boolean;
+  label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
 }

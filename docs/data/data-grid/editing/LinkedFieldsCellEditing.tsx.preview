@@ -1,8 +1,0 @@
-<DataGrid
-  rows={rows}
-  columns={columns}
-  onCellEditStart={handleCellEditStart}
-  onCellEditStop={handleCellEditStop}
-  processRowUpdate={processRowUpdate}
-  experimentalFeatures={{ newEditingApi: true }}
-/>

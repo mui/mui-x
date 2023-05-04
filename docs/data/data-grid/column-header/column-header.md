@@ -1,8 +1,4 @@
----
-title: Data Grid - Column header
----
-
-# Data grid - Column header
+# Data Grid - Column header
 
 <p class="description">Customize your columns header.</p>
 
@@ -41,12 +37,6 @@ const columns: GridColDef[] = [
 ## Styling header
 
 You can check the [styling header](/x/react-data-grid/style/#styling-column-headers) section for more information.
-
-## Column menu
-
-By default, each column header displays a column menu. The column menu allows actions to be performed in the context of the target column, e.g. filtering. To disable the column menu, set the prop `disableColumnMenu={true}`.
-
-{{"demo": "ColumnMenuGrid.js", "bg": "inline"}}
 
 ## API
 

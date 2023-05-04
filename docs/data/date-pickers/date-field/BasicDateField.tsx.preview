@@ -1,3 +1,1 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <DateField label="Basic date field" />
-</LocalizationProvider>
+<DateField label="Basic date field" />

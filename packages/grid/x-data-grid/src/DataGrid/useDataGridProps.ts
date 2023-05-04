@@ -6,30 +6,24 @@ import {
   DataGridForcedPropsKey,
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from '../constants';
-import {
-  GridDensityTypes,
-  GridEditModes,
-  GridFeatureModeConstant,
-  GridSlotsComponent,
-  GridValidRowModel,
-} from '../models';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
+import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
+import { computeSlots, uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
-  apiRef: undefined,
   disableMultipleColumnsFiltering: true,
   disableMultipleColumnsSorting: true,
-  disableMultipleSelection: true,
+  disableMultipleRowSelection: true,
   throttleRowsMs: undefined,
   hideFooterRowCount: false,
   pagination: true,
   checkboxSelectionVisibleOnly: false,
   disableColumnReorder: true,
   disableColumnResize: true,
+  keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
 };
-
-export const MAX_PAGE_SIZE = 100;
 
 /**
  * The default values of `DataGridPropsWithDefaultValues` to inject in the props of DataGrid.
@@ -43,21 +37,20 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   rowBuffer: 3,
   columnThreshold: 3,
   rowThreshold: 3,
-  density: GridDensityTypes.Standard,
-  disableExtendRowFullWidth: false,
+  rowSelection: true,
+  density: 'standard',
   disableColumnFilter: false,
   disableColumnMenu: false,
   disableColumnSelector: false,
   disableDensitySelector: false,
   disableMultipleColumnsFiltering: false,
-  disableMultipleSelection: false,
+  disableMultipleRowSelection: false,
   disableMultipleColumnsSorting: false,
-  disableSelectionOnClick: false,
+  disableRowSelectionOnClick: false,
   disableVirtualization: false,
-  disableIgnoreModificationsIfProcessingProps: false,
   editMode: GridEditModes.Cell,
-  filterMode: GridFeatureModeConstant.client,
-  headerHeight: 56,
+  filterMode: 'client',
+  columnHeaderHeight: 56,
   hideFooter: false,
   hideFooterPagination: false,
   hideFooterRowCount: false,
@@ -65,58 +58,53 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   logger: console,
   logLevel: process.env.NODE_ENV === 'production' ? ('error' as const) : ('warn' as const),
   pagination: false,
-  paginationMode: GridFeatureModeConstant.client,
+  paginationMode: 'client',
   rowHeight: 52,
-  rowsPerPageOptions: [25, 50, 100],
+  pageSizeOptions: [25, 50, 100],
   rowSpacingType: 'margin',
-  showCellRightBorder: false,
-  showColumnRightBorder: false,
+  showCellVerticalBorder: false,
+  showColumnVerticalBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],
-  sortingMode: GridFeatureModeConstant.client,
+  sortingMode: 'client',
   throttleRowsMs: 0,
   disableColumnReorder: false,
   disableColumnResize: false,
   keepNonExistentRowsSelected: false,
+  keepColumnPositionIfDraggedOutside: false,
 };
 
-export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  if (inProps.pageSize! > MAX_PAGE_SIZE) {
-    throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
-  }
+const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
 
-  const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
+export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
+  const { components, componentsProps, ...themedProps } = useThemeProps({
+    props: inProps,
+    name: 'MuiDataGrid',
+  });
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
     [themedProps.localeText],
   );
 
-  const components = React.useMemo<GridSlotsComponent>(() => {
-    const overrides = themedProps.components;
-
-    if (!overrides) {
-      return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
-    }
-
-    const mergedComponents = {} as GridSlotsComponent;
-    type GridSlots = keyof GridSlotsComponent;
-
-    Object.entries(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach(([key, defaultComponent]) => {
-      mergedComponents[key as GridSlots] =
-        overrides[key as GridSlots] === undefined ? defaultComponent : overrides[key as GridSlots];
-    });
-
-    return mergedComponents;
-  }, [themedProps.components]);
+  const slots = React.useMemo<UncapitalizeObjectKeys<GridSlotsComponent>>(
+    () =>
+      computeSlots<GridSlotsComponent>({
+        defaultSlots,
+        slots: themedProps.slots,
+        components,
+      }),
+    [components, themedProps.slots],
+  );
 
   return React.useMemo<DataGridProcessedProps<R>>(
     () => ({
       ...DATA_GRID_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
-      components,
+      slots,
+      slotProps: themedProps.slotProps ?? componentsProps,
       ...DATA_GRID_FORCED_PROPS,
     }),
-    [themedProps, localeText, components],
+    [themedProps, localeText, slots, componentsProps],
   );
 };

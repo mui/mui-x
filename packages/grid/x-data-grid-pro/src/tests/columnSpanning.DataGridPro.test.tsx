@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
@@ -89,7 +88,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
     it('should work after column reordering', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
 
         return (
@@ -97,7 +96,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
             <DataGridPro apiRef={apiRef} {...baselineProps} columns={columns} />
           </div>
         );
-      };
+      }
 
       render(<Test />);
 
@@ -112,7 +111,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
   it('should recalculate cells after column reordering', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -130,7 +129,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -173,7 +172,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
     expect(getColumnHeaderCell(1).offsetWidth).to.equal(100);
     expect(getCell(0, 0).offsetWidth).to.equal(200);
 
-    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`);
+    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 200, buttons: 1 });
     fireEvent.mouseUp(separator);
@@ -193,7 +192,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
 
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -206,7 +205,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 

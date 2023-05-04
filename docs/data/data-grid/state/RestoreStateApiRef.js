@@ -109,7 +109,7 @@ const DEMO_INITIAL_STATE = {
   activeViewId: null,
 };
 
-const ViewListItem = (props) => {
+function ViewListItem(props) {
   const { view, viewId, selected, onDelete, onSelect, ...other } = props;
 
   return (
@@ -128,7 +128,7 @@ const ViewListItem = (props) => {
       </IconButton>
     </MenuItem>
   );
-};
+}
 
 ViewListItem.propTypes = {
   onDelete: PropTypes.func.isRequired,
@@ -136,47 +136,12 @@ ViewListItem.propTypes = {
   selected: PropTypes.bool.isRequired,
   view: PropTypes.shape({
     label: PropTypes.string.isRequired,
-    value: PropTypes.shape({
-      columns: PropTypes.shape({
-        columnVisibilityModel: PropTypes.object,
-        dimensions: PropTypes.object,
-        orderedFields: PropTypes.arrayOf(PropTypes.string),
-      }),
-      detailPanel: PropTypes.shape({
-        expandedRowIds: PropTypes.arrayOf(
-          PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        ).isRequired,
-      }),
-      filter: PropTypes.shape({
-        filterModel: PropTypes.object,
-      }),
-      pagination: PropTypes.shape({
-        page: PropTypes.number,
-        pageSize: PropTypes.number,
-      }),
-      pinnedColumns: PropTypes.shape({
-        left: PropTypes.arrayOf(PropTypes.string),
-        right: PropTypes.arrayOf(PropTypes.string),
-      }),
-      preferencePanel: PropTypes.shape({
-        ids: PropTypes.object,
-        open: PropTypes.bool.isRequired,
-        /**
-         * Tab currently opened.
-         * @default GridPreferencePanelsValue.filter
-         * TODO v6: Remove the default behavior
-         */
-        openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
-      }),
-      sorting: PropTypes.shape({
-        sortModel: PropTypes.arrayOf(PropTypes.object),
-      }),
-    }).isRequired,
+    value: PropTypes.object.isRequired,
   }).isRequired,
   viewId: PropTypes.string.isRequired,
 };
 
-const NewViewListButton = (props) => {
+function NewViewListButton(props) {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
@@ -222,7 +187,7 @@ const NewViewListButton = (props) => {
       </Dialog>
     </React.Fragment>
   );
-};
+}
 
 NewViewListButton.propTypes = {
   isValid: PropTypes.bool.isRequired,
@@ -308,6 +273,7 @@ function CustomToolbar() {
           role={undefined}
           transition
           placement="bottom-start"
+          sx={{ zIndex: 'modal' }}
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
@@ -354,11 +320,10 @@ export default function RestoreStateApiRef() {
   return (
     <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
-        components={{ Toolbar: CustomToolbar }}
+        slots={{ toolbar: CustomToolbar }}
         loading={loading}
         apiRef={apiRef}
         pagination
-        initialState={{ columns: { columnVisibilityModel: {} } }}
         {...data}
       />
     </Box>

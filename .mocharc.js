@@ -1,3 +1,4 @@
+// We can't import the `.mocharc.js` of the monorepo, otherwise we trigger its `setupBabel`.
 module.exports = {
   extension: ['js', 'ts', 'tsx'],
   ignore: [
@@ -10,7 +11,7 @@ module.exports = {
   recursive: true,
   timeout: (process.env.CIRCLECI === 'true' ? 5 : 2) * 1000, // Circle CI has low-performance CPUs.
   reporter: 'dot',
-  require: [require.resolve('./test/utils/setup')],
+  require: [require.resolve('./test/utils/setupBabel'), require.resolve('./test/utils/setupJSDOM')],
   'watch-ignore': [
     // default
     '.git',
@@ -20,5 +21,4 @@ module.exports = {
     '**/build/**',
     'docs/.next/**',
   ],
-  slow: 300,
 };

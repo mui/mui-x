@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
+import { spy } from 'sinon';
 import { createRenderer, fireEvent, createEvent } from '@mui/monorepo/test/utils';
 import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';
-import { useData } from 'storybook/src/hooks/useData';
-import { spy } from 'sinon';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
 function createDragOverEvent(target: ChildNode) {
   const dragOverEvent = createEvent.dragOver(target);
@@ -38,7 +37,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     ];
     const columns = [{ field: 'brand' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -46,7 +45,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -74,7 +73,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     ];
     const columns = [{ field: 'brand' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -82,15 +81,13 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0).firstChild!;
     fireEvent.dragStart(rowReorderCell);
-    expect(
-      (rowReorderCell as HTMLElement).classList.contains(gridClasses['row--dragging']),
-    ).to.equal(false);
+    expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
   });
 
   it('should keep the order of the rows when dragEnd is fired and rowReordering=false', () => {
@@ -102,7 +99,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     ];
     const columns = [{ field: 'brand' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -110,7 +107,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -123,7 +120,7 @@ describe('<DataGridPro /> - Row reorder', () => {
   it('should call onRowOrderChange after the row stops being dragged', () => {
     const handleOnRowOrderChange = spy();
     let apiRef: React.MutableRefObject<GridApi>;
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
       const rows = [
         { id: 0, brand: 'Nike' },
@@ -143,7 +140,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -169,9 +166,9 @@ describe('<DataGridPro /> - Row reorder', () => {
     const handleDragOver = spy();
     const handleDragEnd = spy();
     let apiRef: React.MutableRefObject<GridApi>;
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
-      const data = useData(3, 3);
+      const data = useBasicDemoData(3, 3);
 
       return (
         <div
@@ -185,7 +182,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} {...data} rowReordering />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 

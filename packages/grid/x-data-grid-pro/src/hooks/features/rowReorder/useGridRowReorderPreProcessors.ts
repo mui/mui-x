@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass, GridColDef } from '@mui/x-data-grid';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -22,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowReorderPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };
@@ -34,7 +34,7 @@ export const useGridRowReorderPreProcessors = (
         ...GRID_REORDER_COL_DEF,
         cellClassName: classes.rowReorderCellContainer,
         headerClassName: classes.columnHeaderReorder,
-        headerName: apiRef.current.getLocaleText('rowReorderingHeaderName'),
+        headerName: privateApiRef.current.getLocaleText('rowReorderingHeaderName'),
       };
 
       const shouldHaveReorderColumn = props.rowReordering;
@@ -46,16 +46,18 @@ export const useGridRowReorderPreProcessors = (
 
       if (shouldHaveReorderColumn && !haveReorderColumn) {
         columnsState.lookup[reorderColumn.field] = reorderColumn;
-        columnsState.all = [reorderColumn.field, ...columnsState.all];
+        columnsState.orderedFields = [reorderColumn.field, ...columnsState.orderedFields];
       } else if (!shouldHaveReorderColumn && haveReorderColumn) {
         delete columnsState.lookup[reorderColumn.field];
-        columnsState.all = columnsState.all.filter((field) => field !== reorderColumn.field);
+        columnsState.orderedFields = columnsState.orderedFields.filter(
+          (field) => field !== reorderColumn.field,
+        );
       }
 
       return columnsState;
     },
-    [apiRef, classes, props.rowReordering],
+    [privateApiRef, classes, props.rowReordering],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateReorderColumn);
+  useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateReorderColumn);
 };

@@ -24,7 +24,7 @@ export default function RowGroupingRowsWithMissingGroups() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
       />
     </div>

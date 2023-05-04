@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -43,7 +42,7 @@ describe('<DataGridPro /> - Layout', () => {
         </div>,
       );
       expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-      expect(ref.current).to.equal(container.firstChild.firstChild);
+      expect(ref.current).to.equal(container.firstChild?.firstChild);
     });
 
     function randomStringValue() {
@@ -59,8 +58,8 @@ describe('<DataGridPro /> - Layout', () => {
         </div>,
       );
 
-      expect(container.firstChild.firstChild).to.have.class(className);
-      expect(container.firstChild.firstChild).to.have.class('MuiDataGrid-root');
+      expect(container.firstChild?.firstChild).to.have.class(className);
+      expect(container.firstChild?.firstChild).to.have.class('MuiDataGrid-root');
     });
 
     it('applies the style to the root component', () => {
@@ -82,62 +81,10 @@ describe('<DataGridPro /> - Layout', () => {
   });
 
   describe('columns width', () => {
-    it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call with GridColDef.hide: deprecated)', () => {
-      let apiRef: React.MutableRefObject<GridApi>;
-
-      const TestCase = (props: DataGridProProps) => {
-        apiRef = useGridApiRef();
-
-        return (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGridPro {...props} apiRef={apiRef} />
-          </div>
-        );
-      };
-
-      render(
-        <TestCase
-          rows={[
-            {
-              id: 1,
-              first: 'Mike',
-              age: 11,
-            },
-            {
-              id: 2,
-              first: 'Jack',
-              age: 11,
-            },
-            {
-              id: 3,
-              first: 'Mike',
-              age: 20,
-            },
-          ]}
-          columns={[
-            { field: 'id', flex: 1 },
-            { field: 'first', width: 100 },
-            { field: 'age', width: 50, hide: true },
-          ]}
-        />,
-      );
-
-      let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      expect(firstColumn).toHaveInlineStyle({
-        width: '198px', // because of the 2px border
-      });
-
-      act(() => apiRef!.current.setColumnVisibility('age', true));
-      firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      expect(firstColumn).toHaveInlineStyle({
-        width: '148px', // because of the 2px border
-      });
-    });
-
     it('should resize flex: 1 column when changing column visibility to avoid exceeding grid width (apiRef setColumnVisibility method call)', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
-      const TestCase = (props: Omit<DataGridProProps, 'apiRef'>) => {
+      function TestCase(props: Omit<DataGridProProps, 'apiRef'>) {
         apiRef = useGridApiRef();
 
         return (
@@ -145,7 +92,7 @@ describe('<DataGridPro /> - Layout', () => {
             <DataGridPro {...props} apiRef={apiRef} />
           </div>
         );
-      };
+      }
 
       render(
         <TestCase
@@ -229,5 +176,30 @@ describe('<DataGridPro /> - Layout', () => {
     expect(screen.getByRole('grid')).toHaveComputedStyle({
       color: 'rgb(0, 0, 255)',
     });
+  });
+
+  it('should have ownerState in the theme style overrides', () => {
+    expect(() =>
+      render(
+        <ThemeProvider
+          theme={createTheme({
+            components: {
+              MuiDataGrid: {
+                styleOverrides: {
+                  root: ({ ownerState }) => ({
+                    // test that ownerState is not undefined
+                    ...(ownerState.columns && {}),
+                  }),
+                },
+              },
+            },
+          })}
+        >
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} />
+          </div>
+        </ThemeProvider>,
+      ),
+    ).not.to.throw();
   });
 });

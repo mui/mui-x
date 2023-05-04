@@ -8,11 +8,11 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid';
 
-function renderRating(params: GridRenderCellParams<number>) {
+function renderRating(params: GridRenderCellParams<any, number>) {
   return <Rating readOnly value={params.value} />;
 }
 
-function RatingEditInputCell(props: GridRenderCellParams<number>) {
+function RatingEditInputCell(props: GridRenderCellParams<any, number>) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 
@@ -49,11 +49,7 @@ const renderRatingEditInputCell: GridColDef['renderCell'] = (params) => {
 export default function CustomEditComponent() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }

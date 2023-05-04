@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/material/utils';
-import { GridLoadIcon } from '../../icons';
+import { unstable_useId as useId } from '@mui/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -47,7 +46,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   }, [item.value]);
 
   return (
-    <rootProps.components.BaseTextField
+    <rootProps.slots.baseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -60,7 +59,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       }}
       inputRef={focusElementRef}
       InputProps={{
-        ...(applying ? { endAdornment: <GridLoadIcon /> } : {}),
+        ...(applying ? { endAdornment: <rootProps.slots.loadIcon /> } : {}),
         ...InputProps,
         inputProps: {
           max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
@@ -68,7 +67,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         },
       }}
       {...other}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotProps?.baseTextField}
     />
   );
 }
@@ -87,9 +86,9 @@ GridFilterInputDate.propTypes = {
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
 } as any;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_useId as useId, useForkRef } from '@mui/material/utils';
+import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
 import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
@@ -54,10 +54,10 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
 
     return (
       <React.Fragment>
-        <rootProps.components.BaseButton
+        <rootProps.slots.baseButton
           ref={handleRef}
           size="small"
-          startIcon={<rootProps.components.ExportIcon />}
+          startIcon={<rootProps.slots.exportIcon />}
           aria-expanded={open}
           aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
@@ -65,10 +65,10 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
           id={exportButtonId}
           {...other}
           onClick={handleMenuOpen}
-          {...rootProps.componentsProps?.baseButton}
+          {...rootProps.slotProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
-        </rootProps.components.BaseButton>
+        </rootProps.slots.baseButton>
         <GridMenu
           open={open}
           target={buttonRef.current}
@@ -86,7 +86,7 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
               if (!React.isValidElement(child)) {
                 return child;
               }
-              return React.cloneElement(child, { hideMenu: handleMenuClose });
+              return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
             })}
           </MenuList>
         </GridMenu>

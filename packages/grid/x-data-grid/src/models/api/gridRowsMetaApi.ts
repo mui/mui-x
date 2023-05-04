@@ -38,17 +38,6 @@ export interface GridRowsMetaApi {
     position: 'left' | 'center' | 'right',
   ) => void;
   /**
-   * Determines if the height of a row is "auto".
-   * @ignore - do not document.
-   */
-  unstable_rowHasAutoHeight: (id: GridRowId) => boolean;
-  /**
-   * Returns the index of the last row measured.
-   * The value considers only the rows reachable by scroll, e.g. first row has index=0 in all pages.
-   * @ignore - do not document.
-   */
-  unstable_getLastMeasuredRowIndex: () => number;
-  /**
    * Updates the index of the last row measured.
    * @param {number} index The row index.
    * @ignore - do not document.
@@ -58,4 +47,19 @@ export interface GridRowsMetaApi {
    * Forces the recalculation of the heights of all rows.
    */
   resetRowHeights: () => void;
+}
+
+export interface GridRowsMetaPrivateApi {
+  /**
+   * Determines if the height of a row is "auto".
+   * @param {GridRowId} id The id of the row.
+   * @returns {boolean} True if the row height is "auto", false otherwise.
+   */
+  rowHasAutoHeight: (id: GridRowId) => boolean;
+  /**
+   * Returns the index of the last row measured.
+   * The value considers only the rows reachable by scroll, e.g. first row has index=0 in all pages.
+   * @returns {number} The index of the last measured row.
+   */
+  getLastMeasuredRowIndex: () => number;
 }

@@ -7,7 +7,7 @@ import {
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridSortedRowIdsSelector,
   GridToolbarContainer,
-  gridVisibleSortedRowIdsSelector,
+  gridExpandedSortedRowIdsSelector,
   useGridApiContext,
 } from '@mui/x-data-grid';
 
@@ -16,14 +16,14 @@ const getRowsFromCurrentPage = ({ apiRef }) =>
 
 const getUnfilteredRows = ({ apiRef }) => gridSortedRowIdsSelector(apiRef);
 
-const getFilteredRows = ({ apiRef }) => gridVisibleSortedRowIdsSelector(apiRef);
+const getFilteredRows = ({ apiRef }) => gridExpandedSortedRowIdsSelector(apiRef);
 
 const ExportIcon = createSvgIcon(
   <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />,
   'SaveAlt',
 );
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   const apiRef = useGridApiContext();
 
   const handleExport = (options) => apiRef.current.exportDataAsCsv(options);
@@ -56,7 +56,7 @@ const CustomToolbar = () => {
       </Button>
     </GridToolbarContainer>
   );
-};
+}
 
 export default function CsvGetRowsToExport() {
   const { data, loading } = useDemoData({
@@ -70,15 +70,20 @@ export default function CsvGetRowsToExport() {
       <DataGrid
         {...data}
         loading={loading}
-        components={{ Toolbar: CustomToolbar }}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        slots={{ toolbar: CustomToolbar }}
+        pageSizeOptions={[10]}
         initialState={{
+          ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
-              items: [
-                { columnField: 'quantity', operatorValue: '>', value: '20000' },
-              ],
+              items: [{ field: 'quantity', operator: '>', value: '20000' }],
+            },
+          },
+          pagination: {
+            ...data.initialState?.pagination,
+            paginationModel: {
+              pageSize: 10,
             },
           },
         }}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
+import { useTheme } from '@mui/material/styles';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -18,10 +18,9 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
 import {
   GridColumnPinningApi,
   GridPinnedPosition,
@@ -30,12 +29,10 @@ import {
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
-
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.columnPinning = {
+  apiRef.current.caches.columnPinning = {
     orderedFieldsBeforePinningColumns: null,
   };
 
@@ -61,14 +58,19 @@ const mergeStateWithPinnedColumns =
   (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'disableColumnPinning' | 'initialState' | 'pinnedColumns' | 'onPinnedColumnsChange'
+    | 'disableColumnPinning'
+    | 'initialState'
+    | 'pinnedColumns'
+    | 'onPinnedColumnsChange'
+    | 'slotProps'
+    | 'slots'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-
+  const theme = useTheme();
   // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
   // and up to two additional .MuiDataGrid-row's, one for the columns pinned to the left and another
   // for those on the right side. When hovering any of these elements, the :hover styles are applied only to
@@ -91,12 +93,15 @@ export const useGridColumnPinning = (
       }
 
       const index = event.currentTarget.dataset.rowindex;
-      const rowElements = apiRef.current.windowRef!.current!.querySelectorAll(
+      const rowElements = apiRef.current.virtualScrollerRef!.current!.querySelectorAll(
         `.${gridClasses.row}[data-rowindex="${index}"]`,
       );
       rowElements.forEach((row) => {
         // Ignore rows from other grid inside the hovered row
-        if (row.closest(`.${gridClasses.virtualScroller}`) === apiRef.current.windowRef!.current!) {
+        if (
+          row.closest(`.${gridClasses.virtualScroller}`) ===
+          apiRef.current.virtualScrollerRef!.current!
+        ) {
           if (event.type === 'mouseenter') {
             row.classList.add('Mui-hovered');
           } else {
@@ -138,6 +143,7 @@ export const useGridColumnPinning = (
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
+        theme.direction === 'rtl',
       );
 
       if (!params.colIndex || (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0)) {
@@ -147,8 +153,10 @@ export const useGridColumnPinning = (
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
       const columnPositions = gridColumnPositionsSelector(apiRef);
-      const clientWidth = apiRef.current.windowRef!.current!.clientWidth;
-      const scrollLeft = apiRef.current.windowRef!.current!.scrollLeft;
+      const clientWidth = apiRef.current.virtualScrollerRef!.current!.clientWidth;
+
+      // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
+      const scrollLeft = Math.abs(apiRef.current.virtualScrollerRef!.current!.scrollLeft);
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnPositions[params.colIndex];
 
@@ -167,20 +175,20 @@ export const useGridColumnPinning = (
       }
       return initialValue;
     },
-    [apiRef, pinnedColumns, props.disableColumnPinning],
+    [apiRef, pinnedColumns, props.disableColumnPinning, theme.direction],
   );
 
-  const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+  const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems, colDef) => {
       if (props.disableColumnPinning) {
-        return initialValue;
+        return columnMenuItems;
       }
 
-      if (column.pinnable === false) {
-        return initialValue;
+      if (colDef.pinnable === false) {
+        return columnMenuItems;
       }
 
-      return [...initialValue, <Divider />, <GridColumnPinningMenuItems />];
+      return [...columnMenuItems, 'columnMenuPinningItem'];
     },
     [props.disableColumnPinning],
   );
@@ -191,6 +199,7 @@ export const useGridColumnPinning = (
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
+        theme.direction === 'rtl',
       );
 
       if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
@@ -209,7 +218,7 @@ export const useGridColumnPinning = (
 
       return initialValue;
     },
-    [apiRef, pinnedColumns],
+    [apiRef, pinnedColumns, theme.direction],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
@@ -217,7 +226,7 @@ export const useGridColumnPinning = (
       const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
 
       const shouldExportPinnedColumns =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.pinnedColumns != null ||
@@ -252,12 +261,12 @@ export const useGridColumnPinning = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
-  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
   useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'pinnedColumns',
     propModel: props.pinnedColumns,
     propOnChange: props.onPinnedColumnsChange,
@@ -345,15 +354,16 @@ export const useGridColumnPinning = (
     setPinnedColumns,
     isColumnPinned,
   };
-  useGridApiMethod(apiRef, columnPinningApi, 'columnPinningApi');
+
+  useGridApiMethod(apiRef, columnPinningApi, 'public');
 
   const handleColumnOrderChange = React.useCallback<GridEventListener<'columnOrderChange'>>(
     (params) => {
-      if (!apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns) {
+      if (!apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns) {
         return;
       }
 
-      const { field, targetIndex, oldIndex } = params;
+      const { column, targetIndex, oldIndex } = params;
       const delta = targetIndex > oldIndex ? 1 : -1;
 
       const latestColumnFields = gridColumnFieldsSelector(apiRef);
@@ -378,18 +388,20 @@ export const useGridColumnPinning = (
       const siblingField = latestColumnFields[targetIndex - delta];
 
       const newOrderedFieldsBeforePinningColumns = [
-        ...apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns,
+        ...apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns,
       ];
 
       // The index to start swapping fields
-      let i = newOrderedFieldsBeforePinningColumns.findIndex((column) => column === field);
+      let i = newOrderedFieldsBeforePinningColumns.findIndex(
+        (currentColumn) => currentColumn === column.field,
+      );
       // The index of the field to swap with
       let j = i + delta;
 
       // When to stop swapping fields.
       // We stop one field before because the swap is done with i + 1 (if delta=1)
       const stop = newOrderedFieldsBeforePinningColumns.findIndex(
-        (column) => column === siblingField,
+        (currentColumn) => currentColumn === siblingField,
       );
 
       while (delta > 0 ? i < stop : i > stop) {
@@ -406,7 +418,7 @@ export const useGridColumnPinning = (
         j = i + delta;
       }
 
-      apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns =
+      apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
         newOrderedFieldsBeforePinningColumns;
     },
 

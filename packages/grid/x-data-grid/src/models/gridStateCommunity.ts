@@ -17,8 +17,8 @@ import type {
   GridTabIndexState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
-import type { GridEditRowsModel } from './gridEditRowModel';
-import type { GridSelectionModel } from './gridSelectionModel';
+import type { GridEditingState } from './gridEditRowModel';
+import type { GridRowSelectionModel } from './gridRowSelectionModel';
 
 /**
  * The state of `DataGrid`.
@@ -26,7 +26,7 @@ import type { GridSelectionModel } from './gridSelectionModel';
 export interface GridStateCommunity {
   rows: GridRowsState;
   rowsMeta: GridRowsMetaState;
-  editRows: GridEditRowsModel;
+  editRows: GridEditingState;
   pagination: GridPaginationState;
   columns: GridColumnsState;
   columnGrouping: GridColumnsGroupingState;
@@ -34,11 +34,10 @@ export interface GridStateCommunity {
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
-  selection: GridSelectionModel;
+  rowSelection: GridRowSelectionModel;
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  error?: any;
 }
 
 /**

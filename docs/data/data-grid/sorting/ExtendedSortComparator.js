@@ -63,7 +63,9 @@ export default function ExtendedSortComparator() {
         {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           sorting: {
+            ...data.initialState?.sorting,
             sortModel: [
               {
                 field: 'nameAdmin',

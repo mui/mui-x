@@ -1,0 +1,6 @@
+<StaticDatePicker
+  slots={{
+    layout: CustomLayout,
+    actionBar: ActionList,
+  }}
+/>

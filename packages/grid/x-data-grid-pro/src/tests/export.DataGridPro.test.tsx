@@ -1,5 +1,4 @@
-import { GridColumns, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
+import { GridColDef, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
 import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -15,11 +14,11 @@ describe('<DataGridPro /> - Export', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
+  const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
   describe('getDataAsCsv', () => {
     it('should work with basic strings', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
 
         return (
@@ -45,7 +44,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
@@ -65,7 +64,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should work with comma', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -86,7 +85,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
@@ -95,7 +94,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should apply valueFormatter correctly', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -123,7 +122,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
@@ -132,7 +131,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should work with double quotes', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -153,7 +152,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
@@ -162,7 +161,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should work with newline', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -191,7 +190,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
@@ -206,7 +205,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should allow to change the delimiter', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -227,7 +226,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(
@@ -238,7 +237,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should only export the selected rows if any', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -256,18 +255,18 @@ describe('<DataGridPro /> - Export', () => {
                   brand: 'Adidas',
                 },
               ]}
-              selectionModel={[0]}
+              rowSelectionModel={[0]}
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike'].join('\r\n'));
     });
 
     it('should export the rows returned by params.getRowsToExport if defined', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -288,7 +287,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv({ getRowsToExport: () => [0] })).to.equal(
@@ -296,36 +295,8 @@ describe('<DataGridPro /> - Export', () => {
       );
     });
 
-    it('should not export hidden column (deprecated)', () => {
-      const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef();
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              {...baselineProps}
-              apiRef={apiRef}
-              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
-              rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
-              ]}
-            />
-          </div>
-        );
-      };
-
-      render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(['id', '0', '1'].join('\r\n'));
-    });
-
     it('should not export hidden column', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -347,46 +318,14 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id', '0', '1'].join('\r\n'));
-    });
-
-    it('should export hidden column if params.allColumns = true (deprecated)', () => {
-      const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef();
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              {...baselineProps}
-              apiRef={apiRef}
-              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
-              rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
-              ]}
-            />
-          </div>
-        );
-      };
-
-      render(<TestCaseCSVExport />);
-      expect(
-        apiRef.current.getDataAsCsv({
-          allColumns: true,
-        }),
-      ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
     });
 
     it('should export hidden column if params.allColumns = true', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -408,7 +347,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(
@@ -419,7 +358,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should not export columns with column.disableExport = true', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -443,39 +382,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
-
-      render(<TestCaseCSVExport />);
-      expect(
-        apiRef.current.getDataAsCsv({
-          fields: ['brand'],
-        }),
-      ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
-    });
-
-    it('should only export columns in params.fields if defined (deprecated)', () => {
-      const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef();
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              {...baselineProps}
-              apiRef={apiRef}
-              columns={[{ field: 'id' }, { field: 'brand', headerName: 'Brand', hide: true }]}
-              rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
-              ]}
-            />
-          </div>
-        );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(
@@ -486,7 +393,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should only export columns in params.fields if defined', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -508,7 +415,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(
@@ -518,43 +425,8 @@ describe('<DataGridPro /> - Export', () => {
       ).to.equal(['Brand', 'Nike', 'Adidas'].join('\r\n'));
     });
 
-    it('should export column defined in params.fields even if column.hide=true or column.disableExport=true (deprecated)', () => {
-      const TestCaseCSVExport = () => {
-        apiRef = useGridApiRef();
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPro
-              {...baselineProps}
-              apiRef={apiRef}
-              columns={[
-                { field: 'id', disableExport: true },
-                { field: 'brand', headerName: 'Brand', hide: true },
-              ]}
-              rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Adidas',
-                },
-              ]}
-            />
-          </div>
-        );
-      };
-
-      render(<TestCaseCSVExport />);
-      expect(
-        apiRef.current.getDataAsCsv({
-          fields: ['id', 'brand'],
-        }),
-      ).to.equal(['id,Brand', '0,Nike', '1,Adidas'].join('\r\n'));
-    });
-
     it('should export column defined in params.fields even if `columnVisibilityModel` does not include the field or column.disableExport=true', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -579,7 +451,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(
@@ -590,7 +462,7 @@ describe('<DataGridPro /> - Export', () => {
     });
 
     it('should work with booleans', () => {
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -606,7 +478,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
     });
@@ -617,7 +489,7 @@ describe('<DataGridPro /> - Export', () => {
         { value: 'BR', label: 'Brazil' },
       ];
 
-      const TestCaseCSVExport = () => {
+      function TestCaseCSVExport() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -628,7 +500,6 @@ describe('<DataGridPro /> - Export', () => {
                 { field: 'id' },
                 {
                   field: 'country',
-                  type: 'singleSelect',
                   valueOptions: COUNTRY_ISO_OPTIONS,
                 },
               ]}
@@ -639,7 +510,7 @@ describe('<DataGridPro /> - Export', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCaseCSVExport />);
       expect(() => {

@@ -22,6 +22,9 @@ export interface GridStateApi<State extends GridStateCommunity> {
     state: S | ((previousState: S) => S),
     reason?: GridControlledStateReasonLookup[K],
   ) => boolean;
+}
+
+export interface GridStatePrivateApi<State extends GridStateCommunity> {
   /**
    * Updates a single sub-state.
    * Publishes the `xxxChange` event and calls the `onXXXChange` prop.
@@ -29,9 +32,8 @@ export interface GridStateApi<State extends GridStateCommunity> {
    * @param {(oldState: GridState) => GridState} state The new state of the sub-state to update.
    * @param {GridControlledStateReasonLookup[K]} reason The reason to pass to the callback prop and event.
    * @returns {boolean} `true` if the state has been successfully updated.
-   * @ignore - do not document.
    */
-  unstable_updateControlState: <K extends keyof GridControlledStateReasonLookup>(
+  updateControlState: <K extends keyof GridControlledStateReasonLookup>(
     key: K,
     state: (oldState: State[K]) => State[K],
     reason?: GridControlledStateReasonLookup[K],
@@ -39,9 +41,8 @@ export interface GridStateApi<State extends GridStateCommunity> {
   /**
    * Updates a control state that binds the model, the onChange prop, and the grid state together.
    * @param {GridControlStateItem>} controlState The [[GridControlStateItem]] to be registered.
-   * @ignore - do not document.
    */
-  unstable_registerControlState: <E extends keyof GridControlledStateEventLookup>(
+  registerControlState: <E extends keyof GridControlledStateEventLookup>(
     controlState: GridControlStateItem<State, E>,
   ) => void;
 }

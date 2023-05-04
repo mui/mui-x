@@ -7,7 +7,6 @@ import {
   GridApi,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, act } from '@mui/monorepo/test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -24,21 +23,21 @@ describe('<DataGrid /> - Filter panel', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} />
       </div>
     );
-  };
+  }
 
-  it('should add an id and operatorValue to the filter item created when opening the filter panel', () => {
+  it('should add an id and `operator` to the filter item created when opening the filter panel', () => {
     render(<TestCase />);
     act(() => apiRef.current.showFilterPanel('brand'));
     const model = gridFilterModelSelector(apiRef);
     expect(model.items).to.have.length(1);
     expect(model.items[0].id).to.not.equal(null);
-    expect(model.items[0].operatorValue).to.not.equal(null);
+    expect(model.items[0].operator).to.not.equal(null);
   });
 });

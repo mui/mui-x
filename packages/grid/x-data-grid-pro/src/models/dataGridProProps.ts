@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-  GridRowTreeNodeConfig,
   GridEventListener,
   GridCallbackDetails,
   GridRowParams,
   GridRowId,
   GridValidRowModel,
+  GridGroupNode,
   GridFeatureMode,
 } from '@mui/x-data-grid';
 import {
@@ -23,16 +23,26 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
+import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
+}
+
+interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
+  extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
   /**
-   * Enables the the ability for rows to be pinned in data grid.
+   * Overridable components.
+   * @deprecated Use the `slots` prop instead.
    */
-  rowPinning: boolean;
+  components?: Partial<GridProSlotsComponent>;
+  /**
+   * Overridable components.
+   */
+  slots?: Partial<UncapitalizedGridProSlotsComponent>;
 }
 
 /**
@@ -41,18 +51,23 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
 export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridProPropsWithDefaultValue> &
-      DataGridPropsWithComplexDefaultValueBeforeProcessing &
+      DataGridProPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
   > {}
+
+interface DataGridProPropsWithComplexDefaultValueAfterProcessing
+  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'slots'> {
+  slots: UncapitalizedGridProSlotsComponent;
+}
 
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
-    DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridProPropsWithoutDefaultValue<R> {}
+    DataGridProPropsWithComplexDefaultValueAfterProcessing,
+    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 
@@ -81,10 +96,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {GridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
-  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
+  isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false
@@ -119,12 +134,18 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * * @default "client"
    */
   rowsLoadingMode: GridFeatureMode;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<DataGridPropsWithoutDefaultValue<R>, 'initialState'> {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
   /**
@@ -134,7 +155,7 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   initialState?: GridInitialStatePro;
   /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalProFeatures>;

@@ -6,7 +6,6 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма редове',
   noResultsOverlayLabel: 'Няма намерени резултати.',
-  errorOverlayDefaultLabel: 'Възникна грешка.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Гъстота',
@@ -27,16 +26,16 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Търси…',
+  toolbarQuickFilterLabel: 'Търсене',
+  toolbarQuickFilterDeleteIconLabel: 'Изчисти',
 
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
   toolbarExportCSV: 'Изтегли като CSV',
   toolbarExportPrint: 'Принтиране',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Изтегли като Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
@@ -47,11 +46,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
+  filterPanelRemoveAll: 'Премахни всички',
   filterPanelDeleteIconLabel: 'Изтрий',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Оператори',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Логически оператор',
+  filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
   filterPanelColumns: 'Колони',
@@ -81,6 +79,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Покажи колоните',
+  columnMenuManageColumns: 'Управление на колони',
   columnMenuFilter: 'Филтри',
   columnMenuHideColumn: 'Скрий',
   columnMenuUnsort: 'Отмени сортирането',
@@ -99,7 +98,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} избран ред`,
 
   // Total row amount footer text
-  footerTotalRows: 'Общо Rедове:',
+  footerTotalRows: 'Общо Редове:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
@@ -140,7 +139,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Свиване',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Подредба на редове',
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',

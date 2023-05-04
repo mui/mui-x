@@ -45,7 +45,7 @@ async function main() {
   });
 
   // Wait for all requests to finish.
-  // This should load shared ressources such as fonts.
+  // This should load shared resources such as fonts.
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle0' });
 
   // Simulate portrait mode for date pickers.
@@ -104,6 +104,7 @@ async function main() {
         const pathsToNotWaitForFlagCDN = [
           '/docs-data-grid-filtering/ServerFilterGrid', // No content rendered
           '/docs-data-grid-filtering/CustomMultiValueOperator', // No content rendered
+          '/docs-data-grid-filtering/QuickFilteringInitialize', // No content rendered
           '/docs-data-grid-sorting/ExtendedSortComparator', // No flag column
           '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
           '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
@@ -136,7 +137,7 @@ async function main() {
       });
     });
 
-    it('should position the headers matching the columns', async function test() {
+    it('should position the headers matching the columns', async () => {
       const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
       const screenshotPath = path.resolve(
         screenshotDir,
@@ -165,7 +166,7 @@ async function main() {
     it('should take a screenshot of the print preview', async function test() {
       this.timeout(20000);
 
-      const route = `${baseUrl}/stories-grid-toolbar/PrintExportSnap`;
+      const route = `${baseUrl}/docs-data-grid-export/ExportDefaultToolbar`;
       const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}Print.png`);
       await fse.ensureDir(path.dirname(screenshotPath));
 
@@ -181,10 +182,14 @@ async function main() {
 
       // Click the print export option from the export menu in the toolbar.
       await page.$eval(`li[role="menuitem"]:last-child`, (printButton) => {
-        printButton.click();
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
+        });
       });
 
-      await sleep(6000);
+      await sleep(4000);
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
@@ -195,7 +200,7 @@ async function main() {
           if (code === 0) {
             resolve();
           } else {
-            reject();
+            reject(code);
           }
         });
       });

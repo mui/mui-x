@@ -10,7 +10,6 @@ export default function CellWithPopover() {
     rowLength: 100,
     maxColumns: 4,
   });
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState('');
 
@@ -32,7 +31,7 @@ export default function CellWithPopover() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        componentsProps={{
+        slotProps={{
           cell: {
             onMouseEnter: handlePopoverOpen,
             onMouseLeave: handlePopoverClose,

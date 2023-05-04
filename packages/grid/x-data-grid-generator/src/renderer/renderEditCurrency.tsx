@@ -19,7 +19,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 })) as typeof Autocomplete;
 
-function EditCurrency(props: GridRenderEditCellParams<string>) {
+function EditCurrency(props: GridRenderEditCellParams<any, string>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -27,12 +27,9 @@ function EditCurrency(props: GridRenderEditCellParams<string>) {
   const handleChange = React.useCallback<
     NonNullable<AutocompleteProps<string, false, true, false>['onChange']>
   >(
-    (event, newValue) => {
-      apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
-      if (!(event as any).key) {
-        apiRef.current.commitCellChange({ id, field });
-        apiRef.current.setCellMode(id, field, 'view');
-      }
+    async (event, newValue) => {
+      await apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
+      apiRef.current.stopCellEditMode({ id, field });
     },
     [apiRef, field, id],
   );
@@ -83,6 +80,6 @@ function EditCurrency(props: GridRenderEditCellParams<string>) {
   );
 }
 
-export function renderEditCurrency(params: GridRenderEditCellParams<string>) {
+export function renderEditCurrency(params: GridRenderEditCellParams<any, string>) {
   return <EditCurrency {...params} />;
 }

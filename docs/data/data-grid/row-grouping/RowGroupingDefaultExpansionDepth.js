@@ -25,7 +25,7 @@ export default function RowGroupingDefaultExpansionDepth() {
         {...data}
         apiRef={apiRef}
         defaultGroupingExpansionDepth={-1}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
       />
     </div>

@@ -21,12 +21,7 @@ export default function RowGroupingBasicExample() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPremium
-        {...data}
-        apiRef={apiRef}
-        rowGroupingColumnMode="single"
-        initialState={initialState}
-      />
+      <DataGridPremium {...data} apiRef={apiRef} initialState={initialState} />
     </div>
   );
 }

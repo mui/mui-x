@@ -7,7 +7,9 @@ import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter';
+
+import { gridPaginationModelSelector } from '../hooks/features/pagination/gridPaginationSelector';
 
 const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
@@ -22,74 +24,77 @@ const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
       display: 'inline-flex',
     },
   },
-}));
+})) as typeof TablePagination;
 
-export const GridPagination = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(function GridPagination(props, ref) {
-  const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePaginationProps>>(
+  function GridPagination(props, ref) {
+    const apiRef = useGridApiContext();
+    const rootProps = useGridRootProps();
+    const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
+    const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
-  const lastPage = React.useMemo(
-    () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
-    [paginationState.rowCount, paginationState.pageSize],
-  );
+    const rowCount = React.useMemo(
+      () => rootProps.rowCount ?? visibleTopLevelRowCount ?? 0,
+      [rootProps.rowCount, visibleTopLevelRowCount],
+    );
 
-  const handlePageSizeChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      const newPageSize = Number(event.target.value);
-      apiRef.current.setPageSize(newPageSize);
-    },
-    [apiRef],
-  );
+    const lastPage = React.useMemo(
+      () => Math.floor(rowCount / (paginationModel.pageSize || 1)),
+      [rowCount, paginationModel.pageSize],
+    );
 
-  const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
-    (event, page) => {
-      apiRef.current.setPage(page);
-    },
-    [apiRef],
-  );
+    const handlePageSizeChange = React.useCallback(
+      (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        const pageSize = Number(event.target.value);
+        apiRef.current.setPageSize(pageSize);
+      },
+      [apiRef],
+    );
 
-  if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const warnedOnceMissingPageSizeInRowsPerPageOptions = React.useRef(false);
-    if (
-      !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
-      !rootProps.autoPageSize &&
-      !rootProps.rowsPerPageOptions.includes(rootProps.pageSize ?? paginationState.pageSize)
-    ) {
-      console.warn(
-        [
-          `MUI: The page size \`${
-            rootProps.pageSize ?? paginationState.pageSize
-          }\` is not preset in the \`rowsPerPageOptions\``,
-          `Add it to show the pagination select.`,
-        ].join('\n'),
-      );
+    const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
+      (_, page) => {
+        apiRef.current.setPage(page);
+      },
+      [apiRef],
+    );
 
-      warnedOnceMissingPageSizeInRowsPerPageOptions.current = true;
-    }
-  }
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const warnedOnceMissingInPageSizeOptions = React.useRef(false);
 
-  return (
-    <GridPaginationRoot
-      ref={ref}
-      // @ts-ignore
-      component="div"
-      count={paginationState.rowCount}
-      page={paginationState.page <= lastPage ? paginationState.page : lastPage}
-      rowsPerPageOptions={
-        rootProps.rowsPerPageOptions?.includes(paginationState.pageSize)
-          ? rootProps.rowsPerPageOptions
-          : []
+      if (
+        !warnedOnceMissingInPageSizeOptions.current &&
+        !rootProps.autoPageSize &&
+        !rootProps.pageSizeOptions.includes(paginationModel.pageSize)
+      ) {
+        console.warn(
+          [
+            `MUI: The page size \`${paginationModel.pageSize}\` is not preset in the \`pageSizeOptions\``,
+            `Add it to show the pagination select.`,
+          ].join('\n'),
+        );
+
+        warnedOnceMissingInPageSizeOptions.current = true;
       }
-      rowsPerPage={paginationState.pageSize}
-      onPageChange={handlePageChange}
-      onRowsPerPageChange={handlePageSizeChange}
-      {...apiRef.current.getLocaleText('MuiTablePagination')}
-      {...props}
-    />
-  );
-});
+    }
+
+    return (
+      <GridPaginationRoot
+        ref={ref}
+        component="div"
+        count={rowCount}
+        page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
+        rowsPerPageOptions={
+          rootProps.pageSizeOptions?.includes(paginationModel.pageSize)
+            ? rootProps.pageSizeOptions
+            : []
+        }
+        rowsPerPage={paginationModel.pageSize}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handlePageSizeChange}
+        {...apiRef.current.getLocaleText('MuiTablePagination')}
+        {...props}
+      />
+    );
+  },
+);

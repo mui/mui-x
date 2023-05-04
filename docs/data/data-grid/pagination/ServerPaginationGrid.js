@@ -6,21 +6,15 @@ const SERVER_OPTIONS = {
   useCursorPagination: false,
 };
 
-const { columns, initialState, useQuery } = createFakeServer({}, SERVER_OPTIONS);
+const { useQuery, ...data } = createFakeServer({}, SERVER_OPTIONS);
 
 export default function ServerPaginationGrid() {
-  const [page, setPage] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(5);
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
 
-  const queryOptions = React.useMemo(
-    () => ({
-      page,
-      pageSize,
-    }),
-    [page, pageSize],
-  );
-
-  const { isLoading, data, pageInfo } = useQuery(queryOptions);
+  const { isLoading, rows, pageInfo } = useQuery(paginationModel);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
@@ -39,18 +33,14 @@ export default function ServerPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data}
+        rows={rows}
+        {...data}
         rowCount={rowCountState}
         loading={isLoading}
-        rowsPerPageOptions={[5]}
-        pagination
-        page={page}
-        pageSize={pageSize}
+        pageSizeOptions={[5]}
+        paginationModel={paginationModel}
         paginationMode="server"
-        onPageChange={(newPage) => setPage(newPage)}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        columns={columns}
-        initialState={initialState}
+        onPaginationModelChange={setPaginationModel}
       />
     </div>
   );

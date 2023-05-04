@@ -8,7 +8,7 @@ interface ProgressBarProps {
 }
 
 const Root = styled('div')(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   position: 'relative',
   overflow: 'hidden',
   width: '100%',
@@ -56,7 +56,7 @@ const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
   );
 });
 
-export function renderProgress(params: GridRenderCellParams<number, any, any>) {
+export function renderProgress(params: GridRenderCellParams<any, number, any>) {
   if (params.value == null) {
     return '';
   }

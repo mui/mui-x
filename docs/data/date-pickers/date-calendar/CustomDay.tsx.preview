@@ -1,0 +1,10 @@
+<DateCalendar
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+  slots={{ day: Day }}
+  slotProps={{
+    day: {
+      selectedDay: value,
+    } as any,
+  }}
+/>

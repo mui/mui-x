@@ -1,15 +1,15 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGrid,
   gridPageSelector,
   gridPageCountSelector,
   useGridApiContext,
   useGridSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Pagination from '@mui/material/Pagination';
 
-const Toolbar = () => {
+function Toolbar() {
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
@@ -23,7 +23,7 @@ const Toolbar = () => {
       onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
-};
+}
 
 export default function UseGridSelector() {
   const { data, loading } = useDemoData({
@@ -32,16 +32,21 @@ export default function UseGridSelector() {
     maxColumns: 10,
   });
 
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: 10,
+    page: 0,
+  });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         {...data}
         loading={loading}
-        pagination
-        pageSize={10}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
         hideFooter
-        components={{
-          Toolbar,
+        slots={{
+          toolbar: Toolbar,
         }}
       />
     </div>

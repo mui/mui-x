@@ -24,7 +24,7 @@ export default function RowGroupingSortingMultipleGroupingColDef() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         defaultGroupingExpansionDepth={-1}
         initialState={initialState}
         rowGroupingColumnMode="multiple"

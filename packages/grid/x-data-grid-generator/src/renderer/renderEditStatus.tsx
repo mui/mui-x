@@ -16,7 +16,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import { STATUS_OPTIONS } from '../services/static-data';
 
-function EditStatus(props: GridRenderEditCellParams<string>) {
+function EditStatus(props: GridRenderEditCellParams<any, string>) {
   const { id, value, field } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -84,6 +84,6 @@ function EditStatus(props: GridRenderEditCellParams<string>) {
   );
 }
 
-export function renderEditStatus(params: GridRenderEditCellParams<string>) {
+export function renderEditStatus(params: GridRenderEditCellParams<any, string>) {
   return <EditStatus {...params} />;
 }

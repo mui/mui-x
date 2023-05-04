@@ -24,22 +24,11 @@ body:
           required: true
   - type: textarea
     attributes:
-      label: Current behavior 😯
-      description: Describe what happens instead of the expected behavior.
-  - type: textarea
-    attributes:
-      label: Expected behavior 🤔
-      description: Describe what should happen.
-  - type: textarea
-    attributes:
       label: Steps to reproduce 🕹
       description: |
-        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug.
+        **⚠️ Issues that we can't reproduce will be closed.**
 
-        As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case.
-        Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
-
-        Issues that we can't reproduce will be closed.
+        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug. As a starting point, we recommend you [browse the documentation](https://mui.com/x/introduction/), and [select](https://mui.com/static/docs/forking-an-example.png) the closest example to your use case. Or you can use a [basic template](https://mui.com/r/x-issue-template) to build your reproduction case.
       value: |
         Link to live example:
 
@@ -47,7 +36,14 @@ body:
         1.
         2.
         3.
-        4.
+  - type: textarea
+    attributes:
+      label: Current behavior 😯
+      description: Describe what happens instead of the expected behavior.
+  - type: textarea
+    attributes:
+      label: Expected behavior 🤔
+      description: Describe what should happen.
   - type: textarea
     attributes:
       label: Context 🔦
@@ -68,6 +64,6 @@ body:
   - type: input
     id: contact
     attributes:
-      label: Order ID 💳 (optional)
-      description: The [Pro plan](https://mui.com/pricing/) comes with priority over the Community plan. Providing your order ID might give your problem more attention.
+      label: Order ID or Support key 💳 (optional)
+      description: The [Pro plan](https://mui.com/pricing/) comes with priority over the Community plan. Providing your order ID (or support key) gives your problem more attention.
       placeholder: 'e.g. 11111'

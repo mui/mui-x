@@ -25,7 +25,7 @@ function getDataGridComponentNameFromProjectName(project) {
 
 const Description = styled(Typography)({ whiteSpace: 'nowrap' });
 
-const EventRow = ({ event }) => {
+function EventRow({ event }) {
   const example = React.useMemo(() => {
     const args = ['details, // GridCallbackDetails'];
     if (event.event) {
@@ -42,23 +42,23 @@ const EventRow = ({ event }) => {
           .join(', ')})
 <DataGrid
   ${event.componentProp}={handleEvent}
-  {...other} 
+  {...other}
 />`
       : '';
 
     return `
 const handleEvent: GridEventListener<'${event.name}'> = (
   ${args.join('\n  ')}
-) => {...}    
-  
-// Imperative subscription    
+) => {...}
+
+// Imperative subscription
 apiRef.current.subscribeEvent(
   '${event.name}',
   handleEvent,
 );
 
 // Hook subscription (only available inside the scope of the grid)
-useGridApiEventHandler('${event.name}', handleEvent);
+useGridApiEventHandler(apiRef, '${event.name}', handleEvent);
 ${propExample}
 `;
   }, [event]);
@@ -68,7 +68,7 @@ ${propExample}
       <HighlightedCode code={example} language="tsx" />
     </Box>
   );
-};
+}
 
 const COLUMNS = [
   {
@@ -120,11 +120,13 @@ const COLUMNS = [
   },
 ];
 
-const Toolbar = () => (
-  <GridToolbarContainer sx={{ p: 1 }}>
-    <GridToolbarQuickFilter />
-  </GridToolbarContainer>
-);
+function Toolbar() {
+  return (
+    <GridToolbarContainer sx={{ p: 1 }}>
+      <GridToolbarQuickFilter />
+    </GridToolbarContainer>
+  );
+}
 
 export default function CatalogOfEventsNoSnap() {
   return (
@@ -139,8 +141,8 @@ export default function CatalogOfEventsNoSnap() {
       getRowHeight={() => 'auto'}
       disableRowSelection
       hideFooter
-      components={{
-        Toolbar,
+      slots={{
+        toolbar: Toolbar,
       }}
       sx={{
         '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },

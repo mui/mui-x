@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, within, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -51,7 +50,7 @@ describe('<DataGrid /> - Column Headers', () => {
     });
   });
 
-  describe('GridColumnHeaderMenu', () => {
+  describe('Column Menu', () => {
     it('should allow to hide column', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -65,7 +64,7 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
       clock.runToLast();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -76,7 +75,12 @@ describe('<DataGrid /> - Column Headers', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            columns={[{ field: 'id' }, { field: 'brand', headerClassName: 'foobar', hide: true }]}
+            columns={[{ field: 'id' }, { field: 'brand', headerClassName: 'foobar' }]}
+            initialState={{
+              columns: {
+                columnVisibilityModel: { brand: false },
+              },
+            }}
           />
         </div>,
       );
@@ -84,7 +88,7 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
       fireEvent.click(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
       clock.runToLast();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
@@ -106,10 +110,46 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
       clock.runToLast();
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
+
+    it('menu icon button should close column menu when already open', async () => {
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} />
+        </div>,
+      );
+
+      userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.not.equal(null);
+
+      userEvent.mousePress(within(getColumnHeaderCell(0)).getByLabelText('Menu'));
+      clock.runToLast();
+      expect(screen.queryByRole('menu')).to.equal(null);
+    });
+  });
+
+  it('should display sort column menu items as per sortingOrder prop', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          {...baselineProps}
+          sortingOrder={['desc', 'asc']}
+          columns={[{ field: 'brand', headerClassName: 'foobar' }]}
+        />
+      </div>,
+    );
+    const columnCell = getColumnHeaderCell(0);
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    fireEvent.click(menuIconButton);
+    clock.runToLast();
+
+    expect(screen.queryByRole('menuitem', { name: /asc/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: /desc/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: /unsort/i })).to.equal(null);
   });
 });

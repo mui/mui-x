@@ -30,13 +30,14 @@ export default function RowPinningWithPagination() {
         rows={rowsData.rows}
         pinnedRows={rowsData.pinnedRows}
         initialState={{
+          ...data.initialState,
           pagination: {
-            pageSize: 25,
+            ...data.initialState?.pagination,
+            paginationModel: { pageSize: 25 },
           },
         }}
         pagination
-        rowsPerPageOptions={[5, 10, 25, 50, 100]}
-        experimentalFeatures={{ rowPinning: true }}
+        pageSizeOptions={[5, 10, 25, 50, 100]}
       />
     </div>
   );

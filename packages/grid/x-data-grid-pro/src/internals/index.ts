@@ -1,7 +1,8 @@
 export * from '@mui/x-data-grid/internals';
 
 export { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
-export { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
+export { GridColumnHeaders } from '../components/GridColumnHeaders';
+export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 export {
   useGridColumnResize,
@@ -35,6 +36,8 @@ export {
   useGridRowPinningPreProcessors,
   addPinnedRow,
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
+export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
+export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 
 export type {
   GridExperimentalProFeatures,
@@ -42,6 +45,8 @@ export type {
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
 
-export { buildRowTree } from '../utils/tree/buildRowTree';
-export type { BuildRowTreeGroupingCriteria } from '../utils/tree/buildRowTree';
+export { createRowTree } from '../utils/tree/createRowTree';
+export { updateRowTree } from '../utils/tree/updateRowTree';
 export { sortRowTree } from '../utils/tree/sortRowTree';
+export { insertNodeInTree, removeNodeFromTree } from '../utils/tree/utils';
+export type { RowTreeBuilderGroupingCriterion } from '../utils/tree/models';

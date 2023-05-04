@@ -1,4 +1,4 @@
-import { GridRowId, GridRowTreeNodeConfig } from '../../../models/gridRows';
+import { GridRowId, GridTreeNode } from '../../../models/gridRows';
 import { GridSortModel } from '../../../models/gridSortModel';
 
 export interface GridSortingState {
@@ -10,7 +10,7 @@ export interface GridSortingInitialState {
   sortModel?: GridSortModel;
 }
 
-export type GridSortingModelApplier = (rowList: GridRowTreeNodeConfig[]) => GridRowId[];
+export type GridSortingModelApplier = (rowList: GridTreeNode[]) => GridRowId[];
 
 export interface GridSortingMethodParams {
   sortRowList: GridSortingModelApplier | null;

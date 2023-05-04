@@ -1,10 +1,5 @@
 {renderConfirmDialog()}
-<DataGrid
-  rows={rows}
-  columns={columns}
-  processRowUpdate={processRowUpdate}
-  experimentalFeatures={{ newEditingApi: true }}
-/>
+<DataGrid rows={rows} columns={columns} processRowUpdate={processRowUpdate} />
 {!!snackbar && (
   <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
     <Alert {...snackbar} onClose={handleCloseSnackbar} />

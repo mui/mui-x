@@ -15,17 +15,18 @@ export default function InitialFilters() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 {
-                  columnField: 'rating',
-                  operatorValue: '>',
+                  field: 'rating',
+                  operator: '>',
                   value: '2.5',
                 },
               ],

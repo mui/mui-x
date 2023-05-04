@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -8,7 +7,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface ColumnHeaderMenuIconProps {
-  column: GridStateColDef;
+  colDef: GridStateColDef;
   columnMenuId: string;
   columnMenuButtonId: string;
   open: boolean;
@@ -31,7 +30,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
-  const { column, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
+  const { colDef, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -41,28 +40,34 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      apiRef.current.toggleColumnMenu(column.field);
+      apiRef.current.toggleColumnMenu(colDef.field);
     },
-    [apiRef, column.field],
+    [apiRef, colDef.field],
   );
 
   return (
     <div className={classes.root}>
-      <IconButton
-        ref={iconButtonRef}
-        tabIndex={-1}
-        className={classes.button}
-        aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+      <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('columnMenuLabel')}
-        size="small"
-        onClick={handleMenuIconClick}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        aria-controls={columnMenuId}
-        id={columnMenuButtonId}
+        enterDelay={1000}
+        {...rootProps.slotProps?.baseTooltip}
       >
-        <rootProps.components.ColumnMenuIcon fontSize="small" />
-      </IconButton>
+        <rootProps.slots.baseIconButton
+          ref={iconButtonRef}
+          tabIndex={-1}
+          className={classes.button}
+          aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+          size="small"
+          onClick={handleMenuIconClick}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup="true"
+          aria-controls={columnMenuId}
+          id={columnMenuButtonId}
+          {...rootProps.slotProps?.baseIconButton}
+        >
+          <rootProps.slots.columnMenuIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
+      </rootProps.slots.baseTooltip>
     </div>
   );
 });

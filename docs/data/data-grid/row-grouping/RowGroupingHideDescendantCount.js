@@ -24,7 +24,7 @@ export default function RowGroupingHideDescendantCount() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
         groupingColDef={{
           hideDescendantCount: true,

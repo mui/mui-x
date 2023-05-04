@@ -30,4 +30,6 @@ module.exports = {
       },
     ]),
   },
+  // TODO: 'browserslist:modern'
+  target: 'web',
 };

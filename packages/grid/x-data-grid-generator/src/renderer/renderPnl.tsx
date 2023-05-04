@@ -38,7 +38,7 @@ const Pnl = React.memo(function Pnl(props: PnlProps) {
   );
 });
 
-export function renderPnl(params: GridRenderCellParams<number, any, any>) {
+export function renderPnl(params: GridRenderCellParams<any, number, any>) {
   if (params.value == null) {
     return '';
   }

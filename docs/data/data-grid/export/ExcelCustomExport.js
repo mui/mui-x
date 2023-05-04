@@ -257,13 +257,11 @@ const exceljsPreProcess = ({ workbook, worksheet }) => {
     name: 'Arial Black',
     size: 14,
   };
-
   worksheet.getCell('A1').alignment = {
     vertical: 'top',
     horizontal: 'center',
     wrapText: true,
   };
-
   worksheet.addRow([]);
 };
 const exceljsPostProcess = ({ worksheet }) => {
@@ -285,8 +283,8 @@ export default function ExcelCustomExport() {
         columns={columns}
         groupingColDef={groupingColDef}
         defaultGroupingExpansionDepth={-1}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{ toolbar: { excelOptions } }}
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{ toolbar: { excelOptions } }}
       />
     </div>
   );

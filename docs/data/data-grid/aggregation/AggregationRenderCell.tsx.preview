@@ -8,5 +8,4 @@
       },
     },
   }}
-  experimentalFeatures={{ aggregation: true }}
 />

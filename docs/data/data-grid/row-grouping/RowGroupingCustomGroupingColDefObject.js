@@ -24,7 +24,7 @@ export default function RowGroupingCustomGroupingColDefObject() {
       <DataGridPremium
         {...data}
         apiRef={apiRef}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
         groupingColDef={{
           headerName: 'Group',

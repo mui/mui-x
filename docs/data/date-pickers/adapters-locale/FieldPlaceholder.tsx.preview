@@ -1,0 +1,16 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DemoItem label="English locale (default)">
+    <DateField />
+  </DemoItem>
+</LocalizationProvider>
+<LocalizationProvider
+  dateAdapter={AdapterDayjs}
+  // Define the date locale to have the right format `day.month.year`.
+  adapterLocale="de"
+  // Define the translations to have the right placeholders (e.g. `JJJJ` for the year).
+  localeText={germanLocale}
+>
+  <DemoItem label="German locale">
+    <DateField />
+  </DemoItem>
+</LocalizationProvider>

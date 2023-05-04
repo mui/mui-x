@@ -3,6 +3,7 @@ import { GridVirtualScroller } from './virtualization/GridVirtualScroller';
 import { GridVirtualScrollerContent } from './virtualization/GridVirtualScrollerContent';
 import { GridVirtualScrollerRenderZone } from './virtualization/GridVirtualScrollerRenderZone';
 import { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+import { GridOverlays } from './base/GridOverlays';
 
 interface DataGridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
   disableVirtualization?: boolean;
@@ -19,6 +20,7 @@ const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtual
 
     return (
       <GridVirtualScroller className={className} {...getRootProps(other)}>
+        <GridOverlays />
         <GridVirtualScrollerContent {...getContentProps()}>
           <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
             {getRows()}

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Skeleton from '@mui/material/Skeleton';
-import { capitalize } from '@mui/material/utils';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -22,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { align, classes } = ownerState;
 
   const slots = {
-    root: ['cell', 'cellSkeleton', `cell--text${capitalize(align)}`],
+    root: ['cell', 'cellSkeleton', `cell--text${capitalize(align)}`, 'withBorderColor'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

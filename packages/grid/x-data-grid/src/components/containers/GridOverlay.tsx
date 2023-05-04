@@ -1,18 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { SxProps } from '@mui/system';
-import { Theme, alpha, styled } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { Theme, SxProps, styled } from '@mui/system';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -27,20 +26,16 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Overlay',
-  overridesResolver: (props, styles) => styles.overlay,
-})(({ theme }) => ({
-  position: 'absolute',
-  top: 0,
-  zIndex: 4, // should be above pinned columns, pinned rows and detail panel
+  overridesResolver: (_, styles) => styles.overlay,
+})<{ ownerState: OwnerState }>({
   width: '100%',
   height: '100%',
-  pointerEvents: 'none',
   display: 'flex',
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
-}));
+  backgroundColor: 'var(--unstable_DataGrid-overlayBackground)',
+});
 
 const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
   props: GridOverlayProps,
@@ -48,10 +43,16 @@ const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function 
 ) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
-  return <GridOverlayRoot ref={ref} className={clsx(classes.root, className)} {...other} />;
+  return (
+    <GridOverlayRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={rootProps}
+      {...other}
+    />
+  );
 });
 
 GridOverlay.propTypes = {

@@ -16,7 +16,9 @@ export default function InitialSort() {
       <DataGrid
         {...data}
         initialState={{
+          ...data.initialState,
           sorting: {
+            ...data.initialState?.sorting,
             sortModel: [
               {
                 field: 'rating',

@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'horas',
+  minutes: 'minutos',
+  seconds: 'segundos',
+  meridiem: 'meridiano',
+};
 
 const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +17,10 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Abrir próxima seleção',
   openNextView: 'Abrir seleção anterior',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'Seleção de ano está aberta, alternando para seleção de calendário'
       : 'Seleção de calendários está aberta, alternando para seleção de ano',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Início',
@@ -27,14 +33,14 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Hoje',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Selecione a data',
+  dateTimePickerToolbarTitle: 'Selecione data e hora',
+  timePickerToolbarTitle: 'Selecione a hora',
+  dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Selecione ${view}. ${
+    `Selecione ${timeViews[view]}. ${
       time === null
         ? 'Hora não selecionada'
         : `Selecionado a hora ${adapter.format(time, 'fullTime')}`
@@ -43,19 +49,38 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minutos`,
   secondsClockNumberText: (seconds) => `${seconds} segundos`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Selecione ${timeViews[view]}`,
+
+  // Calendar labels
+  calendarWeekNumberHeaderLabel: 'Número da semana',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Semana ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
+
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Escolha uma data, data selecionada ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Escolha uma data, data selecionada ${utils.format(value, 'fullDate')}`
       : 'Escolha uma data',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Escolha uma hora, hora selecionada ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Escolha uma hora, hora selecionada ${utils.format(value, 'fullTime')}`
       : 'Escolha uma hora',
 
   // Table labels
   timeTableLabel: 'escolha uma hora',
   dateTableLabel: 'escolha uma data',
+
+  // Field section placeholders
+  fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'SSSS' : 'SS'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const ptBR = getPickersLocalization(ptBRPickers);

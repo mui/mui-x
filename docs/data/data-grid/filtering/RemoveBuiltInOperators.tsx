@@ -36,8 +36,9 @@ export default function RemoveBuiltInOperators() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
-              items: [{ columnField: 'unitPrice', value: '25', operatorValue: '>' }],
+              items: [{ field: 'unitPrice', value: '25', operator: '>' }],
             },
           },
         }}

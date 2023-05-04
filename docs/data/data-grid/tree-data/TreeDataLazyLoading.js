@@ -1,3 +1,4 @@
+// TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -139,7 +140,6 @@ const fakeDataFetcher = (parentPath = []) =>
         ...row,
         descendantCount: getChildren(row.hierarchy).length,
       }));
-
       resolve(rows);
     }, 500 + Math.random() * 300);
   });
@@ -161,7 +161,7 @@ const useUtilityClasses = (ownerState) => {
  * Reproduce the behavior of the `GridTreeDataGroupingCell` component in `@mui/x-data-grid-pro`
  * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
  */
-const GroupingCellWithLazyLoading = (props) => {
+function GroupingCellWithLazyLoading(props) {
   const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
@@ -169,17 +169,8 @@ const GroupingCellWithLazyLoading = (props) => {
   const classes = useUtilityClasses({ classes: rootProps.classes });
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.components.TreeDataCollapseIcon
-    : rootProps.components.TreeDataExpandIcon;
-
-  const handleKeyDown = (event) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-    }
-  };
+    ? rootProps.slots.treeDataCollapseIcon
+    : rootProps.slots.treeDataExpandIcon;
 
   const handleClick = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
@@ -194,7 +185,6 @@ const GroupingCellWithLazyLoading = (props) => {
           <IconButton
             size="small"
             onClick={handleClick}
-            onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
               rowNode.childrenExpanded
@@ -214,7 +204,7 @@ const GroupingCellWithLazyLoading = (props) => {
       </span>
     </Box>
   );
-};
+}
 
 GroupingCellWithLazyLoading.propTypes = {
   hideDescendantCount: PropTypes.bool,

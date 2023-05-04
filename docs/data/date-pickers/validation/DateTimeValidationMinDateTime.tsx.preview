@@ -1,0 +1,3 @@
+<DemoItem label="DateTimePicker">
+  <DateTimePicker defaultValue={todayAtNoon} minDateTime={todayAt3PM} />
+</DemoItem>

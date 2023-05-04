@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from '@mui/material/IconButton';
 import MenuList from '@mui/material/MenuList';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { useTheme } from '@mui/material/styles';
+import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
@@ -17,17 +17,16 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-interface GridActionsCellProps extends Omit<GridRenderCellParams, 'value' | 'formattedValue'> {
-  value?: GridRenderCellParams['value'];
-  formattedValue?: GridRenderCellParams['formattedValue'];
+interface GridActionsCellProps extends Omit<GridRenderCellParams, 'api'> {
+  api?: GridRenderCellParams['api'];
   position?: GridMenuProps['position'];
 }
 
-const GridActionsCell = (props: GridActionsCellProps) => {
+function GridActionsCell(props: GridActionsCellProps) {
   const {
+    api,
     colDef,
     id,
-    api,
     hasFocus,
     isEditable,
     field,
@@ -36,7 +35,6 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     row,
     rowNode,
     cellMode,
-    getValue,
     tabIndex,
     position = 'bottom-end',
     focusElementRef,
@@ -49,9 +47,19 @@ const GridActionsCell = (props: GridActionsCellProps) => {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const ignoreCallToFocus = React.useRef(false);
   const touchRippleRefs = React.useRef<Record<string, TouchRippleActions | null>>({});
+  const theme = useTheme();
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
+
+  if (!hasActions(colDef)) {
+    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
+  }
+
+  const options = colDef.getActions(apiRef.current.getRowParams(id));
+  const iconButtons = options.filter((option) => !option.props.showInMenu);
+  const menuButtons = options.filter((option) => option.props.showInMenu);
+  const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
 
   React.useLayoutEffect(() => {
     if (!hasFocus) {
@@ -73,7 +81,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     }
 
     const child = rootRef.current.children[focusedButtonIndex] as HTMLElement;
-    child.focus();
+    child.focus({ preventScroll: true });
   }, [focusedButtonIndex]);
 
   React.useEffect(() => {
@@ -95,15 +103,6 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     }),
     [],
   );
-
-  if (!hasActions(colDef)) {
-    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
-  }
-
-  const options = colDef.getActions(apiRef.current.getRowParams(id));
-  const iconButtons = options.filter((option) => !option.props.showInMenu);
-  const menuButtons = options.filter((option) => option.props.showInMenu);
-  const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
 
   React.useEffect(() => {
     if (focusedButtonIndex >= numberOfButtons) {
@@ -144,9 +143,17 @@ const GridActionsCell = (props: GridActionsCellProps) => {
 
     let newIndex: number = focusedButtonIndex;
     if (event.key === 'ArrowRight') {
-      newIndex += 1;
+      if (theme.direction === 'rtl') {
+        newIndex -= 1;
+      } else {
+        newIndex += 1;
+      }
     } else if (event.key === 'ArrowLeft') {
-      newIndex -= 1;
+      if (theme.direction === 'rtl') {
+        newIndex += 1;
+      } else {
+        newIndex -= 1;
+      }
     }
 
     if (newIndex < 0 || newIndex >= numberOfButtons) {
@@ -188,7 +195,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
       )}
 
       {menuButtons.length > 0 && buttonId && (
-        <IconButton
+        <rootProps.slots.baseIconButton
           ref={buttonRef}
           id={buttonId}
           aria-label={apiRef.current.getLocaleText('actionsCellMore')}
@@ -200,9 +207,10 @@ const GridActionsCell = (props: GridActionsCellProps) => {
           onClick={showMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
+          {...rootProps.slotProps?.baseIconButton}
         >
-          <rootProps.components.MoreActionsIcon fontSize="small" />
-        </IconButton>
+          <rootProps.slots.moreActionsIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
       )}
 
       {menuButtons.length > 0 && (
@@ -227,18 +235,14 @@ const GridActionsCell = (props: GridActionsCellProps) => {
       )}
     </div>
   );
-};
+}
 
 GridActionsCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
-   */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object,
   /**
    * The mode of the cell.
    */
@@ -264,15 +268,10 @@ GridActionsCell.propTypes = {
       }),
     }),
   ]),
-  formattedValue: PropTypes.any,
   /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
+   * The cell value formatted with the column valueFormatter.
    */
-  getValue: PropTypes.func.isRequired,
+  formattedValue: PropTypes.any,
   /**
    * If true, the cell is the active element.
    */
@@ -302,7 +301,7 @@ GridActionsCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
@@ -311,6 +310,10 @@ GridActionsCell.propTypes = {
    * the tabIndex value.
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
   value: PropTypes.any,
 } as any;
 

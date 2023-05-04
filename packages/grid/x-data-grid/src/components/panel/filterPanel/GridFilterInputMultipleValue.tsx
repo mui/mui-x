@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/utils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
@@ -57,7 +57,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     <Autocomplete<string, true, false, true>
       multiple
       freeSolo
-      limitTags={1}
       options={[]}
       filterOptions={(options, params) => {
         const { inputValue } = params;
@@ -72,7 +71,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
         ))
       }
       renderInput={(params) => (
-        <rootProps.components.BaseTextField
+        <rootProps.slots.baseTextField
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -83,7 +82,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           inputRef={focusElementRef}
           type={type || 'text'}
           {...TextFieldProps}
-          {...rootProps.componentsProps?.baseTextField}
+          {...rootProps.slotProps?.baseTextField}
         />
       )}
       {...other}
@@ -105,9 +104,9 @@ GridFilterInputMultipleValue.propTypes = {
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
   type: PropTypes.oneOf(['number', 'text']),

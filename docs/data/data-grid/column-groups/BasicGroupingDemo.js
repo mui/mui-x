@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -54,12 +54,12 @@ const columnGroupingModel = [
 export default function BasicGroupingDemo() {
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         experimentalFeatures={{ columnGrouping: true }}
         rows={rows}
         columns={columns}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
     </div>

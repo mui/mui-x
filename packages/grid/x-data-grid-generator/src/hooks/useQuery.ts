@@ -5,7 +5,7 @@ import {
   GridFilterModel,
   GridSortModel,
   GridRowId,
-  GridLinkOperator,
+  GridLogicOperator,
   GridFilterOperator,
   GridColDef,
 } from '@mui/x-data-grid-pro';
@@ -63,18 +63,18 @@ const getFilteredRows = (
     return rows;
   }
 
-  const valueGetters = filterModel.items.map(({ columnField }) =>
+  const valueGetters = filterModel.items.map(({ field }) =>
     simplifiedValueGetter(
-      columnField,
-      columnsWithDefaultColDef.find(({ field }) => field === columnField) as any,
+      field,
+      columnsWithDefaultColDef.find((column) => column.field === field) as any,
     ),
   );
   const filterFunctions = filterModel.items.map((filterItem) => {
-    const { columnField, operatorValue } = filterItem;
-    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
+    const { field, operator } = filterItem;
+    const colDef = columnsWithDefaultColDef.find((column) => column.field === field) as any;
 
     const filterOperator: any = colDef.filterOperators.find(
-      ({ value }: GridFilterOperator) => operatorValue === value,
+      ({ value }: GridFilterOperator) => operator === value,
     );
 
     let parsedValue = filterItem.value;
@@ -88,7 +88,7 @@ const getFilteredRows = (
     return filterOperator?.getApplyFilterFn({ filterItem, value: parsedValue }, colDef);
   });
 
-  if (filterModel.linkOperator === GridLinkOperator.Or) {
+  if (filterModel.logicOperator === GridLogicOperator.Or) {
     return rows.filter((row: GridRowModel) =>
       filterModel.items.some((_, index) => {
         const value = valueGetters[index](row);
@@ -229,8 +229,8 @@ export const createFakeServer = (
     const queryOptionsRef = React.useRef(queryOptions);
     const [response, setResponse] = React.useState<{
       pageInfo: PageInfo;
-      data: GridRowModel[];
-    }>({ pageInfo: {}, data: [] });
+      rows: GridRowModel[];
+    }>({ pageInfo: {}, rows: [] });
     const [isLoading, setIsLoading] = React.useState<boolean>(dataGenerationIsLoading);
 
     React.useEffect(() => {
@@ -258,7 +258,7 @@ export const createFakeServer = (
           return;
         }
         const newRep = {
-          data: returnedRows,
+          rows: returnedRows,
           pageInfo: {
             totalRowCount,
             nextCursor,

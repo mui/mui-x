@@ -1,8 +1,7 @@
 <DataGridPro
-  components={{ Toolbar: CustomToolbar }}
+  slots={{ toolbar: CustomToolbar }}
   loading={loading}
   apiRef={apiRef}
   pagination
-  initialState={{ columns: { columnVisibilityModel: {} } }}
   {...data}
 />

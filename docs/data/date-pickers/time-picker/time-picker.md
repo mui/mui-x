@@ -1,66 +1,94 @@
 ---
 product: date-pickers
 title: React Time Picker component
-components: DesktopTimePicker, MobileTimePicker, StaticTimePicker, TimePicker, ClockPicker
+components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/time-pickers
+materialDesign: https://m2.material.io/components/time-pickers
 ---
 
-# Time picker
+# Time Picker
 
-<p class="description">Time pickers allow the user to select a single time.</p>
-
-The selected time is indicated by the filled circle at the end of the clock hand.
+<p class="description">The Time Picker component lets the user select a time.</p>
 
 ## Basic usage
 
-The time picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
-
 {{"demo": "BasicTimePicker.js"}}
 
-## Static mode
+## Component composition
 
-It's possible to render any time picker inline. This will enable building custom popover/modal containers.
+The component is built using the `TimeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
+All the documented props of those two components can also be passed to the Time Picker component.
 
-{{"demo": "StaticTimePickerDemo.js", "bg": true}}
+Check-out their documentation page for more information:
 
-## Responsiveness
+- [Time Field](/x/react-date-pickers/time-field/)
+- [Digital Clock](/x/react-date-pickers/digital-clock/)
+- [Time Clock](/x/react-date-pickers/time-clock/)
 
-The time picker component is designed and optimized for the device it runs on.
+## Uncontrolled vs. Controlled
 
-- The `MobileTimePicker` component works best for touch devices and small screens.
-- The `DesktopTimePicker` component works best for mouse devices and large screens.
+The component can be uncontrolled or controlled.
+
+{{"demo": "TimePickerValue.js"}}
+
+## Available components
+
+The component is available in four variants:
+
+- The `DesktopTimePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
+
+- The `MobileTimePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
+
+- The `TimePicker` component which renders `DesktopTimePicker` or `MobileTimePicker` depending on the device it runs on.
+
+- The `StaticTimePicker` component which renders without the popover/modal and field.
+
+{{"demo": "ResponsiveTimePickers.js"}}
 
 By default, the `TimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
-
-{{"demo": "ResponsiveTimePickers.js"}}
+:::warning
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
+:::
 
 ## Form props
 
-The time picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsTimePickers.js"}}
 
-## Time validation
+## Views
 
-{{"demo": "TimeValidationTimePicker.js"}}
+The component supports three views: `hours`, `minutes` and `seconds`.
 
-## Landscape
+By default, the `hours` and `minutes` views are enabled.
+Use the `views` prop to change this behavior:
+
+{{"demo": "TimePickerViews.js"}}
+
+By default, the component renders the `hours` view on mount.
+Use the `openTo` prop to change this behavior:
+
+{{"demo": "TimePickerOpenTo.js"}}
+
+:::success
+The views will appear in the order defined by the `views` array.
+If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow.
+:::
+
+## Landscape orientation
+
+By default, the Time Picker component automatically sets the orientation based on the `window.orientation` value.
+
+You can force a specific orientation using the `orientation` prop.
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
 
-## Sub-components
+## Validation
 
-Some lower-level sub-components (`ClockPicker`) are also exported. These are rendered without a wrapper or outer logic (masked input, date values parsing and validation, etc.).
-
-{{"demo": "SubComponentsTimePickers.js"}}
-
-## Seconds
-
-The seconds input can be used for selection of a precise time point.
-
-{{"demo": "SecondsTimePicker.js"}}
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)

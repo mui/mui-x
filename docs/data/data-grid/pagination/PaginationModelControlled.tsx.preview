@@ -1,0 +1,5 @@
+<DataGrid
+  paginationModel={paginationModel}
+  onPaginationModelChange={setPaginationModel}
+  {...data}
+/>

@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-// import { CalendarPickerView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'saat',
+  minutes: 'dakika',
+  seconds: 'saniye',
+  meridiem: 'öğleden sonra',
+};
 
 const trTRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,8 +17,10 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'sonraki görünüm',
   openNextView: 'önceki görünüm',
-  // calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'yıl görünümü açık, takvim görünümüne geç'
+      : 'takvim görünümü açık, yıl görünümüne geç',
 
   // DateRange placeholders
   start: 'Başlangıç',
@@ -24,24 +33,52 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Bugün',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Tarih Seç',
+  dateTimePickerToolbarTitle: 'Tarih & Saat seç',
+  timePickerToolbarTitle: 'Saat seç',
+  dateRangePickerToolbarTitle: 'Tarih aralığı seçin',
 
   // Clock labels
-  // clockLabelText: (view, time, adapter) => `Select ${view}. ${time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`}`,
-  // hoursClockNumberText: hours => `${hours} hours`,
-  // minutesClockNumberText: minutes => `${minutes} minutes`,
-  // secondsClockNumberText: seconds => `${seconds} seconds`,
+  clockLabelText: (view, time, adapter) =>
+    `${timeViews[view]} seç.  ${
+      time === null ? 'Zaman seçilmedi' : `Seçilen zaman: ${adapter.format(time, 'fullTime')}`
+    }`,
+  hoursClockNumberText: (hours) => `${hours} saat`,
+  minutesClockNumberText: (minutes) => `${minutes} dakika`,
+  secondsClockNumberText: (seconds) => `${seconds} saniye`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Seç ${timeViews[view]}`,
+
+  // Calendar labels
+  calendarWeekNumberHeaderLabel: 'Hafta numarası',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Hafta ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
-  // openDatePickerDialogue: (rawValue, utils) => rawValue && utils.isValid(utils.date(rawValue)) ? `Choose date, selected date is ${utils.format(utils.date(rawValue)!, 'fullDate')}` : 'Choose date',
-  // openTimePickerDialogue: (rawValue, utils) => rawValue && utils.isValid(utils.date(rawValue)) ? `Choose time, selected time is ${utils.format(utils.date(rawValue)!, 'fullTime')}` : 'Choose time',
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Tarih seçin, seçilen tarih: ${utils.format(value, 'fullDate')}`
+      : 'Tarih seç',
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Saat seçin, seçilen saat: ${utils.format(value, 'fullTime')}`
+      : 'Saat seç',
 
   // Table labels
-  // timeTableLabel: 'pick time',
-  // dateTableLabel: 'pick date',
+  timeTableLabel: 'saat seç',
+  dateTableLabel: 'tarih seç',
+
+  // Field section placeholders
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'AAA' : 'AA'),
+  fieldDayPlaceholder: () => 'GG',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'HHH' : 'HH'),
+  fieldHoursPlaceholder: () => 'ss',
+  fieldMinutesPlaceholder: () => 'dd',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const trTR = getPickersLocalization(trTRPickers);

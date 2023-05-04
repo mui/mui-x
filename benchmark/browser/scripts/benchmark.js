@@ -9,7 +9,9 @@ const http = require('http');
 const PORT = 1122;
 
 function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 function createServer(options) {

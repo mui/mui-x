@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GridColumns,
+  GridColDef,
   useGridApiRef,
   DataGridPremium,
   GridApi,
@@ -8,8 +8,8 @@ import {
   DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
+import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import Excel from 'exceljs';
 
@@ -20,7 +20,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
+  const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
   const rows = [
     {
       id: 0,
@@ -41,14 +41,14 @@ describe('<DataGridPremium /> - Export Excel', () => {
     autoHeight: isJSDOM,
   };
 
-  const TestCaseExcelExport = (props: Partial<DataGridPremiumProps>) => {
+  function TestCaseExcelExport(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   describe('export interface', () => {
     it('should generate a file', async () => {
@@ -59,7 +59,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     it('should display export option', () => {
       render(<TestCaseExcelExport components={{ Toolbar: GridToolbar }} />);
 
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
     });
@@ -67,7 +67,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
   describe('generated file', () => {
     it(`should export column with correct type`, async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -95,10 +95,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
-      const workbook = await act(() => apiRef.current.getDataAsExcel());
+      const workbook = await apiRef.current.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -123,7 +123,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it(`should export singleSelect options`, async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -139,10 +139,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
-      const workbook = await act(() => apiRef.current.getDataAsExcel());
+      const workbook = await apiRef.current.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('option');
@@ -151,8 +151,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it(`should not export actions columns`, async () => {
-      const Icon = () => <span>i</span>;
-      const Test = () => {
+      function Icon() {
+        return <span>i</span>;
+      }
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -177,10 +179,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
-      const workbook = await act(() => apiRef.current.getDataAsExcel());
+      const workbook = await apiRef.current.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       expect(worksheet.getCell('A1').value).to.equal('str');
@@ -190,7 +192,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it('should merge cells with `colSpan`', async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 200 }}>
@@ -215,10 +217,10 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
-      const workbook = await act(() => apiRef.current.getDataAsExcel());
+      const workbook = await apiRef.current.getDataAsExcel();
       const worksheet = workbook!.worksheets[0];
 
       // 1-based index + 1 for column header row
@@ -242,7 +244,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
     });
 
     it('should export hidden columns when `allColumns=true`', async () => {
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
         return (
           <div style={{ width: 300, height: 200 }}>
@@ -268,7 +270,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
             />
           </div>
         );
-      };
+      }
       render(<Test />);
 
       const workbook = await apiRef.current.getDataAsExcel({
@@ -281,6 +283,125 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(headerRow.getCell(2).value).to.equal('col1');
       expect(headerRow.getCell(3).value).to.equal('col2');
       expect(headerRow.getCell(4).value).to.equal('col3');
+    });
+
+    it(`should export column grouping`, async () => {
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={[{ field: 'col1' }, { field: 'col2' }, { field: 'col3' }]}
+              rows={[
+                {
+                  id: 1,
+                  col1: 1,
+                  col2: 2,
+                  col3: 3,
+                },
+              ]}
+              columnGroupingModel={[
+                { groupId: 'group1', children: [{ field: 'col1' }] },
+                {
+                  groupId: 'group23',
+                  children: [
+                    { field: 'col2' },
+                    {
+                      groupId: 'group3',
+                      headerName: 'special col3',
+                      children: [{ field: 'col3' }],
+                    },
+                  ],
+                },
+              ]}
+              experimentalFeatures={{ columnGrouping: true }}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      }
+      render(<Test />);
+
+      const workbook = await apiRef.current.getDataAsExcel();
+      const worksheet = workbook!.worksheets[0];
+
+      // line 1: | group1 | group23 |
+      expect(worksheet.getCell('A1').value).to.equal('group1');
+      expect(worksheet.getCell('B1').value).to.equal('group23');
+
+      expect(worksheet.getCell('A1').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('B1').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('C1').type).to.equal(Excel.ValueType.Merge);
+
+      // line 2: |  |  | special col3 |
+
+      expect(worksheet.getCell('A2').value).to.equal(null);
+      expect(worksheet.getCell('B2').value).to.equal(null);
+      expect(worksheet.getCell('C2').value).to.equal('special col3');
+
+      expect(worksheet.getCell('A2').type).to.equal(Excel.ValueType.Null);
+      expect(worksheet.getCell('B2').type).to.equal(Excel.ValueType.Null);
+      expect(worksheet.getCell('C2').type).to.equal(Excel.ValueType.String);
+      // line 3: | col1 | col2 | col3 |
+
+      expect(worksheet.getCell('A3').value).to.equal('col1');
+      expect(worksheet.getCell('B3').value).to.equal('col2');
+      expect(worksheet.getCell('C3').value).to.equal('col3');
+
+      expect(worksheet.getCell('A3').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('B3').type).to.equal(Excel.ValueType.String);
+      expect(worksheet.getCell('C3').type).to.equal(Excel.ValueType.String);
+    });
+  });
+
+  describe('web worker', () => {
+    let workerMock: { postMessage: SinonSpy };
+
+    beforeEach(() => {
+      workerMock = {
+        postMessage: spy(),
+      };
+    });
+
+    it('should not call getDataAsExcel', async () => {
+      render(<TestCaseExcelExport />);
+      const getDataAsExcelSpy = spy(apiRef.current, 'getDataAsExcel');
+      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      expect(getDataAsExcelSpy.calledOnce).to.equal(false);
+    });
+
+    it('should post a message to the web worker with the serialized columns', async () => {
+      render(<TestCaseExcelExport />);
+      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      expect(workerMock.postMessage.lastCall.args[0].serializedColumns).to.deep.equal([
+        { key: 'id', headerText: 'id', style: {}, width: 100 / 7.5 },
+        { key: 'brand', headerText: 'Brand', style: {}, width: 100 / 7.5 },
+      ]);
+    });
+
+    it('should post a message to the web worker with the serialized rows', async () => {
+      render(<TestCaseExcelExport />);
+      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      expect(workerMock.postMessage.lastCall.args[0].serializedRows).to.deep.equal([
+        {
+          dataValidation: {},
+          mergedCells: [],
+          outlineLevel: 0,
+          row: baselineProps.rows[0],
+        },
+        {
+          dataValidation: {},
+          mergedCells: [],
+          outlineLevel: 0,
+          row: baselineProps.rows[1],
+        },
+        {
+          dataValidation: {},
+          mergedCells: [],
+          outlineLevel: 0,
+          row: baselineProps.rows[2],
+        },
+      ]);
     });
   });
 });

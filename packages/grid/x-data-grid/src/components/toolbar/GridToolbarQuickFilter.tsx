@@ -1,28 +1,30 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import { debounce } from '@mui/material/utils';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { GridFilterModel } from '../../models/gridFilterModel';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { isDeepEqual } from '../../utils/utils';
+
+type OwnerState = DataGridProcessedProps;
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   width: 'auto',
   paddingBottom: theme.spacing(0.5),
   '& input': {
     marginLeft: theme.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
   [`& input[type=search]::-ms-clear,
 & input[type=search]::-ms-reveal`]: {
@@ -125,7 +127,8 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
 
   return (
     <GridToolbarQuickFilterRoot
-      as={rootProps.components.BaseTextField}
+      as={rootProps.slots.baseTextField}
+      ownerState={rootProps}
       variant="standard"
       value={searchValue}
       onChange={handleSearchValueChange}
@@ -133,20 +136,21 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
       InputProps={{
-        startAdornment: <rootProps.components.QuickFilterIcon fontSize="small" />,
+        startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
         endAdornment: (
-          <IconButton
+          <rootProps.slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
             sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
             onClick={handleSearchReset}
+            {...rootProps.slotProps?.baseIconButton}
           >
-            <rootProps.components.QuickFilterClearIcon fontSize="small" />
-          </IconButton>
+            <rootProps.slots.quickFilterClearIcon fontSize="small" />
+          </rootProps.slots.baseIconButton>
         ),
       }}
       {...other}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotProps?.baseTextField}
     />
   );
 }

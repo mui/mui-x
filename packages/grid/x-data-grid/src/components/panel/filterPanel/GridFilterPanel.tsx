@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
-import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridAddIcon } from '../../icons';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
@@ -12,13 +11,25 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+
+export interface GetColumnForNewFilterArgs {
+  currentFilters: GridFilterItem[];
+  columns: GridStateColDef[];
+}
 
 export interface GridFilterPanelProps
-  extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
+  extends Pick<GridFilterFormProps, 'logicOperators' | 'columnsSort'> {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Function that returns the next filter item to be picked as default filter.
+   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
+   * @returns {GridColDef['field']} The field to be used for the next filter or `null` to prevent adding a filter.
+   */
+  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => GridColDef['field'] | null;
   /**
    * Props passed to each filter form.
    */
@@ -26,17 +37,35 @@ export interface GridFilterPanelProps
     GridFilterFormProps,
     | 'columnsSort'
     | 'deleteIconProps'
-    | 'linkOperatorInputProps'
+    | 'logicOperatorInputProps'
     | 'operatorInputProps'
     | 'columnInputProps'
     | 'valueInputProps'
+    | 'filterColumns'
   >;
+
+  /*
+   * If `true`, the `Add filter` button will not be displayed.
+   * @default false
+   */
+  disableAddFilterButton?: boolean;
+  /*
+   * If `true`, the `Remove all` button will be disabled
+   * @default false
+   */
+  disableRemoveAllButton?: boolean;
 
   /**
    * @ignore - do not document.
    */
   children?: React.ReactNode;
 }
+
+const getGridFilter = (col: GridStateColDef): GridFilterItem => ({
+  field: col.field,
+  operator: col.filterOperators![0].value,
+  id: Math.round(Math.random() * 1e5),
+});
 
 const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
   function GridFilterPanel(props, ref) {
@@ -45,12 +74,16 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
     const lastFilterRef = React.useRef<any>(null);
+    const placeholderFilter = React.useRef<GridFilterItem | null>(null);
 
     const {
-      linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
+      logicOperators = [GridLogicOperator.And, GridLogicOperator.Or],
       columnsSort,
       filterFormProps,
+      getColumnForNewFilter,
       children,
+      disableAddFilterButton = false,
+      disableRemoveAllButton = false,
       ...other
     } = props;
 
@@ -61,47 +94,88 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       [apiRef],
     );
 
-    const applyFilterLinkOperator = React.useCallback(
-      (operator: GridLinkOperator) => {
-        apiRef.current.setFilterLinkOperator(operator);
+    const applyFilterLogicOperator = React.useCallback(
+      (operator: GridLogicOperator) => {
+        apiRef.current.setFilterLogicOperator(operator);
       },
       [apiRef],
     );
 
-    const getDefaultItem = React.useCallback((): GridFilterItem | null => {
-      const firstColumnWithOperator = filterableColumns.find(
-        (colDef) => colDef.filterOperators?.length,
-      );
+    const getDefaultFilter = React.useCallback((): GridFilterItem | null => {
+      let nextColumnWithOperator;
+      if (getColumnForNewFilter && typeof getColumnForNewFilter === 'function') {
+        // To allow override the column for default (first) filter
+        const nextFieldName = getColumnForNewFilter({
+          currentFilters: filterModel?.items || [],
+          columns: filterableColumns,
+        });
 
-      if (!firstColumnWithOperator) {
+        if (nextFieldName === null) {
+          return null;
+        }
+
+        nextColumnWithOperator = filterableColumns.find(({ field }) => field === nextFieldName);
+      } else {
+        nextColumnWithOperator = filterableColumns.find((colDef) => colDef.filterOperators?.length);
+      }
+
+      if (!nextColumnWithOperator) {
         return null;
       }
 
-      return {
-        columnField: firstColumnWithOperator.field,
-        operatorValue: firstColumnWithOperator.filterOperators![0].value,
-        id: Math.round(Math.random() * 1e5),
-      };
-    }, [filterableColumns]);
+      return getGridFilter(nextColumnWithOperator);
+    }, [filterModel?.items, filterableColumns, getColumnForNewFilter]);
+
+    const getNewFilter = React.useCallback((): GridFilterItem | null => {
+      if (getColumnForNewFilter === undefined || typeof getColumnForNewFilter !== 'function') {
+        return getDefaultFilter();
+      }
+
+      const currentFilters = filterModel.items.length
+        ? filterModel.items
+        : [getDefaultFilter()].filter(Boolean);
+
+      // If no items are there in filterModel, we have to pass defaultFilter
+      const nextColumnFieldName = getColumnForNewFilter({
+        currentFilters: currentFilters as GridFilterItem[],
+        columns: filterableColumns,
+      });
+
+      if (nextColumnFieldName === null) {
+        return null;
+      }
+
+      const nextColumnWithOperator = filterableColumns.find(
+        ({ field }) => field === nextColumnFieldName,
+      );
+
+      if (!nextColumnWithOperator) {
+        return null;
+      }
+
+      return getGridFilter(nextColumnWithOperator);
+    }, [filterModel.items, filterableColumns, getColumnForNewFilter, getDefaultFilter]);
 
     const items = React.useMemo<GridFilterItem[]>(() => {
       if (filterModel.items.length) {
         return filterModel.items;
       }
 
-      const defaultItem = getDefaultItem();
+      if (!placeholderFilter.current) {
+        placeholderFilter.current = getDefaultFilter();
+      }
 
-      return defaultItem ? [defaultItem] : [];
-    }, [filterModel.items, getDefaultItem]);
+      return placeholderFilter.current ? [placeholderFilter.current] : [];
+    }, [filterModel.items, getDefaultFilter]);
 
     const hasMultipleFilters = items.length > 1;
 
     const addNewFilter = () => {
-      const defaultItem = getDefaultItem();
-      if (!defaultItem) {
+      const newFilter = getNewFilter();
+      if (!newFilter) {
         return;
       }
-      apiRef.current.upsertFilterItems([...items, defaultItem]);
+      apiRef.current.upsertFilterItems([...items, newFilter]);
     };
 
     const deleteFilter = React.useCallback(
@@ -115,15 +189,23 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       [apiRef, items.length],
     );
 
+    const handleRemoveAll = () => {
+      if (items.length === 1 && items[0].value === undefined) {
+        apiRef.current.deleteFilterItem(items[0]);
+        apiRef.current.hideFilterPanel();
+      }
+      apiRef.current.setFilterModel({ ...filterModel, items: [] });
+    };
+
     React.useEffect(() => {
       if (
-        linkOperators.length > 0 &&
-        filterModel.linkOperator &&
-        !linkOperators.includes(filterModel.linkOperator)
+        logicOperators.length > 0 &&
+        filterModel.logicOperator &&
+        !logicOperators.includes(filterModel.logicOperator)
       ) {
-        applyFilterLinkOperator(linkOperators[0]);
+        applyFilterLogicOperator(logicOperators[0]);
       }
-    }, [linkOperators, applyFilterLinkOperator, filterModel.linkOperator]);
+    }, [logicOperators, applyFilterLogicOperator, filterModel.logicOperator]);
 
     React.useEffect(() => {
       if (items.length > 0) {
@@ -142,27 +224,42 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
               deleteFilter={deleteFilter}
               hasMultipleFilters={hasMultipleFilters}
               showMultiFilterOperators={index > 0}
-              multiFilterOperator={filterModel.linkOperator}
+              multiFilterOperator={filterModel.logicOperator}
               disableMultiFilterOperator={index !== 1}
-              applyMultiFilterOperatorChanges={applyFilterLinkOperator}
+              applyMultiFilterOperatorChanges={applyFilterLogicOperator}
               focusElementRef={index === items.length - 1 ? lastFilterRef : null}
-              linkOperators={linkOperators}
+              logicOperators={logicOperators}
               columnsSort={columnsSort}
               {...filterFormProps}
             />
           ))}
         </GridPanelContent>
-        {!rootProps.disableMultipleColumnsFiltering && (
+        {!rootProps.disableMultipleColumnsFiltering &&
+        !(disableAddFilterButton && disableRemoveAllButton) ? (
           <GridPanelFooter>
-            <rootProps.components.BaseButton
-              onClick={addNewFilter}
-              startIcon={<GridAddIcon />}
-              {...rootProps.componentsProps?.baseButton}
-            >
-              {apiRef.current.getLocaleText('filterPanelAddFilter')}
-            </rootProps.components.BaseButton>
+            {!disableAddFilterButton ? (
+              <rootProps.slots.baseButton
+                onClick={addNewFilter}
+                startIcon={<rootProps.slots.filterPanelAddIcon />}
+                {...rootProps.slotProps?.baseButton}
+              >
+                {apiRef.current.getLocaleText('filterPanelAddFilter')}
+              </rootProps.slots.baseButton>
+            ) : (
+              <span />
+            )}
+
+            {!disableRemoveAllButton ? (
+              <rootProps.slots.baseButton
+                onClick={handleRemoveAll}
+                startIcon={<rootProps.slots.filterPanelRemoveAllIcon />}
+                {...rootProps.slotProps?.baseButton}
+              >
+                {apiRef.current.getLocaleText('filterPanelRemoveAll')}
+              </rootProps.slots.baseButton>
+            ) : null}
           </GridPanelFooter>
-        )}
+        ) : null}
       </GridPanelWrapper>
     );
   },
@@ -182,6 +279,8 @@ GridFilterPanel.propTypes = {
    * If not specified, the order is derived from the `columns` prop.
    */
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
+  disableAddFilterButton: PropTypes.bool,
+  disableRemoveAllButton: PropTypes.bool,
   /**
    * Props passed to each filter form.
    */
@@ -189,15 +288,22 @@ GridFilterPanel.propTypes = {
     columnInputProps: PropTypes.any,
     columnsSort: PropTypes.oneOf(['asc', 'desc']),
     deleteIconProps: PropTypes.any,
-    linkOperatorInputProps: PropTypes.any,
+    filterColumns: PropTypes.func,
+    logicOperatorInputProps: PropTypes.any,
     operatorInputProps: PropTypes.any,
     valueInputProps: PropTypes.any,
   }),
   /**
-   * Sets the available logic operators.
-   * @default [GridLinkOperator.And, GridLinkOperator.Or]
+   * Function that returns the next filter item to be picked as default filter.
+   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
+   * @returns {GridColDef['field']} The field to be used for the next filter or `null` to prevent adding a filter.
    */
-  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
+  getColumnForNewFilter: PropTypes.func,
+  /**
+   * Sets the available logic operators.
+   * @default [GridLogicOperator.And, GridLogicOperator.Or]
+   */
+  logicOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

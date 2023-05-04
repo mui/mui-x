@@ -3,7 +3,7 @@ import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridFooterCell } from './GridFooterCell';
 
-const GridGroupingColumnFooterCell = (props: GridRenderCellParams) => {
+function GridGroupingColumnFooterCell(props: GridRenderCellParams) {
   const { rowNode } = props;
 
   const rootProps = useGridRootProps();
@@ -18,6 +18,6 @@ const GridGroupingColumnFooterCell = (props: GridRenderCellParams) => {
   }
 
   return <GridFooterCell sx={{ ml: marginLeft }} {...props} />;
-};
+}
 
 export { GridGroupingColumnFooterCell };

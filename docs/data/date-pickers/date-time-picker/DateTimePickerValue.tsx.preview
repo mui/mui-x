@@ -1,0 +1,9 @@
+<DateTimePicker
+  label="Uncontrolled picker"
+  defaultValue={dayjs('2022-04-17T15:30')}
+/>
+<DateTimePicker
+  label="Controlled picker"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>

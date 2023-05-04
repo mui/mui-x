@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { createUseGridApiEventHandler } from './useGridApiEventHandler';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
@@ -37,10 +36,10 @@ describe('useGridApiEventHandler', () => {
         current: { subscribeEvent: spy(() => unsubscribe) },
       };
 
-      const Test = () => {
+      function Test() {
         useGridApiEventHandler(apiRef as any, 'cellClick', noop);
         return null;
-      };
+      }
 
       const { unmount } = render(<Test />);
 
@@ -69,10 +68,10 @@ describe('useGridApiEventHandler', () => {
         current: { subscribeEvent: spy(() => unsubscribe) },
       };
 
-      const Test = () => {
+      function Test() {
         useGridApiEventHandler(apiRef as any, 'cellClick', noop);
         return null;
-      };
+      }
 
       const { unmount } = render(<Test />);
 

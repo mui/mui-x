@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
@@ -12,14 +11,10 @@ const enUSPickers: PickersLocaleText<any> = {
   // View navigation
   openPreviousView: 'open previous view',
   openNextView: 'open next view',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
-    isKeyboardInputOpen
-      ? `text input view is open, go to ${viewType} view`
-      : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -32,10 +27,10 @@ const enUSPickers: PickersLocaleText<any> = {
   todayButtonLabel: 'Today',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Select date',
-  dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  timePickerDefaultToolbarTitle: 'Select time',
-  dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Select date',
+  dateTimePickerToolbarTitle: 'Select date & time',
+  timePickerToolbarTitle: 'Select time',
+  dateRangePickerToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -46,19 +41,38 @@ const enUSPickers: PickersLocaleText<any> = {
   minutesClockNumberText: (minutes) => `${minutes} minutes`,
   secondsClockNumberText: (seconds) => `${seconds} seconds`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Select ${view}`,
+
+  // Calendar labels
+  calendarWeekNumberHeaderLabel: 'Week number',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
+
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Choose date, selected date is ${utils.format(utils.date(rawValue)!, 'fullDate')}`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
       : 'Choose date',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `Choose time, selected time is ${utils.format(utils.date(rawValue)!, 'fullTime')}`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
       : 'Choose time',
 
   // Table labels
   timeTableLabel: 'pick time',
   dateTableLabel: 'pick date',
+
+  // Field section placeholders
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const DEFAULT_LOCALE = enUSPickers;

@@ -1,0 +1,6 @@
+<DemoItem label="Uncontrolled clock">
+  <TimeClock defaultValue={dayjs('2022-04-17T15:30')} />
+</DemoItem>
+<DemoItem label="Controlled clock">
+  <TimeClock value={value} onChange={(newValue) => setValue(newValue)} />
+</DemoItem>

@@ -6,7 +6,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Brak danych',
   noResultsOverlayLabel: 'Nie znaleziono wyników.',
-  errorOverlayDefaultLabel: 'Wystąpił błąd.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Wysokość rzędu',
@@ -27,16 +26,16 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Wyszukaj…',
+  toolbarQuickFilterLabel: 'Szukaj',
+  toolbarQuickFilterDeleteIconLabel: 'Wyczyść',
 
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
   toolbarExportPrint: 'Drukuj',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Pobierz jako plik Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Znajdź kolumnę',
@@ -47,11 +46,10 @@ const plPLGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Usuń',
-  filterPanelLinkOperator: 'Operator logiczny',
-  filterPanelOperators: 'Operator',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Operator logiczny',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
   filterPanelColumns: 'Kolumny',
@@ -81,6 +79,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Ukryj',
   columnMenuUnsort: 'Anuluj sortowanie',
@@ -137,7 +136,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Zwiń',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Porządkowanie wierszy',
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',

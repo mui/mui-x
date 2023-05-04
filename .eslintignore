@@ -1,9 +1,18 @@
 /.git
 /docs/.next
 /docs/export
+/docs/pages/playground/
 /lerna.json
 /packages/grid/x-data-grid/src/lib
+/packages/x-codemod/src/**/*.spec.js
+build
 CHANGELOG.md
 dist
 node_modules
-build
+.nyc_output
+
+# These come from crowdin.
+# If we would commit changes crowdin would immediately try to revert.
+# If we want to format these files we'd need to do it in crowdin
+docs/**/*-pt.md
+docs/**/*-zh.md

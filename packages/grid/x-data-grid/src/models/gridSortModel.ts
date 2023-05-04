@@ -1,4 +1,4 @@
-import { GridRowId, GridRowTreeNodeConfig } from './gridRows';
+import { GridRowId, GridTreeNode } from './gridRows';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
@@ -6,11 +6,7 @@ export interface GridSortCellParams<V = any> {
   id: GridRowId;
   field: string;
   value: V;
-  rowNode: GridRowTreeNodeConfig;
-
-  /**
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
-   */
+  rowNode: GridTreeNode;
   api: any;
 }
 

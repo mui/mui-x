@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useGridApiMethod } from '@mui/x-data-grid';
 import { getRowIdFromRowModel, GridStateInitializer } from '@mui/x-data-grid/internals';
 
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps, DataGridProProps } from '../../../models/dataGridProProps';
 import {
   GridPinnedRowsProp,
@@ -38,11 +38,7 @@ function createPinnedRowsInternalCache(
 export const rowPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId' | 'experimentalFeatures'>
 > = (state, props, apiRef) => {
-  if (!props.experimentalFeatures?.rowPinning) {
-    return state;
-  }
-
-  apiRef.current.unstable_caches.pinnedRows = createPinnedRowsInternalCache(
+  apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(
     props.pinnedRows,
     props.getRowId,
   );
@@ -60,23 +56,19 @@ export const rowPinningStateInitializer: GridStateInitializer<
 };
 
 export const useGridRowPinning = (
-  apiRef: React.MutableRefObject<GridApiPro>,
-  props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId' | 'experimentalFeatures'>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
+  props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>,
 ): void => {
   const setPinnedRows = React.useCallback<GridRowPinningApi['unstable_setPinnedRows']>(
     (newPinnedRows) => {
-      if (!props.experimentalFeatures?.rowPinning) {
-        return;
-      }
-
-      apiRef.current.unstable_caches.pinnedRows = createPinnedRowsInternalCache(
+      apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(
         newPinnedRows,
         props.getRowId,
       );
 
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateRows');
+      apiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
-    [apiRef, props.experimentalFeatures?.rowPinning, props.getRowId],
+    [apiRef, props.getRowId],
   );
 
   useGridApiMethod(
@@ -84,7 +76,7 @@ export const useGridRowPinning = (
     {
       unstable_setPinnedRows: setPinnedRows,
     },
-    'rowPinningApi',
+    'public',
   );
 
   const isFirstRender = React.useRef(true);

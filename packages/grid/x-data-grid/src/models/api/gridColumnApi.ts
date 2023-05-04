@@ -1,4 +1,4 @@
-import { GridColDef, GridColumnsMeta, GridStateColDef } from '../colDef/gridColDef';
+import { GridColDef, GridStateColDef } from '../colDef/gridColDef';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
@@ -23,12 +23,6 @@ export interface GridColumnApi {
    */
   getVisibleColumns: () => GridStateColDef[];
   /**
-   * Returns the [[GridColumnsMeta]] for each column.
-   * @returns {GridColumnsMeta[]} All [[GridColumnsMeta]] objects.
-   * @deprecatedUse Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
-   */
-  getColumnsMeta: () => GridColumnsMeta;
-  /**
    * Returns the index position of a column. By default, only the visible columns are considered.
    * Pass `false` to `useVisibleColumns` to consider all columns.
    * @param {string} field The column field.
@@ -42,12 +36,6 @@ export interface GridColumnApi {
    * @returns {number} The position in pixels.
    */
   getColumnPosition: (field: string) => number;
-  /**
-   * Updates the definition of a column.
-   * @param {GridColDef} col The new [[GridColDef]] object.
-   * @deprecated Use `apiRef.current.updateColumns` instead.
-   */
-  updateColumn: (col: GridColDef) => void;
   /**
    * Updates the definition of multiple columns at the same time.
    * @param {GridColDef[]} cols The new column [[GridColDef]] objects.
@@ -65,15 +53,24 @@ export interface GridColumnApi {
    */
   setColumnVisibility: (field: string, isVisible: boolean) => void;
   /**
-   * Moves a column from its original position to the position given by `targetIndexPosition`.
-   * @param {string} field The field name
-   * @param {number} targetIndexPosition The new position (0-based).
-   */
-  setColumnIndex: (field: string, targetIndexPosition: number) => void;
-  /**
    * Updates the width of a column.
    * @param {string} field The column field.
    * @param {number} width The new width.
    */
   setColumnWidth: (field: string, width: number) => void;
+  /**
+   * Gets the index of a column relative to the columns that are reachable by scroll.
+   * @param {string} field The column field.
+   * @returns {number} The index of the column.
+   */
+  getColumnIndexRelativeToVisibleColumns: (field: string) => number;
+}
+
+export interface GridColumnReorderApi {
+  /**
+   * Moves a column from its original position to the position given by `targetIndexPosition`.
+   * @param {string} field The field name
+   * @param {number} targetIndexPosition The new position (0-based).
+   */
+  setColumnIndex: (field: string, targetIndexPosition: number) => void;
 }

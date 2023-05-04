@@ -1,18 +1,21 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { GridRowId } from '@mui/x-data-grid';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { GridRowId, useGridRootProps } from '@mui/x-data-grid';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
+import { DataGridProProcessedProps } from '../models/dataGridProProps';
+
+type OwnerState = DataGridProProcessedProps;
 
 const DetailPanel = styled(Box, {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
   overridesResolver: (props, styles) => styles.detailPanel,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: 2,
   width: '100%',
   position: 'absolute',
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: (theme.vars || theme).palette.background.default,
   overflow: 'auto',
 }));
 
@@ -31,15 +34,17 @@ interface GridDetailPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   rowId: GridRowId;
 }
 
-const GridDetailPanel = (props: GridDetailPanelProps) => {
+function GridDetailPanel(props: GridDetailPanelProps) {
   const { rowId, height, style: styleProp = {}, ...other } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement>();
+  const rootProps = useGridRootProps() as DataGridProProcessedProps;
+  const ownerState = rootProps;
 
   React.useLayoutEffect(() => {
     if (height === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
       // Fallback for IE
-      apiRef.current.unstable_storeDetailPanelHeight(rowId, ref.current.clientHeight);
+      apiRef.current.storeDetailPanelHeight(rowId, ref.current.clientHeight);
     }
   }, [apiRef, height, rowId]);
 
@@ -56,7 +61,7 @@ const GridDetailPanel = (props: GridDetailPanelProps) => {
           ? entry.borderBoxSize[0].blockSize
           : entry.contentRect.height;
 
-      apiRef.current.unstable_storeDetailPanelHeight(rowId, observedHeight);
+      apiRef.current.storeDetailPanelHeight(rowId, observedHeight);
     });
 
     resizeObserver.observe(ref.current);
@@ -66,7 +71,7 @@ const GridDetailPanel = (props: GridDetailPanelProps) => {
 
   const style = { ...styleProp, height };
 
-  return <DetailPanel ref={ref} style={style} {...other} />;
-};
+  return <DetailPanel ref={ref} ownerState={ownerState} style={style} {...other} />;
+}
 
 export { GridDetailPanel };

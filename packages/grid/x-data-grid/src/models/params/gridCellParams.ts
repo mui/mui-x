@@ -1,12 +1,25 @@
+import * as React from 'react';
 import { GridCellMode } from '../gridCell';
-import { GridRowId, GridRowModel, GridRowTreeNodeConfig, GridValidRowModel } from '../gridRows';
+import {
+  GridRowId,
+  GridRowModel,
+  GridTreeNode,
+  GridTreeNodeWithRender,
+  GridValidRowModel,
+} from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
 import { GridEditCellProps } from '../gridEditRowModel';
+import { GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
-export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = V> {
+export interface GridCellParams<
+  R extends GridValidRowModel = any,
+  V = unknown,
+  F = V,
+  N extends GridTreeNode = GridTreeNode,
+> {
   /**
    * The grid row id.
    */
@@ -31,7 +44,7 @@ export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = 
   /**
    * The node of the row that the current cell belongs to.
    */
-  rowNode: GridRowTreeNodeConfig;
+  rowNode: N;
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -52,14 +65,6 @@ export interface GridCellParams<V = any, R extends GridValidRowModel = any, F = 
    * the tabIndex value.
    */
   tabIndex: 0 | -1;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: (id: GridRowId, field: string) => any;
 }
 
 export interface FocusElement {
@@ -69,13 +74,16 @@ export interface FocusElement {
 /**
  * GridCellParams containing api.
  */
-export interface GridRenderCellParams<V = any, R extends GridValidRowModel = any, F = V>
-  extends GridCellParams<V, R, F> {
+export interface GridRenderCellParams<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+  N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
+> extends GridCellParams<R, V, F, N> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: any;
+  api: GridApiCommunity;
   /**
    * A ref allowing to set imperative focus.
    * It can be passed to the element that should receive focus.
@@ -87,39 +95,36 @@ export interface GridRenderCellParams<V = any, R extends GridValidRowModel = any
 /**
  * GridEditCellProps containing api.
  */
-export interface GridRenderEditCellParams<V = any, R extends GridValidRowModel = any, F = V>
-  extends GridCellParams<V, R, F>,
+export interface GridRenderEditCellParams<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+  N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
+> extends GridCellParams<R, V, F, N>,
     GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: any;
+  api: GridApiCommunity;
 }
 
 /**
  * Parameters passed to `colDef.valueGetter`.
  */
-export interface GridValueGetterParams<V = any, R extends GridValidRowModel = GridValidRowModel>
-  extends Omit<GridCellParams<V, R, any>, 'formattedValue' | 'isEditable'> {
+export interface GridValueGetterParams<
+  R extends GridValidRowModel = any,
+  V = any,
+  N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
+> extends Omit<GridCellParams<R, V, any, N>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: any;
+  api: GridApiCommunity;
   /**
    * The default value for the cell that the `valueGetter` is overriding.
    */
-  value: GridCellParams<V, R, any>['value'];
+  value: GridCellParams<R, V, any>['value'];
 }
-
-/**
- * @deprecated Use `GridValueGetterParams` instead.
- */
-export type GridValueGetterFullParams<
-  V = any,
-  R extends GridValidRowModel = any,
-> = GridValueGetterParams<V, R>;
 
 /**
  * Object passed as parameter in the column [[GridColDef]] value setter callback.
@@ -154,9 +159,8 @@ export interface GridValueFormatterParams<V = any> {
   value: V;
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: any;
+  api: GridApiCommunity;
 }
 
 /**

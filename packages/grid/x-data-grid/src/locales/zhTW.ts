@@ -6,7 +6,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有資料',
   noResultsOverlayLabel: '沒有結果',
-  errorOverlayDefaultLabel: '發生錯誤',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -47,11 +46,10 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: '刪除',
-  filterPanelLinkOperator: '邏輯運算子',
-  filterPanelOperators: '運算子',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: '邏輯運算子',
+  filterPanelOperator: '運算子',
   filterPanelOperatorAnd: '且',
   filterPanelOperatorOr: '或',
   filterPanelColumns: '欄位',
@@ -81,6 +79,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '選單',
   columnMenuShowColumns: '顯示欄位',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '篩選器',
   columnMenuHideColumn: '隱藏',
   columnMenuUnsort: '預設排序',

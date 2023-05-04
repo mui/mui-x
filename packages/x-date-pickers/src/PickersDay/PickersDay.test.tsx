@@ -2,12 +2,9 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { describeConformance, fireEvent, screen } from '@mui/monorepo/test/utils';
+import ButtonBase from '@mui/material/ButtonBase';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<PickersDay />', () => {
   const { render } = createPickerRenderer();
@@ -16,12 +13,14 @@ describe('<PickersDay />', () => {
     <PickersDay
       day={adapterToUse.date()}
       outsideCurrentMonth={false}
+      isFirstVisibleCell={false}
+      isLastVisibleCell={false}
       selected
       onDaySelect={() => {}}
     />,
     () => ({
       classes,
-      inheritComponent: 'button',
+      inheritComponent: ButtonBase,
       render,
       wrapMount: wrapPickerMount,
       muiName: 'MuiPickersDay',
@@ -35,7 +34,15 @@ describe('<PickersDay />', () => {
   it('selects the date on click, Enter and Space', () => {
     const handleDaySelect = spy();
     const day = adapterToUse.date();
-    render(<PickersDay day={day} outsideCurrentMonth={false} onDaySelect={handleDaySelect} />);
+    render(
+      <PickersDay
+        day={day}
+        outsideCurrentMonth={false}
+        isFirstVisibleCell={false}
+        isLastVisibleCell={false}
+        onDaySelect={handleDaySelect}
+      />,
+    );
     const targetDay = screen.getByRole('button', { name: adapterToUse.format(day, 'dayOfMonth') });
 
     // A native button implies Enter and Space keydown behavior
@@ -57,6 +64,8 @@ describe('<PickersDay />', () => {
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         onDaySelect={() => {}}
         outsideCurrentMonth={false}
+        isFirstVisibleCell={false}
+        isLastVisibleCell={false}
       />,
     );
 
@@ -70,6 +79,8 @@ describe('<PickersDay />', () => {
       <PickersDay
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         outsideCurrentMonth={false}
+        isFirstVisibleCell={false}
+        isLastVisibleCell={false}
         onDaySelect={() => {}}
       >
         2 (free)

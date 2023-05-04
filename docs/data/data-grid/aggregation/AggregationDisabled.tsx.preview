@@ -2,5 +2,4 @@
   {...data}
   disableAggregation
   initialState={{ aggregation: { model: { gross: 'sum' } } }}
-  experimentalFeatures={{ aggregation: true }}
 />

@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -10,7 +9,7 @@ import {
   GridRowParams,
   GridCellParams,
   GridRowsProp,
-  GridColumns,
+  GridColDef,
   gridClasses,
   GridActionsCellItem,
   GridApi,
@@ -24,7 +23,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Events Params', () => {
   const { render, clock } = createRenderer();
 
-  const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
+  const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
     rows: [
       {
         id: 1,
@@ -56,14 +55,14 @@ describe('<DataGridPro /> - Events Params', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestEvents = (props: Partial<DataGridProProps>) => {
+  function TestEvents(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...props} disableVirtualization />
       </div>
     );
-  };
+  }
 
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
@@ -134,7 +133,7 @@ describe('<DataGridPro /> - Events Params', () => {
       render(<TestEvents onCellClick={handleClick} />);
       const header = screen
         .getByRole('columnheader', { name: 'first' })
-        .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
+        .querySelector('.MuiDataGrid-columnHeaderTitleContainer')!;
       fireEvent.click(header);
 
       const cell01 = getCell(0, 1);
@@ -218,41 +217,42 @@ describe('<DataGridPro /> - Events Params', () => {
     });
 
     it('should allow to prevent the default behavior while allowing the event to propagate', async () => {
-      const handleEditCellPropsChange = spy((params, event) => {
+      const handleCellEditStop = spy((params, event) => {
         event.defaultMuiPrevented = true;
       });
-      render(<TestEvents onEditCellPropsChange={handleEditCellPropsChange} />);
+      render(<TestEvents onCellEditStop={handleCellEditStop} />);
       const cell = getCell(1, 1);
+      expect(cell).not.to.have.class(gridClasses['cell--editing']);
       fireEvent.doubleClick(cell);
+      expect(cell).to.have.class(gridClasses['cell--editing']);
+
       const input = cell.querySelector('input')!;
-
-      fireEvent.change(input, { target: { value: 'Lisa' } });
-
-      clock.tick(500);
-      expect(handleEditCellPropsChange.callCount).to.equal(1);
       fireEvent.keyDown(input, { key: 'Enter' });
-
-      await waitFor(() => {
-        expect(cell).to.have.text('Jack');
-      });
+      expect(handleCellEditStop.callCount).to.equal(1);
+      expect(cell).to.have.class(gridClasses['cell--editing']);
     });
 
     it('should select a row by default', () => {
-      const handleSelection = spy();
-      render(<TestEvents onSelectionModelChange={handleSelection} />);
+      const handleRowSelectionModelChange = spy();
+      render(<TestEvents onRowSelectionModelChange={handleRowSelectionModelChange} />);
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleSelection.callCount).to.equal(1);
-      expect(handleSelection.lastCall.firstArg).to.deep.equal([2]);
+      expect(handleRowSelectionModelChange.callCount).to.equal(1);
+      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal([2]);
     });
 
-    it('should not select a row if props.disableSelectionOnClick', () => {
-      const handleSelection = spy();
-      render(<TestEvents onSelectionModelChange={handleSelection} disableSelectionOnClick />);
+    it('should not select a row if props.disableRowSelectionOnClick', () => {
+      const handleRowSelectionModelChange = spy();
+      render(
+        <TestEvents
+          onRowSelectionModelChange={handleRowSelectionModelChange}
+          disableRowSelectionOnClick
+        />,
+      );
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleSelection.callCount).to.equal(0);
+      expect(handleRowSelectionModelChange.callCount).to.equal(0);
     });
   });
 
@@ -275,7 +275,7 @@ describe('<DataGridPro /> - Events Params', () => {
 
     it('should not be called when clicking the checkbox added by checkboxSelection', () => {
       render(<TestEvents onRowClick={push('rowClick')} checkboxSelection />);
-      const cell11 = getCell(1, 0).querySelector('input');
+      const cell11 = getCell(1, 0).querySelector('input')!;
       fireEvent.click(cell11);
       expect(eventStack).to.deep.equal([]);
     });
@@ -324,7 +324,7 @@ describe('<DataGridPro /> - Events Params', () => {
       render(<TestEvents onRowClick={push('rowClick')} />);
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
-      fireEvent.click(cell.querySelector('input'));
+      fireEvent.click(cell.querySelector('input')!);
       expect(eventStack).to.deep.equal([]);
     });
   });
@@ -332,7 +332,7 @@ describe('<DataGridPro /> - Events Params', () => {
   it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
     const handleRowsScrollEnd = spy();
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
-    act(() => apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 }));
+    act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
@@ -350,7 +350,7 @@ describe('<DataGridPro /> - Events Params', () => {
         rowCount={50}
       />,
     );
-    act(() => apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 }));
+    act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
     expect(handleFetchRows.callCount).to.equal(1);
   });
 
@@ -367,7 +367,7 @@ describe('<DataGridPro /> - Events Params', () => {
       { id: 5, brand: 'Reebok' },
     ];
     const handleRowsScrollEnd = spy();
-    const TestCase = ({ rows }: { rows: typeof baseRows }) => {
+    function TestCase({ rows }: { rows: typeof baseRows }) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGridPro
@@ -377,9 +377,9 @@ describe('<DataGridPro /> - Events Params', () => {
           />
         </div>
       );
-    };
+    }
     const { container, setProps } = render(<TestCase rows={baseRows} />);
-    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller');
+    const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
     // arbitrary number to make sure that the bottom of the grid window is reached.
     virtualScroller.scrollTop = 12345;
     virtualScroller.dispatchEvent(new Event('scroll'));

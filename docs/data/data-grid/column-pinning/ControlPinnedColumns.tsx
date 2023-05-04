@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridPinnedColumns,
   GridRowsProp,
 } from '@mui/x-data-grid-pro';
@@ -43,7 +43,7 @@ export default function ControlPinnedColumns() {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'email', headerName: 'Email', width: 200, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },

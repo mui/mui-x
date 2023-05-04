@@ -1,7 +1,7 @@
 <DataGridPro
+  {...data}
   loading={loading}
   rows={rows}
-  columns={data.columns}
   rowReordering
   onRowOrderChange={handleRowOrderChange}
 />

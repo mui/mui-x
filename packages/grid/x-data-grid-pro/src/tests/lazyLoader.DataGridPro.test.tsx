@@ -1,13 +1,14 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
-import { getColumnHeaderCell, getRow } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
   DataGridPro,
   DataGridProProps,
+  GRID_ROOT_GROUP_ID,
   GridApi,
-  GridColumns,
+  GridColDef,
+  GridGroupNode,
   GridRowModel,
   GridRowsProp,
   useGridApiRef,
@@ -19,7 +20,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();
 
-  const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
+  const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
     rows: [
       {
         id: 1,
@@ -39,7 +40,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestLazyLoader = (props: Partial<DataGridProProps>) => {
+  function TestLazyLoader(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -56,7 +57,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
         />
       </div>
     );
-  };
+  }
 
   it('should not call onFetchRows if the viewport is fully loaded', function test() {
     if (isJSDOM) {
@@ -100,7 +101,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { id: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.state.rows.ids;
+    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
@@ -108,8 +109,24 @@ describe('<DataGridPro /> - Lazy loader', () => {
     ]);
     act(() => apiRef.current.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.state.rows.ids;
+    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
+  });
+
+  // See https://github.com/mui/mui-x/issues/6857
+  it('should update the row when `apiRef.current.updateRows` is called on lazy-loaded rows', () => {
+    render(<TestLazyLoader rowCount={5} autoHeight={isJSDOM} />);
+
+    const newRows: GridRowModel[] = [
+      { id: 4, first: 'John' },
+      { id: 5, first: 'Mac' },
+    ];
+
+    act(() => apiRef.current.unstable_replaceRows(3, newRows));
+    expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John', 'Mac']);
+
+    act(() => apiRef.current.updateRows([{ id: 4, first: 'John updated' }]));
+    expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John updated', 'Mac']);
   });
 
   it('should update all rows accordingly when `apiRef.current.unstable_replaceRows` is called and props.getRowId is defined', () => {
@@ -140,7 +157,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
       { clientId: 5, name: 'Mac' },
     ];
 
-    const initialAllRows = apiRef.current.state.rows.ids;
+    const initialAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(initialAllRows.slice(3, 6)).to.deep.equal([
       'auto-generated-skeleton-row-root-0',
       'auto-generated-skeleton-row-root-1',
@@ -148,7 +165,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     ]);
     act(() => apiRef.current.unstable_replaceRows(4, newRows));
 
-    const updatedAllRows = apiRef.current.state.rows.ids;
+    const updatedAllRows = apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
 
     expect(apiRef.current.getRowNode(4)).to.not.equal(null);

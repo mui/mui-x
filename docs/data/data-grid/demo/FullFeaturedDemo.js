@@ -301,17 +301,16 @@ export default function FullFeaturedDemo() {
       />
       <DataGridComponent
         {...data}
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           toolbar: { showQuickFilter: true },
         }}
         loading={loading}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         rowThreshold={0}
-        experimentalFeatures={{ newEditingApi: true }}
         initialState={{
           ...data.initialState,
           pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD, 'desk'] },

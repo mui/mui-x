@@ -1,0 +1,8 @@
+<DataGrid
+  checkboxSelection
+  onRowSelectionModelChange={(newRowSelectionModel) => {
+    setRowSelectionModel(newRowSelectionModel);
+  }}
+  rowSelectionModel={rowSelectionModel}
+  {...data}
+/>

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Box from '@mui/material/Box';
 import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
   GridRenderCellParams,
+  GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -25,11 +25,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridGroupingCriteriaCellProps extends GridRenderCellParams {
+interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, any, GridGroupNode> {
   hideDescendantCount?: boolean;
 }
 
-export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) => {
+export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
@@ -43,11 +43,13 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.components.GroupingCriteriaCollapseIcon
-    : rootProps.components.GroupingCriteriaExpandIcon;
+    ? rootProps.slots.groupingCriteriaCollapseIcon
+    : rootProps.slots.groupingCriteriaExpandIcon;
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {
+      // We call event.stopPropagation to avoid unfolding the row and also scrolling to bottom
+      // TODO: Remove and add a check inside useGridKeyboardNavigation
       event.stopPropagation();
     }
     apiRef.current.publishEvent('cellKeyDown', props, event);
@@ -61,11 +63,22 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
 
   const marginLeft = rootProps.rowGroupingColumnMode === 'multiple' ? 0 : rowNode.depth * 2;
 
+  let cellContent: React.ReactNode;
+
+  const colDef = apiRef.current.getColumn(rowNode.groupingField!);
+  if (typeof colDef.renderCell === 'function') {
+    cellContent = colDef.renderCell(props);
+  } else if (typeof formattedValue !== 'undefined') {
+    cellContent = <span>{formattedValue}</span>;
+  } else {
+    cellContent = <span>{rowNode.groupingKey}</span>;
+  }
+
   return (
     <Box className={classes.root} sx={{ ml: marginLeft }}>
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
-          <IconButton
+          <rootProps.slots.baseIconButton
             size="small"
             onClick={handleClick}
             onKeyDown={handleKeyDown}
@@ -75,15 +88,16 @@ export const GridGroupingCriteriaCell = (props: GridGroupingCriteriaCellProps) =
                 ? apiRef.current.getLocaleText('treeDataCollapse')
                 : apiRef.current.getLocaleText('treeDataExpand')
             }
+            {...rootProps.slotProps?.baseIconButton}
           >
             <Icon fontSize="inherit" />
-          </IconButton>
+          </rootProps.slots.baseIconButton>
         )}
       </div>
-      <span>
-        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
-        {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
-      </span>
+      {cellContent}
+      {!hideDescendantCount && filteredDescendantCount > 0 ? (
+        <span style={{ whiteSpace: 'pre' }}> ({filteredDescendantCount})</span>
+      ) : null}
     </Box>
   );
-};
+}

@@ -19,11 +19,9 @@ module.exports = {
       ),
       '@mui/x-date-pickers': path.resolve(__dirname, './packages/x-date-pickers/src'),
       '@mui/x-date-pickers-pro': path.resolve(__dirname, './packages/x-date-pickers-pro/src'),
+      '@mui/x-charts': path.resolve(__dirname, './packages/x-charts/src'),
       '@mui/x-license-pro': path.resolve(__dirname, './packages/x-license-pro/src'),
-      '@mui/markdown': path.resolve(
-        __dirname,
-        './node_modules/@mui/monorepo/docs/packages/markdown',
-      ),
+      '@mui/markdown': path.resolve(__dirname, './node_modules/@mui/monorepo/packages/markdown'),
       docs: path.resolve(__dirname, './node_modules/@mui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },

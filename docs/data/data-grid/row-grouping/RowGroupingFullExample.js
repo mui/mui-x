@@ -12,7 +12,6 @@ export default function RowGroupingFullExample() {
     rowLength: 100,
     maxColumns: 25,
   });
-
   const apiRef = useGridApiRef();
 
   const initialState = useKeepGroupedColumnsHidden({
@@ -35,7 +34,7 @@ export default function RowGroupingFullExample() {
         {...data}
         apiRef={apiRef}
         loading={loading}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
         groupingColDef={{
           leafField: 'traderEmail',

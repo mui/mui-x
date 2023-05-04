@@ -16,7 +16,7 @@ export default function RowGroupingGroupingValueGetter() {
       {
         field: 'composer',
         headerName: 'Composer',
-        renderCell: (params) => params.value?.name,
+        valueGetter: (params) => params.value?.name,
         groupingValueGetter: (params) => params.value.name,
         width: 200,
       },

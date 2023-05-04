@@ -1,29 +1,38 @@
+import { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
 import {
   GridApiCommon,
-  GridStateApi,
-  GridStatePersistenceApi,
   GridColumnPinningApi,
   GridDetailPanelApi,
+  GridDetailPanelPrivateApi,
   GridRowPinningApi,
+  GridRowMultiSelectionApi,
+  GridColumnReorderApi,
+  GridRowProApi,
 } from '@mui/x-data-grid-pro';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
-
-type GridStateApiUntyped = {
-  [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
-};
+import { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
 
 /**
  * The api of `DataGridPremium`.
  * TODO: Do not redefine manually the pro features
  */
 export interface GridApiPremium
-  extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
-    GridStateApi<GridStatePremium>,
-    GridStatePersistenceApi<GridInitialStatePremium>,
+  extends GridApiCommon<GridStatePremium, GridInitialStatePremium>,
+    GridRowProApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
     GridRowGroupingApi,
     GridExcelExportApi,
     GridAggregationApi,
-    GridRowPinningApi {}
+    GridRowPinningApi,
+    GridCellSelectionApi,
+    // APIs that are private in Community plan, but public in Pro and Premium plans
+    GridRowMultiSelectionApi,
+    GridColumnReorderApi,
+    GridRowProApi {}
+
+export interface GridPrivateApiPremium
+  extends GridApiPremium,
+    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium>,
+    GridDetailPanelPrivateApi {}

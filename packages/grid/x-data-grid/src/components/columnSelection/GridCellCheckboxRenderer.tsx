@@ -1,14 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { useForkRef } from '@mui/material/utils';
-import { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useForkRef as useForkRef,
+} from '@mui/utils';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
+import { isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -40,7 +42,6 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       cellMode,
       hasFocus,
       tabIndex,
-      getValue,
       api,
       ...other
     } = props;
@@ -50,7 +51,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     const classes = useUtilityClasses(ownerState);
     const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
-    const rippleRef = React.useRef<TouchRippleActions>();
+    const rippleRef = React.useRef<TouchRippleActions>(null);
     const handleRef = useForkRef(checkboxElement, ref);
     const element = apiRef.current.getCellElement(id, field);
 
@@ -65,29 +66,25 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, [element, tabIndex]);
 
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
       if (hasFocus) {
         const input = checkboxElement.current?.querySelector('input');
-        input?.focus();
+        input?.focus({ preventScroll: true });
       } else if (rippleRef.current) {
         // Only available in @mui/material v5.4.1 or later
         rippleRef.current.stop({});
       }
     }, [hasFocus]);
 
-    const handleKeyDown = React.useCallback(
-      (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (isSpaceKey(event.key)) {
-          event.stopPropagation();
-        }
-        if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-        }
-      },
-      [apiRef, props],
-    );
+    const handleKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+      if (isSpaceKey(event.key)) {
+        // We call event.stopPropagation to avoid selecting the row and also scrolling to bottom
+        // TODO: Remove and add a check inside useGridKeyboardNavigation
+        event.stopPropagation();
+      }
+    }, []);
 
-    if (rowNode.position === 'footer') {
+    if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
       return null;
     }
 
@@ -97,12 +94,8 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       isChecked ? 'checkboxSelectionUnselectRow' : 'checkboxSelectionSelectRow',
     );
 
-    if (rowNode.isPinned) {
-      return null;
-    }
-
     return (
-      <rootProps.components.BaseCheckbox
+      <rootProps.slots.baseCheckbox
         ref={handleRef}
         tabIndex={tabIndex}
         checked={isChecked}
@@ -112,7 +105,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
         touchRippleRef={rippleRef}
-        {...rootProps.componentsProps?.baseCheckbox}
+        {...rootProps.slotProps?.baseCheckbox}
         {...other}
       />
     );
@@ -126,9 +119,8 @@ GridCellCheckboxForwardRef.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
@@ -159,14 +151,6 @@ GridCellCheckboxForwardRef.propTypes = {
    */
   formattedValue: PropTypes.any,
   /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
-  /**
    * If true, the cell is the active element.
    */
   hasFocus: PropTypes.bool.isRequired,
@@ -181,7 +165,7 @@ GridCellCheckboxForwardRef.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
@@ -199,4 +183,4 @@ GridCellCheckboxForwardRef.propTypes = {
 
 export { GridCellCheckboxForwardRef };
 
-export const GridCellCheckboxRenderer = React.memo(GridCellCheckboxForwardRef);
+export const GridCellCheckboxRenderer = GridCellCheckboxForwardRef;

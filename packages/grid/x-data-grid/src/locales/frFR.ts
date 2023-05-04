@@ -6,7 +6,6 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Pas de résultats',
   noResultsOverlayLabel: 'Aucun résultat.',
-  errorOverlayDefaultLabel: 'Une erreur est apparue.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densité',
@@ -48,11 +47,10 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
+  filterPanelRemoveAll: 'Tout supprimer',
   filterPanelDeleteIconLabel: 'Supprimer',
-  filterPanelLinkOperator: 'Opérateur logique',
-  filterPanelOperators: 'Opérateur',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Opérateur logique',
+  filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colonnes',
@@ -72,7 +70,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
-  filterOperatorIsAnyOf: 'fait parti de',
+  filterOperatorIsAnyOf: 'fait partie de',
 
   // Filter values text
   filterValueAny: 'tous',
@@ -82,6 +80,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Afficher les colonnes',
+  columnMenuManageColumns: 'Gérer les colonnes',
   columnMenuFilter: 'Filtrer',
   columnMenuHideColumn: 'Cacher',
   columnMenuUnsort: 'Annuler le tri',
@@ -145,12 +144,12 @@ const frFRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Positionnement des lignes',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agrégation',
+  aggregationFunctionLabelSum: 'Somme',
+  aggregationFunctionLabelAvg: 'Moyenne',
+  aggregationFunctionLabelMin: 'Minimum',
+  aggregationFunctionLabelMax: 'Maximum',
+  aggregationFunctionLabelSize: "Nombre d'éléments",
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

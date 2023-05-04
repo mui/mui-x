@@ -10,7 +10,7 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onCellClick"
   },
@@ -18,17 +18,9 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellDoubleClick",
     "description": "Fired when a cell is double-clicked.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onCellDoubleClick"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellEditCommit",
-    "description": "Fired when the props of the edit input are committed.",
-    "params": "GridCellEditCommitParams",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellEditCommit"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -48,26 +40,18 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusIn",
-    "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusOut",
-    "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellFocusOut"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>",
     "componentProp": "onCellKeyDown"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "cellKeyUp",
+    "description": "Fired when a <code>keyup</code> event happens in a cell.",
+    "params": "GridCellParams<any>",
+    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -80,15 +64,36 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "cellMouseOver",
+    "description": "Fired when a <code>mouseover</code> event happens in a cell.",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellMouseUp",
     "description": "Fired when a <code>mouseup</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "cellSelectionChange",
+    "description": "Fired when the selection state of one or multiple cells change.",
+    "params": "GridCellSelectionModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "columnGroupHeaderKeyDown",
+    "description": "Fired when a key is pressed in a column group header. It&#39;s mapped do the <code>keydown</code> DOM event.",
+    "params": "GridColumnGroupHeaderParams",
+    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -152,14 +157,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "columnVisibilityChange",
-    "description": "Fired when a column visibility changes.\nIt is not fired when the <code>columnVisibilityModel</code> is controlled or initialized.\nIt is not fired when toggling all column&#39;s visibility at once.",
-    "params": "GridColumnVisibilityChangeParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onColumnVisibilityChange"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnVisibilityModelChange",
     "description": "Fired when the column visibility model changes.",
     "params": "GridColumnVisibilityModel",
@@ -175,14 +172,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "componentError",
-    "description": "Fired when an exception is thrown in the grid.",
-    "params": "any",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onError"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "debouncedResize",
     "description": "Fired when the grid is resized with a debounced time of 60ms.",
     "params": "ElementSize",
@@ -190,18 +179,10 @@
     "componentProp": "onResize"
   },
   {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "editCellPropsChange",
-    "description": "Fired when the props of the edit cell changes.",
-    "params": "GridEditCellPropsParams",
-    "event": "MuiEvent<React.SyntheticEvent<HTMLElement> | {}>",
-    "componentProp": "onEditCellPropsChange"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "editRowsModelChange",
-    "description": "Fired when the row editing model changes.",
-    "params": "GridEditRowsModel",
+    "projects": ["x-data-grid-premium"],
+    "name": "excelExportStateChange",
+    "description": "Fired when the state of the Excel export task changes",
+    "params": "'pending' | 'finished'",
     "event": "MuiEvent<{}>"
   },
   {
@@ -244,16 +225,9 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "pageChange",
-    "description": "Fired when the page changes.",
-    "params": "number",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "pageSizeChange",
-    "description": "Fired when the page size changes.",
-    "params": "number",
+    "name": "paginationModelChange",
+    "description": "Fired when the pagination model changes.",
+    "params": "GridPaginationModel",
     "event": "MuiEvent<{}>"
   },
   {
@@ -364,17 +338,17 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowSelectionChange",
+    "description": "Fired when the selection state of one or multiple rows changes.",
+    "params": "GridRowSelectionModel",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of a row is changed",
     "params": "GridRowSelectionCheckboxParams",
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "rowsScroll",
-    "description": "Fired during the scroll of the grid viewport.",
-    "params": "GridScrollParams",
-    "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
   },
   {
     "projects": ["x-data-grid-pro", "x-data-grid-premium"],
@@ -386,10 +360,10 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "selectionChange",
-    "description": "Fired when the selection state of one or multiple rows changes.",
-    "params": "GridSelectionModel",
-    "event": "MuiEvent<{}>"
+    "name": "scrollPositionChange",
+    "description": "Fired during the scroll of the grid viewport.",
+    "params": "GridScrollParams",
+    "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

@@ -24,7 +24,7 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-const ExpandableCell = ({ value }: GridRenderCellParams) => {
+function ExpandableCell({ value }: GridRenderCellParams) {
   const [expanded, setExpanded] = React.useState(false);
 
   return (
@@ -43,7 +43,7 @@ const ExpandableCell = ({ value }: GridRenderCellParams) => {
       )}
     </Box>
   );
-};
+}
 
 const columns = [
   { field: 'id' },
@@ -75,13 +75,13 @@ for (let i = 0; i < 10; i += 1) {
 
 export default function ExpandableCells() {
   return (
-    <div style={{ height: 400, width: 800 }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
         getEstimatedRowHeight={() => 100}
         getRowHeight={() => 'auto'}
-        components={{ Toolbar: GridToolbar }}
+        slots={{ toolbar: GridToolbar }}
         sx={{
           '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
             py: 1,

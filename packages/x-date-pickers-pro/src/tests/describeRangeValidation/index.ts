@@ -1,0 +1,1 @@
+export { describeRangeValidation } from './describeRangeValidation';

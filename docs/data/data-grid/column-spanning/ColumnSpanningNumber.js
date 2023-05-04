@@ -3,8 +3,8 @@ import { DataGrid } from '@mui/x-data-grid';
 
 const other = {
   autoHeight: true,
-  showCellRightBorder: true,
-  showColumnRightBorder: true,
+  showCellVerticalBorder: true,
+  showColumnVerticalBorder: true,
 };
 
 const rows = [

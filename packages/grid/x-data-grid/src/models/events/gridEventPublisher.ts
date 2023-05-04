@@ -1,29 +1,28 @@
 import { MuiBaseEvent } from '../muiEvent';
-import { GridEventLookup } from './gridEventLookup';
-import { GridEventsStr } from './gridEvents';
+import { GridEventLookup, GridEvents } from './gridEventLookup';
 
-type PublisherArgsNoEvent<E extends GridEventsStr, T extends { params: any }> = [E, T['params']];
+type PublisherArgsNoEvent<E extends GridEvents, T extends { params: any }> = [E, T['params']];
 
 type PublisherArgsRequiredEvent<
-  E extends GridEventsStr,
+  E extends GridEvents,
   T extends { params: any; event: MuiBaseEvent },
 > = [E, T['params'], T['event']];
 
 type PublisherArgsOptionalEvent<
-  E extends GridEventsStr,
+  E extends GridEvents,
   T extends { params: any; event: MuiBaseEvent },
 > = PublisherArgsRequiredEvent<E, T> | PublisherArgsNoEvent<E, T>;
 
 type PublisherArgsEvent<
-  E extends GridEventsStr,
+  E extends GridEvents,
   T extends { params: any; event: MuiBaseEvent },
 > = {} extends T['event'] ? PublisherArgsOptionalEvent<E, T> : PublisherArgsRequiredEvent<E, T>;
 
-type PublisherArgsParams<E extends GridEventsStr, T extends { params: any }> = [E, T['params']];
+type PublisherArgsParams<E extends GridEvents, T extends { params: any }> = [E, T['params']];
 
-type PublisherArgsNoParams<E extends GridEventsStr> = [E];
+type PublisherArgsNoParams<E extends GridEvents> = [E];
 
-type GridEventPublisherArg<E extends GridEventsStr, T> = T extends {
+type GridEventPublisherArg<E extends GridEvents, T> = T extends {
   params: any;
   event: MuiBaseEvent;
 }
@@ -32,6 +31,6 @@ type GridEventPublisherArg<E extends GridEventsStr, T> = T extends {
   ? PublisherArgsParams<E, T>
   : PublisherArgsNoParams<E>;
 
-export type GridEventPublisher = <E extends GridEventsStr>(
+export type GridEventPublisher = <E extends GridEvents>(
   ...params: GridEventPublisherArg<E, GridEventLookup[E]>
 ) => void;

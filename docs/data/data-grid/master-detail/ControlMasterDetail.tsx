@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   GridRowId,
 } from '@mui/x-data-grid-pro';
@@ -50,7 +50,7 @@ export default function ControlMasterDetail() {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
   { field: 'date', type: 'date', headerName: 'Placed at' },

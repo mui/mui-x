@@ -1,11 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: '시간을',
   minutes: '분을',
   seconds: '초를',
+  meridiem: '메리디엠',
 };
 
 const koKRPickers: Partial<PickersLocaleText<any>> = {
@@ -16,11 +17,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '이전 화면 보기',
   openNextView: '다음 화면 보기',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? '연도 선택 화면에서 달력 화면으로 전환하기'
       : '달력 화면에서 연도 선택 화면으로 전환하기',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: '시작',
@@ -33,10 +33,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: '오늘',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: '날짜 선택하기',
+  dateTimePickerToolbarTitle: '날짜 & 시간 선택하기',
+  timePickerToolbarTitle: '시간 선택하기',
+  dateRangePickerToolbarTitle: '날짜 범위 선택하기',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -49,25 +49,38 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,
 
+  // Digital clock labels
+  selectViewText: (view) => `${views[view]} 선택하기`,
+
+  // Calendar labels
+  calendarWeekNumberHeaderLabel: '주 번호',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}번째 주`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
+
   // Open picker labels
-  openDatePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${utils.format(
-          utils.date(rawValue)!,
-          'fullDate',
-        )}입니다.`
+  openDatePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `날짜를 선택하세요. 현재 선택된 날짜는 ${utils.format(value, 'fullDate')}입니다.`
       : '날짜를 선택하세요',
-  openTimePickerDialogue: (rawValue, utils) =>
-    rawValue && utils.isValid(utils.date(rawValue))
-      ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(
-          utils.date(rawValue)!,
-          'fullTime',
-        )}입니다.`
+  openTimePickerDialogue: (value, utils) =>
+    value !== null && utils.isValid(value)
+      ? `시간을 선택하세요. 현재 선택된 시간은 ${utils.format(value, 'fullTime')}입니다.`
       : '시간을 선택하세요',
 
   // Table labels
   timeTableLabel: '선택한 시간',
   dateTableLabel: '선택한 날짜',
+
+  // Field section placeholders
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const koKR = getPickersLocalization(koKRPickers);

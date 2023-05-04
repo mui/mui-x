@@ -7,30 +7,19 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { INCOTERM_OPTIONS } from '../services/static-data';
 
-function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
+function EditIncoterm(props: GridRenderEditCellParams<any, string | null>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
 
-  const handleChange: SelectProps['onChange'] = (event) => {
-    apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
-    apiRef.current.commitCellChange({ id, field });
-    apiRef.current.setCellMode(id, field, 'view');
-
-    if ((event as any).key) {
-      // TODO v6: remove once we stop ignoring events fired from portals
-      const params = apiRef.current.getCellParams(id, field);
-      apiRef.current.publishEvent(
-        'cellNavigationKeyDown',
-        params,
-        event as any as React.KeyboardEvent<HTMLElement>,
-      );
-    }
+  const handleChange: SelectProps['onChange'] = async (event) => {
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
+    apiRef.current.stopCellEditMode({ id, field });
   };
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      apiRef.current.setCellMode(id, field, 'view');
+      apiRef.current.stopCellEditMode({ id, field });
     }
   };
 
@@ -68,6 +57,6 @@ function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
   );
 }
 
-export function renderEditIncoterm(params: GridRenderEditCellParams<string | null>) {
+export function renderEditIncoterm(params: GridRenderEditCellParams<any, string | null>) {
   return <EditIncoterm {...params} />;
 }

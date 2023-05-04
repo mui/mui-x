@@ -1,8 +1,7 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
@@ -11,7 +10,7 @@ import {
   GridAggregationFunction,
   GridApi,
   GridRenderCellParams,
-  GridRowTreeNodeConfig,
+  GridGroupNode,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 
@@ -47,22 +46,15 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const Test = (props: Partial<DataGridPremiumProps>) => {
+  function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
 
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGridPremium
-          {...baselineProps}
-          apiRef={apiRef}
-          {...props}
-          experimentalFeatures={{
-            aggregation: true,
-          }}
-        />
+        <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   describe('Setting aggregation model', () => {
     describe('initialState: aggregation.model', () => {
@@ -147,6 +139,13 @@ describe('<DataGridPremium /> - Aggregation', () => {
         render(<Test initialState={{ aggregation: { model: { id: 'mux' } } }} />);
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
       });
+
+      it('should correctly restore the column when changing from aggregated to non-aggregated', () => {
+        const { setProps } = render(<Test aggregationModel={{ id: 'max' }} />);
+        expect(getColumnHeaderCell(0, 0).textContent).to.equal('idmax');
+        setProps({ aggregationModel: {} });
+        expect(getColumnHeaderCell(0, 0).textContent).to.equal('id');
+      });
     });
   });
 
@@ -223,8 +222,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         // All groups aggregated inline except the root
         setProps({
-          getAggregationPosition: (group: GridRowTreeNodeConfig | null) =>
-            group == null ? null : 'inline',
+          getAggregationPosition: (group: GridGroupNode) => (group.depth === -1 ? null : 'inline'),
         });
         expect(getColumnValues(1)).to.deep.equal([
           '4' /* Agg "Cat A" */,
@@ -239,8 +237,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
         // All groups aggregated in footer except the root
         setProps({
-          getAggregationPosition: (group: GridRowTreeNodeConfig | null) =>
-            group == null ? null : 'footer',
+          getAggregationPosition: (group: GridGroupNode) => (group.depth === -1 ? null : 'footer'),
         });
         expect(getColumnValues(1)).to.deep.equal([
           '',
@@ -279,7 +276,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('Tree Data', () => {
-    const TreeDataTest = (props: Omit<DataGridPremiumProps, 'columns'>) => {
+    function TreeDataTest(props: Omit<DataGridPremiumProps, 'columns'>) {
       return (
         <Test
           treeData
@@ -305,7 +302,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           {...props}
         />
       );
-    };
+    }
 
     it('should use aggregated values instead of provided values on data groups', () => {
       render(
@@ -375,7 +372,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
-      userEvent.mousePress(screen.queryByLabelText('Aggregation'));
+      userEvent.mousePress(screen.getByLabelText('Aggregation'));
       userEvent.mousePress(
         within(
           screen.getByRole('listbox', {
@@ -394,7 +391,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -408,7 +405,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -423,7 +420,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -670,7 +667,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell.getCalls().find((call) => call.firstArg.rowNode.isPinned);
+      const callForAggCell = renderCell
+        .getCalls()
+        .find((call) => call.firstArg.rowNode.type === 'pinnedRow');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
     });
 
@@ -696,7 +695,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
         />,
       );
 
-      const callForAggCell = renderCell.getCalls().find((call) => call.firstArg.rowNode.isPinned);
+      const callForAggCell = renderCell
+        .getCalls()
+        .find((call) => call.firstArg.rowNode.type === 'pinnedRow');
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(false);
     });
   });
@@ -709,7 +710,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             aggregation: { model: { id: 'sum' } },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '!=', value: 15 }],
+                items: [{ field: 'id', operator: '!=', value: 15 }],
               },
             },
           }}
@@ -747,7 +748,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             },
           }}
           defaultGroupingExpansionDepth={-1}
-          getAggregationPosition={(group) => (group == null ? null : 'footer')}
+          getAggregationPosition={(group) => (group.depth === -1 ? null : 'footer')}
         />,
       );
       expect(getColumnValues(1)).to.deep.equal([

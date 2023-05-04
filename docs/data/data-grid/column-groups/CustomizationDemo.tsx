@@ -2,11 +2,11 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import {
-  DataGridPro,
+  DataGrid,
   GridColDef,
   GridColumnGroupHeaderParams,
   GridColumnGroupingModel,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -57,7 +57,7 @@ const HeaderWithIconRoot = styled('div')(({ theme }) => ({
   },
 }));
 
-const HeaderWithIcon = (props: HeaderWithIconProps) => {
+function HeaderWithIcon(props: HeaderWithIconProps) {
   const { icon, ...params } = props;
 
   return (
@@ -65,7 +65,7 @@ const HeaderWithIcon = (props: HeaderWithIconProps) => {
       <span>{params.headerName ?? params.groupId}</span> {icon}
     </HeaderWithIconRoot>
   );
-};
+}
 
 const columnGroupingModel: GridColumnGroupingModel = [
   {
@@ -107,12 +107,12 @@ export default function CustomizationDemo() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
     </Box>

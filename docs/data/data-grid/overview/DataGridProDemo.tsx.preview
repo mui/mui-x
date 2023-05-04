@@ -3,6 +3,9 @@
   loading={data.rows.length === 0}
   rowHeight={38}
   checkboxSelection
-  disableSelectionOnClick
-  experimentalFeatures={{ newEditingApi: true }}
+  disableRowSelectionOnClick
+  components={{
+    Row: MemoizedRow,
+    ColumnHeaders: MemoizedColumnHeaders,
+  }}
 />

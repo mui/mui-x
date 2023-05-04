@@ -1,0 +1,9 @@
+<SingleInputTimeRangeField
+  label="Uncontrolled field"
+  defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-17T18:30')]}
+/>
+<SingleInputTimeRangeField
+  label="Controlled field"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
