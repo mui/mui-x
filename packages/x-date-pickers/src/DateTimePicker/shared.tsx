@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { DateOrTimeView, DateTimeValidationError, TimeView } from '../models';
+import { DateOrTimeView, DateTimeValidationError } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlotsComponent,
@@ -36,6 +36,7 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -107,7 +108,7 @@ export interface BaseDateTimePickerProps<TDate>
       TDate | null,
       DateOrTimeView,
       DateViewRendererProps<TDate, DateOrTimeView> &
-        TimeViewRendererProps<TimeView, BaseClockProps<TDate, TimeView>>,
+        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
       {}
     >
   >;
