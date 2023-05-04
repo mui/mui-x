@@ -9,13 +9,14 @@ export function groupDataProps<T extends {
 ): T {
   const keys = Object.keys(props);
 
-  if (!keys.some(key => key.startsWith('data-')))
+  if (!keys.some(key => key.startsWith('data-'))) {
     return props;
+  }
 
   const newProps = {} as Record<string, unknown>;
   const dataProps: Record<string, unknown> = props.dataProps ?? {};
 
-  for (let i = 0; i < keys.length; i++) {
+  for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
 
     if (key.startsWith('data-')) {
