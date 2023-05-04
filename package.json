@@ -94,7 +94,7 @@
     "@playwright/test": "1.33.0",
     "@testing-library/react": "^14.0.0",
     "@types/babel__core": "^7.20.0",
-    "@types/chai": "^4.3.4",
+    "@types/chai": "^4.3.5",
     "@types/chai-dom": "^1.11.0",
     "@types/enzyme": "^3.10.12",
     "@types/mocha": "^10.0.1",
