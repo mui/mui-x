@@ -1270,18 +1270,7 @@
     source-map "^0.5.7"
     stylis "4.1.4"
 
-"@emotion/cache@^11.10.7", "@emotion/cache@^11.4.0":
-  version "11.10.7"
-  resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.10.7.tgz#2e3b12d3c7c74db0a020ae79eefc52a1b03a6908"
-  integrity sha512-VLl1/2D6LOjH57Y8Vem1RoZ9haWF4jesHDGiHtKozDQuBIkJm2gimVo0I02sWCuzZtVACeixTVB4jeE8qvCBoQ==
-  dependencies:
-    "@emotion/memoize" "^0.8.0"
-    "@emotion/sheet" "^1.2.1"
-    "@emotion/utils" "^1.2.0"
-    "@emotion/weak-memoize" "^0.3.0"
-    stylis "4.1.3"
-
-"@emotion/cache@^11.10.8":
+"@emotion/cache@^11.10.7", "@emotion/cache@^11.10.8", "@emotion/cache@^11.4.0":
   version "11.10.8"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.10.8.tgz#3b39b4761bea0ae2f4f07f0a425eec8b6977c03e"
   integrity sha512-5fyqGHi51LU95o7qQ/vD1jyvC4uCY5GcBT+UgP4LHdpO9jPDlXqhrRr9/wCKmfoAvh5G/F7aOh4MwQa+8uEqhA==
@@ -13307,11 +13296,6 @@ styled-jsx@5.1.1:
   integrity sha512-q6xIkri6fBufIO/sV55md2CbgS5c6gg9EhSVATtHHCdOnbN/jcI0u3lYhNVeuI65c4lQPo67g8xmq5jrREvzlg==
   dependencies:
     cssjanus "^2.0.1"
-
-stylis@4.1.3:
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.1.3.tgz#fd2fbe79f5fed17c55269e16ed8da14c84d069f7"
-  integrity sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==
 
 stylis@4.1.4, stylis@^4.1.4:
   version "4.1.4"
