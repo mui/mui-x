@@ -78,19 +78,19 @@ export default function CSSCustomization() {
           id: 'France',
           data: FranceGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
           id: 'Germany',
           data: GermanyGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
           id: 'United Kingdom',
           data: UKGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
       ]}
       width={600}

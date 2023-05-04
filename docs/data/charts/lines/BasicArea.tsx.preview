@@ -3,6 +3,7 @@
   series={[
     {
       data: [2, 5, 2, 8, 1, 5],
+      area: true,
     },
   ]}
   width={600}

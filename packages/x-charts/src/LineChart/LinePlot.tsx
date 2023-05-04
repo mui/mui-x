@@ -61,7 +61,7 @@ export function LinePlot() {
                   key={seriesId}
                   id={seriesId}
                   d={areaPath.curve(curve)(d3Data) || undefined}
-                  color={series[seriesId].area.color ?? series[seriesId].color}
+                  color={series[seriesId].color}
                 />
               )
             );
