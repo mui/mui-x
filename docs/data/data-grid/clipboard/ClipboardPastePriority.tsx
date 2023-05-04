@@ -51,12 +51,6 @@ const columns: GridColDef[] = [
     sortable: false,
     filterable: false,
     hideable: false,
-    colSpan: (params) => {
-      if (params.row.id === 2) {
-        return 2;
-      }
-      return 1;
-    },
   },
   {
     field: 'singleRowMultipleCells',
@@ -116,9 +110,9 @@ const rows = [
   {
     id: 2,
     selection: selectionTypes.rangeOfRows,
-    singleRowSingleCell:
+    singleRowSingleCell: 'The cell value is pasted into the selected cell.',
+    singleRowMultipleCells:
       'The row data is pasted into each selected row.\nRows outside of the selection are not impacted.',
-    singleRowMultipleCells: '---',
     multipleRows:
       'Rows are pasted into selected rows starting from the first selected row.\nRows outside of the selection are not impacted.',
   },
