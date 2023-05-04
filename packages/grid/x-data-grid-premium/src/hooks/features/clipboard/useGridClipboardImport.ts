@@ -21,7 +21,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import { unstable_debounce as debounce } from '@mui/utils';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
@@ -164,6 +164,7 @@ class CellValueUpdater {
     const rowIdsToUpdate = Object.keys(rowsToUpdate);
 
     if (rowIdsToUpdate.length === 0) {
+      apiRef.current.publishEvent('clipboardPasteEnd');
       return;
     }
 
@@ -203,6 +204,102 @@ class CellValueUpdater {
       apiRef.current.publishEvent('clipboardPasteEnd');
     });
   }
+}
+
+function defaultPasteResolver({
+  pastedData,
+  apiRef,
+  updateCell,
+}: {
+  pastedData: string[][];
+  apiRef: React.MutableRefObject<GridApiPremium>;
+  updateCell: CellValueUpdater['updateCell'];
+}) {
+  const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
+
+  const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+  if (cellSelectionModel && apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
+    Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
+      const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
+      const hasRowData = isSingleValuePasted ? true : rowDataArr !== undefined;
+      if (!hasRowData) {
+        return;
+      }
+      Object.keys(cellSelectionModel[rowId]).forEach((field, colIndex) => {
+        const cellValue = isSingleValuePasted ? rowDataArr[0] : rowDataArr[colIndex];
+        updateCell({ rowId, field, pastedCellValue: cellValue });
+      });
+    });
+
+    return;
+  }
+
+  const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) => {
+    if (columnFieldsToExcludeFromPaste.includes(field)) {
+      return false;
+    }
+    return true;
+  });
+
+  const selectedRows = apiRef.current.getSelectedRows();
+
+  if (selectedRows.size > 0 && !isSingleValuePasted) {
+    // Multiple values are pasted starting from the first and top-most cell
+    const pastedRowsDataCount = pastedData.length;
+
+    // There's no guarantee that the selected rows are in the same order as the pasted rows
+    selectedRows.forEach((row, rowId) => {
+      let rowData: string[] | undefined;
+      if (pastedRowsDataCount === 1) {
+        // If only one row is pasted - paste it to all selected rows
+        rowData = pastedData[0];
+      } else {
+        rowData = pastedData.shift();
+      }
+
+      if (rowData === undefined) {
+        return;
+      }
+
+      rowData.forEach((newCellValue, cellIndex) => {
+        updateCell({
+          rowId,
+          field: visibleColumnFields[cellIndex],
+          pastedCellValue: newCellValue,
+        });
+      });
+    });
+
+    return;
+  }
+
+  const selectedCell = gridFocusCellSelector(apiRef);
+  if (!selectedCell) {
+    return;
+  }
+
+  if (columnFieldsToExcludeFromPaste.includes(selectedCell.field)) {
+    return;
+  }
+
+  const selectedRowId = selectedCell.id;
+  const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
+  const visibleRowIds = gridPaginatedVisibleSortedGridRowIdsSelector(apiRef);
+
+  const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
+  pastedData.forEach((rowData, index) => {
+    const rowId = visibleRowIds[selectedRowIndex + index];
+
+    if (typeof rowId === 'undefined') {
+      return;
+    }
+
+    for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
+      const field = visibleColumnFields[i];
+      const stringValue = rowData[i - selectedFieldIndex];
+      updateCell({ rowId, field, pastedCellValue: stringValue });
+    }
+  });
 }
 
 function isPasteShortcut(event: React.KeyboardEvent) {
@@ -279,91 +376,12 @@ export const useGridClipboardImport = (
         data: pastedData,
       });
 
-      const isSingleValuePasted = pastedData.length === 1 && pastedData[0].length === 1;
-
-      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
-      if (cellSelectionModel && apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
-        Object.keys(cellSelectionModel).forEach((rowId, rowIndex) => {
-          const rowDataArr = pastedData[isSingleValuePasted ? 0 : rowIndex];
-          const hasRowData = isSingleValuePasted ? true : rowDataArr !== undefined;
-          if (!hasRowData) {
-            return;
-          }
-          Object.keys(cellSelectionModel[rowId]).forEach((field, colIndex) => {
-            const cellValue = isSingleValuePasted ? rowDataArr[0] : rowDataArr[colIndex];
-            cellUpdater.updateCell({ rowId, field, pastedCellValue: cellValue });
-          });
-        });
-
-        cellUpdater.applyUpdates();
-        return;
-      }
-
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) => {
-        if (columnFieldsToExcludeFromPaste.includes(field)) {
-          return false;
-        }
-        return true;
-      });
-
-      const selectedRows = apiRef.current.getSelectedRows();
-
-      if (selectedRows.size > 0 && !isSingleValuePasted) {
-        // Multiple values are pasted starting from the first and top-most cell
-        const pastedRowsDataCount = pastedData.length;
-
-        // There's no guarantee that the selected rows are in the same order as the pasted rows
-        selectedRows.forEach((row, rowId) => {
-          let rowData: string[] | undefined;
-          if (pastedRowsDataCount === 1) {
-            // If only one row is pasted - paste it to all selected rows
-            rowData = pastedData[0];
-          } else {
-            rowData = pastedData.shift();
-          }
-
-          if (rowData === undefined) {
-            return;
-          }
-
-          rowData.forEach((newCellValue, cellIndex) => {
-            cellUpdater.updateCell({
-              rowId,
-              field: visibleColumnFields[cellIndex],
-              pastedCellValue: newCellValue,
-            });
-          });
-        });
-
-        cellUpdater.applyUpdates();
-        return;
-      }
-
-      const selectedCell = gridFocusCellSelector(apiRef);
-      if (!selectedCell) {
-        return;
-      }
-
-      if (columnFieldsToExcludeFromPaste.includes(selectedCell.field)) {
-        return;
-      }
-
-      const selectedRowId = selectedCell.id;
-      const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
-      const visibleRowIds = gridPaginatedVisibleSortedGridRowIdsSelector(apiRef);
-      const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
-      pastedData.forEach((rowData, index) => {
-        const rowId = visibleRowIds[selectedRowIndex + index];
-
-        if (typeof rowId === 'undefined') {
-          return;
-        }
-
-        for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
-          const field = visibleColumnFields[i];
-          const stringValue = rowData[i - selectedFieldIndex];
-          cellUpdater.updateCell({ rowId, field, pastedCellValue: stringValue });
-        }
+      defaultPasteResolver({
+        pastedData,
+        apiRef: { current: apiRef.current.getPublicApi() },
+        updateCell: (...args) => {
+          cellUpdater.updateCell(...args);
+        },
       });
 
       cellUpdater.applyUpdates();
