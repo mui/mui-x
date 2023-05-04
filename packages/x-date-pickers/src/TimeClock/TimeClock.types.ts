@@ -6,6 +6,7 @@ import {
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { TimeView } from '../models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface ExportedTimeClockProps<TDate> extends ExportedBaseClockProps<TDate> {
   /**
@@ -19,9 +20,9 @@ export interface TimeClockSlotsComponent extends PickersArrowSwitcherSlotsCompon
 
 export interface TimeClockSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
 
-export interface TimeClockProps<TDate>
+export interface TimeClockProps<TDate, TView extends TimeViewWithMeridiem = TimeView>
   extends ExportedTimeClockProps<TDate>,
-    BaseClockProps<TDate, TimeView> {
+    BaseClockProps<TDate, TView> {
   /**
    * Override or extend the styles applied to the component.
    */
