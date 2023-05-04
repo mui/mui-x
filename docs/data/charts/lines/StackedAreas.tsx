@@ -75,14 +75,14 @@ export default function StackedAreas() {
         },
         {
           id: 'Germany',
-          label: 'German GDP per capite',
+          label: 'German GDP per capita',
           data: GermanyGDPperCapita,
           stack: 'total',
           area: {},
         },
         {
           id: 'United Kingdom',
-          label: 'UK GDP per capite',
+          label: 'UK GDP per capita',
           data: UKGDPperCapita,
           stack: 'total',
           area: {},
