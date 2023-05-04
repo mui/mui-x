@@ -155,7 +155,7 @@
     "markdownlint-cli2": "^0.7.1",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
-    "patch-package": "^6.5.1",
+    "patch-package": "^7.0.0",
     "playwright": "^1.33.0",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
