@@ -1,63 +1,17 @@
 import * as React from 'react';
-import { DEFAULT_Y_AXIS_KEY } from '../constants';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
-
-export interface YAxisProps {
-  /**
-   * Position of the axis.
-   */
-  position?: 'left' | 'right';
-  /**
-   * Id of the axis to render.
-   */
-  axisId: string;
-  /**
-   * If true, the axis line is disabled.
-   * @default false
-   */
-  disableLine?: boolean;
-  /**
-   * If true, the ticks are disabled.
-   * @default false
-   */
-  disableTicks?: boolean;
-  /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill?: string;
-  /**
-   * The font size of the axis text.
-   * @default 12
-   */
-  fontSize?: number;
-  /**
-   * The label of the axis.
-   */
-  label?: string;
-  /**
-   * The font size of the axis label.
-   * @default 14
-   */
-  labelFontSize?: number;
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke?: string;
-  /**
-   * The size of the ticks.
-   * @default 6
-   */
-  tickSize?: number;
-}
+import { YAxisProps } from '../models/axis';
 
 export function YAxis(props: YAxisProps) {
   const {
+    yAxis: {
+      [props.axisId]: { scale: yScale, ...settings },
+    },
+  } = React.useContext(CartesianContext);
+  const {
     position = 'left',
-    axisId = DEFAULT_Y_AXIS_KEY,
     disableLine = false,
     disableTicks = false,
     fill = 'currentColor',
@@ -66,13 +20,7 @@ export function YAxis(props: YAxisProps) {
     labelFontSize = 14,
     stroke = 'currentColor',
     tickSize: tickSizeProp = 6,
-  } = props;
-
-  const {
-    yAxis: {
-      [axisId]: { scale: yScale },
-    },
-  } = React.useContext(CartesianContext) as any;
+  } = { ...settings, ...props };
 
   const { left, top, width, height } = React.useContext(DrawingContext);
 
