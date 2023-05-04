@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { useUtils } from '@mui/x-date-pickers/internals';
+import { DAY_SIZE, useUtils } from '@mui/x-date-pickers/internals';
 import { PickersDay, pickersDayClasses, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -248,6 +248,10 @@ const DateRangePickerDayDay = styled(PickersDay, {
 })<{
   ownerState: OwnerState;
 }>(({ ownerState }) => ({
+  // account for the added border
+  // ensures the final size is still 36px
+  width: DAY_SIZE - 4,
+  height: DAY_SIZE - 4,
   // Required to overlap preview border
   transform: 'scale(1.1)',
   '& > *': {
