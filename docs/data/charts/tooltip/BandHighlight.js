@@ -15,9 +15,10 @@ const barChartsParams = {
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'series y' },
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'series z' },
   ],
-  width: 400,
-  height: 200,
+  width: 600,
+  height: 400,
 };
+
 export default function BandHighlight() {
   return (
     <Box>
