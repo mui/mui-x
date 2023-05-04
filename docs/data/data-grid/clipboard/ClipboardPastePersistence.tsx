@@ -9,164 +9,184 @@ import Button from '@mui/material/Button';
 
 const initialRows = [
   {
-    id: 'e2a20b35-811b-591c-8a76-1f3fd5616c49',
-    desk: 'D-3195',
-    commodity: 'Soybeans',
-    traderName: 'Cornelia Farmer',
-    traderEmail: 'mufrukir@sonij.tv',
-    quantity: 48391,
-  },
-  {
-    id: '554328ce-7fa7-5d1b-b5b8-92b76341d66b',
-    desk: 'D-9359',
-    commodity: 'Robusta coffee',
-    traderName: 'Lily Powers',
-    traderEmail: 'emaaje@honofrut.my',
-    quantity: 11711,
-  },
-  {
-    id: '0116fdbe-5578-5fba-8040-5270033df47b',
-    desk: 'D-1480',
-    commodity: 'Rough Rice',
-    traderName: 'Mabel Copeland',
-    traderEmail: 'famul@gafkuf.am',
-    quantity: 84675,
-  },
-  {
-    id: 'ae71ff00-d8ac-5c73-b749-4322f9645532',
-    desk: 'D-4179',
-    commodity: 'Soybeans',
-    traderName: 'Susie Bryan',
-    traderEmail: 'ponnuntu@hibgelga.hn',
-    quantity: 89348,
-  },
-  {
-    id: 'e7daa7d1-c9e9-54c7-b04d-e2f19e51e3c1',
-    desk: 'D-2637',
-    commodity: 'Wheat',
-    traderName: 'Fred Zimmerman',
-    traderEmail: 'jij@lehu.fo',
-    quantity: 48916,
-  },
-  {
-    id: 'c43052d4-bfa8-5e41-a9ce-e8c2247730d0',
-    desk: 'D-9171',
-    commodity: 'Sugar No.11',
-    traderName: 'Ophelia McDonald',
-    traderEmail: 'balcubuho@biheta.ir',
-    quantity: 13513,
-  },
-  {
-    id: '15cfe69c-ad54-5d0e-9fd7-eee6d8ebaf93',
-    desk: 'D-2526',
-    commodity: 'Cocoa',
-    traderName: 'Earl Myers',
-    traderEmail: 'unse@kolsajih.uk',
-    quantity: 78785,
-  },
-  {
-    id: '48134d03-ee4c-53d9-b829-b39aa04343a0',
-    desk: 'D-3248',
-    commodity: 'Soybean Meal',
-    traderName: 'Eleanor Hubbard',
-    traderEmail: 'kipticda@fe.sk',
-    quantity: 38501,
-  },
-  {
-    id: 'a5e0ea6f-9c5d-5c1d-8677-0b9b4fb3f0a9',
-    desk: 'D-387',
-    commodity: 'Rapeseed',
-    traderName: 'Ethel Diaz',
-    traderEmail: 'mu@rezodfo.mv',
-    quantity: 19641,
-  },
-  {
-    id: '10ee61da-63f0-543f-9844-faeacc6f0135',
-    desk: 'D-5067',
-    commodity: 'Soybeans',
-    traderName: 'Russell Dixon',
-    traderEmail: 'cuedaf@arova.gp',
-    quantity: 36996,
-  },
-  {
-    id: '77bd84d0-9fd1-53a9-8337-e79b44433f85',
-    desk: 'D-3597',
-    commodity: 'Soybeans',
-    traderName: 'Jackson Sanchez',
-    traderEmail: 'duiwme@fupahah.fr',
-    quantity: 96417,
-  },
-  {
-    id: 'da108467-2286-5b9f-9591-f4a6508df7cb',
-    desk: 'D-7758',
-    commodity: 'Sugar No.11',
-    traderName: 'Brian Chandler',
-    traderEmail: 'tu@eto.cw',
-    quantity: 73805,
-  },
-  {
-    id: 'aff74566-50a7-54b8-9fd7-81330bc10c6e',
-    desk: 'D-6857',
+    id: '9feb3743-fbf1-585b-ae15-25a1e91126d1',
+    desk: 'D-7702',
     commodity: 'Frozen Concentrated Orange Juice',
-    traderName: 'Jonathan Lyons',
-    traderEmail: 'mummais@poirigoc.sd',
-    quantity: 87507,
+    traderName: 'Jeffrey Nichols',
+    traderEmail: 'weg@tozezew.mz',
+    quantity: 22542,
+    filledQuantity: 0.6027859107443883,
   },
   {
-    id: '57c0ba9a-c959-5fef-9b55-8d1f14bd1ab9',
-    desk: 'D-1580',
-    commodity: 'Rough Rice',
-    traderName: 'William Carter',
-    traderEmail: 'kugacgup@iwnepgun.ua',
-    quantity: 95605,
-  },
-  {
-    id: 'f7fabd85-230e-5a59-bca3-79363b7aea55',
-    desk: 'D-62',
-    commodity: 'Sugar No.11',
-    traderName: 'Clayton Santos',
-    traderEmail: 'epi@zen.mm',
-    quantity: 72953,
-  },
-  {
-    id: '271305a8-e127-555c-89c1-ba66514cbefe',
-    desk: 'D-5089',
+    id: '6aa80501-f0f1-50e4-95d9-94eac5536d24',
+    desk: 'D-5855',
     commodity: 'Oats',
-    traderName: 'Luke Parker',
-    traderEmail: 'jeca@zeuz.be',
-    quantity: 71696,
+    traderName: 'Henrietta Gill',
+    traderEmail: 'ha@ovuewadip.ca',
+    quantity: 39244,
+    filledQuantity: 0.5139893996534503,
   },
   {
-    id: '6df6f68c-152a-5c10-b3ea-6a053befb7f7',
-    desk: 'D-5285',
+    id: 'd4d49ff6-9a37-5490-94b3-c3dea5c8f787',
+    desk: 'D-8853',
     commodity: 'Cocoa',
-    traderName: 'Alberta Greene',
-    traderEmail: 'tudik@sivni.ch',
-    quantity: 41917,
+    traderName: 'Harriet Peters',
+    traderEmail: 'wezbibil@meced.pt',
+    quantity: 81111,
+    filledQuantity: 0.24879486136282378,
   },
   {
-    id: 'eaf40294-b985-58ee-901d-4b454a86b010',
-    desk: 'D-9333',
-    commodity: 'Soybeans',
-    traderName: 'Nancy Bush',
-    traderEmail: 'witac@defjawva.ec',
-    quantity: 68330,
+    id: '1db4a0e5-aca2-5ae7-89f1-aca3756c6c2c',
+    desk: 'D-3882',
+    commodity: 'Wheat',
+    traderName: 'Polly Sims',
+    traderEmail: 'ujaacazas@pobgag.ye',
+    quantity: 91665,
+    filledQuantity: 0.7220967653957344,
   },
   {
-    id: 'd152e01c-fac0-5666-8fe4-e409e370f41b',
-    desk: 'D-5129',
-    commodity: 'Soybean Meal',
-    traderName: 'Earl Burns',
-    traderEmail: 'bevloha@curokvas.gh',
-    quantity: 47471,
-  },
-  {
-    id: 'e0e2b8ac-0091-5c5b-89eb-cd30cc538b93',
-    desk: 'D-1635',
+    id: 'cc24d3fc-0d9b-56f1-8cdd-89199092e711',
+    desk: 'D-94',
     commodity: 'Sugar No.14',
-    traderName: 'Landon Steele',
-    traderEmail: 'vonvuz@rufer.kr',
-    quantity: 26542,
+    traderName: 'Jim Pratt',
+    traderEmail: 'irno@re.iq',
+    quantity: 98763,
+    filledQuantity: 0.9177019734110953,
+  },
+  {
+    id: '181ae856-c185-5895-a996-9ed822f31721',
+    desk: 'D-8570',
+    commodity: 'Frozen Concentrated Orange Juice',
+    traderName: 'Erik Kelley',
+    traderEmail: 'pado@dawom.ar',
+    quantity: 8524,
+    filledQuantity: 0.5193571093383388,
+  },
+  {
+    id: '3a199260-246e-5bb7-a20e-04d4dfae798d',
+    desk: 'D-2253',
+    commodity: 'Adzuki bean',
+    traderName: 'Victor Howell',
+    traderEmail: 'zi@orager.cl',
+    quantity: 60806,
+    filledQuantity: 0.9243989080024998,
+  },
+  {
+    id: 'ad1bdfe2-4dbd-58bb-b432-f4c50b2e8de8',
+    desk: 'D-6307',
+    commodity: 'Soybeans',
+    traderName: 'Ethan Clark',
+    traderEmail: 'wij@nepocreh.tt',
+    quantity: 48391,
+    filledQuantity: 0.7982062780269058,
+  },
+  {
+    id: '6040095c-da9b-507f-8bc2-5c0511019d2c',
+    desk: 'D-2429',
+    commodity: 'Corn',
+    traderName: 'Katie Long',
+    traderEmail: 'doga@raecu.gg',
+    quantity: 51252,
+    filledQuantity: 0.08549910247404979,
+  },
+  {
+    id: '1f90134c-c9b0-556f-b60b-cd7d150f124c',
+    desk: 'D-4598',
+    commodity: 'Soybeans',
+    traderName: 'Etta Marsh',
+    traderEmail: 'riztuw@rol.jo',
+    quantity: 59123,
+    filledQuantity: 0.619099166145155,
+  },
+  {
+    id: 'f3fb76f5-82b4-562e-b873-bec5f9a09e07',
+    desk: 'D-9116',
+    commodity: 'Soybean Meal',
+    traderName: 'Emma Wilkerson',
+    traderEmail: 'vispuhgoh@adkimac.kr',
+    quantity: 4861,
+    filledQuantity: 0.756222999382843,
+  },
+  {
+    id: '468f03c0-ee5a-51d4-807e-e65b108ed7ca',
+    desk: 'D-9046',
+    commodity: 'Robusta coffee',
+    traderName: 'Douglas Boone',
+    traderEmail: 'givuce@jisalta.jp',
+    quantity: 41630,
+    filledQuantity: 0.5862118664424694,
+  },
+  {
+    id: '856c6022-f062-57fe-a618-b8a044d94995',
+    desk: 'D-5940',
+    commodity: 'Coffee C',
+    traderName: 'Delia Collins',
+    traderEmail: 'ga@pukop.kg',
+    quantity: 42184,
+    filledQuantity: 0.17279063151905935,
+  },
+  {
+    id: 'e67a7da2-623e-5a37-afe7-d9d61f6c6707',
+    desk: 'D-166',
+    commodity: 'Oats',
+    traderName: 'Carl Allison',
+    traderEmail: 'biviv@loucu.jm',
+    quantity: 42818,
+    filledQuantity: 0.24769956560325096,
+  },
+  {
+    id: 'fde4e74d-77f8-5325-8401-8093cea3b48d',
+    desk: 'D-2177',
+    commodity: 'Soybean Oil',
+    traderName: 'Jeffrey Stone',
+    traderEmail: 'vaj@wazvi.fr',
+    quantity: 66766,
+    filledQuantity: 0.3001977054189258,
+  },
+  {
+    id: '874e66e5-435d-555c-9ccf-4a776446b1c3',
+    desk: 'D-1732',
+    commodity: 'Oats',
+    traderName: 'Jason Holland',
+    traderEmail: 'lef@nameteh.com',
+    quantity: 79141,
+    filledQuantity: 0.3829999620929733,
+  },
+  {
+    id: '95379b05-69e2-56da-997c-3e5c3892af8d',
+    desk: 'D-5479',
+    commodity: 'Rapeseed',
+    traderName: 'Alfred Cortez',
+    traderEmail: 'loeg@ufooni.eu',
+    quantity: 77715,
+    filledQuantity: 0.35680370584829185,
+  },
+  {
+    id: 'b71a1c39-dd89-59e4-90ed-0eba4708d2bf',
+    desk: 'D-7786',
+    commodity: 'Frozen Concentrated Orange Juice',
+    traderName: 'Eddie Olson',
+    traderEmail: 'sigjap@vas.sc',
+    quantity: 78507,
+    filledQuantity: 0.7016953902199804,
+  },
+  {
+    id: '8d3305fd-40a5-5b91-a677-7c3a12f42abb',
+    desk: 'D-3166',
+    commodity: 'Frozen Concentrated Orange Juice',
+    traderName: 'Louisa Coleman',
+    traderEmail: 'nezcen@mihrotab.pa',
+    quantity: 47797,
+    filledQuantity: 0.16090968052388224,
+  },
+  {
+    id: '1da5290b-1990-58a5-bcba-bd0ab6a38ce9',
+    desk: 'D-6935',
+    commodity: 'Soybean Oil',
+    traderName: 'Franklin Barrett',
+    traderEmail: 'be@fejafo.au',
+    quantity: 95833,
+    filledQuantity: 0.47529556624544783,
   },
 ];
 
@@ -174,8 +194,15 @@ const useSessionStorageData = () => {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 0,
-    maxColumns: 6,
+    maxColumns: 7,
     editable: true,
+    visibleFields: [
+      'commodity',
+      'traderName',
+      'traderEmail',
+      'quantity',
+      'filledQuantity',
+    ],
   });
 
   const [rows] = React.useState(() => {
@@ -202,13 +229,12 @@ const useSessionStorageData = () => {
   }, []);
 
   return {
-    data: { columns: data.columns, rows },
+    data: { ...data, rows },
     updateRow,
   };
 };
 
 export default function ClipboardPastePersistence() {
-  const [rowSelection, setRowSelection] = React.useState(false);
   const { data, updateRow } = useSessionStorageData();
 
   const processRowUpdate: NonNullable<DataGridPremiumProps['processRowUpdate']> = (
@@ -221,9 +247,6 @@ export default function ClipboardPastePersistence() {
   return (
     <div style={{ width: '100%' }}>
       <div style={{ marginBottom: 8 }}>
-        <Button onClick={() => setRowSelection(!rowSelection)}>
-          Toggle row selection
-        </Button>
         <Button onClick={() => sessionStorage.removeItem('clipboardImportRows')}>
           Clear session storage
         </Button>
@@ -231,8 +254,8 @@ export default function ClipboardPastePersistence() {
       <div style={{ height: 400 }}>
         <DataGridPremium
           {...data}
-          rowSelection={rowSelection}
-          checkboxSelection={rowSelection}
+          disableRowSelectionOnClick
+          checkboxSelection
           unstable_cellSelection
           processRowUpdate={processRowUpdate}
           experimentalFeatures={{ clipboardPaste: true }}
