@@ -18,12 +18,22 @@ export default function ClipboardPasteEvents() {
     return newRow;
   }, []);
 
+  const initialState = {
+    ...data.initialState,
+    columns: {
+      columnVisibilityModel: {
+        id: false,
+        desk: false,
+      },
+    },
+  };
+
   return (
     <div style={{ width: '100%', height: 400 }}>
       <DataGridPremium
         {...data}
         loading={loading}
-        rowSelection={false}
+        initialState={initialState}
         unstable_cellSelection
         processRowUpdate={processRowUpdate}
         onClipboardPasteStart={() => setLoading(true)}

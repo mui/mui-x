@@ -1,5 +1,6 @@
 <DataGridPremium
   {...data}
+  initialState={initialState}
   checkboxSelection
   disableRowSelectionOnClick
   unstable_cellSelection

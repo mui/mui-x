@@ -13,11 +13,22 @@ export default function ClipboardCopy() {
 
   const [copiedData, setCopiedData] = React.useState('');
 
+  const initialState = {
+    ...data.initialState,
+    columns: {
+      columnVisibilityModel: {
+        id: false,
+        desk: false,
+      },
+    },
+  };
+
   return (
     <div style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataGridPremium
           {...data}
+          initialState={initialState}
           checkboxSelection
           disableRowSelectionOnClick
           unstable_cellSelection

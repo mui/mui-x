@@ -10,10 +10,21 @@ export default function ClipboardPaste() {
     editable: true,
   });
 
+  const initialState = {
+    ...data.initialState,
+    columns: {
+      columnVisibilityModel: {
+        id: false,
+        desk: false,
+      },
+    },
+  };
+
   return (
     <div style={{ height: 500, width: '100%' }}>
       <DataGridPremium
         {...data}
+        initialState={initialState}
         checkboxSelection
         disableRowSelectionOnClick
         unstable_cellSelection

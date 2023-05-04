@@ -1,7 +1,7 @@
 <DataGridPremium
   {...data}
   loading={loading}
-  rowSelection={false}
+  initialState={initialState}
   unstable_cellSelection
   processRowUpdate={processRowUpdate}
   onClipboardPasteStart={() => setLoading(true)}
