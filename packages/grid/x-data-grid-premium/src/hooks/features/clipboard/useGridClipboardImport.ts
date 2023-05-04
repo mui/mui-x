@@ -10,11 +10,11 @@ import {
   useGridApiOptionHandler,
   useGridApiEventHandler,
   GridEventListener,
+  gridPaginatedVisibleSortedGridRowIdsSelector,
 } from '@mui/x-data-grid';
 import {
   buildWarning,
   getRowIdFromRowModel,
-  getVisibleRows,
   getActiveElement,
   GridPipeProcessor,
   useGridRegisterPipeProcessor,
@@ -350,20 +350,15 @@ export const useGridClipboardImport = (
 
       const selectedRowId = selectedCell.id;
       const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
-      const visibleRows = getVisibleRows(apiRef, {
-        pagination: props.pagination,
-        paginationMode: props.paginationMode,
-      });
-
+      const visibleRowIds = gridPaginatedVisibleSortedGridRowIdsSelector(apiRef);
       const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
       pastedData.forEach((rowData, index) => {
-        const targetRow = visibleRows.rows[selectedRowIndex + index];
+        const rowId = visibleRowIds[selectedRowIndex + index];
 
-        if (!targetRow) {
+        if (typeof rowId === 'undefined') {
           return;
         }
 
-        const rowId = targetRow.id;
         for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
           const field = visibleColumnFields[i];
           const stringValue = rowData[i - selectedFieldIndex];
@@ -375,8 +370,6 @@ export const useGridClipboardImport = (
     },
     [
       apiRef,
-      props.pagination,
-      props.paginationMode,
       processRowUpdate,
       onProcessRowUpdateError,
       getRowId,
