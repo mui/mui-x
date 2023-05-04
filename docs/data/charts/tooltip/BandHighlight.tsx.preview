@@ -1,0 +1,6 @@
+<Stack direction={{ xs: 'column', md: 'row' }}>
+  <BarChart
+    {...barChartsParams}
+    tooltip={{ highlightProps: { highlight: { x: 'band' } } }}
+  />
+</Stack>
