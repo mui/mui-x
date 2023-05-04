@@ -116,7 +116,7 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
         apiRef.current.showPreferences(
           GridPreferencePanelsValue.filters,
           filterPanelId,
-          filterButtonId
+          filterButtonId,
         );
       }
       buttonProps.onClick?.(event);
