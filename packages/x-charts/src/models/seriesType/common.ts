@@ -1,3 +1,5 @@
+import type { StackOffset, StackOrder } from '@mui/x-charts/internals/stackSeries';
+
 export type CommonSeriesType = {
   id?: string;
 };
@@ -16,6 +18,12 @@ export type DefaultizedCommonSeriesType<TValue> = {
 export type CartesianSeriesType = {
   xAxisKey?: string;
   yAxisKey?: string;
+};
+
+export type StackableSeriesType = {
+  stack?: string;
+  stackOffset?: keyof typeof StackOffset;
+  stackOrder?: keyof typeof StackOrder;
 };
 
 export type DefaultizedCartesianSeriesType = Required<CartesianSeriesType>;
