@@ -593,14 +593,17 @@ describe('<DataGridPro /> - Edit Components', () => {
       const onCellEditStop = spy();
 
       render(
-        <TestCase
-          onCellEditStop={onCellEditStop}
-        />
+        <div>
+          <TestCase
+            onCellEditStop={onCellEditStop}
+          />
+          <div id="outside-grid"></div>
+        </div>
       );
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      fireEvent.click(document.body);
+      fireEvent.click(document.getElementById('outside-grid')!);
       await act(() => Promise.resolve());
 
       expect(onCellEditStop.callCount).to.equal(1);
