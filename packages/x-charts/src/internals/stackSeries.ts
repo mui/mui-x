@@ -108,7 +108,7 @@ export const getStackingGroups = (params: FormatterParams) => {
       stackingGroups.push({
         ids: [id],
         stackingOrder: StackOrder[stackOrder ?? 'none'],
-        stackingOffset: StackOffset[stackOffset ?? 'none'],
+        stackingOffset: StackOffset[stackOffset ?? 'diverging'],
       });
     } else {
       stackingGroups[stackIndex[stack]].ids.push(id);

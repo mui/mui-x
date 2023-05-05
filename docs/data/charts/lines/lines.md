@@ -30,7 +30,13 @@ Series with the same `stack` will be staked on top of each other.
 
 {{"demo": "StackedAreas.js", "bg": "inline"}}
 
-### Stacking strategy 🚧
+### Stacking strategy
+
+You can use `stackOffset` and `stackOrder` properties to define how series will be staked.
+
+By default they are staked in the order you defined them, with positive values stacked on above 0 and negative values stacked below 0.
+
+For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ## Styling
 
