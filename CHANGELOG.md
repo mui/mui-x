@@ -5,9 +5,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.3.1
 
-_May 4, 2023_
+_May 5, 2023_
 
-We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -19,6 +19,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGrid] Fix broken filtering in the value formatter demo (#8621) @cherniavskii
 - [DataGrid] Fix falsy filter values not showing in filter button tooltip (#8550) @ithrforu
 - [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
+- [DataGrid] Remove unwarranted warning log (#8847) @romgrk
 - [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
 - [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
 
