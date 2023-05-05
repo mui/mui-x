@@ -25,6 +25,16 @@ And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
 
 {{"demo": "ScaleExample.js", "bg": "inline"}}
 
+:::info
+The management of those ids are for advanced usecases, such as charts with multiple axes.
+Or customized axes.
+
+If you do not provide a `xAxisKey` or `yAxisKey`, series will use the first axis defined.
+
+That's why in most of the demonstration with single x and y axis you will not see definition of axes' `id`, `xAxisKey`, or `yAxisKey`.
+Those demonstrations use the defaultized values.
+:::
+
 ### Axis type
 
 The axis type is specified by its property `scaleType` which expect one of the following values:
@@ -55,7 +65,6 @@ To show a specific range of values, you can provide properties `min` and/or `max
 ```js
 xAxis={[
   {
-    id: 'axisId',
     min: 10,
     max: 50,
   }
