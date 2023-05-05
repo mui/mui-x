@@ -9,6 +9,7 @@ export default function AxisWithComposition() {
           scaleType: 'band',
           data: ['Q1', 'Q2', 'Q3', 'Q4'],
           id: 'quarters',
+          label: 'Quarters',
         },
       ]}
       yAxis={[{ id: 'money' }, { id: 'quantities' }]}
@@ -16,21 +17,18 @@ export default function AxisWithComposition() {
         {
           type: 'line',
           id: 'revenue',
-          xAxisKey: 'quarters',
           yAxisKey: 'money',
           data: [5645, 7542, 9135, 12221],
         },
         {
           type: 'bar',
           id: 'cookies',
-          xAxisKey: 'quarters',
           yAxisKey: 'quantities',
           data: [3205, 2542, 3135, 8374],
         },
         {
           type: 'bar',
           id: 'icecream',
-          xAxisKey: 'quarters',
           yAxisKey: 'quantities',
           data: [1645, 5542, 5146, 3735],
         },

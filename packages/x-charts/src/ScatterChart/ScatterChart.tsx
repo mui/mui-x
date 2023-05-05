@@ -2,8 +2,13 @@ import * as React from 'react';
 import { ScatterPlot } from './ScatterPlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis';
+import { ScatterSeriesType } from '../models/seriesType/scatter';
+import { MakeOptional } from '../models/helpers';
 
-export interface ScatterChartProps extends ChartContainerProps, AxisProps {}
+export interface ScatterChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+  series: MakeOptional<ScatterSeriesType, 'type'>[];
+}
+
 export function ScatterChart(props: ScatterChartProps) {
   const {
     xAxis,
@@ -23,7 +28,7 @@ export function ScatterChart(props: ScatterChartProps) {
 
   return (
     <ChartContainer
-      series={series}
+      series={series.map((s) => ({ type: 'scatter', ...s }))}
       width={width}
       height={height}
       margin={margin}
