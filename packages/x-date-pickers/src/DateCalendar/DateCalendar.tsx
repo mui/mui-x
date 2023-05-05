@@ -23,6 +23,7 @@ import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimati
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
+import { DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -63,7 +64,9 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateCalendarProps<any> }>({});
+})<{ ownerState: DateCalendarProps<any> }>(({ ownerState }) => ({
+  width: DIALOG_WIDTH + (ownerState.displayWeekNumber ? WEEK_NUMBER_SIZE : 0),
+}));
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',

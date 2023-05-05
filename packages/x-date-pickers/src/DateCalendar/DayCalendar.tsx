@@ -11,7 +11,12 @@ import clsx from 'clsx';
 import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
-import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
+import {
+  DAY_SIZE,
+  DAY_MARGIN,
+  CALENDAR_MARGIN,
+  WEEK_NUMBER_SIZE,
+} from '../internals/constants/dimensions';
 import {
   PickersSlideTransition,
   SlideDirection,
@@ -131,7 +136,7 @@ const PickersCalendarDayRoot = styled('div', {
 })({
   display: 'flex',
   flexDirection: 'column',
-  margin: '0 16px',
+  margin: `0 ${CALENDAR_MARGIN}px`,
   gap: 16,
 });
 
@@ -151,7 +156,7 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
   overridesResolver: (_, styles) => styles.weekDayLabel,
 })(({ theme }) => ({
   width: DAY_SIZE,
-  height: 40,
+  height: DAY_SIZE,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -164,8 +169,8 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
   slot: 'WeekNumberLabel',
   overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
-  width: DAY_SIZE,
-  height: 40,
+  width: WEEK_NUMBER_SIZE,
+  height: DAY_SIZE,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -179,7 +184,7 @@ const PickersCalendarWeekNumber = styled(Typography, {
   overridesResolver: (_, styles) => styles.weekNumber,
 })(({ theme }) => ({
   ...theme.typography.caption,
-  width: DAY_SIZE,
+  width: WEEK_NUMBER_SIZE,
   height: DAY_SIZE,
   padding: 0,
   color: theme.palette.text.disabled,
@@ -221,7 +226,7 @@ const PickersCalendarWeek = styled('div', {
 })({
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
 });
 
 function WrappedDay<TDate extends unknown>({

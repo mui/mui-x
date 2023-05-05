@@ -29,6 +29,9 @@ import {
   uncapitalizeObjectKeys,
   UncapitalizeObjectKeys,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
+  CALENDAR_MARGIN,
+  RANGE_CALENDAR_WIDTH,
+  WEEK_NUMBER_SIZE,
 } from '@mui/x-date-pickers/internals';
 import Typography from '@mui/material/Typography';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
@@ -77,7 +80,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
-  margin: 16,
+  margin: CALENDAR_MARGIN,
   alignItems: 'center',
   justifyContent: 'space-between',
 });
@@ -85,7 +88,8 @@ const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
 const DAY_RANGE_SIZE = 40;
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
-const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
+const DayCalendarForRange = styled(DayCalendar)(({ theme, displayWeekNumber }) => ({
+  minWidth: RANGE_CALENDAR_WIDTH + (displayWeekNumber ? WEEK_NUMBER_SIZE : 0),
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.day}`]: {

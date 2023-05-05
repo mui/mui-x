@@ -248,10 +248,9 @@ const DateRangePickerDayDay = styled(PickersDay, {
 })<{
   ownerState: OwnerState;
 }>(({ ownerState }) => ({
-  // account for the added border
-  // ensures the final size is still 36px
-  width: DAY_SIZE - 4,
-  height: DAY_SIZE - 4,
+  // account for difference in expected margin and the preview border
+  width: DAY_SIZE - 1,
+  height: DAY_SIZE - 1,
   // Required to overlap preview border
   transform: 'scale(1.1)',
   '& > *': {

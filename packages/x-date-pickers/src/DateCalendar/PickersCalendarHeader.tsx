@@ -26,6 +26,7 @@ import {
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { CALENDAR_MARGIN } from '../internals/constants/dimensions';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
@@ -108,7 +109,7 @@ const PickersCalendarHeaderRoot = styled('div', {
 }>({
   display: 'flex',
   alignItems: 'center',
-  margin: 16,
+  margin: CALENDAR_MARGIN,
   // prevent jumping in safari
   maxHeight: 34,
   minHeight: 34,
@@ -148,7 +149,7 @@ const PickersCalendarHeaderLabel = styled('div', {
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
 }>({
-  marginRight: 6,
+  marginRight: 4,
 });
 
 const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {

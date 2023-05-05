@@ -49,7 +49,14 @@ export type {
 } from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
-export { DAY_MARGIN, DIALOG_WIDTH, DAY_SIZE } from './constants/dimensions';
+export {
+  DAY_MARGIN,
+  DIALOG_WIDTH,
+  DAY_SIZE,
+  RANGE_CALENDAR_WIDTH,
+  CALENDAR_MARGIN,
+  WEEK_NUMBER_SIZE,
+} from './constants/dimensions';
 
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
