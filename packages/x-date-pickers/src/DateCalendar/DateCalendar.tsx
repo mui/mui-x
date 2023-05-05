@@ -347,6 +347,9 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
+              width={
+                DIALOG_WIDTH + (displayWeekNumber ? WEEK_NUMBER_SIZE : 0) - 2 * CALENDAR_MARGIN
+              }
             />
           )}
 
