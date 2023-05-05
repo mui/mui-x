@@ -65,7 +65,7 @@ const PickersYearButton = styled('button', {
   border: 0,
   outline: 0,
   ...theme.typography.subtitle1,
-  margin: '8px 0',
+  margin: '8px 4px',
   height: DAY_SIZE,
   width: '100%',
   borderRadius: 18,
