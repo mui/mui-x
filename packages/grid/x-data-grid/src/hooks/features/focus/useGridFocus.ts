@@ -178,7 +178,7 @@ export const useGridFocus = (
       const rowToFocus = currentPage.rows[rowIndexToFocus];
 
       const colSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
-        rowToFocus.id,
+        rowToFocus?.id,
         columnIndexToFocus,
       );
       if (colSpanInfo && colSpanInfo.spannedByColSpan) {
@@ -191,7 +191,9 @@ export const useGridFocus = (
 
       columnIndexToFocus = clamp(columnIndexToFocus, 0, visibleColumns.length - 1);
       const columnToFocus = visibleColumns[columnIndexToFocus];
-      apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
+      if (rowToFocus) {
+        apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
+      }
     },
     [apiRef, props.pagination, props.paginationMode],
   );

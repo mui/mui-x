@@ -3,7 +3,12 @@ import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridRowApi, GridRowProApi } from '../../../models/api/gridRowApi';
-import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
+import {
+  GridRowId,
+  GridGroupNode,
+  GridLeafNode,
+  GridRowModelUpdate,
+} from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -186,8 +191,29 @@ export const useGridRows = (
         );
       }
 
+      const nonPinnedRowsUpdates: GridRowModelUpdate[] = [];
+
+      updates.forEach((update) => {
+        const id = getRowIdFromRowModel(
+          update,
+          props.getRowId,
+          'A row was provided without id when calling updateRows():',
+        );
+
+        const rowNode = apiRef.current.getRowNode(id);
+        if (rowNode?.type === 'pinnedRow') {
+          const prevModel = apiRef.current.caches.pinnedRows.idLookup[id];
+          apiRef.current.caches.pinnedRows.idLookup[id] = {
+            ...prevModel,
+            ...update,
+          };
+        } else {
+          nonPinnedRowsUpdates.push(update);
+        }
+      });
+
       const cache = updateCacheWithNewRows({
-        updates,
+        updates: nonPinnedRowsUpdates,
         getRowId: props.getRowId,
         previousCache: apiRef.current.caches.rows,
       });
