@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.3.1
+
+_May 5, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.3.1` / `@mui/x-data-grid-pro@v6.3.1` / `@mui/x-data-grid-premium@v6.3.1`
+
+#### Changes
+
+- [DataGrid] Fix broken filtering in the value formatter demo (#8621) @cherniavskii
+- [DataGrid] Fix falsy filter values not showing in filter button tooltip (#8550) @ithrforu
+- [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
+- [DataGrid] Remove unwarranted warning log (#8847) @romgrk
+- [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
+- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
+
+### `@mui/x-date-pickers@v6.3.1` / `@mui/x-date-pickers-pro@v6.3.1`
+
+#### Changes
+
+- [pickers] Fix `minutesStep` validation prop behavior (#8794) @LukasTy
+- [pickers] Fix time picker `viewRenderers` overriding (#8830) @LukasTy
+- [pickers] Remove last additional character when using LTR (#8848) @alexfauquette
+
+### Docs
+
+- [docs] Fix controlled mode demo on Editing page (#8800) @yaredtsy
+- [docs] Fix scrolling demo not working with React 18 (#6489) @cherniavskii
+- [docs] Update demo to support agregation on popular feature cell (#8617) @BalaM314
+- [docs] Clarify what `<path>` is (#8764) @alexfauquette
+
+### Core
+
+- [core] Do not include playground pages in `yarn typescript` script (#8822) @cherniavskii
+- [core] Limit `typescript:ci` step memory limit (#8796) @LukasTy
+- [core] Upgrade monorepo (#8835) @cherniavskii
+- [test] Use `fake` clock on `MobileDateRangePicker` (#8861) @LukasTy
+- [charts] Clean some styling (#8778) @alexfauquette
+- [charts] Improve tooltip (#8792) @alexfauquette
+- [charts] Improvement and docs on axis (#8654) @alexfauquette
+- [charts] Defaultize attributes (#8788) @alexfauquette
+
 ## 6.3.0
 
 _Apr 28, 2023_
@@ -264,9 +310,9 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [fields] Add missing tokens to `AdapterDateFnsJalali` (#8402) @flaviendelangle
 - [fields] Clean the active date manager (#8370) @flaviendelangle
-- [fields] Cleanup `useFieldState`  (#8292) @flaviendelangle
+- [fields] Cleanup `useFieldState` (#8292) @flaviendelangle
 - [fields] Only add RTL characters when needed (#8325) @flaviendelangle
-- [pickers] Add support for single input fields in range pickers  (#7927) @flaviendelangle
+- [pickers] Add support for single input fields in range pickers (#7927) @flaviendelangle
 - [pickers] Allows non token characters in format (#8256) @alexfauquette
 - [pickers] Avoid root imports and move public models to the models folder (#8337) @flaviendelangle
 - [pickers] Update `view` when `views` or `openTo` changes (#8361) @LukasTy

@@ -1,5 +1,5 @@
 {
-  "version": "6.3.0",
+  "version": "6.3.1",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
@@ -59,7 +59,7 @@
     "build:codesandbox": "yarn release:build",
     "install:codesandbox": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 yarn install --ignore-engines",
     "release:changelog": "node scripts/releaseChangelog.mjs",
-    "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
+    "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version --no-private",
     "release:build": "lerna run --parallel --no-private --scope \"@mui/*\" build",
     "release:publish": "lerna publish from-package --no-private --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
