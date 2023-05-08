@@ -212,7 +212,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       act(() => {
         apiRef.current.setPaginationModel({ page: 1, pageSize: 2 });
         apiRef.current.setPinnedColumns({ left: ['id'] });
-        apiRef.current.showPreferences(GridPreferencePanelsValue.filters, 'panelId', 'buttonId');
+        apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
         apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
         apiRef.current.setFilterModel({
           items: [{ field: 'id', operator: '<', value: '5' }],
