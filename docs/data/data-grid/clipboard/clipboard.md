@@ -92,6 +92,10 @@ You can use the `unstable_splitClipboardText` prop to support a different format
 />
 ```
 
+The demo below uses `,` character as a cell delimiter for both copy and paste operations:
+
+{{"demo": "ClipboardPasteDelimiter.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
