@@ -8,6 +8,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_useControlled as useControlled,
 } from '@mui/utils';
+import { resolveComponentProps } from '@mui/base/utils';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -23,7 +24,7 @@ import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimati
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
-import { CALENDAR_MARGIN, DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
+import { CALENDAR_MARGIN, DAY_MARGIN, DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -64,8 +65,11 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateCalendarProps<any> }>(({ ownerState }) => ({
-  width: DIALOG_WIDTH + (ownerState.displayWeekNumber ? WEEK_NUMBER_SIZE : 0),
+})<{ ownerState: DateCalendarProps<any> & { disableDayMargin?: boolean } }>(({ ownerState }) => ({
+  width:
+    DIALOG_WIDTH +
+    (ownerState.displayWeekNumber ? WEEK_NUMBER_SIZE : 0) -
+    (ownerState.disableDayMargin ? 7 * 2 * DAY_MARGIN : 0),
 }));
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
@@ -251,7 +255,9 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     }
   }, [value]); // eslint-disable-line
 
-  const ownerState = props;
+  // we only need one prop resolved correctly, passing empty object shouldn't be a problem
+  const disableDayMargin = resolveComponentProps(slotProps?.day, {} as any)?.disableMargin;
+  const ownerState = { ...props, disableDayMargin };
   const classes = useUtilityClasses(ownerState);
 
   const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
