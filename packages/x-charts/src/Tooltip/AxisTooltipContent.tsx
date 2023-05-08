@@ -86,7 +86,8 @@ export function AxisTooltipContent(props: {
     const rep: any[] = [];
     (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
       series[seriesType]!.seriesOrder.forEach((seriesId) => {
-        if (series[seriesType]!.series[seriesId].xAxisKey === USED_X_AXIS_ID) {
+        const axisKey = series[seriesType]!.series[seriesId].xAxisKey;
+        if (axisKey === undefined || axisKey === USED_X_AXIS_ID) {
           rep.push(series[seriesType]!.series[seriesId]);
         }
       });

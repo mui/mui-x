@@ -62,10 +62,11 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const warnedOnceMissingInPageSizeOptions = React.useRef(false);
 
+      const pageSize = rootProps.paginationModel?.pageSize ?? paginationModel.pageSize;
       if (
         !warnedOnceMissingInPageSizeOptions.current &&
         !rootProps.autoPageSize &&
-        !rootProps.pageSizeOptions.includes(paginationModel.pageSize)
+        !rootProps.pageSizeOptions.includes(pageSize)
       ) {
         console.warn(
           [
