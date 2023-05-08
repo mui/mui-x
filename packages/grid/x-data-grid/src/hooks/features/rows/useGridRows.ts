@@ -202,11 +202,15 @@ export const useGridRows = (
 
         const rowNode = apiRef.current.getRowNode(id);
         if (rowNode?.type === 'pinnedRow') {
-          const prevModel = apiRef.current.caches.pinnedRows.idLookup[id];
-          apiRef.current.caches.pinnedRows.idLookup[id] = {
-            ...prevModel,
-            ...update,
-          };
+          // @ts-ignore because otherwise `release:build` doesn't work
+          const pinnedRowsCache = apiRef.current.caches.pinnedRows;
+          const prevModel = pinnedRowsCache.idLookup[id];
+          if (prevModel) {
+            pinnedRowsCache.idLookup[id] = {
+              ...prevModel,
+              ...update,
+            };
+          }
         } else {
           nonPinnedRowsUpdates.push(update);
         }
