@@ -156,7 +156,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      <Fade in={!hideControls}>
+      <Fade in={!hideControls} appear={false}>
         <PreviousIconButton {...previousIconButtonProps}>
           {isRTL ? (
             <RightArrowIcon {...rightArrowIconProps} />
@@ -168,7 +168,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       {children || (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      <Fade in={!hideControls}>
+      <Fade in={!hideControls} appear={false}>
         <NextIconButton {...nextIconButtonProps}>
           {isRTL ? (
             <LeftArrowIcon {...leftArrowIconProps} />
