@@ -110,6 +110,7 @@ const PickersCalendarHeaderRoot = styled('div', {
   display: 'flex',
   alignItems: 'center',
   margin: CALENDAR_MARGIN,
+  marginBottom: CALENDAR_MARGIN / 2,
   // prevent jumping in safari
   maxHeight: 34,
   minHeight: 34,

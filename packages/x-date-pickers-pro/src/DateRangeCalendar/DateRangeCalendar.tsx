@@ -81,6 +81,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
   margin: CALENDAR_MARGIN,
+  marginBottom: CALENDAR_MARGIN / 2,
   alignItems: 'center',
   justifyContent: 'space-between',
 });

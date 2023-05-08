@@ -137,7 +137,7 @@ const PickersCalendarDayRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   margin: `0 ${CALENDAR_MARGIN}px`,
-  gap: 16,
+  gap: CALENDAR_MARGIN / 2,
 });
 
 const PickersCalendarDayHeader = styled('div', {
