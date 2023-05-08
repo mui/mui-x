@@ -49,6 +49,7 @@ export const useGridCellSelection = (
     | 'pagination'
     | 'paginationMode'
     | 'unstable_ignoreValueFormatterDuringExport'
+    | 'clipboardCopyCellDelimiter'
   >,
 ) => {
   const visibleRows = useGridVisibleRows(apiRef, props);
@@ -60,6 +61,7 @@ export const useGridCellSelection = (
     (typeof ignoreValueFormatterProp === 'object'
       ? ignoreValueFormatterProp?.clipboardExport
       : ignoreValueFormatterProp) || false;
+  const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -428,19 +430,19 @@ export const useGridCellSelection = (
           if (fieldsMap[field]) {
             const cellParams = apiRef.current.getCellParams(rowId, field);
             cellData = serializeCellValue(cellParams, {
-              delimiterCharacter: '\t',
+              delimiterCharacter: clipboardCopyCellDelimiter,
               ignoreValueFormatter,
             });
           } else {
             cellData = '';
           }
-          return acc2 === '' ? cellData : [acc2, cellData].join('\t');
+          return acc2 === '' ? cellData : [acc2, cellData].join(clipboardCopyCellDelimiter);
         }, '');
         return acc === '' ? rowString : [acc, rowString].join('\r\n');
       }, '');
       return copyData;
     },
-    [apiRef, ignoreValueFormatter],
+    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);

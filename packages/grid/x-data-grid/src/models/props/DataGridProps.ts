@@ -349,6 +349,11 @@ export interface DataGridPropsWithDefaultValues {
         csvExport?: boolean;
         clipboardExport?: boolean;
       };
+  /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: string;
 }
 
 /**

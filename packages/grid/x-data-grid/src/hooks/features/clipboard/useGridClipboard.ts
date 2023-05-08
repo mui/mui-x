@@ -61,7 +61,7 @@ export const useGridClipboard = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'unstable_ignoreValueFormatterDuringExport' | 'onClipboardCopy'
+    'unstable_ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'
   >,
 ): void => {
   const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
@@ -69,6 +69,8 @@ export const useGridClipboard = (
     (typeof ignoreValueFormatterProp === 'object'
       ? ignoreValueFormatterProp?.clipboardExport
       : ignoreValueFormatterProp) || false;
+
+  const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
@@ -90,14 +92,14 @@ export const useGridClipboard = (
         textToCopy = apiRef.current.getDataAsCsv({
           includeHeaders: false,
           // TODO: make it configurable
-          delimiter: '\t',
+          delimiter: clipboardCopyCellDelimiter,
         });
       } else {
         const focusedCell = gridFocusCellSelector(apiRef);
         if (focusedCell) {
           const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
           textToCopy = serializeCellValue(cellParams, {
-            delimiterCharacter: '\t',
+            delimiterCharacter: clipboardCopyCellDelimiter,
             ignoreValueFormatter,
           });
         }
@@ -110,7 +112,7 @@ export const useGridClipboard = (
         apiRef.current.publishEvent('clipboardCopy', textToCopy);
       }
     },
-    [apiRef, ignoreValueFormatter],
+    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
