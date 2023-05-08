@@ -351,4 +351,5 @@ MonthCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  width: PropTypes.number,
 } as any;

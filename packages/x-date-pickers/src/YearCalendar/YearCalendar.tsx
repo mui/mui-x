@@ -361,6 +361,7 @@ YearCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  width: PropTypes.number,
   /**
    * Years rendered per row.
    * @default 3
