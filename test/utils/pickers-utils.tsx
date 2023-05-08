@@ -232,24 +232,24 @@ export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | 
 
 export const rangeCalendarDayTouches = {
   '2018-01-01': {
-    clientX: 85,
-    clientY: 125,
+    clientX: 82,
+    clientY: 138,
   },
   '2018-01-02': {
-    clientX: 125,
-    clientY: 125,
+    clientX: 121,
+    clientY: 138,
   },
   '2018-01-09': {
-    clientX: 125,
-    clientY: 165,
+    clientX: 122,
+    clientY: 177,
   },
   '2018-01-10': {
-    clientX: 165,
-    clientY: 165,
+    clientX: 161,
+    clientY: 177,
   },
   '2018-01-11': {
-    clientX: 205,
-    clientY: 165,
+    clientX: 200,
+    clientY: 177,
   },
 } as const;
 
