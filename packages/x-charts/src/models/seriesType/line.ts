@@ -17,7 +17,7 @@ export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
  */
 export type LineItemIdentifier = {
   type: 'line';
-  seriesId: LineSeriesType['id'];
+  seriesId: DefaultizedLineSeriesType['id'];
   /**
    * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
    */
@@ -25,5 +25,5 @@ export type LineItemIdentifier = {
 };
 
 export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, 'xAxisKey' | 'yAxisKey'>,
+  extends DefaultizedProps<LineSeriesType, 'id'>,
     DefaultizedCommonSeriesType<number> {}

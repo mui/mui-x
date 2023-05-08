@@ -1,8 +1,9 @@
 export type CommonSeriesType = {
-  id: string;
+  id?: string;
 };
 
 export type DefaultizedCommonSeriesType<TValue> = {
+  id: string;
   color: string;
   /**
    * Formatter used to render values in tooltip or other data display.
