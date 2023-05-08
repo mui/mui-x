@@ -24,7 +24,7 @@ import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimati
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
-import { CALENDAR_MARGIN, DAY_MARGIN, DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
+import { DAY_MARGIN, DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -336,9 +336,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
               yearsPerRow={yearsPerRow}
-              width={
-                DIALOG_WIDTH + (displayWeekNumber ? WEEK_NUMBER_SIZE : 0) - 2 * CALENDAR_MARGIN
-              }
+              width="inherit"
             />
           )}
 
@@ -353,9 +351,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
-              width={
-                DIALOG_WIDTH + (displayWeekNumber ? WEEK_NUMBER_SIZE : 0) - 2 * CALENDAR_MARGIN
-              }
+              width="inherit"
             />
           )}
 

@@ -351,5 +351,5 @@ MonthCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
-  width: PropTypes.number,
+  width: PropTypes.oneOfType([PropTypes.oneOf(['inherit']), PropTypes.number]),
 } as any;
