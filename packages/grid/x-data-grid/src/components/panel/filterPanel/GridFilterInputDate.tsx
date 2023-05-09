@@ -8,8 +8,16 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'date' | 'datetime-local';
-    headerFilterMenu?: React.ReactNode | null;
-    isFilterActive?: boolean;
+    headerFilterMenu?: React.ReactNode;
+    /**
+     * It will be `true` if the filter cell is focused
+     */
+    hasFocus?: boolean;
+    /**
+     * It will be `true` if the filter is applied
+     */
+    isApplied?: boolean;
+    clearIcon?: React.ReactNode | null;
   };
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
@@ -23,7 +31,9 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     focusElementRef,
     InputProps,
     headerFilterMenu,
-    isFilterActive,
+    hasFocus,
+    isApplied,
+    clearIcon,
     tabIndex,
     disabled,
     ...other
@@ -63,6 +73,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
   return (
     <rootProps.slots.baseTextField
+      fullWidth
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -75,8 +86,13 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       }}
       inputRef={focusElementRef}
       InputProps={{
-        ...(applying ? { endAdornment: <rootProps.slots.loadIcon /> } : {}),
-        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
+        ...(applying || (isApplied && clearIcon)
+          ? { endAdornment: applying ? <rootProps.slots.loadIcon /> : clearIcon }
+          : {}),
+        ...(headerFilterMenu && (hasFocus || isApplied)
+          ? { startAdornment: headerFilterMenu }
+          : {}),
+        ...(clearIcon && isApplied ? { endAdornment: clearIcon } : {}),
         disabled,
         ...InputProps,
         inputProps: {
@@ -100,12 +116,20 @@ GridFilterInputDate.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  clearIcon: PropTypes.node,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * It will be `true` if the filter cell is focused
+   */
+  hasFocus: PropTypes.bool,
   headerFilterMenu: PropTypes.node,
-  isFilterActive: PropTypes.bool,
+  /**
+   * It will be `true` if the filter is applied
+   */
+  isApplied: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

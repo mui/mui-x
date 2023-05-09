@@ -61,7 +61,7 @@ type GridHeaderFilterCellConditionalProps =
     };
 
 export type GridHeaderFilterCellOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
-  GridHeaderFilterCellConditionalProps;
+  GridHeaderFilterCellConditionalProps & { showClearIcon?: boolean };
 
 export type GridHeaderFilterCellProps = GridHeaderFilterCellOverridableProps & {
   colIndex: number;
@@ -111,6 +111,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       item,
       headerFilterMenuRef,
       InputComponentProps,
+      showClearIcon = false,
       ...other
     } = props;
 
@@ -142,6 +143,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       },
       [apiRef, item],
     );
+
+    const clearFilterItem = React.useCallback(() => {
+      apiRef.current.deleteFilterItem(item);
+    }, [apiRef, item]);
 
     React.useLayoutEffect(() => {
       if (hasFocus && !isMenuOpen) {
@@ -243,7 +248,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const classes = useUtilityClasses(ownerState as OwnerState);
 
     const isNoInputOperator = NO_INPUT_OPERATORS[colType!]?.includes(item.operator);
-    const isFilterActive = hasFocus || Boolean(item?.value) || isNoInputOperator;
+    const isApplied = Boolean(item?.value) || isNoInputOperator;
     const label =
       OPERATOR_LABEL_MAPPING[item.operator] ??
       apiRef.current.getLocaleText(
@@ -276,8 +281,9 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
             onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
             placeholder={apiRef.current.getLocaleText('columnMenuFilter')}
-            label={isFilterActive ? capitalize(label) : ' '}
-            isFilterActive={isFilterActive}
+            label={isApplied || hasFocus ? capitalize(label) : ' '}
+            hasFocus={hasFocus}
+            isApplied={isApplied}
             headerFilterMenu={
               <rootProps.slots.headerFilterAdornment
                 operators={filterOperators!}
@@ -287,6 +293,11 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
                 headerFilterMenuRef={headerFilterMenuRef}
                 buttonRef={buttonRef}
               />
+            }
+            clearIcon={
+              showClearIcon ? (
+                <rootProps.slots.headerFilterClearIcon onClick={clearFilterItem} />
+              ) : null
             }
             disabled={isNoInputOperator}
             tabIndex={-1}
@@ -335,6 +346,7 @@ GridHeaderFilterCell.propTypes = {
     operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
+  showClearIcon: PropTypes.bool,
   sortIndex: PropTypes.number,
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   width: PropTypes.number.isRequired,

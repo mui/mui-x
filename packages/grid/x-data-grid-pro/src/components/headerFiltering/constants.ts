@@ -44,6 +44,7 @@ export const OPERATOR_SYMBOL_MAPPING: { [key: string]: string } = {
 export const NO_INPUT_OPERATORS: { [columnType: string]: string[] } = {
   string: ['isEmpty', 'isNotEmpty'],
   date: ['isEmpty', 'isNotEmpty'],
+  number: ['isEmpty', 'isNotEmpty'],
 };
 
 /*

@@ -5,6 +5,7 @@ import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridHeaderFilterAdornment } from '../components/headerFiltering/GridHeaderFilterAdornment';
 import { GridHeaderFilterMenu } from '../components/headerFiltering/GridHeaderFilterMenu';
 import { GridHeaderFilterCell } from '../components/headerFiltering/GridHeaderFilterCell';
+import { GridHeaderFilterClearIcon } from '../components/headerFiltering/GridHeaderFilterClearIcon';
 import materialSlots from '../material';
 
 export const DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS: GridProSlotsComponent = {
@@ -15,4 +16,5 @@ export const DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS: GridProSlotsComponent = {
   HeaderFilterAdornment: GridHeaderFilterAdornment,
   HeaderFilterCell: GridHeaderFilterCell,
   HeaderFilterMenu: GridHeaderFilterMenu,
+  HeaderFilterClearIcon: GridHeaderFilterClearIcon,
 };

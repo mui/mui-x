@@ -2,14 +2,29 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
+import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
+    /**
+     * It will be `true` if the filter cell is focused
+     */
+    hasFocus?: boolean;
+    /**
+     * It will be `true` if the filter is applied
+     */
+    isApplied?: boolean;
     headerFilterMenu?: React.ReactNode | null;
-    isFilterActive?: boolean;
+    clearIcon?: React.ReactNode | null;
   };
+
+const BooleanOperatorContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'flex-end',
+  width: '100%',
+});
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
@@ -18,7 +33,9 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     apiRef,
     focusElementRef,
     headerFilterMenu,
-    isFilterActive,
+    hasFocus,
+    isApplied,
+    clearIcon,
     tabIndex,
     label: labelProp,
     ...others
@@ -50,52 +67,55 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <rootProps.slots.baseFormControl fullWidth>
-      <rootProps.slots.baseInputLabel
-        {...rootProps.slotProps?.baseInputLabel}
-        id={labelId}
-        shrink
-        variant="standard"
-      >
-        {label}
-      </rootProps.slots.baseInputLabel>
-      <rootProps.slots.baseSelect
-        labelId={labelId}
-        id={selectId}
-        label={label}
-        value={filterValueState}
-        onChange={onFilterChange}
-        variant="standard"
-        native={isSelectNative}
-        displayEmpty
-        startAdornment={isFilterActive ? headerFilterMenu : null}
-        inputProps={{ ref: focusElementRef, tabIndex }}
-        {...others}
-        {...baseSelectProps}
-      >
-        <rootProps.slots.baseSelectOption
-          {...baseSelectOptionProps}
-          native={isSelectNative}
-          value=""
+    <BooleanOperatorContainer>
+      <rootProps.slots.baseFormControl fullWidth>
+        <rootProps.slots.baseInputLabel
+          {...rootProps.slotProps?.baseInputLabel}
+          id={labelId}
+          shrink
+          variant="standard"
         >
-          {apiRef.current.getLocaleText('filterValueAny')}
-        </rootProps.slots.baseSelectOption>
-        <rootProps.slots.baseSelectOption
-          {...baseSelectOptionProps}
+          {label}
+        </rootProps.slots.baseInputLabel>
+        <rootProps.slots.baseSelect
+          labelId={labelId}
+          id={selectId}
+          label={label}
+          value={filterValueState}
+          onChange={onFilterChange}
+          variant="standard"
           native={isSelectNative}
-          value="true"
+          displayEmpty
+          startAdornment={hasFocus || isApplied ? headerFilterMenu : null}
+          inputProps={{ ref: focusElementRef, tabIndex }}
+          {...others}
+          {...baseSelectProps}
         >
-          {apiRef.current.getLocaleText('filterValueTrue')}
-        </rootProps.slots.baseSelectOption>
-        <rootProps.slots.baseSelectOption
-          {...baseSelectOptionProps}
-          native={isSelectNative}
-          value="false"
-        >
-          {apiRef.current.getLocaleText('filterValueFalse')}
-        </rootProps.slots.baseSelectOption>
-      </rootProps.slots.baseSelect>
-    </rootProps.slots.baseFormControl>
+          <rootProps.slots.baseSelectOption
+            {...baseSelectOptionProps}
+            native={isSelectNative}
+            value=""
+          >
+            {apiRef.current.getLocaleText('filterValueAny')}
+          </rootProps.slots.baseSelectOption>
+          <rootProps.slots.baseSelectOption
+            {...baseSelectOptionProps}
+            native={isSelectNative}
+            value="true"
+          >
+            {apiRef.current.getLocaleText('filterValueTrue')}
+          </rootProps.slots.baseSelectOption>
+          <rootProps.slots.baseSelectOption
+            {...baseSelectOptionProps}
+            native={isSelectNative}
+            value="false"
+          >
+            {apiRef.current.getLocaleText('filterValueFalse')}
+          </rootProps.slots.baseSelectOption>
+        </rootProps.slots.baseSelect>
+      </rootProps.slots.baseFormControl>
+      {isApplied ? clearIcon : null}
+    </BooleanOperatorContainer>
   );
 }
 
@@ -108,14 +128,22 @@ GridFilterInputBoolean.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  clearIcon: PropTypes.node,
   focusElementRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.any.isRequired,
     }),
   ]),
+  /**
+   * It will be `true` if the filter cell is focused
+   */
+  hasFocus: PropTypes.bool,
   headerFilterMenu: PropTypes.node,
-  isFilterActive: PropTypes.bool,
+  /**
+   * It will be `true` if the filter is applied
+   */
+  isApplied: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

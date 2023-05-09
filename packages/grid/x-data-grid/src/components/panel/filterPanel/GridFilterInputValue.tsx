@@ -10,8 +10,16 @@ export const SUBMIT_FILTER_STROKE_TIME = 500;
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'text' | 'number' | 'date' | 'datetime-local';
-    isFilterActive?: boolean;
+    /**
+     * It will be `true` if the filter cell is focused
+     */
+    hasFocus?: boolean;
+    /**
+     * It will be `true` if the filter is applied
+     */
+    isApplied?: boolean;
     headerFilterMenu?: React.ReactNode | null;
+    clearIcon?: React.ReactNode | null;
   };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
@@ -23,8 +31,10 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     focusElementRef,
     tabIndex,
     disabled,
-    isFilterActive,
+    isApplied,
+    hasFocus,
     headerFilterMenu,
+    clearIcon,
     InputProps,
     ...others
   } = props;
@@ -70,8 +80,12 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       variant="standard"
       type={type || 'text'}
       InputProps={{
-        ...(applying ? { endAdornment: <rootProps.slots.loadIcon /> } : {}),
-        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
+        ...(applying || (isApplied && clearIcon)
+          ? { endAdornment: applying ? <rootProps.slots.loadIcon /> : clearIcon }
+          : {}),
+        ...(headerFilterMenu && (isApplied || hasFocus)
+          ? { startAdornment: headerFilterMenu }
+          : {}),
         disabled,
         ...InputProps,
         inputProps: {
@@ -98,12 +112,20 @@ GridFilterInputValue.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  clearIcon: PropTypes.node,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * It will be `true` if the filter cell is focused
+   */
+  hasFocus: PropTypes.bool,
   headerFilterMenu: PropTypes.node,
-  isFilterActive: PropTypes.bool,
+  /**
+   * It will be `true` if the filter is applied
+   */
+  isApplied: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

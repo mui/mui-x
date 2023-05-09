@@ -22,6 +22,11 @@ export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSl
    * @default GridHeaderFilterMenu
    */
   HeaderFilterMenu: React.JSXElementConstructor<any>;
+  /**
+   * Component responsible for clear icon in header filter
+   * @default GridHeaderFilterClearIcon
+   */
+  HeaderFilterClearIcon: React.JSXElementConstructor<any>;
 }
 
 // TODO: remove in v7
