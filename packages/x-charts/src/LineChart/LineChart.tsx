@@ -1,42 +1,56 @@
 import * as React from 'react';
 import { LinePlot } from './LinePlot';
-import { XAxis } from '../XAxis/XAxis';
-import { YAxis } from '../YAxis/YAxis';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { Axis, AxisProps } from '../Axis/Axis';
+import { LineSeriesType } from '../models/seriesType/line';
+import { MakeOptional } from '../models/helpers';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
 
-export function LineChart(props: ChartContainerProps) {
-  const { xAxis, yAxis, series, width, height, margin, colors, sx, tooltip, children } = props;
+export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+  series: MakeOptional<LineSeriesType, 'type'>[];
+}
+export function LineChart(props: LineChartProps) {
+  const {
+    xAxis,
+    yAxis,
+    series,
+    width,
+    height,
+    margin,
+    colors,
+    sx,
+    tooltip,
+    topAxis,
+    leftAxis,
+    rightAxis,
+    bottomAxis,
+    children,
+  } = props;
 
   return (
     <ChartContainer
-      series={series}
+      series={series.map((s) => ({ type: 'line', ...s }))}
       width={width}
       height={height}
       margin={margin}
-      xAxis={xAxis}
+      xAxis={
+        xAxis ?? [
+          {
+            id: DEFAULT_X_AXIS_KEY,
+            scaleType: 'band',
+            data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
+              (_, index) => index,
+            ),
+          },
+        ]
+      }
       yAxis={yAxis}
       colors={colors}
       sx={sx}
       tooltip={tooltip}
     >
       <LinePlot />
-      <XAxis
-        label="Bottom X axis"
-        position="bottom"
-        axisId={xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
-      />
-      <XAxis
-        label="Top X axis"
-        position="top"
-        axisId={xAxis?.[1]?.id ?? xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
-      />
-      <YAxis label="Left Y axis" position="left" axisId={yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY} />
-      <YAxis
-        label="Right Y axis"
-        position="right"
-        axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
-      />
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       {children}
     </ChartContainer>
   );

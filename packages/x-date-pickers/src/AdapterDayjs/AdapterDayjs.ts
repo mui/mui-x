@@ -250,7 +250,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return numberToFormat;
   };
 
-  public getDiff = (value: Dayjs, comparing: Dayjs, unit?: AdapterUnits) => {
+  public getDiff = (value: Dayjs, comparing: Dayjs | string, unit?: AdapterUnits) => {
     return value.diff(comparing, unit as AdapterUnits);
   };
 
@@ -282,24 +282,24 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return value.isAfter(comparing);
   };
 
-  public isAfterYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isAfter(comparing, 'year');
+  public isAfterYear = (value: Dayjs, comparing: Dayjs) => {
+    return value.isAfter(comparing, 'year');
   };
 
-  public isAfterDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isAfter(comparing, 'day');
+  public isAfterDay = (value: Dayjs, comparing: Dayjs) => {
+    return value.isAfter(comparing, 'day');
   };
 
-  public isBefore = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing);
+  public isBefore = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing);
   };
 
-  public isBeforeYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing, 'year');
+  public isBeforeYear = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing, 'year');
   };
 
-  public isBeforeDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing, 'day');
+  public isBeforeDay = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing, 'day');
   };
 
   public isWithinRange = (value: Dayjs, [start, end]: [Dayjs, Dayjs]) => {

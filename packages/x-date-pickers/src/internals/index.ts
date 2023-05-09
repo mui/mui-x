@@ -113,6 +113,7 @@ export type {
   MonthValidationProps,
   YearValidationProps,
   DayValidationProps,
+  DateTimeValidationProps,
 } from './models/validation';
 
 export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';

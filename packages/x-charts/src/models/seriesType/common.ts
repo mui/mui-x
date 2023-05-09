@@ -1,9 +1,16 @@
 export type CommonSeriesType = {
-  id: string;
+  id?: string;
 };
 
-export type DefaultizedCommonSeriesType = {
+export type DefaultizedCommonSeriesType<TValue> = {
+  id: string;
   color: string;
+  /**
+   * Formatter used to render values in tooltip or other data display.
+   * @param {TValue} value The series' value to render.
+   * @returns {string} The string to dispaly.
+   */
+  valueFormatter: (value: TValue) => string;
 };
 
 export type CartesianSeriesType = {

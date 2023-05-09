@@ -65,28 +65,29 @@ export default function CSSCustomization() {
           fill: "url('#myGradient')",
         },
       }}
-      xAxis={[{ id: 'Years', data: years, scaleName: 'time' }]}
+      xAxis={[
+        {
+          id: 'Years',
+          data: years,
+          scaleType: 'time',
+          valueFormatter: (date) => date.getFullYear(),
+        },
+      ]}
       series={[
         {
-          type: 'line',
           id: 'France',
-          xAxisKey: 'Years',
           data: FranceGDPperCapita,
           stack: 'total',
           area: {},
         },
         {
-          type: 'line',
           id: 'Germany',
-          xAxisKey: 'Years',
           data: GermanyGDPperCapita,
           stack: 'total',
           area: {},
         },
         {
-          type: 'line',
           id: 'United Kingdom',
-          xAxisKey: 'Years',
           data: UKGDPperCapita,
           stack: 'total',
           area: {},

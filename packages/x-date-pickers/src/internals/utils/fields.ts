@@ -2,12 +2,10 @@ import { FieldValueType } from '../../models';
 import {
   DATE_TIME_VALIDATION_PROP_NAMES,
   DATE_VALIDATION_PROP_NAMES,
-  SHARED_VALIDATION_PROP_NAMES,
   TIME_VALIDATION_PROP_NAMES,
 } from './validation/extractValidationProps';
 
 const SHARED_FIELD_INTERNAL_PROP_NAMES = [
-  ...SHARED_VALIDATION_PROP_NAMES,
   'value',
   'defaultValue',
   'format',
