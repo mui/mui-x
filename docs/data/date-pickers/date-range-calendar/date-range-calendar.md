@@ -34,10 +34,10 @@ You can render up to 3 months at the same time using the `calendars` prop:
 
 {{"demo": "DateRangeCalendarCalendarsProp.js"}}
 
-You can render the month in the backward direction using the `calendarDirection` prop.
+You can render the month in the backward direction using the `currentMonthCalendarPosition` prop.
 This can be useful when using `disableFuture` to render the current month and the month before instead of the current month and the month after.
 
-{{"demo": "DateRangeCalendarCalendarDirectionProp.js"}}
+{{"demo": "DateRangeCalendarCurrentMonthCalendarPositionProp.js"}}
 
 ### Custom day rendering
 

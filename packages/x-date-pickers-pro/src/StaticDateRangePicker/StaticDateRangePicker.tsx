@@ -70,10 +70,6 @@ StaticDateRangePicker.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
-   * @default 'onward'
-   */
-  calendarDirection: PropTypes.oneOf(['backward', 'onward']),
-  /**
    * The number of calendars to render.
    * @default 2
    */
@@ -94,6 +90,10 @@ StaticDateRangePicker.propTypes = {
    * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
+  /**
+   * @default 'onward'
+   */
+  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
