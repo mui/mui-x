@@ -10,9 +10,12 @@ import {
   getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describePicker(MobileDatePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileDatePicker, () => ({
     render,

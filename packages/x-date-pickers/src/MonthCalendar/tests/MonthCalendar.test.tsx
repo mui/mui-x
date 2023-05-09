@@ -8,7 +8,7 @@ import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
 
-  it('allows to pick month standalone by click, `Enter` and `Space`', () => {
+  it('should allow to pick month standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
     render(<MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
     const targetMonth = screen.getByRole('button', { name: 'Feb' });

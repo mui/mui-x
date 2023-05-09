@@ -7,9 +7,7 @@ export default function BasicLineChart() {
       xAxis={[{ id: 'x', data: [1, 2, 3, 4, 8, 10] }]}
       series={[
         {
-          type: 'line',
           id: 'y',
-          xAxisKey: 'x',
           data: [0, 5, 2, 8, 1, 1],
         },
       ]}

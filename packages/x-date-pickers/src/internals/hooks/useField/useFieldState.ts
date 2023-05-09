@@ -85,6 +85,7 @@ export const useFieldState = <
           date,
           formatDensity,
           shouldRespectLeadingZeros,
+          isRTL,
         ),
       ),
     [fieldValueManager, format, localeText, isRTL, shouldRespectLeadingZeros, utils, formatDensity],
@@ -257,6 +258,7 @@ export const useFieldState = <
         date,
         formatDensity,
         shouldRespectLeadingZeros,
+        isRTL,
       );
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };

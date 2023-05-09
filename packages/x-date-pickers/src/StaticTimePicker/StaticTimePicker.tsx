@@ -17,10 +17,11 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   inProps: StaticTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const defaultizedProps = useTimePickerDefaultizedProps<TDate, StaticTimePickerProps<TDate>>(
-    inProps,
-    'MuiStaticTimePicker',
-  );
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeView,
+    StaticTimePickerProps<TDate>
+  >(inProps, 'MuiStaticTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
   const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';

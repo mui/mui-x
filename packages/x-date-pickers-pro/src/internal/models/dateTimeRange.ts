@@ -4,6 +4,7 @@ import {
   DefaultizedProps,
   MakeOptional,
   UseFieldInternalProps,
+  DateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
@@ -18,15 +19,8 @@ export interface UseDateTimeRangeFieldProps<TDate>
     DayRangeValidationProps<TDate>,
     TimeValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
+    DateTimeValidationProps<TDate>,
     BaseRangeProps {
-  /**
-   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
-   */
-  minDateTime?: TDate;
-  /**
-   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
-   */
-  maxDateTime?: TDate;
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
