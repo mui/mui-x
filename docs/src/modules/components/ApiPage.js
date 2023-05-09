@@ -302,7 +302,14 @@ export default function ApiPage(props) {
   if (source === '@mui/x-date-pickers' || source === '@mui/x-date-pickers-pro') {
     packages.forEach((pkg) => {
       // e.g. import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-      imports.push(`import { ${pkg.componentName} } from '${pkg.packageName}/${componentName}';`);
+      if (
+        packages.length === 1 ||
+        pkg.packageName === '@mui/x-date-pickers-pro' ||
+        pkg.componentName.startsWith('Adapter') ||
+        pkg.componentName === 'LocalizationProvider'
+      ) {
+        imports.push(`import { ${pkg.componentName} } from '${pkg.packageName}/${componentName}';`);
+      }
     });
   }
 
