@@ -1,15 +1,15 @@
 /**
  * Gathers data attributes props into a single `.dataProps` field
  */
-export function groupDataProps<T extends {
-  dataProps?: Record<string, any>,
-  [key: string]: any,
-}>(
-  props: T
-): T {
+export function groupDataProps<
+  T extends {
+    dataProps?: Record<string, any>;
+    [key: string]: any;
+  },
+>(props: T): T {
   const keys = Object.keys(props);
 
-  if (!keys.some(key => key.startsWith('data-'))) {
+  if (!keys.some((key) => key.startsWith('data-'))) {
     return props;
   }
 
@@ -20,9 +20,9 @@ export function groupDataProps<T extends {
     const key = keys[i];
 
     if (key.startsWith('data-')) {
-      dataProps[key] = props[key]
+      dataProps[key] = props[key];
     } else {
-      newProps[key] = props[key]
+      newProps[key] = props[key];
     }
   }
 

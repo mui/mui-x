@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DATA_GRID_PRO_PROPS_DEFAULT_VALUES, GRID_DEFAULT_LOCALE_TEXT } from '@mui/x-data-grid-pro';
-import { computeSlots, groupDataProps, uncapitalizeObjectKeys } from '@mui/x-data-grid-pro/internals';
+import {
+  computeSlots,
+  groupDataProps,
+  uncapitalizeObjectKeys,
+} from '@mui/x-data-grid-pro/internals';
 import {
   DataGridPremiumProps,
   DataGridPremiumProcessedProps,
@@ -28,10 +32,12 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS)!;
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
-  const { components, componentsProps, ...themedProps } = groupDataProps(useThemeProps({
-    props: inProps,
-    name: 'MuiDataGrid',
-  }));
+  const { components, componentsProps, ...themedProps } = groupDataProps(
+    useThemeProps({
+      props: inProps,
+      name: 'MuiDataGrid',
+    }),
+  );
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),

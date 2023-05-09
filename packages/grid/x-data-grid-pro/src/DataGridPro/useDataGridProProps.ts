@@ -34,10 +34,12 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS)!;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const { components, componentsProps, ...themedProps } = groupDataProps(useThemeProps({
-    props: inProps,
-    name: 'MuiDataGrid',
-  }));
+  const { components, componentsProps, ...themedProps } = groupDataProps(
+    useThemeProps({
+      props: inProps,
+      name: 'MuiDataGrid',
+    }),
+  );
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),

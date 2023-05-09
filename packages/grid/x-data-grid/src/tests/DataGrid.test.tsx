@@ -29,15 +29,11 @@ describe('<DataGrid />', () => {
   it('should accept data attributes props', () => {
     render(
       <div style={{ width: 300, height: 500 }}>
-        <DataGrid
-          {...baselineProps}
-          columns={[{ field: 'brand' }]}
-          data-custom-id="grid-1"
-        />
+        <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} data-custom-id="grid-1" />
       </div>,
     );
 
-    const grid = document.querySelector('[data-custom-id="grid-1"]')
+    const grid = document.querySelector('[data-custom-id="grid-1"]');
 
     expect(grid).not.to.equal(null);
   });
