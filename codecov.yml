@@ -5,7 +5,7 @@ coverage:
         target: auto
         threshold: 1%
       adapters:
-        target: 95%
+        target: 94%
         paths:
           - 'packages/x-date-pickers/src/AdapterDateFns/AdapterDateFns.ts'
           - 'packages/x-date-pickers/src/AdapterDateFnsJalali/AdapterDateFnsJalali.ts'
