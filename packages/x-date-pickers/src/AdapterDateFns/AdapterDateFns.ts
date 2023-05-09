@@ -267,7 +267,6 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
       .join('');
   };
 
-  // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format)
       .replace(/(aaa|aa|a)/g, '(a|p)m')

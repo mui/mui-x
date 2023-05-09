@@ -432,7 +432,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
 
     while (monthArray.length < 12) {
       const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
+      monthArray.push(this.addMonths(prevMonth, 1));
     }
 
     return monthArray;

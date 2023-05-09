@@ -19,10 +19,6 @@
       "matchPackagePatterns": "@babel/*"
     },
     {
-      "groupName": "date-io",
-      "matchPackagePatterns": "@date-io/*"
-    },
-    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },

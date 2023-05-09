@@ -1,0 +1,6 @@
+<DemoItem label="Digital clock">
+  <DigitalClock />
+</DemoItem>
+<DemoItem label="Multi section digital clock">
+  <MultiSectionDigitalClock />
+</DemoItem>

@@ -1,4 +1,22 @@
-const VALIDATION_PROP_NAMES = [
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  DateTimeValidationProps,
+  DayValidationProps,
+  MonthValidationProps,
+  TimeValidationProps,
+  YearValidationProps,
+} from '../../models/validation';
+
+const VALIDATION_PROP_NAMES: (
+  | keyof BaseTimeValidationProps
+  | keyof BaseDateValidationProps<any>
+  | keyof TimeValidationProps<any>
+  | keyof YearValidationProps<any>
+  | keyof MonthValidationProps<any>
+  | keyof DayValidationProps<any>
+  | keyof DateTimeValidationProps<any>
+)[] = [
   'disablePast',
   'disableFuture',
   'minDate',
@@ -12,8 +30,8 @@ const VALIDATION_PROP_NAMES = [
   'shouldDisableYear',
   'shouldDisableClock',
   'shouldDisableTime',
-  'minuteStep',
-] as const;
+  'minutesStep',
+];
 
 type ValidationPropNames = (typeof VALIDATION_PROP_NAMES)[number];
 

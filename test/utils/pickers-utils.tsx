@@ -25,6 +25,7 @@ import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
 
 export type AdapterName =
   | 'date-fns'
@@ -310,18 +311,35 @@ export const stubMatchMedia = (matches = true) =>
 export const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
-export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
+  switch (specialCase) {
+    case 'singleDigit':
+      return text.replace(/\u200e/g, '');
+    case 'RTL':
+      return text.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+    default:
+      return text;
+  }
+};
 
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
 
-export const expectInputValue = (input: HTMLInputElement, expectedValue: string) => {
-  const value = cleanText(input.value);
+export const expectInputValue = (
+  input: HTMLInputElement,
+  expectedValue: string,
+  specialCase?: 'singleDigit' | 'RTL',
+) => {
+  const value = cleanText(input.value, specialCase);
   return expect(value).to.equal(expectedValue);
 };
 
-export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
-  const cleanPlaceholder = cleanText(input.placeholder);
+export const expectInputPlaceholder = (
+  input: HTMLInputElement,
+  placeholder: string,
+  specialCase?: 'singleDigit' | 'RTL',
+) => {
+  const cleanPlaceholder = cleanText(input.placeholder, specialCase);
   return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
@@ -442,7 +460,11 @@ export const buildFieldInteractions = <P extends {}>({
 
     keyStrokes.forEach((keyStroke) => {
       fireEvent.change(input, { target: { value: keyStroke.value } });
-      expectInputValue(input, keyStroke.expected);
+      expectInputValue(
+        input,
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
     });
   };
 
@@ -546,3 +568,14 @@ export class MockedDataTransfer implements DataTransfer {
     this.yOffset = yOffset;
   }
 }
+
+export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+  switch (componentFamily) {
+    case 'clock':
+      return 2;
+    case 'multi-section-digital-clock':
+      return 3;
+    default:
+      return 1;
+  }
+};

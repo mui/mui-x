@@ -1,3 +1,4 @@
+export * from './caES';
 export * from './nlNL';
 export * from './plPL';
 export * from './ptBR';

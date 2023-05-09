@@ -8,14 +8,11 @@ export default function SimpleCharts() {
         {
           id: 'barCategories',
           data: ['bar A', 'bar B', 'bar C'],
-          scaleName: 'band',
+          scaleType: 'band',
         },
       ]}
       series={[
         {
-          type: 'bar',
-          id: 'bar-id-1',
-          xAxisKey: 'barCategories',
           data: [2, 5, 3],
         },
       ]}
