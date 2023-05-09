@@ -1,13 +1,15 @@
-import { DateOrTimeView, MuiPickersAdapter } from '../../models';
+import { MuiPickersAdapter } from '../../models';
+import { DateOrTimeViewWithMeridiem } from '../models';
 
-export const isTimeView = (view: DateOrTimeView) => ['hours', 'minutes', 'seconds'].includes(view);
+const timeViews = ['hours', 'minutes', 'seconds'];
+export const isTimeView = (view: DateOrTimeViewWithMeridiem) => timeViews.includes(view);
 
-type Meridiem = 'am' | 'pm' | null;
+export type Meridiem = 'am' | 'pm';
 
 export const getMeridiem = <TDate>(
   date: TDate | null,
   utils: MuiPickersAdapter<TDate>,
-): Meridiem => {
+): Meridiem | null => {
   if (!date) {
     return null;
   }
@@ -15,7 +17,7 @@ export const getMeridiem = <TDate>(
   return utils.getHours(date) >= 12 ? 'pm' : 'am';
 };
 
-export const convertValueToMeridiem = (value: number, meridiem: Meridiem, ampm: boolean) => {
+export const convertValueToMeridiem = (value: number, meridiem: Meridiem | null, ampm: boolean) => {
   if (ampm) {
     const currentMeridiem = value >= 12 ? 'pm' : 'am';
     if (currentMeridiem !== meridiem) {
@@ -28,7 +30,7 @@ export const convertValueToMeridiem = (value: number, meridiem: Meridiem, ampm: 
 
 export const convertToMeridiem = <TDate>(
   time: TDate,
-  meridiem: 'am' | 'pm',
+  meridiem: Meridiem,
   ampm: boolean,
   utils: MuiPickersAdapter<TDate>,
 ) => {

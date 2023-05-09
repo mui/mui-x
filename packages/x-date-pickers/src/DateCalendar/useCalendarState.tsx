@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
-import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
+import { useIsDateDisabled } from './useIsDateDisabled';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../models';
 import { clamp } from '../internals/utils/date-utils';

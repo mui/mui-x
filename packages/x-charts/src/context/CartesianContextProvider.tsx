@@ -22,10 +22,11 @@ import {
   ExtremumGetter,
   ExtremumGetterResult,
 } from '../models/seriesType/config';
+import { MakeOptional } from '../models/helpers';
 
 export type CartesianContextProviderProps = {
-  xAxis?: AxisConfig[];
-  yAxis?: AxisConfig[];
+  xAxis?: MakeOptional<AxisConfig, 'id'>[];
+  yAxis?: MakeOptional<AxisConfig, 'id'>[];
   children: React.ReactNode;
 };
 
@@ -56,8 +57,10 @@ export const CartesianContext = React.createContext<{
   yAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
   } & DefaultizedAxisConfig;
+  xAxisIds: string[];
+  yAxisIds: string[];
   // @ts-ignore
-}>({ xAxis: {}, yAxis: {} });
+}>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
 export function CartesianContextProvider({
   xAxis,
@@ -73,6 +76,7 @@ export function CartesianContextProvider({
       chartType: T,
       axis: AxisConfig,
       getters: { [T2 in ChartSeriesType]: ExtremumGetter<T2> },
+      isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
       const series = (formattedSeries[chartType]?.series as { [id: string]: ChartSeries<T> }) ?? {};
@@ -80,6 +84,7 @@ export function CartesianContextProvider({
       const [minChartTypeData, maxChartTypeData] = getter({
         series,
         axis,
+        isDefaultAxis,
       });
 
       const [minData, maxData] = acc;
@@ -98,58 +103,71 @@ export function CartesianContextProvider({
     const getAxisExtremum = (
       axis: AxisConfig,
       getters: { [T in ChartSeriesType]: ExtremumGetter<T> },
+      isDefaultAxis: boolean,
     ) => {
       const charTypes = Object.keys(getters) as ChartSeriesType[];
 
       return charTypes.reduce(
-        (acc, charType) => axisExtremumCallback(acc, charType, axis, getters),
+        (acc, charType) => axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis),
         [null, null] as ExtremumGetterResult,
       );
     };
 
     const allXAxis: AxisConfig[] = [
-      ...(xAxis ?? []),
-      { id: DEFAULT_X_AXIS_KEY, scaleName: 'linear' },
+      ...(xAxis?.map((axis, index) => ({ id: `deaultized-x-axis-${index}`, ...axis })) ?? []),
+      // Allows to specify an axis with id=DEFAULT_X_AXIS_KEY
+      ...(xAxis === undefined || xAxis.findIndex(({ id }) => id === DEFAULT_X_AXIS_KEY) === -1
+        ? [{ id: DEFAULT_X_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
+        : []),
     ];
 
     const completedXAxis: DefaultizedAxisConfig = {};
-    allXAxis.forEach((axis) => {
-      const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters);
+    allXAxis.forEach((axis, axisIndex) => {
+      const isDefaultAxis = axisIndex === 0;
+      const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
-      const scaleName = axis.scaleName ?? 'linear';
+      const scaleType = axis.scaleType ?? 'linear';
       completedXAxis[axis.id] = {
         ...axis,
-        scaleName,
-        scale: getScale(scaleName)
+        scaleType,
+        scale: getScale(scaleType)
           // @ts-ignore
-          .domain(scaleName === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
           // @ts-ignore
           .range([drawingArea.left, drawingArea.left + drawingArea.width]),
       };
     });
 
     const allYAxis: AxisConfig[] = [
-      ...(yAxis ?? []),
-      { id: DEFAULT_Y_AXIS_KEY, scaleName: 'linear' },
+      ...(yAxis?.map((axis, index) => ({ id: `deaultized-y-axis-${index}`, ...axis })) ?? []),
+      ...(yAxis === undefined || yAxis.findIndex(({ id }) => id === DEFAULT_Y_AXIS_KEY) === -1
+        ? [{ id: DEFAULT_Y_AXIS_KEY, scaleType: 'linear' } as AxisConfig]
+        : []),
     ];
 
     const completedYAxis: DefaultizedAxisConfig = {};
-    allYAxis.forEach((axis) => {
-      const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters);
+    allYAxis.forEach((axis, axisIndex) => {
+      const isDefaultAxis = axisIndex === 0;
+      const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
 
-      const scaleName: ScaleName = axis.scaleName ?? 'linear';
+      const scaleType: ScaleName = axis.scaleType ?? 'linear';
       completedYAxis[axis.id] = {
         ...axis,
-        scaleName,
-        scale: getScale(scaleName)
+        scaleType,
+        scale: getScale(scaleType)
           // @ts-ignore
-          .domain(scaleName === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
           // @ts-ignore
           .range([drawingArea.top + drawingArea.height, drawingArea.top]),
       };
     });
 
-    return { xAxis: completedXAxis, yAxis: completedYAxis };
+    return {
+      xAxis: completedXAxis,
+      yAxis: completedYAxis,
+      xAxisIds: allXAxis.map(({ id }) => id),
+      yAxisIds: allYAxis.map(({ id }) => id),
+    };
   }, [
     drawingArea.height,
     drawingArea.left,

@@ -4,7 +4,7 @@
     "view": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       },
       "required": true
     },

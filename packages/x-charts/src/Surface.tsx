@@ -1,15 +1,16 @@
 import { styled, SxProps, Theme } from '@mui/system';
 import * as React from 'react';
 
+type ViewBox = {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+};
 export interface SurfaceProps {
   width: number;
   height: number;
-  viewBox?: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-  };
+  viewBox?: ViewBox;
   className?: string;
   title?: string;
   desc?: string;
@@ -17,20 +18,24 @@ export interface SurfaceProps {
   children?: React.ReactNode;
 }
 
-export const ChartSurfaceStyles = styled('svg', {
+const ChartSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})();
+})(() => ({}));
 
-export default function Surface(props: SurfaceProps) {
+export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Surface(
+  props: SurfaceProps,
+  ref,
+) {
   const { children, width, height, viewBox, className, ...other } = props;
-  const svgView = viewBox || { width, height, x: 0, y: 0 };
+  const svgView = { width, height, x: 0, y: 0, ...viewBox };
 
   return (
     <ChartSurfaceStyles
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
+      ref={ref}
       {...other}
     >
       <title>{props.title}</title>
@@ -38,4 +43,4 @@ export default function Surface(props: SurfaceProps) {
       {children}
     </ChartSurfaceStyles>
   );
-}
+});

@@ -63,7 +63,18 @@ module.exports = withDocsInfra({
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                use: [
+                  options.defaultLoaders.babel,
+                  {
+                    loader: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                    options: {
+                      env: {
+                        SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
+                        LIB_VERSION: options.config.env.LIB_VERSION,
+                      },
+                    },
+                  },
+                ],
               },
             ],
           },
@@ -100,6 +111,11 @@ module.exports = withDocsInfra({
       const prefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
 
       pages2.forEach((page) => {
+        // The experiments pages are only meant for experiments, they shouldn't leak to production.
+        if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
+          return;
+        }
+
         if (!page.children) {
           map[`${prefix}${page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')}`] = {
             page: page.pathname,

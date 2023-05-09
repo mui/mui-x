@@ -26,8 +26,8 @@ export type D3Scale =
   | ScaleTime<any, any>
   | ScaleLinear<any, any>;
 
-export function getScale(scaleName: ScaleName | undefined): D3Scale {
-  switch (scaleName) {
+export function getScale(scaleType: ScaleName | undefined): D3Scale {
+  switch (scaleType) {
     case 'band':
       return scaleBand();
     case 'log':
@@ -49,4 +49,17 @@ export function getScale(scaleName: ScaleName | undefined): D3Scale {
 
 export function isBandScale(scale: D3Scale): scale is ScaleBand<any> | ScalePoint<any> {
   return (scale as ScaleBand<any> | ScalePoint<any>).bandwidth !== undefined;
+}
+
+/**
+ * For a given scale return a function that map value to their position.
+ * Usefull when dealing with specific scale such as band.
+ * @param scale The scale to use
+ * @returns (value: any) => number
+ */
+export function getValueToPositionMapper(scale: D3Scale) {
+  if (isBandScale(scale)) {
+    return (value: any) => scale(value)! + scale.bandwidth() / 2;
+  }
+  return (value: any) => scale(value) as number;
 }

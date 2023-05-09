@@ -8,9 +8,11 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
-import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
-import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
-import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import type {
+  DateRangeValidationError,
+  DateTimeRangeValidationError,
+  TimeRangeValidationError,
+} from '../../models';
 import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
@@ -24,7 +26,10 @@ export type RangePickerValueManager<
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  getTodayValue: (utils, valueType) =>
+    valueType === 'date'
+      ? [utils.startOfDay(utils.date())!, utils.startOfDay(utils.date())!]
+      : [utils.date()!, utils.date()!],
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
   areValuesEqual: (utils, a, b) =>
@@ -76,7 +81,7 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}\u2069 – \u2066`,
+            endSeparator: `${section.endSeparator}${isRTL ? '\u2069 – \u2066' : ' – '}`,
           };
         }
 

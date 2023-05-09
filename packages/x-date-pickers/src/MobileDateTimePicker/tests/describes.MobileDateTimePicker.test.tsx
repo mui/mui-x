@@ -11,12 +11,15 @@ import {
   getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 2, 12, 8, 16, 0),
   });
+
+  describePicker(MobileDateTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileDateTimePicker, () => ({
     render,
@@ -50,7 +53,7 @@ describe('<MobileDateTimePicker /> - Describes', () => {
           )
         : '';
 
-      expectInputValue(input, expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {

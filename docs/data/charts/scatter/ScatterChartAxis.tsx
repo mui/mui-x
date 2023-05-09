@@ -15,7 +15,6 @@ export default function ScatterChartAxis() {
       ]}
       series={[
         {
-          type: 'scatter',
           id: 's1',
           yAxisKey: 'leftAxis',
           markerSize: 5,
@@ -28,7 +27,6 @@ export default function ScatterChartAxis() {
           ],
         },
         {
-          type: 'scatter',
           id: 's2',
           markerSize: 5,
           data: [

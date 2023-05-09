@@ -19,7 +19,7 @@ import {
   validateSections,
   getDateFromDateSections,
 } from './useField.utils';
-import { InferError } from '../validation/useValidation';
+import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {
@@ -63,8 +63,10 @@ export const useFieldState = <
       defaultValue,
       onChange,
       format,
+      formatDensity = 'dense',
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
+      shouldRespectLeadingZeros = false,
     },
   } = params;
 
@@ -76,9 +78,17 @@ export const useFieldState = <
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
-        splitFormatIntoSections(utils, localeText, format, date),
+        splitFormatIntoSections(
+          utils,
+          localeText,
+          format,
+          date,
+          formatDensity,
+          shouldRespectLeadingZeros,
+          isRTL,
+        ),
       ),
-    [fieldValueManager, format, localeText, isRTL, utils],
+    [fieldValueManager, format, localeText, isRTL, shouldRespectLeadingZeros, utils, formatDensity],
   );
 
   const placeholder = React.useMemo(
@@ -100,7 +110,7 @@ export const useFieldState = <
       referenceValue: fieldValueManager.updateReferenceValue(
         utils,
         valueFromTheOutside,
-        valueManager.getTodayValue(utils),
+        valueManager.getTodayValue(utils, valueType),
       ),
       tempValueStrAndroid: null,
     };
@@ -241,7 +251,15 @@ export const useFieldState = <
         return null;
       }
 
-      const sections = splitFormatIntoSections(utils, localeText, format, date);
+      const sections = splitFormatIntoSections(
+        utils,
+        localeText,
+        format,
+        date,
+        formatDensity,
+        shouldRespectLeadingZeros,
+        isRTL,
+      );
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 

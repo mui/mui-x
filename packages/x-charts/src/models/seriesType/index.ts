@@ -1,22 +1,24 @@
 import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { DefaultizedLineSeriesType, LineSeriesType } from './line';
-import { PieSeriesType } from './pie';
+// import { PieSeriesType } from './pie';
 import { DefaultizedScatterSeriesType, ScatterSeriesType } from './scatter';
 
-type AllSeriesType = BarSeriesType | LineSeriesType | PieSeriesType | ScatterSeriesType;
+type AllSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType;
+// | PieSeriesType;
 
-type CartesianSeriesType = BarSeriesType | LineSeriesType | PieSeriesType | ScatterSeriesType;
+type CartesianSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType;
+// | PieSeriesType;
 type DefaultizedCartesianSeriesType =
   | DefaultizedBarSeriesType
   | DefaultizedLineSeriesType
-  | PieSeriesType
   | DefaultizedScatterSeriesType;
-type StackableSeriesType = BarSeriesType | LineSeriesType;
+// | PieSeriesType
+type StackableSeriesType = DefaultizedBarSeriesType | DefaultizedLineSeriesType;
 
 export type {
   BarSeriesType,
   LineSeriesType,
-  PieSeriesType,
+  // PieSeriesType,
   ScatterSeriesType,
   AllSeriesType,
   CartesianSeriesType,
