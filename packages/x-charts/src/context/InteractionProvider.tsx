@@ -1,15 +1,11 @@
 import * as React from 'react';
-import { BarItemIdentifier } from '../models/seriesType/bar';
-import { LineItemIdentifier } from '../models/seriesType/line';
-import { ScatterItemIdentifier } from '../models/seriesType/scatter';
+import { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
 
 export interface InteractionProviderProps {
   children: React.ReactNode;
 }
 
-export type ItemInteractionData = {
-  target?: SVGElement;
-} & (BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier);
+export type ItemInteractionData<T extends ChartSeriesType> = ChartItemIdentifier<T>;
 
 export type AxisInteractionData = {
   x: null | {
@@ -22,14 +18,14 @@ export type AxisInteractionData = {
   };
 };
 
-type InteractionActions =
+type InteractionActions<T extends ChartSeriesType = ChartSeriesType> =
   | {
       type: 'enterItem';
-      data: ItemInteractionData;
+      data: ItemInteractionData<T>;
     }
   | {
       type: 'leaveItem';
-      data: ItemInteractionData;
+      data: ItemInteractionData<T>;
     }
   | {
       type: 'updateAxis';
@@ -37,7 +33,7 @@ type InteractionActions =
     };
 
 type InteractionState = {
-  item: null | ItemInteractionData;
+  item: null | ItemInteractionData<ChartSeriesType>;
   axis: AxisInteractionData;
   dispatch: React.Dispatch<InteractionActions>;
 };
@@ -59,7 +55,7 @@ const dataReducer: React.Reducer<Omit<InteractionState, 'dispatch'>, Interaction
     case 'leaveItem':
       if (
         prevState.item === null ||
-        (Object.keys(action.data) as (keyof ItemInteractionData)[]).some(
+        (Object.keys(action.data) as (keyof ItemInteractionData<ChartSeriesType>)[]).some(
           (key) => action.data[key] !== prevState.item![key],
         )
       ) {

@@ -1,10 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: '시간을',
   minutes: '분을',
   seconds: '초를',
+  meridiem: '메리디엠',
 };
 
 const koKRPickers: Partial<PickersLocaleText<any>> = {
@@ -46,6 +48,9 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours}시간`,
   minutesClockNumberText: (minutes) => `${minutes}분`,
   secondsClockNumberText: (seconds) => `${seconds}초`,
+
+  // Digital clock labels
+  selectViewText: (view) => `${views[view]} 선택하기`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: '주 번호',

@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'timer',
+  minutes: 'minutter',
+  seconds: 'sekunder',
+  meridiem: 'meridiem',
+};
 
 const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -32,12 +40,15 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Velg ${view}. ${
+    `Velg ${timeViews[view]}. ${
       time === null ? 'Ingen tid valgt' : `Valgt tid er ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Velg ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Ukenummer',

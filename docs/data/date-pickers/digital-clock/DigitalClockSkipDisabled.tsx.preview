@@ -1,0 +1,14 @@
+<DemoItem label="Digital clock">
+  <DigitalClock
+    skipDisabled
+    minTime={dayjs('2022-04-17T09:00')}
+    timeStep={60}
+  />
+</DemoItem>
+<DemoItem label="Multi section digital clock">
+  <MultiSectionDigitalClock
+    skipDisabled
+    shouldDisableTime={shouldDisableTime}
+    ampm={false}
+  />
+</DemoItem>

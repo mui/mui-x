@@ -9,20 +9,28 @@ export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
 };
 
 export const getExtremumY: ExtremumGetter<'bar'> = (params) => {
-  const { series, axis } = params;
+  const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
-    .filter((seriesId) => series[seriesId].yAxisKey === axis.id)
+    .filter(
+      (seriesId) =>
+        series[seriesId].yAxisKey === axis.id ||
+        (isDefaultAxis && series[seriesId].yAxisKey === undefined),
+    )
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
         const [seriesMin, seriesMax] = series[seriesId].stackedData.reduce(
-          (seriesAcc, [min, max]) => [Math.min(min, seriesAcc[0]), Math.max(max, seriesAcc[1])],
+          (seriesAcc, values) => [
+            Math.min(...values, ...(seriesAcc[0] === null ? [] : [seriesAcc[0]])),
+            Math.max(...values, ...(seriesAcc[1] === null ? [] : [seriesAcc[1]])),
+          ],
           series[seriesId].stackedData[0],
         );
-        if (acc[0] === null || acc[1] === null) {
-          return [seriesMin, seriesMax];
-        }
-        return [Math.min(seriesMin, acc[0]), Math.max(seriesMax, acc[1])];
+
+        return [
+          acc[0] === null ? seriesMin : Math.min(seriesMin, acc[0]),
+          acc[1] === null ? seriesMax : Math.max(seriesMax, acc[1]),
+        ];
       },
       [null, null],
     );

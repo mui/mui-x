@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ScatterPlot } from '@mui/x-charts/ScatterChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { XAxis } from '@mui/x-charts/XAxis';
 import { YAxis } from '@mui/x-charts/YAxis';
 
@@ -11,7 +12,6 @@ export default function Composition() {
         {
           type: 'scatter',
           id: 's1',
-          yAxisKey: 'leftAxis',
           markerSize: 5,
           data: [
             { x: 0, y: 0, id: 0 },
@@ -43,15 +43,13 @@ export default function Composition() {
         {
           id: 'leftAxis',
           max: 4,
-          scaleName: 'sqrt',
+          scaleType: 'sqrt',
         },
       ]}
     >
       <ScatterPlot />
-      <XAxis label="Bottom X axis" position="bottom" />
-      <XAxis label="Top X axis" position="top" />
+      <XAxis label="Bottom X axis" axisId={DEFAULT_X_AXIS_KEY} position="bottom" />
       <YAxis label="Left Y axis" position="left" axisId="leftAxis" />
-      <YAxis label="Right Y axis" position="right" />
     </ChartContainer>
   );
 }

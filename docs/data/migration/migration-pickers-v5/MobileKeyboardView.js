@@ -153,6 +153,7 @@ LayoutWithKeyboardView.propTypes = {
       view: PropTypes.oneOf([
         'day',
         'hours',
+        'meridiem',
         'minutes',
         'month',
         'seconds',
