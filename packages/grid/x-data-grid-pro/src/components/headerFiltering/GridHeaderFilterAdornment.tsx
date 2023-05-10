@@ -35,6 +35,10 @@ function GridHeaderFilterAdornment(props: {
     apiRef.current.showHeaderFilterMenu(field);
   };
 
+  if (!rootProps.slots.headerFilterMenu) {
+    return null;
+  }
+
   return (
     <React.Fragment>
       <rootProps.slots.baseInputAdornment position="start">

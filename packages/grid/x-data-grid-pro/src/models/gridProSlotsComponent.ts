@@ -16,7 +16,7 @@ export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSl
    * Component responsible for showing menu in Header filter row
    * @default GridHeaderFilterMenu
    */
-  HeaderFilterMenu: React.JSXElementConstructor<any>;
+  HeaderFilterMenu: React.JSXElementConstructor<any> | null;
 }
 
 // TODO: remove in v7

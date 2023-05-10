@@ -23,12 +23,8 @@ export default function SimpleHeaderFilteringDataGridPro() {
         }}
         disableColumnFilter
         unstable_headerFilters
-        slotProps={{
-          headerFilter: {
-            InputComponentProps: {
-              headerFilterMenu: null,
-            },
-          },
+        slots={{
+          headerFilterMenu: null,
         }}
       />
     </div>

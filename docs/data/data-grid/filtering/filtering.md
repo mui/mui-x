@@ -68,7 +68,7 @@ You can switch between different operators by clicking the operator button in th
 
 ### Simple header filters
 
-You can disable default filter panel using `disableColumnFilter` and only show the default operator by removing `headerFilterMenu` to create simple header filters with only the default operator.
+You can disable default filter panel using `disableColumnFilter` prop and only show the default operator by passing `slots.headerFilterMenu` as `null`.
 
 {{"demo": "SimpleHeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
