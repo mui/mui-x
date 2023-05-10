@@ -134,9 +134,7 @@ class CellValueUpdater {
 
     if (colDef.pastedValueParser) {
       parsedValue = colDef.pastedValueParser(pastedCellValue, cellParams);
-    }
-
-    if (colDef.valueParser) {
+    } else if (colDef.valueParser) {
       parsedValue = colDef.valueParser(parsedValue, cellParams);
     }
 
