@@ -13,8 +13,7 @@ import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import JoyBox from '@mui/joy/Box';
 import JoyTypography from '@mui/joy/Typography';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -389,7 +388,7 @@ const Pagination = React.forwardRef<
           onClick={() => handlePageChange(page - 1)}
           sx={{ bgcolor: 'background.surface' }}
         >
-          <KeyboardArrowLeftIcon />
+          <GridKeyboardArrowLeft />
         </JoyIconButton>
         <JoyIconButton
           size="sm"
@@ -399,7 +398,7 @@ const Pagination = React.forwardRef<
           onClick={() => handlePageChange(page + 1)}
           sx={{ bgcolor: 'background.surface' }}
         >
-          <KeyboardArrowRightIcon />
+          <GridKeyboardArrowRight />
         </JoyIconButton>
       </JoyBox>
     </JoyBox>
@@ -407,6 +406,7 @@ const Pagination = React.forwardRef<
 });
 
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
+  ...joyIconSlots,
   baseCheckbox: Checkbox,
   baseTextField: TextField,
   baseButton: Button,

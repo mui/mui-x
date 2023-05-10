@@ -257,6 +257,7 @@
   { "name": "SingleInputDateTimeRangeFieldProps", "kind": "Interface" },
   { "name": "SingleInputTimeRangeField", "kind": "Variable" },
   { "name": "SingleInputTimeRangeFieldProps", "kind": "Interface" },
+  { "name": "skSK", "kind": "Variable" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "Interface" },
   { "name": "StaticDatePickerSlotsComponent", "kind": "Interface" },
