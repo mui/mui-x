@@ -4,6 +4,6 @@ export * from './GridFilterInputDate';
 export * from './GridFilterInputSingleSelect';
 export * from './GridFilterInputBoolean';
 export * from './GridFilterInputValueProps';
-export * from './GridFilterPanel';
+export { GridFilterPanel, GetColumnForNewFilterArgs } from './GridFilterPanel';
 export * from './GridFilterInputMultipleValue';
 export * from './GridFilterInputMultipleSingleSelect';

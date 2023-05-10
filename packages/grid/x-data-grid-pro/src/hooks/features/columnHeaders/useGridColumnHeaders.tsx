@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   unstable_gridFocusColumnHeaderFilterSelector,
   useGridSelector,
-  getGridFilter,
   gridFilterModelSelector,
   unstable_gridTabIndexColumnHeaderFilterSelector,
 } from '@mui/x-data-grid';
@@ -13,6 +12,7 @@ import {
   GetHeadersParams,
   getTotalHeaderHeight,
   useGridPrivateApiContext,
+  getGridFilter,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
