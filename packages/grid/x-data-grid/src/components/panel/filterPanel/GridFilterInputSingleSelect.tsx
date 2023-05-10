@@ -51,16 +51,8 @@ const SingleSelectOperatorContainer = styled('div')({
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps &
   Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
-    headerFilterMenu?: React.ReactNode;
-    /**
-     * It will be `true` if the filter cell is focused
-     */
-    hasFocus?: boolean;
-    /**
-     * It will be `true` if the filter is applied
-     */
-    isApplied?: boolean;
-    clearIcon?: React.ReactNode | null;
+    headerFilterMenu?: React.ReactNode | null;
+    clearButton?: React.ReactNode | null;
     type?: 'singleSelect';
   };
 
@@ -77,9 +69,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     tabIndex,
     label: labelProp,
     headerFilterMenu,
-    hasFocus,
-    isApplied,
-    clearIcon,
+    clearButton,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -168,7 +158,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValueState}
           onChange={onFilterChange}
-          startAdornment={hasFocus || isApplied ? headerFilterMenu : null}
+          startAdornment={headerFilterMenu}
           variant="standard"
           type={type || 'text'}
           inputProps={{
@@ -190,7 +180,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           })}
         </rootProps.slots.baseSelect>
       </rootProps.slots.baseFormControl>
-      {isApplied ? clearIcon : null}
+      {clearButton}
     </SingleSelectOperatorContainer>
   );
 }
@@ -204,7 +194,7 @@ GridFilterInputSingleSelect.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
-  clearIcon: PropTypes.node,
+  clearButton: PropTypes.node,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
@@ -221,15 +211,7 @@ GridFilterInputSingleSelect.propTypes = {
    * @returns {string} The value to be used.
    */
   getOptionValue: PropTypes.func,
-  /**
-   * It will be `true` if the filter cell is focused
-   */
-  hasFocus: PropTypes.bool,
   headerFilterMenu: PropTypes.node,
-  /**
-   * It will be `true` if the filter is applied
-   */
-  isApplied: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

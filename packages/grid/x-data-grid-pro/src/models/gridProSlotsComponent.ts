@@ -9,11 +9,6 @@ import { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
 export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSlotsComponent {
   /**
    * Component responsible for showing menu adornment in Header filter row
-   * @default GridHeaderFilterAdornment
-   */
-  HeaderFilterAdornment: React.JSXElementConstructor<any>;
-  /**
-   * Component responsible for showing menu adornment in Header filter row
    * @default GridHeaderFilterCell
    */
   HeaderFilterCell: React.JSXElementConstructor<any>;
@@ -22,11 +17,6 @@ export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSl
    * @default GridHeaderFilterMenu
    */
   HeaderFilterMenu: React.JSXElementConstructor<any>;
-  /**
-   * Component responsible for clear icon in header filter
-   * @default GridHeaderFilterClearIcon
-   */
-  HeaderFilterClearIcon: React.JSXElementConstructor<any>;
 }
 
 // TODO: remove in v7

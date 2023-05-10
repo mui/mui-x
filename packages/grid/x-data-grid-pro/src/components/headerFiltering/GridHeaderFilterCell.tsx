@@ -27,6 +27,8 @@ import {
   isNavigationKey,
 } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import { GridHeaderFilterAdornment } from './GridHeaderFilterAdornment';
+import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 import { OPERATOR_LABEL_MAPPING, NO_INPUT_OPERATORS, TYPES_WITH_NO_FILTER_CELL } from './constants';
 
 type GridHeaderFilterCellConditionalProps =
@@ -111,7 +113,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       item,
       headerFilterMenuRef,
       InputComponentProps,
-      showClearIcon = false,
+      showClearIcon = true,
       ...other
     } = props;
 
@@ -282,21 +284,21 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
             placeholder={apiRef.current.getLocaleText('columnMenuFilter')}
             label={isApplied || hasFocus ? capitalize(label) : ' '}
-            hasFocus={hasFocus}
-            isApplied={isApplied}
             headerFilterMenu={
-              <rootProps.slots.headerFilterAdornment
-                operators={filterOperators!}
-                item={item}
-                field={colDef.field}
-                applyFilterChanges={applyFilterChanges}
-                headerFilterMenuRef={headerFilterMenuRef}
-                buttonRef={buttonRef}
-              />
+              isApplied || hasFocus ? (
+                <GridHeaderFilterAdornment
+                  operators={filterOperators!}
+                  item={item}
+                  field={colDef.field}
+                  applyFilterChanges={applyFilterChanges}
+                  headerFilterMenuRef={headerFilterMenuRef}
+                  buttonRef={buttonRef}
+                />
+              ) : null
             }
-            clearIcon={
-              showClearIcon ? (
-                <rootProps.slots.headerFilterClearIcon onClick={clearFilterItem} />
+            clearButton={
+              showClearIcon && isApplied ? (
+                <GridHeaderFilterClearButton onClick={clearFilterItem} />
               ) : null
             }
             disabled={isNoInputOperator}

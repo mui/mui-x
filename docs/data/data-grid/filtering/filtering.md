@@ -66,20 +66,6 @@ You can switch between different operators by clicking the operator button in th
 
 {{"demo": "HeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Clear filter icon
-
-You can render a clear icon in the header filter cell by passing `showClearIcon` to `slotProps.headerFilter`.
-
-```tsx
-<DataGridPro
-  {...data}
-  experimentalFeatures={{ headerFiltering: true }}
-  slotProps={{ headerFilter: { showClearIcon: true } }}
-/>
-```
-
-{{"demo": "HeaderFilteringClearIconDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ### Customize header filters
 
 There are multiple ways to customize header filters.

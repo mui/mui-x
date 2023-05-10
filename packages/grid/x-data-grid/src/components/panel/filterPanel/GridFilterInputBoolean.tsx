@@ -8,16 +8,8 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
-    /**
-     * It will be `true` if the filter cell is focused
-     */
-    hasFocus?: boolean;
-    /**
-     * It will be `true` if the filter is applied
-     */
-    isApplied?: boolean;
     headerFilterMenu?: React.ReactNode | null;
-    clearIcon?: React.ReactNode | null;
+    clearButton?: React.ReactNode | null;
   };
 
 const BooleanOperatorContainer = styled('div')({
@@ -33,9 +25,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     apiRef,
     focusElementRef,
     headerFilterMenu,
-    hasFocus,
-    isApplied,
-    clearIcon,
+    clearButton,
     tabIndex,
     label: labelProp,
     ...others
@@ -86,7 +76,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           variant="standard"
           native={isSelectNative}
           displayEmpty
-          startAdornment={hasFocus || isApplied ? headerFilterMenu : null}
+          startAdornment={headerFilterMenu}
           inputProps={{ ref: focusElementRef, tabIndex }}
           {...others}
           {...baseSelectProps}
@@ -114,7 +104,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           </rootProps.slots.baseSelectOption>
         </rootProps.slots.baseSelect>
       </rootProps.slots.baseFormControl>
-      {isApplied ? clearIcon : null}
+      {clearButton}
     </BooleanOperatorContainer>
   );
 }
@@ -128,22 +118,14 @@ GridFilterInputBoolean.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
-  clearIcon: PropTypes.node,
+  clearButton: PropTypes.node,
   focusElementRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.any.isRequired,
     }),
   ]),
-  /**
-   * It will be `true` if the filter cell is focused
-   */
-  hasFocus: PropTypes.bool,
   headerFilterMenu: PropTypes.node,
-  /**
-   * It will be `true` if the filter is applied
-   */
-  isApplied: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

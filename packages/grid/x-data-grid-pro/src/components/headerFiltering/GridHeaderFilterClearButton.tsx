@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useGridRootProps } from '@mui/x-data-grid';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 
 interface GridHeaderFilterClearIconProps {
   onClick: () => void;
 }
 
-function GridHeaderFilterClearIcon({ onClick }: GridHeaderFilterClearIconProps) {
-  const rootProps = useGridRootProps();
+function GridHeaderFilterClearButton({ onClick }: GridHeaderFilterClearIconProps) {
+  const rootProps = useGridRootProps() as DataGridProProcessedProps;
   return (
     <rootProps.slots.baseIconButton
       tabIndex={-1}
@@ -15,9 +15,9 @@ function GridHeaderFilterClearIcon({ onClick }: GridHeaderFilterClearIconProps) 
       size="small"
       onClick={onClick}
     >
-      <HighlightOffIcon fontSize="inherit" />
+      <rootProps.slots.headerFilterClearIcon fontSize="inherit" />
     </rootProps.slots.baseIconButton>
   );
 }
 
-export { GridHeaderFilterClearIcon };
+export { GridHeaderFilterClearButton };

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import InputAdornment from '@mui/material/InputAdornment';
 import {
   GridFilterItem,
   GridFilterOperator,
@@ -39,7 +38,7 @@ function GridHeaderFilterAdornment(props: {
 
   return (
     <React.Fragment>
-      <InputAdornment position="start">
+      <rootProps.slots.baseInputAdornment position="start">
         <rootProps.slots.baseIconButton
           id={buttonId}
           ref={buttonRef}
@@ -51,10 +50,15 @@ function GridHeaderFilterAdornment(props: {
           tabIndex={-1}
           size="small"
           onClick={handleClick}
+          sx={{
+            width: 22,
+            height: 22,
+            padding: '0px 0px 2px 2px',
+          }}
         >
           {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? ''}
         </rootProps.slots.baseIconButton>
-      </InputAdornment>
+      </rootProps.slots.baseInputAdornment>
       <rootProps.slots.headerFilterMenu
         field={field}
         open={open}

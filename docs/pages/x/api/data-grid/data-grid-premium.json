@@ -261,6 +261,7 @@
     "baseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "baseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
     "baseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "baseInputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "baseInputLabel": { "default": "InputLabel", "type": { "name": "elementType" } },
     "basePopper": { "default": "Popper", "type": { "name": "elementType" } },
     "baseSelect": { "default": "Select", "type": { "name": "elementType" } },
@@ -352,13 +353,9 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
-    "headerFilterAdornment": {
-      "default": "GridHeaderFilterAdornment",
-      "type": { "name": "elementType" }
-    },
     "headerFilterCell": { "default": "GridHeaderFilterCell", "type": { "name": "elementType" } },
     "headerFilterClearIcon": {
-      "default": "GridHeaderFilterClearIcon",
+      "default": "GridHighlightOffIcon",
       "type": { "name": "elementType" }
     },
     "headerFilterMenu": { "default": "GridHeaderFilterMenu", "type": { "name": "elementType" } },
