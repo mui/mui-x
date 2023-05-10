@@ -4,9 +4,13 @@ import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
+import { Tooltip, TooltipProps } from '../Tooltip';
+import { Highlight, HighlightProps } from '../Highlight';
 
 export interface ScatterChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
+  tooltip?: TooltipProps;
+  highlight?: HighlightProps;
 }
 
 export function ScatterChart(props: ScatterChartProps) {
@@ -38,11 +42,11 @@ export function ScatterChart(props: ScatterChartProps) {
       xAxis={xAxis}
       yAxis={yAxis}
       sx={sx}
-      tooltip={{ trigger: 'item', ...tooltip }}
-      highlight={{ x: 'none', y: 'none', ...highlight }}
     >
       <ScatterPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <Highlight x="none" y="none" {...highlight} />
+      <Tooltip trigger="item" {...tooltip} />
       {children}
     </ChartContainer>
   );

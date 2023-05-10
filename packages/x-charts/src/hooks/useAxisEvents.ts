@@ -4,7 +4,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
 import { isBandScale } from './useScale';
 
-export const useAxisEvents = (listeToAxis: boolean) => {
+export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = React.useContext(SVGContext);
   const { width, height, top, left } = React.useContext(DrawingContext);
   const { xAxis, yAxis, xAxisIds, yAxisIds } = React.useContext(CartesianContext);
@@ -21,7 +21,7 @@ export const useAxisEvents = (listeToAxis: boolean) => {
 
   React.useEffect(() => {
     const element = svgRef.current;
-    if (element === null || !listeToAxis) {
+    if (element === null || disableAxisListener) {
       return () => {};
     }
 
@@ -116,10 +116,17 @@ export const useAxisEvents = (listeToAxis: boolean) => {
       element.removeEventListener('mouseout', handleMouseOut);
       element.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [svgRef, dispatch, left, width, top, height, usedYAxis, yAxis, usedXAxis, xAxis, listeToAxis]);
+  }, [
+    svgRef,
+    dispatch,
+    left,
+    width,
+    top,
+    height,
+    usedYAxis,
+    yAxis,
+    usedXAxis,
+    xAxis,
+    disableAxisListener,
+  ]);
 };
-
-export function AxisInteractionListener({ listen }: { listen: boolean }) {
-  useAxisEvents(listen);
-  return null;
-}
