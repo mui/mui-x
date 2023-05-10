@@ -114,7 +114,6 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
       <DataGridPro
         {...data}
         columns={columns}
-        disableColumnFilter
         experimentalFeatures={{ headerFiltering: true }}
       />
     </div>

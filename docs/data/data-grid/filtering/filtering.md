@@ -60,7 +60,7 @@ To use header filtering, you need to upgrade to the [Pro plan](/x/introduction/l
 
 :::
 
-Header filtering adds a new header row using which the users can quickly add some filters to the columns. The filters added on filter panel are synchronized with the filtering row and vice versa.
+Header filtering adds a new header row that lets users quickly filter the columns. The filters added on the filter panel are synchronized with the header filters and vice versa.
 
 You can switch between different operators by clicking the operator button in the header filter cell or pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS) when focusing on a header filter cell.
 
@@ -85,13 +85,15 @@ const columns: GridColDef[] = [
 ];
 ```
 
-Following demo uses the `renderHeaderFilter` method to customize the header filter cell for the `isAdmin` column and hide the filter cell for the `phone` column.
+The following demo uses the `renderHeaderFilter` method to customize the header filter cell for the `isAdmin` column and hide the filter cell for the `phone` column.
 
 {{"demo": "CustomHeaderFilterSingleDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### Customize using `filterOperators`
 
-You can also update the `InputComponent` of the `filterOperator` using `GridColDef.filterOperators` to customize the header filter cell for a specific operator type.
+If the filter operator has a [custom `InputComponent`](https://mui.com/x/react-data-grid/filtering/#custom-input-component), the same component is being used for the header filter.
+
+When rendered as a header filter, the `InputComponent` also receives the `headerFilterMenu` and `clearButton` props that contains the filter operator menu and clear button.
 
 {{"demo": "CustomHeaderFilterOperatorDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -99,7 +101,7 @@ You can also update the `InputComponent` of the `filterOperator` using `GridColD
 
 You can use `slots.headerFilterCell` to customize the header filter cell completely. Since the default slot component handles keyboard navigation and focus management, you may have to handle them yourself if you are using a custom component.
 
-Additionally, `slots.headerFilterAdornment` and `slots.headerFilterMenu` could also be used to customize the adornment and the menu of the header filter cell respectively.
+Additionally, `slots.headerFilterMenu` could also be used to customize the menu of the header filter cell.
 
 ```tsx
 <DataGridPro {...data} slots={{ headerFilterCell: MyCustomHeaderFilterCell }} />
