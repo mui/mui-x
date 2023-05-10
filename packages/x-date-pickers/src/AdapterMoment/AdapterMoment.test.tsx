@@ -5,6 +5,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   createPickerRenderer,
   expectInputPlaceholder,
@@ -160,5 +161,15 @@ describe('<AdapterMoment />', () => {
         });
       });
     });
+  });
+
+  it('should use moment custom instance if provided', () => {
+    const spiedInstance = spy(moment);
+
+    const adapter = new AdapterMoment({ instance: spiedInstance as unknown as typeof moment });
+    const date = adapter.date()!;
+
+    expect(date).toEqualDateTime(new Date());
+    expect(spiedInstance.callCount).to.equal(1);
   });
 });

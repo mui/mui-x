@@ -3,7 +3,7 @@ import { DescribeJalaliAdapterTestSuite } from './describeJalaliAdapter.types';
 import { TEST_DATE_ISO_STRING } from '../describeGregorianAdapter';
 
 export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) => {
-  const testDate = adapter.date(TEST_DATE_ISO_STRING)!;
+  const testDateIso = adapter.date(TEST_DATE_ISO_STRING)!;
 
   it('Method: date', () => {
     expect(adapter.date(null)).to.equal(null);
@@ -17,64 +17,83 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
   it('Method: isEqual', () => {
     const anotherDate = adapter.date(TEST_DATE_ISO_STRING);
 
-    expect(adapter.isEqual(testDate, anotherDate)).to.equal(true);
+    expect(adapter.isEqual(testDateIso, anotherDate)).to.equal(true);
     expect(adapter.isEqual(null, null)).to.equal(true);
   });
 
   it('Method: isAfterYear', () => {
-    const afterYear = adapter.addYears(testDate, 2);
-    expect(adapter.isAfterYear(afterYear, testDate)).to.equal(true);
+    const afterYear = adapter.addYears(testDateIso, 2);
+    expect(adapter.isAfterYear(afterYear, testDateIso)).to.equal(true);
   });
 
   it('Method: isBeforeYear', () => {
-    const afterYear = adapter.addYears(testDate, 2);
-    expect(adapter.isBeforeYear(testDate, afterYear)).to.equal(true);
+    const afterYear = adapter.addYears(testDateIso, 2);
+    expect(adapter.isBeforeYear(testDateIso, afterYear)).to.equal(true);
   });
 
   it('Method: startOfYear', () => {
-    expect(adapter.startOfYear(testDate)).toEqualDateTime('2018-03-21T00:00:00.000Z');
+    expect(adapter.startOfYear(testDateIso)).toEqualDateTime('2018-03-21T00:00:00.000Z');
   });
 
   it('Method: startOfMonth', () => {
-    expect(adapter.startOfMonth(testDate)).toEqualDateTime('2018-10-23T00:00:00.000Z');
+    expect(adapter.startOfMonth(testDateIso)).toEqualDateTime('2018-10-23T00:00:00.000Z');
   });
 
   it('Method: endOfYear', () => {
-    expect(adapter.endOfYear(testDate)).toEqualDateTime('2019-03-20T23:59:59.999Z');
+    expect(adapter.endOfYear(testDateIso)).toEqualDateTime('2019-03-20T23:59:59.999Z');
   });
 
   it('Method: endOfMonth', () => {
-    expect(adapter.endOfMonth(testDate)).toEqualDateTime('2018-11-21T23:59:59.999Z');
+    expect(adapter.endOfMonth(testDateIso)).toEqualDateTime('2018-11-21T23:59:59.999Z');
   });
 
   it('Method: getYear', () => {
-    expect(adapter.getYear(testDate)).to.equal(1397);
+    expect(adapter.getYear(testDateIso)).to.equal(1397);
   });
 
   it('Method: getMonth', () => {
-    expect(adapter.getMonth(testDate)).to.equal(7);
+    expect(adapter.getMonth(testDateIso)).to.equal(7);
   });
 
   it('Method: getDate', () => {
-    expect(adapter.getDate(testDate)).to.equal(8);
+    expect(adapter.getDate(testDateIso)).to.equal(8);
   });
 
   it('Method: setYear', () => {
-    expect(adapter.setYear(testDate, 1398)).toEqualDateTime('2019-10-30T11:44:00.000Z');
+    expect(adapter.setYear(testDateIso, 1398)).toEqualDateTime('2019-10-30T11:44:00.000Z');
   });
 
   it('Method: setDate', () => {
-    expect(adapter.setDate(testDate, 9)).toEqualDateTime('2018-10-31T11:44:00.000Z');
+    expect(adapter.setDate(testDateIso, 9)).toEqualDateTime('2018-10-31T11:44:00.000Z');
   });
 
   it('Method: getNextMonth', () => {
-    expect(adapter.getNextMonth(testDate)).toEqualDateTime('2018-11-29T11:44:00.000Z');
+    expect(adapter.getNextMonth(testDateIso)).toEqualDateTime('2018-11-29T11:44:00.000Z');
   });
 
   it('Method: getPreviousMonth', () => {
-    expect(adapter.getPreviousMonth(testDate)).toEqualDateTime(
+    expect(adapter.getPreviousMonth(testDateIso)).toEqualDateTime(
       new Date('2018-09-30T11:44:00.000Z'),
     );
+  });
+
+  it('Method: getMonthArray', () => {
+    const monthArray = adapter.getMonthArray(testDateIso);
+    let expectedDate = adapter.date('2018-03-21T00:00:00.000Z')!;
+
+    monthArray.forEach((month) => {
+      expect(month).toEqualDateTime(expectedDate);
+      expectedDate = adapter.addMonths(expectedDate, 1)!;
+    });
+  });
+
+  it('Method: mergeDateAndTime', () => {
+    const mergedDate = adapter.mergeDateAndTime(
+      testDateIso,
+      adapter.date('2018-01-01T14:15:16.000Z')!,
+    );
+
+    expect(adapter.toJsDate(mergedDate)).toEqualDateTime('2018-10-30T14:15:16.000Z');
   });
 
   it('Method: getWeekdays', () => {
@@ -88,7 +107,7 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
   });
 
   it('Method: getWeekArray', () => {
-    const weekArray = adapter.getWeekArray(testDate);
+    const weekArray = adapter.getWeekArray(testDateIso);
     const expectedDate = new Date('2018-10-20T00:00:00.000Z');
 
     weekArray.forEach((week) => {
@@ -100,12 +119,12 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
   });
 
   it('Method: getWeekNumber', () => {
-    expect(adapter.getWeekNumber!(testDate)).to.equal(33);
+    expect(adapter.getWeekNumber!(testDateIso)).to.equal(33);
   });
 
   it('Method: getYearRange', () => {
-    const anotherDate = adapter.setYear(testDate, 1400);
-    const yearRange = adapter.getYearRange(testDate, anotherDate);
+    const anotherDate = adapter.setYear(testDateIso, 1400);
+    const yearRange = adapter.getYearRange(testDateIso, anotherDate);
     expect(yearRange).to.have.length(4);
   });
 };
