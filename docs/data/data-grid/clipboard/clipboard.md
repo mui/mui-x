@@ -72,7 +72,7 @@ For convenience, you can also listen to these events using their respective prop
 - `onClipboardPasteStart`
 - `onClipboardPasteEnd`
 
-The demo below shows how to use these events to show a loading indicator while the clipboard paste operation is in progress:
+The demo below shows how to use these events to display a loading indicator while the clipboard paste operation is in progress:
 
 {{"demo": "ClipboardPasteEvents.js", "bg": "inline"}}
 
