@@ -15,13 +15,7 @@ import {
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
 } from '@mui/x-data-grid-pro';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  within,
-} from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';

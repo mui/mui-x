@@ -8,7 +8,6 @@ import {
 } from '@mui/utils';
 import {
   GridFilterItem,
-  useGridRootProps,
   GridFilterOperator,
   GridHeaderFilterEventLookup,
   GridColDef,
@@ -26,10 +25,11 @@ import {
   unstable_gridHeaderFilteringMenuSelector,
   isNavigationKey,
 } from '@mui/x-data-grid/internals';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterAdornment } from './GridHeaderFilterAdornment';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
-import { OPERATOR_LABEL_MAPPING, NO_INPUT_OPERATORS, TYPES_WITH_NO_FILTER_CELL } from './constants';
+import { OPERATOR_LABEL_MAPPING } from './constants';
 
 type GridHeaderFilterCellConditionalProps =
   | {
@@ -119,7 +119,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const apiRef = useGridPrivateApiContext();
     const columnFields = gridVisibleColumnFieldsSelector(apiRef);
-    const rootProps = useGridRootProps() as DataGridProProcessedProps;
+    const rootProps = useGridRootProps();
     const cellRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(ref, cellRef);
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -130,10 +130,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const currentOperator = filterOperators![0];
 
-    const InputComponent =
-      (colDef.type && TYPES_WITH_NO_FILTER_CELL.includes(colDef.type)) || !colDef.filterable
-        ? null
-        : currentOperator!.InputComponent;
+    const InputComponent = colDef.filterable ? currentOperator!.InputComponent : null;
 
     const applyFilterChanges = React.useCallback(
       (updatedItem: GridFilterItem) => {
@@ -252,7 +249,9 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const classes = useUtilityClasses(ownerState as OwnerState);
 
-    const isNoInputOperator = NO_INPUT_OPERATORS[colType!]?.includes(item.operator);
+    const isNoInputOperator =
+      filterOperators?.find(({ value }) => item.operator === value)?.requiresFilterValue === false;
+
     const isApplied = Boolean(item?.value) || isNoInputOperator;
     const label =
       OPERATOR_LABEL_MAPPING[item.operator] ??
@@ -285,12 +284,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             item={item}
             inputRef={inputRef}
             applyValue={applyFilterChanges}
-            // onClickCapture={() => {
-            //   // avoid extra click to move focus to input
-            //   if (!isEditing) {
-            //     apiRef.current.startHeaderFilterEditMode(colDef.field);
-            //   }
-            // }}
             onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
             onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
             placeholder={apiRef.current.getLocaleText('columnMenuFilter')}

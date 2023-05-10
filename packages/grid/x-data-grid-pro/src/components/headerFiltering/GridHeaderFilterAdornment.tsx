@@ -5,11 +5,10 @@ import {
   GridFilterOperator,
   useGridApiContext,
   GridColDef,
-  useGridRootProps,
 } from '@mui/x-data-grid';
 import { unstable_useId as useId } from '@mui/utils';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
-import { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
 function GridHeaderFilterAdornment(props: {
@@ -25,7 +24,7 @@ function GridHeaderFilterAdornment(props: {
   const buttonId = useId();
   const menuId = useId();
 
-  const rootProps = useGridRootProps() as DataGridProProcessedProps;
+  const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const open = Boolean(
     unstable_gridHeaderFilteringMenuSelector(apiRef) === field && headerFilterMenuRef.current,

@@ -11,9 +11,12 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
 
 function RatingInputValue(
-  props: GridFilterInputValueProps & { headerFilterMenu: React.ReactNode },
+  props: GridFilterInputValueProps & {
+    headerFilterMenu: React.ReactNode;
+    clearButton: React.ReactNode;
+  },
 ) {
-  const { item, applyValue, focusElementRef, headerFilterMenu } = props;
+  const { item, applyValue, focusElementRef, headerFilterMenu, clearButton } = props;
 
   const ratingRef: React.Ref<any> = React.useRef(null);
   React.useImperativeHandle(focusElementRef, () => ({
@@ -36,7 +39,7 @@ function RatingInputValue(
           display: 'inline-flex',
           flexDirection: 'row',
           alignItems: 'center',
-          height: 20,
+          height: '100%',
           pl: '10px',
           bl: '1px solid lightgrey',
         }}
@@ -50,6 +53,7 @@ function RatingInputValue(
           ref={ratingRef}
         />
       </Box>
+      {clearButton}
     </React.Fragment>
   );
 }
@@ -67,7 +71,7 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
         if (colDef.field === 'rating') {
           return {
             ...colDef,
-            minWidth: 180,
+            minWidth: 200,
             filterOperators: getGridNumericOperators()
               .filter((operator) => operator.value !== 'isAnyOf')
               .map((operator) => ({

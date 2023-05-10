@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  useGridRootProps,
   unstable_gridFocusColumnHeaderFilterSelector,
   useGridSelector,
   getGridFilter,
@@ -15,6 +14,7 @@ import {
   getTotalHeaderHeight,
   useGridPrivateApiContext,
 } from '@mui/x-data-grid/internals';
+import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
@@ -46,7 +46,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     headerFiltersElementRef: headerFiltersRef,
   });
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
-  const rootProps = useGridRootProps() as DataGridProProcessedProps;
+  const rootProps = useGridRootProps();
   const disableHeaderFiltering = !rootProps.experimentalFeatures?.headerFilters;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);

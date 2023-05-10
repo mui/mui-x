@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { useGridRootProps } from '@mui/x-data-grid';
-import { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridHeaderFilterClearIconProps {
   onClick: () => void;
 }
 
 function GridHeaderFilterClearButton({ onClick }: GridHeaderFilterClearIconProps) {
-  const rootProps = useGridRootProps() as DataGridProProcessedProps;
+  const rootProps = useGridRootProps();
   return (
     <rootProps.slots.baseIconButton
       tabIndex={-1}
