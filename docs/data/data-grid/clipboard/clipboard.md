@@ -41,7 +41,9 @@ See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and
 The behavior of the clipboard paste operation depends on the selection state of the data grid and the data pasted from clipboard.
 The priority is the following, from highest to lowest:
 
-{{"demo": "ClipboardPastePriority.js", "bg": "inline", "hideToolbar": true}}
+1. If multiple cells are selected (see [Cell selection<span class="plan-premium" title="Premium plan"></span>](/x/react-data-grid/cell-selection/)), the selected cells are updated with the pasted values.
+2. If one or more rows are selected (see [Row selection](/x/react-data-grid/row-selection/)), the selected rows are updated with the pasted values.
+3. If a single cell is selected, the values are pasted starting from the selected cell.
 
 {{"demo": "ClipboardPaste.js", "bg": "inline"}}
 
