@@ -9,5 +9,5 @@
       },
     },
   }}
-  experimentalFeatures={{ headerFilters: true }}
+  unstable_headerFilters
 />

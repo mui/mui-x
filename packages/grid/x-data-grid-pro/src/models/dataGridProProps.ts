@@ -31,10 +31,6 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
-  /**
-   * Enables the data grid filtering on header feature.
-   */
-  headerFilters: boolean;
 }
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
@@ -145,6 +141,11 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  unstable_headerFilters: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
