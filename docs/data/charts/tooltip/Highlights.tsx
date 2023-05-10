@@ -28,7 +28,7 @@ const lineChartsParams = {
   sx: {
     [`& .${markElementClasses.root}`]: {
       display: 'none',
-    }
+    },
   },
 };
 export default function Highlights() {
