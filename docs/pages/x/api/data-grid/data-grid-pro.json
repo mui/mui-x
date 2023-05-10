@@ -66,7 +66,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, headerFilters?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -228,7 +228,8 @@
       }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" } }
+    "treeData": { "type": { "name": "bool" } },
+    "unstable_headerFilters": { "type": { "name": "bool" } }
   },
   "slots": {
     "baseButton": { "default": "Button", "type": { "name": "elementType" } },

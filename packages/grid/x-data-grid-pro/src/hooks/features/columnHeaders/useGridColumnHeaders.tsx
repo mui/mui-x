@@ -121,7 +121,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           colType={colDef.type as any}
           operator={item.operator as any}
           item={item}
-          {...rootProps.slotProps?.headerFilter}
+          {...rootProps.slotProps?.headerFilterCell}
           {...other}
         />,
       );
