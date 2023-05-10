@@ -270,7 +270,6 @@ DataGridPremiumRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
-    headerFilters: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -925,6 +924,11 @@ DataGridPremiumRaw.propTypes = {
    * Set the cell selection model of the grid.
    */
   unstable_cellSelectionModel: PropTypes.object,
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  unstable_headerFilters: PropTypes.bool,
   /**
    * Callback fired when the selection state of one or multiple cells changes.
    * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.

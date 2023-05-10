@@ -60,6 +60,14 @@ type GridHeaderFilterCellConditionalProps =
   | {
       colType: 'boolean';
       InputComponentProps?: Partial<GridFilterInputBooleanProps>;
+    }
+  | {
+      // user defined operators
+      colType: GridColDef['type'];
+      operator: GridFilterOperator['value'];
+      InputComponentProps?: {
+        [key: string]: any;
+      };
     };
 
 export type GridHeaderFilterCellOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
@@ -322,7 +330,7 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  colType: PropTypes.string.isRequired,
+  colType: PropTypes.string,
   filterOperators: PropTypes.arrayOf(
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
