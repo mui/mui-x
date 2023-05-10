@@ -1,12 +1,4 @@
-import type {
-  ScaleBand,
-  ScaleLogarithmic,
-  ScalePoint,
-  ScalePower,
-  ScaleTime,
-  ScaleLinear,
-} from 'd3-scale';
-import { DefaultizedProps } from './helpers';
+import type { ScaleBand, ScaleLogarithmic, ScalePower, ScaleTime, ScaleLinear } from 'd3-scale';
 import { XAxisClasses } from '../XAxis/xAxisClasses';
 
 export interface AxisProps {
@@ -73,7 +65,39 @@ export interface XAxisProps extends AxisProps {
   classes?: Partial<XAxisClasses>;
 }
 
-export type ScaleName = 'linear' | 'band' | 'log' | 'point' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = 'linear' | 'band' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+
+interface AxisScaleConfig {
+  band: {
+    scaleType: 'band';
+    scale: ScaleBand<any>;
+  };
+  log: {
+    scaleType: 'log';
+    scale: ScaleLogarithmic<any, any>;
+  };
+  pow: {
+    scaleType: 'pow';
+    scale: ScalePower<any, any>;
+  };
+  sqrt: {
+    scaleType: 'sqrt';
+    scale: ScalePower<any, any>;
+  };
+  time: {
+    scaleType: 'time';
+    scale: ScaleTime<any, any>;
+  };
+  utc: {
+    scaleType: 'utc';
+    scale: ScaleTime<any, any>;
+  };
+  linear: {
+    scaleType: 'linear';
+    scale: ScaleLinear<any, any>;
+  };
+}
 
 export type AxisScaleMapping =
   | {
@@ -83,10 +107,6 @@ export type AxisScaleMapping =
   | {
       scaleType: 'log';
       scale: ScaleLogarithmic<any, any>;
-    }
-  | {
-      scaleType: 'point';
-      scale: ScalePoint<any>;
     }
   | {
       scaleType: 'pow' | 'sqrt';
@@ -101,14 +121,17 @@ export type AxisScaleMapping =
       scale: ScaleLinear<any, any>;
     };
 
-export type AxisConfig<V = any> = {
+export type AxisConfig<S = ScaleName, V = any> = {
   id: string;
-  scaleType?: ScaleName;
+  scaleType?: S;
   min?: number;
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
 } & Partial<XAxisProps | YAxisProps>;
 
-export type AxisDefaultized<V = any> = DefaultizedProps<AxisConfig<V>, 'scaleType'> &
-  AxisScaleMapping;
+export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
+  AxisConfig<S, V>,
+  'scaleType'
+> &
+  AxisScaleConfig[S];

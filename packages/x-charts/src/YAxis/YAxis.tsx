@@ -29,6 +29,7 @@ export function YAxis(props: YAxisProps) {
   const yTicks = useTicks({ scale: yScale });
 
   const positionSigne = position === 'right' ? 1 : -1;
+
   return (
     <g transform={`translate(${position === 'right' ? left + width : left}, 0)`}>
       {!disableLine && (

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { scaleBand } from 'd3-scale';
 import {
   getExtremumX as getBarExtremumX,
   getExtremumY as getBarExtremumY,
@@ -127,15 +128,22 @@ export function CartesianContextProvider({
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
       const scaleType = axis.scaleType ?? 'linear';
+      const range = [drawingArea.left, drawingArea.left + drawingArea.width];
+
+      if (scaleType === 'band') {
+        completedXAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scaleBand(axis.data!, range),
+        };
+        return;
+      }
+      const extremums = [axis.min ?? minData, axis.max ?? maxData];
       completedXAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType)
-          // @ts-ignore
-          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
-          // @ts-ignore
-          .range([drawingArea.left, drawingArea.left + drawingArea.width]),
-      };
+        scale: getScale(scaleType, extremums, range).nice(),
+      } as AxisDefaultized<typeof scaleType>;
     });
 
     const allYAxis: AxisConfig[] = [
@@ -149,17 +157,23 @@ export function CartesianContextProvider({
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
+      const range = [drawingArea.top + drawingArea.height, drawingArea.top];
 
       const scaleType: ScaleName = axis.scaleType ?? 'linear';
+      if (scaleType === 'band') {
+        completedYAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scaleBand(axis.data!, range),
+        };
+        return;
+      }
+      const extremums = [axis.min ?? minData, axis.max ?? maxData];
       completedYAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType)
-          // @ts-ignore
-          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
-          // @ts-ignore
-          .range([drawingArea.top + drawingArea.height, drawingArea.top]),
-      };
+        scale: getScale(scaleType, extremums, range).nice(),
+      } as AxisDefaultized<typeof scaleType>;
     });
 
     return {
