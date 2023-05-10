@@ -37,7 +37,8 @@ import {
   GridLoadIcon,
   GridDeleteForeverIcon,
 } from './icons';
-import type { GridIconSlotsComponent, GridBaseSlots } from '../models';
+import type { GridIconSlotsComponent } from '../models';
+import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import MUISelectOption from './components/MUISelectOption';
 
 const iconSlots: GridIconSlotsComponent = {
