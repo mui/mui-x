@@ -10,8 +10,8 @@ import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 import {
-  computeProps,
   computeSlots,
+  useProps,
   uncapitalizeObjectKeys,
   UncapitalizeObjectKeys,
 } from '../internals/utils';
@@ -81,7 +81,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  const [components, componentsProps, themedProps] = computeProps(
+  const [components, componentsProps, themedProps] = useProps(
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',

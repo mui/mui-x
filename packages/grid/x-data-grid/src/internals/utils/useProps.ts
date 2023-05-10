@@ -7,7 +7,7 @@ interface WithComponents {
   componentsProps?: GridSlotsComponentsProps;
 }
 
-export function computeProps<T extends WithComponents>(allProps: T) {
+export function useProps<T extends WithComponents>(allProps: T) {
   return React.useMemo(() => {
     const { components, componentsProps, ...themedProps } = allProps;
     return [components, componentsProps, themedProps] as const;
