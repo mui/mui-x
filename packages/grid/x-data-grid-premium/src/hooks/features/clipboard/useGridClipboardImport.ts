@@ -321,12 +321,14 @@ export const useGridClipboardImport = (
     | 'onClipboardPasteEnd'
     | 'experimentalFeatures'
     | 'unstable_splitClipboardText'
+    | 'disableClipboardPaste'
   >,
 ): void => {
   const processRowUpdate = props.processRowUpdate;
   const onProcessRowUpdateError = props.onProcessRowUpdateError;
   const getRowId = props.getRowId;
-  const enableClipboardPaste = props.experimentalFeatures?.clipboardPaste ?? false;
+  const enableClipboardPaste =
+    (!props.disableClipboardPaste && props.experimentalFeatures?.clipboardPaste) ?? false;
   const rootEl = apiRef.current.rootElementRef?.current;
 
   const splitClipboardText = props.unstable_splitClipboardText;

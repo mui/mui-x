@@ -27,6 +27,7 @@
     "disableAggregation": "If <code>true</code>, aggregation is disabled.",
     "disableChildrenFiltering": "If <code>true</code>, the filtering will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
     "disableChildrenSorting": "If <code>true</code>, the sorting will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
+    "disableClipboardPaste": "If <code>true</code>, the clipboard paste is disabled.",
     "disableColumnFilter": "If <code>true</code>, column filters are disabled.",
     "disableColumnMenu": "If <code>true</code>, the column menu is disabled.",
     "disableColumnPinning": "If <code>true</code>, the column pinning is disabled.",

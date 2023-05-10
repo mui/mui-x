@@ -200,6 +200,11 @@ DataGridPremiumRaw.propTypes = {
    */
   disableChildrenSorting: PropTypes.bool,
   /**
+   * If `true`, the clipboard paste is disabled.
+   * @default false
+   */
+  disableClipboardPaste: PropTypes.bool,
+  /**
    * If `true`, column filters are disabled.
    * @default false
    */

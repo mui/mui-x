@@ -58,6 +58,7 @@
     "disableAggregation": { "type": { "name": "bool" } },
     "disableChildrenFiltering": { "type": { "name": "bool" } },
     "disableChildrenSorting": { "type": { "name": "bool" } },
+    "disableClipboardPaste": { "type": { "name": "bool" } },
     "disableColumnFilter": { "type": { "name": "bool" } },
     "disableColumnMenu": { "type": { "name": "bool" } },
     "disableColumnPinning": { "type": { "name": "bool" } },
