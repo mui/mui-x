@@ -20,7 +20,13 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
   it('Method: toISO', () => {
     const outputtedISO = adapter.toISO(testDateIso);
-    expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING);
+
+    if (adapter.lib === 'date-fns-jalali') {
+      // date-fns never suppress useless milliseconds in the end
+      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING.replace('.000Z', 'Z'));
+    } else {
+      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING);
+    }
   });
 
   it('Method: isNull', () => {
