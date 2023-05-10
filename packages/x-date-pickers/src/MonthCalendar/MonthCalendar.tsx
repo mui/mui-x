@@ -11,7 +11,7 @@ import {
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
-import { applyDefaultDate } from '../internals/utils/date-utils';
+import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
 
@@ -237,7 +237,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      {utils.getMonthArray(selectedDateOrStartOfMonth).map((month) => {
+      {getMonthsInYear(utils, selectedDateOrStartOfMonth).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
         const isSelected = monthNumber === selectedMonth;

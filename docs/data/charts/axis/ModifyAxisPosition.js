@@ -15,7 +15,6 @@ export default function ModifyAxisPosition() {
     <ScatterChart
       series={[
         {
-          type: 'scatter',
           id: 'linear',
           data,
         },

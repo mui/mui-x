@@ -26,7 +26,7 @@ const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
   series.forEach((seriesData, seriesIndex: number) => {
-    const { id, type } = seriesData;
+    const { id = `auto-generated-id-${seriesIndex}`, type } = seriesData;
 
     if (seriesGroups[type] === undefined) {
       seriesGroups[type] = { series: {}, seriesOrder: [] };
@@ -34,7 +34,7 @@ const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
     if (seriesGroups[type]?.series[id] !== undefined) {
       throw new Error(`MUI: series' id "${id}" is not unique`);
     }
-    seriesGroups[type]!.series[id] = defaultizeColor(seriesData, seriesIndex, colors);
+    seriesGroups[type]!.series[id] = { id, ...defaultizeColor(seriesData, seriesIndex, colors) };
     seriesGroups[type]!.seriesOrder.push(id);
   });
 

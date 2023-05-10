@@ -16,10 +16,10 @@ export interface ScatterSeriesType extends CommonSeriesType, CartesianSeriesType
  */
 export type ScatterItemIdentifier = {
   type: 'scatter';
-  seriesId: ScatterSeriesType['id'];
+  seriesId: DefaultizedScatterSeriesType['id'];
   dataIndex: number;
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, 'xAxisKey' | 'yAxisKey'>,
+  extends DefaultizedProps<ScatterSeriesType, 'id'>,
     DefaultizedCommonSeriesType<ScatterValueType> {}
