@@ -186,6 +186,18 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
     return this.moment(value).isSame(comparing);
   };
 
+  public isSameYear = (value: Moment, comparing: Moment) => {
+    // `isSame` seems to mutate the date on `moment-jalaali`
+    // @ts-ignore
+    return value.clone().isSame(comparing, 'jYear');
+  };
+
+  public isSameMonth = (value: Moment, comparing: Moment) => {
+    // `isSame` seems to mutate the date on `moment-jalaali`
+    // @ts-ignore
+    return value.clone().isSame(comparing, 'jMonth');
+  };
+
   public isAfterYear = (value: Moment, comparing: Moment) => {
     return value.jYear() > comparing.jYear();
   };

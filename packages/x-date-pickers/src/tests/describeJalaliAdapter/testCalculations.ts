@@ -21,6 +21,42 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.isEqual(null, null)).to.equal(true);
   });
 
+  it('Method: isSameYear', () => {
+    expect(adapter.isSameYear(testDateIso, adapter.date('2018-10-01T00:00:00.000Z')!)).to.equal(
+      true,
+    );
+    expect(adapter.isSameYear(testDateIso, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
+      false,
+    );
+  });
+
+  it('Method: isSameMonth', () => {
+    expect(adapter.isSameMonth(testDateIso, adapter.date('2018-11-04T00:00:00.000Z')!)).to.equal(
+      true,
+    );
+    expect(adapter.isSameMonth(testDateIso, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
+      false,
+    );
+  });
+
+  it('Method: isSameDay', () => {
+    expect(adapter.isSameDay(testDateIso, adapter.date('2018-10-30T00:00:00.000Z')!)).to.equal(
+      true,
+    );
+    expect(adapter.isSameDay(testDateIso, adapter.date('2019-10-30T00:00:00.000Z')!)).to.equal(
+      false,
+    );
+  });
+
+  it('Method: isSameHour', () => {
+    expect(adapter.isSameHour(testDateIso, adapter.date('2018-10-30T11:00:00.000Z')!)).to.equal(
+      true,
+    );
+    expect(adapter.isSameHour(testDateIso, adapter.date('2018-10-30T12:00:00.000Z')!)).to.equal(
+      false,
+    );
+  });
+
   it('Method: isAfter', () => {
     expect(adapter.isAfter(adapter.date()!, testDateIso)).to.equal(true);
     expect(adapter.isAfter(testDateIso, adapter.date()!)).to.equal(false);
@@ -53,6 +89,36 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.isBeforeDay(testDateIso, nextDayIso)).to.equal(false);
   });
 
+  it('Method: isWithinRange', () => {
+    expect(
+      adapter.isWithinRange(adapter.date('2019-10-01T00:00:00.000Z')!, [
+        adapter.date('2019-09-01T00:00:00.000Z')!,
+        adapter.date('2019-11-01T00:00:00.000Z')!,
+      ]),
+    ).to.equal(true);
+
+    expect(
+      adapter.isWithinRange(adapter.date('2019-12-01T00:00:00.000Z')!, [
+        adapter.date('2019-09-01T00:00:00.000Z')!,
+        adapter.date('2019-11-01T00:00:00.000Z')!,
+      ]),
+    ).to.equal(false);
+
+    expect(
+      adapter.isWithinRange(adapter.date('2019-10-01')!, [
+        adapter.date('2019-09-01')!,
+        adapter.date('2019-11-01')!,
+      ]),
+    ).to.equal(true);
+
+    expect(
+      adapter.isWithinRange(adapter.date('2019-12-01')!, [
+        adapter.date('2019-09-01')!,
+        adapter.date('2019-11-01')!,
+      ]),
+    ).to.equal(false);
+  });
+
   it('Method: startOfYear', () => {
     expect(adapter.startOfYear(testDateIso)).toEqualDateTime('2018-03-21T00:00:00.000Z');
   });
@@ -83,6 +149,45 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
   it('Method: endOfDay', () => {
     expect(adapter.endOfDay(testDateIso)).toEqualDateTime('2018-10-30T23:59:59.999Z');
+  });
+
+  it('Method: addYears', () => {
+    expect(adapter.addYears(testDateIso, 2)).toEqualDateTime('2020-10-29T11:44:00.000Z');
+    expect(adapter.addYears(testDateIso, -2)).toEqualDateTime('2016-10-29T11:44:00.000Z');
+  });
+
+  it('Method: addMonths', () => {
+    expect(adapter.addMonths(testDateIso, 2)).toEqualDateTime('2018-12-29T11:44:00.000Z');
+    expect(adapter.addMonths(testDateIso, -2)).toEqualDateTime('2018-08-30T11:44:00.000Z');
+    expect(adapter.addMonths(testDateIso, 3)).toEqualDateTime('2019-01-28T11:44:00.000Z');
+  });
+
+  it('Method: addWeeks', () => {
+    expect(adapter.addWeeks(testDateIso, 2)).toEqualDateTime('2018-11-13T11:44:00.000Z');
+    expect(adapter.addWeeks(testDateIso, -2)).toEqualDateTime('2018-10-16T11:44:00.000Z');
+  });
+
+  it('Method: addDays', () => {
+    expect(adapter.addDays(testDateIso, 2)).toEqualDateTime('2018-11-01T11:44:00.000Z');
+    expect(adapter.addDays(testDateIso, -2)).toEqualDateTime('2018-10-28T11:44:00.000Z');
+  });
+
+  it('Method: addHours', () => {
+    expect(adapter.addHours(testDateIso, 2)).toEqualDateTime('2018-10-30T13:44:00.000Z');
+    expect(adapter.addHours(testDateIso, -2)).toEqualDateTime('2018-10-30T09:44:00.000Z');
+    expect(adapter.addHours(testDateIso, 15)).toEqualDateTime('2018-10-31T02:44:00.000Z');
+  });
+
+  it('Method: addMinutes', () => {
+    expect(adapter.addMinutes(testDateIso, 2)).toEqualDateTime('2018-10-30T11:46:00.000Z');
+    expect(adapter.addMinutes(testDateIso, -2)).toEqualDateTime('2018-10-30T11:42:00.000Z');
+    expect(adapter.addMinutes(testDateIso, 20)).toEqualDateTime('2018-10-30T12:04:00.000Z');
+  });
+
+  it('Method: addSeconds', () => {
+    expect(adapter.addSeconds(testDateIso, 2)).toEqualDateTime('2018-10-30T11:44:02.000Z');
+    expect(adapter.addSeconds(testDateIso, -2)).toEqualDateTime('2018-10-30T11:43:58.000Z');
+    expect(adapter.addSeconds(testDateIso, 70)).toEqualDateTime('2018-10-30T11:45:10.000Z');
   });
 
   it('Method: getYear', () => {
