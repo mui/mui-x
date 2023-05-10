@@ -172,14 +172,12 @@ export default function BasicScatterChart() {
       height={400}
       series={[
         {
-          type: 'scatter',
           id: 's1',
           markerSize: 5,
           data: data.map(({ x1, y1, id }) => ({ x: x1, y: y1, id })),
         },
         {
           id: 's2',
-          type: 'scatter',
           data: data.map(({ x1, y2, id }) => ({ x: x1, y: y2, id })),
         },
       ]}

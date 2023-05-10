@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { DateOrTimeView, DateTimeValidationError, TimeView } from '../models';
+import { DateOrTimeView, DateTimeValidationError } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlotsComponent,
@@ -19,7 +19,11 @@ import {
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
 } from './DateTimePickerTabs';
-import { BaseDateValidationProps, BaseTimeValidationProps } from '../internals/models/validation';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+  DateTimeValidationProps,
+} from '../internals/models/validation';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DateTimePickerToolbar,
@@ -32,6 +36,7 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -64,20 +69,13 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
-    ExportedBaseClockProps<TDate> {
+    ExportedBaseClockProps<TDate>,
+    DateTimeValidationProps<TDate> {
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
    * @default true on desktop, false on mobile
    */
   ampmInClock?: boolean;
-  /**
-   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
-   */
-  minDateTime?: TDate;
-  /**
-   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
-   */
-  maxDateTime?: TDate;
   /**
    * Overridable components.
    * @default {}
@@ -110,7 +108,7 @@ export interface BaseDateTimePickerProps<TDate>
       TDate | null,
       DateOrTimeView,
       DateViewRendererProps<TDate, DateOrTimeView> &
-        TimeViewRendererProps<TimeView, BaseClockProps<TDate, TimeView>>,
+        TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
       {}
     >
   >;

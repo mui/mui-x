@@ -37,10 +37,10 @@ type PickerViewRenderer<
 export type PickerViewRendererLookup<
   TValue,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
+  TExternalProps extends PickerViewsRendererBaseExternalProps<any>,
   TAdditionalProps extends {},
 > = {
-  [K in TView]: PickerViewRenderer<TValue, TView, TExternalProps, TAdditionalProps> | null;
+  [K in TView]: PickerViewRenderer<TValue, K, TExternalProps, TAdditionalProps> | null;
 };
 
 /**

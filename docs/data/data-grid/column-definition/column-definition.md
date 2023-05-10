@@ -33,43 +33,75 @@ But for some columns, it can be useful to manually get and format the value to r
 
 ### Value getter
 
-Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.
+Sometimes a column might not have a desired value.
+You can use the `valueGetter` attribute of `GridColDef` to:
 
-To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
+1. Transform the value
 
-```tsx
-function getFullName(params) {
-  return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
-}
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'taxRate',
+       valueGetter: (params) => {
+         if (!params.value) {
+           return params.value;
+         }
+         // Convert the decimal value to a percentage
+         return params.value * 100;
+       },
+     },
+   ];
+   ```
 
-const columns: GridColDef[] = [
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    width: 160,
-    valueGetter: getFullName,
-  },
-];
-```
+2. Render a combination of different fields
 
-{{"demo": "ValueGetterGrid.js", "bg": "inline"}}
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'fullName',
+       valueGetter: (params) => {
+         return `${params.row.firstName || ''} ${params.row.lastName || ''}`;
+       },
+     },
+   ];
+   ```
 
-The value generated is used for filtering, sorting, rendering, etc. unless overridden by a more specific configuration.
+3. Derive a value from a complex value
+
+   ```tsx
+   const columns: GridColDef[] = [
+     {
+       field: 'profit',
+       valueGetter: ({ row }) => {
+         if (!row.gross || !row.costs) {
+           return null;
+         }
+         return row.gross - row.costs;
+       },
+     },
+   ];
+   ```
+
+The value returned by `valueGetter` is used for:
+
+- Filtering
+- Sorting
+- Rendering (unless enhanced further by [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) or [`renderCell`](/x/react-data-grid/column-definition/#rendering-cells))
+
+{{"demo": "ValueGetterGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Value formatter
 
 The value formatter allows you to convert the value before displaying it.
 Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (e.g. "1,000.50").
 
-In the following demo, a formatter is used to display the tax rate's decimal value (e.g. 0.2) as a percentage (e.g. 20%).
+Note, that the value returned by `valueFormatter` is only used for rendering purposes.
+Filtering and sorting are based on the raw value (`row[field]`) or the value returned by [`valueGetter`](/x/react-data-grid/column-definition/#value-getter).
+
+In the following demo, `valueGetter` is used to convert the tax rate (e.g. `0.2`) to a decimal value (e.g. `20`),
+and `valueFormatter` is used to display it as a percentage (e.g. `20%`).
 
 {{"demo": "ValueFormatterGrid.js", "bg": "inline"}}
-
-The value generated is only used for rendering purposes.
-Filtering and sorting do not rely on the formatted value.
-Use the [`valueParser`](/x/react-data-grid/editing/#value-parser-and-value-setter) to support filtering.
 
 ## Rendering cells
 

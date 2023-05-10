@@ -3,9 +3,9 @@ import {
   stackOrderNone as d3StackOrderNone,
   stackOffsetNone as d3StackOffsetNone,
 } from 'd3-shape';
-import defaultizeCartesianSeries from '../internals/defaultizeCartesianSeries';
 import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, Formatter } from '../models/seriesType/config';
+import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
 
 const formatter: Formatter<'bar'> = (params) => {
   const { seriesOrder, series } = params;
@@ -40,7 +40,11 @@ const formatter: Formatter<'bar'> = (params) => {
     });
   });
 
-  return { seriesOrder, stackingGroups, series: defaultizeCartesianSeries(completedSeries) };
+  return {
+    seriesOrder,
+    stackingGroups,
+    series: defaultizeValueFormatter(completedSeries, (v) => v.toLocaleString()),
+  };
 };
 
 export default formatter;

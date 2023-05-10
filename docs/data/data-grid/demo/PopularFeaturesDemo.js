@@ -246,6 +246,18 @@ RowDemo.propTypes = {
   row: PropTypes.object.isRequired,
 };
 
+function CustomSizeAggregationFooter(props) {
+  return (
+    <Typography sx={{ fontWeight: 500, fontSize: '1em' }} color="primary">
+      Total: {props.value}
+    </Typography>
+  );
+}
+
+CustomSizeAggregationFooter.propTypes = {
+  value: PropTypes.string,
+};
+
 const columns = [
   {
     field: 'name',
@@ -255,6 +267,9 @@ const columns = [
     minWidth: 100,
     groupable: false,
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
@@ -315,6 +330,9 @@ const columns = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
