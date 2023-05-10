@@ -25,14 +25,14 @@ Check-out their documentation page for more information:
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
 
-## Uncontrolled vs. Controlled value
+## Uncontrolled vs. controlled value
 
 The component can be uncontrolled or controlled.
 
 {{"demo": "DatePickerValue.js"}}
 
 :::info
-Lean more about the _Controlled and uncontrolled_ pattern on the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+Learn more about the _Controlled and uncontrolled_ pattern on the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
 :::
 
 ## Available components
