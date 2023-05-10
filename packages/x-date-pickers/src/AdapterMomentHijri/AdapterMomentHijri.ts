@@ -108,11 +108,11 @@ const NUMBER_SYMBOL_MAP = {
  * SOFTWARE.
  */
 export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<Moment, string> {
-  public isMUIAdapter = true;
+  public lib = 'moment-hijri';
+
+  public moment: typeof defaultHMoment;
 
   public formatTokenMap = formatTokenMap;
-
-  public escapedCharacters = { start: '[', end: ']' };
 
   constructor({ formats, instance }: AdapterOptions<string, typeof defaultHMoment> = {}) {
     super({ locale: 'ar-SA', instance });

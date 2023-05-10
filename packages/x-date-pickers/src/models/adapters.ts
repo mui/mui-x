@@ -85,8 +85,8 @@ type PropertyIfNotNever<PName extends string, PType> = [PType] extends [never]
 
 export type AdapterOptions<TLocale, TInstance> = {
   formats?: Partial<AdapterFormats>;
-} & PropertyIfNotNever<'locale', TLocale> &
-  PropertyIfNotNever<'instance', TInstance>;
+  locale?: TLocale;
+} & PropertyIfNotNever<'instance', TInstance>;
 
 export interface MuiPickersAdapter<TDate, TLocale = any> {
   /**

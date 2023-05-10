@@ -110,19 +110,11 @@ export class AdapterMomentJalaali
   extends AdapterMoment
   implements MuiPickersAdapter<Moment, string>
 {
-  public isMUIAdapter = true;
-
   public lib = 'moment-jalaali';
 
   public moment: typeof defaultJMoment;
 
-  public locale?: string;
-
-  public formats: AdapterFormats;
-
   public formatTokenMap = formatTokenMap;
-
-  public escapedCharacters = { start: '[', end: ']' };
 
   constructor({ formats, instance }: AdapterOptions<string, typeof defaultJMoment> = {}) {
     super({ locale: 'fa', instance });
