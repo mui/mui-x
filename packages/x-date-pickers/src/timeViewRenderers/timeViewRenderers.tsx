@@ -54,7 +54,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   <TimeClock<TDate>
     view={view}
     onViewChange={onViewChange}
-    focusedView={focusedView}
+    focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
     views={views.filter(isTimeView)}
     value={value}
