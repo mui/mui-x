@@ -63,7 +63,7 @@ export function XAxis(inProps: XAxisProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiXAxis' });
   const {
     xAxis: {
-      [props.axisId]: { scale: xScale, ...settings },
+      [props.axisId]: { scale: xScale, ticksNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
@@ -84,7 +84,7 @@ export function XAxis(inProps: XAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const xTicks = useTicks({ scale: xScale });
+  const xTicks = useTicks({ scale: xScale, ticksNumber });
   const positionSigne = position === 'bottom' ? 1 : -1;
 
   return (

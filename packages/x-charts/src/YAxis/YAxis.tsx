@@ -7,7 +7,7 @@ import { YAxisProps } from '../models/axis';
 export function YAxis(props: YAxisProps) {
   const {
     yAxis: {
-      [props.axisId]: { scale: yScale, ...settings },
+      [props.axisId]: { scale: yScale, ticksNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
   const {
@@ -26,7 +26,7 @@ export function YAxis(props: YAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const yTicks = useTicks({ scale: yScale });
+  const yTicks = useTicks({ scale: yScale, ticksNumber });
 
   const positionSigne = position === 'right' ? 1 : -1;
 

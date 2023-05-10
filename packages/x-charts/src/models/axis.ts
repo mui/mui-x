@@ -73,54 +73,39 @@ interface AxisScaleConfig {
   band: {
     scaleType: 'band';
     scale: ScaleBand<any>;
+    ticksNumber: number;
   };
   log: {
     scaleType: 'log';
     scale: ScaleLogarithmic<any, any>;
+    ticksNumber: number;
   };
   pow: {
     scaleType: 'pow';
     scale: ScalePower<any, any>;
+    ticksNumber: number;
   };
   sqrt: {
     scaleType: 'sqrt';
     scale: ScalePower<any, any>;
+    ticksNumber: number;
   };
   time: {
     scaleType: 'time';
     scale: ScaleTime<any, any>;
+    ticksNumber: number;
   };
   utc: {
     scaleType: 'utc';
     scale: ScaleTime<any, any>;
+    ticksNumber: number;
   };
   linear: {
     scaleType: 'linear';
     scale: ScaleLinear<any, any>;
+    ticksNumber: number;
   };
 }
-
-export type AxisScaleMapping =
-  | {
-      scaleType: 'band';
-      scale: ScaleBand<any>;
-    }
-  | {
-      scaleType: 'log';
-      scale: ScaleLogarithmic<any, any>;
-    }
-  | {
-      scaleType: 'pow' | 'sqrt';
-      scale: ScalePower<any, any>;
-    }
-  | {
-      scaleType: 'time' | 'utc';
-      scale: ScaleTime<any, any>;
-    }
-  | {
-      scaleType: 'linear';
-      scale: ScaleLinear<any, any>;
-    };
 
 export type AxisConfig<S = ScaleName, V = any> = {
   id: string;

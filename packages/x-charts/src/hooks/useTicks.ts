@@ -17,8 +17,8 @@ export function getTicksNumber(
   return Math.min(maxTicks, Math.max(minTicks, Math.floor((range[1] - range[0]) / tickSpacing)));
 }
 
-function useTicks(options: { scale: D3Scale } & TickParams) {
-  const { scale, tickSpacing, minTicks, maxTicks } = options;
+function useTicks(options: { scale: D3Scale; ticksNumber?: number }) {
+  const { scale, ticksNumber } = options;
 
   return React.useMemo(() => {
     // band scale
@@ -28,18 +28,11 @@ function useTicks(options: { scale: D3Scale } & TickParams) {
         .map((d) => ({ value: d, offset: (scale(d) ?? 0) + scale.bandwidth() / 2 }));
     }
 
-    const numberOfTicksTarget = getTicksNumber({
-      tickSpacing,
-      minTicks,
-      maxTicks,
-      range: scale.range(),
-    });
-
-    return scale.ticks(numberOfTicksTarget).map((value: any) => ({
-      value: scale.tickFormat(numberOfTicksTarget)(value),
+    return scale.ticks(ticksNumber).map((value: any) => ({
+      value: scale.tickFormat(ticksNumber)(value),
       offset: scale(value),
     }));
-  }, [tickSpacing, minTicks, maxTicks, scale]);
+  }, [ticksNumber, scale]);
 }
 
 export default useTicks;

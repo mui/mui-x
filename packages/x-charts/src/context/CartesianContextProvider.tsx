@@ -136,14 +136,17 @@ export function CartesianContextProvider({
           ...axis,
           scaleType,
           scale: scaleBand(axis.data!, range),
+          ticksNumber: axis.data!.length,
         };
         return;
       }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
+      const ticksNumber = getTicksNumber({ ...axis, range });
       completedXAxis[axis.id] = {
         ...axis,
         scaleType,
         scale: getScale(scaleType, extremums, range).nice(getTicksNumber({ ...axis, range })),
+        ticksNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -166,14 +169,17 @@ export function CartesianContextProvider({
           ...axis,
           scaleType,
           scale: scaleBand(axis.data!, range),
+          ticksNumber: axis.data!.length,
         };
         return;
       }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
+      const ticksNumber = getTicksNumber({ ...axis, range });
       completedYAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, range).nice(getTicksNumber({ ...axis, range })),
+        scale: getScale(scaleType, extremums, range).nice(ticksNumber),
+        ticksNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
 
