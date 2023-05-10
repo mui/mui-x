@@ -21,9 +21,25 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
     expect(adapter.isEqual(null, null)).to.equal(true);
   });
 
+  it('Method: isAfter', () => {
+    expect(adapter.isAfter(adapter.date()!, testDateIso)).to.equal(true);
+    expect(adapter.isAfter(testDateIso, adapter.date()!)).to.equal(false);
+  });
+
   it('Method: isAfterYear', () => {
     const afterYear = adapter.addYears(testDateIso, 2);
     expect(adapter.isAfterYear(afterYear, testDateIso)).to.equal(true);
+  });
+
+  it('Method: isAfterDay', () => {
+    const nextDayIso = adapter.addDays(testDateIso, 1);
+    expect(adapter.isAfterDay(nextDayIso, testDateIso)).to.equal(true);
+    expect(adapter.isAfterDay(testDateIso, nextDayIso)).to.equal(false);
+  });
+
+  it('Method: isBefore', () => {
+    expect(adapter.isBefore(testDateIso, adapter.date()!)).to.equal(true);
+    expect(adapter.isBefore(adapter.date()!, testDateIso)).to.equal(false);
   });
 
   it('Method: isBeforeYear', () => {
@@ -31,8 +47,22 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
     expect(adapter.isBeforeYear(testDateIso, afterYear)).to.equal(true);
   });
 
+  it('Method: isBeforeDay', () => {
+    const nextDayIso = adapter.addDays(testDateIso, -1);
+    expect(adapter.isBeforeDay(nextDayIso, testDateIso)).to.equal(true);
+    expect(adapter.isBeforeDay(testDateIso, nextDayIso)).to.equal(false);
+  });
+
   it('Method: startOfYear', () => {
     expect(adapter.startOfYear(testDateIso)).toEqualDateTime('2018-09-11T00:00:00.000Z');
+  });
+
+  it('Method: startOfWeek', () => {
+    expect(adapter.startOfWeek(testDateIso)).toEqualDateTime('2018-10-28T00:00:00.000Z');
+  });
+
+  it('Method: startOfDay', () => {
+    expect(adapter.startOfDay(testDateIso)).toEqualDateTime('2018-10-30T00:00:00.000Z');
   });
 
   it('Method: startOfMonth', () => {
@@ -45,6 +75,14 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
 
   it('Method: endOfMonth', () => {
     expect(adapter.endOfMonth(testDateIso)).toEqualDateTime('2018-11-08T23:59:59.999Z');
+  });
+
+  it('Method: endOfWeek', () => {
+    expect(adapter.endOfWeek(testDateIso)).toEqualDateTime('2018-11-03T23:59:59.999Z');
+  });
+
+  it('Method: endOfDay', () => {
+    expect(adapter.endOfDay(testDateIso)).toEqualDateTime('2018-10-30T23:59:59.999Z');
   });
 
   it('Method: getYear', () => {
@@ -61,6 +99,10 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
 
   it('Method: setYear', () => {
     expect(adapter.setYear(testDateIso, 1441)).toEqualDateTime('2019-10-20T11:44:00.000Z');
+  });
+
+  it('Method: setMonth', () => {
+    expect(adapter.setMonth(testDateIso, 4)).toEqualDateTime('2019-01-27T11:44:00.000Z');
   });
 
   it('Method: setDate', () => {
