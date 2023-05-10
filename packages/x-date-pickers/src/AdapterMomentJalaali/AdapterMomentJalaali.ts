@@ -146,6 +146,10 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
     return this.moment(value).locale('fa');
   };
 
+  public parseISO = (isoString: string) => {
+    return this.moment(isoString).locale('fa');
+  };
+
   public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
