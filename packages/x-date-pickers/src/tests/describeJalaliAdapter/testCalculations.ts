@@ -14,6 +14,15 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.parse('01/01/1395', adapter.formats.keyboardDate)).not.to.equal(null);
   });
 
+  it('Method: parseISO', () => {
+    expect(adapter.parseISO(TEST_DATE_ISO_STRING)).toEqualDateTime(testDateIso);
+  });
+
+  it('Method: toISO', () => {
+    const outputtedISO = adapter.toISO(testDateIso);
+    expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING);
+  });
+
   it('Method: isNull', () => {
     expect(adapter.isNull(null)).to.equal(true);
     expect(adapter.isNull(testDateIso)).to.equal(false);
