@@ -1,4 +1,5 @@
 import { MuiPickersAdapter } from '../../models';
+import { DateOrTimeViewWithMeridiem } from '../models';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
@@ -134,3 +135,6 @@ export const mergeDateAndTime = <TDate>(
 
   return mergedDate;
 };
+
+const dateViews = ['year', 'month', 'day'];
+export const isDatePickerView = (view: DateOrTimeViewWithMeridiem) => dateViews.includes(view);

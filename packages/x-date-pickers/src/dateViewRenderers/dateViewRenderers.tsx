@@ -2,9 +2,7 @@ import * as React from 'react';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
 import { DateView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-
-const isDatePickerView = (view: unknown): view is DateView =>
-  view === 'year' || view === 'month' || view === 'day';
+import { isDatePickerView } from '../internals/utils/date-utils';
 
 export interface DateViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Omit<

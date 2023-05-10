@@ -25,6 +25,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
+    DateOrTimeView,
     MobileDateTimePickerProps<TDate>
   >(inProps, 'MuiMobileDateTimePicker');
 
