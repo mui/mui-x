@@ -54,12 +54,12 @@ export const renderDateViewCalendar = <TDate extends unknown>({
   autoFocus,
   fixedWeekNumber,
   displayWeekNumber,
-}: DateViewRendererProps<TDate, any>) => (
+}: DateViewRendererProps<TDate, DateView>) => (
   <DateCalendar
-    view={view as DateView}
+    view={view}
     onViewChange={onViewChange}
     views={views.filter(isDatePickerView)}
-    focusedView={focusedView as DateView | null}
+    focusedView={focusedView}
     onFocusedViewChange={onFocusedViewChange}
     value={value}
     defaultValue={defaultValue}
