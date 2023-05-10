@@ -103,7 +103,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
-  columnMenuManageColumns: 'Керування колонками',
+  columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Приховати',
   columnMenuUnsort: 'Скасувати сортування',
