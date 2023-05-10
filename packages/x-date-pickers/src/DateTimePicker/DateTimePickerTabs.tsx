@@ -12,11 +12,12 @@ import {
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import { isDatePickerView } from '../internals/utils/date-utils';
 
 type TabValue = 'date' | 'time';
 
 const viewToTab = (view: DateOrTimeViewWithMeridiem): TabValue => {
-  if (['day', 'month', 'year'].includes(view)) {
+  if (isDatePickerView(view)) {
     return 'date';
   }
 
