@@ -1,10 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'tunnit',
   minutes: 'minuutit',
   seconds: 'sekuntit',
+  meridiem: 'iltapäivä',
 };
 
 const fiFIPickers: Partial<PickersLocaleText<any>> = {
@@ -44,6 +46,9 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} tuntia`,
   minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
   secondsClockNumberText: (seconds) => `${seconds} sekunttia`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Valitse ${views[view]}`,
 
   // Calendar labels
   // calendarWeekNumberHeaderLabel: 'Week number',

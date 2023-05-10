@@ -4,7 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
-import { InferError, useValidation } from '../validation/useValidation';
+import { InferError, useValidation } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
 import {
   UsePickerValueProps,

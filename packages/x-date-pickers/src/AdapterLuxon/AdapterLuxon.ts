@@ -31,11 +31,9 @@ const formatTokenMap: FieldFormatTokenMap = {
   c: { sectionType: 'weekDay', contentType: 'digit', maxLength: 1 },
   ccc: { sectionType: 'weekDay', contentType: 'letter' },
   cccc: { sectionType: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
   E: { sectionType: 'weekDay', contentType: 'digit', maxLength: 2 },
   EEE: { sectionType: 'weekDay', contentType: 'letter' },
   EEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
 
   // Meridiem
   a: 'meridiem',
@@ -142,7 +140,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
       return DateTime.fromJSDate(new Date(value), { locale: this.locale });
     }
 
-    if (value instanceof DateTime) {
+    if (DateTime.isDateTime(value)) {
       return value;
     }
 
@@ -211,7 +209,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     );
   };
 
-  // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
   };
@@ -220,8 +217,8 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     return value === null;
   };
 
-  public isValid = (value: any) => {
-    if (value instanceof DateTime) {
+  public isValid = (value: any): boolean => {
+    if (DateTime.isDateTime(value)) {
       return value.isValid;
     }
 
@@ -229,7 +226,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
       return false;
     }
 
-    return this.date(value)!.isValid;
+    return this.isValid(this.date(value));
   };
 
   public format = (value: DateTime, formatKey: keyof AdapterFormats) => {
@@ -447,7 +444,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
 
     while (monthArray.length < 12) {
       const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
+      monthArray.push(this.addMonths(prevMonth, 1));
     }
 
     return monthArray;

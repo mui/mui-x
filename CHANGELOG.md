@@ -3,6 +3,121 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.3.1
+
+_May 5, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.3.1` / `@mui/x-data-grid-pro@v6.3.1` / `@mui/x-data-grid-premium@v6.3.1`
+
+#### Changes
+
+- [DataGrid] Fix broken filtering in the value formatter demo (#8621) @cherniavskii
+- [DataGrid] Fix falsy filter values not showing in filter button tooltip (#8550) @ithrforu
+- [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
+- [DataGrid] Remove unwarranted warning log (#8847) @romgrk
+- [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
+- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
+
+### `@mui/x-date-pickers@v6.3.1` / `@mui/x-date-pickers-pro@v6.3.1`
+
+#### Changes
+
+- [pickers] Fix `minutesStep` validation prop behavior (#8794) @LukasTy
+- [pickers] Fix time picker `viewRenderers` overriding (#8830) @LukasTy
+- [pickers] Remove last additional character when using LTR (#8848) @alexfauquette
+
+### Docs
+
+- [docs] Fix controlled mode demo on Editing page (#8800) @yaredtsy
+- [docs] Fix scrolling demo not working with React 18 (#6489) @cherniavskii
+- [docs] Update demo to support agregation on popular feature cell (#8617) @BalaM314
+- [docs] Clarify what `<path>` is (#8764) @alexfauquette
+
+### Core
+
+- [core] Do not include playground pages in `yarn typescript` script (#8822) @cherniavskii
+- [core] Limit `typescript:ci` step memory limit (#8796) @LukasTy
+- [core] Upgrade monorepo (#8835) @cherniavskii
+- [test] Use `fake` clock on `MobileDateRangePicker` (#8861) @LukasTy
+- [charts] Clean some styling (#8778) @alexfauquette
+- [charts] Improve tooltip (#8792) @alexfauquette
+- [charts] Improvement and docs on axis (#8654) @alexfauquette
+- [charts] Defaultize attributes (#8788) @alexfauquette
+
+## 6.3.0
+
+_Apr 28, 2023_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 New [time-picking UI](https://mui.com/x/react-date-pickers/digital-clock/) designed for desktops (#7958) @LukasTy
+
+  <img src="https://user-images.githubusercontent.com/4941090/235072007-de39a397-e4a4-4c98-8e10-5ee4ad440108.gif" width="494" />
+
+- ✨ Picker fields [now always include a leading zero](https://mui.com/x/react-date-pickers/adapters-locale/#respect-leading-zeros-in-fields) on digit sections (#8527) @flaviendelangle
+- 🌍 Improve Chinese (zh-CN), French (fr-FR), and Turkish (tr-TR) locales
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.3.0` / `@mui/x-data-grid-pro@v6.3.0` / `@mui/x-data-grid-premium@v6.3.0`
+
+#### Changes
+
+- [DataGrid] Add overlay classes to `gridClasses` (#8686) @lindapaiste
+- [DataGrid] Avoid passing `api` prop to div (#8679) @someden
+- [DataGrid] Fix 'ResizeObserver loop limit exceeded' error (#8744) @m4theushw
+- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
+- [DataGrid] Fix aggregation label alignment (#8694) @joserodolfofreitas
+- [DataGridPremium] Fix infinite loop when updating grouped rows (#8693) @cherniavskii
+- [DataGridPro] Fix error after updating `columns` and `columnGroupingModel` at once (#8730) @cherniavskii
+- [l10n] Improve Chinese (zh-CN) locale (#8753) @SakumyZ
+- [l10n] Improve French (fr-FR) locale (#8704) @Jul13nT
+- [l10n] Improve Turkish (tr-TR) locale (#8783) @cccaaannn
+
+### `@mui/x-date-pickers@v6.3.0` / `@mui/x-date-pickers-pro@v6.3.0`
+
+#### Changes
+
+- [fields] Always add leading zeroes on digit sections (#8527) @flaviendelangle
+- [fields] Pass the `readOnly` prop to `InputProps` instead of `inputProps` (#8659) @flaviendelangle
+- [pickers] Add missing export for `caES` locale (#8782) @flaviendelangle
+- [pickers] Add new `DigitalClock` desktop time picking experience (#7958) @LukasTy
+- [pickers] Do not use `instanceOf DateTime` in `AdapterLuxon` (#8734) @flaviendelangle
+- [pickers] Fix date calendar `selected` & `disabled` day style (#8773) @LukasTy
+- [pickers] Migrate `AdapterDateFns` to our repository (#8736) @flaviendelangle
+- [pickers] Migrate `AdapterLuxon` to our repository (#8600) @flaviendelangle
+- [pickers] Migrate `AdapterMomentHijri` to our repository (#8776) @flaviendelangle
+- [pickers] Migrate `AdapterMomentJalaali` and `AdapterDateFnsJalali` to our repository (#8741) @flaviendelangle
+- [pickers] Migrate `AdapterMoment` to our repository (#8700) @flaviendelangle
+- [pickers] Refactor the validation files (#8622) @flaviendelangle
+- [pickers] Use `en dash` instead of `em dash` in multi input range fields (#8738) @flaviendelangle
+- [l10n] Improve Chinese (zh-CN) locale (#8753) @SakumyZ
+- [l10n] Improve Turkish (tr-TR) locale (#8783) @cccaaannn
+
+### Docs
+
+- [docs] Add icons for charts menu (#8752) @alexfauquette
+- [docs] Document the supported formats (#8746) @flaviendelangle
+- [docs] Fix Hijri demo (#8698) @alexfauquette
+- [docs] Fix `x-codemod` package version in changelog (#8690) @MBilalShafi
+- [docs] Fix columns special properties code example (#8414) @mikkelhl
+- [docs] Fix error in `minDateTime` `validation` page section (#8777) @LukasTy
+- [docs] Update custom field pickers using theme scoping (#8609) @siriwatknp
+- [docs] Use community version of data grid for column grouping demo (#7346) @ASchwad
+- [docs] Use new `slots` / `slotProps` props in the pickers migration guide (#8341) @flaviendelangle
+
+### Core
+
+- [core] Cleanup picker tests (#8652) @flaviendelangle
+- [core] Use `adapter.lib` instead of `adapterName` in `describeAdapters` (#8779) @flaviendelangle
+- [charts] Adapt line and scatter plot to the "band" scale type (#8701) @alexfauquette
+- [charts] Link the Gantt Charts issue in the docs (#8739) @flaviendelangle
+
 ## 6.2.1
 
 _Apr 20, 2023_
@@ -195,9 +310,9 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [fields] Add missing tokens to `AdapterDateFnsJalali` (#8402) @flaviendelangle
 - [fields] Clean the active date manager (#8370) @flaviendelangle
-- [fields] Cleanup `useFieldState`  (#8292) @flaviendelangle
+- [fields] Cleanup `useFieldState` (#8292) @flaviendelangle
 - [fields] Only add RTL characters when needed (#8325) @flaviendelangle
-- [pickers] Add support for single input fields in range pickers  (#7927) @flaviendelangle
+- [pickers] Add support for single input fields in range pickers (#7927) @flaviendelangle
 - [pickers] Allows non token characters in format (#8256) @alexfauquette
 - [pickers] Avoid root imports and move public models to the models folder (#8337) @flaviendelangle
 - [pickers] Update `view` when `views` or `openTo` changes (#8361) @LukasTy

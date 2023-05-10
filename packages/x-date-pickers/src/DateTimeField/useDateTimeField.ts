@@ -8,7 +8,7 @@ import {
   UseDateTimeFieldDefaultizedProps,
   UseDateTimeFieldParams,
 } from './DateTimeField.types';
-import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
 

@@ -186,7 +186,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return value.toISOString();
   };
 
-  public parse = (value: any, format: string) => {
+  public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
     }
@@ -250,7 +250,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return numberToFormat;
   };
 
-  public getDiff = (value: Dayjs, comparing: Dayjs, unit?: AdapterUnits) => {
+  public getDiff = (value: Dayjs, comparing: Dayjs | string, unit?: AdapterUnits) => {
     return value.diff(comparing, unit as AdapterUnits);
   };
 
@@ -282,28 +282,28 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return value.isAfter(comparing);
   };
 
-  public isAfterYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isAfter(comparing, 'year');
+  public isAfterYear = (value: Dayjs, comparing: Dayjs) => {
+    return value.isAfter(comparing, 'year');
   };
 
-  public isAfterDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isAfter(comparing, 'day');
+  public isAfterDay = (value: Dayjs, comparing: Dayjs) => {
+    return value.isAfter(comparing, 'day');
   };
 
-  public isBefore = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing);
+  public isBefore = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing);
   };
 
-  public isBeforeYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing, 'year');
+  public isBeforeYear = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing, 'year');
   };
 
-  public isBeforeDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing, 'day');
+  public isBeforeDay = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing, 'day');
   };
 
-  public isWithinRange = (date: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
-    return date.isBetween(start, end, null, '[]');
+  public isWithinRange = (value: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
+    return value.isBetween(start, end, null, '[]');
   };
 
   public startOfYear = (value: Dayjs) => {
@@ -432,7 +432,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
 
     while (monthArray.length < 12) {
       const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
+      monthArray.push(this.addMonths(prevMonth, 1));
     }
 
     return monthArray;

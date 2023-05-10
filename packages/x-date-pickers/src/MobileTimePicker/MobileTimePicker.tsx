@@ -8,7 +8,7 @@ import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { PickerViewRendererLookup, useLocaleText, validateTime } from '../internals';
 import { TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
 
 type MobileTimePickerComponent = (<TDate>(
@@ -22,10 +22,11 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePickerDefaultizedProps<TDate, MobileTimePickerProps<TDate>>(
-    inProps,
-    'MuiMobileTimePicker',
-  );
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeView,
+    MobileTimePickerProps<TDate>
+  >(inProps, 'MuiMobileTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
     hours: renderTimeViewClock,
@@ -286,6 +287,7 @@ MobileTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

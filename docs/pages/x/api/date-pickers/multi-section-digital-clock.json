@@ -1,0 +1,95 @@
+{
+  "props": {
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "autoFocus": { "type": { "name": "bool" } },
+    "classes": { "type": { "name": "object" } },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code>."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotProps</code>."
+    },
+    "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "focusedView": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      }
+    },
+    "maxTime": { "type": { "name": "any" } },
+    "minTime": { "type": { "name": "any" } },
+    "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "onChange": { "type": { "name": "func" } },
+    "onFocusedViewChange": { "type": { "name": "func" } },
+    "onViewChange": { "type": { "name": "func" } },
+    "openTo": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      }
+    },
+    "readOnly": { "type": { "name": "bool" } },
+    "shouldDisableClock": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    },
+    "shouldDisableTime": { "type": { "name": "func" } },
+    "skipDisabled": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
+    "timeSteps": {
+      "type": {
+        "name": "shape",
+        "description": "{ hours?: number, minutes?: number, seconds?: number }"
+      },
+      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+    },
+    "value": { "type": { "name": "any" } },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      }
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
+      }
+    }
+  },
+  "slots": {
+    "DigitalClockSectionItem": {
+      "default": "MenuItem from '@mui/material'",
+      "type": { "name": "elementType" }
+    }
+  },
+  "name": "MultiSectionDigitalClock",
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMultiSectionDigitalClock" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-date-pickers/src/MultiSectionDigitalClock/MultiSectionDigitalClock.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/digital-clock/\">Digital Clock</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiSectionDigitalClock" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "MultiSectionDigitalClock" }
+  ]
+}

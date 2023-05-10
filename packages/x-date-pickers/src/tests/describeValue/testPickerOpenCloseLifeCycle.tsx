@@ -15,11 +15,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     return;
   }
 
-  // No view to test
-  if (pickerParams.variant === 'desktop' && pickerParams.type === 'time') {
-    return;
-  }
-
   const viewWrapperRole =
     pickerParams.type === 'date-range' && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
 
