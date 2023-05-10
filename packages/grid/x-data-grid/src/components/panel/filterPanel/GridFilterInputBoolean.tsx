@@ -10,6 +10,11 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
     headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (e.g. `isEmpty`)
+     */
+    isFilterActive?: boolean;
   };
 
 const BooleanOperatorContainer = styled('div')({
@@ -25,6 +30,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     apiRef,
     focusElementRef,
     headerFilterMenu,
+    isFilterActive,
     clearButton,
     tabIndex,
     label: labelProp,
@@ -76,7 +82,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           variant="standard"
           native={isSelectNative}
           displayEmpty
-          startAdornment={headerFilterMenu}
+          startAdornment={isFilterActive ? headerFilterMenu : null}
           inputProps={{ ref: focusElementRef, tabIndex }}
           {...others}
           {...baseSelectProps}
@@ -126,6 +132,11 @@ GridFilterInputBoolean.propTypes = {
     }),
   ]),
   headerFilterMenu: PropTypes.node,
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (e.g. `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

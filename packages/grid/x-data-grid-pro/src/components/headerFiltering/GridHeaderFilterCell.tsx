@@ -35,7 +35,7 @@ type GridHeaderFilterCellConditionalProps =
   | {
       operator: 'contains' | 'startsWith' | 'endsWith' | 'equals';
       colType: 'string';
-      InputComponentProps?: GridTypeFilterInputValueProps;
+      InputComponentProps?: Partial<GridTypeFilterInputValueProps>;
     }
   | {
       operator: 'isEmpty' | 'isNotEmpty';
@@ -45,21 +45,21 @@ type GridHeaderFilterCellConditionalProps =
   | {
       operator: '=' | '!=' | '>' | '>=' | '<' | '<=';
       colType: 'number';
-      InputComponentProps?: GridTypeFilterInputValueProps;
+      InputComponentProps?: Partial<GridTypeFilterInputValueProps>;
     }
   | {
       operator: 'is' | 'not' | 'after' | 'onOrAfter' | 'before' | 'onOrBefore';
       colType: 'date' | 'dateTime';
-      InputComponentProps?: GridFilterInputDateProps;
+      InputComponentProps?: Partial<GridFilterInputDateProps>;
     }
   | {
       operator: 'is' | 'not';
       colType: 'singleSelect';
-      InputComponentProps?: GridFilterInputSingleSelectProps;
+      InputComponentProps?: Partial<GridFilterInputSingleSelectProps>;
     }
   | {
       colType: 'boolean';
-      InputComponentProps?: GridFilterInputBooleanProps;
+      InputComponentProps?: Partial<GridFilterInputBooleanProps>;
     };
 
 export type GridHeaderFilterCellOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
@@ -257,6 +257,8 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         `filterOperator${capitalize(item.operator)}` as 'filterOperatorContains',
       );
 
+    const isFilterActive = isApplied || hasFocus;
+
     return (
       <div
         className={clsx(classes.root, headerClassName)}
@@ -280,21 +282,26 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             item={item}
             inputRef={inputRef}
             applyValue={applyFilterChanges}
+            onClick={() => {
+              // avoid extra click to move focus to input
+              if (!isEditing) {
+                apiRef.current.startHeaderFilterEditMode(colDef.field);
+              }
+            }}
             onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
             onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
             placeholder={apiRef.current.getLocaleText('columnMenuFilter')}
-            label={isApplied || hasFocus ? capitalize(label) : ' '}
+            label={isFilterActive ? capitalize(label) : ' '}
+            isFilterActive={isFilterActive}
             headerFilterMenu={
-              isApplied || hasFocus ? (
-                <GridHeaderFilterAdornment
-                  operators={filterOperators!}
-                  item={item}
-                  field={colDef.field}
-                  applyFilterChanges={applyFilterChanges}
-                  headerFilterMenuRef={headerFilterMenuRef}
-                  buttonRef={buttonRef}
-                />
-              ) : null
+              <GridHeaderFilterAdornment
+                operators={filterOperators!}
+                item={item}
+                field={colDef.field}
+                applyFilterChanges={applyFilterChanges}
+                headerFilterMenuRef={headerFilterMenuRef}
+                buttonRef={buttonRef}
+              />
             }
             clearButton={
               showClearIcon && isApplied ? (

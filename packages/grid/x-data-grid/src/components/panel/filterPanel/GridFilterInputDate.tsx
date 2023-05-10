@@ -10,6 +10,11 @@ export type GridFilterInputDateProps = GridFilterInputValueProps &
     type?: 'date' | 'datetime-local';
     headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (e.g. `isEmpty`)
+     */
+    isFilterActive?: boolean;
   };
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
@@ -23,6 +28,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     focusElementRef,
     InputProps,
     headerFilterMenu,
+    isFilterActive,
     clearButton,
     tabIndex,
     disabled,
@@ -79,7 +85,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         ...(applying || clearButton
           ? { endAdornment: applying ? <rootProps.slots.loadIcon /> : clearButton }
           : {}),
-        ...(headerFilterMenu ? { startAdornment: headerFilterMenu } : {}),
+        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
         disabled,
         ...InputProps,
         inputProps: {
@@ -109,6 +115,11 @@ GridFilterInputDate.propTypes = {
     PropTypes.object,
   ]),
   headerFilterMenu: PropTypes.node,
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (e.g. `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

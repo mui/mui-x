@@ -66,6 +66,12 @@ You can switch between different operators by clicking the operator button in th
 
 {{"demo": "HeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Simple header filters
+
+You can disable default filter panel using `disableColumnFilter` and only show the default operator by removing `headerFilterMenu` to create simple header filters with only the default operator.
+
+{{"demo": "SimpleHeaderFilteringDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Customize header filters
 
 There are multiple ways to customize header filters.

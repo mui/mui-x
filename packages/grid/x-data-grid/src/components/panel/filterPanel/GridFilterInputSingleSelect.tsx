@@ -53,6 +53,11 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
     headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (e.g. `isEmpty`)
+     */
+    isFilterActive?: boolean;
     type?: 'singleSelect';
   };
 
@@ -69,6 +74,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     tabIndex,
     label: labelProp,
     headerFilterMenu,
+    isFilterActive,
     clearButton,
     ...others
   } = props;
@@ -158,7 +164,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValueState}
           onChange={onFilterChange}
-          startAdornment={headerFilterMenu}
+          startAdornment={isFilterActive ? headerFilterMenu : null}
           variant="standard"
           type={type || 'text'}
           inputProps={{
@@ -212,6 +218,11 @@ GridFilterInputSingleSelect.propTypes = {
    */
   getOptionValue: PropTypes.func,
   headerFilterMenu: PropTypes.node,
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (e.g. `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

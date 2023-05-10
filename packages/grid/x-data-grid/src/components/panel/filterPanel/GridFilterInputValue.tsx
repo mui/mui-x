@@ -12,6 +12,11 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
     type?: 'text' | 'number' | 'date' | 'datetime-local';
     headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (e.g. `isEmpty`)
+     */
+    isFilterActive?: boolean;
   };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
@@ -24,6 +29,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     tabIndex,
     disabled,
     headerFilterMenu,
+    isFilterActive,
     clearButton,
     InputProps,
     ...others
@@ -73,7 +79,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         ...(applying || clearButton
           ? { endAdornment: applying ? <rootProps.slots.loadIcon /> : clearButton }
           : {}),
-        ...(headerFilterMenu ? { startAdornment: headerFilterMenu } : {}),
+        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
         disabled,
         ...InputProps,
         inputProps: {
@@ -106,6 +112,11 @@ GridFilterInputValue.propTypes = {
     PropTypes.object,
   ]),
   headerFilterMenu: PropTypes.node,
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (e.g. `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
