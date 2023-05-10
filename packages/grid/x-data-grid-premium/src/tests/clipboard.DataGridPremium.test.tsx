@@ -973,14 +973,16 @@ describe('<DataGridPremium /> - Clipboard', () => {
       });
     });
 
-    it('should use `unstable_splitClipboardText` prop to parse the clipboard string', async () => {
+    it('should use `unstable_splitClipboardPastedText` prop to parse the clipboard string', async () => {
       const cellDelimiter = ',';
       const rowDelimiter = ';\n';
 
       const splitClipboardText = (text: string) =>
         text.split(rowDelimiter).map((row) => row.split(cellDelimiter));
 
-      render(<Test rowLength={5} colLength={5} unstable_splitClipboardText={splitClipboardText} />);
+      render(
+        <Test rowLength={5} colLength={5} unstable_splitClipboardPastedText={splitClipboardText} />,
+      );
 
       const cell = getCell(0, 1);
       cell.focus();

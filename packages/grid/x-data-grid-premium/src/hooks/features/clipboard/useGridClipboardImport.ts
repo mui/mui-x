@@ -320,7 +320,7 @@ export const useGridClipboardImport = (
     | 'onClipboardPasteStart'
     | 'onClipboardPasteEnd'
     | 'experimentalFeatures'
-    | 'unstable_splitClipboardText'
+    | 'unstable_splitClipboardPastedText'
     | 'disableClipboardPaste'
   >,
 ): void => {
@@ -331,7 +331,7 @@ export const useGridClipboardImport = (
     (!props.disableClipboardPaste && props.experimentalFeatures?.clipboardPaste) ?? false;
   const rootEl = apiRef.current.rootElementRef?.current;
 
-  const splitClipboardText = props.unstable_splitClipboardText;
+  const splitClipboardPastedText = props.unstable_splitClipboardPastedText;
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -360,7 +360,7 @@ export const useGridClipboardImport = (
         return;
       }
 
-      const pastedData = splitClipboardText(text);
+      const pastedData = splitClipboardPastedText(text);
       if (!pastedData) {
         return;
       }
@@ -393,7 +393,7 @@ export const useGridClipboardImport = (
       getRowId,
       enableClipboardPaste,
       rootEl,
-      splitClipboardText,
+      splitClipboardPastedText,
     ],
   );
 

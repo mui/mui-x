@@ -30,7 +30,7 @@ export default function ClipboardPasteDelimiter() {
         experimentalFeatures={{ clipboardPaste: true }}
         unstable_ignoreValueFormatterDuringExport
         clipboardCopyCellDelimiter={','}
-        unstable_splitClipboardText={(text) =>
+        unstable_splitClipboardPastedText={(text) =>
           text.split('\n').map((row) => row.split(','))
         }
       />
