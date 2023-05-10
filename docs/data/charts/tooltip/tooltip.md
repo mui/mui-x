@@ -21,7 +21,7 @@ The tooltip can be triggered by two kind of events:
 
 ## Highlights
 
-## Highlighting axis
+### Highlighting axis
 
 You can hightligh data based on mouse position.
 By default those highlights are lines, but is can also be a vertical band if your x-axis use `scaleType: 'band`.
@@ -37,7 +37,7 @@ highlight={{
 
 {{"demo": "BandHighlight.js",  "bg": "inline"}}
 
-## Highlighting series 🚧
+### Highlighting series 🚧
 
 When the tooltip is highlighting elements, their style can be modified, and the style of other elements can be fade-out.
 
@@ -61,12 +61,11 @@ Here is a demo with:
 
 ## Composition
 
-If you're using composition, by default the mouse event will not be listen.
-If you need it (for example to support highlight or tooltip with `trigger='axis'`) you should add `<AxisInteractionListener />`.
+If you're using composition, by default the mouse event will be listen to get its current x/y values.
+If you don't need it, because you don' use highlights, and the tooltip is triggered by item, you can disable those listener with `disableAxisListener` props.
 
 ```jsx
-<ChartContainer {...}>
-  <AxisInteractionListener listen/>
+<ChartContainer {...} disableAxisListener>
   {/* ... */}
 </ChartContainer>
 ```
