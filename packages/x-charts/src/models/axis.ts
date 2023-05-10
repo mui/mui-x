@@ -7,6 +7,7 @@ import type {
   ScaleLinear,
 } from 'd3-scale';
 import { DefaultizedProps } from './helpers';
+import { XAxisClasses } from '../XAxis/xAxisClasses';
 
 export interface AxisProps {
   /**
@@ -29,10 +30,10 @@ export interface AxisProps {
    */
   fill?: string;
   /**
-   * The font size of the axis text.
+   * The font size of the axis ticks text.
    * @default 12
    */
-  fontSize?: number;
+  tickFontSize?: number;
   /**
    * The label of the axis.
    */
@@ -66,6 +67,10 @@ export interface XAxisProps extends AxisProps {
    * Position of the axis.
    */
   position?: 'top' | 'bottom';
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<XAxisClasses>;
 }
 
 export type ScaleName = 'linear' | 'band' | 'log' | 'point' | 'pow' | 'sqrt' | 'time' | 'utc';

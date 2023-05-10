@@ -15,7 +15,7 @@ export function YAxis(props: YAxisProps) {
     disableLine = false,
     disableTicks = false,
     fill = 'currentColor',
-    fontSize = 10,
+    tickFontSize = 10,
     label,
     labelFontSize = 14,
     stroke = 'currentColor',
@@ -46,9 +46,9 @@ export function YAxis(props: YAxisProps) {
           )}
           <text
             fill={fill}
-            transform={`translate(${positionSigne * (fontSize + tickSize + 2)}, 0)`}
+            transform={`translate(${positionSigne * (tickFontSize + tickSize + 2)}, 0)`}
             textAnchor="middle"
-            fontSize={fontSize}
+            fontSize={tickFontSize}
           >
             {value}
           </text>
@@ -58,7 +58,7 @@ export function YAxis(props: YAxisProps) {
         <text
           fill={fill}
           style={{}}
-          transform={`translate(${positionSigne * (fontSize + tickSize + 20)}, ${
+          transform={`translate(${positionSigne * (tickFontSize + tickSize + 20)}, ${
             top + height / 2
           }) rotate(${positionSigne * 90})`}
           fontSize={labelFontSize}
