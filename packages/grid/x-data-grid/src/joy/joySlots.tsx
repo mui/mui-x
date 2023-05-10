@@ -373,14 +373,14 @@ const Pagination = React.forwardRef<
           })}
         </JoySelect>
       </JoyFormControl>
-      <JoyTypography textAlign="center" sx={{ minWidth: 80 }}>
+      <JoyTypography textAlign="center" fontSize="xs" fontWeight="md">
         {labelDisplayedRows({
           from: rowCount === 0 ? 0 : page * pageSize + 1,
           to: getLabelDisplayedRowsTo({ page, pageSize, rowCount }),
           count: rowCount === -1 ? -1 : rowCount,
         })}
       </JoyTypography>
-      <JoyBox sx={{ display: 'flex', gap: 1 }}>
+      <JoyBox sx={{ display: 'flex', gap: 0.5 }}>
         <JoyIconButton
           size="sm"
           color="neutral"
