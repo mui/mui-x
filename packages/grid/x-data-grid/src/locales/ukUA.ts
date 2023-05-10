@@ -174,11 +174,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Агрегація',
-  aggregationFunctionLabelSum: 'сумма',
-  aggregationFunctionLabelAvg: 'срзнач',
+  aggregationFunctionLabelSum: 'сума',
+  aggregationFunctionLabelAvg: 'сер',
   aggregationFunctionLabelMin: 'мін',
   aggregationFunctionLabelMax: 'макс',
-  aggregationFunctionLabelSize: 'розмір',
+  aggregationFunctionLabelSize: 'кількість',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);
