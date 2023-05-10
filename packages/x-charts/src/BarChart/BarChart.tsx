@@ -50,8 +50,8 @@ export function BarChart(props: BarChartProps) {
       sx={sx}
       tooltip={tooltip}
     >
-      <BarPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <BarPlot />
       {children}
     </ChartContainer>
   );

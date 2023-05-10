@@ -49,8 +49,8 @@ export function LineChart(props: LineChartProps) {
       sx={sx}
       tooltip={tooltip}
     >
-      <LinePlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <LinePlot />
       {children}
     </ChartContainer>
   );

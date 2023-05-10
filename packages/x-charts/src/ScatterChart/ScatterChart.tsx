@@ -38,8 +38,8 @@ export function ScatterChart(props: ScatterChartProps) {
       sx={sx}
       tooltip={{ trigger: 'item' }}
     >
-      <ScatterPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <ScatterPlot />
       {children}
     </ChartContainer>
   );
