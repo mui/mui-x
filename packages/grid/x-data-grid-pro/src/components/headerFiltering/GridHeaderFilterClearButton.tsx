@@ -11,7 +11,7 @@ function GridHeaderFilterClearButton({ onClick }: GridHeaderFilterClearIconProps
   return (
     <rootProps.slots.baseIconButton
       tabIndex={-1}
-      aria-label="delete"
+      aria-label="Clear filter"
       size="small"
       onClick={onClick}
     >

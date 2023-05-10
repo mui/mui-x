@@ -15,7 +15,13 @@ import {
   gridExpandedSortedRowEntriesSelector,
   gridClasses,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  within,
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
@@ -23,7 +29,7 @@ import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Filter', () => {
+describe.only('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -863,5 +869,141 @@ describe('<DataGridPro /> - Filter', () => {
     filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
     const newId = filterForm!.dataset.id;
     expect(oldId).to.equal(newId);
+  });
+
+  describe('Header filters', () => {
+    it('should reflect the `filterModel` prop in header filters correctly', () => {
+      render(<TestCase filterModel={filterModel} experimentalFeatures={{ headerFilters: true }} />);
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      const filterCellInput = getColumnHeaderCell(0, 1).querySelector('input');
+      expect(filterCellInput).to.have.value('a');
+    });
+
+    it('should apply filters on type when the focus is on cell', () => {
+      render(<TestCase experimentalFeatures={{ headerFilters: true }} />);
+
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      const filterCell = getColumnHeaderCell(0, 1);
+      const filterCellInput = filterCell.querySelector('input')!;
+      expect(filterCellInput).not.toHaveFocus();
+      fireEvent.click(filterCell);
+      expect(filterCellInput).toHaveFocus();
+      fireEvent.change(filterCellInput, { target: { value: 'ad' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
+
+    it('should call `onFilterModelChange` when filters are updated', () => {
+      const onFilterModelChange = spy();
+      render(
+        <TestCase
+          onFilterModelChange={onFilterModelChange}
+          experimentalFeatures={{ headerFilters: true }}
+        />,
+      );
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      const filterCellInput = filterCell.querySelector('input')!;
+      fireEvent.click(filterCell);
+      fireEvent.change(filterCellInput, { target: { value: 'ad' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(onFilterModelChange.callCount).to.equal(1);
+    });
+
+    it('should allow to change the operator from operator menu', () => {
+      const onFilterModelChange = spy();
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'a',
+                  },
+                ],
+              },
+            },
+          }}
+          onFilterModelChange={onFilterModelChange}
+          experimentalFeatures={{ headerFilters: true }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      fireEvent.click(filterCell);
+
+      fireEvent.click(within(filterCell).getByLabelText('Operator'));
+      fireEvent.click(screen.getByRole('menuitem', { name: '= Equals' }));
+
+      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.lastCall.firstArg.items[0].operator).to.equal('equals');
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+
+    it('should allow to clear the filter by clear button', () => {
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'a',
+                  },
+                ],
+              },
+            },
+          }}
+          experimentalFeatures={{ headerFilters: true }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      fireEvent.click(screen.getByRole('button', { name: 'Clear filter' }));
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+
+    it('should allow to customize header filter cell using `renderHeaderFilter`', () => {
+      render(
+        <TestCase
+          columns={[
+            { field: 'brand', headerName: 'Brand', renderHeaderFilter: () => 'Custom Filter Cell' },
+          ]}
+          experimentalFeatures={{ headerFilters: true }}
+        />,
+      );
+
+      expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Filter Cell');
+    });
+
+    it('should allow to customize header filter cell using `filterOperators`', () => {
+      render(
+        <TestCase
+          columns={[
+            {
+              field: 'brand',
+              headerName: 'Brand',
+              filterOperators: [
+                {
+                  value: 'contains',
+                  getApplyFilterFn: () => () => true,
+                  InputComponent: () => <div>Custom Input</div>,
+                },
+              ],
+            },
+          ]}
+          experimentalFeatures={{ headerFilters: true }}
+        />,
+      );
+
+      expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Input');
+    });
   });
 });
