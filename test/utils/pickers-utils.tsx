@@ -314,8 +314,7 @@ export const getPickerDay = (name: string, picker = 'January 2018') =>
 export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
   switch (specialCase) {
     case 'singleDigit':
-      return;
-      text.replace(/\u200e/g, '');
+      return text.replace(/\u200e/g, '');
     case 'RTL':
       return text.replace(/\u2066|\u2067|\u2068|\u2069/g, '').replace(/\u202f/g, ' ');
     default:
