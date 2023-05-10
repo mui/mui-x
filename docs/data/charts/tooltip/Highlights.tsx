@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, markElementClasses } from '@mui/x-charts/LineChart';
 
 const lineChartsParams = {
   xAxis: [{ data: [...Array(100)].map((v, i) => 0.1 * i) }],
@@ -25,6 +25,11 @@ const lineChartsParams = {
   ],
   width: 600,
   height: 400,
+  sx: {
+    [`& .${markElementClasses.root}`]: {
+      display: 'none',
+    }
+  },
 };
 export default function Highlights() {
   return <LineChart {...lineChartsParams} tooltip={{ trigger: 'axis' }} />;

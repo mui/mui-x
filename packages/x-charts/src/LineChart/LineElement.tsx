@@ -9,6 +9,10 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export interface LineElementClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the root element when higlighted. */
+  highlighted: string;
+  /** Styles applied to the root elementwhen fade out. */
+  fadeOut: string;
 }
 export interface LineElementOwnerState {
   id: string;
@@ -24,12 +28,14 @@ export function getLineElementUtilityClass(slot: string) {
 
 export const lineElementClasses: LineElementClasses = generateUtilityClasses('MuiLineElement', [
   'root',
+  'highlighted',
+  'fadeOut',
 ]);
 
 const useUtilityClasses = (ownerState: LineElementOwnerState) => {
-  const { classes, id } = ownerState;
+  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'fadeOut'],
   };
 
   return composeClasses(slots, getLineElementUtilityClass, classes);
