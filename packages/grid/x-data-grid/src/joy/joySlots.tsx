@@ -11,6 +11,7 @@ import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
 import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import joyIconSlots from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 
@@ -289,6 +290,7 @@ const InputLabel = React.forwardRef<
 });
 
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
+  ...joyIconSlots,
   baseCheckbox: Checkbox,
   baseTextField: TextField,
   baseButton: Button,
