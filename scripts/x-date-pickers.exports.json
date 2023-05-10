@@ -202,6 +202,7 @@
   { "name": "renderMultiSectionDigitalClockTimeView", "kind": "Variable" },
   { "name": "renderTimeViewClock", "kind": "Variable" },
   { "name": "ruRU", "kind": "Variable" },
+  { "name": "skSK", "kind": "Variable" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "Interface" },
   { "name": "StaticDatePickerSlotsComponent", "kind": "Interface" },
