@@ -93,7 +93,7 @@ export default function CustomHeaderFilterSingleDataGridPro() {
         {...data}
         columns={columns}
         disableColumnFilter
-        experimentalFeatures={{ headerFiltering: true }}
+        experimentalFeatures={{ headerFilters: true }}
       />
     </div>
   );

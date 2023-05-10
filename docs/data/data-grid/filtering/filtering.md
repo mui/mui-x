@@ -50,10 +50,10 @@ To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` o
 ## Header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
-This feature is experimental, it needs to be explicitly activated using the `headerFiltering` experimental feature flag.
+This feature is experimental, it needs to be explicitly activated using the `headerFilters` experimental feature flag.
 
 ```tsx
-<DataGridPro experimentalFeatures={{ headerFiltering: true }} {...otherProps} />
+<DataGridPro experimentalFeatures={{ headerFilters: true }} {...otherProps} />
 ```
 
 To use header filtering, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.

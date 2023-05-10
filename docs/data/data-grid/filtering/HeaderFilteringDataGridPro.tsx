@@ -21,7 +21,7 @@ export default function HeaderFilteringDataGridPro() {
             },
           },
         }}
-        experimentalFeatures={{ headerFiltering: true }}
+        experimentalFeatures={{ headerFilters: true }}
       />
     </div>
   );

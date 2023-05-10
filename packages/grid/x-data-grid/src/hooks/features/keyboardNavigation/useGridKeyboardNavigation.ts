@@ -106,7 +106,7 @@ export const useGridKeyboardNavigation = (
 
   const headerFilteringEnabled =
     // @ts-expect-error // TODO move relevant code to the `DataGridPro`
-    props.signature !== 'DataGrid' && props.experimentalFeatures?.headerFiltering;
+    props.signature !== 'DataGrid' && props.experimentalFeatures?.headerFilters;
 
   /**
    * @param {number} colIndex Index of the column to focus

@@ -22,7 +22,7 @@ export default function SimpleHeaderFilteringDataGridPro() {
           },
         }}
         disableColumnFilter
-        experimentalFeatures={{ headerFiltering: true }}
+        experimentalFeatures={{ headerFilters: true }}
         slotProps={{
           headerFilter: {
             InputComponentProps: {

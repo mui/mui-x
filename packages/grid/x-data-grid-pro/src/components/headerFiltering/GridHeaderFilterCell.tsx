@@ -226,6 +226,9 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const onClick = React.useCallback(
       (event: React.MouseEvent) => {
         if (!hasFocus) {
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
           apiRef.current.setColumnHeaderFilterFocus(colDef.field, event);
         }
       },
@@ -282,12 +285,12 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
             item={item}
             inputRef={inputRef}
             applyValue={applyFilterChanges}
-            onClick={() => {
-              // avoid extra click to move focus to input
-              if (!isEditing) {
-                apiRef.current.startHeaderFilterEditMode(colDef.field);
-              }
-            }}
+            // onClickCapture={() => {
+            //   // avoid extra click to move focus to input
+            //   if (!isEditing) {
+            //     apiRef.current.startHeaderFilterEditMode(colDef.field);
+            //   }
+            // }}
             onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
             onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
             placeholder={apiRef.current.getLocaleText('columnMenuFilter')}

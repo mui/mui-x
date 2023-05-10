@@ -12,5 +12,5 @@
   slots={{
     headerFilterCell: CustomHeaderFilter,
   }}
-  experimentalFeatures={{ headerFiltering: true }}
+  experimentalFeatures={{ headerFilters: true }}
 />

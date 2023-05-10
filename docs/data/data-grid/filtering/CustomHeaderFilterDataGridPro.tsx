@@ -59,7 +59,7 @@ export default function CustomHeaderFilterDataGridPro() {
         slots={{
           headerFilterCell: CustomHeaderFilter,
         }}
-        experimentalFeatures={{ headerFiltering: true }}
+        experimentalFeatures={{ headerFilters: true }}
       />
     </div>
   );

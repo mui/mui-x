@@ -88,7 +88,7 @@ export default function CustomHeaderFilterOperatorDataGridPro() {
       <DataGridPro
         {...data}
         columns={columns}
-        experimentalFeatures={{ headerFiltering: true }}
+        experimentalFeatures={{ headerFilters: true }}
       />
     </div>
   );

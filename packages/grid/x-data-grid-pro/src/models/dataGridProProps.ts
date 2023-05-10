@@ -34,7 +34,7 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
    * Enables the data grid filtering on header feature.
    */
-  headerFiltering: boolean;
+  headerFilters: boolean;
 }
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
