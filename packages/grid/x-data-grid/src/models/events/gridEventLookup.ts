@@ -195,6 +195,7 @@ export interface GridColumnHeaderEventLookup {
 export interface GridHeaderFilterEventLookup {
   /**
    * Fired when a column header filter is focused
+   * @ignore - do not document.
    */
   headerFilterFocus: {
     params: GridColumnHeaderParams;
@@ -202,6 +203,7 @@ export interface GridHeaderFilterEventLookup {
   };
   /**
    * Fired when a column header filter is blurred
+   * @ignore - do not document.
    */
   headerFilterBlur: {
     params: GridColumnHeaderParams;
@@ -209,13 +211,15 @@ export interface GridHeaderFilterEventLookup {
   };
   /**
    * Fired when a column header filter is clicked
+   * @ignore - do not document.
    */
   headerFilterClick: {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
-   * Fired when a key is pressed in a column header filter. It's mapped do the `keydown` DOM event.
+   * Fired when a key is pressed in a column header filter. It's mapped to the `keydown` DOM event.
+   * @ignore - do not document.
    */
   headerFilterKeyDown: {
     params: GridColumnHeaderParams;

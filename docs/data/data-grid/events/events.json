@@ -202,34 +202,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "headerFilterBlur",
-    "description": "Fired when a column header filter is blurred",
-    "params": "GridColumnHeaderParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "headerFilterClick",
-    "description": "Fired when a column header filter is clicked",
-    "params": "GridColumnHeaderParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "headerFilterFocus",
-    "description": "Fired when a column header filter is focused",
-    "params": "GridColumnHeaderParams",
-    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "headerFilterKeyDown",
-    "description": "Fired when a key is pressed in a column header filter. It&#39;s mapped do the <code>keydown</code> DOM event.",
-    "params": "GridColumnHeaderParams",
-    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "headerSelectionCheckboxChange",
     "description": "Fired when the value of the selection checkbox of the header is changed",
     "params": "GridHeaderSelectionCheckboxParams",
