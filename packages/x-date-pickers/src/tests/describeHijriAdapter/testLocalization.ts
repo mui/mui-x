@@ -18,4 +18,9 @@ export const testLocalization: DescribeHijriAdapterTestSuite = ({ adapter }) => 
       'yyyy/mm/dd hh:mm (a|p)m',
     );
   });
+
+  it('Method: getCurrentLocaleCode', () => {
+    // Returns the default location
+    expect(adapter.getCurrentLocaleCode()).to.match(/ar/);
+  });
 };
