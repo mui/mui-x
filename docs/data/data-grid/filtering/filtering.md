@@ -99,7 +99,7 @@ The following demo uses the `renderHeaderFilter` method to customize the header 
 
 If the filter operator has a [custom `InputComponent`](https://mui.com/x/react-data-grid/filtering/#custom-input-component), the same component is being used for the header filter.
 
-When rendered as a header filter, the `InputComponent` also receives the `headerFilterMenu` and `clearButton` props that contains the filter operator menu and clear button.
+When rendered as a header filter, the `InputComponent` also receives the `headerFilterMenu` and `clearButton` props that contain the filter operator menu and clear button.
 
 {{"demo": "CustomHeaderFilterOperatorDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 

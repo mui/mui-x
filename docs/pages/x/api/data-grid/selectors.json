@@ -469,6 +469,24 @@
     "supportsApiRef": true
   },
   {
+    "name": "unstable_gridHeaderFilteringEditFieldSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "unstable_gridHeaderFilteringMenuSelector",
+    "returnType": "string | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "unstable_gridHeaderFilteringStateSelector",
+    "returnType": "GridHeaderFilteringState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
     "name": "unstable_gridTabIndexColumnGroupHeaderSelector",
     "returnType": "GridColumnGroupIdentifier | null",
     "description": "",
