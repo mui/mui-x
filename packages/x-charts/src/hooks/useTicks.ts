@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { D3Scale, isBandScale } from './useScale';
 
-type TickParams = {
+export type TickParams = {
   maxTicks?: number;
   minTicks?: number;
   tickSpacing?: number;

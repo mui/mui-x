@@ -1,5 +1,6 @@
 import type { ScaleBand, ScaleLogarithmic, ScalePower, ScaleTime, ScaleLinear } from 'd3-scale';
 import { XAxisClasses } from '../XAxis/xAxisClasses';
+import type { TickParams } from '../hooks/useTicks';
 
 export interface AxisProps {
   /**
@@ -128,7 +129,8 @@ export type AxisConfig<S = ScaleName, V = any> = {
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
-} & Partial<XAxisProps | YAxisProps>;
+} & Partial<XAxisProps | YAxisProps> &
+  TickParams;
 
 export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
   AxisConfig<S, V>,
