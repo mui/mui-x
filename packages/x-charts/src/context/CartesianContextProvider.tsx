@@ -24,6 +24,7 @@ import {
   ExtremumGetterResult,
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
+import { getTicksNumber } from '../hooks/useTicks';
 
 export type CartesianContextProviderProps = {
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
@@ -142,7 +143,7 @@ export function CartesianContextProvider({
       completedXAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, range).nice(),
+        scale: getScale(scaleType, extremums, range).nice(getTicksNumber({ ...axis, range })),
       } as AxisDefaultized<typeof scaleType>;
     });
 
@@ -172,7 +173,7 @@ export function CartesianContextProvider({
       completedYAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, range).nice(),
+        scale: getScale(scaleType, extremums, range).nice(getTicksNumber({ ...axis, range })),
       } as AxisDefaultized<typeof scaleType>;
     });
 
