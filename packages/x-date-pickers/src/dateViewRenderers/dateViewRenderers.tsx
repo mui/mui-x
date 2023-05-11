@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
-import { DateOrTimeView, DateView } from '../models';
+import { DateView } from '../models';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
 const isDatePickerView = (view: unknown): view is DateView =>
   view === 'year' || view === 'month' || view === 'day';
 
-export interface DateViewRendererProps<TDate, TView extends DateOrTimeView>
+export interface DateViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Omit<
     DateCalendarProps<TDate>,
     'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView'

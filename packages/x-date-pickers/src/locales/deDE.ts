@@ -1,11 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'Stunden',
   minutes: 'Minuten',
   seconds: 'Sekunden',
+  meridiem: 'Meridiem',
 };
 
 const deDEPickers: Partial<PickersLocaleText<any>> = {
@@ -47,6 +49,9 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} ${timeViews.hours}`,
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Auswählen ${timeViews[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Kalenderwoche',

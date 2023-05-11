@@ -26,8 +26,8 @@ export type D3Scale =
   | ScaleTime<any, any>
   | ScaleLinear<any, any>;
 
-export function getScale(scaleName: ScaleName | undefined): D3Scale {
-  switch (scaleName) {
+export function getScale(scaleType: ScaleName | undefined): D3Scale {
+  switch (scaleType) {
     case 'band':
       return scaleBand();
     case 'log':

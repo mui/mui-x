@@ -13,7 +13,7 @@ type DefaultizedCartesianSeriesType =
   | DefaultizedLineSeriesType
   | DefaultizedScatterSeriesType;
 // | PieSeriesType
-type StackableSeriesType = BarSeriesType | LineSeriesType;
+type StackableSeriesType = DefaultizedBarSeriesType | DefaultizedLineSeriesType;
 
 export type {
   BarSeriesType,

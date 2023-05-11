@@ -209,6 +209,11 @@ export default function FullWidthDetailPanel() {
         pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
+        sx={{
+          '& .MuiDataGrid-detailPanel': {
+            overflow: 'visible',
+          },
+        }}
       />
     </Box>
   );
