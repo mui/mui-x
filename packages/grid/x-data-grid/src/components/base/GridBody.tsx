@@ -111,6 +111,13 @@ function GridBody(props: GridBodyProps) {
     };
   }, [apiRef]);
 
+  React.useEffect(() => {
+    // For JSDOM test environment that doesn't support ResizeObserver
+    if (typeof ResizeObserver === 'undefined' && process.env.NODE_ENV === 'test') {
+      apiRef.current.computeSizeAndPublishResizeEvent();
+    }
+  }, [apiRef]);
+
   const disableVirtualization = React.useCallback(() => {
     setIsVirtualizationDisabled(true);
   }, []);
