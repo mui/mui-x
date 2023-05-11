@@ -55,6 +55,10 @@ The definition of `myGradient` is passed as a children of the chart component.
 sx={{
   '& .MuiLineElement-root': {
     strokeDasharray: '10 5',
+    strokeWidth: 4,
+  },
+  '& .MuiMarkElement-root': {
+    display: 'none',
   },
   '& .MuiAreaElement-series-Germany': {
     fill: "url('#myGradient')",
