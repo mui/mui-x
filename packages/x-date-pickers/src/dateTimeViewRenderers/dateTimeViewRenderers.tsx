@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
+import { resolveComponentProps } from '@mui/base/utils';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import {
@@ -81,6 +82,10 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   timeSteps,
   skipDisabled,
 }: DateTimeViewRendererProps<TDate>) => {
+  const isActionBarVisible = !!resolveComponentProps(
+    slotProps?.actionBar ?? componentsProps?.actionBar,
+    {} as any,
+  )?.actions?.length;
   return (
     <React.Fragment>
       <Divider />
@@ -165,7 +170,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           skipDisabled={skipDisabled}
         />
       </DateTimeViewWrapper>
-      <Divider />
+      {isActionBarVisible && <Divider />}
     </React.Fragment>
   );
 };
