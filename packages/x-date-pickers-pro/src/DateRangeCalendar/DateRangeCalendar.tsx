@@ -348,11 +348,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   }, [rangePosition, value]); // eslint-disable-line
 
   const selectNextMonth = React.useCallback(() => {
-    changeMonth(utils.getNextMonth(calendarState.currentMonth));
+    changeMonth(utils.addMonths(calendarState.currentMonth, 1));
   }, [changeMonth, calendarState.currentMonth, utils]);
 
   const selectPreviousMonth = React.useCallback(() => {
-    changeMonth(utils.getPreviousMonth(calendarState.currentMonth));
+    changeMonth(utils.addMonths(calendarState.currentMonth, -1));
   }, [changeMonth, calendarState.currentMonth, utils]);
 
   const isNextMonthDisabled = useNextMonthDisabled(calendarState.currentMonth, {
