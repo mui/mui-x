@@ -12,8 +12,8 @@ export interface AreaElementClasses {
   root: string;
   /** Styles applied to the root element when higlighted. */
   highlighted: string;
-  /** Styles applied to the root elementwhen fade out. */
-  fadeOut: string;
+  /** Styles applied to the root element when faded. */
+  faded: string;
 }
 export interface AreaElementOwnerState {
   id: string;
@@ -30,13 +30,13 @@ export function getAreaElementUtilityClass(slot: string) {
 export const areaElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
   'root',
   'highlighted',
-  'fadeOut',
+  'faded',
 ]);
 
 const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
   const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'fadeOut'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
   };
 
   return composeClasses(slots, getAreaElementUtilityClass, classes);

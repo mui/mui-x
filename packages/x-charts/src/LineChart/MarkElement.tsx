@@ -13,8 +13,8 @@ export interface MarkElementClasses {
   root: string;
   /** Styles applied to the root element when higlighted. */
   highlighted: string;
-  /** Styles applied to the root elementwhen fade out. */
-  fadeOut: string;
+  /** Styles applied to the root element when faded. */
+  faded: string;
 }
 export interface MarkElementOwnerState {
   id: string;
@@ -33,13 +33,13 @@ export function getMarkElementUtilityClass(slot: string) {
 export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
   'root',
   'highlighted',
-  'fadeOut',
+  'faded',
 ]);
 
 const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
   const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'fadeOut'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
   };
 
   return composeClasses(slots, getMarkElementUtilityClass, classes);

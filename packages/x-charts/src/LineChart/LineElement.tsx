@@ -11,8 +11,8 @@ export interface LineElementClasses {
   root: string;
   /** Styles applied to the root element when higlighted. */
   highlighted: string;
-  /** Styles applied to the root elementwhen fade out. */
-  fadeOut: string;
+  /** Styles applied to the root element when faded. */
+  faded: string;
 }
 export interface LineElementOwnerState {
   id: string;
@@ -29,13 +29,13 @@ export function getLineElementUtilityClass(slot: string) {
 export const lineElementClasses: LineElementClasses = generateUtilityClasses('MuiLineElement', [
   'root',
   'highlighted',
-  'fadeOut',
+  'faded',
 ]);
 
 const useUtilityClasses = (ownerState: LineElementOwnerState) => {
   const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'fadeOut'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
   };
 
   return composeClasses(slots, getLineElementUtilityClass, classes);
