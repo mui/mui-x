@@ -11,7 +11,7 @@ title: Charts - Lines
 
 ### Data format
 
-To plot lines, series must have property `data` containing an array of numbers.
+To plot lines, a series must have a `data` property containing an array of numbers.
 This `data` array corresponds to y values.
 To modify x value, you should provide a `xAxis` with data properties.
 
@@ -19,14 +19,14 @@ To modify x value, you should provide a `xAxis` with data properties.
 
 ### Area
 
-You can fill the area of the curve by setting the series' property `area` to `true`.
+You can fill the area of the line by setting the series' `area` property to `true`.
 
 {{"demo": "BasicArea.js", "bg": "inline"}}
 
 ## Stacking
 
-Each line series can get a property `stack` which expect a string value.
-Series with the same `stack` will be staked on top of each other.
+Each line series can get a `stack` property which expects a string value.
+Series with the same `stack` will be stacked on top of each other.
 
 {{"demo": "StackedAreas.js", "bg": "inline"}}
 
@@ -36,14 +36,14 @@ Series with the same `stack` will be staked on top of each other.
 
 ### Interpolation
 
-The interpolation between data point can be customized by the `curve` property.
-This property expect one of the follwing string value, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
+The interpolation between data points can be customized by the `curve` property.
+This property expects one of the following string value, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
 {{"demo": "InterpolationDemo.js", "bg": "inline"}}
 
 ### CSS
 
-Line pots are made of three elements named `LineElement`, `AreaElement`, and `MarkElement`.
+Line plots are made of three elements named `LineElement`, `AreaElement`, and `MarkElement`.
 Each element can be selected with the CSS class name `.MuiLineElement-root`, `.MuiAreaElement-root`, or `.MuiMarkElement-root`.
 
 If you want to select the element of a given series, you can use classes `.MuiLineElement-series-<seriesId>` with `<seriesId>` the id of the series you want to customize.
