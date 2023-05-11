@@ -40,6 +40,10 @@ describe('<AdapterMoment />', () => {
       it('is12HourCycleInCurrentLocale: should have meridiem', () => {
         expect(adapter.is12HourCycleInCurrentLocale()).to.equal(true);
       });
+
+      it('parse: should have the right locale', () => {
+        expect(adapter.parse('01/01/2020', 'MM/DD/YYYY')!.locale()).to.equal('en');
+      });
     });
 
     describe('Russian', () => {
@@ -71,6 +75,10 @@ describe('<AdapterMoment />', () => {
       it('getCurrentLocaleCode: should return locale code', () => {
         expect(adapter.getCurrentLocaleCode()).to.equal('ru');
       });
+
+      it('parse: should have the right locale', () => {
+        expect(adapter.parse('01/01/2020', 'MM/DD/YYYY')!.locale()).to.equal('ru');
+      });
     });
 
     describe('Korean', () => {
@@ -87,6 +95,10 @@ describe('<AdapterMoment />', () => {
       it('getMeridiemText: should translate meridiem format', () => {
         expect(adapter.getMeridiemText('am')).to.equal('오전');
         expect(adapter.getMeridiemText('pm')).to.equal('오후');
+      });
+
+      it('parse: should have the right locale', () => {
+        expect(adapter.parse('01/01/2020', 'MM/DD/YYYY')!.locale()).to.equal('ko');
       });
     });
 
