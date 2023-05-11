@@ -8,8 +8,17 @@ import JoyFormLabel from '@mui/joy/FormLabel';
 import JoyButton from '@mui/joy/Button';
 import JoyIconButton from '@mui/joy/IconButton';
 import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
+import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
+import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
+import JoyBox from '@mui/joy/Box';
+import JoyTypography from '@mui/joy/Typography';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { gridFilteredTopLevelRowCountSelector, gridPaginationModelSelector } from '../hooks';
 
 function convertColor<
   T extends
@@ -44,18 +53,19 @@ function convertSize<T extends 'small' | 'medium' | 'large'>(size: T | undefined
 
 function convertVariant<T extends 'outlined' | 'contained' | 'text' | 'standard' | 'filled'>(
   variant: T | undefined,
+  defaultVariant: VariantProp = 'plain',
 ) {
-  return (
-    variant
-      ? {
-          outlined: 'outlined',
-          contained: 'solid',
-          text: 'plain',
-          standard: 'plain',
-          filled: 'soft',
-        }[variant]
-      : variant
-  ) as VariantProp;
+  if (!variant) {
+    return defaultVariant;
+  }
+
+  return ({
+    standard: 'outlined',
+    outlined: 'outlined',
+    contained: 'solid',
+    text: 'plain',
+    filled: 'soft',
+  }[variant] || defaultVariant) as VariantProp;
 }
 
 const Checkbox = React.forwardRef<
@@ -81,17 +91,24 @@ const Checkbox = React.forwardRef<
 const TextField = React.forwardRef<
   HTMLDivElement,
   NonNullable<GridSlotsComponentsProps['baseTextField']>
->(({ onChange, label, placeholder, value, inputRef, type }, ref) => {
+>(({ onChange, label, placeholder, value, inputRef, type, size, variant, ...props }, ref) => {
+  const rootRef = useForkRef(ref, props.InputProps?.ref);
+  const inputForkRef = useForkRef(inputRef, props?.inputProps?.ref);
+  const { startAdornment, endAdornment } = props.InputProps || {};
+
   return (
-    <JoyFormControl ref={ref}>
-      <JoyFormLabel sx={{ fontSize: 12 }}>{label}</JoyFormLabel>
+    <JoyFormControl ref={rootRef}>
+      <JoyFormLabel>{label}</JoyFormLabel>
       <JoyInput
         type={type}
         value={value as any}
         onChange={onChange}
         placeholder={placeholder}
-        size="sm"
-        slotProps={{ input: { ref: inputRef } }}
+        variant={convertVariant(variant, 'outlined')}
+        size={convertSize(size)}
+        slotProps={{ input: { ...props?.inputProps, ref: inputForkRef } }}
+        startDecorator={startAdornment}
+        endDecorator={endAdornment}
       />
     </JoyFormControl>
   );
@@ -106,7 +123,7 @@ const Button = React.forwardRef<
       {...props}
       size={convertSize(size)}
       color={convertColor(color)}
-      variant={convertVariant(variant) ?? 'plain'}
+      variant={convertVariant(variant)}
       ref={ref}
       startDecorator={startIcon}
       endDecorator={endIcon}
@@ -118,7 +135,7 @@ const Button = React.forwardRef<
 const IconButton = React.forwardRef<
   HTMLButtonElement,
   NonNullable<GridSlotsComponentsProps['baseIconButton']>
->(function IconButton({ color, size, sx, ...props }, ref) {
+>(function IconButton({ color, size, sx, touchRippleRef, ...props }, ref) {
   return (
     <JoyIconButton
       {...props}
@@ -185,17 +202,223 @@ const Switch = React.forwardRef<
   );
 });
 
+const Select = React.forwardRef<
+  HTMLButtonElement,
+  NonNullable<GridSlotsComponentsProps['baseSelect']>
+>(
+  (
+    {
+      open,
+      onOpen,
+      value,
+      onChange,
+      size,
+      color,
+      variant,
+      inputProps,
+      MenuProps,
+      inputRef,
+      error,
+      native,
+      fullWidth,
+      labelId,
+      ...props
+    },
+    ref,
+  ) => {
+    const handleChange: JoySelectProps<any>['onChange'] = (event, newValue) => {
+      if (event && onChange) {
+        // Same as in https://github.com/mui/material-ui/blob/e5558282a8f36856aef1299f3a36f3235e92e770/packages/mui-material/src/Select/SelectInput.js#L288-L300
+
+        // Redefine target to allow name and value to be read.
+        // This allows seamless integration with the most popular form libraries.
+        // https://github.com/mui/material-ui/issues/13485#issuecomment-676048492
+        // Clone the event to not override `target` of the original event.
+        const nativeEvent = (event as React.SyntheticEvent).nativeEvent || event;
+        // @ts-ignore The nativeEvent is function, not object
+        const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
+
+        Object.defineProperty(clonedEvent, 'target', {
+          writable: true,
+          value: { value: newValue, name: props.name },
+        });
+        onChange(clonedEvent, null);
+      }
+    };
+
+    return (
+      <JoySelect
+        {...(props as JoySelectProps<any>)}
+        listboxOpen={open}
+        onListboxOpenChange={(isOpen) => {
+          if (isOpen) {
+            onOpen?.({} as React.SyntheticEvent);
+          } else {
+            MenuProps?.onClose?.({} as React.KeyboardEvent, undefined as any);
+          }
+        }}
+        size={convertSize(size)}
+        color={convertColor(color)}
+        variant={convertVariant(variant, 'outlined')}
+        ref={ref}
+        value={value}
+        onChange={handleChange}
+        slotProps={{
+          button: {
+            'aria-labelledby': labelId,
+            ref: inputRef,
+          },
+          listbox: {
+            disablePortal: false,
+            sx: {
+              zIndex: 1350,
+            },
+          },
+        }}
+      />
+    );
+  },
+);
+
+const Option = React.forwardRef<
+  HTMLLIElement,
+  NonNullable<GridSlotsComponentsProps['baseSelectOption']>
+>(({ native, ...props }, ref) => {
+  return <JoyOption {...(props as JoyOptionProps)} ref={ref} />;
+});
+
+const InputLabel = React.forwardRef<
+  HTMLLabelElement,
+  NonNullable<GridSlotsComponentsProps['baseInputLabel']>
+>(({ shrink, variant, sx, ...props }, ref) => {
+  return <JoyFormLabel {...props} ref={ref} sx={sx as SxProps<Theme>} />;
+});
+
+function labelDisplayedRows({ from, to, count }: { from: number; to: number; count: number }) {
+  return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+}
+const getLabelDisplayedRowsTo = ({
+  page,
+  pageSize,
+  rowCount,
+}: {
+  page: number;
+  pageSize: number;
+  rowCount: number;
+}) => {
+  if (rowCount === -1) {
+    return (page + 1) * pageSize;
+  }
+  return pageSize === -1 ? rowCount : Math.min(rowCount, (page + 1) * pageSize);
+};
+
+const Pagination = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['pagination']>
+>((props, ref) => {
+  const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+  const paginationModel = gridPaginationModelSelector(apiRef);
+  const visibleTopLevelRowCount = gridFilteredTopLevelRowCountSelector(apiRef);
+
+  const rowCount = React.useMemo(
+    () => rootProps.rowCount ?? visibleTopLevelRowCount ?? 0,
+    [rootProps.rowCount, visibleTopLevelRowCount],
+  );
+
+  const lastPage = React.useMemo(
+    () => Math.floor(rowCount / (paginationModel.pageSize || 1)),
+    [rowCount, paginationModel.pageSize],
+  );
+
+  const handlePageChange = React.useCallback(
+    (page: number) => {
+      apiRef.current.setPage(page);
+    },
+    [apiRef],
+  );
+
+  const page = paginationModel.page <= lastPage ? paginationModel.page : lastPage;
+  const pageSize = paginationModel.pageSize;
+
+  const pageSizeOptions = rootProps.pageSizeOptions?.includes(pageSize)
+    ? rootProps.pageSizeOptions
+    : [];
+
+  const handleChangeRowsPerPage: JoySelectProps<number>['onChange'] = (event, newValue) => {
+    const newPageSize = Number(newValue);
+    apiRef.current.setPageSize(newPageSize);
+  };
+  return (
+    <JoyBox
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        justifyContent: 'flex-end',
+        px: 2,
+      }}
+      ref={ref}
+    >
+      <JoyFormControl orientation="horizontal" size="sm">
+        <JoyFormLabel>Rows per page:</JoyFormLabel>
+        <JoySelect<number> onChange={handleChangeRowsPerPage} value={pageSize}>
+          {pageSizeOptions.map((option) => {
+            return (
+              <Option value={option} key={option}>
+                {option}
+              </Option>
+            );
+          })}
+        </JoySelect>
+      </JoyFormControl>
+      <JoyTypography textAlign="center" fontSize="xs" fontWeight="md">
+        {labelDisplayedRows({
+          from: rowCount === 0 ? 0 : page * pageSize + 1,
+          to: getLabelDisplayedRowsTo({ page, pageSize, rowCount }),
+          count: rowCount === -1 ? -1 : rowCount,
+        })}
+      </JoyTypography>
+      <JoyBox sx={{ display: 'flex', gap: 0.5 }}>
+        <JoyIconButton
+          size="sm"
+          color="neutral"
+          variant="outlined"
+          disabled={page === 0}
+          onClick={() => handlePageChange(page - 1)}
+          sx={{ bgcolor: 'background.surface' }}
+        >
+          <GridKeyboardArrowLeft />
+        </JoyIconButton>
+        <JoyIconButton
+          size="sm"
+          color="neutral"
+          variant="outlined"
+          disabled={rowCount !== -1 ? page >= Math.ceil(rowCount / pageSize) - 1 : false}
+          onClick={() => handlePageChange(page + 1)}
+          sx={{ bgcolor: 'background.surface' }}
+        >
+          <GridKeyboardArrowRight />
+        </JoyIconButton>
+      </JoyBox>
+    </JoyBox>
+  );
+});
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
+  ...joyIconSlots,
   baseCheckbox: Checkbox,
   baseTextField: TextField,
   baseButton: Button,
   baseIconButton: IconButton,
   baseSwitch: Switch,
-  // BaseFormControl: MUIFormControl,
-  // baseSelect: Select,
-  // baseSelectOption: Option,
+  baseSelect: Select,
+  baseSelectOption: Option,
+  baseInputLabel: InputLabel,
+  baseFormControl: JoyFormControl,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
+  pagination: Pagination,
 };
 
 export default joySlots;

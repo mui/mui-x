@@ -12,7 +12,6 @@ const series = [
     type: 'bar',
     id: 'Eco-1',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
     color: 'red',
     data: [2, 5, 3, 4, 1],
@@ -21,7 +20,6 @@ const series = [
     type: 'bar',
     id: 'Eco-2',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
     color: 'blue',
     data: [5, 6, 2, 8, 9],
@@ -29,7 +27,6 @@ const series = [
   {
     type: 'line',
     id: 'pib',
-    xAxisKey: 'years',
     yAxisKey: 'pib',
     data: [1000, 1500, 3000, 5000, 10000],
   },
@@ -45,17 +42,17 @@ export default function Composition() {
         {
           id: 'years',
           data: [2010, 2011, 2012, 2013, 2014],
-          scaleName: 'band',
+          scaleType: 'band',
         },
       ]}
       yAxis={[
         {
           id: 'eco',
-          scaleName: 'linear',
+          scaleType: 'linear',
         },
         {
           id: 'pib',
-          scaleName: 'log',
+          scaleType: 'log',
         },
       ]}
     >

@@ -10,6 +10,14 @@ import {
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import {
+  randomCompanyName,
+  randomRating,
+  randomCreatedDate,
+  randomBoolean,
+  randomArrayItem,
+} from '@mui/x-data-grid-generator';
+
 const materialTheme = materialExtendTheme({
   components: {
     MuiSvgIcon: {
@@ -29,17 +37,21 @@ const materialTheme = materialExtendTheme({
   },
 });
 
+const singleSelectValueOptions = ['Item1', 'Item2', 'Item3'];
+
 const columns = [
-  { field: 'name', editable: true, type: 'string' },
-  { field: 'number', editable: true, type: 'number' },
-  { field: 'date', editable: true, type: 'date' },
-  { field: 'dateTime', editable: true, type: 'dateTime' },
-  { field: 'boolean', editable: true, type: 'boolean' },
+  { field: 'name', editable: true, type: 'string', minWidth: 140 },
+  { field: 'number', editable: true, type: 'number', flex: 1 },
+  { field: 'date', editable: true, type: 'date', minWidth: 100 },
+  { field: 'dateTime', editable: true, type: 'dateTime', minWidth: 160 },
+  { field: 'boolean', editable: true, type: 'boolean', flex: 1 },
   {
     field: 'singleSelect',
     editable: true,
     type: 'singleSelect',
-    valueOptions: ['Item1', 'Item2', 'Item3'],
+    valueOptions: singleSelectValueOptions,
+    minWidth: 100,
+    flex: 1,
   },
   {
     field: 'actions',
@@ -53,26 +65,29 @@ const columns = [
       <GridActionsCellItem onClick={() => {}} label="Print" showInMenu />,
       <GridActionsCellItem label="Duplicate User" showInMenu />,
     ],
+    minWidth: 80,
+    flex: 1,
   },
 ];
 
-const rows = [
-  {
-    id: 1,
-    name: 'Data Grid x Joy UI',
-    number: 1,
-    date: new Date(),
-    dateTime: new Date(),
-    boolean: true,
-    singleSelect: 'Item1',
-  },
-];
+const rows = [];
+for (let i = 0; i < 20; i += 1) {
+  rows.push({
+    id: i,
+    name: randomCompanyName(),
+    number: randomRating(),
+    date: randomCreatedDate(),
+    dateTime: randomCreatedDate(),
+    boolean: randomBoolean(),
+    singleSelect: randomArrayItem(singleSelectValueOptions),
+  });
+}
 
 export default function GridJoyUISlots() {
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
-        <Box sx={{ height: 400, width: '100%' }}>
+        <Box sx={{ height: 420, width: '100%' }}>
           <DataGrid
             pagination
             slots={{
@@ -83,11 +98,21 @@ export default function GridJoyUISlots() {
             rows={rows}
             checkboxSelection
             disableRowSelectionOnClick
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5, page: 0 },
+              },
+            }}
+            pageSizeOptions={[5, 10, 20]}
             slotProps={{
               filterPanel: {
                 sx: {
                   '& .MuiDataGrid-filterForm': {
                     alignItems: 'flex-end',
+                  },
+                  '& .MuiDataGrid-panelContent': {
+                    // To prevent the Select popup being hidden by the panel
+                    overflow: 'visible',
                   },
                 },
               },

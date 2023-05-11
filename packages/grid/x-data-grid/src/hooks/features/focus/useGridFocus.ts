@@ -353,10 +353,10 @@ export const useGridFocus = (
 
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);
-    doc.addEventListener('click', handleDocumentClick);
+    doc.addEventListener('mouseup', handleDocumentClick);
 
     return () => {
-      doc.removeEventListener('click', handleDocumentClick);
+      doc.removeEventListener('mouseup', handleDocumentClick);
     };
   }, [apiRef, handleDocumentClick]);
 

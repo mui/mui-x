@@ -1,3 +1,4 @@
+import { TimeViewWithMeridiem } from '../../internals/models';
 import { DateView, TimeView, MuiPickersAdapter, FieldSectionContentType } from '../../models';
 
 export interface PickersComponentSpecificLocaleText {
@@ -54,6 +55,9 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;
+
+  // Digital clock labels
+  selectViewText: (view: TimeViewWithMeridiem) => string;
 
   // Open picker labels
   openDatePickerDialogue: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;

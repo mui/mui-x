@@ -81,7 +81,7 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}\u2069 – \u2066`,
+            endSeparator: `${section.endSeparator}${isRTL ? '\u2069 – \u2066' : ' – '}`,
           };
         }
 

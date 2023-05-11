@@ -148,12 +148,4 @@ describe('<StaticTimePicker />', () => {
     expect(screen.getByRole('button', { name: /AM/i })).to.have.attribute('disabled');
     expect(screen.getByRole('button', { name: /PM/i })).to.have.attribute('disabled');
   });
-
-  describe('localization', () => {
-    it('should respect the `localeText` prop', () => {
-      render(<StaticTimePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
-
-      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
-    });
-  });
 });
