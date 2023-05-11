@@ -10,7 +10,7 @@ interface AdapterLuxonOptions {
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-  yy: { sectionType: 'year', contentType: 'digit', maxLength: 2 },
+  yy: 'year',
   yyyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
