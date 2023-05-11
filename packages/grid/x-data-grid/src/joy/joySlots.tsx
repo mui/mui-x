@@ -10,10 +10,15 @@ import JoyIconButton from '@mui/joy/IconButton';
 import JoySwitch, { SwitchProps as JoySwitchProps } from '@mui/joy/Switch';
 import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
 import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
+import JoyBox from '@mui/joy/Box';
+import JoyTypography from '@mui/joy/Typography';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import joyIconSlots from './icons';
+import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { gridFilteredTopLevelRowCountSelector, gridPaginationModelSelector } from '../hooks';
 
 function convertColor<
   T extends
@@ -289,6 +294,117 @@ const InputLabel = React.forwardRef<
   return <JoyFormLabel {...props} ref={ref} sx={sx as SxProps<Theme>} />;
 });
 
+function labelDisplayedRows({ from, to, count }: { from: number; to: number; count: number }) {
+  return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
+}
+const getLabelDisplayedRowsTo = ({
+  page,
+  pageSize,
+  rowCount,
+}: {
+  page: number;
+  pageSize: number;
+  rowCount: number;
+}) => {
+  if (rowCount === -1) {
+    return (page + 1) * pageSize;
+  }
+  return pageSize === -1 ? rowCount : Math.min(rowCount, (page + 1) * pageSize);
+};
+
+const Pagination = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['pagination']>
+>((props, ref) => {
+  const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+  const paginationModel = gridPaginationModelSelector(apiRef);
+  const visibleTopLevelRowCount = gridFilteredTopLevelRowCountSelector(apiRef);
+
+  const rowCount = React.useMemo(
+    () => rootProps.rowCount ?? visibleTopLevelRowCount ?? 0,
+    [rootProps.rowCount, visibleTopLevelRowCount],
+  );
+
+  const lastPage = React.useMemo(
+    () => Math.floor(rowCount / (paginationModel.pageSize || 1)),
+    [rowCount, paginationModel.pageSize],
+  );
+
+  const handlePageChange = React.useCallback(
+    (page: number) => {
+      apiRef.current.setPage(page);
+    },
+    [apiRef],
+  );
+
+  const page = paginationModel.page <= lastPage ? paginationModel.page : lastPage;
+  const pageSize = paginationModel.pageSize;
+
+  const pageSizeOptions = rootProps.pageSizeOptions?.includes(pageSize)
+    ? rootProps.pageSizeOptions
+    : [];
+
+  const handleChangeRowsPerPage: JoySelectProps<number>['onChange'] = (event, newValue) => {
+    const newPageSize = Number(newValue);
+    apiRef.current.setPageSize(newPageSize);
+  };
+  return (
+    <JoyBox
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        justifyContent: 'flex-end',
+        px: 2,
+      }}
+      ref={ref}
+    >
+      <JoyFormControl orientation="horizontal" size="sm">
+        <JoyFormLabel>Rows per page:</JoyFormLabel>
+        <JoySelect<number> onChange={handleChangeRowsPerPage} value={pageSize}>
+          {pageSizeOptions.map((option) => {
+            return (
+              <Option value={option} key={option}>
+                {option}
+              </Option>
+            );
+          })}
+        </JoySelect>
+      </JoyFormControl>
+      <JoyTypography textAlign="center" fontSize="xs" fontWeight="md">
+        {labelDisplayedRows({
+          from: rowCount === 0 ? 0 : page * pageSize + 1,
+          to: getLabelDisplayedRowsTo({ page, pageSize, rowCount }),
+          count: rowCount === -1 ? -1 : rowCount,
+        })}
+      </JoyTypography>
+      <JoyBox sx={{ display: 'flex', gap: 0.5 }}>
+        <JoyIconButton
+          size="sm"
+          color="neutral"
+          variant="outlined"
+          disabled={page === 0}
+          onClick={() => handlePageChange(page - 1)}
+          sx={{ bgcolor: 'background.surface' }}
+        >
+          <GridKeyboardArrowLeft />
+        </JoyIconButton>
+        <JoyIconButton
+          size="sm"
+          color="neutral"
+          variant="outlined"
+          disabled={rowCount !== -1 ? page >= Math.ceil(rowCount / pageSize) - 1 : false}
+          onClick={() => handlePageChange(page + 1)}
+          sx={{ bgcolor: 'background.surface' }}
+        >
+          <GridKeyboardArrowRight />
+        </JoyIconButton>
+      </JoyBox>
+    </JoyBox>
+  );
+});
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   ...joyIconSlots,
   baseCheckbox: Checkbox,
@@ -302,6 +418,7 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseFormControl: JoyFormControl,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
+  pagination: Pagination,
 };
 
 export default joySlots;
