@@ -1,12 +1,12 @@
 /* eslint-disable class-methods-use-this */
 import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterMomentOptions {
-  locale?: string;
-  instance?: typeof defaultMoment;
-  formats?: Partial<AdapterFormats>;
-}
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -108,7 +108,7 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMoment implements MuiPickersAdapter<Moment> {
+export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   public isMUIAdapter = true;
 
   public lib = 'moment';
@@ -123,7 +123,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats, instance }: AdapterMomentOptions = {}) {
+  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultMoment> = {}) {
     this.moment = instance || defaultMoment;
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };

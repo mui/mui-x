@@ -5,63 +5,63 @@ import { TimeViewWithMeridiem } from '../internals/models';
 // maps TimeView to its translation
 const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'Hodiny',
-  minutes: 'Minuty',
+  minutes: 'Minúty',
   seconds: 'Sekundy',
-  meridiem: 'Odpoledne',
+  meridiem: 'Popoludnie',
 };
 
-const csCZPickers: Partial<PickersLocaleText<any>> = {
+const skSKPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
-  previousMonth: 'Další měsíc',
-  nextMonth: 'Předchozí měsíc',
+  previousMonth: 'Ďalší mesiac',
+  nextMonth: 'Predchádzajúci mesiac',
 
   // View navigation
-  openPreviousView: 'otevřít předchozí zobrazení',
-  openNextView: 'otevřít další zobrazení',
+  openPreviousView: 'otvoriť predchádzajúce zobrazenie',
+  openNextView: 'otvoriť ďalšie zobrazenie',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře'
-      : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku',
+      ? 'ročné zobrazenie otvorené, prepnite do zobrazenia kalendára'
+      : 'zobrazenie kalendára otvorené, prepnite do zobrazenia roka',
 
   // DateRange placeholders
-  start: 'Začátek',
-  end: 'Konec',
+  start: 'Začiatok',
+  end: 'Koniec',
 
   // Action bar
-  cancelButtonLabel: 'Zrušit',
-  clearButtonLabel: 'Vymazat',
-  okButtonLabel: 'Potvrdit',
+  cancelButtonLabel: 'Zrušiť',
+  clearButtonLabel: 'Vymazať',
+  okButtonLabel: 'Potvrdiť',
   todayButtonLabel: 'Dnes',
 
   // Toolbar titles
-  datePickerToolbarTitle: 'Vyberte datum',
-  dateTimePickerToolbarTitle: 'Vyberte datum a čas',
+  datePickerToolbarTitle: 'Vyberte dátum',
+  dateTimePickerToolbarTitle: 'Vyberte dátum a čas',
   timePickerToolbarTitle: 'Vyberte čas',
-  dateRangePickerToolbarTitle: 'Vyberete rozmezí dat',
+  dateRangePickerToolbarTitle: 'Vyberete rozmedzie dátumov',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${timeViews[view] ?? view} vybrány. ${
-      time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
+    `${timeViews[view] ?? view} vybraný. ${
+      time === null ? 'Nie je vybraný čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
     }`,
-  hoursClockNumberText: (hours) => `${hours} hodin`,
-  minutesClockNumberText: (minutes) => `${minutes} minut`,
-  secondsClockNumberText: (seconds) => `${seconds} sekund`,
+  hoursClockNumberText: (hours) => `${hours} hodín`,
+  minutesClockNumberText: (minutes) => `${minutes} minút`,
+  secondsClockNumberText: (seconds) => `${seconds} sekúnd`,
 
   // Digital clock labels
   selectViewText: (view) => `Vyberte ${timeViews[view]}`,
 
   // Calendar labels
-  calendarWeekNumberHeaderLabel: 'Týden v roce',
+  calendarWeekNumberHeaderLabel: 'Týždeň v roku',
   calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týden v roce`,
+  calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber} týždeň v roku`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Vyberte datum, vybrané datum je ${utils.format(value, 'fullDate')}`
-      : 'Vyberte datum',
+      ? `Vyberte dátum, vybraný dátum je ${utils.format(value, 'fullDate')}`
+      : 'Vyberte dátum',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
       ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
@@ -69,7 +69,7 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
 
   // Table labels
   timeTableLabel: 'vyberte čas',
-  dateTableLabel: 'vyberte datum',
+  dateTableLabel: 'vyberte dátum',
 
   // Field section placeholders
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
@@ -82,4 +82,4 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'aa',
 };
 
-export const csCZ = getPickersLocalization(csCZPickers);
+export const skSK = getPickersLocalization(skSKPickers);
