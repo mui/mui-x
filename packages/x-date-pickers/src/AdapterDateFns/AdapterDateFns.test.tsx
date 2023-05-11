@@ -19,7 +19,7 @@ import {
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterDateFns />', () => {
-  describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss', locale: enUS });
+  describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss' });
 
   describe('Adapter localization', () => {
     describe('English', () => {

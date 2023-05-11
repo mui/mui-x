@@ -16,7 +16,7 @@ import { AdapterFormats } from '@mui/x-date-pickers';
 import { expect } from 'chai';
 
 describe('<AdapterDateFnsJalali />', () => {
-  describeJalaliAdapter(AdapterDateFnsJalali, { locale: faJalaliIR });
+  describeJalaliAdapter(AdapterDateFnsJalali, {});
 
   describe('Adapter localization', () => {
     it('Formatting', () => {

@@ -9,7 +9,7 @@ function innerGregorianDescribeAdapter<TDate>(
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
   params: DescribeGregorianAdapterParams,
 ) {
-  const adapter = new Adapter({ locale: params.locale });
+  const adapter = new Adapter();
 
   describe(adapter.lib, () => {
     const testSuitParams = {

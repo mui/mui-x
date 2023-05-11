@@ -27,7 +27,7 @@ import 'dayjs/locale/de';
 import 'dayjs/plugin/utc';
 
 describe('<AdapterDayjs />', () => {
-  describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss', locale: 'en' });
+  describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss' });
 
   describe('Adapter localization', () => {
     describe('English', () => {

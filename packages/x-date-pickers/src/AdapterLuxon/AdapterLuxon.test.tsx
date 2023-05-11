@@ -18,7 +18,6 @@ import {
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {
     formatDateTime: 'yyyy-MM-dd HH:mm:ss',
-    locale: 'en-US',
   });
 
   describe('Adapter localization', () => {
