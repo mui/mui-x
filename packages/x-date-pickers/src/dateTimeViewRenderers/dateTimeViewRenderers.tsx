@@ -10,16 +10,26 @@ import {
 import { DateTimeViewWrapper } from '../internals/components/DateTimeViewWrapper';
 import { isInternalTimeView } from '../internals/utils/time-utils';
 import { isDatePickerView } from '../internals/utils/date-utils';
+import type { DateTimePickerProps } from '../DateTimePicker/DateTimePicker.types';
 
-export interface DateTimeViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+export interface DateTimeViewRendererProps<TDate>
   extends Omit<
-    DateCalendarProps<TDate> & MultiSectionDigitalClockProps<TDate>,
-    'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView'
-  > {
-  view: TView;
-  onViewChange?: (view: TView) => void;
-  views: readonly TView[];
-  focusedView: TView | null;
+      DateCalendarProps<TDate> & MultiSectionDigitalClockProps<TDate>,
+      | 'views'
+      | 'openTo'
+      | 'view'
+      | 'onViewChange'
+      | 'focusedView'
+      | 'components'
+      | 'componentsProps'
+      | 'slots'
+      | 'slotProps'
+    >,
+    Pick<DateTimePickerProps<TDate>, 'components' | 'componentsProps' | 'slots' | 'slotProps'> {
+  view: DateOrTimeViewWithMeridiem;
+  onViewChange?: (view: DateOrTimeViewWithMeridiem) => void;
+  views: readonly DateOrTimeViewWithMeridiem[];
+  focusedView: DateOrTimeViewWithMeridiem | null;
 }
 
 export const renderDesktopDateTimeView = <TDate extends unknown>({
@@ -70,7 +80,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
-}: DateTimeViewRendererProps<TDate, any>) => {
+}: DateTimeViewRendererProps<TDate>) => {
   return (
     <React.Fragment>
       <Divider />
@@ -79,7 +89,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           view={isDatePickerView(view) ? view : 'day'}
           onViewChange={onViewChange}
           views={views.filter(isDatePickerView)}
-          focusedView={isDatePickerView(focusedView) ? focusedView : null}
+          focusedView={focusedView && isDatePickerView(focusedView) ? focusedView : null}
           onFocusedViewChange={onFocusedViewChange}
           value={value}
           defaultValue={defaultValue}
@@ -119,7 +129,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
         <MultiSectionDigitalClock
           view={isInternalTimeView(view) ? view : 'hours'}
           onViewChange={onViewChange}
-          focusedView={isInternalTimeView(focusedView) ? focusedView : null}
+          focusedView={focusedView && isInternalTimeView(focusedView) ? focusedView : null}
           onFocusedViewChange={onFocusedViewChange}
           views={views.filter(isInternalTimeView)}
           value={value}
