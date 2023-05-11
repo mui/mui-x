@@ -540,18 +540,16 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
-    let lastDay: number | null = null;
+
     while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      const day = getDay(current);
-      if (lastDay !== day) {
-        lastDay = day;
-        nestedWeeks[weekNumber].push(current);
-        count += 1;
-      }
+      nestedWeeks[weekNumber].push(current);
+
       current = addDays(current, 1);
+      count += 1;
     }
+
     return nestedWeeks;
   };
 
