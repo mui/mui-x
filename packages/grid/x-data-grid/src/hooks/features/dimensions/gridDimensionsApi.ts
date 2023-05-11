@@ -48,6 +48,7 @@ export interface GridDimensionsPrivateApi {
   updateGridDimensionsRef: () => void;
   /**
    * Computes the size and publishes a `resize` event with the new value.
+   * @param {HTMLDivElement} mainEl The element with the `MuiDataGrid-main` class.
    */
-  computeSizeAndPublishResizeEvent: () => void;
+  computeSizeAndPublishResizeEvent: (mainEl: HTMLDivElement) => void;
 }

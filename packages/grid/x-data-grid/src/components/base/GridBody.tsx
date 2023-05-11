@@ -81,9 +81,10 @@ function GridBody(props: GridBodyProps) {
   );
 
   useEnhancedEffect(() => {
-    apiRef.current.computeSizeAndPublishResizeEvent();
-
     const elementToObserve = rootRef.current;
+
+    apiRef.current.computeSizeAndPublishResizeEvent(elementToObserve!);
+
     if (typeof ResizeObserver === 'undefined') {
       return () => {};
     }
@@ -92,7 +93,7 @@ function GridBody(props: GridBodyProps) {
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
       animationFrame = window.requestAnimationFrame(() => {
-        apiRef.current.computeSizeAndPublishResizeEvent();
+        apiRef.current.computeSizeAndPublishResizeEvent(elementToObserve!);
       });
     });
 

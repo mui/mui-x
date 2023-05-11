@@ -178,7 +178,11 @@ export function useGridDimensions(
 
   // This is the function called by apiRef.current.resize()
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
-    apiRef.current.computeSizeAndPublishResizeEvent();
+    const rootEl = apiRef.current.rootElementRef?.current;
+    const mainEl = rootEl?.querySelector<HTMLDivElement>(`.${gridClasses.main}`);
+    if (mainEl) {
+      apiRef.current.computeSizeAndPublishResizeEvent(mainEl);
+    }
   }, [apiRef]);
 
   const getRootDimensions = React.useCallback<GridDimensionsApi['getRootDimensions']>(
@@ -214,37 +218,37 @@ export function useGridDimensions(
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
-  const computeSizeAndPublishResizeEvent = React.useCallback(() => {
-    const rootEl = apiRef.current.rootElementRef?.current;
-    const mainEl = rootEl?.querySelector<HTMLDivElement>(`.${gridClasses.main}`);
+  const computeSizeAndPublishResizeEvent = React.useCallback(
+    (mainEl: HTMLDivElement) => {
+      if (!mainEl) {
+        return;
+      }
 
-    if (!mainEl) {
-      return;
-    }
+      const height = mainEl.offsetHeight || 0;
+      const width = mainEl.offsetWidth || 0;
 
-    const height = mainEl.offsetHeight || 0;
-    const width = mainEl.offsetWidth || 0;
+      const win = ownerWindow(mainEl);
 
-    const win = ownerWindow(mainEl);
+      const computedStyle = win.getComputedStyle(mainEl);
+      const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
+      const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
+      const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
+      const paddingBottom = parseInt(computedStyle.paddingBottom, 10) || 0;
 
-    const computedStyle = win.getComputedStyle(mainEl);
-    const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
-    const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
-    const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
-    const paddingBottom = parseInt(computedStyle.paddingBottom, 10) || 0;
+      const newHeight = height - paddingTop - paddingBottom;
+      const newWidth = width - paddingLeft - paddingRight;
 
-    const newHeight = height - paddingTop - paddingBottom;
-    const newWidth = width - paddingLeft - paddingRight;
+      const hasHeightChanged = newHeight !== previousSize.current?.height;
+      const hasWidthChanged = newWidth !== previousSize.current?.width;
 
-    const hasHeightChanged = newHeight !== previousSize.current?.height;
-    const hasWidthChanged = newWidth !== previousSize.current?.width;
-
-    if (!previousSize.current || hasHeightChanged || hasWidthChanged) {
-      const size = { width: newWidth, height: newHeight };
-      apiRef.current.publishEvent('resize', size);
-      previousSize.current = size;
-    }
-  }, [apiRef]);
+      if (!previousSize.current || hasHeightChanged || hasWidthChanged) {
+        const size = { width: newWidth, height: newHeight };
+        apiRef.current.publishEvent('resize', size);
+        previousSize.current = size;
+      }
+    },
+    [apiRef],
+  );
 
   const dimensionsApi: GridDimensionsApi = {
     resize,
