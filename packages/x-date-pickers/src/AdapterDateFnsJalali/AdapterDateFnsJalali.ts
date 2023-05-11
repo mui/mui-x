@@ -27,7 +27,6 @@ import getWeek from 'date-fns-jalali/getWeek';
 import getYear from 'date-fns-jalali/getYear';
 import getMonth from 'date-fns-jalali/getMonth';
 import getDate from 'date-fns-jalali/getDate';
-import getDay from 'date-fns-jalali/getDay';
 import getDaysInMonth from 'date-fns-jalali/getDaysInMonth';
 import getMinutes from 'date-fns-jalali/getMinutes';
 import isAfter from 'date-fns-jalali/isAfter';

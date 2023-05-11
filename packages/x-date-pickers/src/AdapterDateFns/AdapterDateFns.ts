@@ -21,7 +21,6 @@ import endOfWeek from 'date-fns/endOfWeek';
 import endOfYear from 'date-fns/endOfYear';
 import dateFnsFormat from 'date-fns/format';
 import getDate from 'date-fns/getDate';
-import getDay from 'date-fns/getDay';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
 import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
@@ -56,7 +55,6 @@ import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-import { Dayjs } from 'dayjs';
 
 type DateFnsLocale = typeof defaultLocale;
 
