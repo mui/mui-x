@@ -69,6 +69,11 @@ export const GridArrowDownwardIcon = createSvgIcon(
   'ArrowDownward',
 );
 
+export const GridKeyboardArrowLeft = createSvgIcon(
+  <polyline points="15 18 9 12 15 6" />,
+  'KeyboardArrowLeft',
+);
+
 export const GridKeyboardArrowRight = createSvgIcon(
   <polyline points="9 18 15 12 9 6" />,
   'KeyboardArrowRight',

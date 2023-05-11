@@ -11,7 +11,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Year
   y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
   yy: 'year',
-  yyyy: 'year',
+  yyyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
   L: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
