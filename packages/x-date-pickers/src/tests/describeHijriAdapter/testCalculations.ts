@@ -85,6 +85,45 @@ export const testCalculations: DescribeHijriAdapterTestSuite = ({ adapter }) => 
     expect(adapter.endOfDay(testDateIso)).toEqualDateTime('2018-10-30T23:59:59.999Z');
   });
 
+  it('Method: addYears', () => {
+    expect(adapter.addYears(testDateIso, 2)).toEqualDateTime('2020-10-08T11:44:00.000Z');
+    expect(adapter.addYears(testDateIso, -2)).toEqualDateTime('2016-11-21T11:44:00.000Z');
+  });
+
+  it('Method: addMonths', () => {
+    expect(adapter.addMonths(testDateIso, 2)).toEqualDateTime('2018-12-28T11:44:00.000Z');
+    expect(adapter.addMonths(testDateIso, -2)).toEqualDateTime('2018-09-01T11:44:00.000Z');
+    expect(adapter.addMonths(testDateIso, 3)).toEqualDateTime('2019-01-27T11:44:00.000Z');
+  });
+
+  it('Method: addWeeks', () => {
+    expect(adapter.addWeeks(testDateIso, 2)).toEqualDateTime('2018-11-13T11:44:00.000Z');
+    expect(adapter.addWeeks(testDateIso, -2)).toEqualDateTime('2018-10-16T11:44:00.000Z');
+  });
+
+  it('Method: addDays', () => {
+    expect(adapter.addDays(testDateIso, 2)).toEqualDateTime('2018-11-01T11:44:00.000Z');
+    expect(adapter.addDays(testDateIso, -2)).toEqualDateTime('2018-10-28T11:44:00.000Z');
+  });
+
+  it('Method: addHours', () => {
+    expect(adapter.addHours(testDateIso, 2)).toEqualDateTime('2018-10-30T13:44:00.000Z');
+    expect(adapter.addHours(testDateIso, -2)).toEqualDateTime('2018-10-30T09:44:00.000Z');
+    expect(adapter.addHours(testDateIso, 15)).toEqualDateTime('2018-10-31T02:44:00.000Z');
+  });
+
+  it('Method: addMinutes', () => {
+    expect(adapter.addMinutes(testDateIso, 2)).toEqualDateTime('2018-10-30T11:46:00.000Z');
+    expect(adapter.addMinutes(testDateIso, -2)).toEqualDateTime('2018-10-30T11:42:00.000Z');
+    expect(adapter.addMinutes(testDateIso, 20)).toEqualDateTime('2018-10-30T12:04:00.000Z');
+  });
+
+  it('Method: addSeconds', () => {
+    expect(adapter.addSeconds(testDateIso, 2)).toEqualDateTime('2018-10-30T11:44:02.000Z');
+    expect(adapter.addSeconds(testDateIso, -2)).toEqualDateTime('2018-10-30T11:43:58.000Z');
+    expect(adapter.addSeconds(testDateIso, 70)).toEqualDateTime('2018-10-30T11:45:10.000Z');
+  });
+
   it('Method: getYear', () => {
     expect(adapter.getYear(testDateIso)).to.equal(1440);
   });
