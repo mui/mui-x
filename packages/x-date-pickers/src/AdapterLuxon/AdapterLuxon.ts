@@ -1,11 +1,12 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime, Info } from 'luxon';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterLuxonOptions {
-  formats?: Partial<AdapterFormats>;
-  locale?: string;
-}
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -108,7 +109,7 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
+export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public isMUIAdapter = true;
 
   public lib = 'luxon';
@@ -121,7 +122,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats }: AdapterLuxonOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<string, never> = {}) {
     this.locale = locale || 'en-US';
     this.formats = { ...defaultFormats, ...formats };
   }
