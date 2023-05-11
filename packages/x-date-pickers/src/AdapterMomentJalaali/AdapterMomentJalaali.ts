@@ -134,10 +134,6 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  private toJMoment = (value?: Moment | undefined) => {
-    return this.moment(value ? value.clone() : undefined).locale('fa');
-  };
-
   public date = (value?: any) => {
     if (value === null) {
       return null;
@@ -272,7 +268,7 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
 
   public getWeekdays = () => {
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.toJMoment().weekday(dayOfWeek).format('dd');
+      return this.date()!.weekday(dayOfWeek).format('dd');
     });
   };
 
@@ -315,8 +311,6 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
   };
 
   public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am'
-      ? this.toJMoment().hours(2).format('A')
-      : this.toJMoment().hours(14).format('A');
+    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
   };
 }
