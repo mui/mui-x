@@ -10,6 +10,10 @@ import { InteractionContext } from '../context/InteractionProvider';
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the root element when higlighted. */
+  highlighted: string;
+  /** Styles applied to the root element when faded. */
+  faded: string;
 }
 export interface AreaElementOwnerState {
   id: string;
@@ -23,14 +27,16 @@ export function getAreaElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiAreaElement', slot);
 }
 
-export const lineElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
+export const areaElementClasses: AreaElementClasses = generateUtilityClasses('MuiAreaElement', [
   'root',
+  'highlighted',
+  'faded',
 ]);
 
 const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
-  const { classes, id } = ownerState;
+  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
   };
 
   return composeClasses(slots, getAreaElementUtilityClass, classes);

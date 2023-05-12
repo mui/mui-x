@@ -26,7 +26,7 @@ If you need to change the formatting of the text to conform to a given locale, v
 ### Using the theme
 
 To translate all your components from `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`,
-you just have to import the locale from `@mui/x-date-pikers` (see the [list of supported locales below](#supported-locales)).
+import the locale from `@mui/x-date-pickers` (see the [list of supported locales below](#supported-locales)).
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';

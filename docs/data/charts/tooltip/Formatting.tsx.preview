@@ -1,0 +1,8 @@
+<LineChart
+  {...lineChartsParams}
+  xAxis={[{ data: years, scaleType: 'time', valueFormatter: yearFormater }]}
+  series={lineChartsParams.series.map((s) => ({
+    ...s,
+    valueFormatter: currencyFormatter,
+  }))}
+/>

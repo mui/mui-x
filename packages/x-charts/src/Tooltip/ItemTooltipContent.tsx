@@ -30,15 +30,17 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
   return (
     <TooltipPaper>
       <TooltipTable>
-        <tr>
-          <TooltipCell>
-            <TooltipMark ownerState={{ color }} />
-          </TooltipCell>
+        <tbody>
+          <tr>
+            <TooltipCell>
+              <TooltipMark ownerState={{ color }} />
+            </TooltipCell>
 
-          <TooltipCell>{displayedLabel}</TooltipCell>
+            <TooltipCell>{displayedLabel}</TooltipCell>
 
-          <TooltipCell>{formattedValue}</TooltipCell>
-        </tr>
+            <TooltipCell>{formattedValue}</TooltipCell>
+          </tr>
+        </tbody>
       </TooltipTable>
     </TooltipPaper>
   );

@@ -16,7 +16,7 @@ import { AdapterFormats } from '@mui/x-date-pickers';
 import { expect } from 'chai';
 
 describe('<AdapterDateFnsJalali />', () => {
-  describeJalaliAdapter(AdapterDateFnsJalali, { locale: faJalaliIR });
+  describeJalaliAdapter(AdapterDateFnsJalali, {});
 
   describe('Adapter localization', () => {
     it('Formatting', () => {
@@ -59,17 +59,13 @@ describe('<AdapterDateFnsJalali />', () => {
     };
 
     Object.keys(localizedTexts).forEach((localeKey) => {
-      const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
-      const localeObject =
-        localeKey === 'undefined'
-          ? undefined
-          : {
-              faIR,
-              faJalaliIR,
-              enUS,
-            }[localeKey];
+      const localeObject = {
+        faIR,
+        faJalaliIR,
+        enUS,
+      }[localeKey];
 
-      describe(`test with the ${localeName} locale`, () => {
+      describe(`test with the "${localeKey}" locale`, () => {
         const { render, adapter } = createPickerRenderer({
           clock: 'fake',
           adapterName: 'date-fns-jalali',
