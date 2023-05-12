@@ -1,5 +1,6 @@
 [
   { "name": "AdapterFormats", "kind": "Interface" },
+  { "name": "AdapterOptions", "kind": "TypeAlias" },
   { "name": "AdapterUnits", "kind": "TypeAlias" },
   { "name": "BaseSingleInputFieldProps", "kind": "Interface" },
   { "name": "beBY", "kind": "Variable" },
@@ -120,7 +121,7 @@
   { "name": "jaJP", "kind": "Variable" },
   { "name": "koKR", "kind": "Variable" },
   { "name": "kzKZ", "kind": "Variable" },
-  { "name": "LocalizationProvider", "kind": "Function" },
+  { "name": "LocalizationProvider", "kind": "Variable" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
   { "name": "LocalizedComponent", "kind": "TypeAlias" },
   { "name": "MobileDatePicker", "kind": "Variable" },

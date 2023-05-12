@@ -1,5 +1,6 @@
 import { styled, SxProps, Theme } from '@mui/system';
 import * as React from 'react';
+import { useAxisEvents } from './hooks/useAxisEvents';
 
 type ViewBox = {
   x?: number;
@@ -16,6 +17,7 @@ export interface SurfaceProps {
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
+  disableAxisListener?: boolean;
 }
 
 const ChartSurfaceStyles = styled('svg', {
@@ -27,8 +29,18 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
   props: SurfaceProps,
   ref,
 ) {
-  const { children, width, height, viewBox, className, ...other } = props;
+  const {
+    children,
+    width,
+    height,
+    viewBox,
+    disableAxisListener = false,
+    className,
+    ...other
+  } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
+
+  useAxisEvents(disableAxisListener);
 
   return (
     <ChartSurfaceStyles

@@ -233,6 +233,7 @@
   "slots": {
     "baseButton": { "default": "Button", "type": { "name": "elementType" } },
     "baseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
+    "baseChip": { "default": "Chip", "type": { "name": "elementType" } },
     "baseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
     "baseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "baseInputLabel": { "default": "InputLabel", "type": { "name": "elementType" } },
