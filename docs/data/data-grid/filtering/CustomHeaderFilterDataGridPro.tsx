@@ -18,7 +18,7 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
 
   React.useLayoutEffect(() => {
     if (hasFocus && cellRef.current) {
-      let focusableElement =
+      const focusableElement =
         cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
       elementToFocus?.focus();

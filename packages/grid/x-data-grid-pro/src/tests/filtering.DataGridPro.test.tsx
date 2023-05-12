@@ -881,7 +881,7 @@ describe('<DataGridPro /> - Filter', () => {
       const filterCell = getColumnHeaderCell(0, 1);
       const filterCellInput = filterCell.querySelector('input')!;
       expect(filterCellInput).not.toHaveFocus();
-      fireEvent.click(filterCell);
+      fireEvent.mouseDown(filterCell);
       expect(filterCellInput).toHaveFocus();
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
       clock.tick(SUBMIT_FILTER_STROKE_TIME);
