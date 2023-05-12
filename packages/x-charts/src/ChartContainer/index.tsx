@@ -10,7 +10,6 @@ import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import { Tooltip, TooltipProps } from '../Tooltip';
 
 export type ChartContainerProps = Omit<
   SurfaceProps &
@@ -18,23 +17,10 @@ export type ChartContainerProps = Omit<
     Omit<DrawingProviderProps, 'svgRef'> &
     CartesianContextProviderProps,
   'children'
-> & { children?: React.ReactNode; tooltip?: TooltipProps };
+> & { children?: React.ReactNode };
 
 export function ChartContainer(props: ChartContainerProps) {
-  const {
-    width,
-    height,
-    series,
-    margin,
-    xAxis,
-    yAxis,
-    colors,
-    sx,
-    title,
-    desc,
-    tooltip,
-    children,
-  } = props;
+  const { width, height, series, margin, xAxis, yAxis, colors, sx, title, desc, children } = props;
   const ref = React.useRef<SVGSVGElement>(null);
 
   return (
@@ -44,7 +30,6 @@ export function ChartContainer(props: ChartContainerProps) {
           <InteractionProvider>
             <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
               {children}
-              <Tooltip {...tooltip} />
             </Surface>
           </InteractionProvider>
         </CartesianContextProvider>

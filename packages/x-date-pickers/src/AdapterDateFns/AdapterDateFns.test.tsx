@@ -15,16 +15,16 @@ import de from 'date-fns/locale/de';
 import ru from 'date-fns/locale/ru';
 import {
   describeGregorianAdapter,
-  TEST_DATE_ISO,
+  TEST_DATE_ISO_STRING,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterDateFns />', () => {
-  describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss', locale: enUS });
+  describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss' });
 
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
-      const date = adapter.date(TEST_DATE_ISO)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('getWeekdays: should start on Sunday', () => {
         const result = adapter.getWeekdays();
@@ -50,7 +50,7 @@ describe('<AdapterDateFns />', () => {
       });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING)!;
         const result = adapter.getWeekArray(date);
         expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('пн');
       });

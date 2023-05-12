@@ -152,7 +152,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   }
 
   private getLocaleFormats = () => {
-    const locales = this.rawDayJsInstance.Ls ?? defaultDayjs.Ls;
+    const locales = defaultDayjs.Ls;
     const locale = this.locale || 'en';
 
     let localeObject = locales[locale];

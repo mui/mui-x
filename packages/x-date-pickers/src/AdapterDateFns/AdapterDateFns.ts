@@ -21,7 +21,6 @@ import endOfWeek from 'date-fns/endOfWeek';
 import endOfYear from 'date-fns/endOfYear';
 import dateFnsFormat from 'date-fns/format';
 import getDate from 'date-fns/getDate';
-import getDay from 'date-fns/getDay';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
 import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
@@ -527,18 +526,16 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
-    let lastDay: number | null = null;
+
     while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      const day = getDay(current);
-      if (lastDay !== day) {
-        lastDay = day;
-        nestedWeeks[weekNumber].push(current);
-        count += 1;
-      }
+      nestedWeeks[weekNumber].push(current);
+
       current = addDays(current, 1);
+      count += 1;
     }
+
     return nestedWeeks;
   };
 

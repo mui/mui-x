@@ -124,16 +124,16 @@ export class AdapterMomentJalaali
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  private toJMoment = (value?: Moment | undefined) => {
-    return this.moment(value ? value.clone() : undefined).locale('fa');
-  };
-
   public date = (value?: any) => {
     if (value === null) {
       return null;
     }
 
     return this.moment(value).locale('fa');
+  };
+
+  public parseISO = (isoString: string) => {
+    return this.moment(isoString).locale('fa');
   };
 
   public parse = (value: string, format: string) => {
@@ -174,6 +174,18 @@ export class AdapterMomentJalaali
     }
 
     return this.moment(value).isSame(comparing);
+  };
+
+  public isSameYear = (value: Moment, comparing: Moment) => {
+    // `isSame` seems to mutate the date on `moment-jalaali`
+    // @ts-ignore
+    return value.clone().isSame(comparing, 'jYear');
+  };
+
+  public isSameMonth = (value: Moment, comparing: Moment) => {
+    // `isSame` seems to mutate the date on `moment-jalaali`
+    // @ts-ignore
+    return value.clone().isSame(comparing, 'jMonth');
   };
 
   public isAfterYear = (value: Moment, comparing: Moment) => {
@@ -246,7 +258,7 @@ export class AdapterMomentJalaali
 
   public getWeekdays = () => {
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.toJMoment().weekday(dayOfWeek).format('dd');
+      return this.date()!.weekday(dayOfWeek).format('dd');
     });
   };
 
@@ -289,8 +301,6 @@ export class AdapterMomentJalaali
   };
 
   public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am'
-      ? this.toJMoment().hours(2).format('A')
-      : this.toJMoment().hours(14).format('A');
+    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
   };
 }

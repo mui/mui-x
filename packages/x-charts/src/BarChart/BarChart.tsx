@@ -5,9 +5,13 @@ import { Axis, AxisProps } from '../Axis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { Tooltip, TooltipProps } from '../Tooltip';
+import { Highlight, HighlightProps } from '../Highlight';
 
 export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
+  tooltip?: TooltipProps;
+  highlight?: HighlightProps;
 }
 
 export function BarChart(props: BarChartProps) {
@@ -21,6 +25,7 @@ export function BarChart(props: BarChartProps) {
     colors,
     sx,
     tooltip,
+    highlight,
     topAxis,
     leftAxis,
     rightAxis,
@@ -48,10 +53,14 @@ export function BarChart(props: BarChartProps) {
       yAxis={yAxis}
       colors={colors}
       sx={sx}
-      tooltip={tooltip}
+      disableAxisListener={
+        tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
+      }
     >
       <BarPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <Highlight {...highlight} />
+      <Tooltip {...tooltip} />
       {children}
     </ChartContainer>
   );
