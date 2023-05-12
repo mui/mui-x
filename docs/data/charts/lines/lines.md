@@ -48,7 +48,8 @@ Each element can be selected with the CSS class name `.MuiLineElement-root`, `.M
 
 If you want to select the element of a given series, you can use classes `.MuiLineElement-series-<seriesId>` with `<seriesId>` the id of the series you want to customize.
 
-In the next example, we use the following code to customize line style, and the area of the Germany GDP.
+In the next example, each line style is customized with dashes, and marks are removed.
+And the area of Germany's GDP gets a custom gradient color.
 The definition of `myGradient` is passed as a children of the chart component.
 
 ```jsx
