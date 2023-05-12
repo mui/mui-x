@@ -33,7 +33,7 @@ it's recommended to set the `unstable_ignoreValueFormatterDuringExport` prop to 
 :::
 
 You can paste data from clipboard using the <kbd class="key">Ctrl</kbd>+<kbd class="key">V</kbd> (<kbd class="key">⌘ Command</kbd>+<kbd class="key">V</kbd> on macOS) keyboard shortcut.
-The paste operation only affects cells in the [columns that are `editable`](/x/react-data-grid/editing/#making-a-column-editable).
+The paste operation only affects cells in the columns that are [`editable`](/x/react-data-grid/editing/#making-a-column-editable).
 
 Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.
 See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and-value-setter) editing section for more details.
@@ -51,9 +51,7 @@ The priority is the following, from highest to lowest:
 
 To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
 
-```tsx
-<DataGridPremium disableClipboardPaste />
-```
+{{"demo": "ClipboardPasteDisabled.js", "bg": "inline"}}
 
 ### Persisting pasted data
 
