@@ -52,7 +52,7 @@ describe('<AdapterLuxon />', () => {
       });
     });
 
-    describe('Formatting', () => {
+    it('Formatting', () => {
       const adapter = new AdapterLuxon({ locale: 'en-US' });
       const adapterRu = new AdapterLuxon({ locale: 'ru' });
 
@@ -63,7 +63,7 @@ describe('<AdapterLuxon />', () => {
       ) => {
         const date = adapter.date('2020-02-01T23:44:00.000Z')!;
 
-        expect(cleanText(adapter.format(date, format))).to.equal(expectedWithEn);
+        expect(adapter.format(date, format)).to.equal(expectedWithEn);
         expect(cleanText(adapterRu.format(date, format))).to.equal(expectedWithRu);
       };
 

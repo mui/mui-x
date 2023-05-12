@@ -17,10 +17,12 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
     expect(adapter.getMeridiemText('pm')).to.equal('PM');
 
     // Moment only translates for 12-hour cycle.
-    const stub = sinon.stub(adapter, 'is12HourCycleInCurrentLocale').returns(false);
-    expect(adapter.getMeridiemText('am')).to.equal('AM');
-    expect(adapter.getMeridiemText('pm')).to.equal('PM');
-    stub.restore();
+    if (adapter.lib === 'moment') {
+      const stub = sinon.stub(adapter, 'is12HourCycleInCurrentLocale').returns(false);
+      expect(adapter.getMeridiemText('am')).to.equal('AM');
+      expect(adapter.getMeridiemText('pm')).to.equal('PM');
+      stub.restore();
+    }
   });
 
   it('Method: expandFormat', () => {
@@ -56,7 +58,7 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
   });
 
   it('Method: getCurrentLocaleCode', () => {
-    // Returns the default location
+    // Returns the default locale
     expect(adapter.getCurrentLocaleCode()).to.match(/en/);
   });
 };

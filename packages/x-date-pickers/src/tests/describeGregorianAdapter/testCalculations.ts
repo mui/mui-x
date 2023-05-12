@@ -495,7 +495,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({ adapter })
 
   it('Method: getMonthArray', () => {
     const monthArray = adapter.getMonthArray(testDateIso);
-    let expectedDate = adapter.date('2018-01-01 00:00:00')!;
+    let expectedDate = adapter.date('2018-01-01T00:00:00.000Z')!;
 
     monthArray.forEach((month) => {
       expect(month).toEqualDateTime(expectedDate);

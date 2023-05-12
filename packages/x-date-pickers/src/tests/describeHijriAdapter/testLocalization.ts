@@ -20,7 +20,7 @@ export const testLocalization: DescribeHijriAdapterTestSuite = ({ adapter }) => 
   });
 
   it('Method: getCurrentLocaleCode', () => {
-    // Returns the default location
+    // Returns the default locale
     expect(adapter.getCurrentLocaleCode()).to.match(/ar/);
   });
 };
