@@ -88,7 +88,6 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   )?.actions?.length;
   return (
     <React.Fragment>
-      <Divider />
       <DateTimeViewWrapper>
         <DateCalendar
           view={isDatePickerView(view) ? view : 'day'}
