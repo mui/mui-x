@@ -412,13 +412,13 @@ export const useGridFocus = (
   const focusApi: GridFocusApi = {
     setCellFocus,
     setColumnHeaderFocus,
+    setColumnHeaderFilterFocus,
   };
 
   const focusPrivateApi: GridFocusPrivateApi = {
     moveFocusToRelativeCell,
     setColumnGroupHeaderFocus,
     getColumnGroupHeaderFocus,
-    setColumnHeaderFilterFocus,
   };
 
   useGridApiMethod(apiRef, focusApi, 'public');
