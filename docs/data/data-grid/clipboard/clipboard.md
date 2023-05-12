@@ -22,6 +22,8 @@ This feature is experimental, it needs to be explicitly activated using the `cli
 
 Additionally, to make sure the copied cells are formatted correctly and can be parsed,
 it's recommended to set the `unstable_ignoreValueFormatterDuringExport` prop to `true`.
+During clipboard copy operation, the raw cell values will be copied instead of the formatted values,
+so that the values can be parsed correctly during the paste operation.
 
 ```tsx
 <DataGridPremium
@@ -36,7 +38,7 @@ You can paste data from clipboard using the <kbd class="key">Ctrl</kbd>+<kbd cla
 The paste operation only affects cells in the columns that are [`editable`](/x/react-data-grid/editing/#making-a-column-editable).
 
 Same as with editing, you can use `valueParser` to modify the pasted value and `valueSetter` to update the row with new values.
-See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and-value-setter) editing section for more details.
+See [Value parser and value setter](/x/react-data-grid/editing/#value-parser-and-value-setter) section of the editing documentation for more details.
 
 The behavior of the clipboard paste operation depends on the selection state of the data grid and the data pasted from clipboard.
 The priority is the following, from highest to lowest:
