@@ -23,7 +23,6 @@ import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
-import { gridClasses } from '../../../constants/gridClasses';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -215,8 +214,7 @@ export function useGridDimensions(
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const computeSizeAndPublishResizeEvent = React.useCallback(() => {
-    const rootEl = apiRef.current.rootElementRef?.current;
-    const mainEl = rootEl?.querySelector<HTMLDivElement>(`.${gridClasses.main}`);
+    const mainEl = apiRef.current.mainElementRef?.current;
 
     if (!mainEl) {
       return;

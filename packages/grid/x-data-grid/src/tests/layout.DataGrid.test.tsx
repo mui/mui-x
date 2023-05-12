@@ -915,6 +915,23 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
+  describe('non-strict mode', () => {
+    const renderer = createRenderer({ strict: false });
+
+    it('should render in JSDOM', function test() {
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Only run in JSDOM
+      }
+      renderer.render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} />
+        </div>,
+      );
+
+      expect(getCell(0, 0).textContent).to.equal('Nike');
+    });
+  });
+
   it('should allow style customization using the theme', function test() {
     if (/jsdom/.test(window.navigator.userAgent)) {
       this.skip(); // Doesn't work with mocked window.getComputedStyle
