@@ -185,11 +185,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public expandFormat = (format: string) => {
-    if (!DateTime.expandFormat) {
-      throw Error(
-        'Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2',
-      );
-    }
     // Extract escaped section to avoid extending them
     const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
     return (
@@ -250,6 +245,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     if (unit) {
       return Math.floor(value.diff(comparing).as(unit));
     }
+
     return value.diff(comparing).as('millisecond');
   };
 

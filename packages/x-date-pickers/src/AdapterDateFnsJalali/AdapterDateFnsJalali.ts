@@ -27,7 +27,6 @@ import getWeek from 'date-fns-jalali/getWeek';
 import getYear from 'date-fns-jalali/getYear';
 import getMonth from 'date-fns-jalali/getMonth';
 import getDate from 'date-fns-jalali/getDate';
-import getDay from 'date-fns-jalali/getDay';
 import getDaysInMonth from 'date-fns-jalali/getDaysInMonth';
 import getMinutes from 'date-fns-jalali/getMinutes';
 import isAfter from 'date-fns-jalali/isAfter';
@@ -541,18 +540,16 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
-    let lastDay: number | null = null;
+
     while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      const day = getDay(current);
-      if (lastDay !== day) {
-        lastDay = day;
-        nestedWeeks[weekNumber].push(current);
-        count += 1;
-      }
+      nestedWeeks[weekNumber].push(current);
+
       current = addDays(current, 1);
+      count += 1;
     }
+
     return nestedWeeks;
   };
 

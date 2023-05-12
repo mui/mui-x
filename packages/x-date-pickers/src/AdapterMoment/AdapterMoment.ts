@@ -408,7 +408,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getMonthArray = (value: Moment) => {
-    const firstMonth = value.clone().startOf('year');
+    const firstMonth = this.startOfYear(value);
     const monthArray = [firstMonth];
 
     while (monthArray.length < 12) {
@@ -472,7 +472,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   public getMeridiemText = (ampm: 'am' | 'pm') => {
     if (this.is12HourCycleInCurrentLocale()) {
       // AM/PM translation only possible in those who have 12 hour cycle in locale.
-      return this.moment
+      return defaultMoment
         .localeData(this.getCurrentLocaleCode())
         .meridiem(ampm === 'am' ? 0 : 13, 0, false);
     }
