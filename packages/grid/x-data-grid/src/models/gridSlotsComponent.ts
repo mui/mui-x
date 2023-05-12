@@ -9,6 +9,11 @@ export interface GridBaseSlots {
    */
   BaseCheckbox: React.JSXElementConstructor<any>;
   /**
+   * The custom Chip component used in the grid.
+   * @default Chip
+   */
+  BaseChip: React.JSXElementConstructor<any>;
+  /**
    * The custom InputAdornment component used in the grid.
    * @default InputAdornment
    */
