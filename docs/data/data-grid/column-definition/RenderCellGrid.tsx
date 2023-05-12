@@ -46,7 +46,6 @@ function RenderDate(props: GridRenderCellParams<any, Date>) {
 const columns: GridColDef[] = [
   {
     field: 'date',
-    type: 'date',
     headerName: 'Year',
     width: 150,
     renderCell: RenderDate,

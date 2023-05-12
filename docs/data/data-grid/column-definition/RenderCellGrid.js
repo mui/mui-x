@@ -58,7 +58,6 @@ RenderDate.propTypes = {
 const columns = [
   {
     field: 'date',
-    type: 'date',
     headerName: 'Year',
     width: 150,
     renderCell: RenderDate,
