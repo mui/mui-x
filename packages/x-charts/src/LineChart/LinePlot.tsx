@@ -61,7 +61,7 @@ export function LinePlot() {
                   key={seriesId}
                   id={seriesId}
                   d={areaPath.curve(curve)(d3Data) || undefined}
-                  color={series[seriesId].area.color ?? series[seriesId].color}
+                  color={series[seriesId].color}
                 />
               )
             );
@@ -94,13 +94,14 @@ export function LinePlot() {
               .x((d) => xScale(d.x))
               .y((d) => yScale(d.y[1]));
 
+            const curve = getCurveFactory(series[seriesId].curve);
             const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
             return (
               <LineElement
                 key={seriesId}
                 id={seriesId}
-                d={linePath(d3Data) || undefined}
+                d={linePath.curve(curve)(d3Data) || undefined}
                 color={series[seriesId].color}
                 {...getInteractionItemProps({ type: 'line', seriesId })}
               />

@@ -7,5 +7,4 @@ export interface DescribeHijriAdapterParams {
 
 export type DescribeHijriAdapterTestSuite = <TDate>(params: {
   adapter: MuiPickersAdapter<TDate>;
-  testDate: TDate;
 }) => void;

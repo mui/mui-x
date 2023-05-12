@@ -13,7 +13,7 @@ const timeViews: Record<TimeViewWithMeridiem, string> = {
 const csCZPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Další měsíc',
-  nextMonth: 'Předchozí month',
+  nextMonth: 'Předchozí měsíc',
 
   // View navigation
   openPreviousView: 'otevřít předchozí zobrazení',
@@ -60,11 +60,11 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Vybrané datum, vybrané datum je ${utils.format(value, 'fullDate')}`
+      ? `Vyberte datum, vybrané datum je ${utils.format(value, 'fullDate')}`
       : 'Vyberte datum',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Vybrané čas, vybraný čas je ${utils.format(value, 'fullTime')}`
+      ? `Vyberte čas, vybraný čas je ${utils.format(value, 'fullTime')}`
       : 'Vyberte čas',
 
   // Table labels

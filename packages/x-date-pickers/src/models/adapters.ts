@@ -1,60 +1,60 @@
 import { FieldSectionContentType, FieldSectionType } from './fields';
 
-export interface AdapterFormats<TLibFormatToken = string> {
+export interface AdapterFormats {
   /** Localized full date @example "Jan 1, 2019" */
-  fullDate: TLibFormatToken;
+  fullDate: string;
   /** Partially localized full date with weekday, useful for text-to-speech accessibility @example "Tuesday, January 1, 2019" */
-  fullDateWithWeekday: TLibFormatToken;
+  fullDateWithWeekday: string;
   /** Date format string with month and day of month @example "1 January" */
-  normalDate: TLibFormatToken;
+  normalDate: string;
   /** Date format string with weekday, month and day of month @example "Wed, Jan 1" */
-  normalDateWithWeekday: TLibFormatToken;
+  normalDateWithWeekday: string;
   /** Shorter day format @example "Jan 1" */
-  shortDate: TLibFormatToken;
+  shortDate: string;
   /** Year format string @example "2019" */
-  year: TLibFormatToken;
+  year: string;
   /** Month format string @example "January" */
-  month: TLibFormatToken;
+  month: string;
   /** Short month format string @example "Jan" */
-  monthShort: TLibFormatToken;
+  monthShort: string;
   /** Month with year format string @example "January 2018" */
-  monthAndYear: TLibFormatToken;
+  monthAndYear: string;
   /** Month with date format string @example "January 1" */
-  monthAndDate: TLibFormatToken;
+  monthAndDate: string;
   /** Weekday format string @example "Wednesday" */
-  weekday: TLibFormatToken;
+  weekday: string;
   /** Short weekday format string @example "Wed" */
-  weekdayShort: TLibFormatToken;
+  weekdayShort: string;
   /** Day format string @example "1" */
-  dayOfMonth: TLibFormatToken;
+  dayOfMonth: string;
   /** Hours format string @example "11" */
-  hours12h: TLibFormatToken;
+  hours12h: string;
   /** Hours format string @example "23" */
-  hours24h: TLibFormatToken;
+  hours24h: string;
   /** Minutes format string @example "44" */
-  minutes: TLibFormatToken;
+  minutes: string;
   /** Seconds format string @example "00" */
-  seconds: TLibFormatToken;
+  seconds: string;
   /** Full time localized format string @example "11:44 PM" for US, "23:44" for Europe */
-  fullTime: TLibFormatToken;
+  fullTime: string;
   /** Not localized full time format string @example "11:44 PM" */
-  fullTime12h: TLibFormatToken;
+  fullTime12h: string;
   /** Not localized full time format string @example "23:44" */
-  fullTime24h: TLibFormatToken;
+  fullTime24h: string;
   /** Date & time format string with localized time @example "Jan 1, 2018 11:44 PM" */
-  fullDateTime: TLibFormatToken;
+  fullDateTime: string;
   /** Not localized date & Time format 12h @example "Jan 1, 2018 11:44 PM" */
-  fullDateTime12h: TLibFormatToken;
+  fullDateTime12h: string;
   /** Not localized date & Time format 24h @example "Jan 1, 2018 23:44" */
-  fullDateTime24h: TLibFormatToken;
+  fullDateTime24h: string;
   /** Localized keyboard input friendly date format @example "02/13/2020 */
-  keyboardDate: TLibFormatToken;
+  keyboardDate: string;
   /** Localized keyboard input friendly date/time format @example "02/13/2020 23:44" */
-  keyboardDateTime: TLibFormatToken;
+  keyboardDateTime: string;
   /** Partially localized keyboard input friendly date/time 12h format @example "02/13/2020 11:44 PM" */
-  keyboardDateTime12h: TLibFormatToken;
+  keyboardDateTime12h: string;
   /** Partially localized keyboard input friendly date/time 24h format @example "02/13/2020 23:44" */
-  keyboardDateTime24h: TLibFormatToken;
+  keyboardDateTime24h: string;
 }
 
 export type AdapterUnits =
@@ -78,28 +78,35 @@ export type FieldFormatTokenMap = {
       };
 };
 
-export interface MuiPickersAdapter<TDate> {
+// https://www.zhenghao.io/posts/ts-never#how-to-check-for-never
+type PropertyIfNotNever<PName extends string, PType> = [PType] extends [never]
+  ? {}
+  : { [P in PName]?: PType };
+
+export type AdapterOptions<TLocale, TInstance> = {
+  formats?: Partial<AdapterFormats>;
+  locale?: TLocale;
+} & PropertyIfNotNever<'instance', TInstance>;
+
+export interface MuiPickersAdapter<TDate, TLocale = any> {
   /**
    * A boolean confirming that the adapter used is an MUI adapter.
    */
   isMUIAdapter: boolean;
-  formats: AdapterFormats<any>;
-  locale?: any;
-  moment?: any;
-  dayjs?: any;
-  /** Name of the library that is used right now */
+  formats: AdapterFormats;
+  locale?: TLocale;
+  /**
+   * Name of the library that is used right now
+   */
   lib: string;
   /**
    * The characters used to escape a string inside a format.
    */
   escapedCharacters: { start: string; end: string };
-
   /**
    * A map containing all the format that the field components can understand.
    */
   formatTokenMap: FieldFormatTokenMap;
-
-  // constructor (options?: { formats?: DateIOFormats, locale?: any, instance?: any });
 
   /**
    * Create a date in the date library format.

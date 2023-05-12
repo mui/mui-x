@@ -23,6 +23,7 @@ import {
   unstable_gridHeaderFilteringEditFieldSelector,
   unstable_gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -709,6 +710,19 @@ export const useGridKeyboardNavigation = (
       goToHeader,
     ],
   );
+
+  const checkIfCanStartEditing = React.useCallback<GridPipeProcessor<'canStartEditing'>>(
+    (initialValue, { event }) => {
+      if (event.key === ' ') {
+        // Space scrolls to the last row
+        return false;
+      }
+      return initialValue;
+    },
+    [],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'headerFilterKeyDown', handleHeaderFilterKeyDown);

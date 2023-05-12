@@ -70,6 +70,11 @@ export interface GridBaseSlots {
  */
 export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponent {
   /**
+   * The custom Chip component used in the grid.
+   * @default Chip
+   */
+  BaseChip: React.JSXElementConstructor<any>;
+  /**
    * Component rendered for each cell.
    * @default GridCell
    */

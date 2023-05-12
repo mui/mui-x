@@ -4,19 +4,12 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { getValueToPositionMapper, isBandScale } from '../hooks/useScale';
 
 export type HighlightProps = {
-  highlight: {
-    x?: boolean;
-    y?: boolean;
-  };
+  x?: 'none' | 'line' | 'band';
+  y?: 'none' | 'line';
 };
 
-export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(function Highlight(
-  props,
-  ref,
-) {
-  const {
-    highlight: { x: xHighlight, y: yHighlight },
-  } = props;
+export function Highlight(props: HighlightProps) {
+  const { x: xHighlight, y: yHighlight } = props;
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
 
   const USED_X_AXIS_ID = xAxisIds[0];
@@ -27,12 +20,7 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
 
   const { axis } = React.useContext(InteractionContext);
 
-  // React.useEffect(() => {
-  //   interactionApi?.listenXAxis(USED_X_AXIS_ID);
-  //   interactionApi?.listenYAxis(USED_Y_AXIS_ID);
-  // }, [USED_X_AXIS_ID, USED_Y_AXIS_ID, interactionApi]);
-
-  if (isBandScale(xScale) && !xHighlight) {
+  if (xHighlight === 'band' && isBandScale(xScale)) {
     if (axis.x === null) {
       return null;
     }
@@ -46,7 +34,6 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
         d={`M ${x0} ${y0} L ${x0 + w} ${y0} L ${x0 + w} ${y1} L ${x0} ${y1} Z`}
         fill="gray"
         fillOpacity={0.1}
-        ref={ref}
         style={{ pointerEvents: 'none' }}
       />
     );
@@ -55,18 +42,17 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
   const getXPosition = getValueToPositionMapper(xScale);
   return (
     <React.Fragment>
-      {xHighlight && axis.x !== null && (
+      {xHighlight === 'line' && axis.x !== null && (
         <path
           d={`M ${getXPosition(axis.x.value)} ${yScale(yScale.domain()[0])} L ${getXPosition(
             axis.x.value,
           )} ${yScale(yScale.domain().at(-1))}`}
           stroke="black"
           strokeDasharray="5 2"
-          ref={ref}
           style={{ pointerEvents: 'none' }}
         />
       )}
-      {yHighlight && axis.y !== null && (
+      {yHighlight === 'line' && axis.y !== null && (
         <path
           d={`M ${xScale(xScale.domain()[0])} ${yScale(axis.y.value)} L ${xScale(
             xScale.domain().at(-1)!,
@@ -78,4 +64,4 @@ export const Highlight = React.forwardRef<SVGPathElement, HighlightProps>(functi
       )}
     </React.Fragment>
   );
-});
+}
