@@ -93,13 +93,13 @@ By default, the clipboard copy and paste operations use the following format:
 - The cell values are separated by a tab (`\t`) character.
 - The rows are separated by a new line (`\n`) character.
 
-You can use `clipboardCopyTextDelimiter` and `unstable_splitClipboardPastedText` props to change the format:
+You can use `clipboardCopyCellDelimiter` and `unstable_splitClipboardPastedText` props to change the format:
 
 ```tsx
 <DataGridPremium
   {...otherProps}
   // support comma separated values
-  clipboardCopyTextDelimiter={','}
+  clipboardCopyCellDelimiter={','}
   unstable_splitClipboardPastedText={(text) =>
     text.split('\n').map((row) => row.split(','))
   }
