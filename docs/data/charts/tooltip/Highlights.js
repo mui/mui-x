@@ -7,19 +7,19 @@ const lineChartsParams = {
     {
       data: [...Array(100)].map((v, i) => Math.cos(0.1 * i)),
       stack: '1',
-      area: {},
+      area: true,
       label: 'cos(x)',
     },
     {
       data: [...Array(100)].map((v, i) => Math.abs(Math.sin(0.1 * i))),
       stack: '1',
-      area: {},
+      area: true,
       label: 'sin(x)',
     },
     {
       data: [...Array(100)].map((v, i) => Math.abs(Math.cos(0.1 * i))),
       stack: '1',
-      area: {},
+      area: true,
       label: '|cos(x)|',
     },
   ],

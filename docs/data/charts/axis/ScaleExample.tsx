@@ -1,38 +1,19 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
+const sample = [1, 10, 30, 50, 70, 90, 100];
+
 export default function ScaleExample() {
   return (
     <LineChart
-      xAxis={[
-        {
-          id: 'x',
-          data: [1, 10, 30, 50, 70, 90, 100],
-        },
-      ]}
+      xAxis={[{ data: sample }]}
       yAxis={[
-        {
-          id: 'linearAxis',
-          scaleType: 'linear',
-          max: 110,
-        },
-        {
-          id: 'logAxis',
-          scaleType: 'log',
-          max: 110,
-        },
+        { id: 'linearAxis', scaleType: 'linear', max: 110 },
+        { id: 'logAxis', scaleType: 'log', max: 110 },
       ]}
       series={[
-        {
-          id: 'linear',
-          yAxisKey: 'linearAxis',
-          data: [1, 10, 30, 50, 70, 90, 100],
-        },
-        {
-          id: 'log',
-          yAxisKey: 'logAxis',
-          data: [1, 10, 30, 50, 70, 90, 100],
-        },
+        { yAxisKey: 'linearAxis', data: sample, label: 'linear' },
+        { yAxisKey: 'logAxis', data: sample, label: 'log' },
       ]}
       leftAxis="linearAxis"
       rightAxis="logAxis"
