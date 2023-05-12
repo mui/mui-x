@@ -55,14 +55,15 @@ import isWithinInterval from 'date-fns-jalali/isWithinInterval';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 type DateFnsLocale = typeof defaultLocale;
-
-interface AdapterDateFnsJalaliOptions {
-  locale?: DateFnsLocale;
-  formats?: Partial<AdapterFormats>;
-}
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -197,7 +198,7 @@ const NUMBER_SYMBOL_MAP = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
+export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLocale> {
   public isMUIAdapter = true;
 
   public lib = 'date-fns-jalali';
@@ -210,7 +211,7 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  constructor({ locale, formats }: AdapterDateFnsJalaliOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }

@@ -1040,4 +1040,46 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     setProps({ loading: false });
     expect(NoRowsOverlay.callCount).not.to.equal(0);
   });
+
+  describe('sould not overflow parent', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Doesn't work with mocked window.getComputedStyle
+      }
+    });
+
+    const rows = [{ id: 1, username: '@MUI', age: 20 }];
+    const columns = [
+      { field: 'id', width: 300 },
+      { field: 'username', width: 300 },
+    ];
+
+    it('grid container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'grid' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+
+    it('flex container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'flex' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+  });
 });

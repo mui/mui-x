@@ -62,6 +62,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BaseSelectOption: React.JSXElementConstructor<any>;
   /**
+   * The custom Chip component used in the grid.
+   * @default Chip
+   */
+  BaseChip: React.JSXElementConstructor<any>;
+  /**
    * Component rendered for each cell.
    * @default GridCell
    */
