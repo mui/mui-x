@@ -24,11 +24,11 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### Changes
 
+- [DataGrid] Fix DataGrid rendering in JSDOM (#8968) @cherniavskii
+- [DataGrid] Fix layout when rendered inside a parent with `display: grid` (#8577) @cherniavskii
 - [DataGrid] Add Joy UI icon slots (#8940) @siriwatknp
 - [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
 - [DataGrid] Extract `baseChip` slot (#8748) @cherniavskii
-- [DataGrid] Fix DataGrid rendering in JSDOM (#8968) @cherniavskii
-- [DataGrid] Fix layout when rendered inside a parent with `display: grid` (#8577) @cherniavskii
 - [DataGridPremium] Implement Clipboard import (#7389) @cherniavskii
 - [l10n] Improve French (fr-FR) locale (#8825) @vallereaugabriel
 - [l10n] Improve German (de-DE) locale (#8898) @marcauberer
@@ -55,7 +55,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [core] Improve testing of the adapters (#8789) @flaviendelangle
 - [core] Update license key for tests (#8917) @LukasTy
 - [charts] Make introduction docs pages for each chart (#8869) @alexfauquette
-- [charts] document Tooltip and Highlighs (#8867) @alexfauquette
+- [charts] Document Tooltip and Highlighs (#8867) @alexfauquette
 - [test] Cover row grouping regression with a unit test (#8870) @cherniavskii
 - [test] Fix flaky regression tests (#8954) @cherniavskii
 
