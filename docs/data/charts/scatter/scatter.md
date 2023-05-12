@@ -9,8 +9,8 @@ title: Charts - Scatter
 
 ## Basics
 
-Scatter charts series should contain a property `data` containing an array of objects.
-Those objects need properties `x`, `y`, `id`.
+Scatter chart series should contain a `data` property containing an array of objects.
+Those objects require `x`, `y`, and `id` properties.
 
 {{"demo": "BasicScatter.js", "bg": "inline"}}
 

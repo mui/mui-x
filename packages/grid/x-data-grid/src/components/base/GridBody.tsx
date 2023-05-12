@@ -140,6 +140,7 @@ function GridBody(props: GridBodyProps) {
     columnHeadersContainerElementRef: columnsContainerRef,
     columnHeadersElementRef: columnHeadersRef,
     virtualScrollerRef,
+    mainElementRef: rootRef,
   });
 
   const hasDimensions = !!apiRef.current.getRootDimensions();

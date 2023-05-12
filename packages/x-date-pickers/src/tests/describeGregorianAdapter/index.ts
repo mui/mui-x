@@ -1,1 +1,2 @@
-export { describeGregorianAdapter, TEST_DATE_ISO } from './describeGregorianAdapter';
+export { describeGregorianAdapter } from './describeGregorianAdapter';
+export { TEST_DATE_ISO_STRING } from './describeGregorianAdapter.utils';
