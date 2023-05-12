@@ -83,7 +83,13 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       inputRef={focusElementRef}
       InputProps={{
         ...(applying || clearButton
-          ? { endAdornment: applying ? <rootProps.slots.loadIcon /> : clearButton }
+          ? {
+              endAdornment: applying ? (
+                <rootProps.slots.loadIcon fontSize="small" color="action" />
+              ) : (
+                clearButton
+              ),
+            }
           : {}),
         ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
         disabled,

@@ -58,6 +58,7 @@ function GridHeaderFilterAdornment(props: {
             height: 22,
             padding: '0px 0px 2px 2px',
           }}
+          {...rootProps.slotProps?.baseIconButton}
         >
           {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? ''}
         </rootProps.slots.baseIconButton>
