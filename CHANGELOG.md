@@ -15,11 +15,11 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
   See [the documentation](https://mui.com/x/react-data-grid/clipboard/#clipboard-paste) for more information
 
-- 🌍 Improve French (fr-FR), German (de-DE), Portuguese (pt-BR) and Ukrainian (uk-UA) locales on the data grid 
+- 🌍 Improve French (fr-FR), German (de-DE), Portuguese (pt-BR) and Ukrainian (uk-UA) locales on the data grid
 - 🌍 Add Slovak (sk-SK) locale on the pickers
 - 🐞 Bugfixes
 - 📚 Documentation improvements
-- 
+
 ### `@mui/x-data-grid@v6.4.0` / `@mui/x-data-grid-pro@v6.4.0` / `@mui/x-data-grid-premium@v6.4.0`
 
 #### Changes
@@ -48,6 +48,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - [docs] Fix date pickers typo in the docs  (#8939) @richbustos
 - [docs] Fix master detail demo (#8894) @m4theushw
+- [docs] Fix typo in clipboard docs (#8971) @MBilalShafi
 - [docs] Reduce list of dependencies in Codesandbox/Stackblitz demos (#8535) @cherniavskii
 
 ### Core
@@ -58,7 +59,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [charts] Document Tooltip and Highlighs (#8867) @alexfauquette
 - [test] Cover row grouping regression with a unit test (#8870) @cherniavskii
 - [test] Fix flaky regression tests (#8954) @cherniavskii
-
 
 ## 6.3.1
 
