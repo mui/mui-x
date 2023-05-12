@@ -127,9 +127,7 @@ export const useGridFocus = (
     [apiRef, logger, publishCellFocusOut],
   );
 
-  const setColumnHeaderFilterFocus = React.useCallback<
-    GridFocusApi['setColumnHeaderFilterFocus']
-  >(
+  const setColumnHeaderFilterFocus = React.useCallback<GridFocusApi['setColumnHeaderFilterFocus']>(
     (field, event = {}) => {
       const cell = gridFocusCellSelector(apiRef);
       publishCellFocusOut(cell, event);
