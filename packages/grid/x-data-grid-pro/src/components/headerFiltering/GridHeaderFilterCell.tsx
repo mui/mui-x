@@ -228,7 +228,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       [apiRef, colDef.field],
     );
 
-    const onClick = React.useCallback(
+    const onMouseDown = React.useCallback(
       (event: React.MouseEvent) => {
         if (!hasFocus) {
           if (inputRef.current) {
@@ -243,11 +243,10 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const mouseEventsHandlers = React.useMemo(
       () => ({
         onKeyDown: publish('headerFilterKeyDown', onKeyDown),
-        onClick: publish('headerFilterClick', onClick),
-        onBlur: publish('headerFilterBlur'),
-        onFocus: publish('headerFilterFocus'),
+        onClick: publish('headerFilterClick'),
+        onMouseDown: publish('headerFilterMouseDown', onMouseDown),
       }),
-      [onClick, onKeyDown, publish],
+      [onMouseDown, onKeyDown, publish],
     );
 
     const ownerState = {
@@ -267,7 +266,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         `filterOperator${capitalize(item.operator)}` as 'filterOperatorContains',
       );
 
-    const isFilterActive = isApplied || hasFocus;
+    const isFilterActive = isApplied || isEditing;
 
     return (
       <div
