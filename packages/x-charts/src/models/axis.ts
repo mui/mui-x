@@ -1,5 +1,5 @@
 import type { ScaleBand, ScaleLogarithmic, ScalePower, ScaleTime, ScaleLinear } from 'd3-scale';
-import { XAxisClasses } from '../XAxis/xAxisClasses';
+import { AxisClasses } from '../Axis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 
 export interface AxisProps {
@@ -46,6 +46,10 @@ export interface AxisProps {
    * @default 6
    */
   tickSize?: number;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<AxisClasses>;
 }
 
 export interface YAxisProps extends AxisProps {
@@ -60,10 +64,6 @@ export interface XAxisProps extends AxisProps {
    * Position of the axis.
    */
   position?: 'top' | 'bottom';
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<XAxisClasses>;
 }
 
 export type ScaleName = 'linear' | 'band' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';

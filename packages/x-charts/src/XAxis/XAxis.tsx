@@ -5,7 +5,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { XAxisProps } from '../models/axis';
-import { getXAxisUtilityClass } from './xAxisClasses';
+import { getAxisUtilityClass } from '../Axis/axisClasses';
 
 const Line = styled('line', {
   name: 'MuiXAxis',
@@ -46,9 +46,9 @@ const Label = styled('text', {
 }));
 
 const useUtilityClasses = (ownerState: XAxisProps & { theme: Theme }) => {
-  const { classes } = ownerState;
+  const { classes, position } = ownerState;
   const slots = {
-    root: ['root'],
+    root: ['root', 'directionX', position],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
@@ -56,29 +56,38 @@ const useUtilityClasses = (ownerState: XAxisProps & { theme: Theme }) => {
     label: ['label'],
   };
 
-  return composeClasses(slots, getXAxisUtilityClass, classes);
+  return composeClasses(slots, getAxisUtilityClass, classes);
 };
+const defaultProps = {
+  position: 'bottom',
+  disableLine: false,
+  disableTicks: false,
+  tickFontSize: 10,
+  labelFontSize: 14,
+  tickSize: 6,
+} as const;
 
 export function XAxis(inProps: XAxisProps) {
-  const props = useThemeProps({ props: inProps, name: 'MuiXAxis' });
+  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiXAxis' });
   const {
     xAxis: {
       [props.axisId]: { scale: xScale, ticksNumber, ...settings },
     },
   } = React.useContext(CartesianContext);
 
+  const defaultizedProps = { ...defaultProps, ...settings, ...props };
   const {
-    position = 'bottom',
-    disableLine = false,
-    disableTicks = false,
-    tickFontSize = 10,
+    position,
+    disableLine,
+    disableTicks,
+    tickFontSize,
     label,
-    labelFontSize = 14,
-    tickSize: tickSizeProp = 6,
-  } = { ...settings, ...props };
+    labelFontSize,
+    tickSize: tickSizeProp,
+  } = defaultizedProps;
 
   const theme = useTheme();
-  const classes = useUtilityClasses({ ...props, theme });
+  const classes = useUtilityClasses({ ...defaultizedProps, theme });
 
   const { left, top, width, height } = React.useContext(DrawingContext);
 
