@@ -13,6 +13,7 @@
     "cellModesModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
+    "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
@@ -97,6 +98,7 @@
     "onCellEditStop": { "type": { "name": "func" } },
     "onCellKeyDown": { "type": { "name": "func" } },
     "onCellModesModelChange": { "type": { "name": "func" } },
+    "onClipboardCopy": { "type": { "name": "func" } },
     "onColumnHeaderClick": { "type": { "name": "func" } },
     "onColumnHeaderDoubleClick": { "type": { "name": "func" } },
     "onColumnHeaderEnter": { "type": { "name": "func" } },
@@ -173,6 +175,13 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
+    },
+    "unstable_ignoreValueFormatterDuringExport": {
+      "type": {
+        "name": "union",
+        "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
+      },
+      "default": ": false"
     }
   },
   "slots": {

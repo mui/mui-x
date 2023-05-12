@@ -19,6 +19,7 @@ import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { useGridSelector } from '../../utils/useGridSelector';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 
 function enrichPageRowsWithPinnedRows(
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -558,6 +559,19 @@ export const useGridKeyboardNavigation = (
     },
     [apiRef, currentPageRows, theme.direction, getRowIdFromIndex, goToCell, goToHeader],
   );
+
+  const checkIfCanStartEditing = React.useCallback<GridPipeProcessor<'canStartEditing'>>(
+    (initialValue, { event }) => {
+      if (event.key === ' ') {
+        // Space scrolls to the last row
+        return false;
+      }
+      return initialValue;
+    },
+    [],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);

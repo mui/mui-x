@@ -138,7 +138,6 @@
   { "name": "GridClasses", "kind": "Interface" },
   { "name": "GridClassKey", "kind": "TypeAlias" },
   { "name": "GridClearIcon", "kind": "Variable" },
-  { "name": "GridClipboardApi", "kind": "Interface" },
   { "name": "GridCloseIcon", "kind": "Variable" },
   { "name": "GridColDef", "kind": "TypeAlias" },
   { "name": "GridColType", "kind": "TypeAlias" },
