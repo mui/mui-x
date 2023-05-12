@@ -31,7 +31,7 @@ Or customized axes.
 
 If you do not provide a `xAxisKey` or `yAxisKey`, the series will use the first axis defined.
 
-That's why in most of the demonstration with single x and y axis you will not see definition of axes' `id`, `xAxisKey`, or `yAxisKey`.
+That's why in most of the demonstrations with single x and y axis you will not see definitions of axis `id`, `xAxisKey`, or `yAxisKey`.
 Those demonstrations use the defaultized values.
 :::
 

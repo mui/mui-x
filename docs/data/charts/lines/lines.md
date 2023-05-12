@@ -37,7 +37,7 @@ Series with the same `stack` will be stacked on top of each other.
 ### Interpolation
 
 The interpolation between data points can be customized by the `curve` property.
-This property expects one of the following string value, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
+This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
 {{"demo": "InterpolationDemo.js", "bg": "inline"}}
 
@@ -49,7 +49,7 @@ Each element can be selected with the CSS class name `.MuiLineElement-root`, `.M
 If you want to select the element of a given series, you can use classes `.MuiLineElement-series-<seriesId>` with `<seriesId>` the id of the series you want to customize.
 
 In the next example, each line style is customized with dashes, and marks are removed.
-And the area of Germany's GDP gets a custom gradient color.
+The area of Germany's GDP also gets a custom gradient color.
 The definition of `myGradient` is passed as a children of the chart component.
 
 ```jsx
