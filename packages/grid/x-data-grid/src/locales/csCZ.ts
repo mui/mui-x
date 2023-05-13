@@ -8,8 +8,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Hustota',
-  toolbarDensityLabel: 'Hustota',
+  toolbarDensity: 'Zobrazení',
+  toolbarDensityLabel: 'Zobrazení',
   toolbarDensityCompact: 'Kompaktní',
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
@@ -34,8 +34,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Vyhledávat…',
-  toolbarQuickFilterLabel: 'Vyhledat',
+  toolbarQuickFilterPlaceholder: 'Hledat…',
+  toolbarQuickFilterLabel: 'Hledat',
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
   // Export selector toolbar button text
@@ -67,7 +67,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Filter operators text
   filterOperatorContains: 'obsahuje',
   filterOperatorEquals: 'rovná se',
-  filterOperatorStartsWith: 'začíná s',
+  filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
   filterOperatorNot: 'není',
