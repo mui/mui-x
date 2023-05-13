@@ -9,7 +9,12 @@ import {
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
-import { computeSlots, uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils';
+import {
+  computeSlots,
+  useProps,
+  uncapitalizeObjectKeys,
+  UncapitalizeObjectKeys,
+} from '../internals/utils';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   disableMultipleColumnsFiltering: true,
@@ -78,10 +83,12 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  const { components, componentsProps, ...themedProps } = useThemeProps({
-    props: inProps,
-    name: 'MuiDataGrid',
-  });
+  const [components, componentsProps, themedProps] = useProps(
+    useThemeProps({
+      props: inProps,
+      name: 'MuiDataGrid',
+    }),
+  );
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),
