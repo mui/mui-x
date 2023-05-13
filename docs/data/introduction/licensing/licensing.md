@@ -142,6 +142,7 @@ They include a dependency called `@mui/x-license-pro`, used to validate the lice
 If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section.
 
 With a commercial packaged installed, use `LicenseInfo` to set your licence key as in the code snippet below.
+Calling `setLicenseKey()` "install" the key.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -149,13 +150,30 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-### Where to install the key
-
-You need to call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
 
-:::info
-When using Next.js, you should call `setLicenseKey` in [`_app.js`](https://nextjs.org/docs/advanced-features/custom-app):
+### Where to install the key
+
+You need to call `setLicenseKey()` before React renders the first component.
+
+The bundle size of `@mui/x-license-pro` is relatively small, it should be small enough for you to be able to call `setLicenseKey()` optimistically in all the bundles, regardless of whether MUI X is rendered or not.
+
+#### Next.js app
+
+When using Next.js app, a great place to call `setLicenseKey` is in [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout).
+Note the need for `'use client'` as the code needs to run both on the client and server.
+
+```tsx
+'use client';
+
+import { LicenseInfo } from '@mui/x-license-pro';
+
+LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+```
+
+#### Next.js pages
+
+When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
 
 ```tsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -167,8 +185,6 @@ export default function MyApp(props) {
   return <Component {...pageProps} />;
 }
 ```
-
-:::
 
 ### What is the key for?
 
