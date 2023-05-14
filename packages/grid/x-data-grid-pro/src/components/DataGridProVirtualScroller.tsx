@@ -307,9 +307,9 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   // Create a lookup for faster check if the row is expanded
   const expandedRowIdsLookup = React.useMemo(() => {
-    const lookup: { [key: GridRowId]: boolean } = {};
+    const lookup: Set<GridRowId> = new Set();
     expandedRowIds.forEach((id: GridRowId) => {
-      lookup[id] = true;
+      lookup.add(id);
     });
     return lookup;
   }, [expandedRowIds]);
@@ -359,7 +359,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       if (rootProps.getDetailPanelContent == null) {
         return;
       }
-      if (!expandedRowIdsLookup[rowId]) {
+      if (!expandedRowIdsLookup.has(rowId) ) {
         return;
       }
 
