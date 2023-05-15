@@ -90,6 +90,30 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "clipboardCopy",
+    "description": "Fired when the data is copied to the clipboard",
+    "params": "string",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onClipboardCopy"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "clipboardPasteEnd",
+    "description": "Fired when the clipboard paste operation ends.",
+    "params": "",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onClipboardPasteEnd"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "clipboardPasteStart",
+    "description": "Fired when the clipboard paste operation starts.",
+    "params": "{ data: string[][] }",
+    "event": "MuiEvent<{}>",
+    "componentProp": "onClipboardPasteStart"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "columnGroupHeaderKeyDown",
     "description": "Fired when a key is pressed in a column group header. It&#39;s mapped do the <code>keydown</code> DOM event.",
     "params": "GridColumnGroupHeaderParams",

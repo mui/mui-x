@@ -915,6 +915,23 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
+  describe('non-strict mode', () => {
+    const renderer = createRenderer({ strict: false });
+
+    it('should render in JSDOM', function test() {
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Only run in JSDOM
+      }
+      renderer.render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} />
+        </div>,
+      );
+
+      expect(getCell(0, 0).textContent).to.equal('Nike');
+    });
+  });
+
   it('should allow style customization using the theme', function test() {
     if (/jsdom/.test(window.navigator.userAgent)) {
       this.skip(); // Doesn't work with mocked window.getComputedStyle
@@ -1039,5 +1056,47 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(NoRowsOverlay.callCount).to.equal(0);
     setProps({ loading: false });
     expect(NoRowsOverlay.callCount).not.to.equal(0);
+  });
+
+  describe('sould not overflow parent', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Doesn't work with mocked window.getComputedStyle
+      }
+    });
+
+    const rows = [{ id: 1, username: '@MUI', age: 20 }];
+    const columns = [
+      { field: 'id', width: 300 },
+      { field: 'username', width: 300 },
+    ];
+
+    it('grid container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'grid' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+
+    it('flex container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'flex' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
   });
 });

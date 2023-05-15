@@ -5,9 +5,13 @@ import { Axis, AxisProps } from '../Axis/Axis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { Tooltip, TooltipProps } from '../Tooltip';
+import { Highlight, HighlightProps } from '../Highlight';
 
 export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
+  tooltip?: TooltipProps;
+  highlight?: HighlightProps;
 }
 export function LineChart(props: LineChartProps) {
   const {
@@ -20,6 +24,7 @@ export function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
+    highlight,
     topAxis,
     leftAxis,
     rightAxis,
@@ -47,10 +52,15 @@ export function LineChart(props: LineChartProps) {
       yAxis={yAxis}
       colors={colors}
       sx={sx}
-      tooltip={tooltip}
+      disableAxisListener={
+        tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
+      }
     >
       <LinePlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+
+      <Highlight {...highlight} />
+      <Tooltip {...tooltip} />
       {children}
     </ChartContainer>
   );
