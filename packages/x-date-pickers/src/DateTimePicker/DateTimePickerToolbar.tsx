@@ -325,7 +325,6 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             ownerState={ownerState}
           >
             <PickersToolbarButton
-              disableRipple
               variant="subtitle2"
               selected={meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
@@ -334,7 +333,6 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               disabled={disabled}
             />
             <PickersToolbarButton
-              disableRipple
               variant="subtitle2"
               selected={meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
