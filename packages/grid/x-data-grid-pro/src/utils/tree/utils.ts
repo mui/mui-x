@@ -95,27 +95,23 @@ export const insertNodeInTree = ({
   if (node.type === 'footer') {
     // For footers,
     // Register the node from its parent `footerId` property.
-    tree[node.parent] = {
-      ...parentNode,
-      footerId: node.id,
-    };
+    parentNode.footerId = node.id;
   } else if (node.type === 'group' || node.type === 'leaf') {
     // For groups and leaves,
     // Register the node from its parents `children` and `childrenFromPath` properties.
-    const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
-    const groupingKey = (node as GridGroupNode).groupingKey ?? '__no_key__';
+    const groupingFieldName = (node as GridGroupNode).groupingField ?? '__no_field__';
+    const groupingKeyName = (node as GridGroupNode).groupingKey ?? '__no_key__';
+    const groupingField = parentNode.childrenFromPath?.[groupingFieldName];
 
-    tree[node.parent!] = {
-      ...parentNode,
-      childrenFromPath: {
-        ...parentNode.childrenFromPath,
-        [groupingField]: {
-          ...parentNode.childrenFromPath?.[groupingField],
-          [groupingKey.toString()]: node.id,
-        },
-      },
-      children: [...parentNode.children, node.id],
-    };
+    if (groupingField == null) {
+      parentNode.childrenFromPath[groupingFieldName] = {
+        [groupingKeyName.toString()]: node.id,
+      };
+    } else {
+      groupingField[groupingKeyName.toString()] = node.id;
+    }
+
+    parentNode.children.push(node.id);
   }
 };
 
