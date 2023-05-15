@@ -1,12 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultHMoment, { Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
-import { AdapterFormats, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterMomentHijriOptions {
-  instance?: typeof defaultHMoment;
-  formats?: Partial<AdapterFormats>;
-}
+import { AdapterFormats, AdapterOptions, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -112,24 +107,20 @@ const NUMBER_SYMBOL_MAP = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<Moment> {
-  public isMUIAdapter = true;
+export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<Moment, string> {
+  public lib = 'moment-hijri';
+
+  public moment: typeof defaultHMoment;
 
   public formatTokenMap = formatTokenMap;
 
-  public escapedCharacters = { start: '[', end: ']' };
-
-  constructor({ formats, instance }: AdapterMomentHijriOptions = {}) {
+  constructor({ formats, instance }: AdapterOptions<string, typeof defaultHMoment> = {}) {
     super({ locale: 'ar-SA', instance });
 
     this.moment = instance || defaultHMoment;
     this.locale = 'ar-SA';
     this.formats = { ...defaultFormats, ...formats };
   }
-
-  private toIMoment = (value?: Moment | undefined) => {
-    return this.moment(value ? value.clone() : undefined).locale('ar-SA');
-  };
 
   public date = (value?: any) => {
     if (value === null) {
@@ -232,7 +223,7 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
 
   public getWeekdays = () => {
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.toIMoment().weekday(dayOfWeek).format('dd');
+      return this.date()!.weekday(dayOfWeek).format('dd');
     });
   };
 
@@ -285,8 +276,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
   };
 
   public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am'
-      ? this.toIMoment().hours(2).format('A')
-      : this.toIMoment().hours(14).format('A');
+    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
   };
 }

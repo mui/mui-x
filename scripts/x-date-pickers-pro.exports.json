@@ -1,5 +1,6 @@
 [
   { "name": "AdapterFormats", "kind": "Interface" },
+  { "name": "AdapterOptions", "kind": "TypeAlias" },
   { "name": "AdapterUnits", "kind": "TypeAlias" },
   { "name": "BaseMultiInputFieldProps", "kind": "Interface" },
   { "name": "BaseSingleInputFieldProps", "kind": "Interface" },
@@ -155,7 +156,7 @@
   { "name": "koKR", "kind": "Variable" },
   { "name": "kzKZ", "kind": "Variable" },
   { "name": "LicenseInfo", "kind": "Class" },
-  { "name": "LocalizationProvider", "kind": "Function" },
+  { "name": "LocalizationProvider", "kind": "Variable" },
   { "name": "LocalizationProviderProps", "kind": "Interface" },
   { "name": "LocalizedComponent", "kind": "TypeAlias" },
   { "name": "MobileDatePicker", "kind": "Variable" },
@@ -257,6 +258,7 @@
   { "name": "SingleInputDateTimeRangeFieldProps", "kind": "Interface" },
   { "name": "SingleInputTimeRangeField", "kind": "Variable" },
   { "name": "SingleInputTimeRangeFieldProps", "kind": "Interface" },
+  { "name": "skSK", "kind": "Variable" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "Interface" },
   { "name": "StaticDatePickerSlotsComponent", "kind": "Interface" },

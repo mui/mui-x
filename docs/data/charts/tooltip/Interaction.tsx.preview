@@ -1,0 +1,4 @@
+<Stack direction={{ xs: 'column', md: 'row' }}>
+  <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
+  <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
+</Stack>

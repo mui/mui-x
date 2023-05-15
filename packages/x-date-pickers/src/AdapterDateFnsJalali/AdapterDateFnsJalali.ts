@@ -27,7 +27,6 @@ import getWeek from 'date-fns-jalali/getWeek';
 import getYear from 'date-fns-jalali/getYear';
 import getMonth from 'date-fns-jalali/getMonth';
 import getDate from 'date-fns-jalali/getDate';
-import getDay from 'date-fns-jalali/getDay';
 import getDaysInMonth from 'date-fns-jalali/getDaysInMonth';
 import getMinutes from 'date-fns-jalali/getMinutes';
 import isAfter from 'date-fns-jalali/isAfter';
@@ -55,14 +54,15 @@ import isWithinInterval from 'date-fns-jalali/isWithinInterval';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 type DateFnsLocale = typeof defaultLocale;
-
-interface AdapterDateFnsJalaliOptions {
-  locale?: DateFnsLocale;
-  formats?: Partial<AdapterFormats>;
-}
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -197,7 +197,7 @@ const NUMBER_SYMBOL_MAP = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
+export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLocale> {
   public isMUIAdapter = true;
 
   public lib = 'date-fns-jalali';
@@ -210,7 +210,7 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  constructor({ locale, formats }: AdapterDateFnsJalaliOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
@@ -540,18 +540,16 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
-    let lastDay: number | null = null;
+
     while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      const day = getDay(current);
-      if (lastDay !== day) {
-        lastDay = day;
-        nestedWeeks[weekNumber].push(current);
-        count += 1;
-      }
+      nestedWeeks[weekNumber].push(current);
+
       current = addDays(current, 1);
+      count += 1;
     }
+
     return nestedWeeks;
   };
 

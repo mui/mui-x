@@ -16,7 +16,6 @@ import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliA
 
 describe('<AdapterMomentJalaali />', () => {
   describeJalaliAdapter(AdapterMomentJalaali, {
-    locale: 'fa',
     before: () => {
       jMoment.loadPersian({ dialect: 'persian-modern', usePersianDigits: true });
     },

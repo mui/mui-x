@@ -27,7 +27,7 @@ export default function TestLinesTime() {
         {
           id: 's1',
           stack: '1',
-          area: {},
+          area: true,
           data: [2, 5, 3, 4, 1],
         },
         {
@@ -37,7 +37,7 @@ export default function TestLinesTime() {
         {
           id: 's3',
           stack: '1',
-          area: {},
+          area: true,
           data: [10, 3, 1, 2, 10],
         },
       ]}

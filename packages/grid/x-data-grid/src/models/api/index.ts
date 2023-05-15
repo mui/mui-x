@@ -17,7 +17,6 @@ export * from './gridColumnMenuApi';
 export * from './gridPreferencesPanelApi';
 export * from './gridPrintExportApi';
 export * from './gridDisableVirtualizationApi';
-export * from './gridClipboardApi';
 export * from './gridCallbackDetails';
 export * from './gridScrollApi';
 export * from './gridVirtualScrollerApi';

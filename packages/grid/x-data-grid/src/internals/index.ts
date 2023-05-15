@@ -96,7 +96,7 @@ export {
   getRenderableIndexes,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 
-export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
+export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
@@ -110,7 +110,7 @@ export type {
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
 export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
-export { findParentElementFromClassName } from '../utils/domUtils';
+export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
@@ -120,5 +120,7 @@ export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
+
+export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
 
 export * from './utils';
