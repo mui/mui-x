@@ -34,11 +34,16 @@ The component can be disabled or read-only.
 
 ## Customization
 
-### Render 1 to 3 months
+### Choose the months to render
 
 You can render up to 3 months at the same time using the `calendars` prop:
 
-{{"demo": "DateRangeCalendarCalendarProp.js"}}
+{{"demo": "DateRangeCalendarCalendarsProp.js"}}
+
+You can choose the position the current month is rendered in using the `currentMonthCalendarPosition` prop.
+This can be useful when using `disableFuture` to render the current month and the month before instead of the current month and the month after.
+
+{{"demo": "DateRangeCalendarCurrentMonthCalendarPositionProp.js"}}
 
 ### Custom day rendering
 

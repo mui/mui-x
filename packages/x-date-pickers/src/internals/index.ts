@@ -128,7 +128,7 @@ export { extractValidationProps } from './utils/validation/extractValidationProp
 export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
-export { buildDeprecatedPropsWarning } from './utils/warning';
+export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 export { uncapitalizeObjectKeys } from './utils/slots-migration';
 export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
 
