@@ -113,7 +113,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       return;
     }
     setRenderContextRaw(nextRenderContext);
-  }, [])
+  }, [renderContext])
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
