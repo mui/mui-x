@@ -1,49 +1,12 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
+import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { XAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../Axis/axisClasses';
-
-const Line = styled('line', {
-  name: 'MuiXAxis',
-  slot: 'Line',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-  stroke: theme.palette.text.primary,
-  shapeRendering: 'crispEdges',
-}));
-
-const Tick = styled('line', {
-  name: 'MuiXAxis',
-  slot: 'Tick',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-  stroke: theme.palette.text.primary,
-  shapeRendering: 'crispEdges',
-}));
-
-const TickLabel = styled('text', {
-  name: 'MuiXAxis',
-  slot: 'TickLabel',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-  ...theme.typography.caption,
-  fill: theme.palette.text.primary,
-  textAnchor: 'middle',
-}));
-
-const Label = styled('text', {
-  name: 'MuiXAxis',
-  slot: 'Label',
-  overridesResolver: (props, styles) => styles.root,
-})(({ theme }) => ({
-  ...theme.typography.body1,
-  fill: theme.palette.text.primary,
-  textAnchor: 'middle',
-}));
+import { Line, Tick, TickLabel, Label } from '../internals/components/AxisSharedComponents';
 
 const useUtilityClasses = (ownerState: XAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
