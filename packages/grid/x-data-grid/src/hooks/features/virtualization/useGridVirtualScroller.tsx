@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 import {
   unstable_useForkRef as useForkRef,
   unstable_useEnhancedEffect as useEnhancedEffect,
+  unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
@@ -80,7 +81,7 @@ export const getRenderableIndexes = ({
   ];
 };
 
-const areRenderContextsEqual = (context1: GridRenderContext, context2: GridRenderContext) => {
+export const areRenderContextsEqual = (context1: GridRenderContext, context2: GridRenderContext) => {
   if (context1 === context2) {
     return true;
   }
@@ -374,7 +375,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     apiRef.current.publishEvent('scrollPositionChange', params);
   }, [apiRef, computeRenderContext, containerDimensions.width, updateRenderContext]);
 
-  const handleScroll = (event: React.UIEvent) => {
+  const handleScroll = useEventCallback((event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
     scrollPosition.current.top = scrollTop;
     scrollPosition.current.left = scrollLeft;
@@ -437,15 +438,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       });
       prevTotalWidth.current = columnsTotalWidth;
     }
-  };
+  });
 
-  const handleWheel = (event: React.WheelEvent) => {
+  const handleWheel = useEventCallback((event: React.WheelEvent) => {
     apiRef.current.publishEvent('virtualScrollerWheel', {}, event);
-  };
+  });
 
-  const handleTouchMove = (event: React.TouchEvent) => {
+  const handleTouchMove = useEventCallback((event: React.TouchEvent) => {
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
-  };
+  });
 
   const getRows = (
     params: {
@@ -643,13 +644,16 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     contentSize.height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
   }
 
-  const rootStyle = {} as React.CSSProperties;
-  if (!needsHorizontalScrollbar) {
-    rootStyle.overflowX = 'hidden';
-  }
-  if (rootProps.autoHeight) {
-    rootStyle.overflowY = 'hidden';
-  }
+  const rootStyle = React.useMemo(() => {
+    const rootStyle = {} as React.CSSProperties;
+    if (!needsHorizontalScrollbar) {
+      rootStyle.overflowX = 'hidden';
+    }
+    if (rootProps.autoHeight) {
+      rootStyle.overflowY = 'hidden';
+    }
+    return rootStyle;
+  }, [needsHorizontalScrollbar, rootProps.autoHeight]);
 
   const getRenderContext = React.useCallback((): GridRenderContext => {
     return prevRenderContext.current!;
@@ -661,15 +665,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     renderContext,
     updateRenderZonePosition,
     getRows,
-    getRootProps: ({ style = {}, ...other } = {}) => ({
+    getRootProps: (props: { style?: object } = {}) => ({
       ref: handleRef,
       onScroll: handleScroll,
       onWheel: handleWheel,
       onTouchMove: handleTouchMove,
-      style: { ...style, ...rootStyle },
-      ...other,
+      ...props,
+      style: props.style ? { ...props.style, ...rootStyle } : rootStyle,
     }),
-    getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
+    getContentProps: ({ style }: { style?: object } = {}) => ({ style: style ? { ...style, ...contentSize } : contentSize }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
   };
 };
