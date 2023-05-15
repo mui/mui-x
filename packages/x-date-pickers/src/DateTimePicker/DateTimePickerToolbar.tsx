@@ -55,7 +55,7 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   paddingLeft: 16,
   paddingRight: ownerState.wrapperVariant === 'desktop' && !ownerState.isLandscape ? 0 : 16,
   borderBottom:
-    ownerState.wrapperVariant === 'desktop' && !ownerState.isLandscape
+    ownerState.wrapperVariant === 'desktop'
       ? `1px solid ${(theme.vars || theme).palette.divider}`
       : undefined,
   borderRight:
