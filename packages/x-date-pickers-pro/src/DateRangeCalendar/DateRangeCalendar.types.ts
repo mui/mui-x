@@ -89,7 +89,8 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   calendars?: 1 | 2 | 3;
   /**
-   * @default 'onward'
+   * Position the current month is rendered in.
+   * @default 1
    */
   currentMonthCalendarPosition?: 1 | 2 | 3;
   /**
