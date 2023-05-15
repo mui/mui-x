@@ -692,6 +692,7 @@
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "menu": "Component rendered for menu.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",
     "noRowsOverlay": "No rows overlay component rendered when the grid has no rows.",

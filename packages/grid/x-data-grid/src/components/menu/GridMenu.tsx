@@ -1,16 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAwayListener';
 import { unstable_composeClasses as composeClasses, HTMLElementType } from '@mui/utils';
-import Grow, { GrowProps } from '@mui/material/Grow';
-import Paper from '@mui/material/Paper';
-import Popper, { PopperProps } from '@mui/material/Popper';
-import { styled } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/system';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type MenuPosition =
   | 'bottom-end'
@@ -38,34 +34,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
-
-const GridMenuRoot = styled(Popper, {
-  name: 'MuiDataGrid',
-  slot: 'Menu',
-  overridesResolver: (_, styles) => styles.menu,
-})<{ ownerState: OwnerState }>(({ theme }) => ({
-  zIndex: theme.zIndex.modal,
-  [`& .${gridClasses.menuList}`]: {
-    outline: 0,
-  },
-}));
-
-export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown' | 'children'> {
+export interface GridMenuProps {
   open: boolean;
   target: HTMLElement | null;
-  onClickAway: ClickAwayListenerProps['onClickAway'];
+  onClickAway: (event: MouseEvent | TouchEvent) => void;
   position?: MenuPosition;
-  onExited?: GrowProps['onExited'];
+  onExited?: () => void;
   children: React.ReactNode;
+  className?: string;
+  sx?: SxProps<Theme>;
 }
 
-const transformOrigin = {
-  'bottom-start': 'top left',
-  'bottom-end': 'top right',
-};
-
 function GridMenu(props: GridMenuProps) {
-  const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
+  const { open, target, children, className } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
@@ -76,40 +57,20 @@ function GridMenu(props: GridMenuProps) {
     apiRef.current.publishEvent(eventName, { target });
   }, [apiRef, open, target]);
 
-  const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
-    if (popperOnExited) {
-      popperOnExited();
-    }
-
-    if (onExited) {
-      onExited(node);
-    }
-  };
-
   return (
-    <GridMenuRoot
-      as={rootProps.slots.basePopper}
+    <rootProps.slots.menu
+      {...props}
+      {...rootProps.slotProps?.menu}
       className={clsx(className, classes.root)}
-      ownerState={rootProps}
-      open={open}
-      anchorEl={target as any}
-      transition
-      placement={position}
-      {...other}
-      {...rootProps.slotProps?.basePopper}
+      sx={{
+        zIndex: 'modal',
+        [`& .${gridClasses.menuList}`]: {
+          outline: 0,
+        },
+      }}
     >
-      {({ TransitionProps, placement }) => (
-        <ClickAwayListener onClickAway={onClickAway} mouseEvent="onMouseDown">
-          <Grow
-            {...TransitionProps}
-            style={{ transformOrigin: transformOrigin[placement as keyof typeof transformOrigin] }}
-            onExited={handleExited(TransitionProps?.onExited)}
-          >
-            <Paper>{children}</Paper>
-          </Grow>
-        </ClickAwayListener>
-      )}
-    </GridMenuRoot>
+      {children}
+    </rootProps.slots.menu>
   );
 }
 
@@ -119,11 +80,9 @@ GridMenu.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   children: PropTypes.node,
+  className: PropTypes.string,
   onClickAway: PropTypes.func.isRequired,
   onExited: PropTypes.func,
-  /**
-   * If `true`, the component is shown.
-   */
   open: PropTypes.bool.isRequired,
   position: PropTypes.oneOf([
     'bottom-end',
@@ -138,6 +97,11 @@ GridMenu.propTypes = {
     'top-end',
     'top-start',
     'top',
+  ]),
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
   ]),
   target: HTMLElementType,
 } as any;

@@ -39,6 +39,7 @@ import {
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import MUISelectOption from './components/MUISelectOption';
+import MUIMenu from './components/MUIMenu';
 
 const iconSlots: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -92,6 +93,7 @@ const materialSlots = {
   BaseInputLabel: MUIInputLabel,
   BaseSelectOption: MUISelectOption,
   BaseChip: MUIChip,
+  Menu: MUIMenu,
 };
 
 export default materialSlots;

@@ -146,6 +146,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default GridRow
    */
   Row: React.JSXElementConstructor<any>;
+  /**
+   * Component rendered for menu.
+   * @default Menu
+   */
+  Menu: React.JSXElementConstructor<any>;
 }
 
 export interface UncapitalizedGridSlotsComponent

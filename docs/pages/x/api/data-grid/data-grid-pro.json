@@ -332,6 +332,7 @@
     },
     "loadIcon": { "default": "GridLoadIcon", "type": { "name": "elementType" } },
     "loadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
+    "menu": { "default": "Menu", "type": { "name": "elementType" } },
     "moreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
     "noResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },
     "noRowsOverlay": { "default": "GridNoRowsOverlay", "type": { "name": "elementType" } },

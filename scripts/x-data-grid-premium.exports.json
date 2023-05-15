@@ -577,6 +577,7 @@
   { "name": "LicenseInfo", "kind": "Class" },
   { "name": "LoadingOverlayPropsOverrides", "kind": "Interface" },
   { "name": "Logger", "kind": "Interface" },
+  { "name": "MenuPropsOverrides", "kind": "Interface" },
   { "name": "MuiBaseEvent", "kind": "TypeAlias" },
   { "name": "MuiEvent", "kind": "TypeAlias" },
   { "name": "nbNO", "kind": "Variable" },

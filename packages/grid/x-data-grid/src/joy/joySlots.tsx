@@ -12,6 +12,9 @@ import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
 import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import JoyBox from '@mui/joy/Box';
 import JoyTypography from '@mui/joy/Typography';
+import JoyMenu from '@mui/joy/Menu';
+// eslint-disable-next-line no-restricted-imports
+import ClickAwayListener from '@mui/base/ClickAwayListener';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
@@ -405,6 +408,22 @@ const Pagination = React.forwardRef<
   );
 });
 
+const Menu = React.forwardRef<HTMLDivElement, NonNullable<GridSlotsComponentsProps['menu']>>(
+  ({ sx, target, onClickAway, onExited, ...props }, ref) => {
+    return (
+      <ClickAwayListener
+        onClickAway={(event) => {
+          onClickAway?.(event);
+          onExited?.();
+        }}
+        mouseEvent="onMouseDown"
+      >
+        <JoyMenu {...props} anchorEl={target} ref={ref} sx={sx as SxProps<Theme>} />
+      </ClickAwayListener>
+    );
+  },
+);
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   ...joyIconSlots,
   baseCheckbox: Checkbox,
@@ -419,6 +438,7 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
   pagination: Pagination,
+  menu: Menu,
 };
 
 export default joySlots;
