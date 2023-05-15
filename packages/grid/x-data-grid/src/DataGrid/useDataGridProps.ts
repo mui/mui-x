@@ -11,7 +11,7 @@ import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlot
 import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 import {
   computeSlots,
-  groupDataProps,
+  useProps,
   uncapitalizeObjectKeys,
   UncapitalizeObjectKeys,
 } from '../internals/utils';
@@ -76,12 +76,14 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableColumnResize: false,
   keepNonExistentRowsSelected: false,
   keepColumnPositionIfDraggedOutside: false,
+  unstable_ignoreValueFormatterDuringExport: false,
+  clipboardCopyCellDelimiter: '\t',
 };
 
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  const { components, componentsProps, ...themedProps } = groupDataProps(
+  const [components, componentsProps, themedProps] = useProps(
     useThemeProps({
       props: inProps,
       name: 'MuiDataGrid',

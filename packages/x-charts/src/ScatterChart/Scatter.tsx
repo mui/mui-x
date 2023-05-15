@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ScatterSeriesType } from '../models/seriesType/scatter';
+import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
 import { D3Scale, getValueToPositionMapper } from '../hooks/useScale';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 
 export interface ScatterProps {
-  series: ScatterSeriesType;
+  series: DefaultizedScatterSeriesType;
   xScale: D3Scale;
   yScale: D3Scale;
   markerSize: number;

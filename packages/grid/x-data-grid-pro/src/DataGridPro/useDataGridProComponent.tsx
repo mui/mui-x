@@ -143,9 +143,9 @@ export const useDataGridProComponent = (
   useGridInfiniteLoader(apiRef, props);
   useGridLazyLoader(apiRef, props);
   useGridColumnMenu(apiRef);
-  useGridCsvExport(apiRef);
+  useGridCsvExport(apiRef, props);
   useGridPrintExport(apiRef, props);
-  useGridClipboard(apiRef);
+  useGridClipboard(apiRef, props);
   useGridDimensions(apiRef, props);
   useGridEvents(apiRef, props);
   useGridStatePersistence(apiRef);

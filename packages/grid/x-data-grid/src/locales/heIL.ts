@@ -47,7 +47,7 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'מחק הכל',
   filterPanelDeleteIconLabel: 'מחק',
   filterPanelLogicOperator: 'אופרטור לוגי',
   filterPanelOperator: 'אופרטור',
@@ -80,7 +80,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'תפריט',
   columnMenuShowColumns: 'הצג עמודות',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'נהל עמודות',
   columnMenuFilter: 'סנן',
   columnMenuHideColumn: 'הסתר',
   columnMenuUnsort: 'בטל מיון',

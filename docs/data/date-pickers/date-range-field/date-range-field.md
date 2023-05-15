@@ -21,8 +21,14 @@ All the topics covered below are applicable to both `SingleInputDateRangeField` 
 
 {{"demo": "BasicDateRangeField.js"}}
 
-## Uncontrolled vs. Controlled
-
-The component can be uncontrolled or controlled.
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateRangeFieldValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
