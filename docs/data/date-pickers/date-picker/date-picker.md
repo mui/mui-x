@@ -27,7 +27,7 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled.
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DatePickerValue.js"}}
 
