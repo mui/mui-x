@@ -648,14 +648,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }
 
   const rootStyle = React.useMemo(() => {
-    const rootStyle = {} as React.CSSProperties;
+    const style = {} as React.CSSProperties;
     if (!needsHorizontalScrollbar) {
-      rootStyle.overflowX = 'hidden';
+      style.overflowX = 'hidden';
     }
     if (rootProps.autoHeight) {
-      rootStyle.overflowY = 'hidden';
+      style.overflowY = 'hidden';
     }
-    return rootStyle;
+    return style;
   }, [needsHorizontalScrollbar, rootProps.autoHeight]);
 
   const getRenderContext = React.useCallback((): GridRenderContext => {
@@ -668,13 +668,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     renderContext,
     updateRenderZonePosition,
     getRows,
-    getRootProps: (props: { style?: object } = {}) => ({
+    getRootProps: (inputProps: { style?: object } = {}) => ({
       ref: handleRef,
       onScroll: handleScroll,
       onWheel: handleWheel,
       onTouchMove: handleTouchMove,
-      ...props,
-      style: props.style ? { ...props.style, ...rootStyle } : rootStyle,
+      ...inputProps,
+      style: inputProps.style ? { ...inputProps.style, ...rootStyle } : rootStyle,
     }),
     getContentProps: ({ style }: { style?: object } = {}) => ({
       style: style ? { ...style, ...contentSize } : contentSize,
