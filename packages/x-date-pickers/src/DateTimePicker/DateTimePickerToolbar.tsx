@@ -53,9 +53,13 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
   paddingLeft: 16,
-  paddingRight: ownerState.wrapperVariant === 'desktop' ? 0 : 16,
+  paddingRight: ownerState.wrapperVariant === 'desktop' && !ownerState.isLandscape ? 0 : 16,
   borderBottom:
-    ownerState.wrapperVariant === 'desktop'
+    ownerState.wrapperVariant === 'desktop' && !ownerState.isLandscape
+      ? `1px solid ${(theme.vars || theme).palette.divider}`
+      : undefined,
+  borderRight:
+    ownerState.wrapperVariant === 'desktop' && ownerState.isLandscape
       ? `1px solid ${(theme.vars || theme).palette.divider}`
       : undefined,
   justifyContent: 'space-around',
@@ -104,14 +108,17 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   slot: 'TimeContainer',
   overridesResolver: (props, styles) => styles.timeContainer,
 })<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => {
-  const direction = ownerState.isLandscape ? 'column' : 'row';
+  const direction =
+    ownerState.isLandscape && ownerState.wrapperVariant !== 'desktop' ? 'column' : 'row';
   return {
     display: 'flex',
     flexDirection: direction,
     ...(ownerState.wrapperVariant === 'desktop' && {
-      gap: 9,
-      alignSelf: 'flex-end',
-      marginRight: 4,
+      ...(!ownerState.isLandscape && {
+        gap: 9,
+        marginRight: 4,
+        alignSelf: 'flex-end',
+      }),
     }),
     ...(theme.direction === 'rtl' && {
       flexDirection: `${direction}-reverse`,
@@ -266,7 +273,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
           {views.includes('hours') && (
             <PickersToolbarButton
               variant={isDesktop ? 'h5' : 'h3'}
-              width={isDesktop ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+              width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
               data-mui-test="hours"
               onClick={() => onViewChange('hours')}
               selected={view === 'hours'}
@@ -284,7 +291,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               />
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
-                width={isDesktop ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+                width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="minutes"
                 onClick={() => onViewChange('minutes')}
                 selected={view === 'minutes'}
@@ -303,7 +310,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               />
               <PickersToolbarButton
                 variant={isDesktop ? 'h5' : 'h3'}
-                width={isDesktop ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
+                width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="seconds"
                 onClick={() => onViewChange('seconds')}
                 selected={view === 'seconds'}
