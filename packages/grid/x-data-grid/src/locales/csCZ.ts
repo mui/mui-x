@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
-  noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
+  noResultsOverlayLabel: 'Nenašly se žadné výsledky.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zobrazení',
@@ -72,9 +72,9 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterOperatorIs: 'je',
   filterOperatorNot: 'není',
   filterOperatorAfter: 'je po',
-  filterOperatorOnOrAfter: 'je na nebo po',
+  filterOperatorOnOrAfter: 'je po včetně',
   filterOperatorBefore: 'je před',
-  filterOperatorOnOrBefore: 'je na nebo dříve',
+  filterOperatorOnOrBefore: 'je před včetně',
   filterOperatorIsEmpty: 'je prázdný',
   filterOperatorIsNotEmpty: 'není prázdný',
   filterOperatorIsAnyOf: 'je jeden z',
