@@ -445,7 +445,7 @@ export const useGridRowSelection = (
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
         : gridExpandedSortedRowIdsSelector(apiRef);
 
-      apiRef.current.selectRows(rowsToBeSelected, params.value);
+      apiRef.current.selectRows(rowsToBeSelected, params.isIndeterminate ? !params.value : params.value);
     },
     [apiRef, props.checkboxSelectionVisibleOnly, props.pagination],
   );
