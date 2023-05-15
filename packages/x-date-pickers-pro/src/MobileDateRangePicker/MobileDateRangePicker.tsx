@@ -103,7 +103,8 @@ MobileDateRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * @default 'onward'
+   * Position the current month is rendered in.
+   * @default 1
    */
   currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
