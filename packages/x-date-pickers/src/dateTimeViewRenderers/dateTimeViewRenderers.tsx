@@ -31,6 +31,7 @@ export interface DateTimeViewRendererProps<TDate>
   onViewChange?: (view: DateOrTimeViewWithMeridiem) => void;
   views: readonly DateOrTimeViewWithMeridiem[];
   focusedView: DateOrTimeViewWithMeridiem | null;
+  timeViewsCount: number;
 }
 
 export const renderDesktopDateTimeView = <TDate extends unknown>({
@@ -81,6 +82,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
+  timeViewsCount,
 }: DateTimeViewRendererProps<TDate>) => {
   const isActionBarVisible = !!resolveComponentProps(
     slotProps?.actionBar ?? componentsProps?.actionBar,
@@ -129,45 +131,49 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           fixedWeekNumber={fixedWeekNumber}
           displayWeekNumber={displayWeekNumber}
         />
-        <Divider orientation="vertical" />
-        <MultiSectionDigitalClock
-          view={isInternalTimeView(view) ? view : 'hours'}
-          onViewChange={onViewChange}
-          focusedView={focusedView && isInternalTimeView(focusedView) ? focusedView : null}
-          onFocusedViewChange={onFocusedViewChange}
-          views={views.filter(isInternalTimeView)}
-          value={value}
-          defaultValue={defaultValue}
-          onChange={onChange}
-          className={className}
-          classes={classes}
-          disableFuture={disableFuture}
-          disablePast={disablePast}
-          minTime={minTime}
-          maxTime={maxTime}
-          shouldDisableTime={shouldDisableTime}
-          shouldDisableClock={shouldDisableClock}
-          minutesStep={minutesStep}
-          ampm={ampm}
-          components={components}
-          componentsProps={componentsProps}
-          slots={slots}
-          slotProps={slotProps}
-          readOnly={readOnly}
-          disabled={disabled}
-          sx={{
-            borderBottom: 0,
-            width: 'auto',
-            [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-              maxHeight: '100%',
-            },
-            ...(Array.isArray(sx) ? sx : [sx]),
-          }}
-          autoFocus={autoFocus}
-          disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
-          timeSteps={timeSteps}
-          skipDisabled={skipDisabled}
-        />
+        {timeViewsCount > 0 && (
+          <React.Fragment>
+            <Divider orientation="vertical" />
+            <MultiSectionDigitalClock
+              view={isInternalTimeView(view) ? view : 'hours'}
+              onViewChange={onViewChange}
+              focusedView={focusedView && isInternalTimeView(focusedView) ? focusedView : null}
+              onFocusedViewChange={onFocusedViewChange}
+              views={views.filter(isInternalTimeView)}
+              value={value}
+              defaultValue={defaultValue}
+              onChange={onChange}
+              className={className}
+              classes={classes}
+              disableFuture={disableFuture}
+              disablePast={disablePast}
+              minTime={minTime}
+              maxTime={maxTime}
+              shouldDisableTime={shouldDisableTime}
+              shouldDisableClock={shouldDisableClock}
+              minutesStep={minutesStep}
+              ampm={ampm}
+              components={components}
+              componentsProps={componentsProps}
+              slots={slots}
+              slotProps={slotProps}
+              readOnly={readOnly}
+              disabled={disabled}
+              sx={{
+                borderBottom: 0,
+                width: 'auto',
+                [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+                  maxHeight: '100%',
+                },
+                ...(Array.isArray(sx) ? sx : [sx]),
+              }}
+              autoFocus={autoFocus}
+              disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
+              timeSteps={timeSteps}
+              skipDisabled={skipDisabled}
+            />
+          </React.Fragment>
+        )}
       </DateTimeViewWrapper>
       {isActionBarVisible && <Divider />}
     </React.Fragment>
