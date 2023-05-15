@@ -7,13 +7,6 @@ interface WithComponents {
   componentsProps?: GridSlotsComponentsProps;
 }
 
-export function useProps<T extends WithComponents>(allProps: T) {
-  return React.useMemo(() => {
-    const { components, componentsProps, ...themedProps } = allProps;
-    return [components, componentsProps, groupDataProps(themedProps)] as const;
-  }, [allProps]);
-}
-
 /** Gathers data attributes props into a single `.dataProps` field */
 function groupDataProps<
   T extends {
@@ -43,4 +36,11 @@ function groupDataProps<
   newProps.dataProps = dataProps;
 
   return newProps as T;
+}
+
+export function useProps<T extends WithComponents>(allProps: T) {
+  return React.useMemo(() => {
+    const { components, componentsProps, ...themedProps } = allProps;
+    return [components, componentsProps, groupDataProps(themedProps)] as const;
+  }, [allProps]);
 }

@@ -165,6 +165,7 @@ export interface DataGridPropsWithDefaultValues {
   columnThreshold: number;
   /**
    * Data attributes for the grid root element.
+   * @ignore - do not document.
    */
   dataProps?: Record<string, unknown>;
   /**

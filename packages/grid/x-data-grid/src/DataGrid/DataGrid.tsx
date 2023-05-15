@@ -139,6 +139,7 @@ DataGridRaw.propTypes = {
   componentsProps: PropTypes.object,
   /**
    * Data attributes for the grid root element.
+   * @ignore - do not document.
    */
   dataProps: PropTypes.object,
   /**
