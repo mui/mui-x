@@ -22,7 +22,12 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import {
+  FieldRef,
+  FieldSection,
+  FieldSectionType,
+  MuiPickersAdapter,
+} from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
@@ -363,7 +368,7 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
       key: string;
       expectedValue: string;
       cursorPosition?: number;
-      valueToSelect?: string;
+      selectedSection?: FieldSectionType;
     },
   ) => void;
   testFieldChange: (
@@ -426,10 +431,22 @@ export const buildFieldInteractions = <P extends {}>({
     key,
     expectedValue,
     cursorPosition = 1,
-    valueToSelect,
+    selectedSection,
     ...props
   }) => {
-    render(<Component {...(props as any as P)} />);
+    let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
+
+    function WrappedComponent() {
+      fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+      const componentProps = {
+        ...props,
+        unstableFieldRef: fieldRef,
+      };
+
+      return <Component {...(componentProps as any as P)} />;
+    }
+
+    render(<WrappedComponent />);
     const input = getTextbox();
 
     // focus input to trigger setting placeholder as value if no value is present
@@ -439,12 +456,16 @@ export const buildFieldInteractions = <P extends {}>({
     // make sure the value of the input is rendered before proceeding
     clock.runToLast();
 
-    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
-    if (clickPosition === -1) {
-      throw new Error(
-        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
-      );
+    let clickPosition: number;
+    if (selectedSection) {
+      const sectionToSelect = fieldRef
+        .current!.getSections()
+        .find((section) => section.type === selectedSection);
+      clickPosition = sectionToSelect!.startInInput;
+    } else {
+      clickPosition = cursorPosition;
     }
+
     clickOnInput(input, clickPosition);
     userEvent.keyPress(input, { key });
     expectInputValue(input, expectedValue);

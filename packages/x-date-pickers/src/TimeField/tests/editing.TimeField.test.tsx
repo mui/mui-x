@@ -58,7 +58,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
           key: 'ArrowDown',
           expectedValue: '14:59',
-          valueToSelect: '00',
+          selectedSection: 'minutes',
         });
       });
     });
@@ -86,7 +86,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           key: 'ArrowDown',
           expectedValue: 'hh:mm PM',
-          valueToSelect: 'aa',
+          selectedSection: 'meridiem',
         });
       });
 
@@ -96,7 +96,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowDown',
           expectedValue: '02:12 PM',
-          valueToSelect: 'AM',
+          selectedSection: 'meridiem',
         });
       });
 
@@ -106,7 +106,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowDown',
           expectedValue: '02:12 AM',
-          valueToSelect: 'PM',
+          selectedSection: 'meridiem',
         });
       });
     });
@@ -163,7 +163,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 59, 25)),
           key: 'ArrowUp',
           expectedValue: '14:00',
-          valueToSelect: '59',
+          selectedSection: 'minutes',
         });
       });
     });

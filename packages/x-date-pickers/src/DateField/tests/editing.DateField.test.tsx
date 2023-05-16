@@ -74,8 +74,7 @@ describe('<DateField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 1)),
         key: 'ArrowDown',
         expectedValue: 'June 30',
-        // To select the date and not the month
-        valueToSelect: '1',
+        selectedSection: 'day',
       });
     });
 
@@ -166,8 +165,7 @@ describe('<DateField /> - Editing', () => {
         defaultValue: adapter.date(new Date(2022, 5, 30)),
         key: 'ArrowUp',
         expectedValue: 'June 01',
-        // To select the date and not the month
-        valueToSelect: '30',
+        selectedSection: 'day',
       });
     });
 
