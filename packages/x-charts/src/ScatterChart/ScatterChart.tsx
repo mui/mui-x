@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import { ScatterPlot } from './ScatterPlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis';
@@ -6,6 +7,7 @@ import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
+import { ClipPath } from '../ClipPath/ClipPath';
 
 export interface ScatterChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
@@ -32,6 +34,9 @@ export function ScatterChart(props: ScatterChartProps) {
     children,
   } = props;
 
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
+
   return (
     <ChartContainer
       series={series.map((s) => ({ type: 'scatter', ...s }))}
@@ -43,10 +48,13 @@ export function ScatterChart(props: ScatterChartProps) {
       yAxis={yAxis}
       sx={sx}
     >
-      <ScatterPlot />
+      <g clipPath={`url(#${clipPathId})`}>
+        <ScatterPlot />
+      </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <Highlight x="none" y="none" {...highlight} />
       <Tooltip trigger="item" {...tooltip} />
+      <ClipPath id={clipPathId} />
       {children}
     </ChartContainer>
   );

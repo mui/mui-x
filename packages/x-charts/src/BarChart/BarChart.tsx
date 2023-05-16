@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import { BarPlot } from './BarPlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis';
@@ -7,6 +8,7 @@ import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
+import { ClipPath } from '../ClipPath/ClipPath';
 
 export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
@@ -33,6 +35,9 @@ export function BarChart(props: BarChartProps) {
     children,
   } = props;
 
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
+
   return (
     <ChartContainer
       series={series.map((s) => ({ type: 'bar', ...s }))}
@@ -57,10 +62,13 @@ export function BarChart(props: BarChartProps) {
         tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
       }
     >
-      <BarPlot />
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+      </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
+      <ClipPath id={clipPathId} />
       {children}
     </ChartContainer>
   );

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import { LinePlot } from './LinePlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis/Axis';
@@ -7,6 +8,7 @@ import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
+import { ClipPath } from '../ClipPath/ClipPath';
 
 export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
@@ -32,6 +34,9 @@ export function LineChart(props: LineChartProps) {
     children,
   } = props;
 
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
+
   return (
     <ChartContainer
       series={series.map((s) => ({ type: 'line', ...s }))}
@@ -56,11 +61,13 @@ export function LineChart(props: LineChartProps) {
         tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
       }
     >
-      <LinePlot />
+      <g clipPath={`url(#${clipPathId})`}>
+        <LinePlot />
+      </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
+      <ClipPath id={clipPathId} />
       {children}
     </ChartContainer>
   );
