@@ -25,8 +25,7 @@ function GridHeaderFilterAdornment(props: {
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
 }) {
-  const { operators, item, field, buttonRef, headerFilterMenuRef, ...others } =
-    props;
+  const { operators, item, field, buttonRef, headerFilterMenuRef, ...others } = props;
 
   const buttonId = useId();
   const menuId = useId();
