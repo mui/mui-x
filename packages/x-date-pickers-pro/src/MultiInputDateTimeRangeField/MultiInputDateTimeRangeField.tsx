@@ -5,9 +5,14 @@ import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { FieldsTextFieldProps, uncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import {
+  splitFieldInternalAndForwardedProps,
+  FieldsTextFieldProps,
+  uncapitalizeObjectKeys,
+} from '@mui/x-date-pickers/internals';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
+import { UseDateTimeRangeFieldProps } from '../internal/models/dateTimeRange';
 
 const MultiInputDateTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
@@ -42,39 +47,24 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     name: 'MuiMultiInputDateTimeRangeField',
   });
 
+  const { internalProps: dateTimeFieldInternalProps, forwardedProps } =
+    splitFieldInternalAndForwardedProps<
+      typeof themeProps,
+      keyof Omit<UseDateTimeRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+    >(themeProps, 'date-time');
+
   const {
     slots: innerSlots,
     slotProps: innerSlotProps,
     components,
     componentsProps,
-    value,
-    defaultValue,
-    format,
-    formatDensity,
-    shouldRespectLeadingZeros,
-    onChange,
-    readOnly,
     disabled,
-    onError,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    minTime,
-    maxTime,
-    minDateTime,
-    maxDateTime,
-    minutesStep,
-    shouldDisableClock,
-    shouldDisableTime,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
+    autoFocus,
     unstableStartFieldRef,
     unstableEndFieldRef,
-    autoFocus,
-    ...other
-  } = themeProps;
+    ...otherForwardedProps
+  } = forwardedProps;
+
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
   const slotProps = innerSlotProps ?? componentsProps;
 
@@ -84,7 +74,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
-    externalForwardedProps: other,
+    externalForwardedProps: otherForwardedProps,
     additionalProps: {
       ref,
     },
@@ -127,31 +117,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       ...endDateProps
     },
   } = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
-    sharedProps: {
-      value,
-      defaultValue,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      onChange,
-      readOnly,
-      disabled,
-      onError,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      minTime,
-      maxTime,
-      minDateTime,
-      maxDateTime,
-      minutesStep,
-      shouldDisableClock,
-      shouldDisableTime,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-    },
+    sharedProps: { ...dateTimeFieldInternalProps, disabled },
     startTextFieldProps,
     endTextFieldProps,
     startInputRef: startTextFieldProps.inputRef,
