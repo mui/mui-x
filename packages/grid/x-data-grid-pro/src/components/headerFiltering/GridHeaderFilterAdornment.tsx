@@ -11,6 +11,12 @@ import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/inter
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
+const sx = {
+  width: 22,
+  height: 22,
+  padding: '0px 0px 2px 2px',
+};
+
 function GridHeaderFilterAdornment(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
@@ -19,7 +25,8 @@ function GridHeaderFilterAdornment(props: {
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
 }) {
-  const { operators, item, field, buttonRef, headerFilterMenuRef, ...others } = props;
+  const { operators, item, field, buttonRef, headerFilterMenuRef, ...others } =
+    props;
 
   const buttonId = useId();
   const menuId = useId();
@@ -53,14 +60,10 @@ function GridHeaderFilterAdornment(props: {
           tabIndex={-1}
           size="small"
           onClick={handleClick}
-          sx={{
-            width: 22,
-            height: 22,
-            padding: '0px 0px 2px 2px',
-          }}
+          sx={sx}
           {...rootProps.slotProps?.baseIconButton}
         >
-          {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? ''}
+          {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? '='}
         </rootProps.slots.baseIconButton>
       </rootProps.slots.baseInputAdornment>
       <rootProps.slots.headerFilterMenu
@@ -103,6 +106,7 @@ GridHeaderFilterAdornment.propTypes = {
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
       getValueAsString: PropTypes.func,
+      headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,
       InputComponentProps: PropTypes.object,
       label: PropTypes.string,

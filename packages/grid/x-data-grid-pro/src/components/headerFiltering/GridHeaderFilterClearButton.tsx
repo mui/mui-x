@@ -5,6 +5,8 @@ interface GridHeaderFilterClearIconProps {
   onClick: () => void;
 }
 
+const sx = { padding: '2px' };
+
 function GridHeaderFilterClearButton({ onClick }: GridHeaderFilterClearIconProps) {
   const rootProps = useGridRootProps();
   return (
@@ -13,7 +15,7 @@ function GridHeaderFilterClearButton({ onClick }: GridHeaderFilterClearIconProps
       aria-label="Clear filter"
       size="small"
       onClick={onClick}
-      sx={{ padding: '2px' }}
+      sx={sx}
       {...rootProps.slotProps?.baseIconButton}
     >
       <rootProps.slots.headerFilterClearIcon fontSize="inherit" />

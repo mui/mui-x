@@ -13,10 +13,6 @@ import {
   GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
-  GridTypeFilterInputValueProps,
-  GridFilterInputDateProps,
-  GridFilterInputSingleSelectProps,
-  GridFilterInputBooleanProps,
 } from '@mui/x-data-grid';
 import {
   GridStateColDef,
@@ -29,51 +25,8 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterAdornment } from './GridHeaderFilterAdornment';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
-import { OPERATOR_LABEL_MAPPING } from './constants';
 
-type GridHeaderFilterCellConditionalProps =
-  | {
-      operator: 'contains' | 'startsWith' | 'endsWith' | 'equals';
-      colType: 'string';
-      InputComponentProps?: Partial<GridTypeFilterInputValueProps>;
-    }
-  | {
-      operator: 'isEmpty' | 'isNotEmpty';
-      colType: string;
-      InputComponentProps?: null;
-    }
-  | {
-      operator: '=' | '!=' | '>' | '>=' | '<' | '<=';
-      colType: 'number';
-      InputComponentProps?: Partial<GridTypeFilterInputValueProps>;
-    }
-  | {
-      operator: 'is' | 'not' | 'after' | 'onOrAfter' | 'before' | 'onOrBefore';
-      colType: 'date' | 'dateTime';
-      InputComponentProps?: Partial<GridFilterInputDateProps>;
-    }
-  | {
-      operator: 'is' | 'not';
-      colType: 'singleSelect';
-      InputComponentProps?: Partial<GridFilterInputSingleSelectProps>;
-    }
-  | {
-      colType: 'boolean';
-      InputComponentProps?: Partial<GridFilterInputBooleanProps>;
-    }
-  | {
-      // user defined operators
-      colType: GridColDef['type'];
-      operator: GridFilterOperator['value'];
-      InputComponentProps?: {
-        [key: string]: any;
-      };
-    };
-
-export type GridHeaderFilterCellOverridableProps = Pick<GridStateColDef, 'headerClassName'> &
-  GridHeaderFilterCellConditionalProps & { showClearIcon?: boolean };
-
-export type GridHeaderFilterCellProps = GridHeaderFilterCellOverridableProps & {
+export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'headerClassName'> {
   colIndex: number;
   height: number;
   sortIndex?: number;
@@ -85,7 +38,9 @@ export type GridHeaderFilterCellProps = GridHeaderFilterCellOverridableProps & {
   colDef: GridColDef;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
   item: GridFilterItem;
-};
+  showClearIcon?: boolean;
+  InputComponentProps: GridFilterOperator['InputComponentProps'];
+}
 
 type OwnerState = DataGridProProcessedProps & GridHeaderFilterCellProps;
 
@@ -110,7 +65,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
   (props, ref) => {
     const {
       colIndex,
-      colType,
       height,
       hasFocus,
       headerFilterComponent,
@@ -261,12 +215,12 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
 
     const isApplied = Boolean(item?.value) || isNoInputOperator;
     const label =
-      OPERATOR_LABEL_MAPPING[item.operator] ??
+      currentOperator.headerLabel ??
       apiRef.current.getLocaleText(
-        `filterOperator${capitalize(item.operator)}` as 'filterOperatorContains',
+        `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
       );
 
-    const isFilterActive = isApplied || isEditing;
+    const isFilterActive = isApplied || hasFocus;
 
     return (
       <div
@@ -329,11 +283,11 @@ GridHeaderFilterCell.propTypes = {
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  colType: PropTypes.string,
   filterOperators: PropTypes.arrayOf(
     PropTypes.shape({
       getApplyFilterFn: PropTypes.func.isRequired,
       getValueAsString: PropTypes.func,
+      headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,
       InputComponentProps: PropTypes.object,
       label: PropTypes.string,

@@ -1,12 +1,3 @@
-export const OPERATOR_LABEL_MAPPING: { [key: string]: string } = {
-  '=': 'equals',
-  '!=': 'not equals',
-  '>': 'is greater than',
-  '>=': 'is greater than or equal to',
-  '<': 'is less than',
-  '<=': 'is less than or equal to',
-};
-
 export const OPERATOR_SYMBOL_MAPPING: { [key: string]: string } = {
   contains: '∋',
   equals: '=',

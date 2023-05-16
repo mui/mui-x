@@ -11,7 +11,7 @@ import {
   GridFilterItem,
   GridColDef,
 } from '@mui/x-data-grid';
-import { OPERATOR_SYMBOL_MAPPING, OPERATOR_LABEL_MAPPING } from './constants';
+import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
 interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
@@ -66,11 +66,11 @@ function GridHeaderFilterMenu({
     >
       <MenuList aria-labelledby={labelledBy} id={id} onKeyDown={handleListKeyDown}>
         {operators.map((op, i) => {
-          const label = op.label
-            ? OPERATOR_LABEL_MAPPING[op.label]
-            : apiRef.current.getLocaleText(
-                `filterOperator${capitalize(op.value)}` as 'filterOperatorContains',
-              );
+          const label =
+            op?.headerLabel ??
+            apiRef.current.getLocaleText(
+              `headerFilterOperator${capitalize(op.value)}` as 'headerFilterOperatorContains',
+            );
 
           return (
             <MenuItem
@@ -83,7 +83,7 @@ function GridHeaderFilterMenu({
               key={`${field}-${op.value}`}
             >
               <ListItemIcon>{OPERATOR_SYMBOL_MAPPING[op.value]}</ListItemIcon>
-              <ListItemText>{capitalize(label)}</ListItemText>
+              <ListItemText>{label}</ListItemText>
             </MenuItem>
           );
         })}

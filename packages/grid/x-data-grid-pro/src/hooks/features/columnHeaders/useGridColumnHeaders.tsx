@@ -52,7 +52,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const totalHeaderHeight =
     getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
-    (disableHeaderFiltering ? 0 : rootProps.columnHeaderHeight);
+    (disableHeaderFiltering ? 0 : headerHeight);
 
   const columnHeaderFilterFocus = useGridSelector(
     apiRef,
@@ -102,7 +102,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const item =
         filterModel?.items.find((it) => it.field === colDef.field && it.operator !== 'isAnyOf') ??
-        getGridFilter(colDef as any);
+        getGridFilter(colDef);
 
       filters.push(
         <rootProps.slots.headerFilterCell
@@ -118,8 +118,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           headerClassName={headerClassName}
           filterOperators={filterOperators}
           data-field={colDef.field}
-          colType={colDef.type as any}
-          operator={item.operator as any}
           item={item}
           {...rootProps.slotProps?.headerFilterCell}
           {...other}
