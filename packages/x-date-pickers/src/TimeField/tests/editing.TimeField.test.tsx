@@ -174,7 +174,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           key: 'ArrowUp',
           expectedValue: 'hh:mm AM',
-          cursorPosition: 14,
+          cursorPosition: 7,
         });
       });
 
@@ -184,7 +184,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowUp',
           expectedValue: '02:12 PM',
-          cursorPosition: 14,
+          cursorPosition: 7,
         });
       });
 
@@ -194,7 +194,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowUp',
           expectedValue: '02:12 AM',
-          cursorPosition: 14,
+          cursorPosition: 7,
         });
       });
     });
