@@ -52,7 +52,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -68,7 +68,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       render(<ElementToTest value={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);

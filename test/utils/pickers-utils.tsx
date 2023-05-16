@@ -569,7 +569,7 @@ export class MockedDataTransfer implements DataTransfer {
   }
 }
 
-export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily) => {
   switch (componentFamily) {
     case 'clock':
       return 2;
@@ -578,4 +578,19 @@ export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily)
     default:
       return 1;
   }
+};
+
+export const getExpectedOnChangeCount = (
+  componentFamily: PickerComponentFamily,
+  params: OpenPickerParams,
+) => {
+  if (params.type !== 'date-time') {
+    return getChangeCountForComponentFamily(componentFamily);
+  }
+  return (
+    getChangeCountForComponentFamily(componentFamily) +
+    getChangeCountForComponentFamily(
+      params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+    )
+  );
 };
