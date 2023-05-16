@@ -18,6 +18,8 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
 import { GridCellCoordinates } from '../../../models/gridCell';
+import { GridRowEntry } from '../../../models/gridRows';
+import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 
 export const focusStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -140,8 +142,22 @@ export const useGridFocus = (
   const moveFocusToRelativeCell = React.useCallback<GridFocusPrivateApi['moveFocusToRelativeCell']>(
     (id, field, direction) => {
       let columnIndexToFocus = apiRef.current.getColumnIndex(field);
-      let rowIndexToFocus = apiRef.current.getRowIndexRelativeToVisibleRows(id);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+
+      const currentPage = getVisibleRows(apiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
+      const pinnedRows = gridPinnedRowsSelector(apiRef);
+
+      // Include pinned rows as well
+      const currentPageRows = ([] as GridRowEntry[]).concat(
+        pinnedRows.top || [],
+        currentPage.rows,
+        pinnedRows.bottom || [],
+      );
+
+      let rowIndexToFocus = currentPageRows.findIndex((row) => row.id === id);
 
       if (direction === 'right') {
         columnIndexToFocus += 1;
@@ -151,16 +167,11 @@ export const useGridFocus = (
         rowIndexToFocus += 1;
       }
 
-      const currentPage = getVisibleRows(apiRef, {
-        pagination: props.pagination,
-        paginationMode: props.paginationMode,
-      });
-
       if (columnIndexToFocus >= visibleColumns.length) {
         // Go to next row if we are after the last column
         rowIndexToFocus += 1;
 
-        if (rowIndexToFocus < currentPage.rows.length) {
+        if (rowIndexToFocus < currentPageRows.length) {
           // Go to first column of the next row if there's one more row
           columnIndexToFocus = 0;
         }
@@ -174,8 +185,12 @@ export const useGridFocus = (
         }
       }
 
-      rowIndexToFocus = clamp(rowIndexToFocus, 0, currentPage.rows.length - 1);
-      const rowToFocus = currentPage.rows[rowIndexToFocus];
+      rowIndexToFocus = clamp(rowIndexToFocus, 0, currentPageRows.length - 1);
+      const rowToFocus: GridRowEntry | undefined = currentPageRows[rowIndexToFocus];
+
+      if (!rowToFocus) {
+        return;
+      }
 
       const colSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
         rowToFocus.id,
