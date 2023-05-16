@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
@@ -101,22 +100,6 @@ function CustomRangeShortcuts(props) {
     </Box>
   );
 }
-
-CustomRangeShortcuts.propTypes = {
-  isValid: PropTypes.func.isRequired,
-  /**
-   * Ordered array of shortcuts to display.
-   * If empty, does not display the shortcuts.
-   * @default `[]`
-   */
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      getValue: PropTypes.func.isRequired,
-      label: PropTypes.string.isRequired,
-    }),
-  ),
-  onChange: PropTypes.func.isRequired,
-};
 
 export default function CustomizedRangeShortcuts() {
   return (

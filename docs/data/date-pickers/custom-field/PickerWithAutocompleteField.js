@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -84,38 +83,6 @@ function AutocompleteField(props) {
   );
 }
 
-AutocompleteField.propTypes = {
-  disabled: PropTypes.bool,
-  id: PropTypes.string,
-  inputProps: PropTypes.shape({
-    'aria-label': PropTypes.string,
-  }),
-  InputProps: PropTypes.shape({
-    endAdornment: PropTypes.node,
-    startAdornment: PropTypes.node,
-  }),
-  label: PropTypes.node,
-  /**
-   * Callback fired when the value changes.
-   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
-   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
-   * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
-   */
-  onChange: PropTypes.func,
-  /**
-   * It prevents the user from changing the value of the field
-   * (not from interacting with the field).
-   * @default false
-   */
-  readOnly: PropTypes.bool,
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value: PropTypes.object,
-};
-
 function AutocompleteDatePicker(props) {
   const { options, ...other } = props;
 
@@ -137,14 +104,6 @@ function AutocompleteDatePicker(props) {
     />
   );
 }
-
-AutocompleteDatePicker.propTypes = {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.any,
-};
 
 const today = dayjs().startOf('day');
 
