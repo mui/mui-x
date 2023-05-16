@@ -29,6 +29,7 @@ import {
   uncapitalizeObjectKeys,
   UncapitalizeObjectKeys,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
+  buildWarning,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -84,6 +85,11 @@ const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
 
 const DAY_RANGE_SIZE = 40;
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
+
+const warnInvalidCurrentMonthCalendarPosition = buildWarning([
+  'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
+  'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
+]);
 
 const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
@@ -178,6 +184,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     defaultRangePosition: inDefaultRangePosition,
     onRangePositionChange: inOnRangePositionChange,
     calendars,
+    currentMonthCalendarPosition = 1,
     components,
     componentsProps,
     slots: innerSlots,
@@ -463,16 +470,20 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     [calendars],
   );
 
-  const visibleMonths = React.useMemo(
-    () =>
-      Array.from({ length: calendars }).map((_, index) =>
-        utils.setMonth(
-          calendarState.currentMonth,
-          utils.getMonth(calendarState.currentMonth) + index,
-        ),
-      ),
-    [utils, calendarState.currentMonth, calendars],
-  );
+  const visibleMonths = React.useMemo(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (currentMonthCalendarPosition > calendars || currentMonthCalendarPosition < 1) {
+        warnInvalidCurrentMonthCalendarPosition();
+      }
+    }
+
+    const firstMonth = utils.addMonths(
+      calendarState.currentMonth,
+      1 - currentMonthCalendarPosition,
+    );
+
+    return Array.from({ length: calendars }).map((_, index) => utils.addMonths(firstMonth, index));
+  }, [utils, calendarState.currentMonth, calendars, currentMonthCalendarPosition]);
 
   const focusedMonth = React.useMemo(() => {
     if (!autoFocus) {
@@ -599,6 +610,11 @@ DateRangeCalendar.propTypes = {
    * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
+  /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
