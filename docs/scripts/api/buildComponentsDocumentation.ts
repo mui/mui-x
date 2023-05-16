@@ -32,7 +32,7 @@ import {
   getSymbolJSDocTags,
   writePrettifiedFile,
 } from './utils';
-import { Project, Projects } from '../getTypeScriptProjects';
+import { Project, ProjectNames, Projects } from '../getTypeScriptProjects';
 
 interface ReactApi extends ReactDocgenApi {
   /**
@@ -545,6 +545,12 @@ Page.getInitialProps = () => {
 
   // eslint-disable-next-line no-console
   console.log('Built API docs for', reactApi.name);
+
+  return {
+    name: reactApi.name,
+    packages: reactApi.packages,
+    folder: project.documentationFolderName,
+  };
 };
 
 interface BuildComponentsDocumentationOptions {
@@ -576,7 +582,7 @@ export default async function buildComponentsDocumentation(
     }
 
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
-    return componentsWithApiDoc.map<Promise<void>>(async (filename) => {
+    return componentsWithApiDoc.map<Promise<any>>(async (filename) => {
       try {
         return await buildComponentDocumentation({
           filename,
@@ -592,7 +598,6 @@ export default async function buildComponentsDocumentation(
       }
     });
   });
-
   const builds = await Promise.allSettled(promises);
 
   const fails = builds.filter(
@@ -605,6 +610,46 @@ export default async function buildComponentsDocumentation(
   if (fails.length > 0) {
     process.exit(1);
   }
+
+  // Build charts API page indexes
+  const createdPages = builds
+    .filter((promise): promise is PromiseFulfilledResult<any> => promise.status === 'fulfilled')
+    .map((build) => build.value);
+
+  Object.entries({
+    charts: 'x-charts',
+    'date-pickers': 'x-date-pickers',
+  } as { [key: string]: ProjectNames }).forEach(([folderName, projectName]) => {
+    const apiPagesCreated = createdPages
+      .filter(({ folder }) => folder === folderName)
+      .map(({ name, packages, folder }) => {
+        let plan: 'pro' | 'premium' | undefined = 'premium';
+        if (packages.some(({ packageName }) => packageName.includes('pro'))) {
+          plan = 'pro';
+        }
+        if (
+          packages.some(
+            ({ packageName }) => !packageName.includes('premium') && !packageName.includes('pro'),
+          )
+        ) {
+          plan = undefined;
+        }
+        return {
+          pathname: `/x/api/${folder}/${kebabCase(name)}`,
+          title: name,
+          plan,
+        };
+      });
+    apiPagesCreated.sort(({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB));
+
+    writePrettifiedFile(
+      path.resolve(dataFolder, `${folderName}-api-pages.ts`),
+      `import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+
+export default ${JSON.stringify(apiPagesCreated)} as MuiPage[]`,
+      projects.get(projectName)!,
+    );
+  });
 }
 
 interface PageMarkdown {
