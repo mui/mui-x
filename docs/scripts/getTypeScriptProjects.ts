@@ -270,7 +270,6 @@ export const getTypeScriptProjects = () => {
     }),
   );
 
-
   projects.set(
     'x-charts',
     createProject({
