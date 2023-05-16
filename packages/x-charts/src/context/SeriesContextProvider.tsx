@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import barSeriesFormatter from '../BarChart/formatter';
 import scatterSeriesFormatter from '../ScatterChart/formatter';
 import lineSeriesFormatter from '../LineChart/formatter';
@@ -8,7 +9,10 @@ import { ChartSeriesType, FormatterParams, FormatterResult } from '../models/ser
 
 export type SeriesContextProviderProps = {
   series: AllSeriesType[];
-  colors?: string[];
+  /**
+   * Colors used to defaultize series color
+   */
+  colors?: string[] | ((mode: 'light' | 'dark') => string[]);
   children: React.ReactNode;
 };
 
@@ -50,7 +54,12 @@ const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
 };
 
 export function SeriesContextProvider({ series, colors, children }: SeriesContextProviderProps) {
-  const formattedSeries = React.useMemo(() => formatSeries(series, colors), [series, colors]);
+  const theme = useTheme();
+
+  const formattedSeries = React.useMemo(
+    () => formatSeries(series, typeof colors === 'function' ? colors(theme.palette.mode) : colors),
+    [series, colors, theme.palette.mode],
+  );
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;
 }
