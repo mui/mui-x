@@ -61,13 +61,10 @@ describe('<MobileTimePicker /> - Describes', () => {
     type: 'time',
     variant: 'mobile',
     values: [
-      adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 18, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 12, 35)),
     ],
     emptyValue: null,
-    defaultProps: {
-      openTo: 'minutes',
-    },
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
@@ -86,15 +83,35 @@ describe('<MobileTimePicker /> - Describes', () => {
         openPicker({ type: 'time', variant: 'mobile' });
       }
 
-      const newValue = applySameValue ? value : adapterToUse.addMinutes(value, 1);
-      const hourClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
+      const newValue = applySameValue
+        ? value
+        : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+      // change hours
+      const hourClockEvent = getClockTouchEvent(
+        adapterToUse.getHours(newValue),
+        hasMeridiem ? '12hours' : '24hours',
+      );
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      // change minutes
+      const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
 
-      // Close the picker to return to the initial state
+      if (hasMeridiem) {
+        const newHours = adapterToUse.getHours(newValue);
+        // select appropriate meridiem
+        userEvent.mousePress(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+      }
+
+      // Close the picker
       if (!isOpened) {
         userEvent.keyPress(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
+      } else {
+        // return to the hours view in case we'd like to repeat the selection process
+        userEvent.mousePress(screen.getByRole('button', { name: 'open previous view' }));
       }
 
       return newValue;

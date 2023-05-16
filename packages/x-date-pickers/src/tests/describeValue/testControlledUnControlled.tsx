@@ -65,7 +65,22 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.value`', () => {
       const onChange = spy();
 
-      render(<ElementToTest value={values[0]} onChange={onChange} />);
+      function ControlledElementToTest(props) {
+        const [value, setValue] = React.useState(props?.value || null);
+
+        return (
+          <ElementToTest
+            {...props}
+            value={value}
+            onChange={(newValue) => {
+              setValue(newValue);
+              props?.onChange(newValue);
+            }}
+          />
+        );
+      }
+
+      render(<ControlledElementToTest value={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));

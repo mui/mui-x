@@ -572,7 +572,6 @@ export class MockedDataTransfer implements DataTransfer {
 const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily) => {
   switch (componentFamily) {
     case 'clock':
-      return 2;
     case 'multi-section-digital-clock':
       return 3;
     default:
@@ -584,13 +583,26 @@ export const getExpectedOnChangeCount = (
   componentFamily: PickerComponentFamily,
   params: OpenPickerParams,
 ) => {
-  if (params.type !== 'date-time') {
+  if (componentFamily === 'digital-clock') {
     return getChangeCountForComponentFamily(componentFamily);
   }
-  return (
-    getChangeCountForComponentFamily(componentFamily) +
-    getChangeCountForComponentFamily(
+  if (params.type === 'date-time') {
+    return (
+      getChangeCountForComponentFamily(componentFamily) +
+      getChangeCountForComponentFamily(
+        params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+      )
+    );
+  }
+  if (componentFamily === 'picker' && params.type === 'time') {
+    return getChangeCountForComponentFamily(
       params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
-    )
-  );
+    );
+  }
+  if (componentFamily === 'clock') {
+    // the `TimeClock` fires change for both touch move and touch end
+    // but does not have meridiem control
+    return (getChangeCountForComponentFamily(componentFamily) - 1) * 2;
+  }
+  return getChangeCountForComponentFamily(componentFamily);
 };

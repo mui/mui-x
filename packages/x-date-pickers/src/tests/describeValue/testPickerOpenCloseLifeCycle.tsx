@@ -202,7 +202,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           initialChangeCount +
             getExpectedOnChangeCount(componentFamily, pickerParams) -
             // meridiem does not change this time in case of multi section digital clock
-            1,
+            (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
         );
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
       }
