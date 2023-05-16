@@ -1,0 +1,17 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisId": "Id of the axis to render.",
+    "disableLine": "If true, the axis line is disabled.",
+    "disableTicks": "If true, the ticks are disabled.",
+    "fill": "The fill color of the axis text.",
+    "fontSize": "The font size of the axis text.",
+    "label": "The label of the axis.",
+    "labelFontSize": "The font size of the axis label.",
+    "position": "Position of the axis.",
+    "stroke": "The stroke color of the axis line.",
+    "tickSize": "The size of the ticks."
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
+}
