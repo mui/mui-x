@@ -138,6 +138,8 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
         previousViews.current.some((previousView) => !views.includes(previousView)))
     ) {
       setView(views.includes(openTo!) ? openTo! : views[0]);
+      previousViews.current = views;
+      previousOpenTo.current = openTo;
     }
   }, [openTo, setView, view, views]);
 

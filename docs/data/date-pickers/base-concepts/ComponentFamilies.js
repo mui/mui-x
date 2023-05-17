@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -25,10 +24,6 @@ function ProLabel({ children }) {
     </Stack>
   );
 }
-
-ProLabel.propTypes = {
-  children: PropTypes.node,
-};
 
 export default function ComponentFamilies() {
   return (
