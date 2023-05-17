@@ -192,8 +192,40 @@ function AppWrapper(props) {
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
 
-    return { activePage, activePageParents, pages };
-  }, [router.pathname]);
+    const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
+
+    const productIdentifier = {
+      name: 'Data Grid',
+      metadata: 'MUI X',
+      versions: [
+        {
+          text: 'v6',
+          ...(process.env.DATA_GRID_VERSION.startsWith('6')
+            ? {
+                text: `v${process.env.DATA_GRID_VERSION}`,
+                current: true,
+              }
+            : {
+                href: `https://mui.com${languagePrefix}/components/data-grid/`,
+              }),
+        },
+        {
+          text: 'v5',
+          ...(process.env.DATA_GRID_VERSION.startsWith('5')
+            ? {
+                text: `v${process.env.DATA_GRID_VERSION}`,
+                current: true,
+              }
+            : {
+                href: `https://v5.mui.com${languagePrefix}/components/data-grid/`,
+              }),
+        },
+        { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+      ],
+    };
+
+    return { activePage, activePageParents, pages, productIdentifier };
+  }, [pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
