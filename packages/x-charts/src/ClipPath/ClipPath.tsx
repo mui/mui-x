@@ -5,7 +5,7 @@ export type ClipPathProps = {
   id: string;
 };
 
-export function ClipPath(props) {
+export function ClipPath(props: ClipPathProps) {
   const { id } = props;
   const { left, top, width, height } = React.useContext(DrawingContext);
 
