@@ -1,8 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
@@ -26,12 +23,14 @@ function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <MenuItem onClick={showColumns}>
-      <ListItemIcon>
+    <rootProps.slots.baseMenuItem onClick={showColumns} {...rootProps.slotProps?.baseMenuItem}>
+      <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
         <rootProps.slots.columnMenuManageColumnsIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('columnMenuManageColumns')}</ListItemText>
-    </MenuItem>
+      </rootProps.slots.baseListItemIcon>
+      <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+        {apiRef.current.getLocaleText('columnMenuManageColumns')}
+      </rootProps.slots.baseListItemText>
+    </rootProps.slots.baseMenuItem>
   );
 }
 

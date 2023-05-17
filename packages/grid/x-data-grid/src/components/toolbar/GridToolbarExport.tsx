@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ButtonProps } from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridCsvExportOptions, GridPrintExportOptions } from '../../models/gridExport';
 import { GridToolbarExportContainer } from './GridToolbarExportContainer';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridExportDisplayOptions {
   /**
@@ -32,34 +32,38 @@ export interface GridToolbarExportProps extends ButtonProps {
 export function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
   const apiRef = useGridApiContext();
   const { hideMenu, options, ...other } = props;
+  const rootProps = useGridRootProps();
 
   return (
-    <MenuItem
+    <rootProps.slots.baseMenuItem
       onClick={() => {
         apiRef.current.exportDataAsCsv(options);
         hideMenu?.();
       }}
       {...other}
+      {...rootProps.slotProps?.baseMenuItem}
     >
       {apiRef.current.getLocaleText('toolbarExportCSV')}
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   );
 }
 
 export function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   const apiRef = useGridApiContext();
   const { hideMenu, options, ...other } = props;
+  const rootProps = useGridRootProps();
 
   return (
-    <MenuItem
+    <rootProps.slots.baseMenuItem
       onClick={() => {
         apiRef.current.exportDataAsPrint(options);
         hideMenu?.();
       }}
       {...other}
+      {...rootProps.slotProps?.baseMenuItem}
     >
       {apiRef.current.getLocaleText('toolbarExportPrint')}
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   );
 }
 

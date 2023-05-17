@@ -1,8 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
@@ -25,12 +22,14 @@ function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <MenuItem onClick={showFilter}>
-      <ListItemIcon>
+    <rootProps.slots.baseMenuItem onClick={showFilter} {...rootProps.slotProps?.baseMenuItem}>
+      <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
         <rootProps.slots.columnMenuFilterIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('columnMenuFilter')}</ListItemText>
-    </MenuItem>
+      </rootProps.slots.baseListItemIcon>
+      <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+        {apiRef.current.getLocaleText('columnMenuFilter')}
+      </rootProps.slots.baseListItemText>
+    </rootProps.slots.baseMenuItem>
   );
 }
 

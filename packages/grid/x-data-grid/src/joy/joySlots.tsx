@@ -13,6 +13,8 @@ import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import JoyBox from '@mui/joy/Box';
 import JoyTypography from '@mui/joy/Typography';
 import JoyMenu from '@mui/joy/Menu';
+import JoyMenuItem from '@mui/joy/MenuItem';
+import JoyListItemDecorator from '@mui/joy/ListItemDecorator';
 // eslint-disable-next-line no-restricted-imports
 import ClickAwayListener from '@mui/base/ClickAwayListener';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
@@ -435,6 +437,9 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
   baseFormControl: JoyFormControl,
+  baseMenuItem: JoyMenuItem,
+  baseListItemIcon: JoyListItemDecorator,
+  baseListItemText: React.Fragment,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
   pagination: Pagination,

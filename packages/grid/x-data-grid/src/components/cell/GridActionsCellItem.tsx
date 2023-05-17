@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { IconButtonProps } from '@mui/material/IconButton';
-import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import type { IconButtonProps } from '@mui/material/IconButton';
+import type { MenuItemProps } from '@mui/material/MenuItem';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type GridActionsCellItemProps = {
@@ -42,10 +41,19 @@ const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellI
     }
 
     return (
-      <MenuItem ref={ref} {...(other as any)} onClick={onClick}>
-        {icon && <ListItemIcon>{icon}</ListItemIcon>}
+      <rootProps.slots.baseMenuItem
+        ref={ref}
+        {...(other as any)}
+        onClick={onClick}
+        {...rootProps.slotProps?.baseMenuItem}
+      >
+        {icon && (
+          <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
+            {icon}
+          </rootProps.slots.baseListItemIcon>
+        )}
         {label}
-      </MenuItem>
+      </rootProps.slots.baseMenuItem>
     );
   },
 );

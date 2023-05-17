@@ -1,8 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../../models/gridSortModel';
@@ -45,26 +42,43 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   return (
     <React.Fragment>
       {sortingOrder.includes('asc') && sortDirection !== 'asc' ? (
-        <MenuItem onClick={onSortMenuItemClick} data-value="asc">
-          <ListItemIcon>
+        <rootProps.slots.baseMenuItem
+          onClick={onSortMenuItemClick}
+          data-value="asc"
+          {...rootProps.slotProps?.baseMenuItem}
+        >
+          <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
             <rootProps.slots.columnMenuSortAscendingIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortAsc')}</ListItemText>
-        </MenuItem>
+          </rootProps.slots.baseListItemIcon>
+          <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+            {apiRef.current.getLocaleText('columnMenuSortAsc')}
+          </rootProps.slots.baseListItemText>
+        </rootProps.slots.baseMenuItem>
       ) : null}
       {sortingOrder.includes('desc') && sortDirection !== 'desc' ? (
-        <MenuItem onClick={onSortMenuItemClick} data-value="desc">
-          <ListItemIcon>
+        <rootProps.slots.baseMenuItem
+          onClick={onSortMenuItemClick}
+          data-value="desc"
+          {...rootProps.slotProps?.baseMenuItem}
+        >
+          <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
             <rootProps.slots.columnMenuSortDescendingIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortDesc')}</ListItemText>
-        </MenuItem>
+          </rootProps.slots.baseListItemIcon>
+          <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+            {apiRef.current.getLocaleText('columnMenuSortDesc')}
+          </rootProps.slots.baseListItemText>
+        </rootProps.slots.baseMenuItem>
       ) : null}
       {sortingOrder.includes(null) && sortDirection != null ? (
-        <MenuItem onClick={onSortMenuItemClick}>
-          <ListItemIcon />
-          <ListItemText>{apiRef.current.getLocaleText('columnMenuUnsort')}</ListItemText>
-        </MenuItem>
+        <rootProps.slots.baseMenuItem
+          onClick={onSortMenuItemClick}
+          {...rootProps.slotProps?.baseMenuItem}
+        >
+          <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon} />
+          <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+            {apiRef.current.getLocaleText('columnMenuUnsort')}
+          </rootProps.slots.baseListItemText>
+        </rootProps.slots.baseMenuItem>
       ) : null}
     </React.Fragment>
   );

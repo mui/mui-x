@@ -9,6 +9,9 @@ import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUIChip from '@mui/material/Chip';
+import MUIMenuItem from '@mui/material/MenuItem';
+import MUIListItemIcon from '@mui/material/ListItemIcon';
+import MUIListItemText from '@mui/material/ListItemText';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -93,6 +96,9 @@ const materialSlots = {
   BaseInputLabel: MUIInputLabel,
   BaseSelectOption: MUISelectOption,
   BaseChip: MUIChip,
+  BaseMenuItem: MUIMenuItem,
+  BaseListItemIcon: MUIListItemIcon,
+  BaseListItemText: MUIListItemText,
   Menu: MUIMenu,
 };
 
