@@ -111,6 +111,10 @@ XAxis.propTypes = {
    */
   axisId: PropTypes.string.isRequired,
   /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
    * If true, the axis line is disabled.
    * @default false
    */
@@ -125,11 +129,6 @@ XAxis.propTypes = {
    * @default 'currentColor'
    */
   fill: PropTypes.string,
-  /**
-   * The font size of the axis text.
-   * @default 12
-   */
-  fontSize: PropTypes.number,
   /**
    * The label of the axis.
    */
@@ -148,6 +147,11 @@ XAxis.propTypes = {
    * @default 'currentColor'
    */
   stroke: PropTypes.string,
+  /**
+   * The font size of the axis ticks text.
+   * @default 12
+   */
+  tickFontSize: PropTypes.number,
   /**
    * The size of the ticks.
    * @default 6

@@ -59,7 +59,6 @@ function LineChart(props: LineChartProps) {
     >
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <LinePlot />
-
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       {children}
@@ -80,14 +79,15 @@ LineChart.propTypes = {
   bottomAxis: PropTypes.oneOfType([
     PropTypes.shape({
       axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
-      fontSize: PropTypes.number,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
       stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -110,14 +110,15 @@ LineChart.propTypes = {
   leftAxis: PropTypes.oneOfType([
     PropTypes.shape({
       axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
-      fontSize: PropTypes.number,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
       stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -136,14 +137,15 @@ LineChart.propTypes = {
   rightAxis: PropTypes.oneOfType([
     PropTypes.shape({
       axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
-      fontSize: PropTypes.number,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
       stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -189,14 +191,15 @@ LineChart.propTypes = {
   topAxis: PropTypes.oneOfType([
     PropTypes.shape({
       axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
-      fontSize: PropTypes.number,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
       stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
     }),
     PropTypes.string,
@@ -211,40 +214,48 @@ LineChart.propTypes = {
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
+      classes: PropTypes.object,
       data: PropTypes.array,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
-      fontSize: PropTypes.number,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.number,
+      maxTicks: PropTypes.number,
       min: PropTypes.number,
+      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
   yAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
+      classes: PropTypes.object,
       data: PropTypes.array,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
-      fontSize: PropTypes.number,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.number,
+      maxTicks: PropTypes.number,
       min: PropTypes.number,
+      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
