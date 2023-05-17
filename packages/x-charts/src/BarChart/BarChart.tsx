@@ -7,6 +7,7 @@ import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
+import { Legend } from '../Legend';
 
 export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
@@ -59,6 +60,8 @@ export function BarChart(props: BarChartProps) {
     >
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <BarPlot />
+
+      <Legend />
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       {children}
