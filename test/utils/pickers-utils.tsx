@@ -356,13 +356,18 @@ interface BuildFieldInteractionsParams<P extends {}> {
   Component: React.FunctionComponent<P>;
 }
 
+export type FieldSectionSelector = (
+  selectedSection: FieldSectionType | undefined,
+  index?: 'first' | 'last',
+) => void;
+
 export interface BuildFieldInteractionsResponse<P extends {}> {
-  renderField: (props: P) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
+  renderFromProps: (
+    props: P,
+    componentFamily?: 'picker' | 'field',
+  ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     input: HTMLInputElement;
-    selectSection: (
-      selectedSection: FieldSectionType | undefined,
-      index?: 'first' | 'last',
-    ) => void;
+    selectSection: FieldSectionSelector;
   };
   clickOnInput: (
     input: HTMLInputElement,
@@ -412,33 +417,55 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  const renderField = (props: P) => {
+  const renderFromProps = (props: P, componentFamily: 'picker' | 'field' = 'field') => {
     let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
 
     function WrappedComponent() {
       fieldRef = React.useRef<FieldRef<FieldSection>>(null);
-      const componentProps = {
+      const allProps = {
         ...props,
-        unstableFieldRef: fieldRef,
-      };
+      } as any;
 
-      return <Component {...(componentProps as any as P)} />;
+      if (componentFamily === 'field') {
+        allProps.unstableFieldRef = fieldRef;
+      } else {
+        if (!allProps.slotProps) {
+          allProps.slotProps = {};
+        }
+
+        if (!allProps.slotProps.field) {
+          allProps.slotProps.field = {};
+        }
+
+        const hasMultipleInputs =
+          // @ts-ignore
+          Component.render.name.includes('Range') &&
+          allProps.slots?.field?.fieldType !== 'single-input';
+        if (hasMultipleInputs) {
+          allProps.slotProps.field.unstableStartFieldRef = fieldRef;
+        } else {
+          allProps.slotProps.field.unstableFieldRef = fieldRef;
+        }
+      }
+
+      return <Component {...(allProps as P)} />;
     }
 
     const result = render(<WrappedComponent />);
-    const input = getTextbox();
 
-    // focus input to trigger setting placeholder as value if no value is present
-    act(() => {
-      input.focus();
-    });
-    // make sure the value of the input is rendered before proceeding
-    clock.runToLast();
+    // Can't use `getTextbox` because we might have 2 input on multi input range fields.
+    const input = screen.queryAllByRole<HTMLInputElement>('textbox')[0];
 
-    const selectSection = (
-      selectedSection: FieldSectionType | undefined,
-      index: 'first' | 'last' = 'first',
-    ) => {
+    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
+      if (document.activeElement !== input) {
+        // focus input to trigger setting placeholder as value if no value is present
+        act(() => {
+          input.focus();
+        });
+        // make sure the value of the input is rendered before proceeding
+        clock.runToLast();
+      }
+
       let clickPosition: number;
       if (selectedSection) {
         const sections = fieldRef.current!.getSections();
@@ -461,7 +488,7 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    const { input, selectSection } = renderField(props as any as P);
+    const { input, selectSection } = renderFromProps(props as any as P);
     selectSection(selectedSection);
 
     userEvent.keyPress(input, { key });
@@ -473,7 +500,7 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    const { input, selectSection } = renderField(props as any as P);
+    const { input, selectSection } = renderFromProps(props as any as P);
     selectSection(selectedSection);
 
     keyStrokes.forEach((keyStroke) => {
@@ -486,7 +513,7 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  return { clickOnInput, testFieldKeyPress, testFieldChange, renderField };
+  return { clickOnInput, testFieldKeyPress, testFieldChange, renderFromProps };
 };
 
 export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {

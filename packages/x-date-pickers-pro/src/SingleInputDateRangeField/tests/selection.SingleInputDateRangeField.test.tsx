@@ -13,7 +13,7 @@ import {
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-  const { renderField } = buildFieldInteractions({
+  const { renderFromProps } = buildFieldInteractions({
     clock,
     render,
     Component: SingleInputDateRangeField,
@@ -45,7 +45,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', () => {
-      const { input, selectSection } = renderField({
+      const { input, selectSection } = renderFromProps({
         value: [null, adapterToUse.date(new Date(2022, 1, 24))],
       });
 
@@ -65,7 +65,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     });
 
     it('should not change the selection when clicking on the only already selected section', () => {
-      const { input, selectSection } = renderField({
+      const { input, selectSection } = renderFromProps({
         value: [null, adapterToUse.date(new Date(2022, 1, 24))],
       });
 
@@ -87,7 +87,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
   describe('key: ArrowRight', () => {
     it('should allows to move from left to right with ArrowRight', () => {
-      const { input, selectSection } = renderField({});
+      const { input, selectSection } = renderFromProps({});
 
       selectSection('month');
       expect(getCleanedSelectedContent(input)).to.equal('MM');
@@ -109,7 +109,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     });
 
     it('should stay on the current section when the last section is selected', () => {
-      const { input, selectSection } = renderField({});
+      const { input, selectSection } = renderFromProps({});
 
       selectSection('year', 'last');
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
@@ -120,7 +120,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
   describe('key: ArrowLeft', () => {
     it('should allows to move from right to left with ArrowLeft', () => {
-      const { input, selectSection } = renderField({});
+      const { input, selectSection } = renderFromProps({});
 
       selectSection('year', 'last');
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
@@ -141,7 +141,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     });
 
     it('should stay on the current section when the first section is selected', () => {
-      const { input, selectSection } = renderField({});
+      const { input, selectSection } = renderFromProps({});
 
       selectSection('month');
       expect(getCleanedSelectedContent(input)).to.equal('MM');
