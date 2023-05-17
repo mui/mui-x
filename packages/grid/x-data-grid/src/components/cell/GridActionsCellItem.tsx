@@ -52,6 +52,7 @@ const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellI
             {icon}
           </rootProps.slots.baseListItemIcon>
         )}
+
         {label}
       </rootProps.slots.baseMenuItem>
     );

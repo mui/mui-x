@@ -96,10 +96,10 @@ const materialSlots = {
   BaseInputLabel: MUIInputLabel,
   BaseSelectOption: MUISelectOption,
   BaseChip: MUIChip,
+  BaseMenu: MUIMenu,
   BaseMenuItem: MUIMenuItem,
   BaseListItemIcon: MUIListItemIcon,
   BaseListItemText: MUIListItemText,
-  Menu: MUIMenu,
 };
 
 export default materialSlots;

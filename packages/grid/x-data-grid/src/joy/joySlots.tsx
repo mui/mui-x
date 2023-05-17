@@ -410,7 +410,7 @@ const Pagination = React.forwardRef<
   );
 });
 
-const Menu = React.forwardRef<HTMLDivElement, NonNullable<GridSlotsComponentsProps['menu']>>(
+const Menu = React.forwardRef<HTMLDivElement, NonNullable<GridSlotsComponentsProps['baseMenu']>>(
   ({ sx, target, onClickAway, onExited, ...props }, ref) => {
     return (
       <ClickAwayListener
@@ -437,13 +437,13 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
   baseFormControl: JoyFormControl,
+  baseMenu: Menu,
   baseMenuItem: JoyMenuItem,
   baseListItemIcon: JoyListItemDecorator,
   baseListItemText: React.Fragment,
   // BaseTooltip: MUITooltip,
   // BasePopper: MUIPopper,
   pagination: Pagination,
-  menu: Menu,
 };
 
 export default joySlots;

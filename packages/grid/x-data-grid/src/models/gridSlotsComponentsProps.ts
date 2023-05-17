@@ -44,7 +44,7 @@ export interface BaseListItemIconOverrides {}
 export interface BaseListItemTextOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
-export interface MenuPropsOverrides {}
+export interface BaseMenuPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
 export interface ColumnMenuPropsOverrides {}
 export interface ColumnsPanelPropsOverrides {}
@@ -79,6 +79,7 @@ export interface GridSlotsComponentsProps {
     BaseSelectOptionPropsOverrides
   >;
   baseChip?: SlotProps<ChipProps, BaseChipPropsOverrides>;
+  baseMenu?: SlotProps<GridMenuProps, BaseMenuPropsOverrides>;
   baseMenuItem?: SlotProps<MenuItemProps, BaseMenuItemOverrides>;
   baseListItemIcon?: SlotProps<ListItemIconProps, BaseListItemIconOverrides>;
   baseListItemText?: SlotProps<ListItemTextProps, BaseListItemTextOverrides>;
@@ -102,5 +103,4 @@ export interface GridSlotsComponentsProps {
   >;
   row?: SlotProps<GridRowProps, RowPropsOverrides>;
   toolbar?: SlotProps<GridToolbarProps, ToolbarPropsOverrides>;
-  menu?: SlotProps<GridMenuProps, MenuPropsOverrides>;
 }

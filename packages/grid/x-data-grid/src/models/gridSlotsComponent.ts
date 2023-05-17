@@ -57,6 +57,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BaseInputLabel: React.JSXElementConstructor<any>;
   /**
+   * The custom component rendered for menu.
+   * @default Menu
+   */
+  BaseMenu: React.JSXElementConstructor<any>;
+  /**
    * The custom SelectOption component used in the grid.
    * @default MenuItem
    */
@@ -161,11 +166,6 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default GridRow
    */
   Row: React.JSXElementConstructor<any>;
-  /**
-   * Component rendered for menu.
-   * @default Menu
-   */
-  Menu: React.JSXElementConstructor<any>;
 }
 
 export interface UncapitalizedGridSlotsComponent

@@ -58,9 +58,9 @@ function GridMenu(props: GridMenuProps) {
   }, [apiRef, open, target]);
 
   return (
-    <rootProps.slots.menu
+    <rootProps.slots.baseMenu
       {...props}
-      {...rootProps.slotProps?.menu}
+      {...rootProps.slotProps?.baseMenu}
       className={clsx(className, classes.root)}
       sx={{
         zIndex: 'modal',
@@ -70,7 +70,7 @@ function GridMenu(props: GridMenuProps) {
       }}
     >
       {children}
-    </rootProps.slots.menu>
+    </rootProps.slots.baseMenu>
   );
 }
 
