@@ -1,6 +1,5 @@
 // TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPro,
   getDataGridUtilityClass,
@@ -205,10 +204,6 @@ function GroupingCellWithLazyLoading(props) {
     </Box>
   );
 }
-
-GroupingCellWithLazyLoading.propTypes = {
-  hideDescendantCount: PropTypes.bool,
-};
 
 const CUSTOM_GROUPING_COL_DEF = {
   renderCell: (params) => <GroupingCellWithLazyLoading {...params} />,

@@ -61,10 +61,10 @@ export function LineChart(props: LineChartProps) {
         tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
       }
     >
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <g clipPath={`url(#${clipPathId})`}>
         <LinePlot />
       </g>
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
