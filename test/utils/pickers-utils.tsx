@@ -22,9 +22,10 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
 
 export type AdapterName =
   | 'date-fns'
@@ -152,10 +153,22 @@ export type OpenPickerParams =
       type: 'date-range';
       variant: 'mobile' | 'desktop';
       initialFocus: 'start' | 'end';
+      /**
+       * @default false
+       */
+      isSingleInput?: boolean;
     };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
+    if (params.isSingleInput) {
+      const target = screen.getByRole<HTMLInputElement>('textbox');
+      userEvent.mousePress(target);
+      const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
+
+      return target.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
     const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
 
     return userEvent.mousePress(target);
@@ -298,7 +311,17 @@ export const stubMatchMedia = (matches = true) =>
 export const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
-export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
+  const clean = text.replace(/\u202f/g, ' ');
+  switch (specialCase) {
+    case 'singleDigit':
+      return clean.replace(/\u200e/g, '');
+    case 'RTL':
+      return clean.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+    default:
+      return clean;
+  }
+};
 
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
@@ -306,18 +329,18 @@ export const getCleanedSelectedContent = (input: HTMLInputElement) =>
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
-  shouldRemoveDashSpaces = false,
+  specialCase?: 'singleDigit' | 'RTL',
 ) => {
-  let value = cleanText(input.value);
-  if (shouldRemoveDashSpaces) {
-    value = value.replace(/ \/ /g, '/');
-  }
-
+  const value = cleanText(input.value, specialCase);
   return expect(value).to.equal(expectedValue);
 };
 
-export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
-  const cleanPlaceholder = cleanText(input.placeholder).replace(/ \/ /g, '/');
+export const expectInputPlaceholder = (
+  input: HTMLInputElement,
+  placeholder: string,
+  specialCase?: 'singleDigit' | 'RTL',
+) => {
+  const cleanPlaceholder = cleanText(input.placeholder, specialCase);
   return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
@@ -438,7 +461,11 @@ export const buildFieldInteractions = <P extends {}>({
 
     keyStrokes.forEach((keyStroke) => {
       fireEvent.change(input, { target: { value: keyStroke.value } });
-      expectInputValue(input, keyStroke.expected);
+      expectInputValue(
+        input,
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
     });
   };
 
@@ -542,3 +569,14 @@ export class MockedDataTransfer implements DataTransfer {
     this.yOffset = yOffset;
   }
 }
+
+export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+  switch (componentFamily) {
+    case 'clock':
+      return 2;
+    case 'multi-section-digital-clock':
+      return 3;
+    default:
+      return 1;
+  }
+};

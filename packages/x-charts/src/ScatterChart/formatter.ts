@@ -1,18 +1,11 @@
-import defaultizeCartesianSeries from '../internals/defaultizeCartesianSeries';
-import { ScatterSeriesType } from '../models/seriesType';
+import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
+import { Formatter } from '../models/seriesType/config';
 
-export type FormatterParams = {
-  series: { [id: string]: ScatterSeriesType };
-  seriesOrder: string[];
-};
-
-export type FormatterResult = {
-  series: { [id: string]: ScatterSeriesType };
-  seriesOrder: string[];
-};
-
-const formatter = ({ series, seriesOrder }: FormatterParams): FormatterResult => {
-  return { series: defaultizeCartesianSeries(series), seriesOrder };
+const formatter: Formatter<'scatter'> = ({ series, seriesOrder }) => {
+  return {
+    series: defaultizeValueFormatter(series, (v) => `(${v.x}, ${v.y})`),
+    seriesOrder,
+  };
 };
 
 export default formatter;

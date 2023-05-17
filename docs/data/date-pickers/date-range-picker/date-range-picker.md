@@ -25,11 +25,17 @@ Check-out their documentation page for more information:
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
-## Uncontrolled vs. Controlled
-
-The component can be uncontrolled or controlled.
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateRangePickerValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Available components
 
@@ -72,6 +78,16 @@ This prop will be ignored on the mobile picker.
 :::
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
+
+### Use a single input field
+
+You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing:
+
+{{"demo": "SingleInputDateRangePicker.js"}}
+
+:::info
+For more information, check out the [Custom field](/x/react-date-pickers/custom-field/#use-single-input-fields-on-range-pickers) page.
+:::
 
 ### Add shortcuts
 

@@ -15,8 +15,8 @@ import { RangeFieldSection } from '../internal/models/fields';
 
 export type UseMultiInputTimeRangeFieldParams<
   TDate,
-  TTextFieldProps extends {},
-> = UseMultiInputRangeFieldParams<UseMultiInputTimeRangeFieldProps<TDate>, TTextFieldProps>;
+  TTextFieldSlotProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
 export interface UseMultiInputTimeRangeFieldProps<TDate>
   extends Omit<UseTimeRangeFieldProps<TDate>, 'unstableFieldRef'> {

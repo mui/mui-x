@@ -8,8 +8,9 @@ import {
   UseTimeFieldDefaultizedProps,
   UseTimeFieldParams,
 } from './TimeField.types';
-import { validateTime } from '../internals/hooks/validation/useTimeValidation';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { useUtils } from '../internals/hooks/useUtils';
+import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 
 const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   props: UseTimeFieldProps<TDate>,
@@ -28,54 +29,20 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
 };
 
 export const useTimeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseTimeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    onChange,
-    readOnly,
-    onError,
-    disableFuture,
-    disablePast,
-    minTime,
-    maxTime,
-    minutesStep,
-    shouldDisableClock,
-    shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation,
-    selectedSections,
-    onSelectedSectionsChange,
-    ampm,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedTimeField<TDate, TChildProps>(props);
+  const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
+    typeof props,
+    keyof UseTimeFieldProps<any>
+  >(props, 'time');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseTimeFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
-      readOnly,
-      onError,
-      disableFuture,
-      disablePast,
-      minTime,
-      maxTime,
-      minutesStep,
-      shouldDisableClock,
-      shouldDisableTime,
-      disableIgnoringDatePartForTimeValidation,
-      selectedSections,
-      onSelectedSectionsChange,
-      ampm,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateTime,

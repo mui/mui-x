@@ -31,6 +31,10 @@
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
@@ -50,7 +54,7 @@
     "openTo": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
     "orientation": {
@@ -68,6 +72,7 @@
       "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
     },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "skipDisabled": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
@@ -76,15 +81,26 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
+    "timeSteps": {
+      "type": {
+        "name": "shape",
+        "description": "{ hours?: number, minutes?: number, seconds?: number }"
+      },
+      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+    },
     "value": { "type": { "name": "any" } },
     "view": {
       "type": {
         "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+        "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
     "viewRenderers": {
-      "type": { "name": "shape", "description": "{ hours?: func, minutes?: func, seconds?: func }" }
+      "type": {
+        "name": "shape",
+        "description": "{ hours?: func, meridiem?: func, minutes?: func, seconds?: func }"
+      }
     },
     "views": {
       "type": {
@@ -105,6 +121,14 @@
       "type": { "name": "elementType" }
     },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
+    "DigitalClockItem": {
+      "default": "MenuItem from '@mui/material'",
+      "type": { "name": "elementType" }
+    },
+    "DigitalClockSectionItem": {
+      "default": "MenuItem from '@mui/material'",
+      "type": { "name": "elementType" }
+    },
     "Field": { "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
@@ -124,6 +148,7 @@
   "name": "TimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePicker" },
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePicker.tsx",
+  "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimePicker" },

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { UncapitalizeObjectKeys } from '../internals/utils';
-import { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import type { UncapitalizeObjectKeys } from '../internals/utils';
+import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -61,6 +61,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default MenuItem
    */
   BaseSelectOption: React.JSXElementConstructor<any>;
+  /**
+   * The custom Chip component used in the grid.
+   * @default Chip
+   */
+  BaseChip: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each cell.
    * @default GridCell

@@ -1,4 +1,8 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import standardNavIcons from '@mui/monorepo/docs/src/modules/components/AppNavIcons';
+import ChartIcon from '@mui/icons-material/BarChartRounded';
+import TableViewIcon from '@mui/icons-material/TableViewRounded';
+import DatePickerIcon from '@mui/icons-material/DateRangeRounded';
 
 const isPreview =
   process.env.NODE_ENV === 'development' ||
@@ -9,12 +13,12 @@ const pages: MuiPage[] = [
   {
     pathname: '/blog/mui-x-v6/',
     title: "✨ What's new in v6? ✨",
-    icon: 'VisibilityIcon',
+    icon: standardNavIcons.VisibilityIcon,
   },
   {
     pathname: '/x/introduction-group',
     title: 'Introduction',
-    icon: 'DescriptionIcon',
+    icon: standardNavIcons.DescriptionIcon,
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
@@ -26,7 +30,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-data-grid-group',
     title: 'Data Grid',
-    icon: 'TableViewIcon',
+    icon: TableViewIcon,
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
@@ -70,6 +74,7 @@ const pages: MuiPage[] = [
         ],
       },
       { pathname: '/x/react-data-grid/export' },
+      { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
       { pathname: '/x/react-data-grid/components' },
       { pathname: '/x/react-data-grid/style' },
       { pathname: '/x/react-data-grid/localization' },
@@ -174,7 +179,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers-group',
     title: 'Date and Time Pickers',
-    icon: 'DatePickerIcon',
+    icon: DatePickerIcon,
     children: [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
@@ -195,6 +200,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
           { pathname: '/x/react-date-pickers/time-field', title: 'Time Field', newFeature: true },
           { pathname: '/x/react-date-pickers/time-clock', title: 'Time Clock' },
+          {
+            pathname: '/x/react-date-pickers/digital-clock',
+            title: 'Digital Clock',
+            newFeature: true,
+          },
         ],
       },
       {
@@ -334,6 +344,7 @@ const pages: MuiPage[] = [
             title: 'DesktopDateTimePicker',
           },
           { pathname: '/x/api/date-pickers/desktop-time-picker', title: 'DesktopTimePicker' },
+          { pathname: '/x/api/date-pickers/digital-clock', title: 'DigitalClock' },
           { pathname: '/x/api/date-pickers/localization-provider', title: 'LocalizationProvider' },
           { pathname: '/x/api/date-pickers/mobile-date-picker', title: 'MobileDatePicker' },
           {
@@ -347,6 +358,10 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
           { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
+          {
+            pathname: '/x/api/date-pickers/multi-section-digital-clock',
+            title: 'MultiSectionDigitalClock',
+          },
           {
             pathname: '/x/api/date-pickers/multi-input-date-range-field',
             title: 'MultiInputDateRangeField',
@@ -404,7 +419,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/migration-group',
     title: 'Migration',
-    icon: 'BookIcon',
+    icon: standardNavIcons.BookIcon,
     children: [
       {
         pathname: '/x/migration-v6',
@@ -438,15 +453,25 @@ const pages: MuiPage[] = [
         {
           pathname: '/x/react-charts-group',
           title: 'Charts 🚧',
-          icon: 'ChartIcon',
+          icon: ChartIcon,
           children: [
-            { pathname: '/x/react-charts', title: '🚧 Overview' },
-            { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
-            { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
+            { pathname: '/x/react-charts', title: 'Overview' },
+            { pathname: '/x/react-charts/bars', title: 'Bars' },
+            { pathname: '/x/react-charts/lines', title: 'Lines' },
+            { pathname: '/x/react-charts/scatter', title: 'Scatter' },
+            {
+              pathname: '',
+              title: 'Common components',
+              children: [
+                { pathname: '/x/react-charts/axis', title: 'Axis' },
+                { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
+                { pathname: '/x/react-charts/styling', title: 'Styling' },
+              ],
+            },
             { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
-            { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
             { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
             { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
+            { pathname: '/x/react-charts/gantt', title: '🚧 Gantt' },
             { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
             { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
             { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },

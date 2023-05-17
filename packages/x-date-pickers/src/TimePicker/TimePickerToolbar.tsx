@@ -15,9 +15,10 @@ import {
   timePickerToolbarClasses,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
-import { TimeView } from '../models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, TimeView> {
+export interface TimePickerToolbarProps<TDate>
+  extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem> {
   ampm?: boolean;
   ampmInClock?: boolean;
   classes?: Partial<TimePickerToolbarClasses>;
@@ -297,10 +298,9 @@ TimePickerToolbar.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired,
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
+    .isRequired,
 } as any;
 
 export { TimePickerToolbar };

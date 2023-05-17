@@ -68,4 +68,41 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'Escaped January Escaped 2019');
   });
+
+  it('should add spaces around `/` when `formatDensity = "spacious"`', () => {
+    const { setProps } = render(<DateField formatDensity="spacious" />);
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MM / DD / YYYY');
+
+    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    expectInputValue(input, '01 / 01 / 2019');
+  });
+
+  it('should add spaces around `.` when `formatDensity = "spacious"`', () => {
+    const { setProps } = render(
+      <DateField
+        formatDensity="spacious"
+        format={adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '.')}
+      />,
+    );
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MM . DD . YYYY');
+
+    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    expectInputValue(input, '01 . 01 . 2019');
+  });
+
+  it('should add spaces around `-` when `formatDensity = "spacious"`', () => {
+    const { setProps } = render(
+      <DateField
+        formatDensity="spacious"
+        format={adapter.expandFormat(adapter.formats.keyboardDate).replace(/\//g, '-')}
+      />,
+    );
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MM - DD - YYYY');
+
+    setProps({ value: adapter.date(new Date(2019, 0, 1)) });
+    expectInputValue(input, '01 - 01 - 2019');
+  });
 });

@@ -8,9 +8,10 @@ import {
   UseDateFieldDefaultizedProps,
   UseDateFieldParams,
 } from './DateField.types';
-import { validateDate } from '../internals/hooks/validation/useDateValidation';
+import { validateDate } from '../internals/utils/validation/validateDate';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
+import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 
 const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   props: UseDateFieldProps<TDate>,
@@ -29,50 +30,20 @@ const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
 };
 
 export const useDateField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseDateFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    onChange,
-    readOnly,
-    onError,
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedDateField<TDate, TChildProps>(props);
+  const props = useDefaultizedDateField<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
+    typeof props,
+    keyof UseDateFieldProps<TDate>
+  >(props, 'date');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseDateFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
-      readOnly,
-      onError,
-      shouldDisableDate,
-      shouldDisableMonth,
-      shouldDisableYear,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDate,

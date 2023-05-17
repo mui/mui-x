@@ -11,6 +11,10 @@ export type FieldSectionType =
   | 'seconds'
   | 'meridiem';
 
+export type FieldSectionContentType = 'digit' | 'digit-with-letter' | 'letter';
+
+export type FieldValueType = 'date' | 'time' | 'date-time';
+
 export interface FieldSection {
   /**
    * Value of the section, as rendered inside the input.
@@ -23,6 +27,11 @@ export interface FieldSection {
    */
   format: string;
   /**
+   * Maximum length of the value, only defined for "digit" sections.
+   * Will be used to determine how many leading zeros should be added to the value.
+   */
+  maxLength: number | null;
+  /**
    * Placeholder rendered when the value of this section is empty.
    */
   placeholder: string;
@@ -34,12 +43,23 @@ export interface FieldSection {
    * Type of content of the section.
    * Will determine if we should apply a digit-based editing or a letter-based editing.
    */
-  contentType: 'digit' | 'letter';
+  contentType: FieldSectionContentType;
   /**
-   * If `true`, the value of this section is supposed to have leading zeroes.
+   * If `true`, the value of this section is supposed to have leading zeroes when parsed by the date library.
    * For example, the value `1` should be rendered as "01" instead of "1".
+   * @deprecated Will be removed in v7, use `hasLeadingZerosInFormat` instead.
    */
   hasLeadingZeros: boolean;
+  /**
+   * If `true`, the value of this section is supposed to have leading zeroes when parsed by the date library.
+   * For example, the value `1` should be rendered as "01" instead of "1".
+   */
+  hasLeadingZerosInFormat: boolean;
+  /**
+   * If `true`, the value of this section is supposed to have leading zeroes when rendered in the input.
+   * For example, the value `1` should be rendered as "01" instead of "1".
+   */
+  hasLeadingZerosInInput: boolean;
   /**
    * If `true`, the section value has been modified since the last time the sections were generated from a valid date.
    * When we can generate a valid date from the section, we don't directly pass it to `onChange`,
@@ -116,6 +136,10 @@ export interface BaseSingleInputFieldProps<TValue, TSection extends FieldSection
   extends BaseFieldProps<TValue, TSection, TError> {
   label?: React.ReactNode;
   id?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
+  onKeyDown?: React.KeyboardEventHandler;
+  onBlur?: React.FocusEventHandler;
+  focused?: boolean;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;

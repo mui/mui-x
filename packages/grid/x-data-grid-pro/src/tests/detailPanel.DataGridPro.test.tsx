@@ -19,7 +19,7 @@ import {
   act,
   userEvent,
 } from '@mui/monorepo/test/utils';
-import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
+import { getRow, getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -83,6 +83,29 @@ describe('<DataGridPro /> - Detail panel', () => {
     virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
     act(() => virtualScroller.dispatchEvent(new Event('scroll')));
     expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
+  });
+
+  it('should only render detail panels for the rows that are rendered', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <TestCase
+        getDetailPanelHeight={() => 50}
+        getDetailPanelContent={() => <div />}
+        rowBuffer={0}
+        rowThreshold={0}
+        nbRows={10}
+        initialState={{
+          detailPanel: {
+            expandedRowIds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+          },
+        }}
+      />,
+    );
+    const rows = getRows();
+    const detailPanels = document.querySelectorAll('.MuiDataGrid-detailPanel');
+    expect(detailPanels.length).to.equal(rows.length);
   });
 
   it('should derive the height from the content if getDetailPanelHeight returns "auto"', async function test() {

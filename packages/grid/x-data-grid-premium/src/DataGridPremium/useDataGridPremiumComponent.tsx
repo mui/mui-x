@@ -79,6 +79,7 @@ import {
   cellSelectionStateInitializer,
   useGridCellSelection,
 } from '../hooks/features/cellSelection/useGridCellSelection';
+import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
   inputApiRef: React.MutableRefObject<GridApiPremium> | undefined,
@@ -144,6 +145,7 @@ export const useDataGridPremiumComponent = (
   useGridDetailPanel(privateApiRef, props);
   useGridColumnSpanning(privateApiRef);
   useGridColumnGrouping(privateApiRef, props);
+  useGridClipboardImport(privateApiRef, props);
   useGridEditing(privateApiRef, props);
   useGridFocus(privateApiRef, props);
   useGridPreferencesPanel(privateApiRef, props);
@@ -159,10 +161,10 @@ export const useDataGridPremiumComponent = (
   useGridInfiniteLoader(privateApiRef, props);
   useGridLazyLoader(privateApiRef, props);
   useGridColumnMenu(privateApiRef);
-  useGridCsvExport(privateApiRef);
+  useGridCsvExport(privateApiRef, props);
   useGridPrintExport(privateApiRef, props);
   useGridExcelExport(privateApiRef, props);
-  useGridClipboard(privateApiRef);
+  useGridClipboard(privateApiRef, props);
   useGridDimensions(privateApiRef, props);
   useGridEvents(privateApiRef, props);
   useGridStatePersistence(privateApiRef);

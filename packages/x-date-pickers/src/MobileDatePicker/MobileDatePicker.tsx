@@ -7,7 +7,7 @@ import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../Date
 import { PickerViewRendererLookup, useLocaleText, useUtils, validateDate } from '../internals';
 import { DateView } from '../models';
 import { DateField } from '../DateField';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 
@@ -61,6 +61,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
   const { renderPicker } = useMobilePicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDate,
   });
@@ -157,6 +158,12 @@ MobileDatePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */

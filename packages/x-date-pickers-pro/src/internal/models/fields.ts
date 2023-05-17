@@ -34,7 +34,11 @@ export interface MultiInputFieldSlotRootProps {
  */
 export interface BaseMultiInputFieldProps<TValue, TSection extends FieldSection, TError>
   extends BaseFieldProps<TValue, TSection, TError> {
-  slots?: {};
+  slots?: {
+    root?: React.ElementType;
+    separator?: React.ElementType;
+    textField?: React.ElementType;
+  };
   slotProps?: {
     root?: SlotComponentProps<
       React.ElementType<MultiInputFieldSlotRootProps>,

@@ -3,7 +3,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
 import { useTheme } from '@mui/material/styles';
-import { useValidation } from '../validation/useValidation';
+import { useValidation } from '../useValidation';
 import { useUtils } from '../useUtils';
 import {
   UseFieldParams,
@@ -42,13 +42,6 @@ export const useField = <
     placeholder,
   } = useFieldState(params);
 
-  const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
-    sections: state.sections,
-    updateSectionValue,
-    sectionsValueBoundaries,
-    setTempAndroidValueStr,
-  });
-
   const {
     inputRef: inputRefProp,
     internalProps,
@@ -68,6 +61,12 @@ export const useField = <
     validator,
   } = params;
 
+  const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
+    sections: state.sections,
+    updateSectionValue,
+    sectionsValueBoundaries,
+    setTempAndroidValueStr,
+  });
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -85,12 +84,18 @@ export const useField = <
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
-    const nextSectionIndex =
-      browserStartIndex <= state.sections[0].startInInput
-        ? 1 // Special case if browser index is in invisible characters at the beginning.
-        : state.sections.findIndex(
-            (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
-          );
+    let nextSectionIndex: number;
+    if (browserStartIndex <= state.sections[0].startInInput) {
+      // Special case if browser index is in invisible characters at the beginning
+      nextSectionIndex = 1;
+    } else if (browserStartIndex >= state.sections[state.sections.length - 1].endInInput) {
+      // If the click is after the last character of the input, then we want to select the 1st section.
+      nextSectionIndex = 1;
+    } else {
+      nextSectionIndex = state.sections.findIndex(
+        (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+      );
+    }
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
     setSelectedSections(sectionIndex);
@@ -158,9 +163,11 @@ export const useField = <
 
       const lettersOnly = /^[a-zA-Z]+$/.test(pastedValue);
       const digitsOnly = /^[0-9]+$/.test(pastedValue);
+      const digitsAndLetterOnly = /^(([a-zA-Z]+)|)([0-9]+)(([a-zA-Z]+)|)$/.test(pastedValue);
       const isValidPastedValue =
         (activeSection.contentType === 'letter' && lettersOnly) ||
-        (activeSection.contentType === 'digit' && digitsOnly);
+        (activeSection.contentType === 'digit' && digitsOnly) ||
+        (activeSection.contentType === 'digit-with-letter' && digitsAndLetterOnly);
       if (isValidPastedValue) {
         // Early return to let the paste update section, value
         return;
@@ -338,7 +345,7 @@ export const useField = <
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
-          activeDateManager.activeDate,
+          activeDateManager.date,
         );
 
         updateSectionValue({
@@ -398,8 +405,8 @@ export const useField = <
       return error;
     }
 
-    return fieldValueManager.hasError(validationError);
-  }, [fieldValueManager, validationError, error]);
+    return valueManager.hasError(validationError);
+  }, [valueManager, validationError, error]);
 
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)

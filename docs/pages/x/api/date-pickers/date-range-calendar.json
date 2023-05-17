@@ -17,6 +17,10 @@
       "deprecated": true,
       "deprecationInfo": "Please use <code>slotProps</code>."
     },
+    "currentMonthCalendarPosition": {
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
+      "default": "1"
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"

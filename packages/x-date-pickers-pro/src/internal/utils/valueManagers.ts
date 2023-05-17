@@ -8,9 +8,11 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
-import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
-import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
-import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import type {
+  DateRangeValidationError,
+  DateTimeRangeValidationError,
+  TimeRangeValidationError,
+} from '../../models';
 import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
@@ -24,21 +26,20 @@ export type RangePickerValueManager<
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  getTodayValue: (utils, valueType) =>
+    valueType === 'date'
+      ? [utils.startOfDay(utils.date())!, utils.startOfDay(utils.date())!]
+      : [utils.date()!, utils.date()!],
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
   areValuesEqual: (utils, a, b) =>
     areDatesEqual(utils, a[0], b[0]) && areDatesEqual(utils, a[1], b[1]),
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
+  hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
 };
 
-export const rangeFieldValueManager: FieldValueManager<
-  DateRange<any>,
-  any,
-  RangeFieldSection,
-  DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
-> = {
+export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, RangeFieldSection> = {
   updateReferenceValue: (utils, value, prevReferenceValue) => {
     const shouldKeepStartDate = value[0] != null && utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && utils.isValid(value[1]);
@@ -80,7 +81,7 @@ export const rangeFieldValueManager: FieldValueManager<
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}\u2069 – \u2066`,
+            endSeparator: `${section.endSeparator}${isRTL ? '\u2069 – \u2066' : ' – '}`,
           };
         }
 
@@ -106,14 +107,6 @@ export const rangeFieldValueManager: FieldValueManager<
       isRTL,
     );
   },
-  getActiveDateSections: (sections, activeSection) => {
-    const index = activeSection.dateName === 'start' ? 0 : 1;
-    const dateRangeSections = splitDateRangeSections(sections);
-
-    return index === 0
-      ? removeLastSeparator(dateRangeSections.startDate)
-      : dateRangeSections.endDate;
-  },
   parseValueStr: (valueStr, referenceValue, parseDate) => {
     // TODO: Improve because it would not work if the date format has `–` as a separator.
     const [startStr, endStr] = valueStr.split('–');
@@ -133,9 +126,17 @@ export const rangeFieldValueManager: FieldValueManager<
       (index === 0 ? [newDate, prevDateRange[1]] : [prevDateRange[0], newDate]) as DateRange<any>;
 
     return {
-      activeDate: state.value[index],
-      referenceActiveDate: state.referenceValue[index],
-      getNewValueFromNewActiveDate: (newActiveDate) => ({
+      date: state.value[index],
+      referenceDate: state.referenceValue[index],
+      getSections: (sections) => {
+        const dateRangeSections = splitDateRangeSections(sections);
+        if (index === 0) {
+          return removeLastSeparator(dateRangeSections.startDate);
+        }
+
+        return dateRangeSections.endDate;
+      },
+      getNewValuesFromNewActiveDate: (newActiveDate) => ({
         value: updateDateInRange(newActiveDate, state.value),
         referenceValue:
           newActiveDate == null || !utils.isValid(newActiveDate)
@@ -144,5 +145,4 @@ export const rangeFieldValueManager: FieldValueManager<
       }),
     };
   },
-  hasError: (error) => error[0] != null || error[1] != null,
 };

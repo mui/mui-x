@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -14,30 +14,115 @@ import {
   expectInputValue,
   MockedDataTransfer,
 } from 'test/utils/pickers-utils';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/de';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import {
+  describeGregorianAdapter,
+  TEST_DATE_ISO_STRING,
+} from 'packages/x-date-pickers/src/tests/describeGregorianAdapter';
 
-dayjs.extend(utc);
+import 'dayjs/locale/fr';
+import 'dayjs/locale/de';
+// We import it here just to have the typing
+import 'dayjs/plugin/utc';
 
-const testDate = new Date(2018, 4, 15, 9, 35);
-const localizedTexts = {
-  undefined: {
-    placeholder: 'MM/DD/YYYY hh:mm aa',
-    value: '05/15/2018 09:35 AM',
-  },
-  fr: {
-    placeholder: 'DD/MM/YYYY hh:mm',
-    value: '15/05/2018 09:35',
-  },
-  de: {
-    placeholder: 'DD.MM.YYYY hh:mm',
-    value: '15.05.2018 09:35',
-  },
-};
 describe('<AdapterDayjs />', () => {
-  describe('Localization', () => {
+  describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss' });
+
+  describe('Adapter localization', () => {
+    describe('English', () => {
+      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'en' });
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
+
+      it('getWeekdays: should start on Sunday', () => {
+        const result = adapter.getWeekdays();
+        expect(result).to.deep.equal(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']);
+      });
+
+      it('getWeekArray: should start on Sunday', () => {
+        const result = adapter.getWeekArray(date);
+        expect(result[0][0].format('dd')).to.equal('Su');
+      });
+
+      it('is12HourCycleInCurrentLocale: should have meridiem', () => {
+        expect(adapter.is12HourCycleInCurrentLocale()).to.equal(true);
+      });
+    });
+
+    describe('Russian', () => {
+      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'ru' });
+
+      it('getWeekDays: should start on Monday', () => {
+        const result = adapter.getWeekdays();
+        expect(result).to.deep.equal(['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']);
+      });
+
+      it('getWeekArray: should start on Monday', () => {
+        const date = adapter.date(TEST_DATE_ISO_STRING)!;
+        const result = adapter.getWeekArray(date);
+        expect(result[0][0].format('dd')).to.equal('пн');
+      });
+
+      it('is12HourCycleInCurrentLocale: should not have meridiem', () => {
+        expect(adapter.is12HourCycleInCurrentLocale()).to.equal(false);
+      });
+
+      it('getCurrentLocaleCode: should return locale code', () => {
+        expect(adapter.getCurrentLocaleCode()).to.equal('ru');
+      });
+    });
+
+    it('Formatting', () => {
+      const adapter = new AdapterDayjs({ locale: 'en' });
+      const adapterRu = new AdapterDayjs({ locale: 'ru' });
+
+      const expectDate = (
+        format: keyof AdapterFormats,
+        expectedWithEn: string,
+        expectedWithRu: string,
+      ) => {
+        const date = adapter.date('2020-02-01T23:44:00.000Z')!;
+
+        expect(adapter.format(date, format)).to.equal(expectedWithEn);
+        expect(adapterRu.format(date, format)).to.equal(expectedWithRu);
+      };
+
+      expectDate('fullDate', 'Feb 1, 2020', '1 февр. 2020 г.');
+      expectDate('fullDateWithWeekday', 'Saturday, February 1, 2020', 'суббота, 1 февраля 2020 г.');
+      expectDate('fullDateTime', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г., 23:44');
+      expectDate('fullDateTime12h', 'Feb 1, 2020 11:44 PM', '1 февр. 2020 г. 11:44 вечера');
+      expectDate('fullDateTime24h', 'Feb 1, 2020 23:44', '1 февр. 2020 г. 23:44');
+      expectDate('keyboardDate', '02/01/2020', '01.02.2020');
+      expectDate('keyboardDateTime', '02/01/2020 11:44 PM', '01.02.2020 23:44');
+      expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
+      expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
+    });
+
+    it('should warn when trying to use a non-loaded locale', () => {
+      const adapter = new AdapterDayjs({ locale: 'pl' });
+      expect(() => adapter.is12HourCycleInCurrentLocale()).toWarnDev(
+        'Your locale has not been found.',
+      );
+    });
+  });
+
+  describe('Picker localization', () => {
+    const testDate = new Date(2018, 4, 15, 9, 35);
+    const localizedTexts = {
+      undefined: {
+        placeholder: 'MM/DD/YYYY hh:mm aa',
+        value: '05/15/2018 09:35 AM',
+      },
+      fr: {
+        placeholder: 'DD/MM/YYYY hh:mm',
+        value: '15/05/2018 09:35',
+      },
+      de: {
+        placeholder: 'DD.MM.YYYY hh:mm',
+        value: '15.05.2018 09:35',
+      },
+    };
+
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
@@ -61,17 +146,9 @@ describe('<AdapterDayjs />', () => {
         it('should have well formatted value', () => {
           render(<DateTimePicker value={adapter.date(testDate)} />);
 
-          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
+          expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
         });
       });
-    });
-
-    it('should return the correct week number', () => {
-      const localizedAdapter = new AdapterDayjs({ locale: 'fr' });
-
-      const dateToTest = localizedAdapter.date(new Date(2022, 10, 10));
-
-      expect(localizedAdapter.getWeekNumber!(dateToTest)).to.equal(45);
     });
   });
 
