@@ -127,7 +127,7 @@ const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
 
 const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
 
-const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
+const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6 + CALENDAR_MARGIN;
 
 const PickersCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
