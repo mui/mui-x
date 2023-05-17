@@ -399,6 +399,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.get('second');
   };
 
+  public getMilliseconds = (value: DateTime) => {
+    return value.get('millisecond');
+  };
+
   public setYear = (value: DateTime, year: number) => {
     return value.set({ year });
   };
@@ -421,6 +425,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public setSeconds = (value: DateTime, seconds: number) => {
     return value.set({ second: seconds });
+  };
+
+  public setMilliseconds = (value: DateTime, milliseconds: number) => {
+    return value.set({ millisecond: milliseconds });
   };
 
   public getDaysInMonth = (value: DateTime) => {

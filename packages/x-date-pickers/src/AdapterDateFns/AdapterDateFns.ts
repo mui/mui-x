@@ -26,6 +26,7 @@ import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
 import getMonth from 'date-fns/getMonth';
 import getSeconds from 'date-fns/getSeconds';
+import getMilliseconds from 'date-fns/getMilliseconds';
 import getWeek from 'date-fns/getWeek';
 import getYear from 'date-fns/getYear';
 import isAfter from 'date-fns/isAfter';
@@ -42,6 +43,7 @@ import setHours from 'date-fns/setHours';
 import setMinutes from 'date-fns/setMinutes';
 import setMonth from 'date-fns/setMonth';
 import setSeconds from 'date-fns/setSeconds';
+import setMilliseconds from 'date-fns/setMilliseconds';
 import setYear from 'date-fns/setYear';
 import startOfDay from 'date-fns/startOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
@@ -453,6 +455,10 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
     return getSeconds(value);
   };
 
+  public getMilliseconds = (value: Date) => {
+    return getMilliseconds(value);
+  };
+
   public setYear = (value: Date, year: number) => {
     return setYear(value, year);
   };
@@ -475,6 +481,10 @@ export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
 
   public setSeconds = (value: Date, seconds: number) => {
     return setSeconds(value, seconds);
+  };
+
+  public setMilliseconds = (value: Date, milliseconds: number) => {
+    return setMilliseconds(value, milliseconds);
   };
 
   public getDaysInMonth = (value: Date) => {

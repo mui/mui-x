@@ -22,7 +22,13 @@ export type SingleItemPickerValueManager<
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: getTodayDate,
-  getDefaultReferenceValue: getDefaultReferenceDate,
+  getInitialReferenceValue: ({ value, ...params }) => {
+    if (value == null || !params.utils.isValid(value)) {
+      return getDefaultReferenceDate(params);
+    }
+
+    return value;
+  },
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: areDatesEqual,
   isSameError: (a, b) => a === b,

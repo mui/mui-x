@@ -21,7 +21,10 @@ import {
 } from './useField.utils';
 import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
-import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
+import {
+  GetDefaultReferenceDateProps,
+  getSectionTypeGranularity,
+} from '../../utils/getDefaultReferenceDate';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {
   /**
@@ -106,27 +109,31 @@ export const useFieldState = <
     const sections = getSectionsFromValue(valueFromTheOutside);
     validateSections(sections, valueType);
 
+    const stateWithoutReferenceDate: UseFieldState<TValue, TSection> = {
+      sections,
+      value: valueFromTheOutside,
+      referenceValue: valueManager.emptyValue,
+      tempValueStrAndroid: null,
+    };
+
     let referenceValue: TValue;
     if (referenceValueProp != null) {
       referenceValue = referenceValueProp;
     } else {
-      const defaultReferenceValue = valueManager.getDefaultReferenceValue({
+      const granularity = getSectionTypeGranularity(sections);
+
+      referenceValue = valueManager.getInitialReferenceValue({
+        value: valueFromTheOutside,
         valueType,
         utils,
         props: internalProps as GetDefaultReferenceDateProps<TDate>,
+        granularity,
       });
-      referenceValue = fieldValueManager.updateReferenceValue(
-        utils,
-        valueFromTheOutside,
-        defaultReferenceValue,
-      );
     }
 
     return {
-      sections,
-      value: valueFromTheOutside,
+      ...stateWithoutReferenceDate,
       referenceValue,
-      tempValueStrAndroid: null,
     };
   });
 
