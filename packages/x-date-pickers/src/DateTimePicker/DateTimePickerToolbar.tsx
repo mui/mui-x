@@ -342,6 +342,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             />
           </DateTimePickerToolbarAmPmSelection>
         )}
+
         {ampm && isDesktop && (
           <PickersToolbarButton
             variant="h5"
@@ -406,6 +407,7 @@ DateTimePickerToolbar.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
+  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { DateTimePickerToolbar };
