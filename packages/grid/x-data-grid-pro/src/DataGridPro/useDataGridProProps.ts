@@ -5,7 +5,7 @@ import {
   DATA_GRID_PROPS_DEFAULT_VALUES,
   GridValidRowModel,
 } from '@mui/x-data-grid';
-import { computeSlots, uncapitalizeObjectKeys } from '@mui/x-data-grid/internals';
+import { computeSlots, uncapitalizeObjectKeys, useProps } from '@mui/x-data-grid/internals';
 import {
   DataGridProProps,
   DataGridProProcessedProps,
@@ -34,10 +34,12 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS)!;
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const { components, componentsProps, ...themedProps } = useThemeProps({
-    props: inProps,
-    name: 'MuiDataGrid',
-  });
+  const [components, componentsProps, themedProps] = useProps(
+    useThemeProps({
+      props: inProps,
+      name: 'MuiDataGrid',
+    }),
+  );
 
   const localeText = React.useMemo(
     () => ({ ...GRID_DEFAULT_LOCALE_TEXT, ...themedProps.localeText }),

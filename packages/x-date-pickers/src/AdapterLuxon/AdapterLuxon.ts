@@ -1,17 +1,18 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime, Info } from 'luxon';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterLuxonOptions {
-  formats?: Partial<AdapterFormats>;
-  locale?: string;
-}
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
   yy: 'year',
-  yyyy: 'year',
+  yyyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
   L: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
@@ -108,7 +109,7 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
+export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public isMUIAdapter = true;
 
   public lib = 'luxon';
@@ -121,7 +122,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats }: AdapterLuxonOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<string, never> = {}) {
     this.locale = locale || 'en-US';
     this.formats = { ...defaultFormats, ...formats };
   }
@@ -184,11 +185,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
   };
 
   public expandFormat = (format: string) => {
-    if (!DateTime.expandFormat) {
-      throw Error(
-        'Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2',
-      );
-    }
     // Extract escaped section to avoid extending them
     const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
     return (
@@ -249,6 +245,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     if (unit) {
       return Math.floor(value.diff(comparing).as(unit));
     }
+
     return value.diff(comparing).as('millisecond');
   };
 

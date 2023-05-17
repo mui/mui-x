@@ -11,6 +11,10 @@ import { InteractionContext } from '../context/InteractionProvider';
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the root element when higlighted. */
+  highlighted: string;
+  /** Styles applied to the root element when faded. */
+  faded: string;
 }
 export interface MarkElementOwnerState {
   id: string;
@@ -26,14 +30,16 @@ export function getMarkElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiMarkElement', slot);
 }
 
-export const lineElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
+export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
   'root',
+  'highlighted',
+  'faded',
 ]);
 
 const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, isHighlighted, id } = ownerState;
+  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'isHighlighted'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
   };
 
   return composeClasses(slots, getMarkElementUtilityClass, classes);

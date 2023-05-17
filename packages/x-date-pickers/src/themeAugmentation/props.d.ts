@@ -58,7 +58,7 @@ export interface PickersComponentsPropsList {
   MuiDayCalendar: DayCalendarProps<unknown>;
   MuiDayCalendarSkeleton: DayCalendarSkeletonProps;
   MuiDigitalClock: ExportedDigitalClockProps<unknown>;
-  MuiLocalizationProvider: LocalizationProviderProps<unknown>;
+  MuiLocalizationProvider: LocalizationProviderProps<unknown, unknown>;
   MuiMonthCalendar: MonthCalendarProps<unknown>;
   MuiMultiSectionDigitalClock: MultiSectionDigitalClockProps<unknown>;
   MuiMultiSectionDigitalClockSection: ExportedMultiSectionDigitalClockSectionProps;

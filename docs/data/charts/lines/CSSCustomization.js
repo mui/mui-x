@@ -60,6 +60,10 @@ export default function CSSCustomization() {
       sx={{
         '& .MuiLineElement-root': {
           strokeDasharray: '10 5',
+          strokeWidth: 4,
+        },
+        '& .MuiMarkElement-root': {
+          display: 'none',
         },
         '& .MuiAreaElement-series-Germany': {
           fill: "url('#myGradient')",
@@ -78,19 +82,19 @@ export default function CSSCustomization() {
           id: 'France',
           data: FranceGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
           id: 'Germany',
           data: GermanyGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
           id: 'United Kingdom',
           data: UKGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
       ]}
       width={600}

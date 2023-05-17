@@ -3,19 +3,17 @@ import { MuiPickersAdapter } from '@mui/x-date-pickers';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
 import { DescribeJalaliAdapterParams } from './describeJalaliAdapter.types';
-import { TEST_DATE_ISO } from '../describeGregorianAdapter';
 
 function innerJalaliDescribeAdapter<TDate>(
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
   params: DescribeJalaliAdapterParams,
 ) {
-  const adapter = new Adapter({ locale: params.locale });
+  const adapter = new Adapter();
 
   describe(adapter.lib, () => {
     const testSuitParams = {
       ...params,
       adapter,
-      testDate: adapter.date(TEST_DATE_ISO),
     };
 
     if (params.before) {

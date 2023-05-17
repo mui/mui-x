@@ -1,12 +1,6 @@
-import type {
-  ScaleBand,
-  ScaleLogarithmic,
-  ScalePoint,
-  ScalePower,
-  ScaleTime,
-  ScaleLinear,
-} from 'd3-scale';
-import { DefaultizedProps } from './helpers';
+import type { ScaleBand, ScaleLogarithmic, ScalePower, ScaleTime, ScaleLinear } from 'd3-scale';
+import { AxisClasses } from '../Axis/axisClasses';
+import type { TickParams } from '../hooks/useTicks';
 
 export interface AxisProps {
   /**
@@ -29,10 +23,10 @@ export interface AxisProps {
    */
   fill?: string;
   /**
-   * The font size of the axis text.
+   * The font size of the axis ticks text.
    * @default 12
    */
-  fontSize?: number;
+  tickFontSize?: number;
   /**
    * The label of the axis.
    */
@@ -52,6 +46,10 @@ export interface AxisProps {
    * @default 6
    */
   tickSize?: number;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<AxisClasses>;
 }
 
 export interface YAxisProps extends AxisProps {
@@ -68,42 +66,59 @@ export interface XAxisProps extends AxisProps {
   position?: 'top' | 'bottom';
 }
 
-export type ScaleName = 'linear' | 'band' | 'log' | 'point' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = 'linear' | 'band' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
-export type AxisScaleMapping =
-  | {
-      scaleType: 'band';
-      scale: ScaleBand<any>;
-    }
-  | {
-      scaleType: 'log';
-      scale: ScaleLogarithmic<any, any>;
-    }
-  | {
-      scaleType: 'point';
-      scale: ScalePoint<any>;
-    }
-  | {
-      scaleType: 'pow' | 'sqrt';
-      scale: ScalePower<any, any>;
-    }
-  | {
-      scaleType: 'time' | 'utc';
-      scale: ScaleTime<any, any>;
-    }
-  | {
-      scaleType: 'linear';
-      scale: ScaleLinear<any, any>;
-    };
+interface AxisScaleConfig {
+  band: {
+    scaleType: 'band';
+    scale: ScaleBand<any>;
+    ticksNumber: number;
+  };
+  log: {
+    scaleType: 'log';
+    scale: ScaleLogarithmic<any, any>;
+    ticksNumber: number;
+  };
+  pow: {
+    scaleType: 'pow';
+    scale: ScalePower<any, any>;
+    ticksNumber: number;
+  };
+  sqrt: {
+    scaleType: 'sqrt';
+    scale: ScalePower<any, any>;
+    ticksNumber: number;
+  };
+  time: {
+    scaleType: 'time';
+    scale: ScaleTime<any, any>;
+    ticksNumber: number;
+  };
+  utc: {
+    scaleType: 'utc';
+    scale: ScaleTime<any, any>;
+    ticksNumber: number;
+  };
+  linear: {
+    scaleType: 'linear';
+    scale: ScaleLinear<any, any>;
+    ticksNumber: number;
+  };
+}
 
-export type AxisConfig<V = any> = {
+export type AxisConfig<S = ScaleName, V = any> = {
   id: string;
-  scaleType?: ScaleName;
+  scaleType?: S;
   min?: number;
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
-} & Partial<XAxisProps | YAxisProps>;
+} & Partial<XAxisProps | YAxisProps> &
+  TickParams;
 
-export type AxisDefaultized<V = any> = DefaultizedProps<AxisConfig<V>, 'scaleType'> &
-  AxisScaleMapping;
+export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
+  AxisConfig<S, V>,
+  'scaleType'
+> &
+  AxisScaleConfig[S];

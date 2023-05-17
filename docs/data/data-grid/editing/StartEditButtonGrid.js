@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { DataGrid, GridCellModes } from '@mui/x-data-grid';
@@ -77,16 +76,6 @@ function EditToolbar(props) {
     </Box>
   );
 }
-
-EditToolbar.propTypes = {
-  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
-  cellModesModel: PropTypes.object.isRequired,
-  selectedCellParams: PropTypes.shape({
-    field: PropTypes.string.isRequired,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  }),
-  setCellModesModel: PropTypes.func.isRequired,
-};
 
 export default function StartEditButtonGrid() {
   const [selectedCellParams, setSelectedCellParams] = React.useState(null);

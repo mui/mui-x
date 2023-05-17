@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Badge from '@mui/material/Badge';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -50,18 +49,6 @@ function ServerDay(props) {
     </Badge>
   );
 }
-
-ServerDay.propTypes = {
-  /**
-   * The date to show.
-   */
-  day: PropTypes.object.isRequired,
-  highlightedDays: PropTypes.arrayOf(PropTypes.number),
-  /**
-   * If `true`, day is outside of month and will be hidden.
-   */
-  outsideCurrentMonth: PropTypes.bool.isRequired,
-};
 
 export default function DateCalendarServerRequest() {
   const requestAbortController = React.useRef(null);
