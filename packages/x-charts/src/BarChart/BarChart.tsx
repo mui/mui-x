@@ -58,8 +58,8 @@ function BarChart(props: BarChartProps) {
         tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
       }
     >
-      <BarPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <BarPlot />
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       {children}

@@ -57,8 +57,9 @@ function LineChart(props: LineChartProps) {
         tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
       }
     >
-      <LinePlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <LinePlot />
+
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       {children}

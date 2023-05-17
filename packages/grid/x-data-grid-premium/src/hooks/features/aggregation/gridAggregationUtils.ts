@@ -162,6 +162,7 @@ export const addFooterRows = ({
         };
 
         insertNodeInTree({
+          previousTree: null,
           node: footerNode,
           tree: newGroupingParams.tree,
           treeDepths: newGroupingParams.treeDepths,

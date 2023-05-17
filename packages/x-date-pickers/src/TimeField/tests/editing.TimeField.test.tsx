@@ -174,7 +174,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           key: 'ArrowUp',
           expectedValue: 'hh:mm AM',
-          cursorPosition: 14,
+          cursorPosition: 7,
         });
       });
 
@@ -184,7 +184,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowUp',
           expectedValue: '02:12 PM',
-          cursorPosition: 14,
+          cursorPosition: 7,
         });
       });
 
@@ -194,7 +194,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowUp',
           expectedValue: '02:12 AM',
-          cursorPosition: 14,
+          cursorPosition: 7,
         });
       });
     });
@@ -304,7 +304,7 @@ describe('<TimeField /> - Editing', () => {
     it('should set meridiem to AM when pressing "a" and no value is provided', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
-        cursorPosition: 17,
+        cursorPosition: 7,
         // Press "a"
         keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm AM' }],
       });
@@ -313,7 +313,7 @@ describe('<TimeField /> - Editing', () => {
     it('should set meridiem to PM when pressing "p" and no value is provided', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
-        cursorPosition: 17,
+        cursorPosition: 7,
         // Press "p"
         keyStrokes: [{ value: 'hh:mm p', expected: 'hh:mm PM' }],
       });
@@ -323,7 +323,7 @@ describe('<TimeField /> - Editing', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
-        cursorPosition: 17,
+        cursorPosition: 7,
         // Press "a"
         keyStrokes: [{ value: '02:12 a', expected: '02:12 AM' }],
       });
@@ -333,7 +333,7 @@ describe('<TimeField /> - Editing', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
-        cursorPosition: 17,
+        cursorPosition: 7,
         // Press "p"
         keyStrokes: [{ value: '02:12 p', expected: '02:12 PM' }],
       });
