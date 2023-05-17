@@ -13,6 +13,7 @@ import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import JoyBox from '@mui/joy/Box';
 import JoyTypography from '@mui/joy/Typography';
 import JoyCircularProgress from '@mui/joy/CircularProgress';
+import JoyTooltip from '@mui/joy/Tooltip';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
@@ -429,8 +430,7 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
   baseFormControl: JoyFormControl,
-  // BaseTooltip: MUITooltip,
-  // BasePopper: MUIPopper,
+  baseTooltip: JoyTooltip,
   pagination: Pagination,
   loadingOverlay: LoadingOverlay,
 };
