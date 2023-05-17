@@ -260,6 +260,12 @@ MultiInputDateRangeField.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * The value to use to generate the part of the date-time not present in the format.
+   * For example, on time fields it will be used to decide the date to set.
+   * @default `value` or `defaultValue` is defined, otherwise takes the closest valid value using the validation dates (do you use `shouldDisableDate & co).
+   */
+  referenceValue: PropTypes.arrayOf(PropTypes.any),
+  /**
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.

@@ -8,6 +8,7 @@ import {
   FieldValueType,
   MuiPickersAdapter,
 } from '../../../models';
+import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -35,6 +36,19 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) => TValue;
+  /**
+   * @template TDate
+   * @param {object} params The params of the method.
+   * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute a smart reference value.
+   * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
+   * @param {FieldValueType} params.valueType The type of the value being edited.
+   * @returns {TValue} The reference value to use for non-provided dates.
+   */
+  getDefaultReferenceValue: (params: {
+    props: GetDefaultReferenceDateProps<TDate>;
+    utils: MuiPickersAdapter<TDate>;
+    valueType: FieldValueType;
+  }) => TValue;
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
    * @template TDate, TValue

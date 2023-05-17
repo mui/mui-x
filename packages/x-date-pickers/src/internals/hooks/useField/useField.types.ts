@@ -42,6 +42,12 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    */
   defaultValue?: TValue;
   /**
+   * The value to use to generate the part of the date-time not present in the format.
+   * For example, on time fields it will be used to decide the date to set.
+   * @default `value` or `defaultValue` is defined, otherwise takes the closest valid value using the validation dates (do you use `shouldDisableDate & co).
+   */
+  referenceValue?: TValue;
+  /**
    * Callback fired when the value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.

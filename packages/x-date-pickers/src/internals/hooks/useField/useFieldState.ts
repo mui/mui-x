@@ -21,6 +21,7 @@ import {
 } from './useField.utils';
 import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
+import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {
   /**
@@ -61,6 +62,7 @@ export const useFieldState = <
     internalProps: {
       value: valueProp,
       defaultValue,
+      referenceValue: referenceValueProp,
       onChange,
       format,
       formatDensity = 'dense',
@@ -104,14 +106,26 @@ export const useFieldState = <
     const sections = getSectionsFromValue(valueFromTheOutside);
     validateSections(sections, valueType);
 
+    let referenceValue: TValue;
+    if (referenceValueProp != null) {
+      referenceValue = referenceValueProp;
+    } else {
+      const defaultReferenceValue = valueManager.getDefaultReferenceValue({
+        valueType,
+        utils,
+        props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      });
+      referenceValue = fieldValueManager.updateReferenceValue(
+        utils,
+        valueFromTheOutside,
+        defaultReferenceValue,
+      );
+    }
+
     return {
       sections,
       value: valueFromTheOutside,
-      referenceValue: fieldValueManager.updateReferenceValue(
-        utils,
-        valueFromTheOutside,
-        valueManager.getTodayValue(utils, valueType),
-      ),
+      referenceValue,
       tempValueStrAndroid: null,
     };
   });

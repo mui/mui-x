@@ -225,6 +225,12 @@ DateField.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * The value to use to generate the part of the date-time not present in the format.
+   * For example, on time fields it will be used to decide the date to set.
+   * @default `value` or `defaultValue` is defined, otherwise takes the closest valid value using the validation dates (do you use `shouldDisableDate & co).
+   */
+  referenceValue: PropTypes.any,
+  /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
    */
