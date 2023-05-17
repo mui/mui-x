@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { scaleBand } from 'd3-scale';
 import {
   getExtremumX as getBarExtremumX,
   getExtremumY as getBarExtremumY,
@@ -23,6 +24,7 @@ import {
   ExtremumGetterResult,
 } from '../models/seriesType/config';
 import { MakeOptional } from '../models/helpers';
+import { getTicksNumber } from '../hooks/useTicks';
 
 export type CartesianContextProviderProps = {
   xAxis?: MakeOptional<AxisConfig, 'id'>[];
@@ -127,15 +129,25 @@ export function CartesianContextProvider({
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
       const scaleType = axis.scaleType ?? 'linear';
+      const domain = [drawingArea.left, drawingArea.left + drawingArea.width];
+
+      if (scaleType === 'band') {
+        completedXAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scaleBand(axis.data!, domain),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
+      const extremums = [axis.min ?? minData, axis.max ?? maxData];
+      const ticksNumber = getTicksNumber({ ...axis, domain });
       completedXAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType)
-          // @ts-ignore
-          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
-          // @ts-ignore
-          .range([drawingArea.left, drawingArea.left + drawingArea.width]),
-      };
+        scale: getScale(scaleType, extremums, domain).nice(ticksNumber),
+        ticksNumber,
+      } as AxisDefaultized<typeof scaleType>;
     });
 
     const allYAxis: AxisConfig[] = [
@@ -149,17 +161,26 @@ export function CartesianContextProvider({
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
+      const domain = [drawingArea.top + drawingArea.height, drawingArea.top];
 
       const scaleType: ScaleName = axis.scaleType ?? 'linear';
+      if (scaleType === 'band') {
+        completedYAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scaleBand(axis.data!, domain),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
+      const extremums = [axis.min ?? minData, axis.max ?? maxData];
+      const ticksNumber = getTicksNumber({ ...axis, domain });
       completedYAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType)
-          // @ts-ignore
-          .domain(scaleType === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
-          // @ts-ignore
-          .range([drawingArea.top + drawingArea.height, drawingArea.top]),
-      };
+        scale: getScale(scaleType, extremums, domain).nice(ticksNumber),
+        ticksNumber,
+      } as AxisDefaultized<typeof scaleType>;
     });
 
     return {

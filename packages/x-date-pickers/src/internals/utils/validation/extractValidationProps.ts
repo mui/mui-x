@@ -8,29 +8,46 @@ import {
   YearValidationProps,
 } from '../../models/validation';
 
-const VALIDATION_PROP_NAMES: (
-  | keyof BaseTimeValidationProps
+export const DATE_VALIDATION_PROP_NAMES: (
   | keyof BaseDateValidationProps<any>
-  | keyof TimeValidationProps<any>
   | keyof YearValidationProps<any>
   | keyof MonthValidationProps<any>
   | keyof DayValidationProps<any>
-  | keyof DateTimeValidationProps<any>
 )[] = [
   'disablePast',
   'disableFuture',
   'minDate',
   'maxDate',
-  'minTime',
-  'maxTime',
-  'minDateTime',
-  'maxDateTime',
   'shouldDisableDate',
   'shouldDisableMonth',
   'shouldDisableYear',
+];
+
+export const TIME_VALIDATION_PROP_NAMES: (
+  | keyof BaseTimeValidationProps
+  | keyof TimeValidationProps<any>
+  | 'ampm'
+)[] = [
+  'disablePast',
+  'disableFuture',
+  'minTime',
+  'maxTime',
   'shouldDisableClock',
   'shouldDisableTime',
   'minutesStep',
+  'ampm',
+  'disableIgnoringDatePartForTimeValidation',
+];
+
+export const DATE_TIME_VALIDATION_PROP_NAMES: (keyof DateTimeValidationProps<any>)[] = [
+  'minDateTime',
+  'maxDateTime',
+];
+
+const VALIDATION_PROP_NAMES = [
+  ...DATE_VALIDATION_PROP_NAMES,
+  ...TIME_VALIDATION_PROP_NAMES,
+  ...DATE_TIME_VALIDATION_PROP_NAMES,
 ];
 
 type ValidationPropNames = (typeof VALIDATION_PROP_NAMES)[number];

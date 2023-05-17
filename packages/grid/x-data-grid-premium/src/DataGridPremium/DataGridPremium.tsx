@@ -128,6 +128,11 @@ DataGridPremiumRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: PropTypes.string,
+  /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
    */
@@ -194,6 +199,11 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   disableChildrenSorting: PropTypes.bool,
+  /**
+   * If `true`, the clipboard paste is disabled.
+   * @default false
+   */
+  disableClipboardPaste: PropTypes.bool,
   /**
    * If `true`, column filters are disabled.
    * @default false
@@ -269,6 +279,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    clipboardPaste: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
@@ -510,6 +521,19 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy: PropTypes.func,
+  /**
+   * Callback fired when the clipboard paste operation ends.
+   */
+  onClipboardPasteEnd: PropTypes.func,
+  /**
+   * Callback fired when the clipboard paste operation starts.
+   */
+  onClipboardPasteStart: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -925,9 +949,28 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_cellSelectionModel: PropTypes.object,
   /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default: false
+   */
+  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
+  /**
    * Callback fired when the selection state of one or multiple cells changes.
    * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containing the selected cells.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   unstable_onCellSelectionModelChange: PropTypes.func,
+  /**
+   * The function is used to split the pasted text into rows and cells.
+   * @param {string} text The text pasted from the clipboard.
+   * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
+   * @default `(text) => text.split(/\r\n|\n|\r/).map((row) => row.split('\t'))`
+   */
+  unstable_splitClipboardPastedText: PropTypes.func,
 } as any;

@@ -103,6 +103,11 @@ MobileDateRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
+  /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
    * @returns {string} The name to display.

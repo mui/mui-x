@@ -89,6 +89,11 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   calendars?: 1 | 2 | 3;
   /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition?: 1 | 2 | 3;
+  /**
    * If `true`, editing dates by dragging is disabled.
    * @default false
    */

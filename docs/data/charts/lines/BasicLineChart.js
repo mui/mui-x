@@ -4,11 +4,10 @@ import { LineChart } from '@mui/x-charts/LineChart';
 export default function BasicLineChart() {
   return (
     <LineChart
-      xAxis={[{ id: 'x', data: [1, 2, 3, 4, 8, 10] }]}
+      xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
       series={[
         {
-          id: 'y',
-          data: [0, 5, 2, 8, 1, 1],
+          data: [2, 5, 2, 8, 1, 5],
         },
       ]}
       width={600}

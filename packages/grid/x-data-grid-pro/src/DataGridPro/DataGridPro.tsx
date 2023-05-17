@@ -111,6 +111,11 @@ DataGridProRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: PropTypes.string,
+  /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
    */
@@ -470,6 +475,11 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -854,4 +864,16 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default: false
+   */
+  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
 } as any;

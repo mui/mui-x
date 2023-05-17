@@ -10,6 +10,7 @@ import { TooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import { PopperProps } from '@mui/material/Popper';
 import { TablePaginationProps } from '@mui/material/TablePagination';
+import { ChipProps } from '@mui/material/Chip';
 import { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -33,6 +34,7 @@ export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
 export interface BaseSelectOptionPropsOverrides {}
+export interface BaseChipPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -68,6 +70,7 @@ export interface GridSlotsComponentsProps {
     { native: boolean; value: any; children?: React.ReactNode },
     BaseSelectOptionPropsOverrides
   >;
+  baseChip?: SlotProps<ChipProps, BaseChipPropsOverrides>;
   cell?: SlotProps<GridCellProps, CellPropsOverrides>;
   columnHeaderFilterIconButton?: SlotProps<
     ColumnHeaderFilterIconButtonProps,

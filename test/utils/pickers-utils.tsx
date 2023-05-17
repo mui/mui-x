@@ -312,13 +312,14 @@ export const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
+  const clean = text.replace(/\u202f/g, ' ');
   switch (specialCase) {
     case 'singleDigit':
-      return text.replace(/\u200e/g, '');
+      return clean.replace(/\u200e/g, '');
     case 'RTL':
-      return text.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+      return clean.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
     default:
-      return text;
+      return clean;
   }
 };
 

@@ -70,7 +70,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Видалити всі',
   filterPanelDeleteIconLabel: 'Видалити',
   filterPanelLogicOperator: 'Логічна функція',
   filterPanelOperator: 'Оператори',
@@ -103,7 +103,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Приховати',
   columnMenuUnsort: 'Скасувати сортування',
@@ -174,11 +174,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Агрегація',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationFunctionLabelSum: 'сума',
+  aggregationFunctionLabelAvg: 'сер',
+  aggregationFunctionLabelMin: 'мін',
+  aggregationFunctionLabelMax: 'макс',
+  aggregationFunctionLabelSize: 'кількість',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);

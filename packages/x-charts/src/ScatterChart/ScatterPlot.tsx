@@ -28,7 +28,7 @@ export function ScatterPlot() {
             xScale={xScale}
             yScale={yScale}
             color={color}
-            markerSize={markerSize ?? 2}
+            markerSize={markerSize ?? 4}
             series={series[seriesId]}
           />
         );

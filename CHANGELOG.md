@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.4.0
+
+_May 12, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce clipboard paste support for `DataGridPremium`:
+
+  https://github.com/mui/mui-x/assets/13808724/abfcb5c6-9db6-4677-9ba7-ae97de441080
+
+  See [the documentation](https://mui.com/x/react-data-grid/clipboard/#clipboard-paste) for more information
+
+- 🌍 Improve French (fr-FR), German (de-DE), Portuguese (pt-BR) and Ukrainian (uk-UA) locales on the data grid
+- 🌍 Add Slovak (sk-SK) locale on the pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.4.0` / `@mui/x-data-grid-pro@v6.4.0` / `@mui/x-data-grid-premium@v6.4.0`
+
+#### Changes
+
+- [DataGrid] Fix DataGrid rendering in JSDOM (#8968) @cherniavskii
+- [DataGrid] Fix layout when rendered inside a parent with `display: grid` (#8577) @cherniavskii
+- [DataGrid] Add Joy UI icon slots (#8940) @siriwatknp
+- [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
+- [DataGrid] Extract `baseChip` slot (#8748) @cherniavskii
+- [DataGridPremium] Implement Clipboard import (#7389) @cherniavskii
+- [l10n] Improve French (fr-FR) locale (#8825) @vallereaugabriel
+- [l10n] Improve German (de-DE) locale (#8898) @marcauberer
+- [l10n] Improve Portuguese (pt-BR) locale (#8960) @Sorriso337
+- [l10n] Improve Ukrainian (uk-UA) locale (#8863) @Neonin
+
+### `@mui/x-date-pickers@v6.4.0` / `@mui/x-date-pickers-pro@v6.4.0`
+
+#### Changes
+
+- [pickers] Fix trailing zeros inconsistency in `LuxonAdapter` (#8955) @alexfauquette
+- [pickers] Stop using deprecated adapter methods (#8735) @flaviendelangle
+- [pickers] Strictly type the `adapterLocale` prop of `LocalizationProvider` (#8780) @flaviendelangle
+- [l10n] Add Slovak (sk-SK) locale (#8875) @MatejFacko
+
+### Docs
+
+- [docs] Fix date pickers typo in the docs  (#8939) @richbustos
+- [docs] Fix master detail demo (#8894) @m4theushw
+- [docs] Fix typo in clipboard docs (#8971) @MBilalShafi
+- [docs] Reduce list of dependencies in Codesandbox/Stackblitz demos (#8535) @cherniavskii
+
+### Core
+
+- [core] Improve testing of the adapters (#8789) @flaviendelangle
+- [core] Update license key for tests (#8917) @LukasTy
+- [charts] Make introduction docs pages for each chart (#8869) @alexfauquette
+- [charts] Document Tooltip and Highlighs (#8867) @alexfauquette
+- [test] Cover row grouping regression with a unit test (#8870) @cherniavskii
+- [test] Fix flaky regression tests (#8954) @cherniavskii
+
 ## 6.3.1
 
 _May 5, 2023_
