@@ -227,6 +227,7 @@ const PickersCalendarWeek = styled('div', {
   margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
 });
 
 function WrappedDay<TDate extends unknown>({
