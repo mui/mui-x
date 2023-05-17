@@ -32,9 +32,10 @@ import {
   getSymbolJSDocTags,
   writePrettifiedFile,
 } from './utils';
-import { Project, ProjectNames, Projects } from '../getTypeScriptProjects';
+import { Project, Projects } from '../getTypeScriptProjects';
+import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
-interface ReactApi extends ReactDocgenApi {
+export interface ReactApi extends ReactDocgenApi {
   /**
    * list of page pathnames
    * @example ['/components/Accordion']
@@ -582,9 +583,10 @@ export default async function buildComponentsDocumentation(
     }
 
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
-    return componentsWithApiDoc.map<Promise<any>>(async (filename) => {
+    return componentsWithApiDoc.map<Promise<ApiPageType>>(async (filename) => {
       try {
-        return await buildComponentDocumentation({
+        // Create the api files, and data to create it's link
+        const { name, packages, folder } = await buildComponentDocumentation({
           filename,
           project,
           projects,
@@ -592,12 +594,20 @@ export default async function buildComponentsDocumentation(
           pagesMarkdown,
           documentedInterfaces,
         });
+
+        return {
+          folderName: folder,
+          pathname: `/x/api/${folder}/${kebabCase(name)}`,
+          title: name,
+          plan: getPlan(packages),
+        };
       } catch (error: any) {
         error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
         throw error;
       }
     });
   });
+
   const builds = await Promise.allSettled(promises);
 
   const fails = builds.filter(
@@ -613,42 +623,15 @@ export default async function buildComponentsDocumentation(
 
   // Build charts API page indexes
   const createdPages = builds
-    .filter((promise): promise is PromiseFulfilledResult<any> => promise.status === 'fulfilled')
+    .filter(
+      (promise): promise is PromiseFulfilledResult<ApiPageType> => promise.status === 'fulfilled',
+    )
     .map((build) => build.value);
 
-  Object.entries({
-    charts: 'x-charts',
-    'date-pickers': 'x-date-pickers',
-  } as { [key: string]: ProjectNames }).forEach(([folderName, projectName]) => {
-    const apiPagesCreated = createdPages
-      .filter(({ folder }) => folder === folderName)
-      .map(({ name, packages, folder }) => {
-        let plan: 'pro' | 'premium' | undefined = 'premium';
-        if (packages.some(({ packageName }) => packageName.includes('pro'))) {
-          plan = 'pro';
-        }
-        if (
-          packages.some(
-            ({ packageName }) => !packageName.includes('premium') && !packageName.includes('pro'),
-          )
-        ) {
-          plan = undefined;
-        }
-        return {
-          pathname: `/x/api/${folder}/${kebabCase(name)}`,
-          title: name,
-          plan,
-        };
-      });
-    apiPagesCreated.sort(({ title: titleA }, { title: titleB }) => titleA.localeCompare(titleB));
-
-    writePrettifiedFile(
-      path.resolve(dataFolder, `${folderName}-api-pages.ts`),
-      `import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
-
-export default ${JSON.stringify(apiPagesCreated)} as MuiPage[]`,
-      projects.get(projectName)!,
-    );
+  return saveApiDocPages(createdPages, {
+    dataFolder,
+    identifier: 'component-api',
+    project: projects.get(projects.keys().next().value)!, // Use any project since it's only for pretifier
   });
 }
 

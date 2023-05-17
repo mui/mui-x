@@ -3,8 +3,9 @@ import standardNavIcons from '@mui/monorepo/docs/src/modules/components/AppNavIc
 import ChartIcon from '@mui/icons-material/BarChartRounded';
 import TableViewIcon from '@mui/icons-material/TableViewRounded';
 import DatePickerIcon from '@mui/icons-material/DateRangeRounded';
-import pickersApi from './date-pickers-api-pages';
-import chartsApi from './charts-api-pages';
+import dataGridComponentApi from './data-grid-component-api-pages';
+import pickersComponentApi from './date-pickers-component-api-pages';
+import chartsComponentApi from './charts-component-api-pages';
 
 const isPreview =
   process.env.NODE_ENV === 'development' ||
@@ -119,13 +120,7 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/api/data-grid-components-group',
             subheader: 'Components',
-            children: [
-              { pathname: '/x/api/data-grid/data-grid', title: 'DataGrid' },
-              { pathname: '/x/api/data-grid/data-grid-pro', title: 'DataGridPro' },
-              { pathname: '/x/api/data-grid/data-grid-premium', title: 'DataGridPremium' },
-              { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
-              { pathname: '/x/api/data-grid/grid-filter-panel', title: 'GridFilterPanel' },
-            ],
+            children: [...dataGridComponentApi],
           },
           {
             pathname: '/x/api/data-grid-interfaces-group',
@@ -298,7 +293,7 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
-        children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersApi],
+        children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
       },
     ],
   },
@@ -364,7 +359,7 @@ const pages: MuiPage[] = [
             {
               pathname: '/x/api/charts-group',
               title: 'API Reference',
-              children: [...chartsApi],
+              children: [...chartsComponentApi],
             },
           ],
         },
