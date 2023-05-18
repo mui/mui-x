@@ -1,25 +1,28 @@
 import * as React from 'react';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internal/models/dateTimeRange';
 import { RangePosition } from '../internal/models/range';
+import { RangeFieldSection } from '../internal/models/fields';
+import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 
-export interface UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate>> &
-    UseMultiInputDateTimeRangeFieldProps<TDate>;
-  startTextFieldProps: TChildProps;
-  endTextFieldProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
-}
+export type UseMultiInputDateTimeRangeFieldParams<
+  TDate,
+  TTextFieldSlotProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
 export interface UseMultiInputDateTimeRangeFieldProps<TDate>
-  extends UseDateTimeRangeFieldProps<TDate> {}
+  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef'> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+}
 
 export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -29,16 +32,29 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps ext
 
 export interface MultiInputDateTimeRangeFieldProps<TDate>
   extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+  autoFocus?: boolean;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: MultiInputDateTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<MultiInputDateTimeRangeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type MultiInputDateTimeRangeFieldOwnerState<TDate> =

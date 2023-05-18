@@ -15,9 +15,10 @@ import {
   timePickerToolbarClasses,
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
-import { TimeView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-export interface TimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, TimeView> {
+export interface TimePickerToolbarProps<TDate>
+  extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem> {
   ampm?: boolean;
   ampmInClock?: boolean;
   classes?: Partial<TimePickerToolbarClasses>;
@@ -132,10 +133,6 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   },
 }));
 
-/**
- * @ignore - internal component.
- */
-
 TimePickerToolbarAmPmSelection.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -157,11 +154,9 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
     ampmInClock,
     value,
     isLandscape,
-    isMobileKeyboardViewOpen,
     onChange,
     view,
     onViewChange,
-    toggleMobileKeyboardView,
     views,
     disabled,
     readOnly,
@@ -192,12 +187,9 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
 
   return (
     <TimePickerToolbarRoot
-      viewType="time"
       landscapeDirection="row"
       toolbarTitle={localeText.timePickerToolbarTitle}
       isLandscape={isLandscape}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       ownerState={ownerState}
       className={classes.root}
       {...other}
@@ -278,8 +270,12 @@ TimePickerToolbar.propTypes = {
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
-  isMobileKeyboardViewOpen: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
@@ -288,7 +284,7 @@ TimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
-  toggleMobileKeyboardView: PropTypes.func,
+  titleId: PropTypes.string,
   /**
    * Toolbar date format.
    */
@@ -302,10 +298,9 @@ TimePickerToolbar.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired,
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']).isRequired)
+    .isRequired,
 } as any;
 
 export { TimePickerToolbar };

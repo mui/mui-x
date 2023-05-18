@@ -2,6 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { inputBaseClasses } from '@mui/material/InputBase';
+import { getExpectedOnChangeCount } from 'test/utils/pickers-utils';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
@@ -18,6 +20,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     clock,
     ...pickerParams
   } = getOptions();
+
+  const params = pickerParams as DescribeValueOptions<'picker', any>;
 
   describe('Controlled / uncontrolled value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
@@ -48,7 +52,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
-      expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -64,7 +68,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       render(<ElementToTest value={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
-      expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -82,7 +86,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
     ['readOnly', 'disabled'].forEach((prop) => {
       it(`should apply ${prop}="true" prop`, () => {
-        if (!['field', 'new-picker'].includes(componentFamily)) {
+        if (!['field', 'picker'].includes(componentFamily)) {
           return;
         }
         const handleChange = spy();
@@ -96,10 +100,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should not allow editing with keyboard in mobile pickers', () => {
-      if (
-        componentFamily !== 'new-picker' ||
-        (pickerParams as DescribeValueOptions<'new-picker', any>).variant !== 'mobile'
-      ) {
+      if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
       const handleChange = spy();
@@ -113,6 +114,98 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       userEvent.keyPress(input, { key: 'ArrowUp' });
       clock.runToLast();
       expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should have correct labelledby relationship when toolbar is shown', () => {
+      if (
+        componentFamily !== 'picker' ||
+        (params.variant === 'desktop' && params.type === 'date-range')
+      ) {
+        return;
+      }
+
+      render(
+        <ElementToTest
+          open
+          slotProps={{ toolbar: { hidden: false } }}
+          localeText={{ toolbarTitle: 'Test toolbar' }}
+        />,
+      );
+      expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
+    });
+
+    it('should have correct labelledby relationship with provided label when toolbar is hidden', () => {
+      if (
+        componentFamily !== 'picker' ||
+        (params.variant === 'desktop' && params.type === 'date-range')
+      ) {
+        return;
+      }
+
+      render(
+        <ElementToTest
+          open
+          {...(params.type === 'date-range'
+            ? {
+                localeText: {
+                  start: 'test',
+                  end: 'relationship',
+                },
+              }
+            : { label: 'test relationship' })}
+          slotProps={{ toolbar: { hidden: true } }}
+        />,
+      );
+      expect(screen.getByLabelText('test relationship', { selector: 'div' })).to.have.attribute(
+        'role',
+        'dialog',
+      );
+    });
+
+    it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {
+      if (
+        componentFamily !== 'picker' ||
+        (params.variant === 'desktop' && params.type === 'date-range')
+      ) {
+        return;
+      }
+
+      render(
+        <div>
+          <div id="label-id">external label</div>
+          <ElementToTest
+            open
+            {...(params.type === 'date-range' && {
+              localeText: {
+                start: '',
+                end: '',
+              },
+            })}
+            slotProps={{
+              toolbar: { hidden: true },
+              [params.variant === 'desktop' ? 'popper' : 'mobilePaper']: {
+                'aria-labelledby': 'label-id',
+              },
+            }}
+          />
+        </div>,
+      );
+      expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog');
+    });
+
+    describe('slots: textField', () => {
+      it('should respect provided `error="true"` prop', () => {
+        if (!['field', 'picker'].includes(componentFamily)) {
+          return;
+        }
+        render(<ElementToTest slotProps={{ textField: { error: true } }} />);
+
+        const textBoxes = screen.getAllByRole('textbox');
+        textBoxes.forEach((textbox) => {
+          expect(textbox.parentElement).to.have.class(inputBaseClasses.error);
+          expect(textbox).to.have.attribute('aria-invalid', 'true');
+        });
+      });
     });
   });
 };

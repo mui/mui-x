@@ -1,6 +1,0 @@
-<NextDatePicker
-  label="Custom input"
-  components={{
-    TextField: BrowserInput,
-  }}
-/>

@@ -6,7 +6,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
-  errorOverlayDefaultLabel: 'Tapahtui virhe.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tiiveys',
@@ -48,6 +47,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Poista',
   filterPanelLogicOperator: 'Logiikkaoperaattori',
   filterPanelOperator: 'Operaattorit',
@@ -71,6 +71,33 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'on tyhjä',
   filterOperatorIsNotEmpty: 'ei ole tyhjä',
   filterOperatorIsAnyOf: 'mikä tahansa seuraavista',
+  // filterOperator=: '=',
+  // filterOperator!=: '!=',
+  // filterOperator>: '>',
+  // filterOperator>=: '>=',
+  // filterOperator<: '<',
+  // filterOperator<=: '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // headerFilterOperator=: 'Equals',
+  // headerFilterOperator!=: 'Not equals',
+  // headerFilterOperator>: 'Is greater than',
+  // headerFilterOperator>=: 'Is greater than or equal to',
+  // headerFilterOperator<: 'Is less than',
+  // headerFilterOperator<=: 'Is less than or equal to',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',

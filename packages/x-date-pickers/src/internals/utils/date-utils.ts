@@ -1,4 +1,4 @@
-import { MuiPickersAdapter } from '../models';
+import { MuiPickersAdapter } from '../../models';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
@@ -100,4 +100,37 @@ export const applyDefaultDate = <TDate>(
   }
 
   return value;
+};
+
+export const areDatesEqual = <TDate>(utils: MuiPickersAdapter<TDate>, a: TDate, b: TDate) => {
+  if (!utils.isValid(a) && a != null && !utils.isValid(b) && b != null) {
+    return true;
+  }
+
+  return utils.isEqual(a, b);
+};
+
+export const getMonthsInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TDate) => {
+  const firstMonth = utils.startOfYear(year);
+  const months = [firstMonth];
+
+  while (months.length < 12) {
+    const prevMonth = months[months.length - 1];
+    months.push(utils.addMonths(prevMonth, 1));
+  }
+
+  return months;
+};
+
+export const mergeDateAndTime = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateParam: TDate,
+  timeParam: TDate,
+) => {
+  let mergedDate = dateParam;
+  mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
+  mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
+  mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
+
+  return mergedDate;
 };

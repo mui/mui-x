@@ -2,18 +2,38 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
-import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
-export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps {
-  type?: 'text' | 'number' | 'date' | 'datetime-local';
-}
+export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
+  TextFieldProps & {
+    type?: 'text' | 'number' | 'date' | 'datetime-local';
+    headerFilterMenu?: React.ReactNode | null;
+    clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (e.g. `isEmpty`)
+     */
+    isFilterActive?: boolean;
+  };
 
-function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
+function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    tabIndex,
+    disabled,
+    headerFilterMenu,
+    isFilterActive,
+    clearButton,
+    InputProps,
+    ...others
+  } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
@@ -46,10 +66,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
     setFilterValueState(String(itemValue));
   }, [item.value]);
 
-  const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
-
   return (
-    <rootProps.components.BaseTextField
+    <rootProps.slots.baseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -57,13 +75,30 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       onChange={onFilterChange}
       variant="standard"
       type={type || 'text'}
-      InputProps={InputProps}
+      InputProps={{
+        ...(applying || clearButton
+          ? {
+              endAdornment: applying ? (
+                <rootProps.slots.loadIcon fontSize="small" color="action" />
+              ) : (
+                clearButton
+              ),
+            }
+          : {}),
+        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
+        disabled,
+        ...InputProps,
+        inputProps: {
+          tabIndex,
+          ...InputProps?.inputProps,
+        },
+      }}
       InputLabelProps={{
         shrink: true,
       }}
       inputRef={focusElementRef}
       {...others}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotProps?.baseTextField}
     />
   );
 }
@@ -77,10 +112,17 @@ GridFilterInputValue.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  clearButton: PropTypes.node,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  headerFilterMenu: PropTypes.node,
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (e.g. `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

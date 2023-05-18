@@ -1,5 +1,5 @@
-<StaticNextDatePicker
-  componentsProps={{
+<StaticDatePicker
+  slotProps={{
     layout: {
       sx: {
         [`.${pickersLayoutClasses.actionBar}`]: {
@@ -9,7 +9,7 @@
       },
     },
   }}
-  components={{
-    ActionBar: ActionList,
+  slots={{
+    actionBar: ActionList,
   }}
 />

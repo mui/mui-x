@@ -24,6 +24,7 @@ import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import { GridPaginationModel } from '../gridPaginationProps';
 
 export interface GridRowEventLookup {
   /**
@@ -191,6 +192,33 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+export interface GridHeaderFilterEventLookup {
+  /**
+   * Fired when a column header filter is clicked
+   * @ignore - do not document.
+   */
+  headerFilterClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a key is pressed in a column header filter. It's mapped to the `keydown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterKeyDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a mouse is pressed in a column header filter. It's mapped to the `mousedown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterMouseDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+}
+
 export interface GridColumnGroupHeaderEventLookup {
   /**
    * Fired when a key is pressed in a column group header. It's mapped do the `keydown` DOM event.
@@ -287,13 +315,9 @@ export interface GridCellEventLookup {
 
 export interface GridControlledStateEventLookup {
   /**
-   * Fired when the page size changes.
+   * Fired when the pagination model changes.
    */
-  pageSizeChange: { params: number };
-  /**
-   * Fired when the page changes.
-   */
-  pageChange: { params: number };
+  paginationModelChange: { params: GridPaginationModel };
   /**
    * Fired when the filter model changes.
    */
@@ -319,11 +343,13 @@ export interface GridControlledStateReasonLookup {
     | 'deleteFilterItem'
     | 'changeLogicOperator'
     | 'restoreState';
+  pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
 }
 
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridHeaderFilterEventLookup,
     GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
@@ -331,10 +357,6 @@ export interface GridEventLookup
    * Fired when the grid is unmounted.
    */
   unmount: {};
-  /**
-   * Fired when an exception is thrown in the grid.
-   */
-  componentError: { params: any };
   /**
    * Fired when the state of the grid is updated.
    */
@@ -513,6 +535,12 @@ export interface GridEventLookup
     params: GridRowSelectionCheckboxParams;
     event: React.ChangeEvent<HTMLElement>;
   };
+
+  // Clipboard
+  /**
+   * Fired when the data is copied to the clipboard
+   */
+  clipboardCopy: { params: string };
 
   // PreferencePanel
   /**

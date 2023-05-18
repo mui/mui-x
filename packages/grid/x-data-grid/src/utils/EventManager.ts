@@ -10,7 +10,6 @@ interface EventListenerCollection {
    * They are run in the opposite order of the registration order
    */
   highPriority: Map<EventListener, true>;
-
   /**
    * List of events to run after the high priority listeners
    * They are run in the registration order

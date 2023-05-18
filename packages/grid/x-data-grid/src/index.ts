@@ -20,17 +20,21 @@ export type { DataGridProps, GridExperimentalFeatures } from './models/props/Dat
 export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExport';
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
+export { GridColumnHeaders } from './components/GridColumnHeaders';
+
 /**
  * Reexportable components.
  */
 export {
   GridColumnMenu,
-  GRID_COLUMN_MENU_COMPONENTS,
-  GRID_COLUMN_MENU_COMPONENTS_PROPS,
+  GRID_COLUMN_MENU_SLOTS,
+  GRID_COLUMN_MENU_SLOT_PROPS,
 } from './components/reexportable';
 
 /**
  * The full grid API.
+ * @demos
+ *   - [API object](/x/react-data-grid/api-object/)
  */
 export type GridApi = GridApiCommunity;
 

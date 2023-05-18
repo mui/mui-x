@@ -12,7 +12,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers',
     false,
-    /\/desktop-time-picker(-[a-z]{2})?\.json$/,
+    /\.\/desktop-time-picker(-[a-z]{2})?\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

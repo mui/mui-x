@@ -17,7 +17,10 @@ export default function ControlledSelectionServerPaginationGrid() {
     maxColumns: 6,
   });
 
-  const [page, setPage] = React.useState(0);
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState(false);
   const [rowSelectionModel, setRowSelectionModel] =
@@ -28,7 +31,7 @@ export default function ControlledSelectionServerPaginationGrid() {
 
     (async () => {
       setLoading(true);
-      const newRows = await loadServerRows(page, data);
+      const newRows = await loadServerRows(paginationModel.page, data);
 
       if (!active) {
         return;
@@ -41,7 +44,7 @@ export default function ControlledSelectionServerPaginationGrid() {
     return () => {
       active = false;
     };
-  }, [page, data]);
+  }, [paginationModel.page, data]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
@@ -50,13 +53,11 @@ export default function ControlledSelectionServerPaginationGrid() {
         rows={rows}
         pagination
         checkboxSelection
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        paginationModel={paginationModel}
+        pageSizeOptions={[5]}
         rowCount={100}
         paginationMode="server"
-        onPageChange={(newPage) => {
-          setPage(newPage);
-        }}
+        onPaginationModelChange={setPaginationModel}
         onRowSelectionModelChange={(newRowSelectionModel) => {
           setRowSelectionModel(newRowSelectionModel);
         }}

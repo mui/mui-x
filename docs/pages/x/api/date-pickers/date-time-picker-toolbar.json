@@ -10,13 +10,24 @@
     },
     "classes": { "type": { "name": "object" } },
     "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
   "slots": {},
   "name": "DateTimePickerToolbar",
   "styles": {
-    "classes": ["root", "dateContainer", "timeContainer", "timeLabelReverse", "separator"],
+    "classes": [
+      "root",
+      "dateContainer",
+      "timeContainer",
+      "timeDigitsContainer",
+      "timeLabelReverse",
+      "separator",
+      "ampmSelection",
+      "ampmLandscape",
+      "ampmLabel"
+    ],
     "globalClasses": {},
     "name": "MuiDateTimePickerToolbar"
   },

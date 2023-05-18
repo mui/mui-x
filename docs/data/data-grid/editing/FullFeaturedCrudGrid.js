@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -78,11 +77,6 @@ function EditToolbar(props) {
     </GridToolbarContainer>
   );
 }
-
-EditToolbar.propTypes = {
-  setRowModesModel: PropTypes.func.isRequired,
-  setRows: PropTypes.func.isRequired,
-};
 
 export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
@@ -214,10 +208,10 @@ export default function FullFeaturedCrudGrid() {
         onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
-        components={{
-          Toolbar: EditToolbar,
+        slots={{
+          toolbar: EditToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           toolbar: { setRows, setRowModesModel },
         }}
       />

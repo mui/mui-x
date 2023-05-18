@@ -14,6 +14,7 @@ import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
+import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid/useDataGridProps';
 
 export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -22,6 +23,37 @@ export const rowsMetaStateInitializer: GridStateInitializer = (state) => ({
     positions: [],
   },
 });
+
+let warnedOnceInvalidRowHeight = false;
+const getValidRowHeight = (
+  rowHeightProp: any,
+  defaultRowHeight: number,
+  warningMessage: string,
+) => {
+  if (typeof rowHeightProp === 'number' && rowHeightProp > 0) {
+    return rowHeightProp;
+  }
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !warnedOnceInvalidRowHeight &&
+    typeof rowHeightProp !== 'undefined' &&
+    rowHeightProp !== null
+  ) {
+    console.warn(warningMessage);
+    warnedOnceInvalidRowHeight = true;
+  }
+  return defaultRowHeight;
+};
+
+const rowHeightWarning = [
+  `MUI: The \`rowHeight\` prop should be a number greater than 0.`,
+  `The default value will be used instead.`,
+].join('\n');
+
+const getRowHeightWarning = [
+  `MUI: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
+  `The default value will be used instead.`,
+].join('\n');
 
 /**
  * @requires useGridPageSize (method)
@@ -58,7 +90,12 @@ export const useGridRowsMeta = (
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
-  const rowHeight = Math.floor(props.rowHeight * densityFactor);
+  const validRowHeight = getValidRowHeight(
+    props.rowHeight,
+    DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
+    rowHeightWarning,
+  );
+  const rowHeight = Math.floor(validRowHeight * densityFactor);
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
@@ -74,7 +111,7 @@ export const useGridRowsMeta = (
       }
 
       const { isResized, needsFirstMeasurement, sizes } = rowsHeightLookup.current[row.id];
-      let baseRowHeight = rowHeight;
+      let baseRowHeight = typeof rowHeight === 'number' && rowHeight > 0 ? rowHeight : 52;
       const existingBaseRowHeight = sizes.baseCenter;
 
       if (isResized) {
@@ -98,8 +135,8 @@ export const useGridRowsMeta = (
           hasRowWithAutoHeight.current = true;
           rowsHeightLookup.current[row.id].autoHeight = true;
         } else {
-          // Default back to base rowHeight if getRowHeight returns null or undefined.
-          baseRowHeight = rowHeightFromUser ?? rowHeight;
+          // Default back to base rowHeight if getRowHeight returns invalid value.
+          baseRowHeight = getValidRowHeight(rowHeightFromUser, rowHeight, getRowHeightWarning);
           rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
           rowsHeightLookup.current[row.id].autoHeight = false;
         }

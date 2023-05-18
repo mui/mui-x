@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -8,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
@@ -40,13 +39,6 @@ function ActionList(props) {
   );
 }
 
-ActionList.propTypes = {
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-};
-
 function RestaurantHeader() {
   return (
     <Box
@@ -72,6 +64,7 @@ function CustomLayout(props) {
     <PickersLayoutRoot
       ownerState={props}
       sx={{
+        overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,
@@ -95,10 +88,10 @@ function CustomLayout(props) {
 export default function AddComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
-        components={{
-          Layout: CustomLayout,
-          ActionBar: ActionList,
+      <StaticDatePicker
+        slots={{
+          layout: CustomLayout,
+          actionBar: ActionList,
         }}
       />
     </LocalizationProvider>

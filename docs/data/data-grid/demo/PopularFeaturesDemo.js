@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPremium,
   gridClasses,
@@ -31,6 +30,8 @@ import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
+import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
+import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
 
 export const featuresSet = [
   {
@@ -61,11 +62,10 @@ export const featuresSet = [
   },
   {
     id: 4,
-    name: 'Lazy Loading',
+    name: 'Lazy loading',
     description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
-    newBadge: true,
     demo: <LazyLoadingGrid />,
   },
   {
@@ -79,7 +79,7 @@ export const featuresSet = [
   },
   {
     id: 6,
-    name: 'Row Grouping',
+    name: 'Row grouping',
     description: 'Group rows with repeating column values',
     plan: 'Premium',
     detailPage: '/row-grouping/',
@@ -120,25 +120,23 @@ export const featuresSet = [
   },
   {
     id: 11,
-    name: 'Row Pinning',
+    name: 'Row pinning',
     description: 'Pin your rows up or down',
     plan: 'Pro',
     detailPage: '/row-pinning/',
     demo: <RowPinningWithPagination />,
-    newBadge: true,
   },
   {
     id: 12,
-    name: 'Aggretation and Summary rows',
+    name: 'Aggregation and Summary rows',
     description: 'Set summary footer rows or inline summaries with row grouping',
     plan: 'Premium',
     detailPage: '/aggregation/',
     demo: <AggregationRowGrouping />,
-    newBadge: true,
   },
   {
     id: 13,
-    name: 'Column Visibility',
+    name: 'Column visibility',
     description:
       'Display different columns in different use cases by defining which columns are visible',
     plan: 'Community',
@@ -147,7 +145,7 @@ export const featuresSet = [
   },
   {
     id: 14,
-    name: 'Column Virtualization',
+    name: 'Column virtualization',
     description: 'High performance support for thousands of columns',
     plan: 'Community',
     detailPage: '/virtualization/#column-virtualization',
@@ -155,7 +153,7 @@ export const featuresSet = [
   },
   {
     id: 15,
-    name: 'Row Virtualization',
+    name: 'Row virtualization',
     description: 'High performance support for vast volume of data',
     plan: 'Pro',
     detailPage: '/virtualization/#row-virtualization',
@@ -168,6 +166,25 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/tree-data/',
     demo: <TreeDataFullExample />,
+  },
+  {
+    id: 17,
+    name: 'Cell Selection',
+    description:
+      'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
+    plan: 'Premium',
+    detailPage: '/cell-selection/',
+    demo: <CellSelectionGrid />,
+    newBadge: true,
+  },
+  {
+    id: 18,
+    name: 'Column menu',
+    description: 'More customization and improved design on v6',
+    plan: 'Community',
+    detailPage: '/column-menu/',
+    demo: <AddNewColumnMenuGrid />,
+    newBadge: true,
   },
 ];
 
@@ -197,10 +214,6 @@ function PlanTag(props) {
   );
 }
 
-PlanTag.propTypes = {
-  plan: PropTypes.string.isRequired,
-};
-
 function CustomToolbar() {
   return (
     <GridToolbarContainer sx={{ p: 1 }}>
@@ -224,19 +237,26 @@ function RowDemo(props) {
   );
 }
 
-RowDemo.propTypes = {
-  row: PropTypes.object.isRequired,
-};
+function CustomSizeAggregationFooter(props) {
+  return (
+    <Typography sx={{ fontWeight: 500, fontSize: '1em' }} color="primary">
+      Total: {props.value}
+    </Typography>
+  );
+}
 
 const columns = [
   {
     field: 'name',
     headerName: 'Feature name',
-    maxWidth: 160,
+    maxWidth: 172,
     flex: 0.2,
     minWidth: 100,
     groupable: false,
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
@@ -297,6 +317,9 @@ const columns = [
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
     renderCell: (params) => {
+      if (params.aggregation) {
+        return <CustomSizeAggregationFooter value={params.formattedValue} />;
+      }
       if (!params.value) {
         return '';
       }
@@ -356,12 +379,12 @@ export default function PopularFeaturesDemo() {
         autoHeight
         disableRowSelectionOnClick
         onRowClick={onRowClick}
-        components={{
-          Toolbar: CustomToolbar,
-          DetailPanelExpandIcon: ArrowDown,
-          DetailPanelCollapseIcon: ArrowUp,
+        slots={{
+          toolbar: CustomToolbar,
+          detailPanelExpandIcon: ArrowDown,
+          detailPanelCollapseIcon: ArrowUp,
         }}
-        componentsProps={{
+        slotProps={{
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
         getDetailPanelContent={getDetailPanelContent}

@@ -2,6 +2,15 @@
 
 <p class="description">Grid aggregation function definition interface.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Aggregation functions](/x/react-data-grid/aggregation/#aggregation-functions)
+
+:::
+
 ## Import
 
 ```js

@@ -1,7 +1,7 @@
-<StaticNextDateTimePicker
-  defaultValue={dayjs('2022-04-07')}
-  components={{ Tabs: CustomTabs }}
-  componentsProps={{
+<StaticDateTimePicker
+  defaultValue={dayjs('2022-04-17')}
+  slots={{ tabs: CustomTabs }}
+  slotProps={{
     tabs: {
       hidden: false,
       dateIcon: <LightModeIcon />,

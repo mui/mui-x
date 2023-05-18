@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useEnhancedEffect as useEnhancedEffect,
@@ -123,9 +123,7 @@ export function GridOverlays() {
     return null;
   }
 
-  const overlay = (
-    <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
-  );
+  const overlay = <rootProps.slots.loadingOverlay {...rootProps.slotProps?.loadingOverlay} />;
 
   if (overlay === null) {
     return null;

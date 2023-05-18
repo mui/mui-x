@@ -58,7 +58,9 @@ Learn more on [the Licensing page](/x/introduction/licensing/#license-key-instal
 
 ### 2. Run the code mod
 
-We have prepared a codemod to help you migrate your codebase
+We have prepared a codemod to help you migrate your codebase.
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```sh
 npx @mui/codemod v5.0.0/date-pickers-moved-to-x <path>

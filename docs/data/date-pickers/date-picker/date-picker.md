@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Picker component
-components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -9,15 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Picker
 
-<p class="description">The Date Picker component let the user select a date.</p>
-
-:::warning
-The new Date Pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
-
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
-(`NextDatePicker` will become `DatePicker`, ...)
-:::
+<p class="description">The Date Picker component lets the user select a date.</p>
 
 ## Basic usage
 
@@ -33,34 +25,42 @@ Check-out their documentation page for more information:
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
 
-## Uncontrolled vs. Controlled
+## Uncontrolled vs. controlled value
 
-The component can be uncontrolled or controlled
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DatePickerValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Available components
 
 The component is available in four variants:
 
-- The `DesktopNextDatePicker` component which works best for mouse devices and large screens.
+- The `DesktopDatePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The `MobileNextDatePicker` component which works best for touch devices and small screens.
+- The `MobileDatePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextDatePicker` component which renders `DesktopNextDatePicker` or `MobileNextDatePicker` depending on the device it runs on.
+- The `DatePicker` component which renders `DesktopDatePicker` or `MobileDatePicker` depending on the device it runs on.
 
 - The `StaticDatePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDatePickers.js"}}
 
-By default, the `NextDatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `DatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning
 Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
-Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
 ## Form props
@@ -101,13 +101,6 @@ You can force a specific orientation using the `orientation` prop:
 You can show a helper text with the date format accepted:
 
 {{"demo": "HelperText.js"}}
-
-## Custom input component
-
-You can customize the rendering of the input with the `TextField` component slot.
-Make sure to spread `inputProps` correctly to the custom input component.
-
-{{"demo": "CustomInput.js"}}
 
 ## Validation
 

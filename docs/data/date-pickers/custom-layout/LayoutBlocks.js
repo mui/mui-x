@@ -6,9 +6,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
-import { Unstable_StaticNextTimePicker as StaticNextTimePicker } from '@mui/x-date-pickers/StaticNextTimePicker';
-import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
@@ -100,9 +100,9 @@ export default function LayoutBlocks() {
         >
           <Box sx={{ margin: 'auto' }}>
             {currentComponent === 'date' && (
-              <StaticNextDatePicker
+              <StaticDatePicker
                 orientation={orientation}
-                componentsProps={{
+                slotProps={{
                   layout: highlighLayout,
                 }}
               />
@@ -110,9 +110,9 @@ export default function LayoutBlocks() {
 
             {currentComponent === 'time' && (
               <Box sx={{ position: 'relative' }}>
-                <StaticNextTimePicker
+                <StaticTimePicker
                   orientation={orientation}
-                  componentsProps={{
+                  slotProps={{
                     layout: highlighLayout,
                   }}
                 />
@@ -120,9 +120,9 @@ export default function LayoutBlocks() {
             )}
 
             {currentComponent === 'date-time' && (
-              <StaticNextDateTimePicker
+              <StaticDateTimePicker
                 orientation={orientation}
-                componentsProps={{
+                slotProps={{
                   layout: highlighLayout,
                 }}
               />

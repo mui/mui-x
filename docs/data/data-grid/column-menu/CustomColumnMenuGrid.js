@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGrid,
   GridColumnMenuFilterItem,
@@ -18,10 +17,6 @@ function MenuCloseComponent(props) {
     </Button>
   );
 }
-
-MenuCloseComponent.propTypes = {
-  onClick: PropTypes.func.isRequired,
-};
 
 function CustomColumnMenu(props) {
   const itemProps = {
@@ -46,11 +41,6 @@ function CustomColumnMenu(props) {
   );
 }
 
-CustomColumnMenu.propTypes = {
-  colDef: PropTypes.object.isRequired,
-  hideMenu: PropTypes.func.isRequired,
-};
-
 export default function CustomColumnMenuGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -62,8 +52,8 @@ export default function CustomColumnMenuGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          ColumnMenu: CustomColumnMenu,
+        slots={{
+          columnMenu: CustomColumnMenu,
         }}
       />
     </div>

@@ -3,7 +3,7 @@
 import childProcess from 'child_process';
 import { promises as fs } from 'fs';
 import path from 'path';
-import yargs from 'yargs';
+import yargs, { CommandModule } from 'yargs';
 
 const jscodeshiftPackage = require('jscodeshift/package.json');
 
@@ -63,6 +63,17 @@ async function runTransform(
 
   // eslint-disable-next-line no-console -- debug information
   console.log(`Executing command: jscodeshift ${args.join(' ')}`);
+  console.warn(`
+====================================
+IMPORTANT NOTICE ABOUT CODEMOD USAGE
+====================================
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies and etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+<DatePicker {...pickerProps} />
+  
+After running the codemods, make sure to test your application and that you don't have any console errors.
+`);
   const jscodeshiftProcess = childProcess.spawnSync('node', args, { stdio: 'inherit' });
 
   if (jscodeshiftProcess.error) {
@@ -90,7 +101,6 @@ yargs
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',
-    // @ts-expect-error
     builder: (command) => {
       return command
         .positional('codemod', {
@@ -114,12 +124,9 @@ yargs
         });
     },
     handler: run,
-  })
+  } as CommandModule<{}, HandlerArgv>)
   .scriptName('npx @mui/x-codemod')
-  .example(
-    '$0 v6.0.0/localization-provider-rename-locale src',
-    'Run "localization-provider-rename-locale" codemod on "src" path',
-  )
+  .example('$0 v6.0.0/preset-safe src', 'Run "preset-safe" codemod on "src" path')
   .example(
     '$0 v6.0.0/component-rename-prop src -- --component=DataGrid --from=prop --to=newProp',
     'Run "component-rename-prop" codemod in "src" path on "DataGrid" component with custom "from" and "to" arguments',

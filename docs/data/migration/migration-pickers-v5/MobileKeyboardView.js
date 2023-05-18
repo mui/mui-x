@@ -1,5 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -14,8 +14,8 @@ import {
   PickersLayoutRoot,
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
-import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';
 
 function LayoutWithKeyboardView(props) {
@@ -24,10 +24,10 @@ function LayoutWithKeyboardView(props) {
 
   const { toolbar, tabs, content, actionBar } = usePickerLayout({
     ...props,
-    componentsProps: {
-      ...props.componentsProps,
+    slotProps: {
+      ...props.slotProps,
       toolbar: {
-        ...props.componentsProps?.toolbar,
+        ...props.slotProps?.toolbar,
         // @ts-ignore
         showKeyboardViewSwitch: props.wrapperVariant === 'mobile',
         showKeyboardView,
@@ -53,123 +53,6 @@ function LayoutWithKeyboardView(props) {
     </PickersLayoutRoot>
   );
 }
-
-LayoutWithKeyboardView.propTypes = {
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps: PropTypes.shape({
-    /**
-     * Props passed down to the action bar component.
-     */
-    actionBar: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-    /**
-     * Props passed down to the layoutRoot component.
-     */
-    layout: PropTypes.shape({
-      children: PropTypes.node,
-      classes: PropTypes.object,
-      className: PropTypes.string,
-      /**
-       * Overrideable components.
-       * @default {}
-       */
-      components: PropTypes.shape({
-        /**
-         * Custom component for the action bar, it is placed bellow the picker views.
-         * @default PickersActionBar
-         */
-        ActionBar: PropTypes.elementType,
-        /**
-         * Custom component for wrapping the layout.
-         * It wraps the toolbar, views, and action bar.
-         */
-        Layout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-        /**
-         * Tabs enabling toggling between views.
-         */
-        Tabs: PropTypes.elementType,
-        /**
-         * Custom component for the toolbar.
-         * It is placed above the picker views.
-         */
-        Toolbar: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-      }),
-      /**
-       * The props used for each component slot.
-       * @default {}
-       */
-      componentsProps: PropTypes.object,
-      disabled: PropTypes.bool,
-      isLandscape: PropTypes.bool,
-      onAccept: PropTypes.func,
-      onCancel: PropTypes.func,
-      onChange: PropTypes.func,
-      onClear: PropTypes.func,
-      onClose: PropTypes.func,
-      onDismiss: PropTypes.func,
-      onOpen: PropTypes.func,
-      onSetToday: PropTypes.func,
-      onViewChange: PropTypes.func,
-      /**
-       * Force rendering in particular orientation.
-       */
-      orientation: PropTypes.oneOf(['landscape', 'portrait']),
-      readOnly: PropTypes.bool,
-      showToolbar: PropTypes.bool,
-      sx: PropTypes.oneOfType([
-        PropTypes.arrayOf(
-          PropTypes.oneOfType([
-            PropTypes.oneOf([null]),
-            PropTypes.func,
-            PropTypes.object,
-            PropTypes.bool,
-          ]),
-        ),
-        PropTypes.func,
-        PropTypes.object,
-      ]),
-      value: PropTypes.any,
-      view: PropTypes.oneOf([
-        'day',
-        'hours',
-        'minutes',
-        'month',
-        'seconds',
-        'year',
-        null,
-      ]).isRequired,
-      views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year'])),
-      wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
-    }),
-    /**
-     * Props passed down to the tabs component.
-     */
-    tabs: PropTypes.object,
-    /**
-     * Props passed down to the toolbar component.
-     */
-    toolbar: PropTypes.shape({
-      /**
-       * className applied to the root component.
-       */
-      className: PropTypes.string,
-      /**
-       * Toolbar date format.
-       */
-      toolbarFormat: PropTypes.string,
-      /**
-       * Toolbar value placeholder—it is displayed when the value is empty.
-       * @default "––"
-       */
-      toolbarPlaceholder: PropTypes.node,
-    }),
-  }),
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.any,
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile', null]).isRequired,
-};
 
 function ToolbarWithKeyboardViewSwitch(props) {
   const { showKeyboardViewSwitch, showKeyboardView, setShowKeyboardView, ...other } =
@@ -203,21 +86,13 @@ function ToolbarWithKeyboardViewSwitch(props) {
 
   return <DatePickerToolbar {...other} />;
 }
-
-ToolbarWithKeyboardViewSwitch.propTypes = {
-  isLandscape: PropTypes.bool.isRequired,
-  setShowKeyboardView: PropTypes.func,
-  showKeyboardView: PropTypes.bool,
-  showKeyboardViewSwitch: PropTypes.bool,
-};
-
 export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MobileNextDatePicker
-        components={{
-          Layout: LayoutWithKeyboardView,
-          Toolbar: ToolbarWithKeyboardViewSwitch,
+      <MobileDatePicker
+        slots={{
+          layout: LayoutWithKeyboardView,
+          toolbar: ToolbarWithKeyboardViewSwitch,
         }}
       />
     </LocalizationProvider>

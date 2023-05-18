@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
-import Chip from '@mui/material/Chip';
 import { unstable_useId as useId } from '@mui/utils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
@@ -57,7 +56,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     <Autocomplete<string, true, false, true>
       multiple
       freeSolo
-      limitTags={1}
       options={[]}
       filterOptions={(options, params) => {
         const { inputValue } = params;
@@ -68,11 +66,16 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
       onChange={handleChange}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (
-          <Chip variant="outlined" size="small" label={option} {...getTagProps({ index })} />
+          <rootProps.slots.baseChip
+            variant="outlined"
+            size="small"
+            label={option}
+            {...getTagProps({ index })}
+          />
         ))
       }
       renderInput={(params) => (
-        <rootProps.components.BaseTextField
+        <rootProps.slots.baseTextField
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -83,7 +86,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
           inputRef={focusElementRef}
           type={type || 'text'}
           {...TextFieldProps}
-          {...rootProps.componentsProps?.baseTextField}
+          {...rootProps.slotProps?.baseTextField}
         />
       )}
       {...other}

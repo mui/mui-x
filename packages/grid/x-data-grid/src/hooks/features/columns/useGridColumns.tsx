@@ -71,8 +71,8 @@ export function useGridColumns(
     | 'columns'
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
-    | 'components'
-    | 'componentsProps'
+    | 'slots'
+    | 'slotProps'
     | 'disableColumnSelector'
     | 'signature'
   >,
@@ -276,7 +276,7 @@ export function useGridColumns(
 
       const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
       const shouldExportColumnVisibilityModel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.columnVisibilityModel != null ||
@@ -351,13 +351,13 @@ export function useGridColumns(
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.columns) {
-        const ColumnsPanel = props.components.ColumnsPanel;
-        return <ColumnsPanel {...props.componentsProps?.columnsPanel} />;
+        const ColumnsPanel = props.slots.columnsPanel;
+        return <ColumnsPanel {...props.slotProps?.columnsPanel} />;
       }
 
       return initialValue;
     },
-    [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
+    [props.slots.columnsPanel, props.slotProps?.columnsPanel],
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -366,7 +366,7 @@ export function useGridColumns(
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuColumnsItem'];
+      return [...columnMenuItems, 'columnMenuColumnsItem'];
     },
     [props.disableColumnSelector],
   );

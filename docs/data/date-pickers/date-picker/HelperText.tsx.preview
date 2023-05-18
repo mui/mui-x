@@ -1,8 +1,8 @@
-<NextDatePicker
+<DatePicker
   label="Helper text example"
-  componentsProps={{
+  slotProps={{
     textField: {
-      helperText: 'MM / DD / YYYY',
+      helperText: 'MM/DD/YYYY',
     },
   }}
 />

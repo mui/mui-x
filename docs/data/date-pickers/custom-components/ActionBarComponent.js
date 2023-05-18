@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -8,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import { unstable_useId as useId } from '@mui/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import { useLocaleText } from '@mui/x-date-pickers/internals';
 
@@ -110,31 +109,15 @@ function CustomActionBar(props) {
   );
 }
 
-CustomActionBar.propTypes = {
-  /**
-   * Ordered array of actions to display.
-   * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
-   */
-  actions: PropTypes.arrayOf(
-    PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']),
-  ),
-  className: PropTypes.string,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-};
-
 export default function ActionBarComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
-        defaultValue={dayjs('2022-04-07')}
-        components={{
-          ActionBar: CustomActionBar,
+      <StaticDatePicker
+        defaultValue={dayjs('2022-04-17')}
+        slots={{
+          actionBar: CustomActionBar,
         }}
-        componentsProps={{
+        slotProps={{
           actionBar: {
             actions: ['today'],
           },

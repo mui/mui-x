@@ -33,15 +33,10 @@ export interface GridCoreApi {
    */
   publishEvent: GridEventPublisher;
   /**
-   * Displays the error overlay component.
-   * @param {any} props Props to be passed to the `ErrorOverlay` component.
-   */
-  showError: (props: any) => void;
-  /**
    * Unique identifier for each component instance in a page.
    * @ignore - do not document.
    */
-  instanceId: number;
+  instanceId: { id: number };
 }
 
 export interface GridCorePrivateApi<
@@ -65,6 +60,10 @@ export interface GridCorePrivateApi<
    * The React ref of the grid virtual scroller container element.
    */
   virtualScrollerRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid main container div element.
+   */
+  mainElementRef?: React.RefObject<HTMLDivElement>;
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
@@ -86,6 +85,10 @@ export interface GridCorePrivateApi<
    * The React ref of the grid column container virtualized div element.
    */
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid header filter row element.
+   */
+  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The React ref of the grid column headers container element.
    */

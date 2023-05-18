@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -7,43 +7,47 @@ import {
   PickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
 import {
-  DateOrTimeView,
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
-  WrapperVariantContext,
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
+  BaseFieldProps,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
-import { useRangePickerInputProps } from '../useRangePickerInputProps';
+import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangePosition } from '../../models/range';
-import { BaseMultiInputFieldProps } from '../../models/fields';
+import { DateRange } from '../../models/range';
+import { RangeFieldSection } from '../../models/fields';
+import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
 export const useDesktopRangePicker = <
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
-  validator,
+  ...pickerParams
 }: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
-    components,
-    componentsProps = {},
+    slots,
+    slotProps,
     className,
+    sx,
     format,
+    formatDensity,
+    label,
+    inputRef,
     readOnly,
     disabled,
     autoFocus,
@@ -51,9 +55,10 @@ export const useDesktopRangePicker = <
     localeText,
   } = props;
 
-  const fieldRef = React.useRef<HTMLDivElement>(null);
+  const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+
+  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
 
   const {
     open,
@@ -66,24 +71,24 @@ export const useDesktopRangePicker = <
     DateRange<TDate>,
     TDate,
     TView,
+    RangeFieldSection,
     TExternalProps,
     DesktopRangePickerAdditionalViewProps
   >({
+    ...pickerParams,
     props,
-    valueManager,
     wrapperVariant: 'desktop',
-    validator,
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     },
   });
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
       if (
-        fieldRef.current?.contains(getActiveElement(document)) ||
+        fieldContainerRef.current?.contains(getActiveElement(document)) ||
         popperRef.current?.contains(getActiveElement(document))
       ) {
         return;
@@ -93,144 +98,86 @@ export const useDesktopRangePicker = <
     });
   };
 
-  const fieldSlotsProps = useRangePickerInputProps({
-    wrapperVariant: 'desktop',
-    open,
-    actions,
-    readOnly,
-    disabled,
-    disableOpenPicker,
-    localeText,
-    onBlur: handleBlur,
-    rangePosition,
-    onRangePositionChange: setRangePosition,
-  });
+  const Field = slots.field;
+  const fieldType = (Field as any).fieldType ?? 'multi-input';
 
-  const Field = components.Field;
-  const fieldProps: BaseMultiInputFieldProps<
+  const fieldProps: BaseFieldProps<
     DateRange<TDate>,
+    RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
-    externalSlotProps: componentsProps.field,
+    externalSlotProps: slotProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly,
       disabled,
       className,
+      sx,
       format,
+      formatDensity,
       autoFocus: autoFocus && !props.open,
-      ref: fieldRef,
+      ref: fieldContainerRef,
+      ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,
   });
 
-  const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
-    ...fieldProps.components,
-    TextField: components.TextField,
-    Root: components.FieldRoot,
-    Separator: components.FieldSeparator,
-  };
+  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+    TDate,
+    TView,
+    InferError<TExternalProps>
+  >({
+    wrapperVariant: 'desktop',
+    fieldType,
+    open,
+    actions,
+    readOnly,
+    disableOpenPicker,
+    label,
+    localeText,
+    onBlur: handleBlur,
+    rangePosition,
+    onRangePositionChange,
+    singleInputFieldRef,
+    pickerSlotProps: slotProps,
+    pickerSlots: slots,
+    fieldProps,
+  });
 
-  const componentsPropsForField: BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    unknown
-  >['componentsProps'] = {
-    ...fieldProps.componentsProps,
-    textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps.textField, ownerState);
-      const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.textField,
-        ownerState,
-      );
-      const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldSlotsProps.startInput : fieldSlotsProps.endInput;
-
-      return {
-        ...externalInputProps,
-        ...inputPropsPassedByField,
-        ...inputPropsPassedByPicker,
-        inputProps: {
-          ...externalInputProps?.inputProps,
-          ...inputPropsPassedByField?.inputProps,
-        },
-      };
-    },
-    root: (ownerState) => {
-      const externalRootProps = resolveComponentProps(componentsProps.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.root,
-        ownerState,
-      );
-      return {
-        ...externalRootProps,
-        ...rootPropsPassedByField,
-        ...fieldSlotsProps.root,
-      };
-    },
-    separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(
-        componentsProps.fieldSeparator,
-        ownerState,
-      );
-      const separatorPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.separator,
-        ownerState,
-      );
-      return {
-        ...externalSeparatorProps,
-        ...separatorPropsPassedByField,
-        ...fieldSlotsProps.root,
-      };
-    },
-  };
-
-  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
-    ...componentsProps,
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+    ...slotProps,
     toolbar: {
-      ...componentsProps?.toolbar,
+      ...slotProps?.toolbar,
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
-  const Layout = components?.Layout ?? PickersLayout;
+  const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="desktop">
-        <Field
-          {...fieldProps}
-          components={componentsForField}
-          componentsProps={componentsPropsForField}
-        />
-        <PickersPopper
-          role="tooltip"
-          containerRef={popperRef}
-          anchorEl={fieldRef.current}
-          onBlur={handleBlur}
-          {...actions}
-          open={open}
-          components={{
-            ...components,
-            // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
-            ActionBar: () => null,
-          }}
-          componentsProps={{
-            ...componentsProps,
-            actionBar: undefined,
-          }}
-          shouldRestoreFocus={shouldRestoreFocus}
+      <Field {...enrichedFieldProps} />
+      <PickersPopper
+        role="tooltip"
+        containerRef={popperRef}
+        anchorEl={fieldContainerRef.current}
+        onBlur={handleBlur}
+        {...actions}
+        open={open}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+      >
+        <Layout
+          {...layoutProps}
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotPropsForLayout}
         >
-          <Layout
-            {...layoutProps}
-            {...componentsProps?.layout}
-            components={components}
-            componentsProps={componentsPropsForLayout}
-          >
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </WrapperVariantContext.Provider>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
     </LocalizationProvider>
   );
 

@@ -16,6 +16,8 @@ export interface PickersLayoutClasses {
   actionBar: string;
   /** Styles applied to the tabs. */
   tabs: string;
+  /** Styles applied to the shortcuts container. */
+  shortcuts: string;
 }
 
 export type PickersLayoutClassKey = keyof PickersLayoutClasses;
@@ -26,5 +28,5 @@ export function getPickersLayoutUtilityClass(slot: string) {
 
 export const pickersLayoutClasses = generateUtilityClasses<PickersLayoutClassKey>(
   'MuiPickersLayout',
-  ['root', 'landscape', 'contentWrapper', 'toolbar', 'actionBar'],
+  ['root', 'landscape', 'contentWrapper', 'toolbar', 'actionBar', 'shortcuts'],
 );

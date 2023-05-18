@@ -8,12 +8,12 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 export default function DateCalendarFormProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
         <DemoItem label="disabled">
-          <DateCalendar defaultValue={dayjs('2022-04-07')} disabled />
+          <DateCalendar defaultValue={dayjs('2022-04-17')} disabled />
         </DemoItem>
         <DemoItem label="readOnly">
-          <DateCalendar defaultValue={dayjs('2022-04-07')} readOnly />
+          <DateCalendar defaultValue={dayjs('2022-04-17')} readOnly />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

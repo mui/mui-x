@@ -12,8 +12,9 @@ import {
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
   GridToolbar,
+  gridExpandedSortedRowEntriesSelector,
+  gridClasses,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -89,7 +90,7 @@ describe('<DataGridPro /> - Filter', () => {
       const columnForNewFilter = columns
         .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
         .find((colDef) => colDef.filterOperators?.length);
-      return columnForNewFilter?.field;
+      return columnForNewFilter?.field ?? null;
     };
 
     render(
@@ -137,7 +138,6 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    // TODO: Debug two calls each filter
     expect(getColumnForNewFilter.callCount).to.equal(2);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     fireEvent.click(addButton);
@@ -168,7 +168,9 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
 
-    const selectListOfColumns = document.querySelectorAll('.MuiDataGrid-filterFormColumnInput')[0];
+    const selectListOfColumns = document.querySelectorAll<HTMLElement>(
+      '.MuiDataGrid-filterFormColumnInput',
+    )[0];
     const availableColumns = within(selectListOfColumns).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
@@ -314,6 +316,71 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
+  it('should work as expected with "Add filter" and "Remove all" buttons ', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    const removeButton = screen.getByRole('button', { name: /Remove all/i });
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(3);
+    fireEvent.click(removeButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    // clicking on `remove all` should close the panel when no filters
+    fireEvent.click(removeButton);
+    clock.tick(100);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
+  });
+
+  it('should hide `Add filter` in filter panel when `disableAddFilterButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableAddFilterButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).not.to.equal(null);
+  });
+
+  it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableRemoveAllButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).not.to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
+  });
+
   it('should allow multiple filter and changing the logicOperator', () => {
     const newModel: GridFilterModel = {
       items: [
@@ -398,7 +465,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), { target: { value: '' } });
+    fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '' } });
     clock.tick(500);
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
@@ -450,7 +517,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -466,7 +533,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     apiRef.current.subscribeEvent('filterModelChange', listener);
     expect(listener.callCount).to.equal(0);
-    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(listener.callCount).to.equal(1);
     expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -483,7 +550,7 @@ describe('<DataGridPro /> - Filter', () => {
       logicOperator: GridLogicOperator.Or,
     };
     render(<TestCase checkboxSelection filterModel={newModel} />);
-    const checkAllCell = getColumnHeaderCell(0).querySelector('input');
+    const checkAllCell = getColumnHeaderCell(0).querySelector('input')!;
     fireEvent.click(checkAllCell);
     expect(apiRef.current.state.rowSelection).to.deep.equal([1]);
   });
@@ -504,7 +571,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visibleRows', () => {
+  it('should show the latest expandedRows', () => {
     render(
       <TestCase
         initialState={{
@@ -521,8 +588,11 @@ describe('<DataGridPro /> - Filter', () => {
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-    expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
-    expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(gridExpandedSortedRowEntriesSelector(apiRef).length).to.equal(1);
+    expect(gridExpandedSortedRowEntriesSelector(apiRef)[0].model).to.deep.equal({
+      id: 1,
+      brand: 'Adidas',
+    });
   });
 
   it('should not scroll the page when a filter is removed from the panel', function test() {
@@ -774,6 +844,155 @@ describe('<DataGridPro /> - Filter', () => {
 
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
+    });
+  });
+
+  it('should give a stable ID to the filter item used as placeholder', function test() {
+    if (isJSDOM) {
+      this.skip(); // It's not re-rendering the filter panel correctly
+    }
+
+    const { rerender } = render(<TestCase slots={{ toolbar: GridToolbar }} />);
+    const filtersButton = screen.getByRole('button', { name: /Filters/i });
+    fireEvent.click(filtersButton);
+
+    let filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    const oldId = filterForm!.dataset.id;
+
+    rerender(<TestCase slots={{ toolbar: GridToolbar }} rows={[{ id: 0, brand: 'ADIDAS' }]} />);
+    filterForm = document.querySelector<HTMLElement>(`.${gridClasses.filterForm}`);
+    const newId = filterForm!.dataset.id;
+    expect(oldId).to.equal(newId);
+  });
+
+  describe('Header filters', () => {
+    it('should reflect the `filterModel` prop in header filters correctly', () => {
+      render(<TestCase filterModel={filterModel} unstable_headerFilters />);
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      const filterCellInput = getColumnHeaderCell(0, 1).querySelector('input');
+      expect(filterCellInput).to.have.value('a');
+    });
+
+    it('should apply filters on type when the focus is on cell', () => {
+      render(<TestCase unstable_headerFilters />);
+
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      const filterCell = getColumnHeaderCell(0, 1);
+      const filterCellInput = filterCell.querySelector('input')!;
+      expect(filterCellInput).not.toHaveFocus();
+      fireEvent.mouseDown(filterCell);
+      expect(filterCellInput).toHaveFocus();
+      fireEvent.change(filterCellInput, { target: { value: 'ad' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+    });
+
+    it('should call `onFilterModelChange` when filters are updated', () => {
+      const onFilterModelChange = spy();
+      render(<TestCase onFilterModelChange={onFilterModelChange} unstable_headerFilters />);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      const filterCellInput = filterCell.querySelector('input')!;
+      fireEvent.click(filterCell);
+      fireEvent.change(filterCellInput, { target: { value: 'ad' } });
+      clock.tick(SUBMIT_FILTER_STROKE_TIME);
+      expect(onFilterModelChange.callCount).to.equal(1);
+    });
+
+    it('should allow to change the operator from operator menu', () => {
+      const onFilterModelChange = spy();
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'a',
+                  },
+                ],
+              },
+            },
+          }}
+          onFilterModelChange={onFilterModelChange}
+          unstable_headerFilters
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+
+      const filterCell = getColumnHeaderCell(0, 1);
+      fireEvent.click(filterCell);
+
+      fireEvent.click(within(filterCell).getByLabelText('Operator'));
+      fireEvent.click(screen.getByRole('menuitem', { name: '= Equals' }));
+
+      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.lastCall.firstArg.items[0].operator).to.equal('equals');
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+
+    it('should allow to clear the filter by clear button', () => {
+      render(
+        <TestCase
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [
+                  {
+                    field: 'brand',
+                    operator: 'contains',
+                    value: 'a',
+                  },
+                ],
+              },
+            },
+          }}
+          unstable_headerFilters
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      fireEvent.click(screen.getByRole('button', { name: 'Clear filter' }));
+      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    });
+
+    it('should allow to customize header filter cell using `renderHeaderFilter`', () => {
+      render(
+        <TestCase
+          columns={[
+            { field: 'brand', headerName: 'Brand', renderHeaderFilter: () => 'Custom Filter Cell' },
+          ]}
+          unstable_headerFilters
+        />,
+      );
+
+      expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Filter Cell');
+    });
+
+    it('should allow to customize header filter cell using `filterOperators`', () => {
+      render(
+        <TestCase
+          columns={[
+            {
+              field: 'brand',
+              headerName: 'Brand',
+              filterOperators: [
+                {
+                  value: 'contains',
+                  getApplyFilterFn: () => () => true,
+                  InputComponent: () => <div>Custom Input</div>,
+                },
+              ],
+            },
+          ]}
+          unstable_headerFilters
+        />,
+      );
+
+      expect(getColumnHeaderCell(0, 1).textContent).to.equal('Custom Input');
     });
   });
 });

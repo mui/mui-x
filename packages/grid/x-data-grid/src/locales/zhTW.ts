@@ -6,7 +6,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有資料',
   noResultsOverlayLabel: '沒有結果',
-  errorOverlayDefaultLabel: '發生錯誤',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -47,6 +46,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: '刪除',
   filterPanelLogicOperator: '邏輯運算子',
   filterPanelOperator: '運算子',
@@ -70,6 +70,33 @@ const zhTWGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '為空',
   filterOperatorIsNotEmpty: '不為空',
   filterOperatorIsAnyOf: '是其中之一',
+  // filterOperator=: '=',
+  // filterOperator!=: '!=',
+  // filterOperator>: '>',
+  // filterOperator>=: '>=',
+  // filterOperator<: '<',
+  // filterOperator<=: '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // headerFilterOperator=: 'Equals',
+  // headerFilterOperator!=: 'Not equals',
+  // headerFilterOperator>: 'Is greater than',
+  // headerFilterOperator>=: 'Is greater than or equal to',
+  // headerFilterOperator<: 'Is less than',
+  // headerFilterOperator<=: 'Is less than or equal to',
 
   // Filter values text
   filterValueAny: '任何值',

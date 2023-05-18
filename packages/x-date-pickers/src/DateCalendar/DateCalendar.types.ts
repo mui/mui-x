@@ -16,11 +16,12 @@ import {
   YearValidationProps,
   MonthValidationProps,
   DayValidationProps,
-} from '../internals/hooks/validation/models';
-import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+} from '../internals/models/validation';
+import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView } from '../internals/models/views';
+import { DateView } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
 
@@ -33,7 +34,7 @@ export interface DateCalendarSlotsComponentsProps<TDate>
     DayCalendarSlotsComponentsProps<TDate> {}
 
 export interface ExportedDateCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
     BaseDateValidationProps<TDate>,
@@ -66,23 +67,23 @@ export interface ExportedDateCalendarProps<TDate>
    */
   renderLoading?: () => React.ReactNode;
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
   onYearChange?: (year: TDate) => void;
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
+  onMonthChange?: (month: TDate) => void;
 }
 
 export interface DateCalendarProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView> {
+    ExportedUseViewsOptions<DateView>,
+    SlotsAndSlotProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -106,16 +107,6 @@ export interface DateCalendarProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DateCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DateCalendarSlotsComponentsProps<TDate>;
 }
 
 export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<

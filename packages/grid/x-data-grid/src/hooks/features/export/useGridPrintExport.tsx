@@ -3,7 +3,7 @@ import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
@@ -37,6 +37,15 @@ type PrintWindowOnLoad = (
     'copyStyles' | 'bodyClassName' | 'pageStyle' | 'hideToolbar' | 'hideFooter'
   >,
 ) => void;
+
+function buildPrintWindow(title?: string): HTMLIFrameElement {
+  const iframeEl = document.createElement('iframe');
+  iframeEl.style.position = 'absolute';
+  iframeEl.style.width = '0px';
+  iframeEl.style.height = '0px';
+  iframeEl.title = title || document.title;
+  return iframeEl;
+}
 
 /**
  * @requires useGridColumns (state)
@@ -85,18 +94,6 @@ export const useGridPrintExport = (
       }),
     [apiRef],
   );
-
-  // TODO move outside of this scope and remove React.useCallback
-  const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
-    const iframeEl = document.createElement('iframe');
-
-    iframeEl.style.position = 'absolute';
-    iframeEl.style.width = '0px';
-    iframeEl.style.height = '0px';
-    iframeEl.title = title || document.title;
-
-    return iframeEl;
-  }, []);
 
   const handlePrintWindowLoad: PrintWindowOnLoad = React.useCallback(
     (printWindow, options): void => {
@@ -180,7 +177,12 @@ export const useGridPrintExport = (
       }
 
       if (normalizeOptions.copyStyles) {
-        const headStyleElements = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
+        const rootCandidate = gridRootElement!.getRootNode();
+        const root =
+          rootCandidate.constructor.name === 'ShadowRoot'
+            ? (rootCandidate as ShadowRoot)
+            : doc.current;
+        const headStyleElements = root!.querySelectorAll("style, link[rel='stylesheet']");
 
         for (let i = 0; i < headStyleElements.length; i += 1) {
           const node = headStyleElements[i];
@@ -258,7 +260,7 @@ export const useGridPrintExport = (
       previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
 
       if (props.pagination) {
-        const visibleRowCount = gridVisibleRowCountSelector(apiRef);
+        const visibleRowCount = gridExpandedRowCountSelector(apiRef);
         apiRef.current.setPageSize(visibleRowCount);
       }
 
@@ -274,9 +276,14 @@ export const useGridPrintExport = (
       } else {
         printWindow.onload = () => {
           handlePrintWindowLoad(printWindow, options);
-          printWindow.contentWindow!.onafterprint = () => {
-            handlePrintWindowAfterPrint(printWindow);
-          };
+
+          const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
+          mediaQueryList.addEventListener('change', (mql) => {
+            const isAfterPrint = mql.matches === false;
+            if (isAfterPrint) {
+              handlePrintWindowAfterPrint(printWindow);
+            }
+          });
         };
         doc.current!.body.appendChild(printWindow);
       }
@@ -285,7 +292,6 @@ export const useGridPrintExport = (
       props,
       logger,
       apiRef,
-      buildPrintWindow,
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,
       updateGridColumnsForPrint,

@@ -24,7 +24,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
     // #default-branch-switch with latest for the master branch
-    return 'next';
+    return 'latest';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -34,35 +34,14 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid-premium']) {
-      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
-      // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
-      // use `import 'exceljs'` in demonstrations instead
-      newDeps.exceljs = versions.exceljs;
-    }
-
-    if (newDeps['@mui/x-data-grid-pro']) {
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
-    }
-
-    if (newDeps['@mui/x-data-grid']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-    }
+    newDeps['@mui/material'] = versions['@mui/material'];
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid']; // TS types are imported from @mui/x-data-grid
-      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
     }
 
-    if (newDeps['@mui/x-date-pickers-pro']) {
-      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
-    }
-
-    if (newDeps['@mui/x-date-pickers']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['date-fns'] = versions['date-fns'];
+    if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
+      newDeps.dayjs = versions.dayjs;
     }
 
     return newDeps;
@@ -77,6 +56,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       'date-fns': 'latest',
+      dayjs: 'latest',
       exceljs: 'latest',
     };
     return output;
@@ -147,7 +127,7 @@ async function registerServiceWorker() {
     window.location.host.indexOf('mui.com') !== -1
   ) {
     // register() automatically attempts to refresh the sw.js.
-    const registration = await navigator.serviceWorker.register('/sw.js');
+    const registration = await navigator.serviceWorker.register('/x/sw.js');
     // Force the page reload for users.
     forcePageReload(registration);
   }
@@ -215,6 +195,10 @@ function AppWrapper(props) {
     return { activePage, activePageParents, pages };
   }, [router.pathname]);
 
+  // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
+  // Fixes playground styles in dark mode.
+  const ThemeWrapper = router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
+
   return (
     <React.Fragment>
       <NextHead>
@@ -226,12 +210,12 @@ function AppWrapper(props) {
         <CodeCopyProvider>
           <CodeVariantProvider>
             <PageContext.Provider value={pageContextValue}>
-              <ThemeProvider>
+              <ThemeWrapper>
                 <DocsStyledEngineProvider cacheLtr={emotionCache}>
                   {children}
                   <GoogleAnalytics />
                 </DocsStyledEngineProvider>
-              </ThemeProvider>
+              </ThemeWrapper>
             </PageContext.Provider>
           </CodeVariantProvider>
         </CodeCopyProvider>

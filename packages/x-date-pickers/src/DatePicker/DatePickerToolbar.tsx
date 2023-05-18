@@ -7,7 +7,7 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
-import { DateView } from '../internals/models';
+import { DateView } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
@@ -53,9 +53,6 @@ type DatePickerToolbarComponent = (<TDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-/**
- * @ignore - internal component.
- */
 const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   inProps: DatePickerToolbarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -64,9 +61,7 @@ const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   const {
     value,
     isLandscape,
-    isMobileKeyboardViewOpen,
     onChange,
-    toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
@@ -107,8 +102,6 @@ const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
     <DatePickerToolbarRoot
       ref={ref}
       toolbarTitle={localeText.datePickerToolbarTitle}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={isLandscape}
       className={classes.root}
       {...other}
@@ -137,8 +130,12 @@ DatePickerToolbar.propTypes = {
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
-  isMobileKeyboardViewOpen: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
@@ -152,7 +149,7 @@ DatePickerToolbar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  toggleMobileKeyboardView: PropTypes.func,
+  titleId: PropTypes.string,
   /**
    * Toolbar date format.
    */
@@ -167,9 +164,7 @@ DatePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;
 
 export { DatePickerToolbar };

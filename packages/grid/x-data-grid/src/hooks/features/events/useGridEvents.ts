@@ -24,7 +24,6 @@ export function useGridEvents(
     | 'onPreferencePanelOpen'
     | 'onRowDoubleClick'
     | 'onRowClick'
-    | 'onError'
     | 'onStateChange'
     | 'onMenuOpen'
     | 'onMenuClose'
@@ -50,6 +49,5 @@ export function useGridEvents(
   useGridApiOptionHandler(apiRef, 'rowDoubleClick', props.onRowDoubleClick);
   useGridApiOptionHandler(apiRef, 'rowClick', props.onRowClick);
 
-  useGridApiOptionHandler(apiRef, 'componentError', props.onError);
   useGridApiOptionHandler(apiRef, 'stateChange', props.onStateChange);
 }

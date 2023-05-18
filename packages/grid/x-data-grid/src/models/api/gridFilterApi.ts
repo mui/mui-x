@@ -1,4 +1,3 @@
-import { GridRowId, GridRowModel } from '../gridRows';
 import { GridFilterModel } from '../gridFilterModel';
 import { GridFilterItem, GridLogicOperator } from '../gridFilterItem';
 import { GridControlledStateReasonLookup } from '../events';
@@ -50,11 +49,6 @@ export interface GridFilterApi {
     model: GridFilterModel,
     reason?: GridControlledStateReasonLookup['filter'],
   ) => void;
-  /**
-   * Returns a sorted `Map` containing only the visible rows.
-   * @returns {Map<GridRowId, GridRowModel>} The sorted `Map`.
-   */
-  getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
   /**
    * Set the quick filter values ot the one given by `values`
    * @param {any[]} values The list of element to quick filter

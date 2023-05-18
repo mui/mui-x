@@ -1,4 +1,4 @@
-export { SingleInputTimeRangeField as Unstable_SingleInputTimeRangeField } from './SingleInputTimeRangeField';
+export { SingleInputTimeRangeField } from './SingleInputTimeRangeField';
 export { useSingleInputTimeRangeField as unstable_useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 export type {
   UseSingleInputTimeRangeFieldProps,

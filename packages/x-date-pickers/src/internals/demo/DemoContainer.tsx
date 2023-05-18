@@ -1,10 +1,13 @@
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
 
-interface PickersGridProps {
+interface DemoGridProps {
   children: React.ReactNode;
+  components: string[];
+  sx?: SxProps<Theme>;
 }
 
 type PickersGridChildComponentType =
@@ -12,15 +15,18 @@ type PickersGridChildComponentType =
   | 'multi-input-range-field'
   | 'single-input-range-field'
   | 'UI-view'
+  | 'Tall-UI-view'
   | 'multi-panel-UI-view';
 
 type PickersSupportedSections = 'date' | 'time' | 'date-time';
 
-const getChildComponentName = (child: any) => child.type?.render?.name ?? child.type?.name;
-
 const getChildTypeFromChildName = (childName: string): PickersGridChildComponentType => {
   if (childName.match(/^([A-Za-z]+)Range(Calendar|Clock)$/)) {
     return 'multi-panel-UI-view';
+  }
+
+  if (childName.match(/^([A-Za-z]*)(DigitalClock)$/)) {
+    return 'Tall-UI-view';
   }
 
   if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
@@ -53,85 +59,19 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
   return 'time';
 };
 
-export function DemoContainer(props: PickersGridProps) {
-  const { children } = props;
-
-  const childrenCount = React.Children.count(children);
-  const childrenTypes = new Set<PickersGridChildComponentType>();
-  const childrenSupportedSections = new Set<PickersSupportedSections>();
-
-  React.Children.forEach(children, (child: any) => {
-    let childName = getChildComponentName(child);
-
-    if (childName === 'DemoItem') {
-      const nestedChild = React.Children.toArray(child.props.children)[0] as any;
-      childName = getChildComponentName(nestedChild);
-    }
-
-    childrenTypes.add(getChildTypeFromChildName(childName));
-    childrenSupportedSections.add(getSupportedSectionFromChildName(childName));
-  });
-
-  const getSpacing = (direction: 'column' | 'row') => {
-    if (direction === 'row') {
-      return childrenTypes.has('UI-view') ? 3 : 2;
-    }
-
-    return childrenTypes.has('UI-view') ? 4 : 3;
-  };
-
-  let direction: StackProps['direction'];
-  let spacing: StackProps['spacing'];
-  let sx: StackProps['sx'];
-
-  if (
-    childrenCount > 2 ||
-    childrenTypes.has('multi-input-range-field') ||
-    childrenTypes.has('single-input-range-field') ||
-    childrenTypes.has('multi-panel-UI-view')
-  ) {
-    direction = 'column';
-    spacing = getSpacing('column');
-  } else if (childrenTypes.has('UI-view')) {
-    direction = { xs: 'column', xl: 'row' };
-    spacing = { xs: getSpacing('column'), xl: getSpacing('row') };
-  } else {
-    direction = { xs: 'column', lg: 'row' };
-    spacing = { xs: getSpacing('column'), lg: getSpacing('row') };
-  }
-
-  if (childrenTypes.has('UI-view')) {
-    sx = null;
-  } else if (childrenTypes.has('single-input-range-field')) {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 400 } };
-  } else if (childrenSupportedSections.has('date-time')) {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 256 } };
-  } else {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
-  }
-
-  return (
-    <Stack direction={direction} spacing={spacing} sx={sx}>
-      {children}
-    </Stack>
-  );
-}
-
-interface PickersGridItemProps {
-  label: string;
+interface DemoItemProps {
+  label?: React.ReactNode;
+  component?: string;
   children: React.ReactNode;
 }
-export function DemoItem(props: PickersGridItemProps) {
-  const { label, children } = props;
-
-  const childName = getChildComponentName(React.Children.toArray(children)[0]);
-  const childType = getChildTypeFromChildName(childName);
+export function DemoItem(props: DemoItemProps) {
+  const { label, children, component } = props;
 
   let spacing: StackProps['spacing'];
   let sx: StackProps['sx'];
 
-  if (childType === 'multi-input-range-field') {
-    spacing = 2;
+  if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
+    spacing = 1.5;
     sx = {
       [`& .${textFieldClasses.root}`]: {
         flexGrow: 1,
@@ -144,7 +84,81 @@ export function DemoItem(props: PickersGridItemProps) {
 
   return (
     <Stack direction="column" alignItems="stretch" spacing={spacing} sx={sx}>
-      <Typography variant="body2">{label}</Typography>
+      {label && <Typography variant="body2">{label}</Typography>}
+      {children}
+    </Stack>
+  );
+}
+
+export function DemoContainer(props: DemoGridProps) {
+  const { children, components, sx: sxProp } = props;
+
+  const childrenTypes = new Set<PickersGridChildComponentType>();
+  const childrenSupportedSections = new Set<PickersSupportedSections>();
+
+  components.forEach((childName) => {
+    childrenTypes.add(getChildTypeFromChildName(childName));
+    childrenSupportedSections.add(getSupportedSectionFromChildName(childName));
+  });
+
+  const getSpacing = (direction: 'column' | 'row') => {
+    if (direction === 'row') {
+      return childrenTypes.has('UI-view') || childrenTypes.has('Tall-UI-view') ? 3 : 2;
+    }
+
+    return childrenTypes.has('UI-view') ? 4 : 3;
+  };
+
+  let direction: StackProps['direction'];
+  let spacing: StackProps['spacing'];
+  let sx: StackProps['sx'] = {
+    overflow: 'auto',
+    // Add padding as overflow can hide the outline text field label.
+    pt: 1,
+    ...sxProp,
+  };
+
+  if (
+    components.length > 2 ||
+    childrenTypes.has('multi-input-range-field') ||
+    childrenTypes.has('single-input-range-field') ||
+    childrenTypes.has('multi-panel-UI-view') ||
+    childrenTypes.has('UI-view') ||
+    childrenSupportedSections.has('date-time')
+  ) {
+    direction = 'column';
+    spacing = getSpacing('column');
+  } else {
+    direction = { xs: 'column', lg: 'row' };
+    spacing = { xs: getSpacing('column'), lg: getSpacing('row') };
+  }
+
+  if (childrenTypes.has('UI-view')) {
+    // noop
+  } else if (childrenTypes.has('single-input-range-field')) {
+    if (!childrenSupportedSections.has('date-time')) {
+      sx = {
+        ...sx,
+        [`& > .${textFieldClasses.root}`]: {
+          minWidth: 300,
+        },
+      };
+    } else {
+      sx = {
+        ...sx,
+        [`& > .${textFieldClasses.root}`]: {
+          minWidth: { xs: 300, md: 400 },
+        },
+      };
+    }
+  } else if (childrenSupportedSections.has('date-time')) {
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 270 } };
+  } else {
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
+  }
+
+  return (
+    <Stack direction={direction} spacing={spacing} sx={sx}>
       {children}
     </Stack>
   );

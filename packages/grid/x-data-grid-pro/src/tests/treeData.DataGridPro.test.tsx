@@ -1,4 +1,3 @@
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   getCell,
@@ -18,6 +17,7 @@ import {
   GridLogicOperator,
   GridRowsProp,
   useGridApiRef,
+  GridPaginationModel,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -368,9 +368,9 @@ describe('<DataGridPro /> - Tree Data', () => {
     it('should toggle expansion when clicking on grouping column icon', () => {
       render(<Test />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B', 'C']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
     });
 
@@ -410,27 +410,38 @@ describe('<DataGridPro /> - Tree Data', () => {
   });
 
   describe('pagination', () => {
+    function PaginatedTest({ initialModel }: { initialModel: GridPaginationModel }) {
+      const [paginationModel, setPaginationModel] = React.useState(initialModel);
+      return (
+        <Test
+          pagination
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[paginationModel.pageSize]}
+        />
+      );
+    }
     it('should respect the pageSize for the top level rows when toggling children expansion', () => {
-      render(<Test pagination pageSize={2} rowsPerPageOptions={[2]} />);
+      render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['C']);
     });
 
     it('should keep the row expansion when switching page', () => {
-      render(<Test pagination pageSize={1} rowsPerPageOptions={[1]} />);
+      render(<PaginatedTest initialModel={{ pageSize: 1, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['B']);
-      fireEvent.click(getCell(3, 0).querySelector('button'));
+      fireEvent.click(getCell(3, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);
-      fireEvent.click(getCell(0, 0).querySelector('button'));
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
       expect(getColumnValues(1)).to.deep.equal(['A']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);

@@ -12,13 +12,13 @@ describe('createSelector', () => {
       expect(() => selector(state)).toWarnDev(
         'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
       );
-      expect(() => selector(state, 0)).not.toWarnDev();
+      expect(() => selector(state, { id: 0 })).not.toWarnDev();
     });
 
     it('should fallback to the default behavior when no cache key is provided', () => {
       const selector = createSelector([], () => []) as OutputSelector<GridStateCommunity, any>;
       const state = {} as GridStateCommunity;
-      const instanceId = 0;
+      const instanceId = { id: 0 };
       expect(selector(state, instanceId)).to.equal(selector(state, instanceId));
     });
 
@@ -44,10 +44,10 @@ describe('createSelector', () => {
     it('should return different selectors for different cache keys', () => {
       const selector = createSelector([], () => []) as OutputSelector<GridStateCommunity, any>;
       const apiRef1 = {
-        current: { state: {}, instanceId: 0 },
+        current: { state: {}, instanceId: { id: 0 } },
       } as React.MutableRefObject<GridApiCommunity>;
       const apiRef2 = {
-        current: { state: {}, instanceId: 1 },
+        current: { state: {}, instanceId: { id: 1 } },
       } as React.MutableRefObject<GridApiCommunity>;
       expect(selector(apiRef1)).not.to.equal(selector(apiRef2));
     });
@@ -55,10 +55,10 @@ describe('createSelector', () => {
     it('should not clear the cache of one selector when another key is passed', () => {
       const selector = createSelector([], () => []) as OutputSelector<GridStateCommunity, any>;
       const apiRef1 = {
-        current: { state: {}, instanceId: 0 },
+        current: { state: {}, instanceId: { id: 0 } },
       } as React.MutableRefObject<GridApiCommunity>;
       const apiRef2 = {
-        current: { state: {}, instanceId: 1 },
+        current: { state: {}, instanceId: { id: 1 } },
       } as React.MutableRefObject<GridApiCommunity>;
       const value1 = selector(apiRef1);
       selector(apiRef2);

@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: Date and Time Pickers - Validation
-components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker, NextTimePicker, DesktopNextTimePicker, MobileNextTimePicker, StaticNextTimePicker, NextDateTimePicker, DesktopNextDateTimePicker, MobileNextDateTimePicker, StaticNextDateTimePicker, NextDateRangePicker, DesktopNextDateRangePicker, MobileNextDateRangePicker, StaticNextDateRangePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
@@ -14,32 +14,26 @@ All the date and time pickers have an API for adding validation constraints.
 By default, they provide visual feedback if the component value doesn't meet the validation criteria.
 
 :::info
-The validation props are showcased for each type of picker component using the new responsive pickers (`NextTimePicker`, `NextDatePicker`, `NextDateRangePicker`, etc)
+The validation props are showcased for each type of picker component using the responsive pickers (`DatePicker`, `TimePicker`, `DateTimePicker`, and `DateRangePicker`)
 
 But the same props are available on:
 
-- all the other variants of this picker
+- all the other variants of this picker;
 
-  For example—the validation props showcased with `NextDatePicker` are also available on:
+  For example—the validation props showcased with `DatePicker` are also available on:
 
-  - `DesktopNextDatePicker`
-  - `MobileNextDatePicker`
-  - `StaticNextDatePicker`
-
-- the field used by this picker
-
-  For example—the validation props showcased with `NextDatePicker` are also available on `DateField`.
-
-- all the variants of the legacy picker,
-
-  For example—the validation props showcased with `NextDatePicker` are also available on:
-
-  - `DatePicker`
   - `DesktopDatePicker`
   - `MobileDatePicker`
   - `StaticDatePicker`
 
-:::
+- the field used by this picker;
+
+  For example—the validation props showcased with `DatePicker` are also available on `DateField`.
+
+- the view components;
+
+  For example—the validation props showcased with `TimePicker` are also available on `TimeClock` and `DigitalClock`.
+  :::
 
 ## Invalid values feedback
 
@@ -193,7 +187,7 @@ In the example below—the last quarter of each hour is not selectable.
 
 ### Minimum and maximum date time
 
-The `minDateTime` prop prevents the selection of all values after `props.minDateTime`.
+The `minDateTime` prop prevents the selection of all values before `props.minDateTime`.
 
 {{"demo": "DateTimeValidationMinDateTime.js", "defaultCodeOpen": false}}
 

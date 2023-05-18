@@ -5,21 +5,45 @@ import { GridColTypeDef } from '../models/colDef/gridColDef';
 import { renderEditDateCell } from '../components/cell/GridEditDateCell';
 import { GridValueFormatterParams } from '../models/params/gridCellParams';
 
-export function gridDateFormatter({ value }: GridValueFormatterParams<Date | string>) {
-  if (value instanceof Date) {
-    return value.toLocaleDateString();
+function throwIfNotDateObject({
+  value,
+  columnType,
+  rowId,
+  field,
+}: {
+  value: any;
+  columnType: string;
+  rowId: any;
+  field: string;
+}) {
+  if (!(value instanceof Date)) {
+    throw new Error(
+      [
+        `MUI: \`${columnType}\` column type only accepts \`Date\` objects as values.`,
+        'Use `valueGetter` to transform the value into a `Date` object.',
+        `Row ID: ${rowId}, field: "${field}".`,
+      ].join('\n'),
+    );
   }
-  return value ?? '';
 }
 
-export function gridDateTimeFormatter({ value }: GridValueFormatterParams<Date | string>) {
-  if (value instanceof Date) {
-    return value.toLocaleString();
+export function gridDateFormatter({ value, field, id }: GridValueFormatterParams<Date>) {
+  if (!value) {
+    return '';
   }
-  return value ?? '';
+  throwIfNotDateObject({ value, columnType: 'date', rowId: id, field });
+  return value.toLocaleDateString();
 }
 
-export const GRID_DATE_COL_DEF: GridColTypeDef<Date | string, string> = {
+export function gridDateTimeFormatter({ value, field, id }: GridValueFormatterParams<Date>) {
+  if (!value) {
+    return '';
+  }
+  throwIfNotDateObject({ value, columnType: 'dateTime', rowId: id, field });
+  return value.toLocaleString();
+}
+
+export const GRID_DATE_COL_DEF: GridColTypeDef<Date, string> = {
   ...GRID_STRING_COL_DEF,
   type: 'date',
   sortComparator: gridDateComparator,
@@ -27,9 +51,11 @@ export const GRID_DATE_COL_DEF: GridColTypeDef<Date | string, string> = {
   filterOperators: getGridDateOperators(),
   renderEditCell: renderEditDateCell,
   getApplyQuickFilterFn: undefined,
+  // @ts-ignore
+  pastedValueParser: (value) => new Date(value),
 };
 
-export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date | string, string> = {
+export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date, string> = {
   ...GRID_STRING_COL_DEF,
   type: 'dateTime',
   sortComparator: gridDateComparator,
@@ -37,4 +63,6 @@ export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date | string, string> = {
   filterOperators: getGridDateOperators(true),
   renderEditCell: renderEditDateCell,
   getApplyQuickFilterFn: undefined,
+  // @ts-ignore
+  pastedValueParser: (value) => new Date(value),
 };

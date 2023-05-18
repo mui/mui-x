@@ -10,20 +10,21 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">The Time Field component lets the user select a time with the keyboard.</p>
 
-:::warning
-This component is unstable.
-It might receive breaking changes on its props to have the best component possible by the time of the stable release.
-:::
-
 ## Basic usage
 
 {{"demo": "BasicTimeField.js"}}
 
-## Uncontrolled vs. Controlled
-
-The component can be uncontrolled or controlled
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "TimeFieldValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Customize the time format
 
@@ -32,7 +33,6 @@ The component can be uncontrolled or controlled
 ## Localization
 
 Use the `LocalizationProvider` to change the date-library locale used in the date field.
-
 See the [localization documentation page](/x/react-date-pickers/localization/) for more details.
 
 ## Validation

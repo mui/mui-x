@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
@@ -82,10 +81,6 @@ function DetailPanelContent({ row: rowProp }) {
     </Stack>
   );
 }
-
-DetailPanelContent.propTypes = {
-  row: PropTypes.object.isRequired,
-};
 
 const columns = [
   { field: 'id', headerName: 'Order ID' },
@@ -211,6 +206,11 @@ export default function FullWidthDetailPanel() {
         pinnedColumns={{ left: [GRID_DETAIL_PANEL_TOGGLE_FIELD] }}
         getDetailPanelHeight={getDetailPanelHeight}
         getDetailPanelContent={getDetailPanelContent}
+        sx={{
+          '& .MuiDataGrid-detailPanel': {
+            overflow: 'visible',
+          },
+        }}
       />
     </Box>
   );

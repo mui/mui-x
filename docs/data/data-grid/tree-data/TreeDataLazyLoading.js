@@ -1,6 +1,5 @@
 // TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPro,
   getDataGridUtilityClass,
@@ -169,8 +168,8 @@ function GroupingCellWithLazyLoading(props) {
   const classes = useUtilityClasses({ classes: rootProps.classes });
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.components.TreeDataCollapseIcon
-    : rootProps.components.TreeDataExpandIcon;
+    ? rootProps.slots.treeDataCollapseIcon
+    : rootProps.slots.treeDataExpandIcon;
 
   const handleClick = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
@@ -205,10 +204,6 @@ function GroupingCellWithLazyLoading(props) {
     </Box>
   );
 }
-
-GroupingCellWithLazyLoading.propTypes = {
-  hideDescendantCount: PropTypes.bool,
-};
 
 const CUSTOM_GROUPING_COL_DEF = {
   renderCell: (params) => <GroupingCellWithLazyLoading {...params} />,

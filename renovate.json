@@ -19,10 +19,6 @@
       "matchPackagePatterns": "@babel/*"
     },
     {
-      "groupName": "date-io",
-      "matchPackagePatterns": "@date-io/*"
-    },
-    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },
@@ -46,9 +42,8 @@
       "matchPackageNames": ["react", "react-dom", "react-is", "react-test-renderer"]
     },
     {
-      "groupName": "tslint",
-      "matchPackageNames": ["tslint"],
-      "allowedVersions": "<= 5.14.0"
+      "groupName": "React router",
+      "matchPackageNames": ["react-router", "react-router-dom"]
     },
     {
       "groupName": "typescript-eslint",
@@ -85,6 +80,7 @@
         "@mui/joy",
         "@mui/icons-material",
         "@mui/base",
+        "@mui/styles",
         "@mui/system",
         "@mui/utils"
       ]

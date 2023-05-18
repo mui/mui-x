@@ -1,16 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'tunnit',
   minutes: 'minuutit',
   seconds: 'sekuntit',
-};
-
-const viewTranslation = {
-  date: 'kalenteri',
-  time: 'kello',
+  meridiem: 'iltapäivä',
 };
 
 const fiFIPickers: Partial<PickersLocaleText<any>> = {
@@ -21,14 +17,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'avaa edellinen kuukausi',
   openNextView: 'avaa seuraava kuukausi',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'
       : 'kalenterinäkymä on auki, vaihda vuosinäkymään',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `tekstikenttä on auki, mene ${viewTranslation[viewType]}näkymään`
-      : `${viewTranslation[viewType]}näkymä on auki, mene tekstikenttään`,
 
   // DateRange placeholders
   start: 'Alku',
@@ -55,6 +47,9 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
   secondsClockNumberText: (seconds) => `${seconds} sekunttia`,
 
+  // Digital clock labels
+  selectViewText: (view) => `Valitse ${views[view]}`,
+
   // Calendar labels
   // calendarWeekNumberHeaderLabel: 'Week number',
   // calendarWeekNumberHeaderText: '#',
@@ -79,6 +74,7 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',

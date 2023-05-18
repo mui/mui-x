@@ -173,7 +173,6 @@ export default function ColumnSpanningDerived() {
           },
         }}
         autoHeight
-        disableExtendRowFullWidth
         disableRowSelectionOnClick
         hideFooter
         showCellVerticalBorder

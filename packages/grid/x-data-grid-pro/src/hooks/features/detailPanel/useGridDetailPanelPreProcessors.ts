@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { gridClasses } from '@mui/x-data-grid';
 import { useGridRegisterPipeProcessor, GridPipeProcessor } from '@mui/x-data-grid/internals';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
@@ -31,7 +32,7 @@ export const useGridDetailPanelPreProcessors = (
         return columnsState;
       }
 
-      // Othewise, add the toggle column at the beginning
+      // Otherwise, add the toggle column at the beginning
       columnsState.orderedFields = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.orderedFields];
       columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
         ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,
@@ -53,7 +54,7 @@ export const useGridDetailPanelPreProcessors = (
         return classes;
       }
 
-      return [...classes, 'MuiDataGrid-row--detailPanelExpanded'];
+      return [...classes, gridClasses['row--detailPanelExpanded']];
     },
     [privateApiRef, props.getDetailPanelContent],
   );

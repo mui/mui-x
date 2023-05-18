@@ -1,9 +1,9 @@
-<StaticNextDatePicker
-  defaultValue={dayjs('2022-04-07')}
-  components={{
-    ActionBar: CustomActionBar,
+<StaticDatePicker
+  defaultValue={dayjs('2022-04-17')}
+  slots={{
+    actionBar: CustomActionBar,
   }}
-  componentsProps={{
+  slotProps={{
     actionBar: {
       actions: ['today'],
     },

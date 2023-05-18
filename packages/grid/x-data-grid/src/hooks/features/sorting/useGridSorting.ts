@@ -125,7 +125,7 @@ export const useGridSorting = (
       const sortingOrder = colDef.sortingOrder || props.sortingOrder;
 
       if (sortingOrder.some((item) => !!item)) {
-        return [...columnMenuItems, 'ColumnMenuSortItem'];
+        return [...columnMenuItems, 'columnMenuSortItem'];
       }
 
       return columnMenuItems;
@@ -240,7 +240,7 @@ export const useGridSorting = (
       const sortModelToExport = gridSortModelSelector(apiRef);
 
       const shouldExportSortModel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.sortModel != null ||

@@ -1,26 +1,31 @@
 # Migration from v5 to v6
 
+<!-- #default-branch-switch -->
+
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
-## Start using the alpha release
+## Introduction
 
-In `package.json`, change the version of the date pickers package to `next`.
+To get started, check out [the blog post about the release of MUI X v6](https://mui.com/blog/mui-x-v6/).
+
+## Start using the new release
+
+In `package.json`, change the version of the date pickers package to `latest` or `^6.0.0`.
 
 ```diff
--"@mui/x-date-pickers": "latest",
-+"@mui/x-date-pickers": "next",
+-"@mui/x-date-pickers": "5.X.X",
++"@mui/x-date-pickers": "^6.0.0",
 ```
 
-Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-alpha.0`.
-
-Since v6 is a major release, it contains some changes that affect the public API.
-These changes were done for consistency, improve stability and make room for new features.
-Below are described the steps you need to take to migrate from v5 to v6.
+Since v6 is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from v5 to v6.
 
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v6.0.0/preset-safe` to target Data Grid as well.
-It should be only applied **once per folder.**
+
+You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
 ```sh
 // Date and Time Pickers specific
@@ -30,7 +35,7 @@ npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#-preset-safe-for-pickers) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -39,44 +44,23 @@ If you have already applied the `v6.0.0/pickers/preset-safe` (or `v6.0.0/preset-
 
 All other changes must be handled manually.
 
+:::warning
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies, etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+
+```tsx
+<DatePicker {...pickerProps} />
+```
+
+After running the codemods, make sure to test your application and that you don't have any console errors.
+
+Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
+
 ## Picker components
 
-### New picker components
-
-All the picker components have been rewritten to use the new field components instead of using a masked-based editing.
-
-During the v6 alpha and beta phases, both the new and the legacy components are available.
-The old components will be removed during the beta phase and the new components will be renamed to match the name of the legacy ones.
-
-A codemod will be provided to rename the new components from the alpha / beta naming to the final naming.
-
-For example, `@mui/x-date-pickers` currently exports:
-
-- `DatePicker`: the legacy date picker which uses the masked-based editing
-- `NextDatePicker`: the new date picker which uses the new field component `DateField`
-
-You can find the whole list of the pickers in the table below:
-
-| Legacy picker name       | New picker name during alpha / beta |
-| ------------------------ | ----------------------------------- |
-| `DatePicker`             | `NextDatePicker`                    |
-| `DesktopDatePicker`      | `DesktopNextDatePicker`             |
-| `MobileDatePicker`       | `MobileNextDatePicker`              |
-| `StaticDatePicker`       | `StaticNextDatePicker`              |
-| `TimePicker`             | `NextTimePicker`                    |
-| `DesktopTimePicker`      | `DesktopNextTimePicker`             |
-| `MobileTimePicker`       | `MobileNextTimePicker`              |
-| `StaticTimePicker`       | `StaticNextTimePicker`              |
-| `DateTimePicker`         | `NextDateTimePicker`                |
-| `DesktopDateTimePicker`  | `DesktopNextDateTimePicker`         |
-| `MobileDateTimePicker`   | `MobileNextDateTimePicker`          |
-| `StaticDateTimePicker`   | `StaticNextDateTimePicker`          |
-| `DateRangePicker`        | `NextDateRangePicker`               |
-| `DesktopDateRangePicker` | `DesktopNextDateRangePicker`        |
-| `MobileDateRangePicker`  | `MobileNextDateRangePicker`         |
-| `StaticDateRangePicker`  | `StaticNextDateRangePicker`         |
-
-### Rename the `inputFormat` prop
+### ✅ Rename the `inputFormat` prop
 
 The `inputFormat` prop has been renamed to `format` on all the pickers components.
 
@@ -87,12 +71,19 @@ The `inputFormat` prop has been renamed to `format` on all the pickers component
  />
 ```
 
-:::warning
-This change only applies to the new pickers.
-The legacy pickers keep the `inputFormat` prop name until their removal.
+### Update expected values in tests
 
-For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section.
-:::
+The value rendered in the input might have been modified.
+If you are using RTL or if your date contains single digits sections, non-ASCII characters will be added.
+
+If your tests are relying on the input values, you can clean them with the following method.
+
+```ts
+export const cleanString = (dirtyString: string) =>
+  dirtyString
+    .replace(/[\u2066\u2067\u2068\u2069]/g, '') // Remove non-ASCII characters
+    .replace(/ \/ /g, '/'); // Remove extra spaces
+```
 
 ### Update the format of the `value` prop
 
@@ -120,22 +111,22 @@ import { DateTime } from 'luxon';
 <DatePicker value={DateTime.now()} />;
 ```
 
-### Drop `clock` in desktop mode
+### Stop rendering a clock on desktop
 
-In desktop mode, the `DateTimePicker` and `TimePicker` components will not display the clock.
-This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).
+In desktop mode, the `DateTimePicker` and `TimePicker` components will no longer render the [`TimeClock`](/x/react-date-pickers/time-clock/) component.
+The `DateTimePicker` component currently has no replacement, but on `TimePicker` a new [`DigitalClock`](/x/react-date-pickers/digital-clock/) component has been introduced instead.
 The behavior on mobile mode is still the same.
-If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/getting-started/#testing-caveats) to choose the best replacement for it.
+If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/base-concepts/#testing-caveats) to choose the best replacement for it.
 
-You can manually re-enable the clock using the new `viewRenderers` prop.
-The code below enables the `Clock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
+You can manually re-enable the previous clock component using the new `viewRenderers` prop.
+The code below enables the `TimeClock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
 
-Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#default-props) for more information.
+Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#theme-default-props) for more information.
 
 ```tsx
 const theme = createTheme({
   components: {
-    MuiDesktopNextTimePicker: {
+    MuiDesktopTimePicker: {
       defaultProps: {
         viewRenderers: {
           hours: renderTimeViewClock,
@@ -144,7 +135,7 @@ const theme = createTheme({
         },
       },
     },
-    MuiDesktopNextDateTimePicker: {
+    MuiDesktopDateTimePicker: {
       defaultProps: {
         viewRenderers: {
           hours: renderTimeViewClock,
@@ -156,6 +147,10 @@ const theme = createTheme({
   },
 });
 ```
+
+:::success
+If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
+:::
 
 ### Remove the keyboard view
 
@@ -180,16 +175,14 @@ The picker components no longer have a keyboard view to render the input inside 
 At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
 :::
 
-:::warning
-This change only applies to the new pickers.
-The legacy pickers keep the keyboard view until there removal.
+### ✅ Rename or refactor `shouldDisableTime` prop
 
-For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
-:::
+The `shouldDisableTime` prop signature has been changed.
+Previously it did receive `value` as a `number` of hours, minutes, or seconds. Now it will receive the date object (based on the used adapter).
+This will allow more powerful usage and will be compatible with the future digital time selection view.
 
-### Rename `shouldDisableTime` prop
-
-The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
+Either rename the prop to the newly added, but deprecated `shouldDisableClock` or refactor usage to account for the change in prop type.
+The codemod will take care of renaming the prop to keep the existing functionality but feel free to update to the new `shouldDisableTime` prop on your own.
 
 ```diff
  <DateTimePicker
@@ -199,7 +192,7 @@ The `shouldDisableTime` prop signature has been changed. Either rename the prop 
 
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
-+  shouldDisableTime={(time, view) => view === 'hours' && value.hour() < 12}
++  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}
  />
 ```
 
@@ -226,13 +219,6 @@ The `shouldDisableTime` prop signature has been changed. Either rename the prop 
      },
    });
   ```
-
-  :::warning
-  These changes only apply to the new pickers.
-  The legacy pickers keep the `CalendarOrClockPicker` internal component until there removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
 
 - The internal `PickerStaticWrapper` component has been removed and all its element have been moved to the new `Layout` component slot.
 
@@ -271,18 +257,11 @@ The `shouldDisableTime` prop signature has been changed. Either rename the prop 
    });
   ```
 
-  :::warning
-  These changes only apply to the new pickers.
-  The legacy pickers keep the `PickerStaticWrapper` internal component until their removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section
-  :::
-
 ## Date library and adapters
 
 ### ✅ Do not import adapter from `@date-io`
 
-In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.
+In v5, it was possible to import adapters either from either `@date-io` or `@mui/x-date-pickers` which were the same.
 In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/).
 Which means adapters can not be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
 Otherwise, some methods will be missing.
@@ -349,7 +328,7 @@ Component names in the theme have changed as well:
 
 ### ✅ Rename `date` prop to `value`
 
-The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
+The `date` prop has been renamed to `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
 
 ```diff
 -<MonthPicker date={dayjs()} />
@@ -419,7 +398,7 @@ Works exactly the same way for `PickersMonth`
 The props used to set the text displayed in the pickers have been replaced by keys inside the `localeText` prop:
 
 | Removed prop                 | Property in the new `localText` prop                                              |
-| ---------------------------- | --------------------------------------------------------------------------------- |
+| :--------------------------- | :-------------------------------------------------------------------------------- |
 | `endText`                    | `end`                                                                             |
 | `getClockLabelText`          | `clockLabelText`                                                                  |
 | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
@@ -458,9 +437,9 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
  </LocalizationProvider
 ```
 
-## Component slots / component slots props
+## Component slots / component slot props
 
-All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slots props.
+All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
 
 You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
@@ -470,12 +449,12 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Input renderer (required in v5)
 
-- The `renderInput` has been replaced by an `input` component slots props:
+- The `renderInput` has been replaced by an `input` component slot props:
 
   ```diff
    <DatePicker
   -  renderInput={(inputProps) => <TextField {...props} variant="outlined" />}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  slotProps={{ textField: { variant: 'outlined' } }}
    />
 
    <DateRangePicker
@@ -486,11 +465,11 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} variant="outlined" />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  slotProps={{ textField: { variant: 'outlined' } }}
    />
   ```
 
-- The Date Range Picker also have a new `fieldSeparator` component slot and component slots props to customize only this part of the UI:
+- The Date Range Picker also have a new `fieldSeparator` component slot and component slot props to customize only this part of the UI:
 
   ```diff
    <DateRangePicker
@@ -501,57 +480,52 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ fieldSeparator: { children: 'to' }}
+  +  slotProps={{ fieldSeparator: { children: 'to' } }}
    />
   ```
 
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `renderInput` prop until there removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section
-  :::
-
 ### Toolbar (`ToolbarComponent`)
 
-- The `ToolbarComponent` has been replaced by a `Toolbar` component slot:
+- ✅ The `ToolbarComponent` has been replaced by a `toolbar` component slot:
 
   ```diff
    <DatePicker
   -  ToolbarComponent={MyToolbar}
-  +  components={{ Toolbar: MyToolbar }}
+  +  slots={{ toolbar: MyToolbar }}
    />
   ```
 
-- The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` component slots props:
+- ✅ The `toolbarPlaceholder`, `toolbarFormat`, and `showToolbar` props have been moved to the `toolbar` component slot props:
 
   ```diff
    <DatePicker
   -  toolbarPlaceholder="__"
   -  toolbarFormat="DD / MM / YYYY"
-  +  componentsProps={{
+  -  showToolbar
+  +  slotProps={{
   +    toolbar: {
-  +      toolbarPlaceholder: "__",
-  +      toolbarFormat: "DD / MM / YYYY",
+  +      toolbarPlaceholder: '__',
+  +      toolbarFormat: 'DD / MM / YYYY',
+  +      hidden: false,
   +    }
   +  }}
    />
   ```
 
-- The `toolbarTitle` prop has been moved to the localization object:
+- ✅ The `toolbarTitle` prop has been moved to the localization object:
 
   ```diff
    <DatePicker
   -  toolbarTitle="Title"
-  +  localeText={{ toolbarTitle: "Title" }}
+  +  localeText={{ toolbarTitle: 'Title' }}
    />
   ```
 
-- The toolbar related translation keys have been renamed to better fit their usage:
+- ✅ The toolbar related translation keys have been renamed to better fit their usage:
 
   ```diff
-   <DatePicker
-    localeText={{
+   <LocalizationProvider
+     localeText={{
   -    datePickerDefaultToolbarTitle: 'Date Picker',
   +    datePickerToolbarTitle: 'Date Picker',
 
@@ -563,7 +537,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
   +    dateRangePickerToolbarTitle: 'Date Range Picker',
-    }}
+     }}
    />
   ```
 
@@ -581,8 +555,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
    <DatePicker
   -  ToolbarComponent={CustomToolbarComponent}
-  +  components={{
-  +    Toolbar: CustomToolbarComponent
+  +  slots={{
+  +    toolbar: CustomToolbarComponent
   +  }}
    />
   ```
@@ -600,23 +574,23 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    )
    <DateRangePicker
   -  ToolbarComponent={CustomToolbarComponent}
-  +  components={{
-  +    Toolbar: CustomToolbarComponent
+  +  slots={{
+  +    toolbar: CustomToolbarComponent
   +  }}
    />
   ```
 
 ### Tabs
 
-- The `hideTabs` and `timeIcon` props have been moved to `tabs` component slots props.
-  The `dateRangeIcon` prop has been renamed to `dateIcon` and moved to `tabs` component slots props:
+- ✅ The `hideTabs` and `timeIcon` props have been moved to `tabs` component slot props.
+  The `dateRangeIcon` prop has been renamed to `dateIcon` and moved to `tabs` component slot props:
 
   ```diff
    <DateTimePicker
   -  hideTabs={false}
   -  dateRangeIcon={<LightModeIcon />}
   -  timeIcon={<AcUnitIcon />}
-  +  componentsProps={{
+  +  slotProps={{
   +    tabs: {
   +      hidden: false,
   +      dateIcon: <LightModeIcon />,
@@ -643,43 +617,51 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
      </div>
    )
    <DateTimePicker
-     components={{
-       Tabs: CustomTabsComponent
+     slots={{
+       tabs: CustomTabsComponent
      }}
    />
   ```
 
 ### Action bar
 
-- The `action` prop of the `actionBar` component slot can no longer receive a callback.
-  Instead, you can pass a callback at the component slots props level
+- The `actions` prop of the `actionBar` component slot can no longer receive a callback.
+  Instead, you can pass a callback at the component slot props level
 
   ```diff
    <DatePicker
-     componentsProps={{
+  -  componentsProps={{
   -     actionBar: {
   -       actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
   -     },
+  -  }}
+  +  componentsProps={{
   +     actionBar: ({ wrapperVariant }) => ({
   +       actions: wrapperVariant === 'desktop' ? [] : ['clear'],
   +     }),
-     }}
+  +  }}
+     // or using the new `slots` prop
+  +  slotProps={{
+  +     actionBar: ({ wrapperVariant }) => ({
+  +       actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+  +     }),
+  +  }}
    />
   ```
 
 ### Day (`renderDay`)
 
-- The `renderDay` prop has been replaced by a `Day` component slot:
+- The `renderDay` prop has been replaced by a `day` component slot:
 
   ```diff
    <DatePicker
   -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
-  +  components={{ Day: CustomDay }}
+  +  slots={{ day: CustomDay }}
    />
   ```
 
 - The `Day` component slot no longer receives a `selectedDays` prop.
-  If you need to access it, you can control the value and pass it to the component slots props:
+  If you need to access it, you can control the value and pass it to the component slot props:
 
   ```tsx
   function CustomDay({ selectedDay, ...other }) {
@@ -694,8 +676,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
       <DatePicker
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        components={{ Day: CustomDay }}
-        componentsProps={{
+        slots={{ day: CustomDay }}
+        slotProps={{
           day: { selectedDay: value },
         }}
       />
@@ -703,64 +685,64 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   }
   ```
 
-### Popper (`PopperProps`)
+### ✅ Popper (`PopperProps`)
 
-- The `PopperProps` prop has been replaced by a `popper` component slots props:
+- The `PopperProps` prop has been replaced by a `popper` component slot props:
 
   ```diff
    <DatePicker
   -  PopperProps={{ onClick: handleClick }}
-  +  componentsProps={{ popper: { onClick: handleClick }}}
+  +  slotProps={{ popper: { onClick: handleClick } }}
    />
   ```
 
-### Desktop transition (`TransitionComponent`)
+### ✅ Desktop transition (`TransitionComponent`)
 
-- The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot:
+- The `TransitionComponent` prop has been replaced by a `desktopTransition` component slot:
 
   ```diff
    <DatePicker
   -  TransitionComponent={Fade}
-  +  components={{ DesktopTransition: Fade }}
+  +  slots={{ desktopTransition: Fade }}
    />
   ```
 
-### Dialog (`DialogProps`)
+### ✅ Dialog (`DialogProps`)
 
-- The `DialogProps` prop has been replaced by a `dialog` component slots props:
+- The `DialogProps` prop has been replaced by a `dialog` component slot props:
 
   ```diff
    <DatePicker
   -  DialogProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ dialog: { backgroundColor: 'red }}}
+  +  slotProps={{ dialog: { backgroundColor: 'red' }}}
    />
   ```
 
-### Desktop paper (`PaperProps`)
+### ✅ Desktop paper (`PaperProps`)
 
-- The `PaperProps` prop has been replaced by a `desktopPaper` component slots props:
+- The `PaperProps` prop has been replaced by a `desktopPaper` component slot props:
 
   ```diff
    <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
+  +  slotProps={{ desktopPaper: { backgroundColor: 'red' } }}
    />
   ```
 
-### Desktop TrapFocus (`TrapFocusProp`)
+### ✅ Desktop TrapFocus (`TrapFocusProp`)
 
-- The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component slots props:
+- The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component slot props:
 
   ```diff
    <DatePicker
   -  TrapFocusProps={{ isEnabled: () => false }}
-  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
+  +  slotProps={{ desktopTrapFocus: { isEnabled: () => false } }}
    />
   ```
 
 ### Paper Content
 
-- The `PaperContent` / `paperContent` component slot and component slots props have been removed.
+- The `PaperContent` / `paperContent` component slot and component slot props have been removed.
 
   You can use the new [`Layout` component slot](/x/react-date-pickers/custom-layout/).
   The main difference is that you now receive the various parts of the UI instead of a single `children` prop:
@@ -768,7 +750,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
   +import { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
 
-   function MyCustomLayout (props) {
+   function MyCustomLayout(props) {
   -  const { children } = props;
   -
   -  return (
@@ -792,105 +774,114 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    function App() {
      return (
        <DatePicker
-          components={{
+  -       components={{
   -         PaperContent: MyCustomLayout,
+  -       }}
+  +       components={{
   +         Layout: MyCustomLayout,
-          }}
+  +       }}
+          // or using the new `slots` prop
+  +       slots={{
+  +         layout: MyCustomLayout,
+  +       }}
        />
      );
    }
   ```
 
-### Left arrow button
+### ✅ Left arrow button
 
-- The component slot `LeftArrowButton` has been renamed `PreviousIconButton`:
-
-```diff
- <DatePicker
-   components={{
--    LeftArrowButton: CustomButton,
-+    PreviousIconButton: CustomButton,
-   }}
-
-   componentsProps={{
--    leftArrowButton: {},
-+    previousIconButton: {},
-   }}
- />
-```
-
-### Right arrow button
-
-- The component slot `RightArrowButton` has been renamed `NextIconButton`:
+- The component slot `LeftArrowButton` has been renamed to `PreviousIconButton`:
 
   ```diff
    <DatePicker
-     components={{
-  -    RightArrowButton: CustomButton,
-  +    NextIconButton: CustomButton,
-     }}
+  -  components={{
+  -    LeftArrowButton: CustomButton,
+  -  }}
+  +  components={{
+  +    PreviousIconButton: CustomButton,
+  +  }}
+     // or using the new `slots` prop
+  +  slots={{
+  +    previousIconButton: CustomButton,
+  +  }}
 
-     componentsProps={{
-  -    rightArrowButton: {},
-  +    nextIconButton: {},
-     }}
+  -  componentsProps={{
+  -    leftArrowButton: {},
+  -  }}
+  +  componentsProps={{
+  +    previousIconButton: {},
+  +  }}
+     // or using the new `slotProps` prop
+  +  slotProps={{
+  +    previousIconButton: {},
+  +  }}
    />
   ```
 
-### Input
+### ✅ Right arrow button
+
+- The component slot `RightArrowButton` has been renamed to `NextIconButton`:
+
+  ```diff
+   <DatePicker
+  -  components={{
+  -    RightArrowButton: CustomButton,
+  -  }}
+  +  components={{
+  +    NextIconButton: CustomButton,
+  +  }}
+     // or using the new `slots` prop
+  +  slots={{
+  +    nextIconButton: CustomButton,
+  +  }}
+
+  -  componentsProps={{
+  -    rightArrowButton: {},
+  -  }}
+  +  componentsProps={{
+  +    nextIconButton: {},
+  +  }}
+     // or using the new `slotProps` prop
+  +  slotProps={{
+  +    nextIconButton: {},
+  +  }}
+   />
+  ```
+
+### ✅ Input
 
 - The `InputProps` prop has been removed.
-  You can use the `InputProps` of the `input` component slots props instead:
+  You can use the `InputProps` of the `textField` component slot props instead:
 
   ```diff
    <DatePicker
   -  InputProps={{ color: 'primary' }}
-  +  componentsProps={{ input: { InputProps: { color: 'primary' }}}}
+  +  slotProps={{ textField: { InputProps: { color: 'primary' } } }}
    />
   ```
 
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `InputProps` prop until their removal.
+### ✅ Input adornment
 
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
-
-### Input adornment
-
-- The `InputAdornmentProps` prop has been replaced by a `inputAdornment` component slots props:
+- The `InputAdornmentProps` prop has been replaced by an `inputAdornment` component slot props:
 
   ```diff
    <DatePicker
   -  InputAdornmentProps={{ position: 'start' }}
-  +  componentsProps={{ inputAdornment: { position: 'start' }}}
+  +  slotProps={{ inputAdornment: { position: 'start' } }}
    />
   ```
 
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `InputAdornmentProps` prop until their removal.
+### ✅ Open Picker Button
 
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
-
-### Open Picker Button
-
-- The `OpenPickerButtonProps` prop has been replaced by a `openPickerButton` component slots props:
+- The `OpenPickerButtonProps` prop has been replaced by an `openPickerButton` component slot props:
 
   ```diff
    <DatePicker
   -  OpenPickerButtonProps={{ ref: buttonRef }}
-  +  componentsProps={{ openPickerButton: { ref: buttonRef }}}
+  +  slotProps={{ openPickerButton: { ref: buttonRef } }}
    />
   ```
-
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `OpenPickerButtonProps` prop until their removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
 
 ## Rename remaining `private` components
 
@@ -942,3 +933,40 @@ Component name changes are also reflected in `themeAugmentation`:
    },
  });
 ```
+
+## Rename `components` to `slots` (optional)
+
+The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
+This is a slow and ongoing effort between the different MUI libraries.
+To smooth the transition, pickers support both the `components` props which are deprecated, and the new `slots` props.
+
+If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+```
+
+Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
+
+:::warning
+If this codemod is applied on a component with both a `slots` and a `components` prop, the output will contain two `slots` props.
+You are then responsible for merging those two props manually.
+
+For example:
+
+```tsx
+// Before running the codemod
+<DatePicker
+  slots={{ textField: MyTextField }}
+  components={{ toolbar: MyToolbar }}
+/>
+
+// After running the codemod
+<DatePicker
+  slots={{ textField: MyTextField }}
+  slots={{ toolbar: MyToolbar }}
+/>
+```
+
+The same applies to `slotProps` and `componentsProps`.
+:::

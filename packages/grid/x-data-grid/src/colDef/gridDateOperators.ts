@@ -23,21 +23,20 @@ function buildApplyFilterFn(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return ({ value }: GridCellParams<any, string | number | Date, any>): boolean => {
+  return ({ value }: GridCellParams<any, Date, any>): boolean => {
     if (!value) {
       return false;
     }
 
-    const valueAsDate = value instanceof Date ? value : new Date(value.toString());
     if (keepHours) {
-      return compareFn(valueAsDate.getTime(), time);
+      return compareFn(value.getTime(), time);
     }
 
     // Make a copy of the date to not reset the hours in the original object
-    const dateCopy = value instanceof Date ? new Date(valueAsDate) : valueAsDate;
+    const dateCopy = new Date(value);
     const timeToCompare = dateCopy.setHours(
-      showTime ? valueAsDate.getHours() : 0,
-      showTime ? valueAsDate.getMinutes() : 0,
+      showTime ? value.getHours() : 0,
+      showTime ? value.getMinutes() : 0,
       0,
       0,
     );
@@ -45,9 +44,7 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (
-  showTime?: boolean,
-): GridFilterOperator<any, string | Date, any>[] => [
+export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {

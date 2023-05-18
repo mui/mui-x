@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -35,7 +34,7 @@ describe('<DataGrid /> - Keyboard', () => {
   function NavigationTestCaseNoScrollX(
     props: Omit<
       DataGridProps,
-      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
     > & {},
   ) {
     const data = useBasicDemoData(100, 3);
@@ -48,8 +47,8 @@ describe('<DataGrid /> - Keyboard', () => {
           autoHeight={isJSDOM}
           rows={data.rows}
           columns={transformColSizes(data.columns)}
-          pageSize={PAGE_SIZE}
-          rowsPerPageOptions={[PAGE_SIZE]}
+          initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}
+          pageSizeOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
           columnHeaderHeight={HEADER_HEIGHT}
@@ -76,7 +75,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to cell below when pressing "ArrowDown" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(18, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('18-1');
@@ -91,7 +90,7 @@ describe('<DataGrid /> - Keyboard', () => {
       const cell = getCell(0, 0);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('0-0');
-      fireEvent.keyDown(cell.querySelector('input'), { key: 'ArrowDown' });
+      fireEvent.keyDown(cell.querySelector('input')!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('1-0');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('2-0');
@@ -109,7 +108,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the cell above when pressing "ArrowUp" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(11, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('11-1');
@@ -344,7 +343,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the first row when pressing "ArrowDown" on a column header on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
@@ -463,7 +462,7 @@ describe('<DataGrid /> - Keyboard', () => {
     function NavigationTestGroupingCaseNoScrollX(
       props: Omit<
         DataGridProps,
-        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
       > & {},
     ) {
       const data = getBasicGridData(10, 10);
@@ -476,8 +475,8 @@ describe('<DataGrid /> - Keyboard', () => {
             autoHeight={isJSDOM}
             rows={data.rows}
             columns={transformColSizes(data.columns)}
-            pageSize={PAGE_SIZE}
-            rowsPerPageOptions={[PAGE_SIZE]}
+            paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
+            pageSizeOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}
             columnHeaderHeight={HEADER_HEIGHT}
@@ -686,13 +685,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(6);
+    expect(renderCell.callCount).to.equal(4);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(8);
+    expect(renderCell.callCount).to.equal(6);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(8);
+    expect(renderCell.callCount).to.equal(6);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', () => {

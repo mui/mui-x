@@ -9,9 +9,10 @@ const VARIABLES = {
   SortGridMenuItems: 'GridColumnMenuSortItem',
   GridColumnPinningMenuItems: 'GridColumnMenuPinningItem',
   GridAggregationColumnMenuItem: 'GridColumnMenuAggregationItem',
+  GridFilterItemProps: 'GridColumnMenuItemProps',
 };
 
-const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)(\/(.*)|)/;
+const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
 
 const matchImport = (path: ASTPath<ImportDeclaration>) =>
   (path.node.source.value?.toString() ?? '').match(PACKAGE_REGEXP);
@@ -31,7 +32,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // + import { GridColumnMenuFilterItem } from '@mui/x-data-grid'
   matchingImports
     .find(j.ImportSpecifier)
-    .filter((path) => !!VARIABLES[path.node.imported.name])
+    .filter((path) => VARIABLES.hasOwnProperty(path.node.imported.name))
     .replaceWith((path) => j.importSpecifier(j.identifier(VARIABLES[path.node.imported.name])));
 
   // Rename the import usage
@@ -39,7 +40,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // + <GridColumnMenuFilterItem />
   root
     .find(j.Identifier)
-    .filter((path) => !!VARIABLES[path.node.name])
+    .filter((path) => VARIABLES.hasOwnProperty(path.node.name))
     .replaceWith((path) => j.identifier(VARIABLES[path.node.name]));
 
   // Rename `column` prop to `colDef`

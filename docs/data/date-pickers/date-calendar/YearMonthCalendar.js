@@ -8,7 +8,7 @@ import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 export default function YearMonthCalendar() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['YearCalendar', 'MonthCalendar']}>
         <DemoItem label="YearCalendar">
           <YearCalendar />
         </DemoItem>

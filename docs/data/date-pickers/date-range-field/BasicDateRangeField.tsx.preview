@@ -1,8 +1,8 @@
 <MultiInputDateRangeField
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
+  slotProps={{
+    textField: ({ position }) => ({
+      label: position === 'start' ? 'Departure' : 'Return',
+    }),
+  }}
 />
-<SingleInputDateRangeField
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
-/>
+<SingleInputDateRangeField label="Departure - Return" />

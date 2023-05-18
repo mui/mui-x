@@ -17,12 +17,16 @@ import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
 import { PickersCalendarHeader } from './PickersCalendarHeader';
-import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
+import {
+  findClosestEnabledDate,
+  applyDefaultDate,
+  mergeDateAndTime,
+} from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import { BaseDateValidationProps } from '../internals/models/validation';
+import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -127,12 +131,14 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     dayOfWeekFormatter,
     components,
     componentsProps,
+    slots,
+    slotProps,
     loading,
     renderLoading,
     displayWeekNumber,
     yearsPerRow,
     monthsPerRow,
-    sx,
+    ...other
   } = props;
 
   const [value, setValue] = useControlled({
@@ -237,7 +243,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
     if (value && day) {
       // If there is a date already selected, then we want to keep its time
-      return setValueAndGoToNextView(utils.mergeDateAndTime(day, value), 'finish');
+      return setValueAndGoToNextView(mergeDateAndTime(utils, day, value), 'finish');
     }
 
     return setValueAndGoToNextView(day, 'finish');
@@ -293,7 +299,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
       <PickersCalendarHeader
         views={views}
@@ -308,8 +314,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
-        components={components}
-        componentsProps={componentsProps}
+        slots={slots}
+        slotProps={slotProps}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -367,6 +373,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               displayWeekNumber={displayWeekNumber}
               components={components}
               componentsProps={componentsProps}
+              slots={slots}
+              slotProps={slotProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -392,13 +400,15 @@ DateCalendar.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -485,10 +495,9 @@ DateCalendar.propTypes = {
    */
   onFocusedViewChange: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -498,7 +507,7 @@ DateCalendar.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
@@ -547,10 +556,26 @@ DateCalendar.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

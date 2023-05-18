@@ -5,61 +5,59 @@ export interface PickersProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDateRangeCalendar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangeCalendar'];
   };
-  MuiDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePicker'];
-  };
   MuiDateRangePickerDay?: {
     defaultProps?: ComponentsProps['MuiDateRangePickerDay'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerDay'];
-  };
-  MuiDateRangePickerInput?: {
-    defaultProps?: ComponentsProps['MuiDateRangePickerInput'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerInput'];
   };
   MuiDateRangePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiDateRangePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerToolbar'];
   };
-  MuiDateRangePickerViewDesktop?: {
-    defaultProps?: ComponentsProps['MuiDateRangePickerViewDesktop'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerViewDesktop'];
+
+  // Multi input range fields
+  MuiMultiInputDateRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiMultiInputDateRangeField'];
+  };
+  MuiMultiInputDateTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputDateTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiMultiInputDateTimeRangeField'];
+  };
+  MuiMultiInputTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiMultiInputTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiMultiInputTimeRangeField'];
+  };
+
+  // Single input range fields
+  MuiSingleInputDateRangeField?: {
+    defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiSingleInputDateRangeField'];
+  };
+  MuiSingleInputDateTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiSingleInputDateTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiSingleInputDateTimeRangeField'];
+  };
+  MuiSingleInputTimeRangeField?: {
+    defaultProps?: ComponentsProps['MuiSingleInputTimeRangeField'];
+    styleOverrides?: ComponentsOverrides['MuiSingleInputTimeRangeField'];
+  };
+
+  // Date Range Pickers
+  MuiDateRangePicker?: {
+    defaultProps?: ComponentsProps['MuiDateRangePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePicker'];
   };
   MuiDesktopDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiDesktopDateRangePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateRangePicker'];
   };
-  MuiDesktopNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiDesktopNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextDateRangePicker'];
-  };
   MuiMobileDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiMobileDateRangePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMobileDateRangePicker'];
   };
-  MuiMobileNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiMobileNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileNextDateRangePicker'];
-  };
-  MuiMultiInputDateRangeField?: {
-    defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiMultiInputDateRangeField'];
-  };
-  MuiNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiNextDateRangePicker'];
-  };
-  MuiSingleInputDateRangeField?: {
-    defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
-    styleOverrides?: ComponentsOverrides['MuiSingleInputDateRangeField'];
-  };
   MuiStaticDateRangePicker?: {
     defaultProps?: ComponentsProps['MuiStaticDateRangePicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDateRangePicker'];
-  };
-  MuiStaticNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiStaticNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticNextDateRangePicker'];
   };
 }
 

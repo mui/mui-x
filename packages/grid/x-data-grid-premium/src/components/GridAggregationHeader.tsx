@@ -14,7 +14,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-interface OwnerState {
+interface OwnerState extends DataGridPremiumProcessedProps {
   classes: DataGridPremiumProcessedProps['classes'];
   colDef: GridColDef;
 }
@@ -42,7 +42,8 @@ const GridAggregationFunctionLabel = styled('div', {
   return {
     fontSize: theme.typography.caption.fontSize,
     lineHeight: theme.typography.caption.fontSize,
-    marginTop: `calc(-2px - ${theme.typography.caption.fontSize})`,
+    position: 'absolute',
+    bottom: 4,
     fontWeight: theme.typography.fontWeightMedium,
     color: (theme.vars || theme).palette.primary.dark,
     textTransform: 'uppercase',
@@ -71,7 +72,7 @@ function GridAggregationHeader(props: GridColumnHeaderParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const ownerState = { classes: rootProps.classes, colDef };
+  const ownerState = { ...rootProps, classes: rootProps.classes, colDef };
   const classes = useUtilityClasses(ownerState);
 
   if (!aggregation) {

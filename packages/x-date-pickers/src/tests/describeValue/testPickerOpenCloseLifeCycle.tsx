@@ -2,21 +2,16 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { openPicker } from 'test/utils/pickers-utils';
+import { getTextbox, openPicker } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
-export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-picker'> = (
+export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
   getOptions,
 ) => {
   const { componentFamily, render, values, setNewValue, ...pickerParams } = getOptions();
 
-  if (componentFamily !== 'new-picker') {
-    return;
-  }
-
-  // No view to test
-  if (pickerParams.variant === 'desktop' && pickerParams.type === 'time') {
+  if (componentFamily !== 'picker') {
     return;
   }
 
@@ -84,6 +79,23 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
     });
 
+    it('should not select input content after closing on mobile', () => {
+      if (pickerParams.variant !== 'mobile') {
+        return;
+      }
+      render(<ElementToTest defaultValue={values[0]} />);
+
+      // Change the value
+      setNewValue(values[0]);
+      let textbox: HTMLInputElement;
+      if (pickerParams.type === 'date-range') {
+        textbox = screen.getAllByRole<HTMLInputElement>('textbox')[0];
+      } else {
+        textbox = getTextbox();
+      }
+      expect(textbox.scrollLeft).to.be.equal(0);
+    });
+
     it('should call onChange, onClose and onAccept when selecting a value and `props.closeOnSelect` is true', () => {
       const onChange = spy();
       const onAccept = spy();
@@ -130,7 +142,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
           onAccept={onAccept}
           onClose={onClose}
           open
-          defaultValue={values[0]}
+          value={values[0]}
           closeOnSelect
         />,
       );
@@ -225,10 +237,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose when clicking outside of the picker without prior change', () => {
+    it('should call onClose when clicking outside of the picker without prior change', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
       if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
-        return;
+        this.skip();
       }
 
       const onChange = spy();
@@ -240,7 +252,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          defaultValue={values[0]}
+          value={values[0]}
           open
           closeOnSelect={false}
         />,
@@ -253,10 +265,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       expect(onClose.callCount).to.equal(1);
     });
 
-    it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+    it('should call onClose and onAccept with the live value when clicking outside of the picker', function test() {
       // TODO: Fix this test and enable it on mobile and date-range
       if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
-        return;
+        this.skip();
       }
 
       const onChange = spy();

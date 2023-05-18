@@ -21,7 +21,7 @@ import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridCo
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
-export type GridColumnDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
+export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
 /**
  * Computes width for flex columns.
@@ -207,8 +207,6 @@ export const hydrateColumnsWidth = (
   };
 };
 
-let columnTypeWarnedOnce = false;
-
 /**
  * Apply the order and the dimensions of the initial state.
  * The columns not registered in `orderedFields` will be placed after the imported columns.
@@ -327,24 +325,8 @@ export const createColumnsState = ({
     if (existingState == null) {
       let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
 
-      if (newColumn.type) {
-        if (
-          process.env.NODE_ENV !== 'production' &&
-          !columnTypeWarnedOnce &&
-          !columnTypes[newColumn.type]
-        ) {
-          console.warn(
-            [
-              `MUI: The column type "${newColumn.type}" you are using is not supported.`,
-              `Column type "string" is being used instead.`,
-            ].join('\n'),
-          );
-          columnTypeWarnedOnce = true;
-        }
-
-        if (columnTypes[newColumn.type]) {
-          colDef = columnTypes[newColumn.type];
-        }
+      if (newColumn.type && columnTypes[newColumn.type]) {
+        colDef = columnTypes[newColumn.type];
       }
 
       existingState = {

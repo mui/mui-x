@@ -35,7 +35,7 @@ export default function PageSizeAuto() {
         </Select>
       </FormControl>
       <div style={{ height, width: '100%' }}>
-        <DataGrid autoPageSize pagination {...data} />
+        <DataGrid autoPageSize {...data} />
       </div>
     </Stack>
   );

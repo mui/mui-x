@@ -9,6 +9,7 @@ import {
   getByRole,
   act,
   fireEvent,
+  createEvent,
 } from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
 import { unstable_useControlled as useControlled } from '@mui/utils';
@@ -21,9 +22,10 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
 
 export type AdapterName =
   | 'date-fns'
@@ -35,7 +37,7 @@ export type AdapterName =
   // | 'js-joda'
   | 'date-fns-jalali';
 
-const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
+const availableAdapters: { [key in AdapterName]: new (...args: any) => MuiPickersAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
@@ -93,8 +95,10 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   adapterName?: AdapterName;
 }
 
-export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
-  return (node: React.ReactNode) =>
+export function wrapPickerMount(
+  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
+) {
+  return (node: React.ReactElement) =>
     mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
 }
 
@@ -149,10 +153,22 @@ export type OpenPickerParams =
       type: 'date-range';
       variant: 'mobile' | 'desktop';
       initialFocus: 'start' | 'end';
+      /**
+       * @default false
+       */
+      isSingleInput?: boolean;
     };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
+    if (params.isSingleInput) {
+      const target = screen.getByRole<HTMLInputElement>('textbox');
+      userEvent.mousePress(target);
+      const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
+
+      return target.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
     const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
 
     return userEvent.mousePress(target);
@@ -293,9 +309,19 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 export const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
-export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
+  const clean = text.replace(/\u202f/g, ' ');
+  switch (specialCase) {
+    case 'singleDigit':
+      return clean.replace(/\u200e/g, '');
+    case 'RTL':
+      return clean.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+    default:
+      return clean;
+  }
+};
 
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
@@ -303,32 +329,71 @@ export const getCleanedSelectedContent = (input: HTMLInputElement) =>
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
-  shouldRemoveDashSpaces: boolean = false,
+  specialCase?: 'singleDigit' | 'RTL',
 ) => {
-  let value = cleanText(input.value);
-  if (shouldRemoveDashSpaces) {
-    value = value.replace(/ \/ /g, '/');
-  }
-
+  const value = cleanText(input.value, specialCase);
   return expect(value).to.equal(expectedValue);
 };
 
-export const buildFieldInteractions = ({
-  clock,
-}: {
+export const expectInputPlaceholder = (
+  input: HTMLInputElement,
+  placeholder: string,
+  specialCase?: 'singleDigit' | 'RTL',
+) => {
+  const cleanPlaceholder = cleanText(input.placeholder, specialCase);
+  return expect(cleanPlaceholder).to.equal(placeholder);
+};
+
+interface BuildFieldInteractionsParams<P extends {}> {
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
-}) => {
-  const clickOnInput = (
+  render: ReturnType<typeof createRenderer>['render'];
+  Component: React.FunctionComponent<P>;
+}
+
+export interface BuildFieldInteractionsResponse<P extends {}> {
+  clickOnInput: (
     input: HTMLInputElement,
     cursorStartPosition: number,
+    cursorEndPosition?: number,
+  ) => void;
+  selectSection: (input: HTMLInputElement, activeSectionIndex: number) => void;
+  testFieldKeyPress: (
+    params: P & {
+      key: string;
+      expectedValue: string;
+      cursorPosition?: number;
+      valueToSelect?: string;
+    },
+  ) => void;
+  testFieldChange: (
+    params: P & {
+      keyStrokes: { value: string; expected: string }[];
+      cursorPosition?: number;
+    },
+  ) => void;
+}
+
+export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
+
+export const buildFieldInteractions = <P extends {}>({
+  clock,
+  render,
+  Component,
+}: BuildFieldInteractionsParams<P>): BuildFieldInteractionsResponse<P> => {
+  const clickOnInput: BuildFieldInteractionsResponse<P>['clickOnInput'] = (
+    input,
+    cursorStartPosition,
     cursorEndPosition = cursorStartPosition,
   ) => {
+    if (document.activeElement !== input) {
+      act(() => {
+        input.focus();
+      });
+      clock.runToLast();
+    }
     act(() => {
       fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
       fireEvent.mouseUp(input);
       input.setSelectionRange(cursorStartPosition, cursorEndPosition);
       fireEvent.click(input);
@@ -337,7 +402,106 @@ export const buildFieldInteractions = ({
     });
   };
 
-  return { clickOnInput };
+  const selectSection: BuildFieldInteractionsResponse<P>['selectSection'] = (
+    input,
+    activeSectionIndex,
+  ) => {
+    const value = input.value.replace(':', '/');
+
+    // TODO: Improve this logic when we will be able to access state.sections from the outside
+    let clickPosition: number;
+    if (activeSectionIndex === 0) {
+      clickPosition = 0;
+    } else {
+      clickPosition =
+        (value.split('/', activeSectionIndex - 1).join('/').length +
+          value.split('/', activeSectionIndex).join('/').length) /
+        2;
+    }
+
+    clickOnInput(input, clickPosition);
+  };
+
+  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
+    key,
+    expectedValue,
+    cursorPosition = 1,
+    valueToSelect,
+    ...props
+  }) => {
+    render(<Component {...(props as any as P)} />);
+    const input = getTextbox();
+
+    // focus input to trigger setting placeholder as value if no value is present
+    act(() => {
+      input.focus();
+    });
+    // make sure the value of the input is rendered before proceeding
+    clock.runToLast();
+
+    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
+    if (clickPosition === -1) {
+      throw new Error(
+        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
+      );
+    }
+    clickOnInput(input, clickPosition);
+    userEvent.keyPress(input, { key });
+    expectInputValue(input, expectedValue);
+  };
+
+  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
+    keyStrokes,
+    cursorPosition = 1,
+    ...props
+  }) => {
+    render(<Component {...(props as any as P)} />);
+    const input = getTextbox();
+    clickOnInput(input, cursorPosition);
+
+    keyStrokes.forEach((keyStroke) => {
+      fireEvent.change(input, { target: { value: keyStroke.value } });
+      expectInputValue(
+        input,
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
+    });
+  };
+
+  return { clickOnInput, selectSection, testFieldKeyPress, testFieldChange };
+};
+
+export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {
+  const createDragEvent = (type: DragEventTypes, target: ChildNode) => {
+    const createdEvent = createEvent[type](target);
+    Object.defineProperty(createdEvent, 'dataTransfer', {
+      value: getDataTransfer(),
+    });
+    return createdEvent;
+  };
+
+  const executeDateDragWithoutDrop = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
+    const endDate = otherDates[otherDates.length - 1];
+    fireEvent(startDate, createDragEvent('dragStart', startDate));
+    fireEvent(startDate, createDragEvent('dragLeave', startDate));
+    otherDates.slice(0, otherDates.length - 1).forEach((date) => {
+      fireEvent(date, createDragEvent('dragEnter', date));
+      fireEvent(date, createDragEvent('dragOver', date));
+      fireEvent(date, createDragEvent('dragLeave', date));
+    });
+    fireEvent(endDate, createDragEvent('dragEnter', endDate));
+    fireEvent(endDate, createDragEvent('dragOver', endDate));
+  };
+
+  const executeDateDrag = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
+    executeDateDragWithoutDrop(startDate, ...otherDates);
+    const endDate = otherDates[otherDates.length - 1];
+    fireEvent(endDate, createDragEvent('drop', endDate));
+    fireEvent(endDate, createDragEvent('dragEnd', endDate));
+  };
+
+  return { executeDateDragWithoutDrop, executeDateDrag };
 };
 
 export type DragEventTypes =
@@ -405,3 +569,14 @@ export class MockedDataTransfer implements DataTransfer {
     this.yOffset = yOffset;
   }
 }
+
+export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+  switch (componentFamily) {
+    case 'clock':
+      return 2;
+    case 'multi-section-digital-clock':
+      return 3;
+    default:
+      return 1;
+  }
+};
