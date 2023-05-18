@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {
@@ -85,15 +84,6 @@ function CustomHeaderFilter(props) {
     </Stack>
   );
 }
-
-CustomHeaderFilter.propTypes = {
-  colDef: PropTypes.object.isRequired,
-  colIndex: PropTypes.number.isRequired,
-  hasFocus: PropTypes.bool,
-  height: PropTypes.number.isRequired,
-  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
-  width: PropTypes.number.isRequired,
-};
 
 export default function CustomHeaderFilterDataGridPro() {
   const { data } = useDemoData({
