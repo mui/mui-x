@@ -192,6 +192,33 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+export interface GridHeaderFilterEventLookup {
+  /**
+   * Fired when a column header filter is clicked
+   * @ignore - do not document.
+   */
+  headerFilterClick: {
+    params: GridColumnHeaderParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a key is pressed in a column header filter. It's mapped to the `keydown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterKeyDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a mouse is pressed in a column header filter. It's mapped to the `mousedown` DOM event.
+   * @ignore - do not document.
+   */
+  headerFilterMouseDown: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+}
+
 export interface GridColumnGroupHeaderEventLookup {
   /**
    * Fired when a key is pressed in a column group header. It's mapped do the `keydown` DOM event.
@@ -322,6 +349,7 @@ export interface GridControlledStateReasonLookup {
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridHeaderFilterEventLookup,
     GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
