@@ -36,6 +36,7 @@ import {
   DAY_SIZE,
 } from '@mui/x-date-pickers/internals';
 import Typography from '@mui/material/Typography';
+import { dayPickerClasses } from '@mui/x-date-pickers';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -69,6 +70,9 @@ const DateRangeCalendarRoot = styled('div', {
 })<{ ownerState: DateRangeCalendarOwnerState<any> }>({
   display: 'flex',
   flexDirection: 'row',
+  [`& .${dayPickerClasses.root}`]: {
+    margin: '0 auto',
+  },
 });
 
 const DateRangeCalendarMonthContainer = styled('div', {
@@ -103,7 +107,10 @@ const warnInvalidCurrentMonthCalendarPosition = buildWarning([
 ]);
 
 const DayCalendarForRange = styled(DayCalendar)(({ theme, displayWeekNumber }) => ({
-  minWidth: RANGE_CALENDAR_WIDTH + (displayWeekNumber ? WEEK_NUMBER_SIZE : 0),
+  minWidth: Math.min(
+    RANGE_CALENDAR_WIDTH + (displayWeekNumber ? WEEK_NUMBER_SIZE : 0) + 2 * CALENDAR_MARGIN,
+    326,
+  ),
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.day}`]: {
