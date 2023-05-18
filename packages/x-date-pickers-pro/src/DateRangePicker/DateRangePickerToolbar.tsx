@@ -54,6 +54,7 @@ const DateRangePickerToolbarContainer = styled('div', {
   overridesResolver: (_, styles) => styles.container,
 })({
   display: 'flex',
+  alignItems: 'center',
 });
 
 const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
