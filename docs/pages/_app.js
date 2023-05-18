@@ -127,7 +127,7 @@ async function registerServiceWorker() {
     window.location.host.indexOf('mui.com') !== -1
   ) {
     // register() automatically attempts to refresh the sw.js.
-    const registration = await navigator.serviceWorker.register('/sw.js');
+    const registration = await navigator.serviceWorker.register('/x/sw.js');
     // Force the page reload for users.
     forcePageReload(registration);
   }
