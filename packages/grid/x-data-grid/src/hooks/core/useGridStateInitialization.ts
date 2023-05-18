@@ -87,6 +87,8 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
         if (apiRef.current.publishEvent) {
           apiRef.current.publishEvent('stateChange', newState);
         }
+
+        apiRef.current.store.update(newState);
       }
 
       if (updatedControlStateIds.length === 1) {
