@@ -16,6 +16,7 @@ import {
   DAY_MARGIN,
   CALENDAR_MARGIN,
   WEEK_NUMBER_SIZE,
+  WEEKS_CONTAINER_HEIGHT,
 } from '../internals/constants/dimensions';
 import {
   PickersSlideTransition,
@@ -127,8 +128,6 @@ const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
 
 const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
 
-const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6 + CALENDAR_MARGIN;
-
 const PickersCalendarDayRoot = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Root',
@@ -202,7 +201,7 @@ const PickersCalendarLoadingContainer = styled('div', {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  minHeight: weeksContainerHeight,
+  minHeight: WEEKS_CONTAINER_HEIGHT,
 });
 
 const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
@@ -210,7 +209,7 @@ const PickersCalendarSlideTransition = styled(PickersSlideTransition, {
   slot: 'SlideTransition',
   overridesResolver: (_, styles) => styles.slideTransition,
 })({
-  minHeight: weeksContainerHeight,
+  minHeight: WEEKS_CONTAINER_HEIGHT,
 });
 
 const PickersCalendarWeekContainer = styled('div', {
