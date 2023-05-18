@@ -38,7 +38,7 @@ const PickersToolbarRoot = styled('div', {
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'space-between',
-  padding: theme.spacing(2),
+  padding: theme.spacing(2, 2, 1),
   ...(ownerState.isLandscape && {
     height: 'auto',
     maxWidth: 160,
