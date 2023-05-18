@@ -33,6 +33,7 @@ import {
   CALENDAR_MARGIN,
   RANGE_CALENDAR_WIDTH,
   WEEK_NUMBER_SIZE,
+  DAY_SIZE,
 } from '@mui/x-date-pickers/internals';
 import Typography from '@mui/material/Typography';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
@@ -87,8 +88,13 @@ const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
   justifyContent: 'space-between',
 });
 
-const DAY_RANGE_SIZE = 40;
-const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
+const weeksContainerHeight =
+  (DAY_SIZE +
+    DAY_MARGIN * 2 +
+    // add the margin between week containers
+    DAY_MARGIN * 2) *
+    6 +
+  1 + CALENDAR_MARGIN;
 
 const warnInvalidCurrentMonthCalendarPosition = buildWarning([
   'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
