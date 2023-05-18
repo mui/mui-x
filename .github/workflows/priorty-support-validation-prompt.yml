@@ -1,0 +1,27 @@
+name: Priorty Support Validation Prompt
+
+on:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  add-comment:
+    if: ${{ endsWith(github.event.label.name, 'unverified') }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Add comment
+        uses: peter-evans/create-or-update-comment@5f728c3dae25f329afbe34ee4d08eef25569d79f
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Looks like you are requestion priorty support ⏰. Please validate your support key using the link below:
+
+            [...]
+
+            Do not share you support key in this issue!
+
+            Priority support will only be provided to verified customers. Once you have verified your support key, we will remove the `priority support: unverified` label and add the `priority support: verified` label to this issue.
+            Only then the time for the SLA will start counting.
