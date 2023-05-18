@@ -67,13 +67,20 @@ const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateRangeCalendarOwnerState<any> }>({
+})<{ ownerState: DateRangeCalendarOwnerState<any> }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'row',
   [`& .${dayPickerClasses.root}`]: {
     margin: '0 auto',
   },
-});
+  [`& .${dayPickerClasses.header}`]: {
+    alignSelf: 'center',
+    width: Math.min(
+      RANGE_CALENDAR_WIDTH + (ownerState.displayWeekNumber ? WEEK_NUMBER_SIZE : 0),
+      326,
+    ),
+  },
+}));
 
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
