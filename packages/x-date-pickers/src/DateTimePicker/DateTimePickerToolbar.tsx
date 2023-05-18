@@ -4,7 +4,6 @@ import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -49,15 +48,10 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>({
   justifyContent: 'space-around',
   position: 'relative',
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'absolute',
-    top: 8,
-    ...(theme.direction === 'rtl' ? { left: 8 } : { right: 8 }),
-  },
-}));
+});
 
 DateTimePickerToolbarRoot.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -7,7 +7,6 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   PickersToolbar,
   PickersToolbarButton,
-  pickersToolbarClasses,
   useUtils,
   BaseToolbarProps,
   useLocaleText,
@@ -47,12 +46,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: DateRangePickerToolbarProps<any>;
-}>({
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'relative',
-    top: 4,
-  },
-});
+}>({});
 
 const DateRangePickerToolbarContainer = styled('div', {
   name: 'MuiDateRangePickerToolbar',
