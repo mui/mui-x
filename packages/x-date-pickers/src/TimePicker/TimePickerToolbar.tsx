@@ -65,7 +65,7 @@ const TimePickerToolbarSeparator = styled(PickersToolbarText, {
   overridesResolver: (props, styles) => styles.separator,
 })({
   outline: 0,
-  margin: '0 4px 0 2px',
+  padding: '6px',
   cursor: 'default',
 });
 
@@ -181,7 +181,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
     <TimePickerToolbarSeparator
       tabIndex={-1}
       value=":"
-      variant="h3"
+      variant="h4"
       selected={false}
       className={classes.separator}
     />
@@ -189,7 +189,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
 
   return (
     <TimePickerToolbarRoot
-      landscapeDirection="row"
+      flexDirection="row"
       toolbarTitle={localeText.timePickerToolbarTitle}
       isLandscape={isLandscape}
       ownerState={ownerState}
@@ -201,7 +201,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
           <PickersToolbarButton
             data-mui-test="hours"
             tabIndex={-1}
-            variant="h3"
+            variant="h4"
             onClick={() => onViewChange('hours')}
             selected={view === 'hours'}
             value={value ? formatHours(value) : '--'}
@@ -213,7 +213,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
           <PickersToolbarButton
             data-mui-test="minutes"
             tabIndex={-1}
-            variant="h3"
+            variant="h4"
             onClick={() => onViewChange('minutes')}
             selected={view === 'minutes'}
             value={value ? utils.format(value, 'minutes') : '--'}
@@ -224,7 +224,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
         {arrayIncludes(views, 'seconds') && (
           <PickersToolbarButton
             data-mui-test="seconds"
-            variant="h3"
+            variant="h4"
             onClick={() => onViewChange('seconds')}
             selected={view === 'seconds'}
             value={value ? utils.format(value, 'seconds') : '--'}
@@ -242,6 +242,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             value={utils.getMeridiemText('am')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled}
+            sx={{ py: 0.5 }}
           />
           <PickersToolbarButton
             disableRipple
@@ -252,6 +253,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             value={utils.getMeridiemText('pm')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             disabled={disabled}
+            sx={{ py: 0.5 }}
           />
         </TimePickerToolbarAmPmSelection>
       )}

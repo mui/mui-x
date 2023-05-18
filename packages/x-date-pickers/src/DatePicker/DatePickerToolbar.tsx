@@ -43,7 +43,8 @@ const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
   overridesResolver: (_, styles) => styles.title,
-})<{ ownerState: DatePickerToolbarProps<any> }>(({ ownerState }) => ({
+})<{ ownerState: DatePickerToolbarProps<any> }>(({ ownerState, theme }) => ({
+  padding: theme.spacing(0, 1),
   ...(ownerState.isLandscape && {
     margin: 'auto 16px auto auto',
   }),

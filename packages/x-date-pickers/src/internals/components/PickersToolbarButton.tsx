@@ -32,7 +32,6 @@ const PickersToolbarButtonRoot = styled(Button, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })({
-  padding: 0,
   minWidth: 16,
   textTransform: 'none',
 });

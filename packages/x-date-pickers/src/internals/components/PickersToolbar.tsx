@@ -11,7 +11,7 @@ import { DateOrTimeViewWithMeridiem } from '../models';
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
   className?: string;
-  landscapeDirection?: 'row' | 'column';
+  flexDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
 }
@@ -38,11 +38,10 @@ const PickersToolbarRoot = styled('div', {
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'space-between',
-  padding: theme.spacing(2, 3),
+  padding: theme.spacing(2),
   ...(ownerState.isLandscape && {
     height: 'auto',
     maxWidth: 160,
-    padding: 16,
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
   }),
@@ -54,12 +53,9 @@ const PickersToolbarContent = styled(Grid, {
   overridesResolver: (props, styles) => styles.content,
 })<{
   ownerState: PickersToolbarProps<any, any>;
-}>(({ ownerState }) => ({
+}>({
   flex: 1,
-  ...(!ownerState.isLandscape && {
-    alignItems: 'flex-end',
-  }),
-}));
+});
 
 type PickersToolbarComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
@@ -78,7 +74,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     children,
     className,
     isLandscape,
-    landscapeDirection = 'column',
+    flexDirection = 'column',
     toolbarTitle,
     hidden,
     titleId,
@@ -103,6 +99,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
         color="text.secondary"
         variant="overline"
         id={titleId}
+        sx={{ px: 1 }}
       >
         {toolbarTitle}
       </Typography>
@@ -111,8 +108,8 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
         justifyContent={isLandscape ? 'flex-start' : 'space-between'}
         className={classes.content}
         ownerState={ownerState}
-        direction={isLandscape ? landscapeDirection : 'row'}
-        alignItems={isLandscape ? 'flex-start' : 'flex-end'}
+        direction={flexDirection}
+        alignItems={flexDirection === 'column' ? 'flex-start' : 'center'}
       >
         {children}
       </PickersToolbarContent>
