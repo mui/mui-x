@@ -27,7 +27,7 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByMuiTest('hours')).to.have.text('10');
     expect(screen.getByMuiTest('minutes')).to.have.text('01');
     expect(screen.getByMuiTest('datetimepicker-toolbar-year')).to.have.text('2021');
-    expect(screen.getByMuiTest('datetimepicker-toolbar-day')).to.have.text('Nov 20');
+    expect(screen.getByMuiTest('datetimepicker-toolbar-day')).to.have.text('November 20');
   });
 
   it('should render toolbar and tabs by default', () => {
