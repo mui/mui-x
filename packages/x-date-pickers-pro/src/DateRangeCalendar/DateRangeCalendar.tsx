@@ -94,7 +94,8 @@ const weeksContainerHeight =
     // add the margin between week containers
     DAY_MARGIN * 2) *
     6 +
-  1 + CALENDAR_MARGIN;
+  1 +
+  CALENDAR_MARGIN;
 
 const warnInvalidCurrentMonthCalendarPosition = buildWarning([
   'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
