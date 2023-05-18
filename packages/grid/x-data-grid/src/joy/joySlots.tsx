@@ -299,6 +299,21 @@ const InputLabel = React.forwardRef<
   return <JoyFormLabel {...props} ref={ref} sx={sx as SxProps<Theme>} />;
 });
 
+const FormControl = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['baseFormControl']>
+>(({ size, color, sx, fullWidth, ...props }, ref) => {
+  return (
+    <JoyFormControl
+      {...props}
+      sx={sx as SxProps<Theme>}
+      color={convertColor(color)}
+      size={convertSize(size)}
+      ref={ref}
+    />
+  );
+});
+
 function labelDisplayedRows({ from, to, count }: { from: number; to: number; count: number }) {
   return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
 }
@@ -436,7 +451,7 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseSelect: Select,
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
-  baseFormControl: JoyFormControl,
+  baseFormControl: FormControl,
   baseMenu: Menu,
   baseMenuItem: JoyMenuItem,
   baseListItemIcon: JoyListItemDecorator,

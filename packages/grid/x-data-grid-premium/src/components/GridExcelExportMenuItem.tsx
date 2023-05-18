@@ -1,26 +1,28 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
 import { GridExportMenuItemProps } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridExcelExportOptions } from '../hooks/features/export';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 export type GridExcelExportMenuItemProps = GridExportMenuItemProps<GridExcelExportOptions>;
 
 function GridExcelExportMenuItem(props: GridExcelExportMenuItemProps) {
   const apiRef = useGridApiContext();
   const { hideMenu, options, ...other } = props;
+  const rootProps = useGridRootProps();
 
   return (
-    <MenuItem
+    <rootProps.slots.baseMenuItem
       onClick={() => {
         apiRef.current.exportDataAsExcel(options);
         hideMenu?.();
       }}
+      {...rootProps.slotProps?.baseMenuItem}
       {...other}
     >
       {apiRef.current.getLocaleText('toolbarExportExcel')}
-    </MenuItem>
+    </rootProps.slots.baseMenuItem>
   );
 }
 

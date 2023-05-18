@@ -1,8 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import {
   useGridSelector,
   gridColumnLookupSelector,
@@ -32,12 +29,18 @@ function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
 
     const name = columnsLookup[field].headerName ?? field;
     return (
-      <MenuItem onClick={ungroupColumn} key={field}>
-        <ListItemIcon>
+      <rootProps.slots.baseMenuItem
+        onClick={ungroupColumn}
+        key={field}
+        {...rootProps.slotProps?.baseMenuItem}
+      >
+        <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
           <rootProps.slots.columnMenuUngroupIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
-      </MenuItem>
+        </rootProps.slots.baseListItemIcon>
+        <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+          {apiRef.current.getLocaleText('unGroupColumn')(name)}
+        </rootProps.slots.baseListItemText>
+      </rootProps.slots.baseMenuItem>
     );
   };
 

@@ -2,12 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -53,7 +48,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
     return '';
   }, [rootProps.aggregationFunctions, aggregationModel, colDef]);
 
-  const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
+  const handleAggregationItemChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newAggregationItem = event.target?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
     const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
@@ -69,26 +64,44 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
 
   return (
+    // TODO: when baseMenuItem slot is used, the Joy select inside is not working
     <MenuItem disableRipple>
-      <ListItemIcon>
+      <rootProps.slots.baseListItemIcon {...rootProps.slotProps?.baseListItemIcon}>
         <rootProps.slots.columnMenuAggregationIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>
-        <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
-          <InputLabel id={`${id}-label`}>{label}</InputLabel>
-          <Select
+      </rootProps.slots.baseListItemIcon>
+      <rootProps.slots.baseListItemText {...rootProps.slotProps?.baseListItemText}>
+        <rootProps.slots.baseFormControl
+          size="small"
+          fullWidth
+          sx={{ minWidth: 150, width: '100%' }}
+          {...rootProps.slotProps?.baseFormControl}
+        >
+          <rootProps.slots.baseInputLabel
+            id={`${id}-label`}
+            {...rootProps.slotProps?.baseInputLabel}
+          >
+            {label}
+          </rootProps.slots.baseInputLabel>
+          <rootProps.slots.baseSelect
             labelId={`${id}-label`}
             id={`${id}-input`}
             value={selectedAggregationRule}
             label={label}
             color="primary"
             onChange={handleAggregationItemChange}
-            onBlur={(e) => e.stopPropagation()}
+            onBlur={(event: React.FocusEvent) => event.stopPropagation()}
             fullWidth
+            {...rootProps.slotProps?.baseSelect}
           >
-            <MenuItem value="">...</MenuItem>
+            <rootProps.slots.baseSelectOption value="" {...rootProps.slotProps?.baseSelectOption}>
+              ...
+            </rootProps.slots.baseSelectOption>
             {availableAggregationFunctions.map((aggFunc) => (
-              <MenuItem key={aggFunc} value={aggFunc}>
+              <rootProps.slots.baseSelectOption
+                key={aggFunc}
+                value={aggFunc}
+                {...rootProps.slotProps?.baseSelectOption}
+              >
                 {getAggregationFunctionLabel({
                   apiRef,
                   aggregationRule: {
@@ -96,11 +109,11 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
                     aggregationFunction: rootProps.aggregationFunctions[aggFunc],
                   },
                 })}
-              </MenuItem>
+              </rootProps.slots.baseSelectOption>
             ))}
-          </Select>
-        </FormControl>
-      </ListItemText>
+          </rootProps.slots.baseSelect>
+        </rootProps.slots.baseFormControl>
+      </rootProps.slots.baseListItemText>
     </MenuItem>
   );
 }
