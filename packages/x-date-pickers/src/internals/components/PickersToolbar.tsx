@@ -57,7 +57,7 @@ const PickersToolbarContent = styled(Grid, {
 }>(({ ownerState }) => ({
   flex: 1,
   ...(!ownerState.isLandscape && {
-    alignItems: 'center',
+    alignItems: 'flex-end',
   }),
 }));
 

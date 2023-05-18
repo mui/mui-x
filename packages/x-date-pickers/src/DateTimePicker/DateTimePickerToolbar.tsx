@@ -50,8 +50,6 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme }) => ({
-  paddingLeft: 16,
-  paddingRight: 16,
   justifyContent: 'space-around',
   position: 'relative',
   [`& .${pickersToolbarClasses.penIconButton}`]: {
@@ -102,6 +100,7 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   return {
     display: 'flex',
     flexDirection: direction,
+    alignItems: 'center',
     ...(theme.direction === 'rtl' && {
       flexDirection: `${direction}-reverse`,
     }),

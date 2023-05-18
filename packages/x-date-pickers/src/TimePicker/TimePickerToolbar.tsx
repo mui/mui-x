@@ -122,6 +122,8 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   flexDirection: 'column',
   marginRight: 'auto',
   marginLeft: 12,
+  marginTop: 1,
+  marginBottom: 1,
   ...(ownerState.isLandscape && {
     margin: '4px 0 auto',
     flexDirection: 'row',
