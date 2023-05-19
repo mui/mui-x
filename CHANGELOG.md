@@ -54,7 +54,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [core] Fix `yarn.lock` (#8988) @flaviendelangle
 - [core] Fix flacky adapter test (#8995) @flaviendelangle
 - [charts] Clean the axis rendering (#8948) @alexfauquette
-- [Datagrid] Memoize root props (#8942) @romgrk
+- [DataGrid] Memoize root props for better performance (#8942) @romgrk
 - [test] Skip flaky unit tests in JSDOM (#8994) @cherniavskii
 
 ## v6.4.0
