@@ -37,7 +37,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Changes
 
-- [fields] Fix selection of first element on DateField (#9005) @noraleonte
+- [fields] Select the first section instead of last when clicking right of content (#9005) @noraleonte
 - [fields] Refactor prop drilling in fields (#8660) @flaviendelangle
 - [pickers] Allow to render the months before `currentMonth` instead of the one after (#8592) @flaviendelangle
 - [pickers] Fix view management when `openTo` or `views` is modified (#8997) @alexfauquette
