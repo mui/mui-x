@@ -66,8 +66,13 @@ const rows = [
 export default function SingleClickEditing() {
   const [cellModesModel, setCellModesModel] = React.useState({});
 
-  const handleCellClick = React.useCallback((params) => {
+  const handleCellClick = React.useCallback((params, event) => {
     if (!params.isEditable) {
+      return;
+    }
+
+    // Ignore portal
+    if (!event.currentTarget.contains(event.target)) {
       return;
     }
 

@@ -73,38 +73,46 @@ const rows: GridRowsProp = [
 export default function SingleClickEditing() {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
 
-  const handleCellClick = React.useCallback((params: GridCellParams) => {
-    if (!params.isEditable) {
-      return;
-    }
+  const handleCellClick = React.useCallback(
+    (params: GridCellParams, event: React.MouseEvent) => {
+      if (!params.isEditable) {
+        return;
+      }
 
-    setCellModesModel((prevModel) => {
-      return {
-        // Revert the mode of the other cells from other rows
-        ...Object.keys(prevModel).reduce(
-          (acc, id) => ({
-            ...acc,
-            [id]: Object.keys(prevModel[id]).reduce(
-              (acc2, field) => ({
-                ...acc2,
-                [field]: { mode: GridCellModes.View },
-              }),
-              {},
-            ),
-          }),
-          {},
-        ),
-        [params.id]: {
-          // Revert the mode of other cells in the same row
-          ...Object.keys(prevModel[params.id] || {}).reduce(
-            (acc, field) => ({ ...acc, [field]: { mode: GridCellModes.View } }),
+      // Ignore portal
+      if (!event.currentTarget.contains(event.target as Element)) {
+        return;
+      }
+
+      setCellModesModel((prevModel) => {
+        return {
+          // Revert the mode of the other cells from other rows
+          ...Object.keys(prevModel).reduce(
+            (acc, id) => ({
+              ...acc,
+              [id]: Object.keys(prevModel[id]).reduce(
+                (acc2, field) => ({
+                  ...acc2,
+                  [field]: { mode: GridCellModes.View },
+                }),
+                {},
+              ),
+            }),
             {},
           ),
-          [params.field]: { mode: GridCellModes.Edit },
-        },
-      };
-    });
-  }, []);
+          [params.id]: {
+            // Revert the mode of other cells in the same row
+            ...Object.keys(prevModel[params.id] || {}).reduce(
+              (acc, field) => ({ ...acc, [field]: { mode: GridCellModes.View } }),
+              {},
+            ),
+            [params.field]: { mode: GridCellModes.Edit },
+          },
+        };
+      });
+    },
+    [],
+  );
 
   const handleCellModesModelChange = React.useCallback(
     (newModel: GridCellModesModel) => {
