@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { userEvent } from '@mui/monorepo/test/utils';
@@ -7,7 +6,6 @@ import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
-  getTextbox,
 } from 'test/utils/pickers-utils';
 
 describe('<DateTimeField /> - Editing', () => {
@@ -16,7 +14,7 @@ describe('<DateTimeField /> - Editing', () => {
     clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743),
   });
 
-  const { clickOnInput } = buildFieldInteractions({
+  const { renderWithProps } = buildFieldInteractions({
     clock,
     render,
     Component: DateTimeField,
@@ -27,16 +25,13 @@ describe('<DateTimeField /> - Editing', () => {
       const onChange = spy();
       const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
 
-      render(
-        <DateTimeField
-          onChange={onChange}
-          format={adapterToUse.formats.month}
-          referenceDate={referenceDate}
-        />,
-      );
+      const { input, selectSection } = renderWithProps({
+        onChange,
+        referenceDate,
+        format: adapterToUse.formats.month,
+      });
 
-      const input = getTextbox();
-      clickOnInput(input, 0);
+      selectSection('month');
       userEvent.keyPress(input, { key: 'ArrowUp' });
 
       // All sections not present should equal the one from the referenceDate, and the month should equal January (because it's an ArrowUp on an empty month).
@@ -48,17 +43,14 @@ describe('<DateTimeField /> - Editing', () => {
       const value = adapterToUse.date(new Date(2018, 10, 3, 22, 15));
       const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
 
-      render(
-        <DateTimeField
-          onChange={onChange}
-          format={adapterToUse.formats.month}
-          value={value}
-          referenceDate={referenceDate}
-        />,
-      );
+      const { input, selectSection } = renderWithProps({
+        onChange,
+        referenceDate,
+        value,
+        format: adapterToUse.formats.month,
+      });
 
-      const input = getTextbox();
-      clickOnInput(input, 0);
+      selectSection('month');
       userEvent.keyPress(input, { key: 'ArrowUp' });
 
       // Should equal the initial `value` prop with one less month.
@@ -70,17 +62,14 @@ describe('<DateTimeField /> - Editing', () => {
       const defaultValue = adapterToUse.date(new Date(2018, 10, 3, 22, 15));
       const referenceDate = adapterToUse.date(new Date(2012, 4, 3, 14, 30));
 
-      render(
-        <DateTimeField
-          onChange={onChange}
-          format={adapterToUse.formats.month}
-          defaultValue={defaultValue}
-          referenceDate={referenceDate}
-        />,
-      );
+      const { input, selectSection } = renderWithProps({
+        onChange,
+        referenceDate,
+        defaultValue,
+        format: adapterToUse.formats.month,
+      });
 
-      const input = getTextbox();
-      clickOnInput(input, 0);
+      selectSection('month');
       userEvent.keyPress(input, { key: 'ArrowUp' });
 
       // Should equal the initial `defaultValue` prop with one less month.
@@ -91,10 +80,12 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep year when granularity = month', () => {
         const onChange = spy();
 
-        render(<DateTimeField onChange={onChange} format={adapterToUse.formats.month} />);
+        const { input, selectSection } = renderWithProps({
+          onChange,
+          format: adapterToUse.formats.month,
+        });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+        selectSection('month');
         userEvent.keyPress(input, { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01');
@@ -103,10 +94,12 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep year and month when granularity = day', () => {
         const onChange = spy();
 
-        render(<DateTimeField onChange={onChange} format={adapterToUse.formats.dayOfMonth} />);
+        const { input, selectSection } = renderWithProps({
+          onChange,
+          format: adapterToUse.formats.dayOfMonth,
+        });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+        selectSection('day');
         userEvent.keyPress(input, { key: 'ArrowUp' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-05-01');
@@ -115,10 +108,12 @@ describe('<DateTimeField /> - Editing', () => {
       it('should only keep up to the hours when granularity = minutes', () => {
         const onChange = spy();
 
-        render(<DateTimeField onChange={onChange} format={adapterToUse.formats.fullTime24h} />);
+        const { input, selectSection } = renderWithProps({
+          onChange,
+          format: adapterToUse.formats.fullTime24h,
+        });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+        selectSection('hours');
 
         // Set hours
         userEvent.keyPress(input, { key: 'ArrowUp' });
@@ -136,16 +131,13 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const minDate = adapterToUse.date(new Date(2030, 4, 5, 18, 30));
 
-        render(
-          <DateTimeField
-            onChange={onChange}
-            format={adapterToUse.formats.month}
-            minDate={minDate}
-          />,
-        );
+        const { input, selectSection } = renderWithProps({
+          onChange,
+          minDate,
+          format: adapterToUse.formats.month,
+        });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+        selectSection('month');
         userEvent.keyPress(input, { key: 'ArrowUp' });
 
         // Respect the granularity and the minDate
@@ -156,16 +148,13 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const minDate = adapterToUse.date(new Date(2007, 4, 5, 18, 30));
 
-        render(
-          <DateTimeField
-            onChange={onChange}
-            format={adapterToUse.formats.month}
-            minDate={minDate}
-          />,
-        );
+        const { input, selectSection } = renderWithProps({
+          onChange,
+          minDate,
+          format: adapterToUse.formats.month,
+        });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+        selectSection('month');
         userEvent.keyPress(input, { key: 'ArrowUp' });
 
         // Respect the granularity but not the minDate
@@ -176,16 +165,13 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const maxDate = adapterToUse.date(new Date(2007, 4, 5, 18, 30));
 
-        render(
-          <DateTimeField
-            onChange={onChange}
-            format={adapterToUse.formats.month}
-            maxDate={maxDate}
-          />,
-        );
+        const { input, selectSection } = renderWithProps({
+          onChange,
+          maxDate,
+          format: adapterToUse.formats.month,
+        });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+        selectSection('month');
         userEvent.keyPress(input, { key: 'ArrowUp' });
 
         // Respect the granularity and the minDate
@@ -196,16 +182,13 @@ describe('<DateTimeField /> - Editing', () => {
         const onChange = spy();
         const maxDate = adapterToUse.date(new Date(2030, 4, 5, 18, 30));
 
-        render(
-          <DateTimeField
-            onChange={onChange}
-            format={adapterToUse.formats.month}
-            maxDate={maxDate}
-          />,
-        );
+        const { input, selectSection } = renderWithProps({
+          onChange,
+          maxDate,
+          format: adapterToUse.formats.month,
+        });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+        selectSection('month');
         userEvent.keyPress(input, { key: 'ArrowUp' });
 
         // Respect the granularity but not the maxDate
