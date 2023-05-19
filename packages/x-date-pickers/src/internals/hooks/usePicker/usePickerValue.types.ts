@@ -40,6 +40,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @template TDate, TValue
    * Method returning the reference value to use at the mount of the component.
    * @param {object} params The params of the method.
+   * @param {TDate | undefined} params.referenceDate The referenceDate provided by the user.
    * @param {TValue} params.value The value provided by the user.
    * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute a smart reference value.
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
@@ -48,6 +49,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @returns {TValue} The reference value to use for non-provided dates.
    */
   getInitialReferenceValue: (params: {
+    referenceDate: TDate | undefined;
     value: TValue;
     props: GetDefaultReferenceDateProps<TDate>;
     utils: MuiPickersAdapter<TDate>;
@@ -209,7 +211,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
  */
 export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSection>
   extends Pick<
-    UseFieldInternalProps<TValue, TSection, unknown>,
+    UseFieldInternalProps<TValue, unknown, TSection, unknown>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
@@ -271,7 +273,7 @@ export interface UsePickerValueActions {
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
   Pick<
-    UseFieldInternalProps<TValue, TSection, TError>,
+    UseFieldInternalProps<TValue, unknown, TSection, TError>,
     'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
   >
 >;

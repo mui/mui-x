@@ -42,9 +42,9 @@
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
-    "referenceValue": {
-      "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
-      "default": "`value` or `defaultValue` is defined, otherwise takes the closest valid value using the validation dates (do you use `shouldDisableDate & co)."
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation dates (do not use `shouldDisableDate & co) and the rounded to the most granular section used."
     },
     "selectedSections": {
       "type": {

@@ -15,7 +15,12 @@ import {
 
 interface AutoCompleteFieldProps
   extends UseDateFieldProps<Dayjs>,
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateValidationError
+    > {
   /**
    * @typescript-to-proptypes-ignore
    */

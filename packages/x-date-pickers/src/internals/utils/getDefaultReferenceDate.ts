@@ -44,24 +44,26 @@ export const getDefaultReferenceDate = <TDate>({
   granularity: number;
 }) => {
   const roundDate = (date: TDate) => {
-    let roundedDate = date;
-
     if (granularity === SECTION_TYPE_GRANULARITY.year) {
-      roundedDate = utils.startOfYear(date);
-    } else if (granularity === SECTION_TYPE_GRANULARITY.month) {
-      roundedDate = utils.startOfMonth(date);
-    } else if (granularity === SECTION_TYPE_GRANULARITY.day) {
-      roundedDate = utils.startOfDay(date);
-    } else {
-      if (granularity < SECTION_TYPE_GRANULARITY.minutes) {
-        roundedDate = utils.setMinutes(date, 0);
-      }
-      if (granularity < SECTION_TYPE_GRANULARITY.seconds) {
-        roundedDate = utils.setSeconds(date, 0);
-      }
-      if (granularity < SECTION_TYPE_GRANULARITY.milliseconds) {
-        roundedDate = utils.setMilliseconds(date, 0);
-      }
+      return utils.startOfYear(date);
+    }
+    if (granularity === SECTION_TYPE_GRANULARITY.month) {
+      return utils.startOfMonth(date);
+    }
+    if (granularity === SECTION_TYPE_GRANULARITY.day) {
+      return utils.startOfDay(date);
+    }
+
+    // We don't have startOfHour / startOfMinute / startOfSecond
+    let roundedDate = date;
+    if (granularity < SECTION_TYPE_GRANULARITY.minutes) {
+      roundedDate = utils.setMinutes(roundedDate, 0);
+    }
+    if (granularity < SECTION_TYPE_GRANULARITY.seconds) {
+      roundedDate = utils.setSeconds(roundedDate, 0);
+    }
+    if (granularity < SECTION_TYPE_GRANULARITY.milliseconds) {
+      roundedDate = utils.setMilliseconds(roundedDate, 0);
     }
 
     return roundedDate;

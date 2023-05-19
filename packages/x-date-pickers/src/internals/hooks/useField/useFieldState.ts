@@ -46,7 +46,7 @@ export const useFieldState = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ) => {
@@ -65,7 +65,7 @@ export const useFieldState = <
     internalProps: {
       value: valueProp,
       defaultValue,
-      referenceValue: referenceValueProp,
+      referenceDate: referenceDateProp,
       onChange,
       format,
       formatDensity = 'dense',
@@ -116,20 +116,15 @@ export const useFieldState = <
       tempValueStrAndroid: null,
     };
 
-    let referenceValue: TValue;
-    if (referenceValueProp != null) {
-      referenceValue = referenceValueProp;
-    } else {
-      const granularity = getSectionTypeGranularity(sections);
-
-      referenceValue = valueManager.getInitialReferenceValue({
-        value: valueFromTheOutside,
-        valueType,
-        utils,
-        props: internalProps as GetDefaultReferenceDateProps<TDate>,
-        granularity,
-      });
-    }
+    const granularity = getSectionTypeGranularity(sections);
+    const referenceValue = valueManager.getInitialReferenceValue({
+      referenceDate: referenceDateProp,
+      value: valueFromTheOutside,
+      valueType,
+      utils,
+      props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      granularity,
+    });
 
     return {
       ...stateWithoutReferenceDate,

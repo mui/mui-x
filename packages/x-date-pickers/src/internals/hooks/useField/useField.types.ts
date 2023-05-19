@@ -15,7 +15,7 @@ export interface UseFieldParams<
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 > {
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
@@ -31,7 +31,7 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TError> {
+export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -42,11 +42,11 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    */
   defaultValue?: TValue;
   /**
-   * The value to use to generate the part of the date-time not present in the format.
+   * The date to use to generate the part of the date-time not present in the format if not value / defaultValue is present.
    * For example, on time fields it will be used to decide the date to set.
-   * @default `value` or `defaultValue` is defined, otherwise takes the closest valid value using the validation dates (do you use `shouldDisableDate & co).
+   * @default The closest valid date using the validation dates (do not use `shouldDisableDate & co) and the rounded to the most granular section used.
    */
-  referenceValue?: TValue;
+  referenceDate?: TDate;
   /**
    * Callback fired when the value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.

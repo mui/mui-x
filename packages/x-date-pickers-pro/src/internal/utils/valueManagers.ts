@@ -32,7 +32,7 @@ export const rangeValueManager: RangePickerValueManager = {
     getTodayDate(utils, valueType),
     getTodayDate(utils, valueType),
   ],
-  getInitialReferenceValue: ({ value, ...params }) => {
+  getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
     const shouldKeepStartDate = value[0] != null && params.utils.isValid(value[0]);
     const shouldKeepEndDate = value[1] != null && params.utils.isValid(value[1]);
 
@@ -40,7 +40,7 @@ export const rangeValueManager: RangePickerValueManager = {
       return value;
     }
 
-    const referenceDate = getDefaultReferenceDate(params);
+    const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
 
     if (!shouldKeepStartDate && !shouldKeepEndDate) {
       return [referenceDate, referenceDate];
