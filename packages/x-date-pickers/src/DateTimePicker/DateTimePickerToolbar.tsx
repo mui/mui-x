@@ -398,6 +398,7 @@ DateTimePickerToolbar.propTypes = {
    * @default "––"
    */
   toolbarPlaceholder: PropTypes.node,
+  toolbarVariant: PropTypes.oneOf(['desktop', 'mobile']),
   value: PropTypes.any,
   /**
    * Currently visible picker view.
@@ -407,7 +408,6 @@ DateTimePickerToolbar.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ).isRequired,
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { DateTimePickerToolbar };
