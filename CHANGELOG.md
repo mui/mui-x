@@ -11,8 +11,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 💫 Introduce filtering on column headers for `DataGridPro`:
 
-  <!-- TODO: Add a nice demo -->
-  [...]
+  https://github.com/mui/mui-x/assets/12609561/c4c2bfec-59cf-4cab-932d-dc1983081de9
 
   See [the documentation](https://mui.com/x/react-data-grid/filtering/#header-filters) for more information
 
