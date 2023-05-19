@@ -81,7 +81,7 @@ describe('<MobileTimePicker /> - Describes', () => {
 
       expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'time', variant: 'mobile' });
       }

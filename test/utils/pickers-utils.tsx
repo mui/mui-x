@@ -22,7 +22,12 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import {
+  FieldRef,
+  FieldSection,
+  FieldSectionType,
+  MuiPickersAdapter,
+} from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
@@ -351,25 +356,35 @@ interface BuildFieldInteractionsParams<P extends {}> {
   Component: React.FunctionComponent<P>;
 }
 
+export type FieldSectionSelector = (
+  selectedSection: FieldSectionType | undefined,
+  index?: 'first' | 'last',
+) => void;
+
 export interface BuildFieldInteractionsResponse<P extends {}> {
+  renderWithProps: (
+    props: P,
+    componentFamily?: 'picker' | 'field',
+  ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
+    input: HTMLInputElement;
+    selectSection: FieldSectionSelector;
+  };
   clickOnInput: (
     input: HTMLInputElement,
     cursorStartPosition: number,
     cursorEndPosition?: number,
   ) => void;
-  selectSection: (input: HTMLInputElement, activeSectionIndex: number) => void;
   testFieldKeyPress: (
     params: P & {
       key: string;
       expectedValue: string;
-      cursorPosition?: number;
-      valueToSelect?: string;
+      selectedSection?: FieldSectionType;
     },
   ) => void;
   testFieldChange: (
     params: P & {
       keyStrokes: { value: string; expected: string }[];
-      cursorPosition?: number;
+      selectedSection?: FieldSectionType;
     },
   ) => void;
 }
@@ -402,62 +417,90 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  const selectSection: BuildFieldInteractionsResponse<P>['selectSection'] = (
-    input,
-    activeSectionIndex,
-  ) => {
-    const value = input.value.replace(':', '/');
+  const renderWithProps = (props: P, componentFamily: 'picker' | 'field' = 'field') => {
+    let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
 
-    // TODO: Improve this logic when we will be able to access state.sections from the outside
-    let clickPosition: number;
-    if (activeSectionIndex === 0) {
-      clickPosition = 0;
-    } else {
-      clickPosition =
-        (value.split('/', activeSectionIndex - 1).join('/').length +
-          value.split('/', activeSectionIndex).join('/').length) /
-        2;
+    function WrappedComponent() {
+      fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+      const allProps = {
+        ...props,
+      } as any;
+
+      if (componentFamily === 'field') {
+        allProps.unstableFieldRef = fieldRef;
+      } else {
+        if (!allProps.slotProps) {
+          allProps.slotProps = {};
+        }
+
+        if (!allProps.slotProps.field) {
+          allProps.slotProps.field = {};
+        }
+
+        const hasMultipleInputs =
+          // @ts-ignore
+          Component.render.name.includes('Range') &&
+          allProps.slots?.field?.fieldType !== 'single-input';
+        if (hasMultipleInputs) {
+          allProps.slotProps.field.unstableStartFieldRef = fieldRef;
+        } else {
+          allProps.slotProps.field.unstableFieldRef = fieldRef;
+        }
+      }
+
+      return <Component {...(allProps as P)} />;
     }
 
-    clickOnInput(input, clickPosition);
+    const result = render(<WrappedComponent />);
+
+    const input = screen.queryAllByRole<HTMLInputElement>('textbox')[0];
+
+    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
+      if (document.activeElement !== input) {
+        // focus input to trigger setting placeholder as value if no value is present
+        act(() => {
+          input.focus();
+        });
+        // make sure the value of the input is rendered before proceeding
+        clock.runToLast();
+      }
+
+      let clickPosition: number;
+      if (selectedSection) {
+        const sections = fieldRef.current!.getSections();
+        const cleanSections = index === 'first' ? sections : [...sections].reverse();
+        const sectionToSelect = cleanSections.find((section) => section.type === selectedSection);
+        clickPosition = sectionToSelect!.startInInput;
+      } else {
+        clickPosition = 1;
+      }
+
+      clickOnInput(input, clickPosition);
+    };
+
+    return { input, selectSection, ...result };
   };
 
   const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
     key,
     expectedValue,
-    cursorPosition = 1,
-    valueToSelect,
+    selectedSection,
     ...props
   }) => {
-    render(<Component {...(props as any as P)} />);
-    const input = getTextbox();
+    const { input, selectSection } = renderWithProps(props as any as P);
+    selectSection(selectedSection);
 
-    // focus input to trigger setting placeholder as value if no value is present
-    act(() => {
-      input.focus();
-    });
-    // make sure the value of the input is rendered before proceeding
-    clock.runToLast();
-
-    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
-    if (clickPosition === -1) {
-      throw new Error(
-        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
-      );
-    }
-    clickOnInput(input, clickPosition);
     userEvent.keyPress(input, { key });
     expectInputValue(input, expectedValue);
   };
 
   const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
     keyStrokes,
-    cursorPosition = 1,
+    selectedSection,
     ...props
   }) => {
-    render(<Component {...(props as any as P)} />);
-    const input = getTextbox();
-    clickOnInput(input, cursorPosition);
+    const { input, selectSection } = renderWithProps(props as any as P);
+    selectSection(selectedSection);
 
     keyStrokes.forEach((keyStroke) => {
       fireEvent.change(input, { target: { value: keyStroke.value } });
@@ -469,7 +512,7 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  return { clickOnInput, selectSection, testFieldKeyPress, testFieldChange };
+  return { clickOnInput, testFieldKeyPress, testFieldChange, renderWithProps };
 };
 
 export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {
