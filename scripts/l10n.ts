@@ -190,7 +190,7 @@ function extractAndReplaceTranslations(localePath: string) {
     configFile: false,
     retainLines: true,
   })!;
-  return { translations, transformedCode: code, rawCode: file };
+  return { translations, transformedCode: code };
 }
 
 function injectTranslations(
@@ -403,11 +403,8 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
     const locales = findLocales(localesDirectory, constantsPath);
 
     locales.forEach(([localePath, localeCode]) => {
-      const {
-        translations: existingTranslations,
-        transformedCode,
-        rawCode,
-      } = extractAndReplaceTranslations(localePath);
+      const { translations: existingTranslations, transformedCode } =
+        extractAndReplaceTranslations(localePath);
 
       if (!transformedCode || Object.keys(existingTranslations).length === 0) {
         return;
@@ -439,9 +436,9 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
           missingKeys: [],
         };
       }
-      const lines = rawCode.split('\n');
+      const lines = codeWithNewTranslations.split('\n');
       Object.entries(baseTranslations).forEach(([key]) => {
-        if (!existingTranslations[key]) {
+        if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
           const location = lines.findIndex(
             (line) =>
               line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
