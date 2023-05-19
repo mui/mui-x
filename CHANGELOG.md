@@ -38,7 +38,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 #### Changes
 
 - [fields] Fix selection of first element on DateField (#9005) @noraleonte
-- [fields] Refacto prop drilling in fields (#8660) @flaviendelangle
+- [fields] Refactor prop drilling in fields (#8660) @flaviendelangle
 - [pickers] Allow to render the months before `currentMonth` instead of the one after (#8592) @flaviendelangle
 - [pickers] Fix view management when `openTo` or `views` is modified (#8997) @alexfauquette
 - [l10n] Improve Czech (cs-CZ) locale (#8829) @harastaivan
