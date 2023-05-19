@@ -193,9 +193,9 @@ describe('<DateField /> - Editing', () => {
     describeAdapters(
       `key: ${keyToClearValue}`,
       DateField,
-      ({ adapter, testFieldKeyPress, renderFromProps }) => {
+      ({ adapter, testFieldKeyPress, renderWithProps }) => {
         it('should clear the selected section when only this section is completed', () => {
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             format: adapter.formats.monthAndYear,
           });
           selectSection('month');
@@ -220,7 +220,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         it('should clear all the sections when all sections are selected and all sections are completed', () => {
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             format: adapter.formats.monthAndYear,
             defaultValue: adapter.date(),
           });
@@ -235,7 +235,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         it('should clear all the sections when all sections are selected and not all sections are completed', () => {
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             format: adapter.formats.monthAndYear,
           });
 
@@ -255,7 +255,7 @@ describe('<DateField /> - Editing', () => {
         });
 
         it('should not keep query after typing again on a cleared section', () => {
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             format: adapter.formats.year,
           });
 
@@ -284,7 +284,7 @@ describe('<DateField /> - Editing', () => {
         it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
           const onChange = spy();
 
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             format: adapter.formats.monthAndYear,
             onChange,
           });
@@ -301,7 +301,7 @@ describe('<DateField /> - Editing', () => {
         it('should call `onChange` when clearing the first and last section', () => {
           const handleChange = spy();
 
-          const { selectSection, input } = renderFromProps({
+          const { selectSection, input } = renderWithProps({
             format: adapter.formats.monthAndYear,
             defaultValue: adapter.date(),
             onChange: handleChange,
@@ -323,7 +323,7 @@ describe('<DateField /> - Editing', () => {
         it('should not call `onChange` if the section is already empty', () => {
           const handleChange = spy();
 
-          const { selectSection, input } = renderFromProps({
+          const { selectSection, input } = renderWithProps({
             format: adapter.formats.monthAndYear,
             defaultValue: adapter.date(),
             onChange: handleChange,
@@ -606,11 +606,11 @@ describe('<DateField /> - Editing', () => {
     },
   );
 
-  describeAdapters('Full editing scenarios', DateField, ({ adapter, renderFromProps }) => {
+  describeAdapters('Full editing scenarios', DateField, ({ adapter, renderWithProps }) => {
     it('should move to the last day of the month when the current day exceeds it', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({ onChange });
+      const { input, selectSection } = renderWithProps({ onChange });
       selectSection('month');
 
       fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
@@ -644,7 +644,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters('Pasting', DateField, ({ adapter, render, renderFromProps, clickOnInput }) => {
+  describeAdapters('Pasting', DateField, ({ adapter, render, renderWithProps, clickOnInput }) => {
     const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
       act(() => {
         const clipboardEvent = new Event('paste', {
@@ -675,7 +675,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when all sections are selected, the pasted value is valid and a value is provided', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({
+      const { input, selectSection } = renderWithProps({
         defaultValue: adapter.date(),
         onChange,
       });
@@ -694,7 +694,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when all sections are selected, the pasted value is valid and no value is provided', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({
+      const { input, selectSection } = renderWithProps({
         onChange,
       });
 
@@ -712,7 +712,7 @@ describe('<DateField /> - Editing', () => {
     it('should not set the date when all sections are selected and the pasted value is not valid', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({ onChange });
+      const { input, selectSection } = renderWithProps({ onChange });
       selectSection('month');
 
       // Select all sections
@@ -745,7 +745,7 @@ describe('<DateField /> - Editing', () => {
     it('should not set the date when all sections are selected and props.readOnly = true', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({
+      const { input, selectSection } = renderWithProps({
         onChange,
         readOnly: true,
       });
@@ -762,7 +762,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the section when one section is selected, the pasted value has the correct type and no value is provided', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({
+      const { input, selectSection } = renderWithProps({
         onChange,
       });
 
@@ -778,7 +778,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the section when one section is selected, the pasted value has the correct type and value is provided', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({
+      const { input, selectSection } = renderWithProps({
         defaultValue: adapter.date(new Date(2018, 0, 13)),
         onChange,
       });
@@ -795,7 +795,7 @@ describe('<DateField /> - Editing', () => {
     it('should not update the section when one section is selected and the pasted value has incorrect type', () => {
       const onChange = spy();
 
-      const { input, selectSection } = renderFromProps({
+      const { input, selectSection } = renderWithProps({
         defaultValue: adapter.date(new Date(2018, 0, 13)),
         onChange,
       });
@@ -812,11 +812,11 @@ describe('<DateField /> - Editing', () => {
   describeAdapters(
     'Do not loose missing section values ',
     DateField,
-    ({ adapter, renderFromProps }) => {
+    ({ adapter, renderWithProps }) => {
       it('should not loose time information when a value is provided', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
           onChange,
         });
@@ -830,7 +830,7 @@ describe('<DateField /> - Editing', () => {
       it('should not loose time information when cleaning the date then filling it again', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
           onChange,
         });
@@ -861,7 +861,7 @@ describe('<DateField /> - Editing', () => {
       it('should not loose date information when using the year format and value is provided', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           format: adapter.formats.year,
           defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
           onChange,
@@ -877,7 +877,7 @@ describe('<DateField /> - Editing', () => {
       it('should not loose date information when using the month format and value is provided', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           format: adapter.formats.month,
           defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
           onChange,
@@ -938,7 +938,7 @@ describe('<DateField /> - Editing', () => {
   describeAdapters(
     'Android editing',
     DateField,
-    ({ adapter, render, renderFromProps, clickOnInput }) => {
+    ({ adapter, render, renderWithProps, clickOnInput }) => {
       let originalUserAgent: string = '';
 
       beforeEach(() => {
@@ -971,7 +971,7 @@ describe('<DateField /> - Editing', () => {
           // Remove the selected section
           fireEvent.change(input, { target: { value: initialValueStr.replace('23', '') } });
 
-          // // Set the key pressed in the selected section
+          // Set the key pressed in the selected section
           fireEvent.change(input, { target: { value: initialValueStr.replace('23', '2') } });
         });
 
@@ -987,7 +987,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       it('should support letter editing', () => {
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           defaultValue: adapter.date(new Date(2022, 4, 16)),
           format: adapter.formats.monthAndYear,
         });
@@ -998,7 +998,7 @@ describe('<DateField /> - Editing', () => {
           // Remove the selected section
           fireEvent.change(input, { target: { value: ' 2022' } });
 
-          // // Set the key pressed in the selected section
+          // Set the key pressed in the selected section
           fireEvent.change(input, { target: { value: 'J 2022' } });
         });
 
@@ -1015,9 +1015,9 @@ describe('<DateField /> - Editing', () => {
     },
   );
 
-  describeAdapters('Select all', DateField, ({ renderFromProps }) => {
+  describeAdapters('Select all', DateField, ({ renderWithProps }) => {
     it('should edit the 1st section when all sections are selected', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       selectSection('month');
 
       // Select all sections

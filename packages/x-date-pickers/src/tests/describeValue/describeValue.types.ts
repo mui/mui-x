@@ -41,6 +41,6 @@ export type DescribeValueOptions<
 export type DescribeValueTestSuite<TValue, C extends PickerComponentFamily> = (
   ElementToTest: React.FunctionComponent<any>,
   options: DescribeValueOptions<C, TValue> & {
-    renderFromProps: BuildFieldInteractionsResponse<any>['renderFromProps'];
+    renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   },
 ) => void;

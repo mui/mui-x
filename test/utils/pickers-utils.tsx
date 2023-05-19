@@ -362,7 +362,7 @@ export type FieldSectionSelector = (
 ) => void;
 
 export interface BuildFieldInteractionsResponse<P extends {}> {
-  renderFromProps: (
+  renderWithProps: (
     props: P,
     componentFamily?: 'picker' | 'field',
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
@@ -417,7 +417,7 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  const renderFromProps = (props: P, componentFamily: 'picker' | 'field' = 'field') => {
+  const renderWithProps = (props: P, componentFamily: 'picker' | 'field' = 'field') => {
     let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
 
     function WrappedComponent() {
@@ -453,7 +453,6 @@ export const buildFieldInteractions = <P extends {}>({
 
     const result = render(<WrappedComponent />);
 
-    // Can't use `getTextbox` because we might have 2 input on multi input range fields.
     const input = screen.queryAllByRole<HTMLInputElement>('textbox')[0];
 
     const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
@@ -488,7 +487,7 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    const { input, selectSection } = renderFromProps(props as any as P);
+    const { input, selectSection } = renderWithProps(props as any as P);
     selectSection(selectedSection);
 
     userEvent.keyPress(input, { key });
@@ -500,7 +499,7 @@ export const buildFieldInteractions = <P extends {}>({
     selectedSection,
     ...props
   }) => {
-    const { input, selectSection } = renderFromProps(props as any as P);
+    const { input, selectSection } = renderWithProps(props as any as P);
     selectSection(selectedSection);
 
     keyStrokes.forEach((keyStroke) => {
@@ -513,7 +512,7 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  return { clickOnInput, testFieldKeyPress, testFieldChange, renderFromProps };
+  return { clickOnInput, testFieldKeyPress, testFieldChange, renderWithProps };
 };
 
 export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {

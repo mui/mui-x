@@ -9,7 +9,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
   options,
 ) => {
-  const { componentFamily, render, renderFromProps, values, emptyValue, setNewValue, type } =
+  const { componentFamily, render, renderWithProps, values, emptyValue, setNewValue, type } =
     options;
 
   if (componentFamily !== 'picker') {
@@ -85,7 +85,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection } = renderFromProps({
+        const { selectSection } = renderWithProps({
           onChange,
           onAccept,
           onClose,
@@ -143,7 +143,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        const { selectSection } = renderFromProps({
+        const { selectSection } = renderWithProps({
           onChange,
           onAccept,
           onClose,

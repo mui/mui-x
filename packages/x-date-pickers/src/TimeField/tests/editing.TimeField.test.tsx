@@ -199,7 +199,7 @@ describe('<TimeField /> - Editing', () => {
     });
   });
 
-  describeAdapters('Digit editing', TimeField, ({ adapter, renderFromProps, testFieldChange }) => {
+  describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
     it('should set the minute to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
         format: adapter.formats.minutes,
@@ -247,7 +247,7 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `2` in a 12-hours format', () => {
-      const { input, selectSection } = renderFromProps({ format: adapter.formats.fullTime12h });
+      const { input, selectSection } = renderWithProps({ format: adapter.formats.fullTime12h });
 
       selectSection('hours');
 
@@ -258,7 +258,7 @@ describe('<TimeField /> - Editing', () => {
     });
 
     it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
-      const { input, selectSection } = renderFromProps({ format: adapter.formats.fullTime12h });
+      const { input, selectSection } = renderWithProps({ format: adapter.formats.fullTime12h });
 
       selectSection('hours');
 
@@ -336,11 +336,11 @@ describe('<TimeField /> - Editing', () => {
   describeAdapters(
     'Do not loose missing section values ',
     TimeField,
-    ({ adapter, renderFromProps }) => {
+    ({ adapter, renderWithProps }) => {
       it('should not loose date information when a value is provided', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
           onChange,
         });
@@ -358,7 +358,7 @@ describe('<TimeField /> - Editing', () => {
 
         const onChange = spy();
 
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
           onChange,
           format: adapter.formats.fullTime24h,
@@ -381,7 +381,7 @@ describe('<TimeField /> - Editing', () => {
       it('should not loose time information when using the hour format and value is provided', () => {
         const onChange = spy();
 
-        const { input, selectSection } = renderFromProps({
+        const { input, selectSection } = renderWithProps({
           defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
           onChange,
           format: adapter.formats.hours24h,

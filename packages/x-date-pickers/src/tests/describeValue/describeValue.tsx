@@ -29,14 +29,14 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
     return <ElementToTest {...defaultProps} {...props} />;
   }
 
-  let renderFromProps: BuildFieldInteractionsResponse<any>['renderFromProps'];
+  let renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   if (componentFamily === 'field' || componentFamily === 'picker') {
     const interactions = buildFieldInteractions({ clock, render, Component: ElementToTest });
 
-    renderFromProps = (props: any) =>
-      interactions.renderFromProps({ ...defaultProps, ...props }, componentFamily);
+    renderWithProps = (props: any) =>
+      interactions.renderWithProps({ ...defaultProps, ...props }, componentFamily);
   } else {
-    renderFromProps = (props: any) => {
+    renderWithProps = (props: any) => {
       const response = render(<WrappedElementToTest {...props} />);
 
       return {
@@ -50,7 +50,7 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
   }
 
   TEST_SUITES.forEach((testSuite) => {
-    testSuite(WrappedElementToTest, { ...options, renderFromProps });
+    testSuite(WrappedElementToTest, { ...options, renderWithProps });
   });
 }
 

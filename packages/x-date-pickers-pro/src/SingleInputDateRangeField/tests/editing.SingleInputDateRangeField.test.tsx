@@ -10,9 +10,9 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
     describeAdapters(
       `key: ${keyToClearValue}`,
       SingleInputDateRangeField,
-      ({ adapter, renderFromProps }) => {
+      ({ adapter, renderWithProps }) => {
         it('should clear all the sections when all sections are selected and all sections are completed', () => {
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
             format: adapter.formats.monthAndYear,
           });
@@ -27,7 +27,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         });
 
         it('should clear all the sections when all sections are selected and not all sections are completed', () => {
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             format: adapter.formats.monthAndYear,
           });
 
@@ -49,7 +49,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
           const onChange = spy();
 
-          const { input, selectSection } = renderFromProps({
+          const { input, selectSection } = renderWithProps({
             format: adapter.formats.monthAndYear,
             defaultValue: [null, null],
             onChange,
@@ -67,7 +67,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         it('should call `onChange` when clearing the each section of each date', () => {
           const handleChange = spy();
 
-          const { selectSection, input } = renderFromProps({
+          const { selectSection, input } = renderWithProps({
             format: adapter.formats.monthAndYear,
             defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
             onChange: handleChange,
@@ -100,7 +100,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
         it('should not call `onChange` if the section is already empty', () => {
           const handleChange = spy();
 
-          const { selectSection, input } = renderFromProps({
+          const { selectSection, input } = renderWithProps({
             format: adapter.formats.monthAndYear,
             defaultValue: [adapter.date(), adapter.addYears(adapter.date(), 1)],
             onChange: handleChange,

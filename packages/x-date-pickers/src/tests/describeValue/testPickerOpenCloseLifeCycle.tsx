@@ -9,7 +9,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
   ElementToTest,
   options,
 ) => {
-  const { componentFamily, render, renderFromProps, values, setNewValue, ...pickerParams } =
+  const { componentFamily, render, renderWithProps, values, setNewValue, ...pickerParams } =
     options;
 
   if (componentFamily !== 'picker') {
@@ -51,7 +51,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderFromProps({
+      const { selectSection } = renderWithProps({
         onChange,
         onAccept,
         onClose,
@@ -83,7 +83,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
         return;
       }
 
-      const { selectSection } = renderFromProps({ defaultValue: values[0] });
+      const { selectSection } = renderWithProps({ defaultValue: values[0] });
 
       // Change the value
       setNewValue(values[0], { selectSection });
@@ -101,7 +101,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderFromProps({
+      const { selectSection } = renderWithProps({
         onChange,
         onAccept,
         onClose,
@@ -134,7 +134,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderFromProps({
+      const { selectSection } = renderWithProps({
         onChange,
         onAccept,
         onClose,
@@ -164,7 +164,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderFromProps({
+      const { selectSection } = renderWithProps({
         onChange,
         onAccept,
         onClose,
@@ -208,7 +208,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderFromProps({
+      const { selectSection } = renderWithProps({
         onChange,
         onAccept,
         onClose,
@@ -272,7 +272,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      const { selectSection } = renderFromProps({
+      const { selectSection } = renderWithProps({
         onChange,
         onAccept,
         onClose,

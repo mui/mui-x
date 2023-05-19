@@ -12,7 +12,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 ) => {
   const {
     render,
-    renderFromProps,
+    renderWithProps,
     values,
     componentFamily,
     emptyValue,
@@ -48,7 +48,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      const { selectSection } = renderFromProps({ defaultValue: values[0], onChange });
+      const { selectSection } = renderWithProps({ defaultValue: values[0], onChange });
       const newValue = setNewValue(values[0], { selectSection });
 
       assertRenderedValue(newValue);
@@ -66,7 +66,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.value`', () => {
       const onChange = spy();
 
-      const { selectSection } = renderFromProps({ defaultValue: values[0], onChange });
+      const { selectSection } = renderWithProps({ defaultValue: values[0], onChange });
       const newValue = setNewValue(values[0], { selectSection });
 
       expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));

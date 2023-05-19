@@ -13,7 +13,7 @@ import {
 
 describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-  const { renderFromProps } = buildFieldInteractions({ clock, render, Component: DateField });
+  const { renderWithProps } = buildFieldInteractions({ clock, render, Component: DateField });
 
   describe('Focus', () => {
     it('should select all on mount focus (`autoFocus = true`)', () => {
@@ -76,7 +76,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select day on desktop', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       render(<DateField />);
 
       selectSection('day');
@@ -88,7 +88,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
 
       selectSection('day');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
@@ -98,7 +98,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should not change the selection when clicking on the only already selected section', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
 
       selectSection('day');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
@@ -110,7 +110,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: Ctrl + A', () => {
     it('should select all sections', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
 
       selectSection('month');
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
@@ -118,7 +118,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select all sections with start separator', () => {
-      const { input, selectSection } = renderFromProps({
+      const { input, selectSection } = renderWithProps({
         format: `- ${adapterToUse.formats.year}`,
       });
 
@@ -130,7 +130,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: ArrowRight', () => {
     it('should move selection to the next section when one section is selected', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       selectSection('day');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
       userEvent.keyPress(input, { key: 'ArrowRight' });
@@ -138,7 +138,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should stay on the current section when the last section is selected', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       selectSection('year');
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
       userEvent.keyPress(input, { key: 'ArrowRight' });
@@ -146,7 +146,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the last section when all the sections are selected', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       selectSection('month');
 
       // Select all sections
@@ -160,7 +160,7 @@ describe('<DateField /> - Selection', () => {
 
   describe('key: ArrowLeft', () => {
     it('should move selection to the previous section when one section is selected', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       selectSection('day');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
       userEvent.keyPress(input, { key: 'ArrowLeft' });
@@ -168,7 +168,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should stay on the current section when the first section is selected', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       selectSection('month');
       expect(getCleanedSelectedContent(input)).to.equal('MM');
       userEvent.keyPress(input, { key: 'ArrowLeft' });
@@ -176,7 +176,7 @@ describe('<DateField /> - Selection', () => {
     });
 
     it('should select the first section when all the sections are selected', () => {
-      const { input, selectSection } = renderFromProps({});
+      const { input, selectSection } = renderWithProps({});
       selectSection('month');
 
       // Select all sections
