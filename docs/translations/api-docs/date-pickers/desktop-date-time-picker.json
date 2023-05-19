@@ -58,7 +58,6 @@
     "slotProps": "The props used for each component slot.",
     "slots": "Overridable component slots.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
-    "thresholdToRenderTimeInASingleColumn": "Amount of time options below or at which the single column time renderer is used.",
     "timeSteps": "The time steps between two time unit options. For example, if <code>timeStep.minutes = 8</code>, then the available minute options will be <code>[0, 8, 16, 24, 32, 40, 48, 56]</code>. When single column time renderer is used, only <code>timeStep.minutes</code> will be used.",
     "value": "The selected value. Used when the component is controlled.",
     "view": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list.",
