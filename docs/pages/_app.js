@@ -197,7 +197,10 @@ function AppWrapper(props) {
 
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
 
-    let productIdentifier = null;
+    let productIdentifier = {
+      name: 'Advanced components',
+      metadata: 'MUI X',
+    };
 
     if (
       canonicalAs.startsWith('/x/react-data-grid/') ||
@@ -263,11 +266,6 @@ function AppWrapper(props) {
                 }),
           },
         ],
-      };
-    } else if (canonicalAs.startsWith('/x/introduction/')) {
-      productIdentifier = {
-        name: 'Advanced components',
-        metadata: 'MUI X',
       };
     }
 
