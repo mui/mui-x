@@ -9,15 +9,15 @@ _May 19, 2023_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 Introduce filtering on column headers for `DataGridPro`:
+- 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
 
-  <!-- TODO: Add a nice demo -->
-  [...]
+  https://github.com/mui/mui-x/assets/12609561/c4c2bfec-59cf-4cab-932d-dc1983081de9
 
   See [the documentation](https://mui.com/x/react-data-grid/filtering/#header-filters) for more information
 
 - 🌍 Improve Hebrew (he-IL) and Czech (cs-CZ) locales
-- ⚙️ Performance improvements
+- 📝 Support for editing on pinned rows
+- 🚀 Performance improvements
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -29,18 +29,19 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGridPro] Filtering on Column Header (#7760) @MBilalShafi
 - [DataGridPro] Improve `treeData` and `rowGrouping` performance (#8990) @MBilalShafi
 - [DataGridPro] Support pinned rows editing (#8921) @cherniavskii
-- [l10n] Add missing keys in Hebrew (he-IL) locale (#8943) @Itzik-Tech
+- [l10n] Improve Hebrew (he-IL) locale (#8943) @Itzik-Tech
 - [l10n] Improve Czech (cs-CZ) locale (#8829) @harastaivan
-- [l10n] Update Czech (cs-CZ) locale (#8956) @davidzemancz
+- [l10n] Improve Czech (cs-CZ) locale (#8956) @davidzemancz
 
 ### `@mui/x-date-pickers@6.5.0` / `@mui/x-date-pickers-pro@6.5.0`
 
 #### Changes
 
-- [fields] Fix selection of first element on DateField (#9005) @noraleonte
-- [fields] Refacto prop drilling in fields (#8660) @flaviendelangle
+- [fields] Select the first section instead of last when clicking right of content (#9005) @noraleonte
+- [fields] Refactor prop drilling in fields (#8660) @flaviendelangle
 - [pickers] Allow to render the months before `currentMonth` instead of the one after (#8592) @flaviendelangle
 - [pickers] Fix view management when `openTo` or `views` is modified (#8997) @alexfauquette
+- [l10n] Improve Czech (cs-CZ) locale (#8829) @harastaivan
 
 ### Docs
 
@@ -51,10 +52,11 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 ### Core
 
 - [core] Add assertion about checkbox rerenders (#8974) @oliviertassinari
+- [core] Allow selecting a section by type in field tests (#9009) @flaviendelangle
 - [core] Fix `yarn.lock` (#8988) @flaviendelangle
 - [core] Fix flacky adapter test (#8995) @flaviendelangle
 - [charts] Clean the axis rendering (#8948) @alexfauquette
-- [Datagrid] Memoize root props (#8942) @romgrk
+- [DataGrid] Memoize root props for better performance (#8942) @romgrk
 - [test] Skip flaky unit tests in JSDOM (#8994) @cherniavskii
 
 ## v6.4.0
