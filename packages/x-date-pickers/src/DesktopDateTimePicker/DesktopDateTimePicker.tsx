@@ -5,6 +5,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
+import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { renderDesktopDateTimeView } from '../dateTimeViewRenderers';
 import { useLocaleText, validateDateTime } from '../internals';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
@@ -13,7 +14,6 @@ import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { PickersActionBarAction } from '../PickersActionBar';
-import { isDatePickerView } from '../internals/utils/date-utils';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -32,42 +32,48 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
 
-  const thresholdToRenderTimeInASingleColumn =
-    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
   const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
-  const shouldRenderTimeInASingleColumn =
-    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
+  const shouldUseNewRenderer =
+    !defaultizedProps.viewRenderers || Object.keys(defaultizedProps.viewRenderers).length === 0;
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeViewWithMeridiem, any, {}> =
-    {
-      day: renderDesktopDateTimeView,
-      month: renderDesktopDateTimeView,
-      year: renderDesktopDateTimeView,
-      hours: renderDesktopDateTimeView,
-      minutes: renderDesktopDateTimeView,
-      seconds: renderDesktopDateTimeView,
-      meridiem: renderDesktopDateTimeView,
-      ...defaultizedProps.viewRenderers,
-    };
+    // we can only ensure the expected two-column layout if none of the renderers are overridden
+    shouldUseNewRenderer
+      ? {
+          day: renderDesktopDateTimeView,
+          month: renderDesktopDateTimeView,
+          year: renderDesktopDateTimeView,
+          hours: renderDesktopDateTimeView,
+          minutes: renderDesktopDateTimeView,
+          seconds: renderDesktopDateTimeView,
+          meridiem: renderDesktopDateTimeView,
+        }
+      : {
+          day: renderDateViewCalendar,
+          month: renderDateViewCalendar,
+          year: renderDateViewCalendar,
+          hours: null,
+          minutes: null,
+          seconds: null,
+          meridiem: null,
+          ...defaultizedProps.viewRenderers,
+        };
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
-  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
+  // add "accept" action only when the new date time view renderers are used
+  const actionBarActions: PickersActionBarAction[] = defaultizedProps.viewRenderers
     ? []
     : ['accept'];
-  const views: readonly DateOrTimeViewWithMeridiem[] = defaultizedProps.ampm
-    ? [...defaultizedProps.views, 'meridiem']
-    : defaultizedProps.views;
 
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    // Setting only `hours` time view in case of single column time picker
-    // Allows for easy view lifecycle management
-    views: shouldRenderTimeInASingleColumn
-      ? ([...views.filter(isDatePickerView), 'hours'] as DateOrTimeViewWithMeridiem[])
-      : views,
+    views: (defaultizedProps.ampm
+      ? [...defaultizedProps.views, 'meridiem']
+      : defaultizedProps.views) as DateOrTimeViewWithMeridiem[],
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
+    timeSteps,
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,
@@ -83,6 +89,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
       toolbar: {
         hidden: true,
         ampmInClock,
+        toolbarVariant: shouldUseNewRenderer ? 'desktop' : 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {

@@ -34,7 +34,7 @@ export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
     DesktopOnlyPickerProps<TDate>,
-    DesktopOnlyTimePickerProps<TDate> {
+    Omit<DesktopOnlyTimePickerProps<TDate>, 'thresholdToRenderTimeInASingleColumn'> {
   /**
    * Available views.
    */

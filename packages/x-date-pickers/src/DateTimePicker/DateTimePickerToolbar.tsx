@@ -29,7 +29,7 @@ export interface DateTimePickerToolbarProps<TDate>
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateTimePickerToolbarClasses>;
-  wrapperVariant?: WrapperVariant;
+  toolbarVariant?: WrapperVariant;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
@@ -53,13 +53,13 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
   paddingLeft: 16,
-  paddingRight: ownerState.wrapperVariant === 'desktop' && !ownerState.isLandscape ? 0 : 16,
+  paddingRight: ownerState.toolbarVariant === 'desktop' && !ownerState.isLandscape ? 0 : 16,
   borderBottom:
-    ownerState.wrapperVariant === 'desktop'
+    ownerState.toolbarVariant === 'desktop'
       ? `1px solid ${(theme.vars || theme).palette.divider}`
       : undefined,
   borderRight:
-    ownerState.wrapperVariant === 'desktop' && ownerState.isLandscape
+    ownerState.toolbarVariant === 'desktop' && ownerState.isLandscape
       ? `1px solid ${(theme.vars || theme).palette.divider}`
       : undefined,
   justifyContent: 'space-around',
@@ -109,11 +109,11 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   overridesResolver: (props, styles) => styles.timeContainer,
 })<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => {
   const direction =
-    ownerState.isLandscape && ownerState.wrapperVariant !== 'desktop' ? 'column' : 'row';
+    ownerState.isLandscape && ownerState.toolbarVariant !== 'desktop' ? 'column' : 'row';
   return {
     display: 'flex',
     flexDirection: direction,
-    ...(ownerState.wrapperVariant === 'desktop' && {
+    ...(ownerState.toolbarVariant === 'desktop' && {
       ...(!ownerState.isLandscape && {
         gap: 9,
         marginRight: 4,
@@ -132,7 +132,7 @@ const DateTimePickerToolbarTimeDigitsContainer = styled('div', {
   overridesResolver: (props, styles) => styles.timeDigitsContainer,
 })<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
   display: 'flex',
-  ...(ownerState.wrapperVariant === 'desktop' && { gap: 1.5 }),
+  ...(ownerState.toolbarVariant === 'desktop' && { gap: 1.5 }),
   ...(theme.direction === 'rtl' && {
     flexDirection: 'row-reverse',
   }),
@@ -159,7 +159,7 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
 })<{
   ownerState: DateTimePickerToolbarProps<any>;
 }>(({ ownerState }) => ({
-  margin: ownerState.wrapperVariant === 'desktop' ? 0 : '0 4px 0 2px',
+  margin: ownerState.toolbarVariant === 'desktop' ? 0 : '0 4px 0 2px',
   cursor: 'default',
 }));
 
@@ -205,7 +205,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
     views,
     disabled,
     readOnly,
-    wrapperVariant = 'mobile',
+    toolbarVariant = 'mobile',
     ...other
   } = props;
   const ownerState = props;
@@ -213,7 +213,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const showAmPmControl = Boolean(ampm && !ampmInClock);
-  const isDesktop = wrapperVariant === 'desktop';
+  const isDesktop = toolbarVariant === 'desktop';
 
   const localeText = useLocaleText<TDate>();
   const theme = useTheme();
