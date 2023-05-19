@@ -5,7 +5,6 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
   getTextbox,
   expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
@@ -14,12 +13,6 @@ import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({
-    clock,
-    render,
-    Component: DesktopDateTimePicker,
-  });
 
   describePicker(DesktopDateTimePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
@@ -57,7 +50,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
 
       expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
       const newValue = applySameValue
         ? value
         : adapterToUse.addMinutes(adapterToUse.addHours(adapterToUse.addDays(value, 1), 1), 5);
@@ -81,8 +74,8 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
           );
         }
       } else {
+        selectSection('day');
         const input = getTextbox();
-        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
         // move to the hours section
         userEvent.keyPress(input, { key: 'ArrowRight' });

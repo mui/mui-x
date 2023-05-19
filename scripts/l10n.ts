@@ -129,7 +129,9 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
           return;
         }
 
-        const key = (property.key as babelTypes.Identifier).name;
+        const key =
+          (property.key as babelTypes.Identifier).name ||
+          (property.key as babelTypes.StringLiteral).value;
 
         // Ignore translations for MUI Core components, e.g. MuiTablePagination
         if (key.startsWith('Mui')) {

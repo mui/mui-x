@@ -33,6 +33,7 @@ import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
+import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -61,7 +62,8 @@ export interface GridApiCommon<
     GridColumnSpanningApi,
     GridStateApi<GridState>,
     GridStatePersistenceApi<GridInitialState>,
-    GridColumnGroupingApi {}
+    GridColumnGroupingApi,
+    GridHeaderFilteringApi {}
 
 export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,
@@ -76,7 +78,8 @@ export interface GridPrivateOnlyApiCommon<
     GridVirtualScrollerApi,
     GridEditingPrivateApi,
     GridLoggerApi,
-    GridFocusPrivateApi {}
+    GridFocusPrivateApi,
+    GridHeaderFilteringPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,
