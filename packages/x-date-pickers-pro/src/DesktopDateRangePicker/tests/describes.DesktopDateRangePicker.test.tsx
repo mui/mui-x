@@ -4,10 +4,10 @@ import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeR
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   adapterToUse,
-  buildFieldInteractions,
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
+  getTextbox,
   wrapPickerMount,
 } from 'test/utils/pickers-utils';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
@@ -18,12 +18,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
-  });
-
-  const { clickOnInput } = buildFieldInteractions({
-    clock,
-    render,
-    Component: DesktopDateRangePicker,
   });
 
   describePicker(DesktopDateRangePicker, { render, fieldType: 'multi-input', variant: 'desktop' });
@@ -78,7 +72,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '');
       });
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false, selectSection }) => {
       let newValue: any[];
       if (applySameValue) {
         newValue = value;
@@ -95,8 +89,8 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
           })[0],
         );
       } else {
+        selectSection('day');
         const input = screen.getAllByRole<HTMLInputElement>('textbox')[0];
-        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 
@@ -137,7 +131,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
 
       expectInputValue(input, isEmpty ? '' : expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false, selectSection }) => {
       let newValue: any[];
       if (applySameValue) {
         newValue = value;
@@ -154,8 +148,8 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
           })[0],
         );
       } else {
-        const input = screen.getByRole<HTMLInputElement>('textbox');
-        clickOnInput(input, 5); // Update the day
+        selectSection('day');
+        const input = getTextbox();
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

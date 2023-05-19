@@ -15,6 +15,10 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    */
   label?: string;
   /**
+   * The label of the filter shown in header filter row.
+   */
+  headerLabel?: string;
+  /**
    * The name of the filter operator.
    * It will be matched with the `operator` property of the filter items.
    */
