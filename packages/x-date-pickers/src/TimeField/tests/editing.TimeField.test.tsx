@@ -1,9 +1,8 @@
-import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getCleanedSelectedContent, getTextbox } from 'test/utils/pickers-utils';
+import { expectInputValue, getCleanedSelectedContent } from 'test/utils/pickers-utils';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<TimeField /> - Editing', () => {
@@ -58,7 +57,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
           key: 'ArrowDown',
           expectedValue: '14:59',
-          valueToSelect: '00',
+          selectedSection: 'minutes',
         });
       });
     });
@@ -86,7 +85,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           key: 'ArrowDown',
           expectedValue: 'hh:mm PM',
-          valueToSelect: 'aa',
+          selectedSection: 'meridiem',
         });
       });
 
@@ -96,7 +95,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowDown',
           expectedValue: '02:12 PM',
-          valueToSelect: 'AM',
+          selectedSection: 'meridiem',
         });
       });
 
@@ -106,7 +105,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowDown',
           expectedValue: '02:12 AM',
-          valueToSelect: 'PM',
+          selectedSection: 'meridiem',
         });
       });
     });
@@ -163,7 +162,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 59, 25)),
           key: 'ArrowUp',
           expectedValue: '14:00',
-          valueToSelect: '59',
+          selectedSection: 'minutes',
         });
       });
     });
@@ -174,7 +173,7 @@ describe('<TimeField /> - Editing', () => {
           format: adapter.formats.fullTime12h,
           key: 'ArrowUp',
           expectedValue: 'hh:mm AM',
-          cursorPosition: 7,
+          selectedSection: 'meridiem',
         });
       });
 
@@ -184,7 +183,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 2, 12, 25)),
           key: 'ArrowUp',
           expectedValue: '02:12 PM',
-          cursorPosition: 7,
+          selectedSection: 'meridiem',
         });
       });
 
@@ -194,92 +193,86 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
           key: 'ArrowUp',
           expectedValue: '02:12 AM',
-          cursorPosition: 7,
+          selectedSection: 'meridiem',
         });
       });
     });
   });
 
-  describeAdapters(
-    'Digit editing',
-    TimeField,
-    ({ adapter, render, testFieldChange, clickOnInput }) => {
-      it('should set the minute to the digit pressed when no digit no value is provided', () => {
-        testFieldChange({
-          format: adapter.formats.minutes,
-          keyStrokes: [{ value: '1', expected: '01' }],
-        });
+  describeAdapters('Digit editing', TimeField, ({ adapter, renderWithProps, testFieldChange }) => {
+    it('should set the minute to the digit pressed when no digit no value is provided', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        keyStrokes: [{ value: '1', expected: '01' }],
       });
+    });
 
-      it('should concatenate the digit pressed to the current section value if the output is valid', () => {
-        testFieldChange({
-          format: adapter.formats.minutes,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
-          keyStrokes: [
-            { value: '1', expected: '01' },
-            { value: '2', expected: '12' },
-          ],
-        });
+    it('should concatenate the digit pressed to the current section value if the output is valid', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
+        keyStrokes: [
+          { value: '1', expected: '01' },
+          { value: '2', expected: '12' },
+        ],
       });
+    });
 
-      it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
-        testFieldChange({
-          format: adapter.formats.minutes,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
-          keyStrokes: [
-            { value: '7', expected: '07' },
-            { value: '2', expected: '02' },
-          ],
-        });
+    it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
+        keyStrokes: [
+          { value: '7', expected: '07' },
+          { value: '2', expected: '02' },
+        ],
       });
+    });
 
-      it('should not edit when props.readOnly = true and no value is provided (digit)', () => {
-        testFieldChange({
-          format: adapter.formats.minutes,
-          readOnly: true,
-          keyStrokes: [{ value: '1', expected: 'mm' }],
-        });
+    it('should not edit when props.readOnly = true and no value is provided (digit)', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        readOnly: true,
+        keyStrokes: [{ value: '1', expected: 'mm' }],
       });
+    });
 
-      it('should not edit value when props.readOnly = true and a value is provided (digit)', () => {
-        testFieldChange({
-          format: adapter.formats.minutes,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
-          readOnly: true,
-          keyStrokes: [{ value: '1', expected: '12' }],
-        });
+    it('should not edit value when props.readOnly = true and a value is provided (digit)', () => {
+      testFieldChange({
+        format: adapter.formats.minutes,
+        defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
+        readOnly: true,
+        keyStrokes: [{ value: '1', expected: '12' }],
       });
+    });
 
-      it('should go to the next section when pressing `2` in a 12-hours format', () => {
-        render(<TimeField format={adapter.formats.fullTime12h} />);
+    it('should go to the next section when pressing `2` in a 12-hours format', () => {
+      const { input, selectSection } = renderWithProps({ format: adapter.formats.fullTime12h });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+      selectSection('hours');
 
-        // Press "2"
-        fireEvent.change(input, { target: { value: '2:mm aa' } });
-        expectInputValue(input, '02:mm aa');
-        expect(getCleanedSelectedContent(input)).to.equal('mm');
-      });
+      // Press "2"
+      fireEvent.change(input, { target: { value: '2:mm aa' } });
+      expectInputValue(input, '02:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
+    });
 
-      it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
-        render(<TimeField format={adapter.formats.fullTime12h} />);
+    it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
+      const { input, selectSection } = renderWithProps({ format: adapter.formats.fullTime12h });
 
-        const input = getTextbox();
-        clickOnInput(input, 0);
+      selectSection('hours');
 
-        // Press "1"
-        fireEvent.change(input, { target: { value: '1:mm aa' } });
-        expectInputValue(input, '01:mm aa');
-        expect(getCleanedSelectedContent(input)).to.equal('01');
+      // Press "1"
+      fireEvent.change(input, { target: { value: '1:mm aa' } });
+      expectInputValue(input, '01:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('01');
 
-        // Press "3"
-        fireEvent.change(input, { target: { value: '3:mm aa' } });
-        expectInputValue(input, '03:mm aa');
-        expect(getCleanedSelectedContent(input)).to.equal('mm');
-      });
-    },
-  );
+      // Press "3"
+      fireEvent.change(input, { target: { value: '3:mm aa' } });
+      expectInputValue(input, '03:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
+    });
+  });
 
   describeAdapters('Letter editing', TimeField, ({ adapter, testFieldChange }) => {
     it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
@@ -304,7 +297,7 @@ describe('<TimeField /> - Editing', () => {
     it('should set meridiem to AM when pressing "a" and no value is provided', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
-        cursorPosition: 7,
+        selectedSection: 'meridiem',
         // Press "a"
         keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm AM' }],
       });
@@ -313,7 +306,7 @@ describe('<TimeField /> - Editing', () => {
     it('should set meridiem to PM when pressing "p" and no value is provided', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
-        cursorPosition: 7,
+        selectedSection: 'meridiem',
         // Press "p"
         keyStrokes: [{ value: 'hh:mm p', expected: 'hh:mm PM' }],
       });
@@ -323,7 +316,7 @@ describe('<TimeField /> - Editing', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
-        cursorPosition: 7,
+        selectedSection: 'meridiem',
         // Press "a"
         keyStrokes: [{ value: '02:12 a', expected: '02:12 AM' }],
       });
@@ -333,7 +326,7 @@ describe('<TimeField /> - Editing', () => {
       testFieldChange({
         format: adapter.formats.fullTime12h,
         defaultValue: adapter.date(new Date(2022, 5, 15, 14, 12, 25)),
-        cursorPosition: 7,
+        selectedSection: 'meridiem',
         // Press "p"
         keyStrokes: [{ value: '02:12 p', expected: '02:12 PM' }],
       });
@@ -343,18 +336,16 @@ describe('<TimeField /> - Editing', () => {
   describeAdapters(
     'Do not loose missing section values ',
     TimeField,
-    ({ adapter, render, clickOnInput }) => {
+    ({ adapter, renderWithProps }) => {
       it('should not loose date information when a value is provided', () => {
         const onChange = spy();
 
-        render(
-          <TimeField
-            defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
-            onChange={onChange}
-          />,
-        );
-        const input = getTextbox();
-        clickOnInput(input, 1);
+        const { input, selectSection } = renderWithProps({
+          defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
+          onChange,
+        });
+
+        selectSection('hours');
         userEvent.keyPress(input, { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
@@ -367,16 +358,13 @@ describe('<TimeField /> - Editing', () => {
 
         const onChange = spy();
 
-        render(
-          <TimeField
-            defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
-            format={adapter.formats.fullTime24h}
-            onChange={onChange}
-          />,
-        );
-        const input = getTextbox();
-        clickOnInput(input, 1);
+        const { input, selectSection } = renderWithProps({
+          defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
+          onChange,
+          format: adapter.formats.fullTime24h,
+        });
 
+        selectSection('hours');
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
         userEvent.keyPress(input, { key: 'Backspace' });
         userEvent.keyPress(input, { key: 'ArrowLeft' });
@@ -393,15 +381,13 @@ describe('<TimeField /> - Editing', () => {
       it('should not loose time information when using the hour format and value is provided', () => {
         const onChange = spy();
 
-        render(
-          <TimeField
-            format={adapter.formats.hours24h}
-            defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
-            onChange={onChange}
-          />,
-        );
-        const input = getTextbox();
-        clickOnInput(input, 1);
+        const { input, selectSection } = renderWithProps({
+          defaultValue: adapter.date(new Date(2010, 3, 3, 3, 3, 3)),
+          onChange,
+          format: adapter.formats.hours24h,
+        });
+
+        selectSection('hours');
         userEvent.keyPress(input, { key: 'ArrowDown' });
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));

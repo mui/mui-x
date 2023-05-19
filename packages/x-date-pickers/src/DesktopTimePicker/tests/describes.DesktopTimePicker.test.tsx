@@ -6,7 +6,6 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
   wrapPickerMount,
   getTextbox,
   expectInputPlaceholder,
@@ -16,8 +15,6 @@ import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopTimePicker });
 
   describePicker(DesktopTimePicker, {
     render,
@@ -79,7 +76,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
           : '',
       );
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
       const newValue = applySameValue ? value : adapterToUse.addHours(value, 1);
 
       if (isOpened) {
@@ -95,8 +92,8 @@ describe('<DesktopTimePicker /> - Describes', () => {
           );
         }
       } else {
+        selectSection('hours');
         const input = getTextbox();
-        clickOnInput(input, 1); // Update the hour
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

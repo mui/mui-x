@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import { DataGridPro, getGridNumericOperators } from '@mui/x-data-grid-pro';
@@ -49,38 +48,6 @@ function RatingInputValue(props) {
     </React.Fragment>
   );
 }
-
-RatingInputValue.propTypes = {
-  applyValue: PropTypes.func.isRequired,
-  clearButton: PropTypes.node,
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.any.isRequired,
-    }),
-  ]),
-  headerFilterMenu: PropTypes.node,
-  item: PropTypes.shape({
-    /**
-     * The column from which we want to filter the rows.
-     */
-    field: PropTypes.string.isRequired,
-    /**
-     * Must be unique.
-     * Only useful when the model contains several items.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /**
-     * The name of the operator we want to apply.
-     */
-    operator: PropTypes.string.isRequired,
-    /**
-     * The filtering value.
-     * The operator filtering function will decide for each row if the row values is correct compared to this value.
-     */
-    value: PropTypes.any,
-  }).isRequired,
-};
 
 export default function CustomHeaderFilterOperatorDataGridPro() {
   const { data } = useDemoData({
