@@ -9,7 +9,7 @@ _May 19, 2023_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 Introduce filtering on column headers for `DataGridPro`:
+- 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
 
   https://github.com/mui/mui-x/assets/12609561/c4c2bfec-59cf-4cab-932d-dc1983081de9
 
