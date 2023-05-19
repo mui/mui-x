@@ -16,7 +16,8 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   See [the documentation](https://mui.com/x/react-data-grid/filtering/#header-filters) for more information
 
 - 🌍 Improve Hebrew (he-IL) and Czech (cs-CZ) locales
-- ⚙️ Performance improvements
+- 📝 Support for editing on pinned rows
+- 🚀 Performance improvements
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
