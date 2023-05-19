@@ -6,8 +6,8 @@ import { renderTimeViewClock } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView } from '../internals/models';
-import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
+import { DateOrTimeView } from '../models';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticDateTimePickerComponent = (<TDate>(
@@ -60,8 +60,9 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
   const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    ref,
+    valueType: 'date-time',
     validator: validateDateTime,
+    ref,
   });
 
   return renderPicker();
@@ -302,6 +303,7 @@ StaticDateTimePicker.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

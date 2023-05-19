@@ -26,16 +26,16 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => `${count} aktív szűrő`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Keresés…',
+  toolbarQuickFilterLabel: 'Keresés',
+  toolbarQuickFilterDeleteIconLabel: 'Törlés',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportálás',
   toolbarExportLabel: 'Exportálás',
   toolbarExportCSV: 'Mentés CSV fájlként',
   toolbarExportPrint: 'Nyomtatás',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Mentés Excel fájlként',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Oszlop keresése',
@@ -46,7 +46,7 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Összes törlése',
   filterPanelDeleteIconLabel: 'Törlés',
   filterPanelLogicOperator: 'Logikai operátor',
   filterPanelOperator: 'Operátorok',
@@ -70,6 +70,33 @@ const huHUGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'üres',
   filterOperatorIsNotEmpty: 'nem üres',
   filterOperatorIsAnyOf: 'a következők egyike:',
+  // filterOperator=: '=',
+  // filterOperator!=: '!=',
+  // filterOperator>: '>',
+  // filterOperator>=: '>=',
+  // filterOperator<: '<',
+  // filterOperator<=: '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // headerFilterOperator=: 'Equals',
+  // headerFilterOperator!=: 'Not equals',
+  // headerFilterOperator>: 'Is greater than',
+  // headerFilterOperator>=: 'Is greater than or equal to',
+  // headerFilterOperator<: 'Is less than',
+  // headerFilterOperator<=: 'Is less than or equal to',
 
   // Filter values text
   filterValueAny: 'bármilyen',
@@ -79,7 +106,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Oszlopok megjelenítése',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Oszlopok kezelése',
   columnMenuFilter: 'Szűrők',
   columnMenuHideColumn: 'Elrejtés',
   columnMenuUnsort: 'Sorrend visszaállítása',
@@ -131,20 +158,20 @@ const huHUGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name} szerinti csoportosítás törlése`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Részletek panel váltása',
   expandDetailPanel: 'Kibontás',
   collapseDetailPanel: 'Összecsukás',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Sorok újrarendezése',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Összesítés',
+  aggregationFunctionLabelSum: 'Összeg',
+  aggregationFunctionLabelAvg: 'Átlag',
+  aggregationFunctionLabelMin: 'Minimum',
+  aggregationFunctionLabelMax: 'Maximum',
+  aggregationFunctionLabelSize: 'Darabszám',
 };
 
 export const huHU: Localization = getGridLocalization(huHUGrid, huHUCore);

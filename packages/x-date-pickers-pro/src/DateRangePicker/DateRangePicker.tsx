@@ -67,6 +67,11 @@ DateRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
+  /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
    * @returns {string} The name to display.
@@ -144,6 +149,27 @@ DateRangePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
+  /**
+   * Pass a ref to the `input` element.
+   * Ignored if the field has several inputs.
+   */
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  /**
+   * The label content.
+   * Ignored if the field has several inputs.
+   */
+  label: PropTypes.node,
   /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.

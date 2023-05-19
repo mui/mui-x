@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { FieldSection, UseFieldInternalProps } from '../internals/hooks/useField';
-import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
+import { DateValidationError, FieldSection } from '../models';
+import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps } from '../internals';
+} from '../internals/models/validation';
+import { FieldsTextFieldProps } from '../internals/models/fields';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface UseDateFieldParams<TDate, TChildProps extends {}> {
@@ -30,7 +30,7 @@ export interface UseDateFieldProps<TDate>
 
 export type UseDateFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | 'format'
+  keyof BaseDateValidationProps<any> | 'format'
 >;
 
 export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<

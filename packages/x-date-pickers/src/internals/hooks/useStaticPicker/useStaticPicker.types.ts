@@ -3,18 +3,20 @@ import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '../../../PickersLayout/PickersLayout.types';
-import { DateOrTimeView } from '../../models';
 import { BasePickerProps } from '../../models/props/basePickerProps';
 import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
-import { FieldSection } from '../useField';
+import { FieldSection } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
-export interface UseStaticPickerSlotsComponent<TDate, TView extends DateOrTimeView>
+export interface UseStaticPickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {}
 
-export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {}
+export interface UseStaticPickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -36,7 +38,7 @@ export interface StaticOnlyPickerProps {
 
 export interface UseStaticPickerProps<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<TDate | null, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
@@ -67,11 +69,11 @@ export interface UseStaticPickerProps<
 
 export interface UseStaticPickerParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
-    'valueManager' | 'validator'
+    'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
   /**

@@ -22,6 +22,10 @@
       "deprecated": true,
       "deprecationInfo": "Please use <code>slotProps</code>."
     },
+    "currentMonthCalendarPosition": {
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
+      "default": "1"
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
@@ -46,6 +50,14 @@
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
+    "inputRef": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
+    },
+    "label": { "type": { "name": "node" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
@@ -116,6 +128,8 @@
   },
   "name": "DateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateRangePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",

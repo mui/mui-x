@@ -2,11 +2,11 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import {
-  DataGridPro,
+  DataGrid,
   GridColDef,
   GridColumnGroupHeaderParams,
   GridColumnGroupingModel,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import BuildIcon from '@mui/icons-material/Build';
 import PersonIcon from '@mui/icons-material/Person';
 
@@ -107,7 +107,7 @@ export default function CustomizationDemo() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         experimentalFeatures={{ columnGrouping: true }}

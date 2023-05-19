@@ -18,15 +18,22 @@ import {
   getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+  });
+
+  describePicker(MobileTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileTimePicker, () => ({
     render,
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   describeConformance(<MobileTimePicker />, () => ({
@@ -72,9 +79,9 @@ describe('<MobileTimePicker /> - Describes', () => {
         ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
         : '';
 
-      expectInputValue(input, expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'time', variant: 'mobile' });
       }

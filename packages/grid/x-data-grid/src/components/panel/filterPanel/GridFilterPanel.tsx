@@ -74,6 +74,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
     const lastFilterRef = React.useRef<any>(null);
+    const placeholderFilter = React.useRef<GridFilterItem | null>(null);
 
     const {
       logicOperators = [GridLogicOperator.And, GridLogicOperator.Or],
@@ -160,9 +161,11 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         return filterModel.items;
       }
 
-      const defaultFilter = getDefaultFilter();
+      if (!placeholderFilter.current) {
+        placeholderFilter.current = getDefaultFilter();
+      }
 
-      return defaultFilter ? [defaultFilter] : [];
+      return placeholderFilter.current ? [placeholderFilter.current] : [];
     }, [filterModel.items, getDefaultFilter]);
 
     const hasMultipleFilters = items.length > 1;
@@ -232,8 +235,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
           ))}
         </GridPanelContent>
         {!rootProps.disableMultipleColumnsFiltering &&
-        !disableAddFilterButton &&
-        !disableRemoveAllButton ? (
+        !(disableAddFilterButton && disableRemoveAllButton) ? (
           <GridPanelFooter>
             {!disableAddFilterButton ? (
               <rootProps.slots.baseButton
@@ -312,4 +314,4 @@ GridFilterPanel.propTypes = {
   ]),
 } as any;
 
-export { GridFilterPanel };
+export { GridFilterPanel, getGridFilter };

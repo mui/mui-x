@@ -248,6 +248,20 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
     });
 
+    it('should call setEditCellValue when entering the edit mode by pressing a digit', () => {
+      render(<TestCase />);
+      const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
+
+      const cell = getCell(0, 0);
+      userEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: '5' });
+
+      expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
+      expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
+      expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.be.instanceOf(Date);
+    });
+
     it('should call setEditCellValue with null when entered an empty value', () => {
       render(<TestCase />);
       const spiedSetEditCellValue = spy(apiRef.current, 'setEditCellValue');
@@ -569,7 +583,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      await Promise.resolve();
+      await act(() => Promise.resolve());
 
       expect(onValueChange.callCount).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');

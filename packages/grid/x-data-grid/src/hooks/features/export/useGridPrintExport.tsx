@@ -177,7 +177,12 @@ export const useGridPrintExport = (
       }
 
       if (normalizeOptions.copyStyles) {
-        const headStyleElements = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
+        const rootCandidate = gridRootElement!.getRootNode();
+        const root =
+          rootCandidate.constructor.name === 'ShadowRoot'
+            ? (rootCandidate as ShadowRoot)
+            : doc.current;
+        const headStyleElements = root!.querySelectorAll("style, link[rel='stylesheet']");
 
         for (let i = 0; i < headStyleElements.length; i += 1) {
           const node = headStyleElements[i];

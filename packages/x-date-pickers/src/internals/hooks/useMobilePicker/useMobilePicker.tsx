@@ -3,16 +3,15 @@ import { useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
-import { DateOrTimeView } from '../../models';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
 import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
-import { InferError } from '../validation/useValidation';
-import { FieldSection } from '../useField';
+import { InferError } from '../useValidation';
+import { FieldSection, BaseSingleInputFieldProps } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -22,13 +21,12 @@ import { FieldSection } from '../useField';
  */
 export const useMobilePicker = <
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
-  valueManager,
   getOpenDialogAriaText,
-  validator,
+  ...pickerParams
 }: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
   const {
     slots,
@@ -36,6 +34,7 @@ export const useMobilePicker = <
     className,
     sx,
     format,
+    formatDensity,
     label,
     inputRef,
     readOnly,
@@ -55,10 +54,9 @@ export const useMobilePicker = <
     renderCurrentView,
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>({
+    ...pickerParams,
     props,
     inputRef: internalInputRef,
-    valueManager,
-    validator,
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
@@ -84,6 +82,7 @@ export const useMobilePicker = <
       className,
       sx,
       format,
+      formatDensity,
       label,
     },
     ownerState: props,

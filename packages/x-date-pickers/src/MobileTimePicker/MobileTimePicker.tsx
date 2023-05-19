@@ -5,9 +5,10 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { PickerViewRendererLookup, TimeView, useLocaleText, validateTime } from '../internals';
+import { PickerViewRendererLookup, useLocaleText, validateTime } from '../internals';
+import { TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
 
 type MobileTimePickerComponent = (<TDate>(
@@ -21,10 +22,11 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePickerDefaultizedProps<TDate, MobileTimePickerProps<TDate>>(
-    inProps,
-    'MuiMobileTimePicker',
-  );
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeView,
+    MobileTimePickerProps<TDate>
+  >(inProps, 'MuiMobileTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
     hours: renderTimeViewClock,
@@ -49,7 +51,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        ampm: defaultizedProps.ampm,
       }),
       toolbar: {
         hidden: false,
@@ -62,6 +63,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'time',
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
     validator: validateTime,
   });
@@ -147,6 +149,12 @@ MobileTimePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -278,6 +286,7 @@ MobileTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.

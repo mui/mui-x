@@ -20,7 +20,7 @@ import {
   ExportedCalendarHeaderProps,
   ExportedPickersToolbarTextProps,
 } from '../internals';
-import { DateOrTimeView } from '../internals/models';
+import { DateOrTimeView } from '../models';
 
 import { DatePickerProps, DatePickerToolbarProps } from '../DatePicker';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
@@ -40,6 +40,11 @@ import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
 import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileTimePickerProps } from '../MobileTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
+import { ExportedDigitalClockProps } from '../DigitalClock';
+import {
+  ExportedMultiSectionDigitalClockSectionProps,
+  MultiSectionDigitalClockProps,
+} from '../MultiSectionDigitalClock';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps<unknown>;
@@ -52,8 +57,11 @@ export interface PickersComponentsPropsList {
   MuiDateTimePickerToolbar: DateTimePickerToolbarProps<unknown>;
   MuiDayCalendar: DayCalendarProps<unknown>;
   MuiDayCalendarSkeleton: DayCalendarSkeletonProps;
-  MuiLocalizationProvider: LocalizationProviderProps<unknown>;
+  MuiDigitalClock: ExportedDigitalClockProps<unknown>;
+  MuiLocalizationProvider: LocalizationProviderProps<unknown, unknown>;
   MuiMonthCalendar: MonthCalendarProps<unknown>;
+  MuiMultiSectionDigitalClock: MultiSectionDigitalClockProps<unknown>;
+  MuiMultiSectionDigitalClockSection: ExportedMultiSectionDigitalClockSectionProps;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
   MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;

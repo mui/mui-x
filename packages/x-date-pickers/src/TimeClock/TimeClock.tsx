@@ -14,12 +14,13 @@ import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internal
 import { useViews } from '../internals/hooks/useViews';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { TimeView } from '../internals/models';
+import { TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getTimeClockUtilityClass } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -80,8 +81,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
-    slots,
-    slotProps,
+    slots: innerSlots,
+    slotProps: innerSlotProps,
     value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
@@ -98,11 +99,16 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     views = ['hours', 'minutes'],
     openTo,
     onViewChange,
+    focusedView,
+    onFocusedViewChange,
     className,
     disabled,
     readOnly,
     ...other
   } = props;
+
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const [value, setValue] = useControlled({
     name: 'DateCalendar',
@@ -124,6 +130,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     openTo,
     onViewChange,
     onChange: handleValueChange,
+    focusedView,
+    onFocusedViewChange,
   });
 
   const selectedTimeOrMidnight = React.useMemo(
@@ -344,7 +352,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       {...other}
     >
       <Clock<TDate>
-        autoFocus={autoFocus}
+        autoFocus={autoFocus ?? !!focusedView}
         ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
         type={view}
@@ -361,8 +369,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       {showViewSwitcher && (
         <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
-          components={components}
-          componentsProps={componentsProps}
           slots={slots}
           slotProps={slotProps}
           onGoToPrevious={() => setView(previousView!)}
@@ -394,7 +400,10 @@ TimeClock.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   /**
-   * Set to `true` if focus should be moved to clock picker.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
   /**
@@ -420,7 +429,7 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.any,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the picker views and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
@@ -439,6 +448,10 @@ TimeClock.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Controlled focused view.
+   */
+  focusedView: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -459,20 +472,30 @@ TimeClock.propTypes = {
    * @template TDate
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired on focused view change.
+   * @template TView
+   * @param {TView} view The new view to focus or not.
+   * @param {boolean} hasFocus `true` if the view should be focused.
+   */
+  onFocusedViewChange: PropTypes.func,
+  /**
    * Callback fired on view change.
-   * @param {TimeView} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
-   * Initially open view.
-   * @default 'hours'
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * Make picker read only.
+   * If `true`, the picker views and text field are read-only.
    * @default false
    */
   readOnly: PropTypes.bool,
@@ -486,6 +509,7 @@ TimeClock.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
@@ -516,12 +540,13 @@ TimeClock.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Controlled open view.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
    */
   view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * Views for calendar picker.
-   * @default ['hours', 'minutes']
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

@@ -1,11 +1,11 @@
-import { DateOrTimeView } from '../../models';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayoutProps } from './usePickerLayoutProps';
-import { InferError } from '../validation/useValidation';
+import { InferError } from '../useValidation';
 import { buildWarning } from '../../utils/warning';
-import { FieldSection } from '../useField';
+import { FieldSection } from '../../../models';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
 const warnRenderInputIsDefined = buildWarning([
   'The `renderInput` prop has been removed in version 6.0 of the Date and Time Pickers.',
@@ -16,13 +16,14 @@ const warnRenderInputIsDefined = buildWarning([
 export const usePicker = <
   TValue,
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TSection extends FieldSection,
   TExternalProps extends UsePickerProps<TValue, TView, TSection, any, any, any>,
   TAdditionalProps extends {},
 >({
   props,
   valueManager,
+  valueType,
   wrapperVariant,
   inputRef,
   additionalViewProps,
@@ -44,6 +45,7 @@ export const usePicker = <
   const pickerValueResponse = usePickerValue({
     props,
     valueManager,
+    valueType,
     wrapperVariant,
     validator,
   });

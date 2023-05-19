@@ -7,7 +7,7 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
-import { DateView } from '../internals/models';
+import { DateView } from '../models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
@@ -164,9 +164,7 @@ DatePickerToolbar.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
-  views: PropTypes.arrayOf(
-    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  ).isRequired,
+  views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired).isRequired,
 } as any;
 
 export { DatePickerToolbar };

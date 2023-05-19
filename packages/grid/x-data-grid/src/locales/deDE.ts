@@ -47,7 +47,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Alle entfernen',
   filterPanelDeleteIconLabel: 'Löschen',
   filterPanelLogicOperator: 'Logische Operatoren',
   filterPanelOperator: 'Operatoren',
@@ -71,6 +71,33 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
   filterOperatorIsAnyOf: 'ist einer der Werte',
+  // filterOperator=: '=',
+  // filterOperator!=: '!=',
+  // filterOperator>: '>',
+  // filterOperator>=: '>=',
+  // filterOperator<: '<',
+  // filterOperator<=: '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // headerFilterOperator=: 'Equals',
+  // headerFilterOperator!=: 'Not equals',
+  // headerFilterOperator>: 'Is greater than',
+  // headerFilterOperator>=: 'Is greater than or equal to',
+  // headerFilterOperator<: 'Is less than',
+  // headerFilterOperator<=: 'Is less than or equal to',
 
   // Filter values text
   filterValueAny: 'Beliebig',
@@ -80,7 +107,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Zeige alle Spalten',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Spalten verwalten',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Sortierung deaktivieren',

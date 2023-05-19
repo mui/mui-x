@@ -62,7 +62,7 @@ export interface UseGridColumnHeadersProps {
   hasOtherElementInTabSequence: boolean;
 }
 
-interface GetHeadersParams {
+export interface GetHeadersParams {
   renderContext: GridRenderContext | null;
   minFirstColumn?: number;
   maxLastColumn?: number;
@@ -390,8 +390,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         })
         .filter((groupStructure) => groupStructure.columnFields.length > 0);
 
-      const leftOverflow =
+      const firstVisibleColumnIndex =
         visibleColumnGroupHeader[0].columnFields.indexOf(firstColumnFieldToRender);
+      const hiddenGroupColumns = visibleColumnGroupHeader[0].columnFields.slice(
+        0,
+        firstVisibleColumnIndex,
+      );
+      const leftOverflow = hiddenGroupColumns.reduce((acc, field) => {
+        const column = apiRef.current.getColumn(field);
+        return acc + (column.computedWidth ?? 0);
+      }, 0);
 
       let columnIndex = firstColumnToRender;
       const elements = visibleColumnGroupHeader.map(({ groupId, columnFields }) => {
@@ -408,9 +416,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
         const headerInfo: HeaderInfo = {
           groupId,
-          width: columnFields
-            .map((field) => apiRef.current.getColumn(field).computedWidth)
-            .reduce((acc, val) => acc + val, 0),
+          width: columnFields.reduce(
+            (acc, field) => acc + apiRef.current.getColumn(field).computedWidth,
+            0,
+          ),
           fields: columnFields,
           colIndex: columnIndex,
           hasFocus,
@@ -470,6 +479,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   return {
     renderContext,
     getColumnHeaders,
+    getColumnsToRender,
     getColumnGroupHeaders,
     isDragging: !!dragCol,
     getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
@@ -477,5 +487,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       ref: handleInnerRef,
       role: 'rowgroup',
     }),
+    headerHeight,
   };
 };
