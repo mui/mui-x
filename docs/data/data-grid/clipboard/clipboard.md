@@ -17,6 +17,16 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 ## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
+:::info
+
+<details style="margin: 0">
+  <summary markdown="span">Video demo</summary>
+  <video muted loop playsinline controls style="margin-top: 8px">
+    <source src="/static/x/clipboard-paste.mov" type="video/mp4" />
+  </video>
+</details>
+:::
+
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `clipboardPaste` experimental feature flag.
 
