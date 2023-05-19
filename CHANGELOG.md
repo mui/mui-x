@@ -52,6 +52,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 ### Core
 
 - [core] Add assertion about checkbox rerenders (#8974) @oliviertassinari
+- [core] Allow selecting a section by type in field tests (#9009) @flaviendelangle
 - [core] Fix `yarn.lock` (#8988) @flaviendelangle
 - [core] Fix flacky adapter test (#8995) @flaviendelangle
 - [charts] Clean the axis rendering (#8948) @alexfauquette
