@@ -31,7 +31,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGridPro] Support pinned rows editing (#8921) @cherniavskii
 - [l10n] Add missing keys in Hebrew (he-IL) locale (#8943) @Itzik-Tech
 - [l10n] Improve Czech (cs-CZ) locale (#8829) @harastaivan
-- [l10n] Update Czech (cs-CZ) locale (#8956) @davidzemancz
+- [l10n] Improve Czech (cs-CZ) locale (#8956) @davidzemancz
 
 ### `@mui/x-date-pickers@6.5.0` / `@mui/x-date-pickers-pro@6.5.0`
 
