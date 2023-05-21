@@ -93,7 +93,7 @@
     "@babel/preset-typescript": "^7.21.4",
     "@types/doctrine": "^0.0.5",
     "cpy-cli": "^4.2.0",
-    "cross-fetch": "^3.1.5",
+    "cross-fetch": "^3.1.6",
     "gm": "^1.25.0",
     "typescript-to-proptypes": "^2.2.1"
   }
