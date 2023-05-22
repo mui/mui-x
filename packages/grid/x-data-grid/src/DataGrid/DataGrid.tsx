@@ -130,11 +130,6 @@ DataGridRaw.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
-   * Data attributes for the grid root element.
-   * @ignore - do not document.
-   */
-  dataProps: PropTypes.object,
-  /**
    * Set the density of the grid.
    * @default "standard"
    */
@@ -204,6 +199,11 @@ DataGridRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps: PropTypes.object,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
