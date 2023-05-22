@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -32,10 +31,6 @@ function GridCustomToolbar({ syncState }) {
     </GridToolbarContainer>
   );
 }
-
-GridCustomToolbar.propTypes = {
-  syncState: PropTypes.func.isRequired,
-};
 
 export default function RestoreStateInitialState() {
   const { data, loading } = useDemoData({

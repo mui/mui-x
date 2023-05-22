@@ -5,9 +5,14 @@ import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { FieldsTextFieldProps, uncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import {
+  splitFieldInternalAndForwardedProps,
+  FieldsTextFieldProps,
+  uncapitalizeObjectKeys,
+} from '@mui/x-date-pickers/internals';
 import { MultiInputTimeRangeFieldProps } from './MultiInputTimeRangeField.types';
 import { useMultiInputTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
+import { UseTimeRangeFieldProps } from '../internal/models/timeRange';
 
 const MultiInputTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
@@ -21,7 +26,7 @@ const MultiInputTimeRangeFieldRoot = styled(
 )({});
 
 const MultiInputTimeRangeFieldSeparator = styled(
-  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
+  (props: TypographyProps) => <Typography {...props}>{props.children ?? ' – '}</Typography>,
   {
     name: 'MuiMultiInputTimeRangeField',
     slot: 'Separator',
@@ -42,34 +47,24 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     name: 'MuiMultiInputTimeRangeField',
   });
 
+  const { internalProps: timeFieldInternalProps, forwardedProps } =
+    splitFieldInternalAndForwardedProps<
+      typeof themeProps,
+      keyof Omit<UseTimeRangeFieldProps<any>, 'unstableFieldRef' | 'disabled'>
+    >(themeProps, 'time');
+
   const {
     slots: innerSlots,
     slotProps: innerSlotProps,
     components,
     componentsProps,
-    value,
-    defaultValue,
-    format,
-    formatDensity,
-    shouldRespectLeadingZeros,
-    onChange,
-    readOnly,
     disabled,
-    onError,
-    minTime,
-    maxTime,
-    minutesStep,
-    shouldDisableClock,
-    shouldDisableTime,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
+    autoFocus,
     unstableStartFieldRef,
     unstableEndFieldRef,
-    autoFocus,
-    ...other
-  } = themeProps;
+    ...otherForwardedProps
+  } = forwardedProps;
+
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
   const slotProps = innerSlotProps ?? componentsProps;
 
@@ -79,7 +74,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   const rootProps = useSlotProps({
     elementType: Root,
     externalSlotProps: slotProps?.root,
-    externalForwardedProps: other,
+    externalForwardedProps: otherForwardedProps,
     additionalProps: {
       ref,
     },
@@ -123,26 +118,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       ...endDateProps
     },
   } = useMultiInputTimeRangeField<TDate, FieldsTextFieldProps>({
-    sharedProps: {
-      value,
-      defaultValue,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      onChange,
-      readOnly,
-      disabled,
-      onError,
-      minTime,
-      maxTime,
-      minutesStep,
-      shouldDisableClock,
-      shouldDisableTime,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-    },
+    sharedProps: { ...timeFieldInternalProps, disabled },
     startTextFieldProps,
     endTextFieldProps,
     startInputRef: startTextFieldProps.inputRef,
@@ -156,10 +132,13 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       <TextField
         fullWidth
         {...startDateProps}
+        InputProps={{
+          ...startDateProps.InputProps,
+          readOnly: startReadOnly,
+        }}
         inputProps={{
           ...startDateProps.inputProps,
           ref: startInputRef,
-          readOnly: startReadOnly,
           inputMode: startInputMode,
           onKeyDown: onStartInputKeyDown,
         }}
@@ -168,6 +147,10 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       <TextField
         fullWidth
         {...endDateProps}
+        InputProps={{
+          ...endDateProps.InputProps,
+          readOnly: endReadOnly,
+        }}
         inputProps={{
           ...endDateProps.inputProps,
           ref: endInputRef,
@@ -386,7 +369,7 @@ MultiInputTimeRangeField.propTypes = {
   /**
    * If `true`, the CSS flexbox `gap` is used instead of applying `margin` to children.
    *
-   * While CSS `gap` removes the [known limitations](https://mui.com/joy-ui/react-stack#limitations),
+   * While CSS `gap` removes the [known limitations](https://mui.com/joy-ui/react-stack/#limitations),
    * it is not fully supported in some browsers. We recommend checking https://caniuse.com/?search=flex%20gap before using this flag.
    *
    * To enable this flag globally, follow the [theme's default props](https://mui.com/material-ui/customization/theme-components/#default-props) configuration.

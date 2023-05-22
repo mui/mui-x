@@ -11,6 +11,7 @@ import {
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
+import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 
 const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
   props: UseDateTimeFieldProps<TDate>,
@@ -37,70 +38,20 @@ const useDefaultizedDateTimeField = <TDate, AdditionalProps extends {}>(
 };
 
 export const useDateTimeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseDateTimeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    formatDensity,
-    shouldRespectLeadingZeros,
-    onChange,
-    readOnly,
-    onError,
-    shouldDisableDate,
-    shouldDisableMonth,
-    shouldDisableYear,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    minTime,
-    maxTime,
-    minDateTime,
-    maxDateTime,
-    minutesStep,
-    disableIgnoringDatePartForTimeValidation,
-    shouldDisableClock,
-    shouldDisableTime,
-    selectedSections,
-    onSelectedSectionsChange,
-    ampm,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedDateTimeField<TDate, TChildProps>(props);
+  const props = useDefaultizedDateTimeField<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
+    typeof props,
+    keyof UseDateTimeFieldProps<any>
+  >(props, 'date-time');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseDateTimeFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      onChange,
-      readOnly,
-      onError,
-      shouldDisableDate,
-      shouldDisableMonth,
-      shouldDisableYear,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      minTime,
-      maxTime,
-      minutesStep,
-      shouldDisableClock,
-      shouldDisableTime,
-      disableIgnoringDatePartForTimeValidation,
-      selectedSections,
-      onSelectedSectionsChange,
-      ampm,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDateTime,

@@ -1,41 +1,67 @@
 import * as React from 'react';
 import { BarPlot } from './BarPlot';
-import { XAxis } from '../XAxis/XAxis';
-import { YAxis } from '../YAxis/YAxis';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { Axis, AxisProps } from '../Axis';
+import { BarSeriesType } from '../models/seriesType/bar';
+import { MakeOptional } from '../models/helpers';
+import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { Tooltip, TooltipProps } from '../Tooltip';
+import { Highlight, HighlightProps } from '../Highlight';
 
-export function BarChart(props: Omit<ChartContainerProps, 'children'>) {
-  const { xAxis, yAxis, series, width, height, margin, colors, tooltip } = props;
+export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+  series: MakeOptional<BarSeriesType, 'type'>[];
+  tooltip?: TooltipProps;
+  highlight?: HighlightProps;
+}
+
+export function BarChart(props: BarChartProps) {
+  const {
+    xAxis,
+    yAxis,
+    series,
+    width,
+    height,
+    margin,
+    colors,
+    sx,
+    tooltip,
+    highlight,
+    topAxis,
+    leftAxis,
+    rightAxis,
+    bottomAxis,
+    children,
+  } = props;
 
   return (
     <ChartContainer
-      series={series}
+      series={series.map((s) => ({ type: 'bar', ...s }))}
       width={width}
       height={height}
       margin={margin}
-      xAxis={xAxis}
+      xAxis={
+        xAxis ?? [
+          {
+            id: DEFAULT_X_AXIS_KEY,
+            scaleType: 'band',
+            data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
+              (_, index) => index,
+            ),
+          },
+        ]
+      }
       yAxis={yAxis}
       colors={colors}
-      tooltip={tooltip}
+      sx={sx}
+      disableAxisListener={
+        tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
+      }
     >
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <BarPlot />
-      <XAxis
-        label="Bottom X axis"
-        position="bottom"
-        axisId={xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
-      />
-      <XAxis
-        label="Top X axis"
-        position="top"
-        axisId={xAxis?.[1]?.id ?? xAxis?.[0]?.id ?? DEFAULT_X_AXIS_KEY}
-      />
-      <YAxis label="Left Y axis" position="left" axisId={yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY} />
-      <YAxis
-        label="Right Y axis"
-        position="right"
-        axisId={yAxis?.[1]?.id ?? yAxis?.[0]?.id ?? DEFAULT_Y_AXIS_KEY}
-      />
+      <Highlight {...highlight} />
+      <Tooltip {...tooltip} />
+      {children}
     </ChartContainer>
   );
 }

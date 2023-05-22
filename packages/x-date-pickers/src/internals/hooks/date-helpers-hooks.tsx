@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useUtils } from './useUtils';
 import { PickerOnChangeFn } from './useViews';
 import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
+import { PickerSelectionState } from './usePicker';
 
 interface MonthValidationOptions<TDate> {
   disablePast?: boolean;
@@ -43,6 +44,7 @@ export function useMeridiemMode<TDate>(
   date: TDate | null,
   ampm: boolean | undefined,
   onChange: PickerOnChangeFn<TDate>,
+  selectionState?: PickerSelectionState,
 ) {
   const utils = useUtils<TDate>();
   const meridiemMode = getMeridiem(date, utils);
@@ -51,9 +53,9 @@ export function useMeridiemMode<TDate>(
     (mode: 'am' | 'pm') => {
       const timeWithMeridiem =
         date == null ? null : convertToMeridiem<TDate>(date, mode, Boolean(ampm), utils);
-      onChange(timeWithMeridiem, 'partial');
+      onChange(timeWithMeridiem, selectionState ?? 'partial');
     },
-    [ampm, date, onChange, utils],
+    [ampm, date, onChange, selectionState, utils],
   );
 
   return { meridiemMode, handleMeridiemChange };

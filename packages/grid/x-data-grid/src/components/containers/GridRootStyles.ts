@@ -115,6 +115,7 @@ export const GridRootStyles = styled('div', {
     outline: 'none',
     height: '100%',
     display: 'flex',
+    overflow: 'hidden',
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
     [`&.${gridClasses.autoHeight}`]: {
@@ -178,6 +179,8 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
+      // to anchor the aggregation label
+      position: 'relative',
     },
     [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',

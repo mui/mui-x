@@ -27,6 +27,7 @@ import {
 import { gridColumnMenuSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 
 interface GridBodyProps {
+  children?: React.ReactNode;
   ColumnHeadersProps?: Record<string, any>;
   VirtualScrollerComponent: React.JSXElementConstructor<
     React.HTMLAttributes<HTMLDivElement> & {
@@ -37,7 +38,7 @@ interface GridBodyProps {
 }
 
 function GridBody(props: GridBodyProps) {
-  const { VirtualScrollerComponent, ColumnHeadersProps } = props;
+  const { VirtualScrollerComponent, ColumnHeadersProps, children } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -87,8 +88,12 @@ function GridBody(props: GridBodyProps) {
       return () => {};
     }
 
+    let animationFrame: number;
     const observer = new ResizeObserver(() => {
-      apiRef.current.computeSizeAndPublishResizeEvent();
+      // See https://github.com/mui/mui-x/issues/8733
+      animationFrame = window.requestAnimationFrame(() => {
+        apiRef.current.computeSizeAndPublishResizeEvent();
+      });
     });
 
     if (elementToObserve) {
@@ -96,6 +101,10 @@ function GridBody(props: GridBodyProps) {
     }
 
     return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
       if (elementToObserve) {
         observer.unobserve(elementToObserve);
       }
@@ -131,6 +140,7 @@ function GridBody(props: GridBodyProps) {
     columnHeadersContainerElementRef: columnsContainerRef,
     columnHeadersElementRef: columnHeadersRef,
     virtualScrollerRef,
+    mainElementRef: rootRef,
   });
 
   const hasDimensions = !!apiRef.current.getRootDimensions();
@@ -167,6 +177,8 @@ function GridBody(props: GridBodyProps) {
           disableVirtualization={isVirtualizationDisabled}
         />
       )}
+
+      {children}
     </GridMainContainer>
   );
 }
@@ -176,6 +188,7 @@ GridBody.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  children: PropTypes.node,
   ColumnHeadersProps: PropTypes.object,
   VirtualScrollerComponent: PropTypes.elementType.isRequired,
 } as any;

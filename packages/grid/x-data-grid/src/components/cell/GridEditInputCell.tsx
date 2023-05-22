@@ -132,7 +132,11 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
         type={colDef.type === 'number' ? colDef.type : 'text'}
         value={valueState ?? ''}
         onChange={handleChange}
-        endAdornment={isProcessingProps ? <rootProps.slots.loadIcon /> : undefined}
+        endAdornment={
+          isProcessingProps ? (
+            <rootProps.slots.loadIcon fontSize="small" color="action" />
+          ) : undefined
+        }
         {...other}
       />
     );

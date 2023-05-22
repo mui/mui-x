@@ -1,12 +1,12 @@
 /* eslint-disable class-methods-use-this */
 import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterMomentOptions {
-  locale?: string;
-  instance?: typeof defaultMoment;
-  formats?: Partial<AdapterFormats>;
-}
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -43,8 +43,6 @@ const formatTokenMap: FieldFormatTokenMap = {
   HH: 'hours',
   h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
-  k: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
-  kk: 'hours',
 
   // Minutes
   m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
@@ -110,7 +108,7 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMoment implements MuiPickersAdapter<Moment> {
+export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   public isMUIAdapter = true;
 
   public lib = 'moment';
@@ -125,7 +123,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats, instance }: AdapterMomentOptions = {}) {
+  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultMoment> = {}) {
     this.moment = instance || defaultMoment;
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
@@ -410,7 +408,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
   };
 
   public getMonthArray = (value: Moment) => {
-    const firstMonth = value.clone().startOf('year');
+    const firstMonth = this.startOfYear(value);
     const monthArray = [firstMonth];
 
     while (monthArray.length < 12) {
@@ -474,7 +472,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
   public getMeridiemText = (ampm: 'am' | 'pm') => {
     if (this.is12HourCycleInCurrentLocale()) {
       // AM/PM translation only possible in those who have 12 hour cycle in locale.
-      return this.moment
+      return defaultMoment
         .localeData(this.getCurrentLocaleCode())
         .meridiem(ampm === 'am' ? 0 : 13, 0, false);
     }

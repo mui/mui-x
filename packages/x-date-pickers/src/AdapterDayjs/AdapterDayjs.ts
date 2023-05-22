@@ -4,19 +4,18 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import { FieldFormatTokenMap, MuiPickersAdapter, AdapterFormats, AdapterUnits } from '../models';
+import {
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+  AdapterFormats,
+  AdapterUnits,
+  AdapterOptions,
+} from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
 defaultDayjs.extend(customParseFormatPlugin);
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(isBetweenPlugin);
-
-interface AdapterDayjsOptions {
-  locale?: string;
-  /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
-  instance?: typeof defaultDayjs;
-  formats?: Partial<AdapterFormats>;
-}
 
 type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
@@ -126,7 +125,7 @@ const withLocale = (dayjs: any, locale?: string): Constructor =>
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
+export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public isMUIAdapter = true;
 
   public lib = 'dayjs';
@@ -143,7 +142,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats, instance }: AdapterDayjsOptions = {}) {
+  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultDayjs> = {}) {
     this.rawDayJsInstance = instance || defaultDayjs;
     this.dayjs = withLocale(this.rawDayJsInstance, locale);
     this.locale = locale;
@@ -153,7 +152,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
   }
 
   private getLocaleFormats = () => {
-    const locales = this.rawDayJsInstance.Ls ?? defaultDayjs.Ls;
+    const locales = defaultDayjs.Ls;
     const locale = this.locale || 'en';
 
     let localeObject = locales[locale];
@@ -250,7 +249,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return numberToFormat;
   };
 
-  public getDiff = (value: Dayjs, comparing: Dayjs, unit?: AdapterUnits) => {
+  public getDiff = (value: Dayjs, comparing: Dayjs | string, unit?: AdapterUnits) => {
     return value.diff(comparing, unit as AdapterUnits);
   };
 
@@ -282,24 +281,24 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return value.isAfter(comparing);
   };
 
-  public isAfterYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isAfter(comparing, 'year');
+  public isAfterYear = (value: Dayjs, comparing: Dayjs) => {
+    return value.isAfter(comparing, 'year');
   };
 
-  public isAfterDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isAfter(comparing, 'day');
+  public isAfterDay = (value: Dayjs, comparing: Dayjs) => {
+    return value.isAfter(comparing, 'day');
   };
 
-  public isBefore = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing);
+  public isBefore = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing);
   };
 
-  public isBeforeYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing, 'year');
+  public isBeforeYear = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing, 'year');
   };
 
-  public isBeforeDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isBefore(comparing, 'day');
+  public isBeforeDay = (value: Dayjs, comparing: Dayjs) => {
+    return value.isBefore(comparing, 'day');
   };
 
   public isWithinRange = (value: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
@@ -432,7 +431,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
 
     while (monthArray.length < 12) {
       const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
+      monthArray.push(this.addMonths(prevMonth, 1));
     }
 
     return monthArray;

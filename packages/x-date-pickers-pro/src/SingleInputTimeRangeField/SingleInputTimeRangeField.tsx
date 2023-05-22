@@ -52,7 +52,8 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     <TextField
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
+      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
     />
   );
 }) as DateRangeFieldComponent;
@@ -219,6 +220,10 @@ SingleInputTimeRangeField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
+  /**
+   * @ignore
+   */
+  onClick: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.

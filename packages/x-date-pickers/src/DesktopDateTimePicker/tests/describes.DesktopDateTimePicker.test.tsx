@@ -5,20 +5,16 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
   getTextbox,
   expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({
-    clock,
-    render,
-    Component: DesktopDateTimePicker,
-  });
+  describePicker(DesktopDateTimePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
   describeValidation(DesktopDateTimePicker, () => ({
     render,
@@ -55,7 +51,7 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
 
       expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
@@ -63,8 +59,8 @@ describe('<DesktopDateTimePicker /> - Describes', () => {
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
+        selectSection('day');
         const input = getTextbox();
-        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

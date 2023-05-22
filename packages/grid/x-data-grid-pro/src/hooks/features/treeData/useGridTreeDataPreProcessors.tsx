@@ -150,6 +150,7 @@ export const useGridTreeDataPreProcessors = (
 
       if (params.updates.type === 'full') {
         return createRowTree({
+          previousTree: params.previousTree,
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,

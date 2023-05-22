@@ -24,6 +24,7 @@ import {
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
+import type { GridProSlotProps } from './gridProSlotProps';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -140,10 +141,18 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  unstable_headerFilters: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<DataGridPropsWithoutDefaultValue<R>, 'initialState'> {
+  extends Omit<
+    DataGridPropsWithoutDefaultValue<R>,
+    'initialState' | 'componentsProps' | 'slotProps'
+  > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -241,4 +250,13 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * Rows data to pin on top or bottom.
    */
   pinnedRows?: GridPinnedRowsProp<R>;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridProSlotProps;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
+   */
+  componentsProps?: GridProSlotProps;
 }

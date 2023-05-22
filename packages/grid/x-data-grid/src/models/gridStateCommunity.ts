@@ -19,6 +19,7 @@ import type {
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import { GridVisibleRowsState } from '../hooks/features/rows/gridVisibleRowsInterfaces';
 import type { GridEditingState } from './gridEditRowModel';
+import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
 
 /**
@@ -29,6 +30,7 @@ export interface GridStateCommunity {
   visibleRows: GridVisibleRowsState;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditingState;
+  headerFiltering: GridHeaderFilteringState;
   pagination: GridPaginationState;
   columns: GridColumnsState;
   columnGrouping: GridColumnsGroupingState;
