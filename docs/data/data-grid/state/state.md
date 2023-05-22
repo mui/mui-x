@@ -11,7 +11,7 @@ This prop has the same format as the returned value of `apiRef.current.exportSta
 The `initialState` can only be used to set the initial value of the state.
 The Data Grid will not react if you change the `initialState` value later on.
 
-If you need to fully control specific models, use the control props instead (e.g. [`prop.filterModel`](/x/react-data-grid/filtering/#controlled-filters) or [`prop.sortModel`](https://mui.com/x/react-data-grid/sorting/#controlled-sort-model)).
+If you need to fully control specific models, use the control props instead (e.g. [`prop.filterModel`](/x/react-data-grid/filtering/customization/#controlled-filters) or [`prop.sortModel`](https://mui.com/x/react-data-grid/sorting/#controlled-sort-model)).
 You can find more information on the corresponding feature documentation page.
 :::
 
