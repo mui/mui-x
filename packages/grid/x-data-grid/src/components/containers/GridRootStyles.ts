@@ -237,11 +237,40 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
-    [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
-      {
-        visibility: 'visible',
-        width: 'auto',
+    '@media (pointer: fine)': {
+      [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
+        {
+          visibility: 'visible',
+          width: 'auto',
+        },
+      [`& .${gridClasses.columnHeader}:hover`]: {
+        [`& .${gridClasses.iconButtonContainer}`]: {
+          visibility: 'visible',
+          width: 'auto',
+        },
+        [`& .${gridClasses.menuIcon}`]: {
+          width: 'auto',
+          visibility: 'visible',
+        },
       },
+    },
+    '@media (pointer: coarse)': {
+      [`& .${gridClasses.columnHeaders} .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
+        {
+          visibility: 'visible',
+          width: 'auto',
+        },
+      [`& .${gridClasses.columnHeader}`]: {
+        [`& .${gridClasses.iconButtonContainer}`]: {
+          visibility: 'visible',
+          width: 'auto',
+        },
+        [`& .${gridClasses.menuIcon}`]: {
+          width: 'auto',
+          visibility: 'visible',
+        },
+      },
+    },
     [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
       left: -12,
     },
@@ -275,16 +304,6 @@ export const GridRootStyles = styled('div', {
       marginRight: -10,
       display: 'flex',
       alignItems: 'center',
-    },
-    [`& .${gridClasses.columnHeader}:hover`]: {
-      [`& .${gridClasses.iconButtonContainer}`]: {
-        visibility: 'visible',
-        width: 'auto',
-      },
-      [`& .${gridClasses.menuIcon}`]: {
-        width: 'auto',
-        visibility: 'visible',
-      },
     },
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
