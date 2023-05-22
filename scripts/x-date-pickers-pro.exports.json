@@ -242,6 +242,7 @@
   { "name": "pickersYearClasses", "kind": "Variable" },
   { "name": "PickersYearClasses", "kind": "Interface" },
   { "name": "PickersYearClassKey", "kind": "TypeAlias" },
+  { "name": "PickerTimezone", "kind": "TypeAlias" },
   { "name": "plPL", "kind": "Variable" },
   { "name": "ptBR", "kind": "Variable" },
   { "name": "RangeFieldSection", "kind": "Interface" },

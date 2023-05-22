@@ -1,4 +1,5 @@
 import { FieldSectionContentType, FieldSectionType } from './fields';
+import { PickerTimezone } from './timezone';
 
 export interface AdapterFormats {
   /** Localized full date @example "Jan 1, 2019" */
@@ -93,6 +94,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * A boolean confirming that the adapter used is an MUI adapter.
    */
   isMUIAdapter: boolean;
+  isTimezoneCompatible: boolean;
   formats: AdapterFormats;
   locale?: TLocale;
   /**
@@ -108,6 +110,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   formatTokenMap: FieldFormatTokenMap;
 
+  // TODO v7: Replace with dateWithTimezone
   /**
    * Create a date in the date library format.
    * If no `value` parameter is provided, creates a date with the current timestamp.
@@ -117,6 +120,30 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {TDate | null} The parsed date.
    */
   date(value?: any): TDate | null;
+  /**
+   * Create a date in the date library format.
+   * If no `value` parameter is provided, creates a date with the current timestamp.
+   * If a `value` parameter is provided, pass it to the date library to try to parse it.
+   * @template TDate
+   * @param {string | null | undefined} value The optional value to parse.
+   * @param {string} timezone The timezone of the date.
+   * @returns {TDate | null} The parsed date.
+   */
+  dateWithTimezone(value: string | null | undefined, timezone: PickerTimezone): TDate | null;
+  /**
+   * Extracts the timezone from a date.
+   * @template TDate
+   * @param {TDate} value The date from which we want to get the timezone.
+   */
+  getTimezone(value: TDate | null): string;
+  /**
+   * Convert a date to another timezone.
+   * @template TDate
+   * @param {TDate} value The date to convert.
+   * @param {string} timezone The timezone to convert the date to.
+   * @returns {TDate} The converted date.
+   */
+  setTimezone(value: TDate, timezone: PickerTimezone): TDate;
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
    * @template TDate
