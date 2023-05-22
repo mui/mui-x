@@ -84,12 +84,18 @@ export const useField = <
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
-    const nextSectionIndex =
-      browserStartIndex <= state.sections[0].startInInput
-        ? 1 // Special case if browser index is in invisible characters at the beginning.
-        : state.sections.findIndex(
-            (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
-          );
+    let nextSectionIndex: number;
+    if (browserStartIndex <= state.sections[0].startInInput) {
+      // Special case if browser index is in invisible characters at the beginning
+      nextSectionIndex = 1;
+    } else if (browserStartIndex >= state.sections[state.sections.length - 1].endInInput) {
+      // If the click is after the last character of the input, then we want to select the 1st section.
+      nextSectionIndex = 1;
+    } else {
+      nextSectionIndex = state.sections.findIndex(
+        (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+      );
+    }
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
     setSelectedSections(sectionIndex);

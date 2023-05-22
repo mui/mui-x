@@ -42,7 +42,7 @@ export interface UseDateTimeFieldProps<TDate>
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps | 'format'
+  keyof BaseDateValidationProps<any> | keyof BaseTimeValidationProps | 'format'
 >;
 
 export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<

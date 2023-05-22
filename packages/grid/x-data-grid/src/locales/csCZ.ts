@@ -5,11 +5,11 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
-  noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
+  noResultsOverlayLabel: 'Nenašly se žadné výsledky.',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Hustota',
-  toolbarDensityLabel: 'Hustota',
+  toolbarDensity: 'Zobrazení',
+  toolbarDensityLabel: 'Zobrazení',
   toolbarDensityCompact: 'Kompaktní',
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
@@ -34,8 +34,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Vyhledávat…',
-  toolbarQuickFilterLabel: 'Vyhledat',
+  toolbarQuickFilterPlaceholder: 'Hledat…',
+  toolbarQuickFilterLabel: 'Hledat',
   toolbarQuickFilterDeleteIconLabel: 'Vymazat',
 
   // Export selector toolbar button text
@@ -67,17 +67,44 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Filter operators text
   filterOperatorContains: 'obsahuje',
   filterOperatorEquals: 'rovná se',
-  filterOperatorStartsWith: 'začíná s',
+  filterOperatorStartsWith: 'začíná na',
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
   filterOperatorNot: 'není',
   filterOperatorAfter: 'je po',
-  filterOperatorOnOrAfter: 'je na nebo po',
+  filterOperatorOnOrAfter: 'je po včetně',
   filterOperatorBefore: 'je před',
-  filterOperatorOnOrBefore: 'je na nebo dříve',
+  filterOperatorOnOrBefore: 'je před včetně',
   filterOperatorIsEmpty: 'je prázdný',
   filterOperatorIsNotEmpty: 'není prázdný',
   filterOperatorIsAnyOf: 'je jeden z',
+  // filterOperator=: '=',
+  // filterOperator!=: '!=',
+  // filterOperator>: '>',
+  // filterOperator>=: '>=',
+  // filterOperator<: '<',
+  // filterOperator<=: '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // headerFilterOperator=: 'Equals',
+  // headerFilterOperator!=: 'Not equals',
+  // headerFilterOperator>: 'Is greater than',
+  // headerFilterOperator>=: 'Is greater than or equal to',
+  // headerFilterOperator<: 'Is less than',
+  // headerFilterOperator<=: 'Is less than or equal to',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
