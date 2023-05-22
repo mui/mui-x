@@ -35,6 +35,12 @@ import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
 import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
+const getVisibleRows: GridStrategyProcessor<'visibleRows'> = (params) => {
+  return {
+    lookup: getVisibleRowsLookup(params),
+  };
+};
+
 export const useGridTreeDataPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
@@ -203,12 +209,6 @@ export const useGridTreeDataPreProcessors = (
     },
     [privateApiRef, props.disableChildrenSorting],
   );
-
-  const getVisibleRows = React.useCallback<GridStrategyProcessor<'visibleRows'>>((params) => {
-    return {
-      lookup: getVisibleRowsLookup(params),
-    };
-  }, []);
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(

@@ -17,6 +17,13 @@ export const visibleRowsStateInitializer: GridStateInitializer = (state) => {
   };
 };
 
+const getVisibleRows: GridStrategyProcessor<'visibleRows'> = (params) => {
+  // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
+  return {
+    lookup: params.filteredRowsLookup,
+  };
+};
+
 export function useGridVisibleRowsState(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
   const updateVisibleRowsState = React.useCallback(() => {
     apiRef.current.setState((state) => {
@@ -31,13 +38,6 @@ export function useGridVisibleRowsState(apiRef: React.MutableRefObject<GridPriva
     });
     apiRef.current.forceUpdate();
   }, [apiRef]);
-
-  const getVisibleRows = React.useCallback<GridStrategyProcessor<'visibleRows'>>((params) => {
-    // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
-    return {
-      lookup: params.filteredRowsLookup,
-    };
-  }, []);
 
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'visibleRows', getVisibleRows);
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsState);

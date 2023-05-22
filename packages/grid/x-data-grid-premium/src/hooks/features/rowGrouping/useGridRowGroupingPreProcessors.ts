@@ -39,6 +39,12 @@ import {
 } from './gridRowGroupingUtils';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
+const getVisibleRows: GridStrategyProcessor<'visibleRows'> = (params) => {
+  return {
+    lookup: getVisibleRowsLookup(params),
+  };
+};
+
 export const useGridRowGroupingPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -224,12 +230,6 @@ export const useGridRowGroupingPreProcessors = (
     },
     [apiRef],
   );
-
-  const getVisibleRows = React.useCallback<GridStrategyProcessor<'visibleRows'>>((params) => {
-    return {
-      lookup: getVisibleRowsLookup(params),
-    };
-  }, []);
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateGroupingColumn);
   useGridRegisterStrategyProcessor(
