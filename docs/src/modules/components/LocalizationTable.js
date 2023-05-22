@@ -106,7 +106,7 @@ const ProgressBar = React.memo(function ProgressBar(props) {
         }
       />
       <Bar className="progress-bar" style={{ right: `${100 - valueInPercent}%` }} />
-      <Value>{numerator === denumerator ? 'Done!🎉' : `${numerator}/${denumerator}`}</Value>
+      <Value>{numerator === denumerator ? 'Done! 🎉' : `${numerator}/${denumerator}`}</Value>
     </Root>
   );
 });
