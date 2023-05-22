@@ -86,7 +86,7 @@ export const StackOffset: {
 /**
  * Takes a set of series and groups their ids
  * @param series the object of all bars series
- * @returns an array groups, including the ids, the stacking order and stacking offset.
+ * @returns an array of groups, including the ids, the stacking order, and the stacking offset.
  */
 export const getStackingGroups = (params: FormatterParams) => {
   const { series, seriesOrder } = params;

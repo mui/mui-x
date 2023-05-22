@@ -9,8 +9,8 @@ title: Charts - Stacking
 
 ## Basics
 
-Bar and line charts allow staking series.
-To stack series together, you need to pass them a `stack` attributes.
+Bar and line charts allow stacking series.
+To stack series together, you need to pass them a `stack` attribute.
 Series with the same `stack` value will get stacked together.
 
 {{"demo": "BasicStacking.js"}}
@@ -19,27 +19,28 @@ Series with the same `stack` value will get stacked together.
 
 Based on D3 [stack orders](https://github.com/d3/d3-shape#stack-orders) and [stack offsets](https://github.com/d3/d3-shape#stack-offsets) you can modify how series are stacked.
 
-To pass those attributes, use series properties `stackOffset` (default `'diverging'`) and `stackOrder` (default `'none'`) which accept a string.
+To pass those attributes, use series properties `stackOffset` (default `'diverging'`) and `stackOrder` (default `'none'`).
 You can define them for only one of the series of a stack group.
 
 ### Stack offset
 
 If you just want to stack values, the `stackOffset` set to `'none'` should do the job.
-However, with negative values, you should use `'diverging'`.
-Otherwise, stacked rectangle will overlap.
 
-To show relative evolution instead of absolute values, you can use `'expand'`.
+However, with negative values, you should use `'diverging'`.
+Otherwise, the stacked rectangle will overlap.
+
+To show series evolution relative to other stacked series (instead of their absolute values), you can use `'expand'`.
 
 | value         | description                                               |
 | :------------ | :-------------------------------------------------------- |
 | `'none'`      | Set baseline at 0 and stack data on top of each other.    |
-| `'expand'`    | Set baseline at zero and scale data to en up at 1.        |
+| `'expand'`    | Set baseline at zero and scale data to end up at 1.       |
 | `'diverging'` | Stack positive value above zero and negative value below. |
 
-The next demonstration allows to test the different `stackOffset` values.
+The next demonstration allows testing the different `stackOffset` values.
 
-To see how they interact with dataset containing negative values, you can toggle "data has negative values".
-When turned on, the series will be such that
+To see how they interact with a dataset containing negative values, you can toggle "data has negative values" switch.
+When turned on, the series will have the following composition:
 
 - series A has only positive values.
 - series B has one negative value.
@@ -50,20 +51,20 @@ When turned on, the series will be such that
 ### Stack order
 
 The order of stacked data matters for the reading of charts.
-The evolution of the series ate the bottom is the easiest to read since its baseline is 0.
+The evolution of the series at the bottom is the easiest to read since its baseline is 0.
 
-If you know the data to display, you can use `'none'` which respect the order you defined series.
-Otherwise, if might be interesting to order them according to their properties.
+If you know the data you are displaying, you can use `'none'` which respects the order you defined the series in.
+Otherwise, it might be interesting to order them according to their properties.
 
-With `'appearance'` you take into consideration the position of series maximal value.
+With `'appearance'` you take into consideration the position of the maximal series value.
 
 With `'ascending'` and `'descending'` you take into consideration, the sum of values.
-Which correspond the the area taken by the series on the chart.
+Which corresponds to the area taken by the series on the chart.
 
-| value          | description                                                                                                                              |
-| :------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
-| `'none'`       | Respect the order series are provided                                                                                                    |
-| `'reverse'`    | Reverse the order series are provided                                                                                                    |
-| `'appearance'` | Sort series by ascending order according to the index of their maximal value. The series with the earlies maximum will be at the bottom. |
-| `'ascending'`  | Sort series by ascending order according to the sum of their values. Series taking the smallest surface is at the bottom                 |
-| `'descending'` | Sort series by descending order according to the sum of their values. Series taking the largest surface is at the bottom                 |
+| value          | description                                                                                                                               |
+| :------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| `'none'`       | Respect the order the series are provided in.                                                                                             |
+| `'reverse'`    | Reverse the order the series are provided in.                                                                                             |
+| `'appearance'` | Sort series by ascending order according to the index of their maximal value. The series with the earliest maximum will be at the bottom. |
+| `'ascending'`  | Sort series by ascending order according to the sum of their values. Series taking the smallest surface will be at the bottom             |
+| `'descending'` | Sort series by descending order according to the sum of their values. Series taking the largest surface will be at the bottom             |

@@ -13,7 +13,7 @@ title: Charts - Lines
 
 To plot lines, a series must have a `data` property containing an array of numbers.
 This `data` array corresponds to y values.
-To modify x value, you should provide a `xAxis` with data properties.
+To modify the x value, you should provide a `xAxis` with data properties.
 
 {{"demo": "BasicLineChart.js", "bg": "inline"}}
 
@@ -32,9 +32,9 @@ Series with the same `stack` will be stacked on top of each other.
 
 ### Stacking strategy
 
-You can use `stackOffset` and `stackOrder` properties to define how series will be staked.
+You can use the `stackOffset` and `stackOrder` properties to define how the series will be stacked.
 
-By default they are staked in the order you defined them, with positive values stacked on above 0 and negative values stacked below 0.
+By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 

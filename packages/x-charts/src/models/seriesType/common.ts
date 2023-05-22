@@ -1,4 +1,4 @@
-import type { StackOffset, StackOrder } from '@mui/x-charts/internals/stackSeries';
+import type { StackOffset, StackOrder } from '../../internals/stackSeries';
 
 export type CommonSeriesType = {
   id?: string;
