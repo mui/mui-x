@@ -26,15 +26,21 @@ describe('<DataGrid />', () => {
     ],
   };
 
-  it('should accept data attributes props', () => {
+  it('should accept aria & data attributes props', () => {
+    const gridRef = React.createRef<HTMLDivElement>();
     render(
       <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} columns={[{ field: 'brand' }]} data-custom-id="grid-1" />
+        <DataGrid
+          {...baselineProps}
+          ref={gridRef}
+          columns={[{ field: 'brand' }]}
+          data-custom-id="grid-1"
+          aria-description="Grid one"
+        />
       </div>,
     );
 
-    const grid = document.querySelector('[data-custom-id="grid-1"]');
-
-    expect(grid).not.to.equal(null);
+    expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(gridRef.current);
+    expect(document.querySelector('[aria-description="Grid one"]')).to.equal(gridRef.current);
   });
 });
