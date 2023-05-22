@@ -43,16 +43,12 @@ const DateField = React.forwardRef(function DateField<TDate>(
     onPaste,
     inputMode,
     readOnly,
-    handleClearValue,
-    value,
     clearable,
     ...fieldProps
   } = useDateField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
-
-  console.log(value, fieldProps);
 
   return (
     <TextField
@@ -61,8 +57,13 @@ const DateField = React.forwardRef(function DateField<TDate>(
       InputProps={{
         ...fieldProps.InputProps,
         readOnly,
-        endAdornment: value && (
-          <IconButton className="deleteIcon" onClick={handleClearValue}>
+        endAdornment: clearable && (
+          <IconButton
+            className="deleteIcon"
+            onClick={() => {
+              console.log('wtf');
+            }}
+          >
             <ClearIcon />
           </IconButton>
         ),

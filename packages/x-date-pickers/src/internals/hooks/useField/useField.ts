@@ -54,6 +54,7 @@ export const useField = <
       onMouseUp,
       onPaste,
       error,
+      clearable: forwardedClearable,
       ...otherForwardedProps
     },
     fieldValueManager,
@@ -72,6 +73,8 @@ export const useField = <
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
+
+  let clearable = forwardedClearable;
 
   const sectionOrder = React.useMemo(
     () => getSectionOrder(state.sections, isRTL),
@@ -358,10 +361,6 @@ export const useField = <
     }
   });
 
-  const handleClearValue = React.useCallback(() => {
-    console.log('hei there clearing');
-  });
-
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
       if (inputRef.current!.scrollLeft) {
@@ -451,8 +450,8 @@ export const useField = <
   }, [selectedSectionIndexes, state.sections]);
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
-  const shouldShowPlaceholder =
-    !inputHasFocus && valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
+  const areSectionsEmpty = valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
+  const shouldShowPlaceholder = !inputHasFocus && areSectionsEmpty;
 
   React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,
@@ -474,6 +473,14 @@ export const useField = <
     setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
   }));
 
+  const handleClearValue = React.useCallback(() => {
+    console.log('hei there clearing');
+  });
+
+  React.useEffect(() => {
+    console.log(areSectionsEmpty, state.value);
+  }, [areSectionsEmpty]);
+
   return {
     placeholder,
     autoComplete: 'off',
@@ -491,5 +498,6 @@ export const useField = <
     error: inputError,
     ref: handleRef,
     handleClearValue,
+    clearable: Boolean(forwardedClearable && inputHasFocus && !areSectionsEmpty),
   };
 };

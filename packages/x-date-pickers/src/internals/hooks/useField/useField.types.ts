@@ -136,6 +136,7 @@ export interface UseFieldForwardedProps {
   onFocus?: () => void;
   onBlur?: () => void;
   error?: boolean;
+  clearable: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
