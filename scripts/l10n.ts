@@ -87,9 +87,10 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
             ) {
               return;
             }
-            const key =
-              (property.key as babelTypes.Identifier).name ||
-              `'${(property.key as babelTypes.StringLiteral).value}'`;
+            // The stringLiteral keys are wrapped into `'` such that we can distinguish them from identifiers.
+            const key = babelTypes.isIdentifier(property.key)
+              ? (property.key as babelTypes.Identifier).name
+              : `'${(property.key as babelTypes.StringLiteral).value}'`;
             existingTranslations[key] = property.value;
           });
         },
