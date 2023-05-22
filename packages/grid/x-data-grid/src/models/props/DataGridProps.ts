@@ -678,14 +678,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
   /**
-   * The label of the grid.
-   */
-  'aria-label'?: string;
-  /**
-   * The id of the element containing a label for the grid.
-   */
-  'aria-labelledby'?: string;
-  /**
    * Set of columns of type [[GridColDef[]]].
    */
   columns: GridColDef<R>[];

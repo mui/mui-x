@@ -16,7 +16,10 @@ function groupDataProps<
 >(props: T): T {
   const keys = Object.keys(props);
 
-  if (!keys.some((key) => key.startsWith('data-'))) {
+  if (
+    !keys.some((key) => key.startsWith('aria-')) &&
+    !keys.some((key) => key.startsWith('data-'))
+  ) {
     return props;
   }
 
@@ -26,7 +29,7 @@ function groupDataProps<
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
 
-    if (key.startsWith('data-')) {
+    if (key.startsWith('aria-') || key.startsWith('data-')) {
       dataProps[key] = props[key];
     } else {
       newProps[key] = props[key];

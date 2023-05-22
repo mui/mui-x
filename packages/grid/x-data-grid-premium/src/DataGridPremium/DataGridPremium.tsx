@@ -90,14 +90,6 @@ DataGridPremiumRaw.propTypes = {
     current: PropTypes.object.isRequired,
   }),
   /**
-   * The label of the grid.
-   */
-  'aria-label': PropTypes.string,
-  /**
-   * The id of the element containing a label for the grid.
-   */
-  'aria-labelledby': PropTypes.string,
-  /**
    * If `true`, the grid height is dynamic and follow the number of rows in the grid.
    * @default false
    */
