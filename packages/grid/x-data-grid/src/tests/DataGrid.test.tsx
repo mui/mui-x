@@ -35,12 +35,12 @@ describe('<DataGrid />', () => {
           ref={gridRef}
           columns={[{ field: 'brand' }]}
           data-custom-id="grid-1"
-          aria-description="Grid one"
+          aria-label="Grid one"
         />
       </div>,
     );
 
     expect(document.querySelector('[data-custom-id="grid-1"]')).to.equal(gridRef.current);
-    expect(document.querySelector('[aria-description="Grid one"]')).to.equal(gridRef.current);
+    expect(document.querySelector('[aria-label="Grid one"]')).to.equal(gridRef.current);
   });
 });
