@@ -1,7 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
+import { SelectChangeEvent } from '@mui/material/Select';
 import { unstable_useId as useId } from '@mui/utils';
+import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
@@ -40,9 +42,22 @@ const renderSingleSelectOptions = ({
   });
 };
 
+const SingleSelectOperatorContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'flex-end',
+  width: '100%',
+});
+
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps &
   Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
+    headerFilterMenu?: React.ReactNode | null;
+    clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (e.g. `isEmpty`)
+     */
+    isFilterActive?: boolean;
     type?: 'singleSelect';
   };
 
@@ -55,6 +70,12 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     focusElementRef,
     getOptionLabel: getOptionLabelProp,
     getOptionValue: getOptionValueProp,
+    placeholder,
+    tabIndex,
+    label: labelProp,
+    headerFilterMenu,
+    isFilterActive,
+    clearButton,
     ...others
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
@@ -85,7 +106,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   }, [resolvedColumn]);
 
   const onFilterChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (event: SelectChangeEvent) => {
       let value = event.target.value;
 
       // NativeSelect casts the value to a string.
@@ -124,44 +145,49 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     return null;
   }
 
-  const label = apiRef.current.getLocaleText('filterPanelInputLabel');
+  const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <React.Fragment>
-      <rootProps.slots.baseInputLabel
-        {...rootProps.slotProps?.baseInputLabel}
-        id={labelId}
-        shrink
-        variant="standard"
-      >
-        {label}
-      </rootProps.slots.baseInputLabel>
-      <rootProps.slots.baseSelect
-        id={id}
-        label={label}
-        labelId={labelId}
-        value={filterValueState}
-        onChange={onFilterChange}
-        variant="standard"
-        type={type || 'text'}
-        inputProps={{
-          ref: focusElementRef,
-          placeholder: apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
-        }}
-        native={isSelectNative}
-        {...others}
-        {...rootProps.slotProps?.baseSelect}
-      >
-        {renderSingleSelectOptions({
-          column: resolvedColumn,
-          OptionComponent: rootProps.slots.baseSelectOption,
-          getOptionLabel,
-          getOptionValue,
-          isSelectNative,
-          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
-        })}
-      </rootProps.slots.baseSelect>
-    </React.Fragment>
+    <SingleSelectOperatorContainer>
+      <rootProps.slots.baseFormControl>
+        <rootProps.slots.baseInputLabel
+          {...rootProps.slotProps?.baseInputLabel}
+          id={labelId}
+          shrink
+          variant="standard"
+        >
+          {label}
+        </rootProps.slots.baseInputLabel>
+        <rootProps.slots.baseSelect
+          id={id}
+          label={label}
+          labelId={labelId}
+          value={filterValueState}
+          onChange={onFilterChange}
+          startAdornment={isFilterActive ? headerFilterMenu : null}
+          variant="standard"
+          type={type || 'text'}
+          inputProps={{
+            tabIndex,
+            ref: focusElementRef,
+            placeholder: placeholder ?? apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+          }}
+          native={isSelectNative}
+          {...others}
+          {...rootProps.slotProps?.baseSelect}
+        >
+          {renderSingleSelectOptions({
+            column: resolvedColumn,
+            OptionComponent: rootProps.slots.baseSelectOption,
+            getOptionLabel,
+            getOptionValue,
+            isSelectNative,
+            baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+          })}
+        </rootProps.slots.baseSelect>
+      </rootProps.slots.baseFormControl>
+      {clearButton}
+    </SingleSelectOperatorContainer>
   );
 }
 
@@ -174,6 +200,7 @@ GridFilterInputSingleSelect.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  clearButton: PropTypes.node,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
@@ -190,6 +217,12 @@ GridFilterInputSingleSelect.propTypes = {
    * @returns {string} The value to be used.
    */
   getOptionValue: PropTypes.func,
+  headerFilterMenu: PropTypes.node,
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (e.g. `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

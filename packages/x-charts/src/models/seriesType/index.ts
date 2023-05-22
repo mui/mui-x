@@ -13,13 +13,13 @@ type DefaultizedCartesianSeriesType =
   | DefaultizedLineSeriesType
   | DefaultizedScatterSeriesType;
 // | PieSeriesType
-type StackableSeriesType = BarSeriesType | LineSeriesType;
+type StackableSeriesType = DefaultizedBarSeriesType | DefaultizedLineSeriesType;
 
+export * from './line';
+export * from './bar';
+export * from './scatter';
 export type {
-  BarSeriesType,
-  LineSeriesType,
   // PieSeriesType,
-  ScatterSeriesType,
   AllSeriesType,
   CartesianSeriesType,
   DefaultizedCartesianSeriesType,

@@ -2,13 +2,24 @@ import * as React from 'react';
 import { ScatterPlot } from './ScatterPlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis';
+import { ScatterSeriesType } from '../models/seriesType/scatter';
+import { MakeOptional } from '../models/helpers';
+import { Tooltip, TooltipProps } from '../Tooltip';
+import { Highlight, HighlightProps } from '../Highlight';
 
-export interface ScatterChartProps extends ChartContainerProps, AxisProps {}
+export interface ScatterChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+  series: MakeOptional<ScatterSeriesType, 'type'>[];
+  tooltip?: TooltipProps;
+  highlight?: HighlightProps;
+}
+
 export function ScatterChart(props: ScatterChartProps) {
   const {
     xAxis,
     yAxis,
     series,
+    tooltip,
+    highlight,
     width,
     height,
     margin,
@@ -23,7 +34,7 @@ export function ScatterChart(props: ScatterChartProps) {
 
   return (
     <ChartContainer
-      series={series}
+      series={series.map((s) => ({ type: 'scatter', ...s }))}
       width={width}
       height={height}
       margin={margin}
@@ -31,10 +42,11 @@ export function ScatterChart(props: ScatterChartProps) {
       xAxis={xAxis}
       yAxis={yAxis}
       sx={sx}
-      tooltip={{ trigger: 'item' }}
     >
-      <ScatterPlot />
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <ScatterPlot />
+      <Highlight x="none" y="none" {...highlight} />
+      <Tooltip trigger="item" {...tooltip} />
       {children}
     </ChartContainer>
   );

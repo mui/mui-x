@@ -70,7 +70,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Видалити всі',
   filterPanelDeleteIconLabel: 'Видалити',
   filterPanelLogicOperator: 'Логічна функція',
   filterPanelOperator: 'Оператори',
@@ -94,6 +94,33 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'порожній',
   filterOperatorIsNotEmpty: 'не порожній',
   filterOperatorIsAnyOf: 'будь-що із',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Is greater than',
+  // 'headerFilterOperator>=': 'Is greater than or equal to',
+  // 'headerFilterOperator<': 'Is less than',
+  // 'headerFilterOperator<=': 'Is less than or equal to',
 
   // Filter values text
   filterValueAny: 'будь-який',
@@ -103,7 +130,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Керування стовпцями',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Приховати',
   columnMenuUnsort: 'Скасувати сортування',
@@ -174,11 +201,11 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Агрегація',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationFunctionLabelSum: 'сума',
+  aggregationFunctionLabelAvg: 'сер',
+  aggregationFunctionLabelMin: 'мін',
+  aggregationFunctionLabelMax: 'макс',
+  aggregationFunctionLabelSize: 'кількість',
 };
 
 export const ukUA: Localization = getGridLocalization(ukUAGrid, ukUACore);
