@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { teal } from '@mui/material/colors';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { DataGridPro, GridRow, GridColumnHeaders } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -11,13 +10,17 @@ const TraceUpdates = React.forwardRef((props, ref) => {
   const handleRef = useForkRef(rootRef, ref);
 
   React.useEffect(() => {
-    rootRef.current?.classList.add('updating');
+    const root = rootRef.current;
+    root.classList.add('updating');
+    root.classList.add('updated');
 
     const timer = setTimeout(() => {
-      rootRef.current?.classList.remove('updating');
-    }, 500);
+      root.classList.remove('updating');
+    }, 360);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   });
 
   return <Component ref={handleRef} {...other} />;
@@ -47,12 +50,18 @@ export default function GridWithReactMemo() {
       sx={{
         height: 400,
         width: '100%',
-        '&&& .updating': (theme) => ({
-          background: teal[theme.palette.mode === 'dark' ? 900 : 100],
-          transition: theme.transitions.create('background', {
-            duration: theme.transitions.duration.standard,
-          }),
-        }),
+        '&&& .updated': {
+          transition: (theme) =>
+            theme.transitions.create(['background-color', 'outline'], {
+              duration: theme.transitions.duration.standard,
+            }),
+        },
+        '&&& .updating': {
+          backgroundColor: 'rgb(92 199 68 / 25%)',
+          outline: '1px solid rgb(92 199 68 / 35%)',
+          outlineOffset: '-1px',
+          transition: 'none',
+        },
       }}
     >
       <DataGridPro

@@ -14,6 +14,7 @@ import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
 import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
+import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -189,11 +190,87 @@ function AppWrapper(props) {
     ];
   }
 
+  const { canonicalAs } = pathnameToLanguage(router.asPath);
+
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
 
-    return { activePage, activePageParents, pages };
-  }, [router.pathname]);
+    const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
+
+    let productIdentifier = {
+      name: 'Advanced components',
+      metadata: 'MUI X',
+    };
+
+    if (
+      canonicalAs.startsWith('/x/react-data-grid/') ||
+      canonicalAs.startsWith('/x/api/data-grid/')
+    ) {
+      productIdentifier = {
+        name: 'Data Grid',
+        metadata: 'MUI X',
+        versions: [
+          {
+            text: 'v6',
+            ...(process.env.DATA_GRID_VERSION.startsWith('6')
+              ? {
+                  text: `v${process.env.DATA_GRID_VERSION}`,
+                  current: true,
+                }
+              : {
+                  href: `https://mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+          {
+            text: 'v5',
+            ...(process.env.DATA_GRID_VERSION.startsWith('5')
+              ? {
+                  text: `v${process.env.DATA_GRID_VERSION}`,
+                  current: true,
+                }
+              : {
+                  href: `https://v5.mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+          { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+        ],
+      };
+    } else if (
+      canonicalAs.startsWith('/x/react-date-pickers/') ||
+      canonicalAs.startsWith('/x/api/date-pickers/')
+    ) {
+      productIdentifier = {
+        name: 'Date pickers',
+        metadata: 'MUI X',
+        versions: [
+          {
+            ...(process.env.DATE_PICKERS_VERSION.startsWith('6')
+              ? {
+                  text: `v${process.env.DATE_PICKERS_VERSION}`,
+                  current: true,
+                }
+              : {
+                  text: `v6`,
+                  href: `https://next.mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+          {
+            ...(process.env.DATE_PICKERS_VERSION.startsWith('5')
+              ? {
+                  text: `v${process.env.DATE_PICKERS_VERSION}`,
+                  current: true,
+                }
+              : {
+                  text: `v5`,
+                  href: `https://v5.mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+        ],
+      };
+    }
+
+    return { activePage, activePageParents, pages, productIdentifier };
+  }, [canonicalAs, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
