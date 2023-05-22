@@ -64,7 +64,22 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-data-grid/editing' },
       { pathname: '/x/react-data-grid/sorting' },
-      { pathname: '/x/react-data-grid/filtering' },
+      {
+        pathname: '/x/react-data-grid/filtering',
+        title: 'Filtering',
+        children: [
+          { pathname: '/x/react-data-grid/filtering/overview' },
+          { pathname: '/x/react-data-grid/filtering/customization' },
+          { pathname: '/x/react-data-grid/filtering/quick-filter' },
+          { pathname: '/x/react-data-grid/filtering/server-side', title: 'Server-side filter' },
+          { pathname: '/x/react-data-grid/filtering/multi-filters', plan: 'pro' },
+          {
+            pathname: '/x/react-data-grid/filtering/header-filters',
+            plan: 'pro',
+            newFeature: true,
+          },
+        ],
+      },
       { pathname: '/x/react-data-grid/pagination' },
       {
         pathname: '/x/react-data-grid/selection',
