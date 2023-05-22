@@ -7,10 +7,10 @@ interface WithComponents {
   componentsProps?: GridSlotsComponentsProps;
 }
 
-/** Gathers data attributes props into a single `.dataProps` field */
-function groupDataProps<
+/** Gathers data attributes props into a single `.forwardedProps` field */
+function groupForwardedProps<
   T extends {
-    dataProps?: Record<string, any>;
+    forwardedProps?: Record<string, any>;
     [key: string]: any;
   },
 >(props: T): T {
@@ -24,19 +24,19 @@ function groupDataProps<
   }
 
   const newProps = {} as Record<string, unknown>;
-  const dataProps: Record<string, unknown> = props.dataProps ?? {};
+  const forwardedProps: Record<string, unknown> = props.forwardedProps ?? {};
 
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
 
     if (key.startsWith('aria-') || key.startsWith('data-')) {
-      dataProps[key] = props[key];
+      forwardedProps[key] = props[key];
     } else {
       newProps[key] = props[key];
     }
   }
 
-  newProps.dataProps = dataProps;
+  newProps.forwardedProps = forwardedProps;
 
   return newProps as T;
 }
@@ -44,6 +44,6 @@ function groupDataProps<
 export function useProps<T extends WithComponents>(allProps: T) {
   return React.useMemo(() => {
     const { components, componentsProps, ...themedProps } = allProps;
-    return [components, componentsProps, groupDataProps(themedProps)] as const;
+    return [components, componentsProps, groupForwardedProps(themedProps)] as const;
   }, [allProps]);
 }

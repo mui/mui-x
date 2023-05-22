@@ -164,11 +164,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   columnThreshold: number;
   /**
-   * Data attributes for the grid root element.
-   * @ignore - do not document.
-   */
-  dataProps?: Record<string, unknown>;
-  /**
    * Set the density of the grid.
    * @default "standard"
    */
@@ -229,6 +224,11 @@ export interface DataGridPropsWithDefaultValues {
    * @default "client"
    */
   filterMode: GridFeatureMode;
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
   /**
    * Sets the height in pixel of the column headers in the grid.
    * @default 56

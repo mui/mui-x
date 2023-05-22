@@ -23,7 +23,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         style={props.style}
         sx={props.sx}
         ref={ref}
-        {...props.dataProps}
+        {...props.forwardedProps}
       >
         <GridHeader />
         <GridBody VirtualScrollerComponent={DataGridVirtualScroller} />

@@ -37,7 +37,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
         style={props.style}
         sx={props.sx}
         ref={ref}
-        {...props.dataProps}
+        {...props.forwardedProps}
       >
         <GridHeader />
         <GridBody
