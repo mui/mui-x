@@ -7,7 +7,7 @@ interface WithComponents {
   componentsProps?: GridSlotsComponentsProps;
 }
 
-/** Gathers data attributes props into a single `.forwardedProps` field */
+/** Gathers props for the root element into a single `.forwardedProps` field */
 function groupForwardedProps<
   T extends {
     forwardedProps?: Record<string, any>;
