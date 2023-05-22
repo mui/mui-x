@@ -60,9 +60,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
         };
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
   // add "accept" action only when the new date time view renderers are used
-  const actionBarActions: PickersActionBarAction[] = defaultizedProps.viewRenderers
-    ? []
-    : ['accept'];
+  const actionBarActions: PickersActionBarAction[] = shouldUseNewRenderer ? ['accept'] : [];
 
   // Props with the default values specific to the desktop variant
   const props = {
