@@ -358,6 +358,10 @@ export const useField = <
     }
   });
 
+  const handleClearValue = React.useCallback(() => {
+    console.log('hei there clearing');
+  });
+
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
       if (inputRef.current!.scrollLeft) {
@@ -486,5 +490,6 @@ export const useField = <
     onMouseUp: handleInputMouseUp,
     error: inputError,
     ref: handleRef,
+    handleClearValue,
   };
 };

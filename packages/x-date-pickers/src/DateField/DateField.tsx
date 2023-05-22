@@ -2,9 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useSlotProps } from '@mui/base/utils';
 import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
+import { IconButton } from '@mui/material';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -41,17 +43,30 @@ const DateField = React.forwardRef(function DateField<TDate>(
     onPaste,
     inputMode,
     readOnly,
+    handleClearValue,
+    value,
+    clearable,
     ...fieldProps
   } = useDateField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  console.log(value, fieldProps);
+
   return (
     <TextField
       ref={ref}
       {...fieldProps}
-      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      InputProps={{
+        ...fieldProps.InputProps,
+        readOnly,
+        endAdornment: value && (
+          <IconButton className="deleteIcon" onClick={handleClearValue}>
+            <ClearIcon />
+          </IconButton>
+        ),
+      }}
       inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
     />
   );
