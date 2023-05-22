@@ -205,7 +205,8 @@ export const featuresSet: Row[] = [
   {
     id: 20,
     name: 'Header filters',
-    description: 'Quickly accessible and customizable header filters to filter the data',
+    description:
+      'Quickly accessible and customizable header filters to filter the data',
     plan: 'Pro',
     detailPage: '/filtering/#header-filters',
     demo: <HeaderFiltering />,
