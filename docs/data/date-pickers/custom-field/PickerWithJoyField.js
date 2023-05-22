@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
 import {
   useTheme as useMaterialTheme,
@@ -170,18 +169,6 @@ function JoyDateField(props) {
   return <JoyField {...response} />;
 }
 
-JoyDateField.propTypes = {
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.object])
-        .isRequired,
-    }),
-  ]),
-  slotProps: PropTypes.object,
-  slots: PropTypes.object,
-};
-
 function JoyDatePicker(props) {
   return (
     <DatePicker
@@ -202,15 +189,6 @@ function JoyDatePicker(props) {
  * This component is for syncing the MUI docs's mode with this demo.
  * You might not need this component in your project.
  */
-
-JoyDatePicker.propTypes = {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.any,
-};
-
 function SyncThemeMode({ mode }) {
   const { setMode } = useColorScheme();
   const { setMode: setMaterialMode } = useMaterialColorScheme();

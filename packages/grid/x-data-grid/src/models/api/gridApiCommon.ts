@@ -1,7 +1,6 @@
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
 import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
-import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
 import { GridEditingApi, GridEditingPrivateApi } from './gridEditingApi';
@@ -34,6 +33,7 @@ import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
+import { GridHeaderFilteringApi, GridHeaderFilteringPrivateApi } from './gridHeaderFilteringApi';
 
 export interface GridApiCommon<
   GridState extends GridStateCommunity = any,
@@ -58,12 +58,12 @@ export interface GridApiCommon<
     GridPrintExportApi,
     GridDisableVirtualizationApi,
     GridLocaleTextApi,
-    GridClipboardApi,
     GridScrollApi,
     GridColumnSpanningApi,
     GridStateApi<GridState>,
     GridStatePersistenceApi<GridInitialState>,
-    GridColumnGroupingApi {}
+    GridColumnGroupingApi,
+    GridHeaderFilteringApi {}
 
 export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,
@@ -78,7 +78,8 @@ export interface GridPrivateOnlyApiCommon<
     GridVirtualScrollerApi,
     GridEditingPrivateApi,
     GridLoggerApi,
-    GridFocusPrivateApi {}
+    GridFocusPrivateApi,
+    GridHeaderFilteringPrivateApi {}
 
 export interface GridPrivateApiCommon
   extends GridApiCommon,

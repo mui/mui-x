@@ -22,10 +22,11 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePickerDefaultizedProps<TDate, MobileTimePickerProps<TDate>>(
-    inProps,
-    'MuiMobileTimePicker',
-  );
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeView,
+    MobileTimePickerProps<TDate>
+  >(inProps, 'MuiMobileTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
     hours: renderTimeViewClock,
@@ -50,7 +51,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        ampm: defaultizedProps.ampm,
       }),
       toolbar: {
         hidden: false,

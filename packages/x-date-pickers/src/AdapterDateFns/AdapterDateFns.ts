@@ -21,7 +21,6 @@ import endOfWeek from 'date-fns/endOfWeek';
 import endOfYear from 'date-fns/endOfYear';
 import dateFnsFormat from 'date-fns/format';
 import getDate from 'date-fns/getDate';
-import getDay from 'date-fns/getDay';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
 import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
@@ -55,14 +54,15 @@ import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 type DateFnsLocale = typeof defaultLocale;
-
-interface AdapterDateFnsOptions {
-  locale?: DateFnsLocale;
-  formats?: Partial<AdapterFormats>;
-}
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -184,7 +184,7 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFns implements MuiPickersAdapter<Date> {
+export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
   public isMUIAdapter = true;
 
   public lib = 'date-fns';
@@ -197,7 +197,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  constructor({ locale, formats }: AdapterDateFnsOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
@@ -267,7 +267,6 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
       .join('');
   };
 
-  // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format)
       .replace(/(aaa|aa|a)/g, '(a|p)m')
@@ -527,18 +526,16 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
-    let lastDay: number | null = null;
+
     while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      const day = getDay(current);
-      if (lastDay !== day) {
-        lastDay = day;
-        nestedWeeks[weekNumber].push(current);
-        count += 1;
-      }
+      nestedWeeks[weekNumber].push(current);
+
       current = addDays(current, 1);
+      count += 1;
     }
+
     return nestedWeeks;
   };
 

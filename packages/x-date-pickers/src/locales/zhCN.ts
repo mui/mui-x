@@ -1,10 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: '小时',
   minutes: '分钟',
   seconds: '秒',
+  meridiem: '子午线',
 };
 
 const zhCNPickers: Partial<PickersLocaleText<any>> = {
@@ -36,12 +38,15 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${views[view]}. ${
+    `选择 ${views[view]}. ${
       time === null ? '未选择时间' : `已选择${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
+
+  // Digital clock labels
+  selectViewText: (view) => `选择 ${views[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: '周数',

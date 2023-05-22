@@ -7,6 +7,7 @@ import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
+  DateTimeValidationProps,
   DayValidationProps,
   MonthValidationProps,
   TimeValidationProps,
@@ -30,25 +31,18 @@ export interface UseDateTimeFieldProps<TDate>
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
     TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
+    BaseTimeValidationProps,
+    DateTimeValidationProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
-  /**
-   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
-   */
-  minDateTime?: TDate;
-  /**
-   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
-   */
-  maxDateTime?: TDate;
 }
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps | 'format'
+  keyof BaseDateValidationProps<any> | keyof BaseTimeValidationProps | 'format'
 >;
 
 export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<

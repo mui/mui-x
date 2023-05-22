@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DateOrTimeView } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
-export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeView>
+export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends DateRangeCalendarProps<TDate> {
   view: TView;
   onViewChange?: (view: TView) => void;
@@ -31,6 +31,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   defaultRangePosition,
   onRangePositionChange,
   calendars,
+  currentMonthCalendarPosition,
   components,
   componentsProps,
   slots,
@@ -67,6 +68,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}
     calendars={calendars}
+    currentMonthCalendarPosition={currentMonthCalendarPosition}
     components={components}
     componentsProps={componentsProps}
     slots={slots}

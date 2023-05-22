@@ -15,31 +15,16 @@ import de from 'date-fns/locale/de';
 import ru from 'date-fns/locale/ru';
 import {
   describeGregorianAdapter,
-  TEST_DATE_ISO,
+  TEST_DATE_ISO_STRING,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
-const testDate = new Date(2018, 4, 15, 9, 35);
-const localizedTexts = {
-  undefined: {
-    placeholder: 'MM/DD/YYYY hh:mm aa',
-    value: '05/15/2018 09:35 AM',
-  },
-  fr: {
-    placeholder: 'DD/MM/YYYY hh:mm',
-    value: '15/05/2018 09:35',
-  },
-  de: {
-    placeholder: 'DD.MM.YYYY hh:mm',
-    value: '15.05.2018 09:35',
-  },
-};
 describe('<AdapterDateFns />', () => {
-  describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss', locale: enUS });
+  describeGregorianAdapter(AdapterDateFns, { formatDateTime: 'yyyy-MM-dd HH:mm:ss' });
 
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterDateFns({ locale: enUS });
-      const date = adapter.date(TEST_DATE_ISO)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('getWeekdays: should start on Sunday', () => {
         const result = adapter.getWeekdays();
@@ -65,7 +50,7 @@ describe('<AdapterDateFns />', () => {
       });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING)!;
         const result = adapter.getWeekArray(date);
         expect(adapter.formatByString(result[0][0], 'EEEEEE')).to.equal('пн');
       });
@@ -111,6 +96,22 @@ describe('<AdapterDateFns />', () => {
   });
 
   describe('Picker localization', () => {
+    const testDate = new Date(2018, 4, 15, 9, 35);
+    const localizedTexts = {
+      undefined: {
+        placeholder: 'MM/DD/YYYY hh:mm aa',
+        value: '05/15/2018 09:35 AM',
+      },
+      fr: {
+        placeholder: 'DD/MM/YYYY hh:mm',
+        value: '15/05/2018 09:35',
+      },
+      de: {
+        placeholder: 'DD.MM.YYYY hh:mm',
+        value: '15.05.2018 09:35',
+      },
+    };
+
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
       const localeObject = localeKey === 'undefined' ? undefined : { fr, de }[localeKey];
@@ -137,14 +138,6 @@ describe('<AdapterDateFns />', () => {
           expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value);
         });
       });
-    });
-
-    it('should return the correct week number', () => {
-      const adapter = new AdapterDateFns({ locale: fr });
-
-      const dateToTest = adapter.date(new Date(2022, 10, 10))!;
-
-      expect(adapter.getWeekNumber!(dateToTest)).to.equal(45);
     });
   });
 });

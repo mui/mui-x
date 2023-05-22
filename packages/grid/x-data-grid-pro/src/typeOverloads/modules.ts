@@ -1,4 +1,4 @@
-import { GridRowId } from '@mui/x-data-grid';
+import { GridRowId, GridColumnHeaderParams, GridValidRowModel } from '@mui/x-data-grid';
 import type {
   GridRowScrollEndParams,
   GridRowOrderChangeParams,
@@ -10,6 +10,16 @@ import type {
 } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
+
+export interface GridColDefPro<R extends GridValidRowModel = any, V = any, F = V> {
+  /**
+   * Allows to render a component in the column header filter cell.
+   * @template R, V, F
+   * @param {GridColumnHeaderParams<R, V, F>} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
+   */
+  renderHeaderFilter?: (params: GridColumnHeaderParams<R, V, F>) => React.ReactNode;
+}
 
 export interface GridControlledStateEventLookupPro {
   /**
@@ -61,4 +71,6 @@ declare module '@mui/x-data-grid' {
 
 declare module '@mui/x-data-grid/internals' {
   interface GridApiCaches extends GridApiCachesPro {}
+
+  interface GridBaseColDef<R, V, F> extends GridColDefPro<R, V, F> {}
 }

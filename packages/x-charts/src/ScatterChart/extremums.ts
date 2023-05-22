@@ -14,10 +14,14 @@ const mergeMinMax = (
 };
 
 export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
-  const { series, axis } = params;
+  const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
-    .filter((seriesId) => series[seriesId].xAxisKey === axis.id)
+    .filter(
+      (seriesId) =>
+        series[seriesId].xAxisKey === axis.id ||
+        (series[seriesId].xAxisKey === undefined && isDefaultAxis),
+    )
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
         const seriesMinMax = series[seriesId].data.reduce(
@@ -34,10 +38,14 @@ export const getExtremumX: ExtremumGetter<'scatter'> = (params) => {
 };
 
 export const getExtremumY: ExtremumGetter<'scatter'> = (params) => {
-  const { series, axis } = params;
+  const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
-    .filter((seriesId) => series[seriesId].yAxisKey === axis.id)
+    .filter(
+      (seriesId) =>
+        series[seriesId].yAxisKey === axis.id ||
+        (series[seriesId].yAxisKey === undefined && isDefaultAxis),
+    )
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
         const seriesMinMax = series[seriesId].data.reduce(

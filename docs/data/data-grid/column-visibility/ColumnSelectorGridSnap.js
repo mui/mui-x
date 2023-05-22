@@ -22,7 +22,11 @@ export default function ColumnSelectorGridSnap() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid apiRef={apiRef} {...data} />
+      <DataGrid
+        apiRef={apiRef}
+        {...data}
+        slotProps={{ columnsPanel: { autoFocusSearchField: false } }}
+      />
     </div>
   );
 }

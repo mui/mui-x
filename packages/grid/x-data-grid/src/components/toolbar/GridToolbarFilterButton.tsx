@@ -93,7 +93,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
                 <li key={index}>
                   {`${lookup[item.field!].headerName || item.field}
                   ${getOperatorLabel(item)}
-                  ${item.value ? getFilterItemValue(item) : ''}`}
+                  ${
+                    // implicit check for null and undefined
+                    item.value != null ? getFilterItemValue(item) : ''
+                  }`}
                 </li>
               )),
             }))}

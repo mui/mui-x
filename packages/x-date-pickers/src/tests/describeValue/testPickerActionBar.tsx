@@ -7,16 +7,12 @@ import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
-  getOptions,
+  options,
 ) => {
-  const { componentFamily, render, values, emptyValue, setNewValue, variant, type } = getOptions();
+  const { componentFamily, render, renderWithProps, values, emptyValue, setNewValue, type } =
+    options;
 
   if (componentFamily !== 'picker') {
-    return;
-  }
-
-  // No view to test
-  if (variant === 'desktop' && type === 'time') {
     return;
   }
 
@@ -89,20 +85,18 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        render(
-          <ElementToTest
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            open
-            value={values[0]}
-            slotProps={{ actionBar: { actions: ['cancel'] } }}
-            closeOnSelect={false}
-          />,
-        );
+        const { selectSection } = renderWithProps({
+          onChange,
+          onAccept,
+          onClose,
+          open: true,
+          value: values[0],
+          slotProps: { actionBar: { actions: ['cancel'] } },
+          closeOnSelect: false,
+        });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true });
+        setNewValue(values[0], { isOpened: true, selectSection });
 
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
@@ -149,20 +143,18 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        render(
-          <ElementToTest
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            open
-            defaultValue={values[0]}
-            slotProps={{ actionBar: { actions: ['accept'] } }}
-            closeOnSelect={false}
-          />,
-        );
+        const { selectSection } = renderWithProps({
+          onChange,
+          onAccept,
+          onClose,
+          open: true,
+          defaultValue: values[0],
+          slotProps: { actionBar: { actions: ['accept'] } },
+          closeOnSelect: false,
+        });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true });
+        setNewValue(values[0], { isOpened: true, selectSection });
 
         // Accept the modifications
         userEvent.mousePress(screen.getByText(/ok/i));
