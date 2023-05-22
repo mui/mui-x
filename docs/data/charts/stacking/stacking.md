@@ -68,3 +68,14 @@ Which corresponds to the area taken by the series on the chart.
 | `'appearance'` | Sort series by ascending order according to the index of their maximal value. The series with the earliest maximum will be at the bottom. |
 | `'ascending'`  | Sort series by ascending order according to the sum of their values. Series taking the smallest surface will be at the bottom             |
 | `'descending'` | Sort series by descending order according to the sum of their values. Series taking the largest surface will be at the bottom             |
+
+To experiment with stack orders, here are statistics about the transport used to go to the office depending on the distance between home and office.
+
+With the `'appearance'` order, walking will be the first since its maximal percentage is for 0-1km. And the last one is common transportation because its maximum value is at the ">50km" distance.
+
+With the `'ascending'` order, stacking starts with bicycles and motorbikes since their values respectively sum to 41.7 and 55.4.
+Then arrives walking (with values sum to 94.1).
+And common transportation and cars which are visually more important.
+The `'descending'` order is the strict opposite.
+
+{{"demo": "StackOrderDemo.js"}}
