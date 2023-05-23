@@ -385,7 +385,12 @@ export const useField = <
     ) {
       // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
       const currentScrollTop = inputRef.current!.scrollTop;
-      inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      // On multi input range pickers we want to update selection range only for the active input
+      // This helps avoiding the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
+      // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
+      if (inputRef.current && inputRef.current === getActiveElement(document)) {
+        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      }
       // Even reading this variable seems to do the trick, but also setting it just to make use of it
       inputRef.current!.scrollTop = currentScrollTop;
     }
