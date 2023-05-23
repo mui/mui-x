@@ -2,7 +2,6 @@ import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation
 import { userEvent } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
-  buildFieldInteractions,
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
@@ -13,8 +12,6 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: TimeField });
 
   describeValidation(TimeField, () => ({
     render,
@@ -40,11 +37,10 @@ describe('<TimeField /> - Describes', () => {
         : '';
       expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value) => {
+    setNewValue: (value, { selectSection }) => {
       const newValue = adapterToUse.addHours(value, 1);
-
+      selectSection('hours');
       const input = getTextbox();
-      clickOnInput(input, 1); // Update the hour
       userEvent.keyPress(input, { key: 'ArrowUp' });
 
       return newValue;

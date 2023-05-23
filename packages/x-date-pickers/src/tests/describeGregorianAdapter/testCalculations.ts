@@ -35,7 +35,9 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({ adapter })
     });
 
     it('should parse undefined', () => {
-      expect(adapter.date(undefined)).toEqualDateTime(new Date());
+      expect(
+        Math.abs(adapter.toJsDate(adapter.date(undefined)!).getTime() - Date.now()),
+      ).to.be.lessThan(5);
     });
   });
 

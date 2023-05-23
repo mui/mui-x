@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -84,10 +83,6 @@ function DetailPanelContent({ row }) {
     </Stack>
   );
 }
-
-DetailPanelContent.propTypes = {
-  row: PropTypes.object.isRequired,
-};
 
 const columns = [
   { field: 'id', headerName: 'Order ID' },

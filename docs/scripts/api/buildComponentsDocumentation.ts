@@ -33,8 +33,9 @@ import {
   writePrettifiedFile,
 } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
+import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
-interface ReactApi extends ReactDocgenApi {
+export interface ReactApi extends ReactDocgenApi {
   /**
    * list of page pathnames
    * @example ['/components/Accordion']
@@ -545,6 +546,12 @@ Page.getInitialProps = () => {
 
   // eslint-disable-next-line no-console
   console.log('Built API docs for', reactApi.name);
+
+  return {
+    name: reactApi.name,
+    packages: reactApi.packages,
+    folder: project.documentationFolderName,
+  };
 };
 
 interface BuildComponentsDocumentationOptions {
@@ -576,9 +583,10 @@ export default async function buildComponentsDocumentation(
     }
 
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
-    return componentsWithApiDoc.map<Promise<void>>(async (filename) => {
+    return componentsWithApiDoc.map<Promise<ApiPageType>>(async (filename) => {
       try {
-        return await buildComponentDocumentation({
+        // Create the api files, and data to create it's link
+        const { name, packages, folder } = await buildComponentDocumentation({
           filename,
           project,
           projects,
@@ -586,6 +594,13 @@ export default async function buildComponentsDocumentation(
           pagesMarkdown,
           documentedInterfaces,
         });
+
+        return {
+          folderName: folder,
+          pathname: `/x/api/${folder}/${kebabCase(name)}`,
+          title: name,
+          plan: getPlan(packages),
+        };
       } catch (error: any) {
         error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
         throw error;
@@ -605,6 +620,19 @@ export default async function buildComponentsDocumentation(
   if (fails.length > 0) {
     process.exit(1);
   }
+
+  // Build charts API page indexes
+  const createdPages = builds
+    .filter(
+      (promise): promise is PromiseFulfilledResult<ApiPageType> => promise.status === 'fulfilled',
+    )
+    .map((build) => build.value);
+
+  return saveApiDocPages(createdPages, {
+    dataFolder,
+    identifier: 'component-api',
+    project: projects.get(projects.keys().next().value)!, // Use any project since it's only for pretifier
+  });
 }
 
 interface PageMarkdown {

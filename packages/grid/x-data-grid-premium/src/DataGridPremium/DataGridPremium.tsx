@@ -949,6 +949,11 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_cellSelectionModel: PropTypes.object,
   /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  unstable_headerFilters: PropTypes.bool,
+  /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
    * @default: false

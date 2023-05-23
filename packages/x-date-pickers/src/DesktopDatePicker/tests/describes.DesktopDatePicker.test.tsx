@@ -5,7 +5,6 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
   getTextbox,
   expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
@@ -14,8 +13,6 @@ import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopDatePicker });
 
   describePicker(DesktopDatePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
@@ -45,7 +42,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
         expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
       );
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
@@ -53,8 +50,8 @@ describe('<DesktopDatePicker /> - Describes', () => {
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
+        selectSection('day');
         const input = getTextbox();
-        clickOnInput(input, 5); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

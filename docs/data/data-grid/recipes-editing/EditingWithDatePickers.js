@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGrid,
   useGridApiContext,
@@ -179,16 +178,6 @@ function WrappedGridEditDateInput(props) {
   return <GridEditDateInput fullWidth {...InputProps} {...other} />;
 }
 
-WrappedGridEditDateInput.propTypes = {
-  /**
-   * Props applied to the Input element.
-   * It will be a [`FilledInput`](/material-ui/api/filled-input/),
-   * [`OutlinedInput`](/material-ui/api/outlined-input/) or [`Input`](/material-ui/api/input/)
-   * component depending on the `variant` prop value.
-   */
-  InputProps: PropTypes.object,
-};
-
 function GridEditDateCell({ id, field, value, colDef }) {
   const apiRef = useGridApiContext();
 
@@ -207,26 +196,6 @@ function GridEditDateCell({ id, field, value, colDef }) {
     />
   );
 }
-
-GridEditDateCell.propTypes = {
-  /**
-   * The column of the row that the current cell belongs to.
-   */
-  colDef: PropTypes.object.isRequired,
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
-};
 
 function GridFilterDateInput(props) {
   const { item, showTime, applyValue, apiRef } = props;
@@ -262,34 +231,6 @@ function GridFilterDateInput(props) {
 /**
  * `dateTime` column
  */
-
-GridFilterDateInput.propTypes = {
-  apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
-  }).isRequired,
-  applyValue: PropTypes.func.isRequired,
-  item: PropTypes.shape({
-    /**
-     * The column from which we want to filter the rows.
-     */
-    field: PropTypes.string.isRequired,
-    /**
-     * Must be unique.
-     * Only useful when the model contains several items.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /**
-     * The name of the operator we want to apply.
-     */
-    operator: PropTypes.string.isRequired,
-    /**
-     * The filtering value.
-     * The operator filtering function will decide for each row if the row values is correct compared to this value.
-     */
-    value: PropTypes.any,
-  }).isRequired,
-  showTime: PropTypes.bool,
-};
 
 const dateTimeColumnType = {
   ...GRID_DATETIME_COL_DEF,
