@@ -7,6 +7,7 @@ import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions
 import { styled } from '@mui/material/styles';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
+import { MIN_DIALOG_WIDTH } from '../constants/dimensions';
 
 export interface PickersModalDialogSlotsComponent {
   /**
@@ -61,6 +62,7 @@ const PickersModalDialogRoot = styled(MuiDialog)({
   },
   [`& .${dialogClasses.paper}`]: {
     outline: 0,
+    minWidth: MIN_DIALOG_WIDTH,
   },
 });
 
