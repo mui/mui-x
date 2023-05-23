@@ -11,7 +11,7 @@ import { DateOrTimeViewWithMeridiem } from '../models';
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
   className?: string;
-  flexDirection?: 'row' | 'column';
+  landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
 }
@@ -53,9 +53,12 @@ const PickersToolbarContent = styled(Grid, {
   overridesResolver: (props, styles) => styles.content,
 })<{
   ownerState: PickersToolbarProps<any, any>;
-}>({
+}>(({ ownerState }) => ({
   flex: 1,
-});
+  ...(!ownerState.isLandscape && {
+    alignItems: 'center',
+  }),
+}));
 
 type PickersToolbarComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
@@ -74,7 +77,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     children,
     className,
     isLandscape,
-    flexDirection = 'column',
+    landscapeDirection = 'column',
     toolbarTitle,
     hidden,
     titleId,
@@ -99,7 +102,6 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
         color="text.secondary"
         variant="overline"
         id={titleId}
-        sx={{ px: 1 }}
       >
         {toolbarTitle}
       </Typography>
@@ -108,8 +110,8 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
         justifyContent={isLandscape ? 'flex-start' : 'space-between'}
         className={classes.content}
         ownerState={ownerState}
-        direction={flexDirection}
-        alignItems={flexDirection === 'column' ? 'flex-start' : 'center'}
+        direction={isLandscape ? landscapeDirection : 'row'}
+        alignItems={isLandscape ? 'flex-start' : 'flex-end'}
       >
         {children}
       </PickersToolbarContent>

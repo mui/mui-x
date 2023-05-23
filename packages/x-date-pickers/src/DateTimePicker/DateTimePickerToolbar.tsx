@@ -79,13 +79,11 @@ const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
   overridesResolver: (props, styles) => styles.dateContainer,
-})<{ ownerState: DateTimePickerToolbarProps<any> }>(({ ownerState }) => ({
+})<{ ownerState: DateTimePickerToolbarProps<any> }>({
   display: 'flex',
-  ...(ownerState.isLandscape && {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  }),
-}));
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+});
 
 const DateTimePickerToolbarTimeContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
@@ -135,7 +133,7 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
 })<{
   ownerState: DateTimePickerToolbarProps<any>;
 }>({
-  padding: '6px',
+  margin: '0 4px 0 2px',
   cursor: 'default',
 });
 
@@ -205,8 +203,8 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
       return utils.formatByString(value, toolbarFormat);
     }
 
-    return utils.format(value, isLandscape ? 'shortDate' : 'monthAndDate');
-  }, [value, toolbarFormat, utils, isLandscape, toolbarPlaceholder]);
+    return utils.format(value, 'shortDate');
+  }, [value, toolbarFormat, toolbarPlaceholder, utils]);
 
   return (
     <DateTimePickerToolbarRoot
@@ -220,7 +218,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
         {views.includes('year') && (
           <PickersToolbarButton
             tabIndex={-1}
-            variant="h5"
+            variant="subtitle1"
             data-mui-test="datetimepicker-toolbar-year"
             onClick={() => onViewChange('year')}
             selected={view === 'year'}
@@ -231,7 +229,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
         {views.includes('day') && (
           <PickersToolbarButton
             tabIndex={-1}
-            variant="h5"
+            variant="h4"
             data-mui-test="datetimepicker-toolbar-day"
             onClick={() => onViewChange('day')}
             selected={view === 'day'}
@@ -243,7 +241,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
         <DateTimePickerToolbarTimeDigitsContainer className={classes.timeDigitsContainer}>
           {views.includes('hours') && (
             <PickersToolbarButton
-              variant="h4"
+              variant="h3"
               data-mui-test="hours"
               onClick={() => onViewChange('hours')}
               selected={view === 'hours'}
@@ -254,13 +252,13 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
           {views.includes('minutes') && (
             <React.Fragment>
               <DateTimePickerToolbarSeparator
-                variant="h4"
+                variant="h3"
                 value=":"
                 className={classes.separator}
                 ownerState={ownerState}
               />
               <PickersToolbarButton
-                variant="h4"
+                variant="h3"
                 data-mui-test="minutes"
                 onClick={() => onViewChange('minutes')}
                 selected={view === 'minutes'}
@@ -272,13 +270,13 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
           {views.includes('seconds') && (
             <React.Fragment>
               <DateTimePickerToolbarSeparator
-                variant="h4"
+                variant="h3"
                 value=":"
                 className={classes.separator}
                 ownerState={ownerState}
               />
               <PickersToolbarButton
-                variant="h4"
+                variant="h3"
                 data-mui-test="seconds"
                 onClick={() => onViewChange('seconds')}
                 selected={view === 'seconds'}
@@ -300,7 +298,6 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               value={utils.getMeridiemText('am')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
               disabled={disabled}
-              sx={{ py: 0.5 }}
             />
             <PickersToolbarButton
               disableRipple
@@ -310,7 +307,6 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               value={utils.getMeridiemText('pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
               disabled={disabled}
-              sx={{ py: 0.5 }}
             />
           </DateTimePickerToolbarAmPmSelection>
         )}
