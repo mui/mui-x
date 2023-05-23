@@ -4,6 +4,7 @@ import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { PickerChangeEventImportance } from '../models';
 
 interface PickersShortcutsItemGetValueParams<TValue> {
   isValid: (value: TValue) => boolean;
@@ -14,20 +15,24 @@ export interface PickersShortcutsItem<TValue> {
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
 }
 
-export interface PickersShortcutsProps<TValue> extends Omit<ListProps, 'onChange'> {
+export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
    * @default `[]`
    */
   items?: PickersShortcutsItem<TValue>[];
+  eventImportance?: PickerChangeEventImportance;
+}
+
+export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (newValue: TValue) => void;
+  onChange: (newValue: TValue, eventImportance?: PickerChangeEventImportance) => void;
   isValid: (value: TValue) => boolean;
 }
 
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, isLandscape, onChange, isValid, ...other } = props;
+  const { items, eventImportance = 'finish', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -39,7 +44,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue);
+        onChange(newValue, eventImportance);
       },
       disabled: !isValid(newValue),
     };
@@ -87,6 +92,7 @@ PickersShortcuts.propTypes = {
    * @default false
    */
   disablePadding: PropTypes.bool,
+  eventImportance: PropTypes.oneOf(['finish', 'partial', 'shallow']),
   isLandscape: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   /**

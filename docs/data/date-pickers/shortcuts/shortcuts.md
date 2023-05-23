@@ -60,6 +60,20 @@ In the following demonstration, it is used to get the next available week and we
 
 {{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}
 
+## Behavior when selecting a shortcut
+
+By default, the selection of a shortcut acts like the selection of a value in the last view of a picker.
+On desktop, it will fire `onChange`, `onAccept` and close the picker.
+On mobile, it will fire `onChange`, but the user will have to press "OK" or click outside the modal to fire `onAccept` and close the picker.
+
+You can change this behavior using the `eventImportance` property:
+
+- `finish` (_default value_): fires `onChange`, on desktop also fires `onAccept` and closes the picker
+- `draft`: fires `onChange`
+- `shallow`: just selects the value visually
+
+{{"demo": "EventImportance.js", "bg": "inline"}}
+
 ## Customization
 
 Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.

@@ -155,6 +155,7 @@
   { "name": "MultiSectionDigitalClockSlotsComponentsProps", "kind": "Interface" },
   { "name": "nbNO", "kind": "Variable" },
   { "name": "nlNL", "kind": "Variable" },
+  { "name": "PickerChangeEventImportance", "kind": "TypeAlias" },
   { "name": "PickersActionBar", "kind": "Function" },
   { "name": "PickersActionBarAction", "kind": "TypeAlias" },
   { "name": "PickersActionBarProps", "kind": "Interface" },
