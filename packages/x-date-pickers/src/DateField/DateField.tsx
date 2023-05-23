@@ -2,11 +2,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
-import ClearIcon from '@mui/icons-material/Clear';
 import { useSlotProps } from '@mui/base/utils';
-import { DateFieldProps } from './DateField.types';
+import {
+  DateFieldProps,
+  DateFieldSlotsComponent,
+  DateFieldSlotsComponentsProps,
+} from './DateField.types';
 import { useDateField } from './useDateField';
-import { IconButton } from '@mui/material';
+import { useClearEndAdornment } from '../internals/hooks/useClearEndAdornment/useClearEndAdornment';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -44,10 +47,23 @@ const DateField = React.forwardRef(function DateField<TDate>(
     inputMode,
     readOnly,
     clearable,
+    onClear,
     ...fieldProps
   } = useDateField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
+  });
+
+  const ProcessedInputProps = useClearEndAdornment<
+    typeof fieldProps.InputProps,
+    DateFieldSlotsComponent,
+    DateFieldSlotsComponentsProps<TDate>
+  >({
+    onClear,
+    clearable,
+    InputProps: fieldProps.InputProps,
+    slots,
+    slotProps,
   });
 
   return (
@@ -55,18 +71,8 @@ const DateField = React.forwardRef(function DateField<TDate>(
       ref={ref}
       {...fieldProps}
       InputProps={{
-        ...fieldProps.InputProps,
+        ...ProcessedInputProps,
         readOnly,
-        endAdornment: clearable && (
-          <IconButton
-            className="deleteIcon"
-            onClick={() => {
-              console.log('wtf');
-            }}
-          >
-            <ClearIcon />
-          </IconButton>
-        ),
       }}
       inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
     />

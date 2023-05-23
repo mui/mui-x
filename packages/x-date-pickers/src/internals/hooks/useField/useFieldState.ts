@@ -113,6 +113,7 @@ export const useFieldState = <
         valueManager.getTodayValue(utils, valueType),
       ),
       tempValueStrAndroid: null,
+      isHovered: false,
     };
   });
 
@@ -130,6 +131,13 @@ export const useFieldState = <
     setState((prevState) => ({
       ...prevState,
       selectedSectionQuery: null,
+    }));
+  };
+
+  const setIsHovered = (isHovered: boolean) => {
+    setState((prevState) => ({
+      ...prevState,
+      isHovered,
     }));
   };
 
@@ -412,5 +420,6 @@ export const useFieldState = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    setIsHovered,
   };
 };

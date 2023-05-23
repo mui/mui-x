@@ -12,6 +12,10 @@ import {
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
+import {
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
+} from '../internals/hooks/useField/useField.types';
 
 export interface UseDateFieldParams<TDate, TChildProps extends {}> {
   props: UseDateFieldComponentProps<TDate, TChildProps>;
@@ -45,7 +49,7 @@ export interface DateFieldProps<TDate>
 
 export type DateFieldOwnerState<TDate> = DateFieldProps<TDate>;
 
-export interface DateFieldSlotsComponent {
+export interface DateFieldSlotsComponent extends FieldSlotsComponents {
   /**
    * Form control with an input to render the value.
    * Receives the same props as `@mui/material/TextField`.
@@ -54,6 +58,6 @@ export interface DateFieldSlotsComponent {
   TextField?: React.ElementType;
 }
 
-export interface DateFieldSlotsComponentsProps<TDate> {
+export interface DateFieldSlotsComponentsProps<TDate> extends FieldSlotsComponentsProps {
   textField?: SlotComponentProps<typeof TextField, {}, DateFieldOwnerState<TDate>>;
 }

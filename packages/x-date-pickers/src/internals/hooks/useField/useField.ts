@@ -40,6 +40,7 @@ export const useField = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    setIsHovered,
   } = useFieldState(params);
 
   const {
@@ -54,7 +55,10 @@ export const useField = <
       onMouseUp,
       onPaste,
       error,
-      clearable: forwardedClearable,
+      clearable,
+      onClear,
+      onMouseEnter,
+      onMouseLeave,
       ...otherForwardedProps
     },
     fieldValueManager,
@@ -73,8 +77,6 @@ export const useField = <
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
   const theme = useTheme();
   const isRTL = theme.direction === 'rtl';
-
-  let clearable = forwardedClearable;
 
   const sectionOrder = React.useMemo(
     () => getSectionOrder(state.sections, isRTL),
@@ -100,7 +102,6 @@ export const useField = <
       );
     }
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
-
     setSelectedSections(sectionIndex);
   };
 
@@ -144,9 +145,18 @@ export const useField = <
     });
   });
 
-  const handleInputBlur = useEventCallback((...args) => {
-    onBlur?.(...(args as []));
-    setSelectedSections(null);
+  const handleInputBlur = useEventCallback((event: React.FocusEvent<HTMLInputElement>, ...args) => {
+    const { relatedTarget } = event;
+
+    const shouldBlur =
+      !relatedTarget &&
+      relatedTarget !== inputRef.current &&
+      !inputRef.current.contains(relatedTarget);
+
+    if (shouldBlur) {
+      onBlur?.(event, ...(args as []));
+      setSelectedSections(null);
+    }
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
@@ -450,8 +460,13 @@ export const useField = <
   }, [selectedSectionIndexes, state.sections]);
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
-  const areSectionsEmpty = valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue);
-  const shouldShowPlaceholder = !inputHasFocus && areSectionsEmpty;
+  const areAllSectionsEmpty = valueManager.areValuesEqual(
+    utils,
+    state.value,
+    valueManager.emptyValue,
+  );
+  const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
+  const isInputHovered = state.isHovered;
 
   React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,
@@ -473,13 +488,25 @@ export const useField = <
     setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
   }));
 
-  const handleClearValue = React.useCallback(() => {
-    console.log('hei there clearing');
+  const handleClearValue = useEventCallback((event: React.MouseEvent, ...args) => {
+    // the click event of the endAdornmnet propagates to the input and triggers the `handleInputClick` handler.
+    event.stopPropagation();
+    event.preventDefault();
+    onClear?.(event, ...(args as []));
+    clearValue();
+    setSelectedSections(0);
+    inputRef?.current?.focus();
   });
 
-  React.useEffect(() => {
-    console.log(areSectionsEmpty, state.value);
-  }, [areSectionsEmpty]);
+  const handleMouseEnter = useEventCallback((event: React.MouseEvent, ...args) => {
+    onMouseEnter?.(event, ...(args as []));
+    setIsHovered(true);
+  });
+
+  const handleMouseLeave = useEventCallback((event: React.MouseEvent, ...args) => {
+    onMouseLeave?.(event, ...(args as []));
+    setIsHovered(false);
+  });
 
   return {
     placeholder,
@@ -495,9 +522,11 @@ export const useField = <
     onChange: handleInputChange,
     onKeyDown: handleInputKeyDown,
     onMouseUp: handleInputMouseUp,
+    onClear: handleClearValue,
     error: inputError,
     ref: handleRef,
-    handleClearValue,
-    clearable: Boolean(forwardedClearable && inputHasFocus && !areSectionsEmpty),
+    clearable: Boolean(clearable && !areAllSectionsEmpty && (inputHasFocus || isInputHovered)),
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
   };
 };

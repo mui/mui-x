@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SlotComponentProps } from '@mui/base/utils';
+import ClearIcon from '@mui/icons-material/Clear';
 import {
   FieldSectionType,
   FieldSection,
@@ -134,9 +136,12 @@ export interface UseFieldForwardedProps {
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
   onClick?: () => void;
   onFocus?: () => void;
-  onBlur?: () => void;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
   error?: boolean;
-  clearable: boolean;
+  onClear?: React.MouseEventHandler;
+  clearable?: boolean;
+  onMouseEnter?: React.MouseEventHandler;
+  onMouseLeave?: React.MouseEventHandler;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -318,6 +323,7 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * The property below allows us to set the first `onChange` value into state waiting for the second one.
    */
   tempValueStrAndroid: string | null;
+  isHovered: boolean;
 }
 
 export type UseFieldValidationProps<
@@ -360,3 +366,16 @@ export type SectionOrdering = {
    */
   endIndex: number;
 };
+
+export interface FieldSlotsComponents {
+  /**
+   * Icon to display inside the clear button.
+   * Receives the same props as `@mui/icons-material/Clear`.
+   * @default ClearIcon from '@mui/icons-material/Clear'
+   */
+  ClearIcon?: React.ElementType;
+}
+
+export interface FieldSlotsComponentsProps {
+  clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
+}
