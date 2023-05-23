@@ -235,7 +235,6 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             value={utils.getMeridiemText('am')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled}
-            // sx={{ py: 0.5 }}
           />
           <PickersToolbarButton
             disableRipple
@@ -246,7 +245,6 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             value={utils.getMeridiemText('pm')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             disabled={disabled}
-            // sx={{ py: 0.5 }}
           />
         </TimePickerToolbarAmPmSelection>
       )}
