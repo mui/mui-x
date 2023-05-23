@@ -14,23 +14,19 @@ const SECTION_TYPE_GRANULARITY = {
   year: 1,
   month: 2,
   day: 3,
-  hours: 5,
-  minutes: 6,
-  seconds: 7,
-  milliseconds: 8,
+  hours: 4,
+  minutes: 5,
+  seconds: 6,
+  milliseconds: 7,
 };
 
-export const getSectionTypeGranularity = (sections: FieldSection[]) => {
-  let granularity = 1;
-  sections.forEach((section) => {
-    const sectionGranularity =
-      SECTION_TYPE_GRANULARITY[section.type as keyof typeof SECTION_TYPE_GRANULARITY];
-    if (sectionGranularity != null && sectionGranularity > granularity) {
-      granularity = sectionGranularity;
-    }
-  });
-  return granularity;
-};
+export const getSectionTypeGranularity = (sections: FieldSection[]) =>
+  Math.max(
+    ...sections.map(
+      (section) =>
+        SECTION_TYPE_GRANULARITY[section.type as keyof typeof SECTION_TYPE_GRANULARITY] ?? 1,
+    ),
+  );
 
 export const getDefaultReferenceDate = <TDate>({
   props,

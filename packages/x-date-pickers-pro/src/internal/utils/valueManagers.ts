@@ -42,15 +42,10 @@ export const rangeValueManager: RangePickerValueManager = {
 
     const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
 
-    if (!shouldKeepStartDate && !shouldKeepEndDate) {
-      return [referenceDate, referenceDate];
-    }
-
-    if (shouldKeepStartDate) {
-      return [value[0], referenceDate];
-    }
-
-    return [referenceDate, value[1]];
+    return [
+      shouldKeepStartDate ? value[0] : referenceDate,
+      shouldKeepEndDate ? value[1] : referenceDate,
+    ];
   },
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
