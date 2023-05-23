@@ -65,7 +65,7 @@ export const useFieldState = <
     internalProps: {
       value: valueProp,
       defaultValue,
-      referenceDate,
+      referenceDate: referenceDateProp,
       onChange,
       format,
       formatDensity = 'dense',
@@ -118,7 +118,7 @@ export const useFieldState = <
 
     const granularity = getSectionTypeGranularity(sections);
     const referenceValue = valueManager.getInitialReferenceValue({
-      referenceDate,
+      referenceDate: referenceDateProp,
       value: valueFromTheOutside,
       valueType,
       utils,
