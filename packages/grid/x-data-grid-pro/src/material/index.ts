@@ -1,9 +1,10 @@
 import type { GridProIconSlotsComponent } from '../models';
-import { GridPushPinRightIcon, GridPushPinLeftIcon } from './icons';
+import { GridPushPinRightIcon, GridPushPinLeftIcon, GridHighlightOffIcon } from './icons';
 
 const iconSlots: GridProIconSlotsComponent = {
   ColumnMenuPinRightIcon: GridPushPinRightIcon,
   ColumnMenuPinLeftIcon: GridPushPinLeftIcon,
+  HeaderFilterClearIcon: GridHighlightOffIcon,
 };
 
 const materialSlots = {
