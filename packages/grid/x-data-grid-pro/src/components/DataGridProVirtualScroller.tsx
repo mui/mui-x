@@ -359,7 +359,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       if (rootProps.getDetailPanelContent == null) {
         return;
       }
-      if (!expandedRowIdsLookup.has(rowId) ) {
+      if (!expandedRowIdsLookup.has(rowId)) {
         return;
       }
 
