@@ -1,6 +1,6 @@
-type AnchorX = 'left' | 'right' | 'middle';
-type AnchorY = 'top' | 'bottom' | 'middle';
-type Anchor = { x: AnchorX; y: AnchorY };
+export type AnchorX = 'left' | 'right' | 'middle';
+export type AnchorY = 'top' | 'bottom' | 'middle';
+export type AnchorPosition = { horizontal: AnchorX; vertical: AnchorY };
 type Size = { height: number; width: number };
 
 const getAnchorValue = (anchor: AnchorX | AnchorY, value: number) => {
@@ -25,16 +25,21 @@ const oposit: { [k in AnchorX]: AnchorX } | { [k in AnchorY]: AnchorY } = {
 
 export function getTranslateValues(
   referenceSize: Size,
-  reference: Anchor,
+  reference: AnchorPosition,
   elementSize: Size,
-  inElement?: Anchor,
+  inElement?: AnchorPosition,
 ) {
-  const element = { ...inElement, x: oposit[reference.x], y: oposit[reference.y] };
+  const element = {
+    ...inElement,
+    horizontal: oposit[reference.horizontal],
+    vertical: oposit[reference.vertical],
+  };
   const translateLeft =
-    getAnchorValue(reference.x, referenceSize.width) - getAnchorValue(element.x, elementSize.width);
+    getAnchorValue(reference.horizontal, referenceSize.width) -
+    getAnchorValue(element.horizontal, elementSize.width);
   const translateTop =
-    getAnchorValue(reference.y, referenceSize.height) -
-    getAnchorValue(element.y, elementSize.height);
+    getAnchorValue(reference.vertical, referenceSize.height) -
+    getAnchorValue(element.vertical, elementSize.height);
 
   return { left: translateLeft, top: translateTop };
 }
