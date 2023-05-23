@@ -48,10 +48,10 @@ export function ScatterChart(props: ScatterChartProps) {
       yAxis={yAxis}
       sx={sx}
     >
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <g clipPath={`url(#${clipPathId})`}>
         <ScatterPlot />
       </g>
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <Highlight x="none" y="none" {...highlight} />
       <Tooltip trigger="item" {...tooltip} />
       <ClipPath id={clipPathId} />
