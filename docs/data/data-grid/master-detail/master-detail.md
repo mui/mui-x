@@ -72,10 +72,6 @@ For this, pass a function to the `getDetailPanelHeight` prop returning `"auto"`,
 The following example demonstrates this option in action:
 
 {{"demo": "DetailPanelAutoHeight.js", "bg": "inline", "defaultCodeOpen": false}}
-## Changes - Working Sample (type GridRowId = string | number)
-
-{{"demo": "DetailPanelSampleWorking.js", "bg": "inline", "defaultCodeOpen": false}}
-
 
 ## Controlling expanded detail panels
 
