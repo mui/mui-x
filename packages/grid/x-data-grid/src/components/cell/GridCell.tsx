@@ -185,42 +185,43 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
 
   let children: React.ReactNode;
+  {
+    if (editCellState == null && column.renderCell) {
+      children = column.renderCell({ ...cellParams, api: apiRef.current });
+      classNames.push(
+        clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']),
+      );
+    }
 
-  if (editCellState == null && column.renderCell) {
-    children = column.renderCell({ ...cellParams, api: apiRef.current });
-    classNames.push(
-      clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']),
-    );
-  }
+    if (editCellState != null && column.renderEditCell) {
+      const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
 
-  if (editCellState != null && column.renderEditCell) {
-    const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
+      const params: GridRenderEditCellParams = {
+        ...cellParams,
+        row: updatedRow,
+        ...editCellStateRest,
+        api: apiRef.current,
+      };
 
-    const params: GridRenderEditCellParams = {
-      ...cellParams,
-      row: updatedRow,
-      ...editCellStateRest,
-      api: apiRef.current,
-    };
+      children = column.renderEditCell(params);
+      classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
+    }
 
-    children = column.renderEditCell(params);
-    classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
-  }
+    if (children === undefined) {
+      const valueString = valueToRender?.toString();
+      children = (
+        <div className={classes.content} title={valueString}>
+          {valueString}
+        </div>
+      );
+    }
 
-  if (children === undefined) {
-    const valueString = valueToRender?.toString();
-    children = (
-      <div className={classes.content} title={valueString}>
-        {valueString}
-      </div>
-    );
-  }
-
-  if (React.isValidElement(children) && managesOwnFocus) {
-    children = React.cloneElement<any>(children, { focusElementRef });
+    if (React.isValidElement(children) && managesOwnFocus) {
+      children = React.cloneElement<any>(children, { focusElementRef });
+    }
   }
 
   const publishMouseUp = React.useCallback(
