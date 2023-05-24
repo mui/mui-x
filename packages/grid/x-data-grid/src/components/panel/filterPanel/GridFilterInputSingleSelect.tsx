@@ -153,6 +153,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}
           id={labelId}
+          htmlFor={id}
           shrink
           variant="standard"
         >
