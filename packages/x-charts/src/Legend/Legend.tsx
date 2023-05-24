@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
-import { DrawingContext } from '../context/DrawingProvider';
+import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
 import { AnchorPosition, SizingParams, getSeriesToDisplay } from './utils';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { LegendClasses, getLegendUtilityClass } from './legendClasses';
@@ -34,33 +34,47 @@ const useUtilityClasses = (ownerState: DefaultizedLegendProps & { theme: Theme }
   return composeClasses(slots, getLegendUtilityClass, classes);
 };
 
-type LegendRootOwnerState = any;
+type LegendRootOwnerState = {
+  position: AnchorPosition;
+  direction: 'row' | 'column';
+  drawingArea: DrawingArea;
+  offsetX: number;
+  offsetY: number;
+  seriesNumber: number;
+};
 
-function getTranslePosition(position: AnchorPosition, chartBox, offsetX, offsetY) {
+function getTranslePosition({
+  position,
+  drawingArea,
+  offsetX,
+  offsetY,
+}: Omit<LegendRootOwnerState, 'direction' | 'seriesNumber'>) {
   let xValue: string;
   switch (position.horizontal) {
     case 'left':
-      xValue = `calc(${offsetX + chartBox.left}px - var(--Legend-width))`;
+      xValue = `calc(${offsetX + drawingArea.left}px - var(--Legend-width))`;
       break;
     case 'middle':
-      xValue = `calc(${offsetX + chartBox.left + chartBox.width / 2}px - 0.5 *var(--Legend-width))`;
+      xValue = `calc(${
+        offsetX + drawingArea.left + drawingArea.width / 2
+      }px - 0.5 *var(--Legend-width))`;
       break;
     default:
-      xValue = `calc(${offsetX}px + ${chartBox.left + chartBox.width}px)`;
+      xValue = `calc(${offsetX}px + ${drawingArea.left + drawingArea.width}px)`;
       break;
   }
   let yValue: string;
   switch (position.vertical) {
     case 'top':
-      yValue = `calc(${offsetY + chartBox.top}px - var(--Legend-height))`;
+      yValue = `calc(${offsetY + drawingArea.top}px - var(--Legend-height))`;
       break;
     case 'middle':
       yValue = `calc(${
-        offsetY + chartBox.top + chartBox.height / 2
+        offsetY + drawingArea.top + drawingArea.height / 2
       }px - 0.5 * var(--Legend-height))`;
       break;
     default:
-      yValue = `calc(${offsetY + chartBox.top + chartBox.height}px)`;
+      yValue = `calc(${offsetY + drawingArea.top + drawingArea.height}px)`;
       break;
   }
   return { transform: `translate(${xValue}, ${yValue})` };
@@ -71,7 +85,7 @@ export const LegendRoot = styled('g', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: LegendRootOwnerState }>(({ ownerState }) => {
-  const { direction, chartBox, offsetX, offsetY, seriesNumber, position } = ownerState;
+  const { direction, drawingArea, offsetX, offsetY, seriesNumber, position } = ownerState;
 
   return {
     '--Legend-width':
@@ -86,7 +100,7 @@ export const LegendRoot = styled('g', {
         : `calc(var(--Legend-mark-size) * ${seriesNumber} + var(--Legend-spacing) *${
             seriesNumber - 1
           } )`,
-    ...getTranslePosition(position, chartBox, offsetX, offsetY),
+    ...getTranslePosition({ position, drawingArea, offsetX, offsetY }),
   };
 });
 
@@ -151,13 +165,13 @@ export function Legend(inProps: LegendProps) {
   const theme = useTheme();
   const classes = useUtilityClasses({ ...props, theme });
 
-  const { left, top, width, height } = React.useContext(DrawingContext);
+  const drawingArea = React.useContext(DrawingContext);
   const series = React.useContext(SeriesContext);
 
   const seriesToDisplay = getSeriesToDisplay(series);
 
   const offsetX = offset?.x ?? 0;
-  const offsetY = offset?.y ?? 0;
+  const offsetY = offset?.y ?? -20;
 
   return (
     <LegendRoot
@@ -167,7 +181,7 @@ export function Legend(inProps: LegendProps) {
         offsetY,
         seriesNumber: seriesToDisplay.length,
         position,
-        chartBox: { left, top, width, height },
+        drawingArea,
       }}
       className={classes.root}
     >
