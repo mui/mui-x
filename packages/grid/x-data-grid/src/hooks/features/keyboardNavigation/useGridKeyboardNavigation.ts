@@ -517,14 +517,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [
-      apiRef,
-      currentPageRows.length,
-      goToHeader,
-      goToGroupHeader,
-      goToCell,
-      getRowIdFromIndex,
-    ],
+    [apiRef, currentPageRows.length, goToHeader, goToGroupHeader, goToCell, getRowIdFromIndex],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(

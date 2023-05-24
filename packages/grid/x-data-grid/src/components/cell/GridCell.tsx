@@ -9,13 +9,8 @@ import {
   unstable_capitalize as capitalize,
 } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import {
-  GridCellEventLookup,
-  GridEvents,
-  GridCellModes,
-  GridRowId,
-} from '../../models';
-import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import { GridCellEventLookup, GridEvents, GridCellModes, GridRowId } from '../../models';
+import { GridRenderEditCellParams, FocusElement } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector, shallowCompare } from '../../hooks/utils/useGridSelector';
@@ -24,7 +19,6 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { FocusElement } from '../../models/params/gridCellParams';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -62,8 +56,8 @@ function doesSupportPreventScroll(): boolean {
 }
 
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder'> & {
-  isEditable?: boolean,
-  isSelected?: boolean,
+  isEditable?: boolean;
+  isSelected?: boolean;
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -122,38 +116,36 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
 
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
-  const {
-    classes: rootClasses,
-    getCellClassName,
-  } = rootProps;
+  const { classes: rootClasses, getCellClassName } = rootProps;
 
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
       id: rowId,
-      field: field,
-    })
+      field,
+    }),
   );
 
-  const cellParams = useGridSelector(apiRef, () => {
-    // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
-    // associated with `rowId`/`fieldId`, but this selector runs after the state has been
-    // updated, while `rowId`/`fieldId` reference an entry in the old state.
-    try {
-      return apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
-        rowId,
-        field,
-      );
-    } catch (e) {
-      if ((e as Error).message.startsWith('No row with id')) {
-        return null as any;
+  const cellParams = useGridSelector(
+    apiRef,
+    () => {
+      // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
+      // associated with `rowId`/`fieldId`, but this selector runs after the state has been
+      // updated, while `rowId`/`fieldId` reference an entry in the old state.
+      try {
+        return apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(rowId, field);
+      } catch (e) {
+        if ((e as Error).message.startsWith('No row with id')) {
+          return null as any;
+        }
+        throw e;
       }
-      throw e;
-    }
-  }, shallowCompare);
+    },
+    shallowCompare,
+  );
 
   const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
     id: rowId,
-    field: field,
+    field,
   });
 
   if (column.cellClassName) {
@@ -176,19 +168,17 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const cellMode = cellParams.cellMode;
   const hasFocus = cellParams.hasFocus;
   const isEditable = cellParams.isEditable;
-  const valueToRender = cellParams.formattedValue == null ? cellParams.value : cellParams.formattedValue;
+  const valueToRender =
+    cellParams.formattedValue == null ? cellParams.value : cellParams.formattedValue;
 
   const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
   const classes = useUtilityClasses(ownerState);
-
 
   let children: React.ReactNode;
   {
     if (editCellState == null && column.renderCell) {
       children = column.renderCell({ ...cellParams, api: apiRef.current });
-      classNames.push(
-        clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']),
-      );
+      classNames.push(clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']));
     }
 
     if (editCellState != null && column.renderEditCell) {
@@ -364,18 +354,12 @@ GridCell.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   align: PropTypes.oneOf(['center', 'left', 'right']),
-  cellMode: PropTypes.oneOf(['edit', 'view']),
-  children: PropTypes.node,
   className: PropTypes.string,
   colIndex: PropTypes.number,
   colSpan: PropTypes.number,
+  column: PropTypes.object,
   disableDragEvents: PropTypes.bool,
-  field: PropTypes.string,
-  formattedValue: PropTypes.any,
-  hasFocus: PropTypes.bool,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
-  isEditable: PropTypes.bool,
-  isSelected: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,
@@ -385,8 +369,6 @@ GridCell.propTypes = {
   onMouseUp: PropTypes.func,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   showRightBorder: PropTypes.bool,
-  tabIndex: PropTypes.oneOf([-1, 0]),
-  value: PropTypes.any,
   width: PropTypes.number,
 } as any;
 

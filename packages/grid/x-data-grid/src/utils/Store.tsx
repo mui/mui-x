@@ -2,7 +2,8 @@ type Listener<T> = (value: T) => void;
 
 export class Store<T> {
   value: T;
-  listeners;
+
+  listeners: Set<Listener<T>>;
 
   static create<T>(value: T) {
     return new Store(value);
@@ -15,8 +16,10 @@ export class Store<T> {
 
   subscribe = (fn: Listener<T>) => {
     this.listeners.add(fn);
-    return () => { this.listeners.delete(fn) };
-  }
+    return () => {
+      this.listeners.delete(fn);
+    };
+  };
 
   getSnapshot = () => {
     return this.value;
@@ -24,6 +27,6 @@ export class Store<T> {
 
   update = (value: T) => {
     this.value = value;
-    this.listeners.forEach(l => l(value));
-  }
+    this.listeners.forEach((l) => l(value));
+  };
 }

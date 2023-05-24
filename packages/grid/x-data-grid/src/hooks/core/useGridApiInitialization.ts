@@ -64,7 +64,7 @@ export function useGridApiInitialization<
     const state = {} as Api['state'];
 
     publicApiRef.current = {
-      state: state,
+      state,
       store: Store.create(state),
       instanceId: { id: globalId },
     } as Api;

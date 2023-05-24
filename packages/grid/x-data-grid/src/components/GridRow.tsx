@@ -255,11 +255,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     [apiRef, onClick, publish, rowId],
   );
 
-  const {
-    slots,
-    slotProps,
-    disableColumnReorder,
-  } = rootProps;
+  const { slots, slotProps, disableColumnReorder } = rootProps;
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
@@ -272,7 +268,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
     >,
   ) => {
-
     const disableDragEvents =
       (disableColumnReorder && column.disableReorder) ||
       (!rowReordering &&
@@ -359,7 +354,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const rowNode = apiRef.current.getRowNode(rowId);
   if (!rowNode) {
-    return null
+    return null;
   }
 
   const rowType = rowNode.type;

@@ -778,7 +778,6 @@ describe('<DataGrid /> - Row Selection', () => {
 
   describe('performance', () => {
     it('should not rerender unrelated nodes', () => {
-
       // Couldn't use <RenderCounter> because we need to track multiple components
       let commits: any[] = [];
       function CustomCell(props: any) {
