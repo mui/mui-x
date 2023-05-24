@@ -1,31 +1,14 @@
 import * as React from 'react';
 import { DrawingContext } from '../context/DrawingProvider';
-import { AnchorPosition, getTranslateValues } from './utils';
-import { SeriesContext, FormattedSeries } from '../context/SeriesContextProvider';
+import {
+  AnchorPosition,
+  SizingParams,
+  getLegendSize,
+  getSeriesToDisplay,
+  getTranslateValues,
+} from './utils';
+import { SeriesContext } from '../context/SeriesContextProvider';
 
-function getSeriesToDisplay(series: FormattedSeries) {
-  return Object.values(series)
-    .flatMap((s) => s.seriesOrder.map((seriesId) => s.series[seriesId]))
-    .filter((s) => s.label !== undefined);
-}
-type SizingParams = {
-  direction?: 'row' | 'column';
-  markSize?: number;
-  itemWidth?: number;
-  spacing?: number;
-};
-
-function getLegendSize(itemNumber: number, params: Required<SizingParams>) {
-  const { direction, markSize, itemWidth, spacing } = params;
-  if (direction === 'row') {
-    const width = itemWidth * itemNumber + spacing * (itemNumber - 1);
-    const height = markSize;
-    return { width, height };
-  }
-  const width = itemWidth;
-  const height = markSize * itemNumber + spacing * (itemNumber - 1);
-  return { width, height };
-}
 
 export type LegendProps = {
   position: AnchorPosition;
