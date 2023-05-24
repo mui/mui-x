@@ -133,12 +133,6 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     (id, field) => {
       const colDef = apiRef.current.getColumn(field);
 
-      if (process.env.NODE_ENV !== 'production') {
-        if (!colDef && !warnedOnceMissingColumn) {
-          warnMissingColumn(field);
-        }
-      }
-
       if (!colDef || !colDef.valueGetter) {
         const rowModel = apiRef.current.getRow(id);
 

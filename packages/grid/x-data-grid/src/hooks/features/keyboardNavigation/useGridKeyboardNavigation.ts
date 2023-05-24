@@ -281,7 +281,6 @@ export const useGridKeyboardNavigation = (
     ],
   );
 
-  const focusedColumnGroup = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);
   const handleColumnGroupHeaderKeyDown = React.useCallback<
     GridEventListener<'columnGroupHeaderKeyDown'>
   >(
@@ -291,6 +290,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
       if (focusedColumnGroup === null) {
         return;
       }
@@ -379,7 +379,6 @@ export const useGridKeyboardNavigation = (
     },
     [
       apiRef,
-      focusedColumnGroup,
       currentPageRows.length,
       goToHeader,
       goToGroupHeader,
