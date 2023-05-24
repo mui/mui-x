@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -66,6 +67,7 @@ export const useGridFilter = (
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
+  const prevFilterModelWithOnlyValidItems = React.useRef({});
 
   apiRef.current.registerControlState({
     stateId: 'filter',
@@ -111,10 +113,47 @@ export const useGridFilter = (
   /**
    * API METHODS
    */
-  const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(() => {
-    updateFilteredRows();
-    apiRef.current.forceUpdate();
-  }, [apiRef, updateFilteredRows]);
+  const applyFilters = React.useCallback<GridFilterApi['unstable_applyFilters']>(
+    (skipIfNoValidItem = false) => {
+      const filterModel = gridFilterModelSelector(apiRef);
+
+      // Contains the filter items whose `value` is not `undefined`.
+      // If an operator doesn't require a value (e.g. `isEmpty`) then it's always valid.
+      const validFilterItems = filterModel.items.filter((item) => {
+        const column = apiRef.current.getColumn(item.field);
+        if (!column) {
+          // Some tests will fail without this check because the columns are provided in 2nd render
+          return false;
+        }
+
+        const filterOperator = column.filterOperators?.find(
+          (operator) => operator.value === item.operator,
+        );
+
+        const requiresFilterValue = filterOperator?.requiresFilterValue ?? true;
+        if (!requiresFilterValue) {
+          return true;
+        }
+
+        return Array.isArray(item.value) ? item.value.length > 0 : item.value !== undefined;
+      });
+
+      const filterModelWithOnlyValidItems = { ...filterModel, items: validFilterItems };
+      const filterModelIsEqualToPrevious = isDeepEqual(
+        filterModelWithOnlyValidItems,
+        prevFilterModelWithOnlyValidItems.current,
+      );
+
+      if (skipIfNoValidItem && filterModelIsEqualToPrevious) {
+        return;
+      }
+
+      prevFilterModelWithOnlyValidItems.current = filterModelWithOnlyValidItems;
+      updateFilteredRows();
+      apiRef.current.forceUpdate();
+    },
+    [apiRef, updateFilteredRows],
+  );
 
   const upsertFilterItem = React.useCallback<GridFilterApi['upsertFilterItem']>(
     (item) => {
@@ -181,10 +220,7 @@ export const useGridFilter = (
           const filterOperator = column.filterOperators?.find(
             (operator) => operator.value === item.operator,
           );
-          const requiresFilterValue =
-            typeof filterOperator?.requiresFilterValue === 'undefined'
-              ? true
-              : filterOperator?.requiresFilterValue;
+          const requiresFilterValue = filterOperator?.requiresFilterValue ?? true;
 
           // Operators like `isEmpty` don't have and don't require `item.value`.
           // So we don't want to remove them from the filter model if `item.value === undefined`.
@@ -277,7 +313,8 @@ export const useGridFilter = (
           mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering, apiRef),
           reason,
         );
-        apiRef.current.unstable_applyFilters();
+        apiRef.current.forceUpdate();
+        apiRef.current.unstable_applyFilters(true);
       }
     },
     [apiRef, logger, props.disableMultipleColumnsFiltering],
@@ -432,10 +469,14 @@ export const useGridFilter = (
     [apiRef],
   );
 
+  const handleRowExpansionChange = useEventCallback(() => {
+    apiRef.current.unstable_applyFilters();
+  });
+
   // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
   // Otherwise, the state is not consistent during the render
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', apiRef.current.unstable_applyFilters);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', handleRowExpansionChange);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
 
