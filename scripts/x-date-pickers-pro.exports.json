@@ -334,6 +334,7 @@
   { "name": "UseTimeFieldComponentProps", "kind": "TypeAlias" },
   { "name": "UseTimeFieldDefaultizedProps", "kind": "TypeAlias" },
   { "name": "UseTimeFieldProps", "kind": "Interface" },
+  { "name": "viVN", "kind": "Variable" },
   { "name": "YearCalendar", "kind": "Variable" },
   { "name": "yearCalendarClasses", "kind": "Variable" },
   { "name": "YearCalendarClasses", "kind": "Interface" },

@@ -25,4 +25,5 @@ export * from './beBY';
 export * from './ruRU';
 export * from './heIL';
 export * from './skSK';
+export * from './viVN';
 export * from './utils/pickersLocaleTextApi';
