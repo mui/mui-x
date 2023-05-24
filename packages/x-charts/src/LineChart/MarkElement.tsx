@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -11,6 +12,10 @@ import { InteractionContext } from '../context/InteractionProvider';
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the root element when higlighted. */
+  highlighted: string;
+  /** Styles applied to the root element when faded. */
+  faded: string;
 }
 export interface MarkElementOwnerState {
   id: string;
@@ -26,14 +31,16 @@ export function getMarkElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiMarkElement', slot);
 }
 
-export const lineElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
+export const markElementClasses: MarkElementClasses = generateUtilityClasses('MuiMarkElement', [
   'root',
+  'highlighted',
+  'faded',
 ]);
 
 const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, isHighlighted, id } = ownerState;
+  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'isHighlighted'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
   };
 
   return composeClasses(slots, getMarkElementUtilityClass, classes);
@@ -52,6 +59,28 @@ const MarkElementPath = styled('path', {
   strokeWidth: 2,
 }));
 
+MarkElementPath.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  as: PropTypes.elementType,
+  ownerState: PropTypes.shape({
+    classes: PropTypes.object,
+    color: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    isHighlighted: PropTypes.bool.isRequired,
+    isNotHighlighted: PropTypes.bool.isRequired,
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+  }).isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     /**
@@ -64,7 +93,7 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isNotHighlighted' | 
     dataIndex: number;
   };
 
-export function MarkElement(props: MarkElementProps) {
+function MarkElement(props: MarkElementProps) {
   const { x, y, id, classes: innerClasses, color, shape, dataIndex, ...other } = props;
   const { axis } = React.useContext(InteractionContext);
   const isHighlighted = axis.x?.index === dataIndex;
@@ -89,3 +118,22 @@ export function MarkElement(props: MarkElementProps) {
     />
   );
 }
+
+MarkElement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  /**
+   * The index to the element in the series' data array.
+   */
+  dataIndex: PropTypes.number.isRequired,
+  /**
+   * The shape of the marker.
+   */
+  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
+    .isRequired,
+} as any;
+
+export { MarkElement };

@@ -7,48 +7,59 @@ title: Charts - Lines
 
 <p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
 
-## Overview
+## Basics
 
 ### Data format
 
-To plot lines, series must be of type `'line'` and have property `data` containing an array of numbers.
-It has to be associated to an xAxis with `data` property.
-
-:::info
-Latter on, the `xAxis` should be optional with by default an axis with `data:[1, 2, 3, ...]`.
-:::
+To plot lines, a series must have a `data` property containing an array of numbers.
+This `data` array corresponds to y values.
+To modify x value, you should provide a `xAxis` with data properties.
 
 {{"demo": "BasicLineChart.js", "bg": "inline"}}
 
-### Adding area
+### Area
 
-You can fill the area be:low the curve by defining the series' property `area`.
-This property will be used to customize the area.
-But you can simply pass an empty object if you're fine with default settings.
+You can fill the area of the line by setting the series' `area` property to `true`.
 
-Overlapping areas is not a nice pattern.
-To stack lines, you can define the `stack` property.
-LInes with the same `stack` value will be stacked on top of each other.
+{{"demo": "BasicArea.js", "bg": "inline"}}
+
+## Stacking
+
+Each line series can get a `stack` property which expects a string value.
+Series with the same `stack` will be stacked on top of each other.
 
 {{"demo": "StackedAreas.js", "bg": "inline"}}
+
+### Stacking strategy 🚧
 
 ## Styling
 
 ### Interpolation
 
+The interpolation between data points can be customized by the `curve` property.
+This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
+
+{{"demo": "InterpolationDemo.js", "bg": "inline"}}
+
 ### CSS
 
-Line pots are made of two elements named `LineElement` and `AreaElement` (will come `SymbolElement`).
-Each element can be selected with the CSS class name `.MuiLineElement-root` or `.MuiAreaElement-root`.
+Line plots are made of three elements named `LineElement`, `AreaElement`, and `MarkElement`.
+Each element can be selected with the CSS class name `.MuiLineElement-root`, `.MuiAreaElement-root`, or `.MuiMarkElement-root`.
+
 If you want to select the element of a given series, you can use classes `.MuiLineElement-series-<seriesId>` with `<seriesId>` the id of the series you want to customize.
 
-In the next example, we use the following code to customize line style, and the area of the germany GDP.
+In the next example, each line style is customized with dashes, and marks are removed.
+The area of Germany's GDP also gets a custom gradient color.
 The definition of `myGradient` is passed as a children of the chart component.
 
 ```jsx
 sx={{
   '& .MuiLineElement-root': {
     strokeDasharray: '10 5',
+    strokeWidth: 4,
+  },
+  '& .MuiMarkElement-root': {
+    display: 'none',
   },
   '& .MuiAreaElement-series-Germany': {
     fill: "url('#myGradient')",
@@ -57,7 +68,3 @@ sx={{
 ```
 
 {{"demo": "CSSCustomization.js", "bg": "inline"}}
-
-### Props
-
-I assume, we could have properties `area`, `line`, and `symbol` in the series definition. Those objects would the be passes as props to the components.

@@ -84,12 +84,18 @@ export const useField = <
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
-    const nextSectionIndex =
-      browserStartIndex <= state.sections[0].startInInput
-        ? 1 // Special case if browser index is in invisible characters at the beginning.
-        : state.sections.findIndex(
-            (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
-          );
+    let nextSectionIndex: number;
+    if (browserStartIndex <= state.sections[0].startInInput) {
+      // Special case if browser index is in invisible characters at the beginning
+      nextSectionIndex = 1;
+    } else if (browserStartIndex >= state.sections[state.sections.length - 1].endInInput) {
+      // If the click is after the last character of the input, then we want to select the 1st section.
+      nextSectionIndex = 1;
+    } else {
+      nextSectionIndex = state.sections.findIndex(
+        (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+      );
+    }
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
     setSelectedSections(sectionIndex);
@@ -379,7 +385,12 @@ export const useField = <
     ) {
       // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
       const currentScrollTop = inputRef.current!.scrollTop;
-      inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      // On multi input range pickers we want to update selection range only for the active input
+      // This helps avoiding the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
+      // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
+      if (inputRef.current && inputRef.current === getActiveElement(document)) {
+        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      }
       // Even reading this variable seems to do the trick, but also setting it just to make use of it
       inputRef.current!.scrollTop = currentScrollTop;
     }

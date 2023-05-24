@@ -42,17 +42,12 @@ export default function MinMaxExample() {
       <ScatterChart
         xAxis={[
           {
-            id: 'x',
+            label: 'x',
             min: value[0],
             max: value[1],
           },
         ]}
-        series={[
-          {
-            id: 'linear',
-            data,
-          },
-        ]}
+        series={[{ data }]}
         width={600}
         height={500}
       />

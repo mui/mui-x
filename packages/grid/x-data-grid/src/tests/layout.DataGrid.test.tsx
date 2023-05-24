@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getCell, getRow, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   const { clock, render } = createRenderer();
@@ -915,6 +915,23 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
+  describe('non-strict mode', () => {
+    const renderer = createRenderer({ strict: false });
+
+    it('should render in JSDOM', function test() {
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Only run in JSDOM
+      }
+      renderer.render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} />
+        </div>,
+      );
+
+      expect(getCell(0, 0).textContent).to.equal('Nike');
+    });
+  });
+
   it('should allow style customization using the theme', function test() {
     if (/jsdom/.test(window.navigator.userAgent)) {
       this.skip(); // Doesn't work with mocked window.getComputedStyle
@@ -1039,5 +1056,75 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(NoRowsOverlay.callCount).to.equal(0);
     setProps({ loading: false });
     expect(NoRowsOverlay.callCount).not.to.equal(0);
+  });
+
+  describe('sould not overflow parent', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        this.skip(); // Doesn't work with mocked window.getComputedStyle
+      }
+    });
+
+    const rows = [{ id: 1, username: '@MUI', age: 20 }];
+    const columns = [
+      { field: 'id', width: 300 },
+      { field: 'username', width: 300 },
+    ];
+
+    it('grid container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'grid' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+
+    it('flex container', async () => {
+      render(
+        <div style={{ maxWidth: 400 }}>
+          <div style={{ display: 'flex' }}>
+            <DataGrid autoHeight columns={columns} rows={rows} />
+          </div>
+        </div>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toHaveComputedStyle({ width: '400px' });
+      });
+    });
+  });
+
+  // See https://github.com/mui/mui-x/issues/8737
+  it('should not add horizontal scrollbar when .MuiDataGrid-main has border', async function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 300, width: 400, display: 'flex' }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[{ field: 'id', flex: 1 }]}
+          sx={{ '.MuiDataGrid-main': { border: '2px solid red' } }}
+        />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+    const initialVirtualScrollerWidth = virtualScroller.clientWidth;
+
+    // It should not have a horizontal scrollbar
+    expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+
+    await sleep(200);
+    // The width should not increase infinitely
+    expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
   });
 });

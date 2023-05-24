@@ -637,6 +637,15 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(document.querySelector('.MuiDataGrid-detailPanels')).to.equal(null);
         expect(getRow(1)).not.toHaveComputedStyle({ marginBottom: '50px' });
       });
+
+      // See https://github.com/mui/mui-x/pull/8976
+      it('should not toggle the panel if the row id is of a different type', () => {
+        render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
+        expect(screen.queryByText('Detail')).to.equal(null);
+        // '0' !== 0
+        act(() => apiRef.current.toggleDetailPanel('0'));
+        expect(screen.queryByText('Detail')).to.equal(null);
+      });
     });
 
     describe('getExpandedDetailPanels', () => {

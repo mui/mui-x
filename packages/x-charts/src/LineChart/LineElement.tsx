@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -9,6 +10,10 @@ import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export interface LineElementClasses {
   /** Styles applied to the root element. */
   root: string;
+  /** Styles applied to the root element when higlighted. */
+  highlighted: string;
+  /** Styles applied to the root element when faded. */
+  faded: string;
 }
 export interface LineElementOwnerState {
   id: string;
@@ -24,12 +29,14 @@ export function getLineElementUtilityClass(slot: string) {
 
 export const lineElementClasses: LineElementClasses = generateUtilityClasses('MuiLineElement', [
   'root',
+  'highlighted',
+  'faded',
 ]);
 
 const useUtilityClasses = (ownerState: LineElementOwnerState) => {
-  const { classes, id } = ownerState;
+  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
   };
 
   return composeClasses(slots, getLineElementUtilityClass, classes);
@@ -47,10 +54,30 @@ const LineElementPath = styled('path', {
   opacity: ownerState.isNotHighlighted ? 0.3 : 1,
 }));
 
+LineElementPath.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  as: PropTypes.elementType,
+  ownerState: PropTypes.shape({
+    classes: PropTypes.object,
+    color: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    isHighlighted: PropTypes.bool.isRequired,
+    isNotHighlighted: PropTypes.bool.isRequired,
+  }).isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
 export type LineElementProps = Omit<LineElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'>;
 
-export function LineElement(props: LineElementProps) {
+function LineElement(props: LineElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
 
   const getInteractionItemProps = useInteractionItemProps();
@@ -77,3 +104,13 @@ export function LineElement(props: LineElementProps) {
     />
   );
 }
+
+LineElement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+} as any;
+
+export { LineElement };
