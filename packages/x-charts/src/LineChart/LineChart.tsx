@@ -7,11 +7,13 @@ import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
+import { Legend, LegendProps } from '../Legend';
 
 export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
+  legend?: LegendProps;
 }
 export function LineChart(props: LineChartProps) {
   const {
@@ -25,6 +27,7 @@ export function LineChart(props: LineChartProps) {
     sx,
     tooltip,
     highlight,
+    legend,
     topAxis,
     leftAxis,
     rightAxis,
@@ -59,6 +62,7 @@ export function LineChart(props: LineChartProps) {
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <LinePlot />
 
+      <Legend {...legend} />
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       {children}

@@ -6,11 +6,13 @@ import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
+import { Legend, LegendProps } from '../Legend';
 
 export interface ScatterChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
+  legend?: LegendProps;
 }
 
 export function ScatterChart(props: ScatterChartProps) {
@@ -20,6 +22,7 @@ export function ScatterChart(props: ScatterChartProps) {
     series,
     tooltip,
     highlight,
+    legend,
     width,
     height,
     margin,
@@ -45,6 +48,8 @@ export function ScatterChart(props: ScatterChartProps) {
     >
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <ScatterPlot />
+
+      <Legend {...legend} />
       <Highlight x="none" y="none" {...highlight} />
       <Tooltip trigger="item" {...tooltip} />
       {children}
