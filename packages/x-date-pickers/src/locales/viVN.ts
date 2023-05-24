@@ -5,64 +5,64 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 const viVNPickers: PickersLocaleText<any> = {
   // Calendar navigation
-  previousMonth: 'Previous month',
-  nextMonth: 'Next month',
+  previousMonth: 'Tháng trước',
+  nextMonth: 'Tháng sau',
 
   // View navigation
-  openPreviousView: 'open previous view',
-  openNextView: 'open next view',
-  calendarViewSwitchingButtonAriaLabel: (view) =>
-    view === 'year'
-      ? 'year view is open, switch to calendar view'
-      : 'calendar view is open, switch to year view',
+  openPreviousView: 'mở xem trước',
+openNextView: 'mở xem sau',
+calendarViewSwitchingButtonAriaLabel: (view) =>
+view === 'year'
+? 'đang mở xem năm, chuyển sang xem lịch'
+: 'đang mở xem lịch, chuyển sang xem năm',
 
   // DateRange placeholders
-  start: 'Start',
-  end: 'End',
+  start: 'Bắt đầu',
+  end: 'Kết thúc',
 
   // Action bar
-  cancelButtonLabel: 'Cancel',
-  clearButtonLabel: 'Clear',
+  cancelButtonLabel: 'Hủy',
+  clearButtonLabel: 'Xóa',
   okButtonLabel: 'OK',
-  todayButtonLabel: 'Today',
+  todayButtonLabel: 'Hôm nay',
 
   // Toolbar titles
-  datePickerToolbarTitle: 'Select date',
-  dateTimePickerToolbarTitle: 'Select date & time',
-  timePickerToolbarTitle: 'Select time',
-  dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Chọn ngày',
+  dateTimePickerToolbarTitle: 'Chọn ngày và giờ',
+  timePickerToolbarTitle: 'Chọn giờ',
+  dateRangePickerToolbarTitle: 'Chọn khoảng ngày',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
-      time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`
+    `Chọn ${view}. ${
+      time === null ? 'Không có giờ được chọn' : `Giờ được chọn là ${adapter.format(time, 'fullTime')}`
     }`,
-  hoursClockNumberText: (hours) => `${hours} hours`,
-  minutesClockNumberText: (minutes) => `${minutes} minutes`,
-  secondsClockNumberText: (seconds) => `${seconds} seconds`,
+  hoursClockNumberText: (hours) => `${hours} giờ`,
+  minutesClockNumberText: (minutes) => `${minutes} phút`,
+  secondsClockNumberText: (seconds) => `${seconds} giây`,
 
   // Digital clock labels
-  selectViewText: (view) => `Select ${view}`,
+  selectViewText: (view) => `Chọn ${view}`,
 
   // Calendar labels
-  calendarWeekNumberHeaderLabel: 'Week number',
+  calendarWeekNumberHeaderLabel: 'Số tuần',
   calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: (weekNumber) => `Week ${weekNumber}`,
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Tuần ${weekNumber}`,
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Choose date, selected date is ${utils.format(value, 'fullDate')}`
-      : 'Choose date',
+      ? `Chọn ngày, ngày đã chọn là ${utils.format(value, 'fullDate')}`
+      : ''Chọn ngày',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Choose time, selected time is ${utils.format(value, 'fullTime')}`
-      : 'Choose time',
+      ? `Chọn giờ, giờ đã chọn là ${utils.format(value, 'fullTime')}`
+      : ''Chọn giờ',
 
   // Table labels
-  timeTableLabel: 'pick time',
-  dateTableLabel: 'pick date',
+  timeTableLabel: 'chọn giờ',
+  dateTableLabel: 'chọn ngày',
 
   // Field section placeholders
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
@@ -75,6 +75,5 @@ const viVNPickers: PickersLocaleText<any> = {
   fieldMeridiemPlaceholder: () => 'aa',
 };
 
-export const DEFAULT_LOCALE = enUSPickers;
 
-export const enUS = getPickersLocalization(enUSPickers);
+export const viVN = getPickersLocalization(viVNPickers);
