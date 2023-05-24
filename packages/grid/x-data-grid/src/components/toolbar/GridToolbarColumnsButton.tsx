@@ -47,9 +47,9 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
         id={columnButtonId}
         size="small"
         aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
-        aria-controls={isOpen ? columnPanelId : undefined}
+        aria-haspopup="menu"
         aria-expanded={isOpen}
-        aria-haspopup
+        aria-controls={isOpen ? columnPanelId : undefined}
         startIcon={<rootProps.slots.columnSelectorIcon />}
         {...other}
         onClick={showColumns}
