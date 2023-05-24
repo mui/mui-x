@@ -218,7 +218,7 @@
   {
     "languageTag": "vi-VN",
     "importName": "viVN",
-    "localeName": "Vietnam",
+    "localeName": "Vietnamese",
     "missingKeysCount": 0,
     "totalKeysCount": 36,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/viVN.ts"
