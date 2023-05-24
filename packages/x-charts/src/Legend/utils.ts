@@ -27,7 +27,7 @@ const getAnchorValue = (anchor: AnchorX | AnchorY, value: number) => {
   }
 };
 
-const oposit: { [k in AnchorX]: AnchorX } | { [k in AnchorY]: AnchorY } = {
+const oposit: { [k in AnchorX | AnchorY]: AnchorX | AnchorY } = {
   left: 'right',
   right: 'left',
   middle: 'middle',
