@@ -1,6 +1,14 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
+const views: Record<TimeViewWithMeridiem, string> = {
+  hours: 'giờ',
+  minutes: 'phút',
+  seconds: 'giây',
+  meridiem: 'buổi',
+};
+  
 const viVNPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Tháng trước',
@@ -8,11 +16,11 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
 
   // View navigation
   openPreviousView: 'mở xem trước',
-openNextView: 'mở xem sau',
-calendarViewSwitchingButtonAriaLabel: (view) =>
-view === 'year'
-? 'đang mở xem năm, chuyển sang xem lịch'
-: 'đang mở xem lịch, chuyển sang xem năm',
+  openNextView: 'mở xem sau',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+  view === 'year'
+  ? 'đang mở xem năm, chuyển sang xem lịch'
+  : 'đang mở xem lịch, chuyển sang xem năm',
 
   // DateRange placeholders
   start: 'Bắt đầu',
