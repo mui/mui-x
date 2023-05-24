@@ -17,6 +17,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
+import { useGridSelector } from '../../utils/useGridSelector';
 import { GridCellCoordinates } from '../../../models/gridCell';
 import { GridRowEntry } from '../../../models/gridRows';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
@@ -244,8 +245,6 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const focussedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
-
   const handleColumnGroupHeaderFocus = React.useCallback<
     GridEventListener<'columnGroupHeaderFocus'>
   >(
@@ -253,17 +252,18 @@ export const useGridFocus = (
       if (event.target !== event.currentTarget) {
         return;
       }
+      const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
       if (
-        focussedColumnGroup !== null &&
-        focussedColumnGroup.depth === depth &&
-        fields.includes(focussedColumnGroup.field)
+        focusedColumnGroup !== null &&
+        focusedColumnGroup.depth === depth &&
+        fields.includes(focusedColumnGroup.field)
       ) {
         // This group cell has already been focused
         return;
       }
       apiRef.current.setColumnGroupHeaderFocus(fields[0], depth, event);
     },
-    [apiRef, focussedColumnGroup],
+    [apiRef],
   );
 
   const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(() => {

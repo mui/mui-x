@@ -8,7 +8,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
   GridCellEventLookup,
   GridEvents,
@@ -16,30 +16,27 @@ import {
   GridCellModes,
   GridRowId,
 } from '../../models';
-import { GridAlignment } from '../../models/colDef/gridColDef';
+import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
+import { GridTreeNodeWithRender } from '../../models/gridRows';
+import { useGridSelector, shallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import { gridFocusCellSelector, gridTabIndexCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import { gridEditRowsStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { FocusElement } from '../../models/params/gridCellParams';
+import type { GridRowProps } from '../GridRow';
 
-export interface GridCellProps<V = any, F = V> {
+export interface GridCellProps {
   align: GridAlignment;
   className?: string;
   colIndex: number;
-  field: string;
+  column: GridColDef;
   rowId: GridRowId;
-  formattedValue?: F;
-  hasFocus?: boolean;
   height: number | 'auto';
-  isEditable?: boolean;
-  isSelected?: boolean;
   showRightBorder?: boolean;
-  value?: V;
   width: number;
-  cellMode?: GridCellMode;
-  children: React.ReactNode;
-  tabIndex: 0 | -1;
   colSpan?: number;
   disableDragEvents?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -66,7 +63,9 @@ function doesSupportPreventScroll(): boolean {
   return cachedSupportsPreventScroll;
 }
 
-type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'isEditable' | 'isSelected'> & {
+type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder'> & {
+  isEditable?: boolean,
+  isSelected?: boolean,
   classes?: DataGridProcessedProps['classes'];
 };
 
@@ -93,19 +92,10 @@ let warnedOnce = false;
 const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) => {
   const {
     align,
-    children,
     colIndex,
-    colDef,
-    cellMode,
-    field,
-    formattedValue,
-    hasFocus,
+    column,
     height,
-    isEditable,
-    isSelected,
     rowId,
-    tabIndex,
-    value,
     width,
     className,
     showRightBorder,
@@ -125,15 +115,113 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     ...other
   } = props;
 
-  const valueToRender = formattedValue == null ? value : formattedValue;
+  const field = column.field;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
   const apiRef = useGridApiContext();
-
   const rootProps = useGridRootProps();
+
+  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+
+  const {
+    classes: rootClasses,
+    getCellClassName,
+  } = rootProps;
+
+  const isSelected = useGridSelector(apiRef, () =>
+    apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+      id: rowId,
+      field: field,
+    })
+  );
+
+  const cellParams = useGridSelector(apiRef, () => {
+    // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
+    // associated with `rowId`/`fieldId`, but this selector runs after the state has been
+    // updated, while `rowId`/`fieldId` reference an entry in the old state.
+    try {
+      return apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+        rowId,
+        field,
+      );
+    } catch (e) {
+      if ((e as Error).message.startsWith('No row with id')) {
+        return null as any;
+      }
+      throw e;
+    }
+  }, shallowCompare);
+
+  const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
+    id: rowId,
+    field: field,
+  });
+
+  if (column.cellClassName) {
+    classNames.push(
+      clsx(
+        typeof column.cellClassName === 'function'
+          ? column.cellClassName(cellParams)
+          : column.cellClassName,
+      ),
+    );
+  }
+
+  const editCellState = editRowsState[rowId]?.[column.field] ?? null;
+
+  if (getCellClassName) {
+    classNames.push(getCellClassName(cellParams));
+  }
+
+  const managesOwnFocus = column.type === 'actions';
+
+  const cellMode = cellParams.cellMode;
+  const isEditable = cellParams.isEditable;
+  const valueToRender = cellParams.formattedValue == null ? cellParams.value : cellParams.formattedValue;
+
   const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
   const classes = useUtilityClasses(ownerState);
+
+
+  let children: React.ReactNode;
+
+  if (editCellState == null && column.renderCell) {
+    children = column.renderCell({ ...cellParams, api: apiRef.current });
+    classNames.push(
+      clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']),
+    );
+  }
+
+  if (editCellState != null && column.renderEditCell) {
+    const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
+
+    const params: GridRenderEditCellParams = {
+      ...cellParams,
+      row: updatedRow,
+      ...editCellStateRest,
+      api: apiRef.current,
+    };
+
+    children = column.renderEditCell(params);
+    classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
+  }
+
+  if (children === undefined) {
+    const valueString = valueToRender?.toString();
+    children = (
+      <div className={classes.content} title={valueString}>
+        {valueString}
+      </div>
+    );
+  }
+
+  if (React.isValidElement(children) && managesOwnFocus) {
+    children = React.cloneElement<any>(children, { focusElementRef });
+  }
 
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
@@ -185,7 +273,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   };
 
   React.useEffect(() => {
-    if (!hasFocus || cellMode === GridCellModes.Edit) {
+    if (!cellParams.hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
 
@@ -203,7 +291,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         apiRef.current.scroll(scrollPosition);
       }
     }
-  }, [hasFocus, cellMode, apiRef]);
+  }, [cellParams.hasFocus, cellMode, apiRef]);
 
   let handleFocus: any = other.onFocus;
 
@@ -235,26 +323,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     };
   }
 
-  const column = apiRef.current.getColumn(field);
-  const managesOwnFocus = column.type === 'actions';
-
-  const renderChildren = () => {
-    if (children === undefined) {
-      const valueString = valueToRender?.toString();
-      return (
-        <div className={classes.content} title={valueString}>
-          {valueString}
-        </div>
-      );
-    }
-
-    if (React.isValidElement(children) && managesOwnFocus) {
-      return React.cloneElement<any>(children, { focusElementRef });
-    }
-
-    return children;
-  };
-
   const draggableEventHandlers = disableDragEvents
     ? null
     : {
@@ -265,14 +333,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   return (
     <div
       ref={handleRef}
-      className={clsx(className, classes.root)}
+      className={clsx(className, classes.root, ...classNames)}
       role="cell"
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
       style={style}
-      tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? tabIndex : -1}
+      tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParams.tabIndex : -1}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
       onMouseOver={publish('cellMouseOver', onMouseOver)}
@@ -284,7 +352,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       {...other}
       onFocus={handleFocus}
     >
-      {renderChildren()}
+      {children}
     </div>
   );
 });

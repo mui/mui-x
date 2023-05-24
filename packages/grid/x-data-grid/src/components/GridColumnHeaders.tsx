@@ -116,4 +116,6 @@ GridColumnHeaders.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
-export { GridColumnHeaders };
+const MemoizedGridColumnHeaders = React.memo(GridColumnHeaders);
+
+export { MemoizedGridColumnHeaders as GridColumnHeaders };
