@@ -177,6 +177,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const managesOwnFocus = column.type === 'actions';
 
   const cellMode = cellParams.cellMode;
+  const hasFocus = cellParams.hasFocus;
   const isEditable = cellParams.isEditable;
   const valueToRender = cellParams.formattedValue == null ? cellParams.value : cellParams.formattedValue;
 
@@ -273,7 +274,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   };
 
   React.useEffect(() => {
-    if (!cellParams.hasFocus || cellMode === GridCellModes.Edit) {
+    if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
 
@@ -291,7 +292,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         apiRef.current.scroll(scrollPosition);
       }
     }
-  }, [cellParams.hasFocus, cellMode, apiRef]);
+  }, [hasFocus, cellMode, apiRef]);
 
   let handleFocus: any = other.onFocus;
 
