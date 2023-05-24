@@ -8,7 +8,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   seconds: 'giây',
   meridiem: 'buổi',
 };
-  
+
 const viVNPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Tháng trước',
@@ -18,9 +18,9 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   openPreviousView: 'mở xem trước',
   openNextView: 'mở xem sau',
   calendarViewSwitchingButtonAriaLabel: (view) =>
-  view === 'year'
-  ? 'đang mở xem năm, chuyển sang xem lịch'
-  : 'đang mở xem lịch, chuyển sang xem năm',
+    view === 'year'
+      ? 'đang mở xem năm, chuyển sang xem lịch'
+      : 'đang mở xem lịch, chuyển sang xem năm',
 
   // DateRange placeholders
   start: 'Bắt đầu',
@@ -40,15 +40,17 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Chọn ${view}. ${
-      time === null ? 'Không có giờ được chọn' : `Giờ được chọn là ${adapter.format(time, 'fullTime')}`
+    `Chọn ${views[view]}. ${
+      time === null
+        ? 'Không có giờ được chọn'
+        : `Giờ được chọn là ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} giờ`,
   minutesClockNumberText: (minutes) => `${minutes} phút`,
   secondsClockNumberText: (seconds) => `${seconds} giây`,
 
   // Digital clock labels
-  selectViewText: (view) => `Chọn ${view}`,
+  selectViewText: (view) => `Chọn ${views[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Số tuần',
@@ -80,6 +82,5 @@ const viVNPickers: Partial<PickersLocaleText<any>> = {
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',
 };
-
 
 export const viVN = getPickersLocalization(viVNPickers);
