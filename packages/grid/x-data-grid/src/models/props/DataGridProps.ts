@@ -225,11 +225,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
-   * Forwarded props for the grid root element.
-   * @ignore - do not document.
-   */
-  forwardedProps?: Record<string, unknown>;
-  /**
    * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
@@ -370,6 +365,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].

@@ -16,10 +16,7 @@ function groupForwardedProps<
 >(props: T): T {
   const keys = Object.keys(props);
 
-  if (
-    !keys.some((key) => key.startsWith('aria-')) &&
-    !keys.some((key) => key.startsWith('data-'))
-  ) {
+  if (!keys.some((key) => key.startsWith('aria-') || key.startsWith('data-'))) {
     return props;
   }
 
