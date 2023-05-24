@@ -59,7 +59,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
         onClick(apiRef.current.getColumnHeaderParams(field), event);
       }
     },
-    [apiRef, field, onClick],
+    [apiRef, field, onClick, panelId, labelId],
   );
 
   if (!counter) {
