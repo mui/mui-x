@@ -5,7 +5,6 @@ import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
-  buildFieldInteractions,
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
@@ -16,8 +15,6 @@ import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
 describe('<DateTimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
   describeValidation(DateTimeField, () => ({
     render,
@@ -65,10 +62,10 @@ describe('<DateTimeField /> - Describes', () => {
 
       expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value) => {
+    setNewValue: (value, { selectSection }) => {
       const newValue = adapterToUse.addDays(value, 1);
+      selectSection('day');
       const input = getTextbox();
-      clickOnInput(input, 5); // Update the day
       userEvent.keyPress(input, { key: 'ArrowUp' });
       return newValue;
     },

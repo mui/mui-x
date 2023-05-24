@@ -29,6 +29,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   rowReordering: false,
   rowsLoadingMode: 'client',
   getDetailPanelHeight: () => 500,
+  unstable_headerFilters: false,
 };
 
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS)!;

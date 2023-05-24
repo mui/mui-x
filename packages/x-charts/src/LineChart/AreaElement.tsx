@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -52,10 +53,30 @@ const AreaElementPath = styled('path', {
   opacity: ownerState.isNotHighlighted ? 0.3 : 1,
 }));
 
+AreaElementPath.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  as: PropTypes.elementType,
+  ownerState: PropTypes.shape({
+    classes: PropTypes.object,
+    color: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    isHighlighted: PropTypes.bool.isRequired,
+    isNotHighlighted: PropTypes.bool.isRequired,
+  }).isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
 export type AreaElementProps = Omit<AreaElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'>;
 
-export function AreaElement(props: AreaElementProps) {
+function AreaElement(props: AreaElementProps) {
   const { id, classes: innerClasses, color, ...other } = props;
 
   const getInteractionItemProps = useInteractionItemProps();
@@ -82,3 +103,13 @@ export function AreaElement(props: AreaElementProps) {
     />
   );
 }
+
+AreaElement.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+} as any;
+
+export { AreaElement };
