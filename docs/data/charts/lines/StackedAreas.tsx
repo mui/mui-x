@@ -88,6 +88,9 @@ export default function StackedAreas() {
           area: true,
         },
       ]}
+      sx={{
+        '--Legend-item-width': '200px',
+      }}
       width={600}
       height={500}
     />

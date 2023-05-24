@@ -69,6 +69,9 @@ const lineChartsParams = {
       data: UKGDPperCapita,
     },
   ],
+  sx: {
+    '--Legend-item-width': '200px',
+  },
   width: 600,
   height: 400,
 };
