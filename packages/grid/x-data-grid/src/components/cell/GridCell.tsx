@@ -168,12 +168,11 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     );
   }
 
-  const editCellState = editRowsState[rowId]?.[column.field] ?? null;
-
   if (getCellClassName) {
     classNames.push(getCellClassName(cellParams));
   }
 
+  const editCellState = editRowsState[rowId]?.[column.field] ?? null;
   const managesOwnFocus = column.type === 'actions';
 
   const cellMode = cellParams.cellMode;
