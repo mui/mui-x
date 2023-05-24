@@ -54,11 +54,11 @@ view === 'year'
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
       ? `Chọn ngày, ngày đã chọn là ${utils.format(value, 'fullDate')}`
-      : ''Chọn ngày',
+      : 'Chọn ngày',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
       ? `Chọn giờ, giờ đã chọn là ${utils.format(value, 'fullTime')}`
-      : ''Chọn giờ',
+      : 'Chọn giờ',
 
   // Table labels
   timeTableLabel: 'chọn giờ',
