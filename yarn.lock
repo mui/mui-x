@@ -3462,15 +3462,15 @@ add-stream@^1.0.0:
   resolved "https://registry.yarnpkg.com/add-stream/-/add-stream-1.0.0.tgz#6a7990437ca736d5e1288db92bd3266d5f5cb2aa"
   integrity sha1-anmQQ3ynNtXhKI25K9MmbV9csqo=
 
-ag-grid-community@^29.3.4:
-  version "29.3.4"
-  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-29.3.4.tgz#bd469299986d74102f71e61fe328fcf757f2be98"
-  integrity sha512-HQ/meI/4jBXitkpB7GIgmyQMEDm2MPLinZCGqGWnybZ5lnn77RIvBzNdcGlwqRxMjrbpIjRaQOcvWvki1KK4BA==
+ag-grid-community@^29.3.5:
+  version "29.3.5"
+  resolved "https://registry.yarnpkg.com/ag-grid-community/-/ag-grid-community-29.3.5.tgz#16897896d10fa3ecac79279aad50d3aaa17c5f33"
+  integrity sha512-LxUo21f2/CH31ACEs1C7Q/ggGGI1fQPSTB4aY5OThmM+lBkygZ7QszBE8jpfgWOIjvjdtcdIeQbmbjkHeMsA7A==
 
-ag-grid-react@^29.3.4:
-  version "29.3.4"
-  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-29.3.4.tgz#38fe68bbffecb82951a5ac37d863f710c5fd69c9"
-  integrity sha512-dZvVPq7myLOUnXILvWNPNI8tf9Oje5EowRnUEFJodVVWXhxvYwnNqYAj0py1AC66Ok16cpH7MVodtNkBkHzM7g==
+ag-grid-react@^29.3.5:
+  version "29.3.5"
+  resolved "https://registry.yarnpkg.com/ag-grid-react/-/ag-grid-react-29.3.5.tgz#0eae8934d372c7751e98789542fc663aee0ad6ad"
+  integrity sha512-Eg0GJ8hEBuxdVaN5g+qITOzhw0MGL9avL0Oaajr+p7QRtq2pIFHLZSknWsCBzUTjidiu75WZMKwlZjtGEuafdQ==
   dependencies:
     prop-types "^15.8.1"
 
