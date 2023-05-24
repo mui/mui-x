@@ -12,7 +12,6 @@ import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasse
 import {
   GridCellEventLookup,
   GridEvents,
-  GridCellMode,
   GridCellModes,
   GridRowId,
 } from '../../models';
@@ -22,11 +21,10 @@ import { GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector, shallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridFocusCellSelector, gridTabIndexCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { FocusElement } from '../../models/params/gridCellParams';
-import type { GridRowProps } from '../GridRow';
 
 export interface GridCellProps {
   align: GridAlignment;
