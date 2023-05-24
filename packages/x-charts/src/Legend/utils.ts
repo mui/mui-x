@@ -7,6 +7,7 @@ export type AnchorPosition = { horizontal: AnchorX; vertical: AnchorY };
 
 type Size = { height: number; width: number };
 
+// TODO: remove unused function if we agree to go in the direction of CSS vars
 export type SizingParams = {
   direction?: 'row' | 'column';
   markSize?: number;

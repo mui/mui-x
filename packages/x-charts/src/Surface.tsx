@@ -36,6 +36,7 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
     viewBox,
     disableAxisListener = false,
     className,
+    sx,
     ...other
   } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
@@ -48,6 +49,14 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       ref={ref}
+      sx={[
+        {
+          '--Legend-item-width': '100px',
+          '--Legend-spacing': '5px',
+          '--Legend-mark-size': '20px',
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       {...other}
     >
       <title>{props.title}</title>
