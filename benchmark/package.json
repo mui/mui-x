@@ -14,7 +14,7 @@
     "@mui/x-data-grid": "^4.0.0",
     "ag-grid-community": "^29.3.5",
     "ag-grid-react": "^29.3.5",
-    "css-loader": "^6.7.3",
+    "css-loader": "^6.7.4",
     "html-webpack-plugin": "^5.5.1",
     "mui-plus": "^0.0.15",
     "playwright": "^1.33.0",
