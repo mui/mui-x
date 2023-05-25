@@ -17,7 +17,6 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { GridCellCoordinates } from '../../../models/gridCell';
 import { GridRowEntry } from '../../../models/gridRows';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
