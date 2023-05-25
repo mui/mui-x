@@ -4,6 +4,7 @@ import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridCellParams } from '../models';
+import { wrapFastFilterOperators } from '../hooks/features/filter/gridFilterUtils';
 
 export const getGridStringQuickFilterFn = (value: any) => {
   if (!value) {
@@ -17,7 +18,7 @@ export const getGridStringQuickFilterFn = (value: any) => {
 
 export const getGridStringOperators = (
   disableTrim: boolean = false,
-): GridFilterOperator<any, number | string | null, any>[] => [
+): GridFilterOperator<any, number | string | null, any>[] => wrapFastFilterOperators([
   {
     value: 'contains',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
@@ -116,4 +117,4 @@ export const getGridStringOperators = (
     },
     InputComponent: GridFilterInputMultipleValue,
   },
-];
+]);

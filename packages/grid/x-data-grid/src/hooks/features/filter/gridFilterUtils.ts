@@ -2,10 +2,13 @@ import * as React from 'react';
 import { defaultMemoize } from 'reselect';
 import {
   GridCellParams,
+  GridColDef,
   GridFilterItem,
   GridFilterModel,
+  GridFilterOperator,
   GridLogicOperator,
   GridRowId,
+  GridTreeNode,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
@@ -128,6 +131,27 @@ export const mergeStateWithFilterModel =
     filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
+
+export const isFastFilterFn = <T extends Function>(fn: T) => {
+  return (fn as any).isFastFilter === true;
+}
+
+export const wrapFastFilterFn = <T extends Function | null>(fn: T) => {
+  if (fn) {
+    (fn as any).isFastFilter = true;
+  }
+  return fn;
+}
+
+export const wrapFastFilterOperators =
+  <T extends GridFilterOperator<any, any, any>[]>(operators: T) => {
+    return operators.map(operator => ({
+      ...operator,
+      getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef<any, any, any>) =>
+        wrapFastFilterFn(operator.getApplyFilterFn(filterItem, column))
+    }))
+  }
+
 const getFilterCallbackFromItem = (
   filterItem: GridFilterItem,
   apiRef: React.MutableRefObject<GridApiCommunity>,
@@ -171,11 +195,19 @@ const getFilterCallbackFromItem = (
     return null;
   }
 
-  const fn = (rowId: GridRowId) => {
-    const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.field!);
+  const isFastFilter = isFastFilterFn(applyFilterOnRow);
 
-    return applyFilterOnRow(cellParams);
-  };
+  const fn =
+    isFastFilter ?
+      (rowId: GridRowId) => {
+        const value = apiRef.current.getCellValue(rowId, newFilterItem.field!);
+        const params = { value } as GridCellParams<any, unknown, unknown, GridTreeNode>;
+        return applyFilterOnRow(params);
+      } :
+      (rowId: GridRowId) => {
+        const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
+        return applyFilterOnRow(params);
+      };
 
   return { fn, item: newFilterItem };
 };
@@ -203,13 +235,11 @@ export const buildAggregatedFilterItemsApplier = (
   return (rowId, shouldApplyFilter) => {
     const resultPerItemId: GridFilterItemResult = {};
 
-    const filteredAppliers = shouldApplyFilter
-      ? appliers.filter((applier) => shouldApplyFilter(applier.item.field))
-      : appliers;
-
-    filteredAppliers.forEach((applier) => {
+    for (const applier of appliers) {
+      if (shouldApplyFilter && !shouldApplyFilter(applier.item.field))
+        continue;
       resultPerItemId[applier.item.id!] = applier.fn(rowId);
-    });
+    }
 
     return resultPerItemId;
   };
