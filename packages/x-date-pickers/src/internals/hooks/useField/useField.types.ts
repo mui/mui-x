@@ -44,7 +44,7 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
   /**
    * The date to use to generate the part of the date-time not present in the format if not value / defaultValue is present.
    * For example, on time fields it will be used to decide the date to set.
-   * @default The closest valid date using the validation dates (do not use `shouldDisableDate & co) and the rounded to the most granular section used.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
   referenceDate?: TDate;
   /**
