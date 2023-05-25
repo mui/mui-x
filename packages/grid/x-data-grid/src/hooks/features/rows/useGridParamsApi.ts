@@ -102,6 +102,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
         value,
         formattedValue: value,
+        isEditable: false,
       };
       if (colDef && colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter({

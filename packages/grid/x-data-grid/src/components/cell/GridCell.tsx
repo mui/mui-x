@@ -10,7 +10,7 @@ import {
 } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { GridCellEventLookup, GridEvents, GridCellModes, GridRowId } from '../../models';
-import { GridRenderEditCellParams, FocusElement } from '../../models/params/gridCellParams';
+import { GridRenderEditCellParams, FocusElement, GridCellParams } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector, shallowCompare } from '../../hooks/utils/useGridSelector';
@@ -40,6 +40,31 @@ export interface GridCellProps {
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
   [x: string]: any;
 }
+
+const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
+  id: -1,
+  field: '__unset__',
+  row: {},
+  rowNode: {
+    id: -1,
+    depth: 0,
+    type: 'leaf',
+    parent: -1,
+    groupingKey: null,
+  },
+  colDef: {
+    type: 'string',
+    field: '__unset__',
+    computedWidth: 0,
+  },
+  cellMode: GridCellModes.View,
+  hasFocus: false,
+  tabIndex: -1,
+  value: null,
+  formattedValue: '__unset__',
+  isEditable: false,
+};
+
 
 // Based on https://stackoverflow.com/a/59518678
 let cachedSupportsPreventScroll: boolean;
@@ -135,7 +160,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         return apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(rowId, field);
       } catch (e) {
         if ((e as Error).message.startsWith('No row with id')) {
-          return null as any;
+          return EMPTY_CELL_PARAMS;
         }
         throw e;
       }
@@ -312,6 +337,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
       }
     };
   }
+
+  if (cellParams === EMPTY_CELL_PARAMS)
+    return null;
 
   const draggableEventHandlers = disableDragEvents
     ? null
