@@ -415,7 +415,7 @@ export const useGridColumnResize = (
     Promise.resolve().then(() => {
       doc.removeEventListener('click', handleClick, true);
     })
-  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
+  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd, handleClick]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {
