@@ -40,17 +40,28 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) >= 17.0.2 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.2 are peer dependencies.
+Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
 
-MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
+```
+
+### Style engine
+
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 ```sh
 // with npm
-npm install @mui/material @mui/styled-engine-sc styled-components
+npm install @mui/styled-engine-sc styled-components
 
 // with yarn
-yarn add @mui/material @mui/styled-engine-sc styled-components
+yarn add @mui/styled-engine-sc styled-components
 ```
+
+Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
 
 ## Setup your date library adapter
 

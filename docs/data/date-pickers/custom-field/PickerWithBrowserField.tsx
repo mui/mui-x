@@ -76,6 +76,7 @@ interface BrowserMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
+      Dayjs,
       RangeFieldSection,
       DateRangeValidationError
     > {}
@@ -161,7 +162,12 @@ function BrowserDateRangePicker(props: DateRangePickerProps<Dayjs>) {
 
 interface BrowserDateFieldProps
   extends UseDateFieldProps<Dayjs>,
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {}
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateValidationError
+    > {}
 
 function BrowserDateField(props: BrowserDateFieldProps) {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;

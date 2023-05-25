@@ -21,6 +21,10 @@ import {
 } from './useField.utils';
 import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
+import {
+  GetDefaultReferenceDateProps,
+  getSectionTypeGranularity,
+} from '../../utils/getDefaultReferenceDate';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {
   /**
@@ -42,7 +46,7 @@ export const useFieldState = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ) => {
@@ -61,6 +65,7 @@ export const useFieldState = <
     internalProps: {
       value: valueProp,
       defaultValue,
+      referenceDate: referenceDateProp,
       onChange,
       format,
       formatDensity = 'dense',
@@ -104,15 +109,26 @@ export const useFieldState = <
     const sections = getSectionsFromValue(valueFromTheOutside);
     validateSections(sections, valueType);
 
-    return {
+    const stateWithoutReferenceDate: UseFieldState<TValue, TSection> = {
       sections,
       value: valueFromTheOutside,
-      referenceValue: fieldValueManager.updateReferenceValue(
-        utils,
-        valueFromTheOutside,
-        valueManager.getTodayValue(utils, valueType),
-      ),
+      referenceValue: valueManager.emptyValue,
       tempValueStrAndroid: null,
+    };
+
+    const granularity = getSectionTypeGranularity(sections);
+    const referenceValue = valueManager.getInitialReferenceValue({
+      referenceDate: referenceDateProp,
+      value: valueFromTheOutside,
+      valueType,
+      utils,
+      props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      granularity,
+    });
+
+    return {
+      ...stateWithoutReferenceDate,
+      referenceValue,
     };
   });
 
