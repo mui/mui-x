@@ -101,6 +101,28 @@ describe('<DataGridPro /> - Columns', () => {
       expect(getCell(1, 0)).toHaveInlineStyle({ width: '110px' });
     });
 
+    /* XXX: Does not reproduce the original issue */
+    it('should not trigger a click on the header after resizing', () => {
+      const columns = [{ field: 'id', minWidth: 100 }, { field: 'brand', width: 100 }];
+      render(
+        <Test
+          columns={columns}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'brand', sort: 'asc' }],
+            }
+          }}
+        />
+      );
+      const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+      const header = document.querySelector(`.${gridClasses['columnHeader']}`)!;
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 90, buttons: 1 });
+      fireEvent.mouseUp(header);
+      const sortedCell = document.querySelector(`.${gridClasses['columnHeader--sorted']}`);
+      expect(sortedCell?.getAttribute('data-field')).to.equal('brand');
+    });
+
     it('should allow to resize columns with the touch', function test() {
       // Only run in supported browsers
       if (typeof Touch === 'undefined') {
