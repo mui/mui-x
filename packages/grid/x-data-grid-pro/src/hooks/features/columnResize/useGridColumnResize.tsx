@@ -215,7 +215,7 @@ export const useGridColumnResize = (
     logger.debug(
       `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
     );
-  }
+  };
 
   // Prevent the click event if we have resized the column.
   // Fixes https://github.com/mui/mui-x/issues/4777
@@ -414,8 +414,15 @@ export const useGridColumnResize = (
     // has been canceled before removing our handler.
     Promise.resolve().then(() => {
       doc.removeEventListener('click', handleClick, true);
-    })
-  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd, handleClick]);
+    });
+  }, [
+    apiRef,
+    handleResizeMouseMove,
+    handleResizeMouseUp,
+    handleTouchMove,
+    handleTouchEnd,
+    handleClick,
+  ]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {

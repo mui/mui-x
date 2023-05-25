@@ -103,16 +103,19 @@ describe('<DataGridPro /> - Columns', () => {
 
     /* XXX: Does not reproduce the original issue */
     it('should not trigger a click on the header after resizing', () => {
-      const columns = [{ field: 'id', minWidth: 100 }, { field: 'brand', width: 100 }];
+      const columns = [
+        { field: 'id', minWidth: 100 },
+        { field: 'brand', width: 100 },
+      ];
       render(
         <Test
           columns={columns}
           initialState={{
             sorting: {
               sortModel: [{ field: 'brand', sort: 'asc' }],
-            }
+            },
           }}
-        />
+        />,
       );
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       const header = document.querySelector(`.${gridClasses['columnHeader']}`)!;
