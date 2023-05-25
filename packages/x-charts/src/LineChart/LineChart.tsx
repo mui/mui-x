@@ -39,6 +39,7 @@ function LineChart(props: LineChartProps) {
 
   const id = useId();
   const clipPathId = `${id}-clip-path`;
+  const clipPathLoseId = `${id}-clip-path-lose`;
 
   return (
     <ChartContainer
@@ -69,10 +70,13 @@ function LineChart(props: LineChartProps) {
         <LinePlot />
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <g clipPath={`url(#${clipPathLoseId})`}>
         <MarkPlot />
+      </g>
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
+      <ClipPath id={clipPathLoseId} offset={{ top: 5, bottom: 5, left: 5, right: 5 }} />
       {children}
     </ChartContainer>
   );

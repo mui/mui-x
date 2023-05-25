@@ -49,13 +49,13 @@ function ScatterChart(props: ScatterChartProps) {
       yAxis={yAxis}
       sx={sx}
     >
+      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <g clipPath={`url(#${clipPathId})`}>
         <ScatterPlot />
       </g>
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <Highlight x="none" y="none" {...highlight} />
       <Tooltip trigger="item" {...tooltip} />
-      <ClipPath id={clipPathId} />
+      <ClipPath id={clipPathId} offset={{ top: 5, bottom: 5, left: 5, right: 5 }} />
       {children}
     </ChartContainer>
   );
