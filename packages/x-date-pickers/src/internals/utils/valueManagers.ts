@@ -6,7 +6,8 @@ import {
   FieldSection,
 } from '../../models';
 import type { FieldValueManager } from '../hooks/useField';
-import { areDatesEqual, replaceInvalidDateByNull } from './date-utils';
+import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
+import { getDefaultReferenceDate } from './getDefaultReferenceDate';
 import {
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
@@ -20,8 +21,18 @@ export type SingleItemPickerValueManager<
 
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
-  getTodayValue: (utils, valueType) =>
-    valueType === 'date' ? utils.startOfDay(utils.date())! : utils.date()!,
+  getTodayValue: getTodayDate,
+  getInitialReferenceValue: ({ value, referenceDate, ...params }) => {
+    if (value != null && params.utils.isValid(value)) {
+      return value;
+    }
+
+    if (referenceDate != null) {
+      return referenceDate;
+    }
+
+    return getDefaultReferenceDate(params);
+  },
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: areDatesEqual,
   isSameError: (a, b) => a === b,

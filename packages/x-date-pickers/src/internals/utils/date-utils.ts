@@ -1,4 +1,4 @@
-import { MuiPickersAdapter } from '../../models';
+import { FieldValueType, MuiPickersAdapter } from '../../models';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
@@ -134,3 +134,6 @@ export const mergeDateAndTime = <TDate>(
 
   return mergedDate;
 };
+
+export const getTodayDate = <TDate>(utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) =>
+  valueType === 'date' ? utils.startOfDay(utils.date()!) : utils.date()!;

@@ -475,6 +475,13 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   getSeconds(value: TDate): number;
   /**
+   * Get the milliseconds of the given date.
+   * @template TDate
+   * @param {TDate} value The given date.
+   * @returns {number} The milliseconds of the given date.
+   */
+  getMilliseconds(value: TDate): number;
+  /**
    * Set the year to the given date.
    * @template TDate
    * @param {TDate} value The date to be changed.
@@ -522,6 +529,14 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {TDate} The new date with the seconds set.
    */
   setSeconds(value: TDate, seconds: number): TDate;
+  /**
+   * Set the milliseconds to the given date.
+   * @template TDate
+   * @param {TDate} value The date to be changed.
+   * @param {number} milliseconds The milliseconds of the new date.
+   * @returns {TDate} The new date with the milliseconds set.
+   */
+  setMilliseconds(value: TDate, milliseconds: number): TDate;
   /**
    * Get the number of days in a month of the given date.
    * @template TDate
