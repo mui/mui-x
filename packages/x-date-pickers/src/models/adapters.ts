@@ -1,5 +1,5 @@
 import { FieldSectionContentType, FieldSectionType } from './fields';
-import { PickerTimezone } from './timezone';
+import { PickersTimezone } from './timezone';
 
 export interface AdapterFormats {
   /** Localized full date @example "Jan 1, 2019" */
@@ -129,7 +129,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @param {string} timezone The timezone of the date.
    * @returns {TDate | null} The parsed date.
    */
-  dateWithTimezone(value: string | null | undefined, timezone: PickerTimezone): TDate | null;
+  dateWithTimezone(value: string | null | undefined, timezone: PickersTimezone): TDate | null;
   /**
    * Extracts the timezone from a date.
    * @template TDate
@@ -143,7 +143,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @param {string} timezone The timezone to convert the date to.
    * @returns {TDate} The converted date.
    */
-  setTimezone(value: TDate, timezone: PickerTimezone): TDate;
+  setTimezone(value: TDate, timezone: PickersTimezone): TDate;
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
    * @template TDate

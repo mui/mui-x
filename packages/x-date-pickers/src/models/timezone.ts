@@ -1,1 +1,1 @@
-export type PickerTimezone = 'default' | 'system' | 'UTC' | string;
+export type PickersTimezone = 'default' | 'system' | 'UTC' | string;

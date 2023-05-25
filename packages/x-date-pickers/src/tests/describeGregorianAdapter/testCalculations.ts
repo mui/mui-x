@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { PickerTimezone } from '@mui/x-date-pickers/models';
+import { PickersTimezone } from '@mui/x-date-pickers/models';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 
@@ -42,7 +42,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   describe('Method: dateWithTimezone', () => {
     it('should parse ISO strings', () => {
       if (adapter.isTimezoneCompatible) {
-        const test = (timezone: PickerTimezone, expectedTimezones: string = timezone) => {
+        const test = (timezone: PickersTimezone, expectedTimezones: string = timezone) => {
           [adapterTZ, adapterFr].forEach((instance) => {
             const dateWithZone = instance.dateWithTimezone(TEST_DATE_ISO_STRING, timezone)!;
             expect(instance.getTimezone(dateWithZone)).to.equal(expectedTimezones);
@@ -77,7 +77,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
     it('should parse locale strings', () => {
       if (adapter.isTimezoneCompatible) {
-        const test = (timezone: PickerTimezone) => {
+        const test = (timezone: PickersTimezone) => {
           [adapterTZ, adapterFr].forEach((instance) => {
             const dateWithZone = instance.dateWithTimezone(TEST_DATE_LOCALE_STRING, timezone)!;
             expect(instance.getTimezone(dateWithZone)).to.equal(timezone);
@@ -113,7 +113,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       expect(adapter.dateWithTimezone(undefined, 'system')).toEqualDateTime(expectedDate);
 
       if (adapter.isTimezoneCompatible) {
-        const testTodayZone = (timezone: PickerTimezone) => {
+        const testTodayZone = (timezone: PickersTimezone) => {
           const dateWithZone = adapterTZ.dateWithTimezone(undefined, timezone)!;
           expect(adapterTZ.getTimezone(dateWithZone)).to.equal(timezone);
           expect(adapterTZ.getDiff(dateWithZone, adapterTZ.date(new Date())!)).to.be.lessThan(5);
@@ -134,7 +134,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   describe('Method: setTimezone', () => {
     it('should support "default"', () => {
       if (adapter.isTimezoneCompatible) {
-        const test = (timezone: PickerTimezone) => {
+        const test = (timezone: PickersTimezone) => {
           setDefaultTimezone(timezone);
           const dateWithLocaleTimezone = adapter.dateWithTimezone(undefined, 'system')!;
           const dateWithDefaultTimezone = adapter.setTimezone(dateWithLocaleTimezone, 'default');

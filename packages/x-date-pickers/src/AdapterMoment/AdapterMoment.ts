@@ -6,7 +6,7 @@ import {
   AdapterUnits,
   FieldFormatTokenMap,
   MuiPickersAdapter,
-  PickerTimezone,
+  PickersTimezone,
 } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
@@ -160,7 +160,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return parsedValue.locale(this.locale);
   };
 
-  private createTZDate = (value: string | undefined, timezone: PickerTimezone): Moment => {
+  private createTZDate = (value: string | undefined, timezone: PickersTimezone): Moment => {
     /* istanbul ignore next */
     if (!this.hasTimezonePlugin()) {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
@@ -189,7 +189,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public dateWithTimezone = (
     value: string | null | undefined,
-    timezone: PickerTimezone,
+    timezone: PickersTimezone,
   ): Moment | null => {
     if (value === null) {
       return null;
@@ -219,7 +219,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return zone ?? this.moment.defaultZone?.name ?? 'system';
   };
 
-  public setTimezone = (value: Moment, timezone: PickerTimezone): Moment => {
+  public setTimezone = (value: Moment, timezone: PickersTimezone): Moment => {
     if (timezone === 'UTC') {
       return value.clone().utc();
     }

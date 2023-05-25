@@ -10,7 +10,7 @@ import {
   AdapterFormats,
   AdapterUnits,
   AdapterOptions,
-  PickerTimezone,
+  PickersTimezone,
 } from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
@@ -190,7 +190,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return defaultDayjs.utc(value);
   };
 
-  private createTZDate = (value: string | undefined, timezone: PickerTimezone): Dayjs => {
+  private createTZDate = (value: string | undefined, timezone: PickersTimezone): Dayjs => {
     /* istanbul ignore next */
     if (!this.hasUTCPlugin()) {
       throw new Error(MISSING_UTC_PLUGIN);
@@ -231,7 +231,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public dateWithTimezone = (
     value: string | null | undefined,
-    timezone: PickerTimezone,
+    timezone: PickersTimezone,
   ): Dayjs | null => {
     if (value === null) {
       return null;
@@ -269,7 +269,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return 'system';
   };
 
-  public setTimezone = (value: Dayjs, timezone: PickerTimezone): Dayjs => {
+  public setTimezone = (value: Dayjs, timezone: PickersTimezone): Dayjs => {
     if (this.getTimezone(value) === timezone) {
       return value;
     }

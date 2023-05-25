@@ -6,7 +6,7 @@ import {
   AdapterUnits,
   FieldFormatTokenMap,
   MuiPickersAdapter,
-  PickerTimezone,
+  PickersTimezone,
 } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
@@ -154,7 +154,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public dateWithTimezone = (
     value: string | null | undefined,
-    timezone: PickerTimezone,
+    timezone: PickersTimezone,
   ): DateTime | null => {
     if (value === null) {
       return null;
@@ -178,7 +178,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.zoneName ?? 'system';
   };
 
-  public setTimezone = (value: DateTime, timezone: PickerTimezone): DateTime => {
+  public setTimezone = (value: DateTime, timezone: PickersTimezone): DateTime => {
     if (!value.zone.equals(Info.normalizeZone(timezone))) {
       return value.setZone(timezone);
     }
