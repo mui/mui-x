@@ -71,6 +71,8 @@ const FULL_INITIAL_STATE: GridInitialState = {
   preferencePanel: {
     open: true,
     openedPanelValue: GridPreferencePanelsValue.filters,
+    panelId: undefined,
+    labelId: undefined,
   },
   sorting: {
     sortModel: [{ field: 'id', sort: 'desc' }],
