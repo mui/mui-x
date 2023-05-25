@@ -314,6 +314,17 @@ export const useGridColumnResize = (
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
       apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
+      if (colDefRef.current) {
+        apiRef.current.publishEvent(
+          'columnWidthChange',
+          {
+            element: colElementRef.current,
+            colDef: colDefRef.current,
+            width: colDefRef.current?.computedWidth,
+          },
+          nativeEvent,
+        );
+      }
     });
 
     logger.debug(

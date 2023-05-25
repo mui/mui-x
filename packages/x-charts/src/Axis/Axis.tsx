@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { XAxis } from '../XAxis';
@@ -44,7 +45,7 @@ const getAxisId = (
   return propsValue;
 };
 
-export function Axis(props: AxisProps) {
+function Axis(props: AxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis } = props;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
 
@@ -74,6 +75,7 @@ export function Axis(props: AxisProps) {
       {topId && (
         <XAxis position="top" axisId={topId} {...(typeof topAxis === 'object' ? topAxis : {})} />
       )}
+
       {bottomId && (
         <XAxis
           position="bottom"
@@ -81,6 +83,7 @@ export function Axis(props: AxisProps) {
           {...(typeof bottomAxis === 'object' ? bottomAxis : {})}
         />
       )}
+
       {leftId && (
         <YAxis
           position="left"
@@ -88,6 +91,7 @@ export function Axis(props: AxisProps) {
           {...(typeof leftAxis === 'object' ? leftAxis : {})}
         />
       )}
+
       {rightId && (
         <YAxis
           position="right"
@@ -98,3 +102,96 @@ export function Axis(props: AxisProps) {
     </React.Fragment>
   );
 }
+
+Axis.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Indicate which axis to display the the bottom of the charts.
+   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * @default xAxisIds[0] The id of the first provided axis
+   */
+  bottomAxis: PropTypes.oneOfType([
+    PropTypes.shape({
+      axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'top']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.string,
+  ]),
+  /**
+   * Indicate which axis to display the the left of the charts.
+   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * @default yAxisIds[0] The id of the first provided axis
+   */
+  leftAxis: PropTypes.oneOfType([
+    PropTypes.shape({
+      axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      position: PropTypes.oneOf(['left', 'right']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.string,
+  ]),
+  /**
+   * Indicate which axis to display the the right of the charts.
+   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * @default null
+   */
+  rightAxis: PropTypes.oneOfType([
+    PropTypes.shape({
+      axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      position: PropTypes.oneOf(['left', 'right']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.string,
+  ]),
+  /**
+   * Indicate which axis to display the the top of the charts.
+   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * @default null
+   */
+  topAxis: PropTypes.oneOfType([
+    PropTypes.shape({
+      axisId: PropTypes.string.isRequired,
+      classes: PropTypes.object,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'top']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+    }),
+    PropTypes.string,
+  ]),
+} as any;
+
+export { Axis };
