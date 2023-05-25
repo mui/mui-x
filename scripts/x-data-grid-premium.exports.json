@@ -1,4 +1,5 @@
 [
+  { "name": "applySelector", "kind": "Function" },
   { "name": "arSD", "kind": "Variable" },
   { "name": "BaseButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseCheckboxPropsOverrides", "kind": "Interface" },
@@ -32,6 +33,7 @@
   { "name": "DataGridPro", "kind": "Function" },
   { "name": "deDE", "kind": "Variable" },
   { "name": "DEFAULT_GRID_COL_TYPE_KEY", "kind": "Variable" },
+  { "name": "defaultCompare", "kind": "Variable" },
   { "name": "ElementSize", "kind": "Interface" },
   { "name": "elGR", "kind": "Variable" },
   { "name": "enUS", "kind": "Variable" },
@@ -608,6 +610,7 @@
   { "name": "selectedGridRowsSelector", "kind": "Variable" },
   { "name": "selectedIdsLookupSelector", "kind": "Variable" },
   { "name": "setupExcelExportWebWorker", "kind": "Function" },
+  { "name": "shallowCompare", "kind": "Variable" },
   { "name": "skSK", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_DATE_STROKE_TIME", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_STROKE_TIME", "kind": "Variable" },
