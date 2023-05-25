@@ -600,17 +600,17 @@ describe('<DataGrid /> - Keyboard', () => {
     it('should go back to same header when pressing "ArrowUp" and "ArrowDown" from column header', () => {
       render(<NavigationTestGroupingCaseNoScrollX />);
 
-      act(() => getColumnHeaderCell(4, 2).focus());
+      act(() => getColumnHeaderCell(2, 2).focus());
       // column with field "price3M"
-      expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 5 });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 3 });
 
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
       // group "prices 234"
-      expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 3 });
 
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       // column with field "price3M"
-      expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 5 });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 3 });
     });
   });
 
