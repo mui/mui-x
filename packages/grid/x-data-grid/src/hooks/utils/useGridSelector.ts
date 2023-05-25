@@ -50,16 +50,17 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
   stateRef.current = state;
   selectorRef.current = selector;
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   React.useEffect(() => {
     return apiRef.current.store.subscribe(() => {
-      const state = stateRef.current;
       const newState = applySelector(apiRef, selectorRef.current!);
-      if (!equals(state, newState)) {
+      if (!equals(stateRef.current, newState)) {
         stateRef.current = newState;
         setState(newState);
       }
     });
   }, EMPTY);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   return state;
 };

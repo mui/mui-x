@@ -11,6 +11,8 @@ export function fastShallowCompare<T extends Record<string, unknown> | null | un
     return false;
   }
 
+  /* eslint-disable no-restricted-syntax */
+  /* eslint-disable guard-for-in */
   for (const key in a) {
     if (!(key in b)) {
       return false;
@@ -25,6 +27,8 @@ export function fastShallowCompare<T extends Record<string, unknown> | null | un
       return false;
     }
   }
+  /* eslint-enable no-restricted-syntax */
+  /* eslint-enable guard-for-in */
 
   return true;
 }

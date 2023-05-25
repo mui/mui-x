@@ -21,7 +21,6 @@ function Component({ rows }) {
     />
   );
 }
-
 ```
 
 An easy way to prevent re-renders is to extract any object that can be a static object, and to memoize any object that
@@ -33,20 +32,13 @@ const slots = {
 };
 
 function Component({ rows }) {
-  const cellModesModel = React.useMemo(() =>
-    ({ [rows[0].id]: { name: { mode: GridCellModes.Edit } } }),
-    [rows]
+  const cellModesModel = React.useMemo(
+    () => ({ [rows[0].id]: { name: { mode: GridCellModes.Edit } } }),
+    [rows],
   );
 
-  return (
-    <DataGrid
-      rows={rows}
-      slots={slots}
-      cellModesModel={cellModesModel}
-    />
-  );
+  return <DataGrid rows={rows} slots={slots} cellModesModel={cellModesModel} />;
 }
-
 ```
 
 ## API

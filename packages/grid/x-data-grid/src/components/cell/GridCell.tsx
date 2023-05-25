@@ -175,6 +175,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const classes = useUtilityClasses(ownerState);
 
   let children: React.ReactNode;
+  /* eslint-disable-next-line no-lone-blocks */
   {
     if (editCellState == null && column.renderCell) {
       children = column.renderCell({ ...cellParams, api: apiRef.current });

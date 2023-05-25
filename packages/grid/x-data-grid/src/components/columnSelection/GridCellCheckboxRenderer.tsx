@@ -6,10 +6,8 @@ import {
 } from '@mui/utils';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { isSpaceKey } from '../../utils/keyboardUtils';
-import { useGridSelector } from '../../hooks';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { selectedIdsLookupSelector } from '../../hooks/features/rowSelection';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';

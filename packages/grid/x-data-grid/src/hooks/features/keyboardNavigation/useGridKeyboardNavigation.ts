@@ -18,7 +18,6 @@ import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
-import { useGridSelector } from '../../utils/useGridSelector';
 import {
   unstable_gridHeaderFilteringEditFieldSelector,
   unstable_gridHeaderFilteringMenuSelector,

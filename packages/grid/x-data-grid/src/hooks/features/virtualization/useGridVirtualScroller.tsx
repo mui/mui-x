@@ -108,7 +108,7 @@ interface ContainerDimensions {
 
 // The `maxSize` is 3 so that reselect caches the `renderedColumns` values for the pinned left,
 // unpinned, and pinned right sections.
-const MEMOIZE_OPTIONS = { maxSize: 3 }
+const MEMOIZE_OPTIONS = { maxSize: 3 };
 
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const apiRef = useGridPrivateApiContext();
