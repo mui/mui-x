@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
 import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
@@ -119,31 +118,11 @@ function BrowserDateField(props) {
   return <BrowserField {...response} />;
 }
 
-BrowserDateField.propTypes = {
-  inputRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.oneOfType([PropTypes.oneOf([null]), PropTypes.object])
-        .isRequired,
-    }),
-  ]),
-  slotProps: PropTypes.object,
-  slots: PropTypes.object,
-};
-
 function BrowserDatePicker(props) {
   return (
     <DatePicker slots={{ field: BrowserDateField, ...props.slots }} {...props} />
   );
 }
-
-BrowserDatePicker.propTypes = {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots: PropTypes.any,
-};
 
 export default function PickerWithBrowserField() {
   return (

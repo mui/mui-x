@@ -51,7 +51,6 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        ampm: defaultizedProps.ampm,
       }),
       toolbar: {
         hidden: false,
