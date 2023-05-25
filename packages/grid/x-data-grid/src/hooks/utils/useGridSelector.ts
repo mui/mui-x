@@ -27,7 +27,7 @@ export function applySelector<Api extends GridApiCommon, T>(
   return selector(apiRef.current.state);
 }
 
-export const defaultCompare = Object.is; // XXX: Do we need to polyfill?
+export const defaultCompare = Object.is;
 export const shallowCompare = fastShallowCompare;
 
 export const useGridSelector = <Api extends GridApiCommon, T>(
