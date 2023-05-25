@@ -28,6 +28,32 @@ export const getSectionTypeGranularity = (sections: FieldSection[]) =>
     ),
   );
 
+const roundDate = <TDate>(utils: MuiPickersAdapter<TDate>, granularity: number, date: TDate) => {
+  if (granularity === SECTION_TYPE_GRANULARITY.year) {
+    return utils.startOfYear(date);
+  }
+  if (granularity === SECTION_TYPE_GRANULARITY.month) {
+    return utils.startOfMonth(date);
+  }
+  if (granularity === SECTION_TYPE_GRANULARITY.day) {
+    return utils.startOfDay(date);
+  }
+
+  // We don't have startOfHour / startOfMinute / startOfSecond
+  let roundedDate = date;
+  if (granularity < SECTION_TYPE_GRANULARITY.minutes) {
+    roundedDate = utils.setMinutes(roundedDate, 0);
+  }
+  if (granularity < SECTION_TYPE_GRANULARITY.seconds) {
+    roundedDate = utils.setSeconds(roundedDate, 0);
+  }
+  if (granularity < SECTION_TYPE_GRANULARITY.milliseconds) {
+    roundedDate = utils.setMilliseconds(roundedDate, 0);
+  }
+
+  return roundedDate;
+};
+
 export const getDefaultReferenceDate = <TDate>({
   props,
   utils,
@@ -39,40 +65,14 @@ export const getDefaultReferenceDate = <TDate>({
   valueType: FieldValueType;
   granularity: number;
 }) => {
-  const roundDate = (date: TDate) => {
-    if (granularity === SECTION_TYPE_GRANULARITY.year) {
-      return utils.startOfYear(date);
-    }
-    if (granularity === SECTION_TYPE_GRANULARITY.month) {
-      return utils.startOfMonth(date);
-    }
-    if (granularity === SECTION_TYPE_GRANULARITY.day) {
-      return utils.startOfDay(date);
-    }
-
-    // We don't have startOfHour / startOfMinute / startOfSecond
-    let roundedDate = date;
-    if (granularity < SECTION_TYPE_GRANULARITY.minutes) {
-      roundedDate = utils.setMinutes(roundedDate, 0);
-    }
-    if (granularity < SECTION_TYPE_GRANULARITY.seconds) {
-      roundedDate = utils.setSeconds(roundedDate, 0);
-    }
-    if (granularity < SECTION_TYPE_GRANULARITY.milliseconds) {
-      roundedDate = utils.setMilliseconds(roundedDate, 0);
-    }
-
-    return roundedDate;
-  };
-
-  let referenceDate = roundDate(getTodayDate(utils, valueType));
+  let referenceDate = roundDate(utils, granularity, getTodayDate(utils, valueType));
 
   if (props.minDate != null && utils.isAfterDay(props.minDate, referenceDate)) {
-    referenceDate = roundDate(props.minDate);
+    referenceDate = roundDate(utils, granularity, props.minDate);
   }
 
   if (props.maxDate != null && utils.isBeforeDay(props.maxDate, referenceDate)) {
-    referenceDate = roundDate(props.maxDate);
+    referenceDate = roundDate(utils, granularity, props.maxDate);
   }
 
   const isAfter = createIsAfterIgnoreDatePart(
@@ -81,6 +81,8 @@ export const getDefaultReferenceDate = <TDate>({
   );
   if (props.minTime != null && isAfter(props.minTime, referenceDate)) {
     referenceDate = roundDate(
+      utils,
+      granularity,
       props.disableIgnoringDatePartForTimeValidation
         ? props.minTime
         : mergeDateAndTime(utils, referenceDate, props.minTime),
@@ -89,6 +91,8 @@ export const getDefaultReferenceDate = <TDate>({
 
   if (props.maxTime != null && isAfter(referenceDate, props.maxTime)) {
     referenceDate = roundDate(
+      utils,
+      granularity,
       props.disableIgnoringDatePartForTimeValidation
         ? props.maxTime
         : mergeDateAndTime(utils, referenceDate, props.maxTime),

@@ -144,7 +144,7 @@ describe('<DateTimeField /> - Editing', () => {
         expect(onChange.lastCall.firstArg).toEqualDateTime('2030-01-01T00:00');
       });
 
-      it("should ignore the `minDate` it's before the current date", () => {
+      it("should ignore the `minDate` if  it's before the current date", () => {
         const onChange = spy();
         const minDate = adapterToUse.date(new Date(2007, 4, 5, 18, 30));
 
@@ -178,7 +178,7 @@ describe('<DateTimeField /> - Editing', () => {
         expect(onChange.lastCall.firstArg).toEqualDateTime('2007-01-01T00:00');
       });
 
-      it("should ignore the `maxDate` it's after the current date", () => {
+      it("should ignore the `maxDate` if  it's after the current date", () => {
         const onChange = spy();
         const maxDate = adapterToUse.date(new Date(2030, 4, 5, 18, 30));
 

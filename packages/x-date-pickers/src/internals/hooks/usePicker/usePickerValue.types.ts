@@ -38,11 +38,11 @@ export interface PickerValueManager<TValue, TDate, TError> {
   getTodayValue: (utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) => TValue;
   /**
    * @template TDate, TValue
-   * Method returning the reference value to use at the mount of the component.
+   * Method returning the reference value to use when mounting the component.
    * @param {object} params The params of the method.
    * @param {TDate | undefined} params.referenceDate The referenceDate provided by the user.
    * @param {TValue} params.value The value provided by the user.
-   * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute a smart reference value.
+   * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute the reference value.
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
    * @param {FieldValueType} params.valueType The type of the value being edited.
    * @param {granularity} params.granularity The granularity of the selection possible on this component.
