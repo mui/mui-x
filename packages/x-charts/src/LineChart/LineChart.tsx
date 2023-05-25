@@ -1,7 +1,9 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
+import { AreaPlot } from './AreaPlot';
 import { LinePlot } from './LinePlot';
+import { MarkPlot } from './MarkPlot';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis/Axis';
 import { LineSeriesType } from '../models/seriesType/line';
@@ -63,9 +65,11 @@ function LineChart(props: LineChartProps) {
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
+        <AreaPlot />
         <LinePlot />
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+        <MarkPlot />
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />

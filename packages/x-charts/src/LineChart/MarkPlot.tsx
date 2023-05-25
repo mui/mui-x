@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { line as d3Line } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { LineElement } from './LineElement';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { MarkElement } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import getCurveFactory from '../internals/getCurve';
 
-export function LinePlot() {
+export function MarkPlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -41,25 +39,21 @@ export function LinePlot() {
             );
           }
 
-          const linePath = d3Line<{
-            x: any;
-            y: any[];
-          }>()
-            .x((d) => xScale(d.x))
-            .y((d) => yScale(d.y[1]));
-
-          const curve = getCurveFactory(series[seriesId].curve);
-          const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
-
-          return (
-            <LineElement
-              key={seriesId}
-              id={seriesId}
-              d={linePath.curve(curve)(d3Data) || undefined}
-              color={series[seriesId].color}
-              {...getInteractionItemProps({ type: 'line', seriesId })}
-            />
-          );
+          return xData?.map((x, index) => {
+            const y = stackedData[index][1];
+            return (
+              <MarkElement
+                key={`${seriesId}-${index}`}
+                id={seriesId}
+                dataIndex={index}
+                shape="circle"
+                color={series[seriesId].color}
+                x={xScale(x)}
+                y={yScale(y)}
+                {...getInteractionItemProps({ type: 'line', seriesId, dataIndex: index })}
+              />
+            );
+          });
         });
       })}
     </g>
