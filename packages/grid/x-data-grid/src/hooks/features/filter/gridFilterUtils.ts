@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { defaultMemoize } from 'reselect';
 import {
   GridCellParams,
   GridFilterItem,
@@ -295,15 +296,18 @@ export const buildAggregatedFilterApplier = (
   });
 };
 
+const filterModelItems = defaultMemoize(
+  (apiRef: React.MutableRefObject<GridApiCommunity>, items: GridFilterItem[]) =>
+    items.filter((item) => getFilterCallbackFromItem(item, apiRef) !== null)
+);
+
 export const passFilterLogic = (
   allFilterItemResults: (null | GridFilterItemResult)[],
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): boolean => {
-  const cleanedFilterItems = filterModel.items.filter(
-    (item) => getFilterCallbackFromItem(item, apiRef) !== null,
-  );
+  const cleanedFilterItems = filterModelItems(apiRef, filterModel.items);
 
   const cleanedAllFilterItemResults = allFilterItemResults.filter(
     (result): result is GridFilterItemResult => result != null,
