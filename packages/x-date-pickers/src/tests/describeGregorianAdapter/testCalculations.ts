@@ -291,10 +291,10 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         this.skip();
       }
 
-      const londonTimezone = adapterTZ.setTimezone(testDateIso, 'Europe/London');
-      const parisTimezone = adapterTZ.setTimezone(testDateIso, 'Europe/Paris');
+      const dateInLondonTZ = adapterTZ.setTimezone(testDateIso, 'Europe/London');
+      const dateInParisTZ = adapterTZ.setTimezone(testDateIso, 'Europe/Paris');
 
-      expect(adapterTZ.isEqual(londonTimezone, parisTimezone)).to.equal(true);
+      expect(adapterTZ.isEqual(dateInLondonTZ, dateInParisTZ)).to.equal(true);
     });
   });
 
@@ -321,13 +321,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
       // The adapter should still consider that they are in the same year.
-      const londonTimezone = adapterTZ.endOfYear(
+      const dateInLondonTZ = adapterTZ.endOfYear(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isSameYear(londonTimezone, parisTimezone)).to.equal(true);
-      expect(adapterTZ.isSameYear(parisTimezone, londonTimezone)).to.equal(true);
+      expect(adapterTZ.isSameYear(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameYear(dateInParisTZ, dateInLondonTZ)).to.equal(true);
     });
   });
 
@@ -354,13 +354,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same month when represented in their respective timezone.
       // The adapter should still consider that they are in the same month.
-      const londonTimezone = adapterTZ.endOfMonth(
+      const dateInLondonTZ = adapterTZ.endOfMonth(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isSameMonth(londonTimezone, parisTimezone)).to.equal(true);
-      expect(adapterTZ.isSameMonth(parisTimezone, londonTimezone)).to.equal(true);
+      expect(adapterTZ.isSameMonth(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameMonth(dateInParisTZ, dateInLondonTZ)).to.equal(true);
     });
   });
 
@@ -387,13 +387,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
-      const londonTimezone = adapterTZ.endOfDay(
+      const dateInLondonTZ = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isSameDay(londonTimezone, parisTimezone)).to.equal(true);
-      expect(adapterTZ.isSameDay(parisTimezone, londonTimezone)).to.equal(true);
+      expect(adapterTZ.isSameDay(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameDay(dateInParisTZ, dateInLondonTZ)).to.equal(true);
     });
   });
 
@@ -414,11 +414,11 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
-      const londonTimezone = adapterTZ.setTimezone(testDateIso, 'Europe/London');
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInLondonTZ = adapterTZ.setTimezone(testDateIso, 'Europe/London');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isSameHour(londonTimezone, parisTimezone)).to.equal(true);
-      expect(adapterTZ.isSameHour(parisTimezone, londonTimezone)).to.equal(true);
+      expect(adapterTZ.isSameHour(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameHour(dateInParisTZ, dateInLondonTZ)).to.equal(true);
     });
   });
 
@@ -436,16 +436,16 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         this.skip();
       }
 
-      const londonTimezone = adapterTZ.endOfDay(
+      const dateInLondonTZ = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.addMinutes(
+      const dateInParisTZ = adapterTZ.addMinutes(
         adapterTZ.endOfDay(adapterTZ.setTimezone(testDateIso, 'Europe/Paris')),
         30,
       );
 
-      expect(adapter.isAfter(londonTimezone, parisTimezone)).to.equal(true);
-      expect(adapter.isAfter(parisTimezone, londonTimezone)).to.equal(false);
+      expect(adapter.isAfter(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapter.isAfter(dateInParisTZ, dateInLondonTZ)).to.equal(false);
     });
   });
 
@@ -467,13 +467,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
       // The adapter should still consider that they are in the same year.
-      const londonTimezone = adapterTZ.endOfYear(
+      const dateInLondonTZ = adapterTZ.endOfYear(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isAfterYear(londonTimezone, parisTimezone)).to.equal(false);
-      expect(adapterTZ.isAfterYear(parisTimezone, londonTimezone)).to.equal(false);
+      expect(adapterTZ.isAfterYear(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isAfterYear(dateInParisTZ, dateInLondonTZ)).to.equal(false);
     });
   });
 
@@ -495,27 +495,27 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
-      const londonTimezone = adapterTZ.endOfDay(
+      const dateInLondonTZ = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isAfterDay(londonTimezone, parisTimezone)).to.equal(false);
-      expect(adapterTZ.isAfterDay(parisTimezone, londonTimezone)).to.equal(false);
+      expect(adapterTZ.isAfterDay(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isAfterDay(dateInParisTZ, dateInLondonTZ)).to.equal(false);
 
       // Both dates below have the same day when represented in their respective timezone,
       // But not when represented in the same timezone
       // The adapter should consider that they are not in the same day
-      const londonTimezone2 = adapterTZ.startOfDay(
+      const dateInLondonTZ2 = adapterTZ.startOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone2 = adapterTZ.addHours(
-        adapterTZ.setTimezone(londonTimezone2, 'Europe/Paris'),
+      const dateInParisTZ2 = adapterTZ.addHours(
+        adapterTZ.setTimezone(dateInLondonTZ2, 'Europe/Paris'),
         -1,
       );
 
-      expect(adapterTZ.isAfterDay(londonTimezone2, parisTimezone2)).to.equal(true);
-      expect(adapterTZ.isAfterDay(parisTimezone2, londonTimezone2)).to.equal(false);
+      expect(adapterTZ.isAfterDay(dateInLondonTZ2, dateInParisTZ2)).to.equal(true);
+      expect(adapterTZ.isAfterDay(dateInParisTZ2, dateInLondonTZ2)).to.equal(false);
     });
   });
 
@@ -533,16 +533,16 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         this.skip();
       }
 
-      const londonTimezone = adapterTZ.endOfDay(
+      const dateInLondonTZ = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.addMinutes(
+      const dateInParisTZ = adapterTZ.addMinutes(
         adapterTZ.endOfDay(adapterTZ.setTimezone(testDateIso, 'Europe/Paris')),
         30,
       );
 
-      expect(adapter.isBefore(londonTimezone, parisTimezone)).to.equal(false);
-      expect(adapter.isBefore(parisTimezone, londonTimezone)).to.equal(true);
+      expect(adapter.isBefore(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapter.isBefore(dateInParisTZ, dateInLondonTZ)).to.equal(true);
     });
   });
 
@@ -564,13 +564,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
       // The adapter should still consider that they are in the same year.
-      const londonTimezone = adapterTZ.endOfYear(
+      const dateInLondonTZ = adapterTZ.endOfYear(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isBeforeYear(londonTimezone, parisTimezone)).to.equal(false);
-      expect(adapterTZ.isBeforeYear(parisTimezone, londonTimezone)).to.equal(false);
+      expect(adapterTZ.isBeforeYear(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isBeforeYear(dateInParisTZ, dateInLondonTZ)).to.equal(false);
     });
   });
 
@@ -592,27 +592,27 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 
       // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
       // The adapter should still consider that they are in the same day.
-      const londonTimezone = adapterTZ.endOfDay(
+      const dateInLondonTZ = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone = adapterTZ.setTimezone(londonTimezone, 'Europe/Paris');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
 
-      expect(adapterTZ.isBeforeDay(londonTimezone, parisTimezone)).to.equal(false);
-      expect(adapterTZ.isBeforeDay(parisTimezone, londonTimezone)).to.equal(false);
+      expect(adapterTZ.isBeforeDay(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isBeforeDay(dateInParisTZ, dateInLondonTZ)).to.equal(false);
 
       // Both dates below have the same day when represented in their respective timezone,
       // But not when represented in the same timezone
       // The adapter should consider that they are not in the same day
-      const londonTimezone2 = adapterTZ.endOfDay(
+      const dateInLondonTZ2 = adapterTZ.endOfDay(
         adapterTZ.setTimezone(testDateIso, 'Europe/London'),
       );
-      const parisTimezone2 = adapterTZ.addHours(
-        adapterTZ.setTimezone(londonTimezone2, 'Europe/Paris'),
+      const dateInParisTZ2 = adapterTZ.addHours(
+        adapterTZ.setTimezone(dateInLondonTZ2, 'Europe/Paris'),
         -1,
       );
 
-      expect(adapterTZ.isBeforeDay(londonTimezone2, parisTimezone2)).to.equal(false);
-      expect(adapterTZ.isBeforeDay(parisTimezone2, londonTimezone2)).to.equal(true);
+      expect(adapterTZ.isBeforeDay(dateInLondonTZ2, dateInParisTZ2)).to.equal(false);
+      expect(adapterTZ.isBeforeDay(dateInParisTZ2, dateInLondonTZ2)).to.equal(true);
     });
   });
 
