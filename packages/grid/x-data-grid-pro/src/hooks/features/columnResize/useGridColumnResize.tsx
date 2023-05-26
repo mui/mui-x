@@ -124,13 +124,6 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
   columnResize: { resizingColumnField: '' },
 });
 
-// Prevent the click event if we have resized the column.
-// Fixes https://github.com/mui/mui-x/issues/4777
-const preventClick = (event: MouseEvent) => {
-  event.preventDefault();
-  event.stopImmediatePropagation();
-};
-
 /**
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
@@ -306,7 +299,9 @@ export const useGridColumnResize = (
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
-      doc.addEventListener('click', preventClick, true);
+
+      // Fixes https://github.com/mui/mui-x/issues/4777
+      colElementRef.current.style.pointerEvents = 'none';
     });
 
   const handleTouchEnd = useEventCallback((nativeEvent: any) => {
@@ -410,12 +405,17 @@ export const useGridColumnResize = (
     doc.removeEventListener('mouseup', handleResizeMouseUp);
     doc.removeEventListener('touchmove', handleTouchMove);
     doc.removeEventListener('touchend', handleTouchEnd);
-    // The click event runs right after the mouseup event, we want to wait until it
-    // has been canceled before removing our handler.
-    setTimeout(() => {
-      doc.removeEventListener('click', preventClick, true);
-    }, 100);
-  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
+    if (colElementRef.current) {
+      colElementRef.current!.style.pointerEvents = 'unset';
+    }
+  }, [
+    apiRef,
+    colElementRef,
+    handleResizeMouseMove,
+    handleResizeMouseUp,
+    handleTouchMove,
+    handleTouchEnd,
+  ]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {
