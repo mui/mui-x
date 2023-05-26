@@ -5,13 +5,15 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import { renderDateViewCalendar } from '../dateViewRenderers';
+import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
+import { renderDesktopDateTimeView } from '../dateTimeViewRenderers';
 import { useLocaleText, validateDateTime } from '../internals';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -26,26 +28,50 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
+    DateOrTimeViewWithMeridiem,
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
-    day: renderDateViewCalendar,
-    month: renderDateViewCalendar,
-    year: renderDateViewCalendar,
-    hours: null,
-    minutes: null,
-    seconds: null,
-    ...defaultizedProps.viewRenderers,
-  };
+  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
+  const shouldUseNewRenderer =
+    !defaultizedProps.viewRenderers || Object.keys(defaultizedProps.viewRenderers).length === 0;
+
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeViewWithMeridiem, any, {}> =
+    // we can only ensure the expected two-column layout if none of the renderers are overridden
+    shouldUseNewRenderer
+      ? {
+          day: renderDesktopDateTimeView,
+          month: renderDesktopDateTimeView,
+          year: renderDesktopDateTimeView,
+          hours: renderDesktopDateTimeView,
+          minutes: renderDesktopDateTimeView,
+          seconds: renderDesktopDateTimeView,
+          meridiem: renderDesktopDateTimeView,
+        }
+      : {
+          day: renderDateViewCalendar,
+          month: renderDateViewCalendar,
+          year: renderDateViewCalendar,
+          hours: null,
+          minutes: null,
+          seconds: null,
+          meridiem: null,
+          ...defaultizedProps.viewRenderers,
+        };
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
+  // add "accept" action only when the new date time view renderers are used
+  const actionBarActions: PickersActionBarAction[] = shouldUseNewRenderer ? ['accept'] : [];
 
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    views: (defaultizedProps.ampm
+      ? [...defaultizedProps.views, 'meridiem']
+      : defaultizedProps.views) as DateOrTimeViewWithMeridiem[],
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     ampmInClock,
+    timeSteps,
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,
@@ -61,16 +87,21 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
       toolbar: {
         hidden: true,
         ampmInClock,
+        toolbarVariant: shouldUseNewRenderer ? 'desktop' : 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
       },
+      actionBar: {
+        actions: actionBarActions,
+        ...defaultizedProps.slotProps?.actionBar,
+      },
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, DateOrTimeView, typeof props>({
+  const { renderPicker } = useDesktopPicker<TDate, DateOrTimeViewWithMeridiem, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
@@ -318,7 +349,7 @@ DesktopDateTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  openTo: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Force rendering in particular orientation.
    */
@@ -411,6 +442,11 @@ DesktopDateTimePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -429,6 +465,17 @@ DesktopDateTimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   */
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
+  /**
    * The selected value.
    * Used when the component is controlled.
    */
@@ -438,7 +485,7 @@ DesktopDateTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -447,6 +494,7 @@ DesktopDateTimePicker.propTypes = {
   viewRenderers: PropTypes.shape({
     day: PropTypes.func,
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     month: PropTypes.func,
     seconds: PropTypes.func,
