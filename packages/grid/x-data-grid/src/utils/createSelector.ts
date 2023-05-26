@@ -86,6 +86,26 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
   return selector;
 };
 
+export const createRawSelector: CreateSelectorFunction = (...selectors: any) => {
+  const selector = (stateOrApiRef: any) => {
+    const isApiRef = !!stateOrApiRef.current;
+    const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
+
+    let result = state;
+    for (const selector of selectors) {
+      result = selector(result);
+    }
+
+    return result
+  };
+
+  // We use this property to detect if the selector was created with createSelector
+  // or it's only a simple function the receives the state and returns part of it.
+  selector.acceptsApiRef = true;
+
+  return selector;
+};
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_resetCreateSelectorCache = () => {
   cacheContainer.cache = new WeakMap();

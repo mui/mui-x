@@ -1,4 +1,4 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRawSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 const gridRowsStateSelector = (state: GridStateCommunity) => state.rows;
@@ -19,7 +19,7 @@ export const gridTopLevelRowCountSelector = createSelector(
 );
 
 // TODO rows v6: Rename
-export const gridRowsLookupSelector = createSelector(
+export const gridRowsLookupSelector = createRawSelector(
   gridRowsStateSelector,
   (rows) => rows.dataRowIdToModelLookup,
 );

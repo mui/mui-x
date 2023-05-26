@@ -1,4 +1,4 @@
-import { createSelector } from '../../../utils/createSelector';
+import { createSelector, createRawSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridColumnLookup } from './gridColumnsInterfaces';
 
@@ -21,7 +21,7 @@ export const gridColumnFieldsSelector = createSelector(
  * Get the columns as a lookup (an object containing the field for keys and the definition for values).
  * @category Columns
  */
-export const gridColumnLookupSelector = createSelector(
+export const gridColumnLookupSelector = createRawSelector(
   gridColumnsStateSelector,
   (columnsState) => columnsState.lookup,
 );
