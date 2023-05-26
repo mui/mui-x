@@ -412,9 +412,9 @@ export const useGridColumnResize = (
     doc.removeEventListener('touchend', handleTouchEnd);
     // The click event runs right after the mouseup event, we want to wait until it
     // has been canceled before removing our handler.
-    Promise.resolve().then(() => {
+    setTimeout(() => {
       doc.removeEventListener('click', handleClick, true);
-    });
+    }, 100);
   }, [
     apiRef,
     handleResizeMouseMove,
