@@ -8,7 +8,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DateComponentValidationProps } from '../internals/hooks/validation/useDateValidation';
+import { DateComponentValidationProps } from '../internals/utils/validation/validateDate';
 import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
@@ -219,8 +219,8 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     className: classes.switchViewIcon,
   });
 
-  const selectNextMonth = () => onMonthChange(utils.getNextMonth(month), 'left');
-  const selectPreviousMonth = () => onMonthChange(utils.getPreviousMonth(month), 'right');
+  const selectNextMonth = () => onMonthChange(utils.addMonths(month, 1), 'left');
+  const selectPreviousMonth = () => onMonthChange(utils.addMonths(month, -1), 'right');
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,

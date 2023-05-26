@@ -3,22 +3,37 @@ import { MuiPickersAdapter } from '@mui/x-date-pickers';
 import { testCalculations } from './testCalculations';
 import { testLocalization } from './testLocalization';
 import { testFormat } from './testFormat';
-import { DescribeGregorianAdapterParams } from './describeGregorianAdapter.types';
+import {
+  DescribeGregorianAdapterParams,
+  DescribeGregorianAdapterTestSuiteParams,
+} from './describeGregorianAdapter.types';
 
-export const TEST_DATE_ISO = '2018-10-30T11:44:00.000Z';
-
-function innerGregorianDescribeAdapter<TDate>(
+function innerGregorianDescribeAdapter<TDate, TLocale>(
   Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
-  params: DescribeGregorianAdapterParams,
+  params: DescribeGregorianAdapterParams<TDate, TLocale>,
 ) {
-  const adapter = new Adapter({});
+  const prepareAdapter = params.prepareAdapter ?? ((e) => e);
+
+  const adapter = new Adapter();
+  const adapterTZ = params.dateLibInstanceWithTimezoneSupport
+    ? new Adapter({
+        dateLibInstance: params.dateLibInstanceWithTimezoneSupport,
+      })
+    : new Adapter();
+  const adapterFr = new Adapter({
+    locale: params.frenchLocale,
+    dateLibInstance: params.dateLibInstanceWithTimezoneSupport,
+  });
+
+  prepareAdapter(adapter);
+  prepareAdapter(adapterTZ);
 
   describe(adapter.lib, () => {
-    const testSuitParams = {
+    const testSuitParams: DescribeGregorianAdapterTestSuiteParams<TDate, TLocale> = {
       ...params,
       adapter,
-      testDateISO: TEST_DATE_ISO,
-      testDate: adapter.date(TEST_DATE_ISO),
+      adapterTZ,
+      adapterFr,
     };
 
     testCalculations(testSuitParams);
@@ -27,7 +42,18 @@ function innerGregorianDescribeAdapter<TDate>(
   });
 }
 
+type Params<TDate, TLocale> = [
+  Adapter: new (...args: any) => MuiPickersAdapter<TDate>,
+  params: DescribeGregorianAdapterParams<TDate, TLocale>,
+];
+
+type DescribeGregorianAdapter = {
+  <TDate, TLocale>(...args: Params<TDate, TLocale>): void;
+  skip: <TDate, TLocale>(...args: Params<TDate, TLocale>) => void;
+  only: <TDate, TLocale>(...args: Params<TDate, TLocale>) => void;
+};
+
 export const describeGregorianAdapter = createDescribe(
   'Adapter methods',
   innerGregorianDescribeAdapter,
-);
+) as DescribeGregorianAdapter;

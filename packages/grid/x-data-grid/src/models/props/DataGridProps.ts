@@ -338,6 +338,22 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default: false
+   */
+  unstable_ignoreValueFormatterDuringExport:
+    | boolean
+    | {
+        csvExport?: boolean;
+        clipboardExport?: boolean;
+      };
+  /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: string;
 }
 
 /**
@@ -349,6 +365,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
@@ -722,4 +743,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy?: GridEventListener<'clipboardCopy'>;
 }

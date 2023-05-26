@@ -4,6 +4,7 @@ import {
   unstable_useDateField as useDateField,
   UseDateFieldComponentProps,
   UseDateFieldProps,
+  UseDateFieldDefaultizedProps,
 } from '@mui/x-date-pickers/DateField';
 import {
   useLocalizationContext,
@@ -19,11 +20,11 @@ import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeF
 import { DateRange } from '../../models/range';
 import {
   DateRangeComponentValidationProps,
-  DateRangeValidationError,
   validateDateRange,
-} from '../validation/useDateRangeValidation';
+} from '../../utils/validation/validateDateRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
+import { DateRangeValidationError } from '../../../models';
 
 export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
@@ -47,6 +48,7 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     defaultValue,
     format,
     formatDensity,
+    shouldRespectLeadingZeros,
     onChange,
     disabled,
     readOnly,
@@ -100,13 +102,17 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseDateFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const startFieldProps: UseDateFieldComponentProps<
+    TDate,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[0],
     ...startTextFieldProps,
     disabled,
     readOnly,
     format,
     formatDensity,
+    shouldRespectLeadingZeros,
     unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
@@ -115,11 +121,15 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     onSelectedSectionsChange,
   };
 
-  const endFieldProps: UseDateFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const endFieldProps: UseDateFieldComponentProps<
+    TDate,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,
     formatDensity,
+    shouldRespectLeadingZeros,
     disabled,
     readOnly,
     unstableFieldRef: unstableEndFieldRef,

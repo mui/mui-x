@@ -19,10 +19,6 @@
       "matchPackagePatterns": "@babel/*"
     },
     {
-      "groupName": "date-io",
-      "matchPackagePatterns": "@date-io/*"
-    },
-    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },
@@ -52,6 +48,11 @@
     {
       "groupName": "typescript-eslint",
       "matchPackagePatterns": "@typescript-eslint/*"
+    },
+    {
+      "groupName": "@types/node",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "< 19.0.0"
     },
     {
       "groupName": "bundling fixtures",

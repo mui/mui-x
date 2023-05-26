@@ -4,12 +4,21 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import customParseFormatPlugin from 'dayjs/plugin/customParseFormat';
 import localizedFormatPlugin from 'dayjs/plugin/localizedFormat';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import { FieldFormatTokenMap, MuiPickersAdapter, AdapterFormats, AdapterUnits } from '../models';
+import {
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+  AdapterFormats,
+  AdapterUnits,
+  AdapterOptions,
+  PickersTimezone,
+} from '../models';
 import { buildWarning } from '../internals/utils/warning';
 
 defaultDayjs.extend(customParseFormatPlugin);
 defaultDayjs.extend(localizedFormatPlugin);
 defaultDayjs.extend(isBetweenPlugin);
+
+type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
 const localeNotFoundWarning = buildWarning([
   'Your locale has not been found.',
@@ -21,21 +30,21 @@ const localeNotFoundWarning = buildWarning([
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   YY: 'year',
-  YYYY: 'year',
+  YYYY: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
-  M: 'month',
+  M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
   MM: 'month',
   MMM: { sectionType: 'month', contentType: 'letter' },
   MMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of the month
-  D: 'day',
+  D: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
   DD: 'day',
-  Do: 'day',
+  Do: { sectionType: 'day', contentType: 'digit-with-letter' },
 
   // Day of the week
-  d: 'weekDay',
+  d: { sectionType: 'weekDay', contentType: 'digit', maxLength: 2 },
   dd: { sectionType: 'weekDay', contentType: 'letter' },
   ddd: { sectionType: 'weekDay', contentType: 'letter' },
   dddd: { sectionType: 'weekDay', contentType: 'letter' },
@@ -45,28 +54,19 @@ const formatTokenMap: FieldFormatTokenMap = {
   a: 'meridiem',
 
   // Hours
-  H: 'hours',
+  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   HH: 'hours',
-  h: 'hours',
+  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
   hh: 'hours',
 
   // Minutes
-  m: 'minutes',
+  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
   mm: 'minutes',
 
   // Seconds
-  s: 'seconds',
+  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
   ss: 'seconds',
 };
-
-interface Opts {
-  locale?: string;
-  /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
-  instance?: typeof defaultDayjs;
-  formats?: Partial<AdapterFormats>;
-}
-
-type Constructor = (...args: Parameters<typeof defaultDayjs>) => Dayjs;
 
 const defaultFormats: AdapterFormats = {
   normalDateWithWeekday: 'ddd, MMM D',
@@ -98,6 +98,18 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'L HH:mm',
 };
 
+const MISSING_UTC_PLUGIN = [
+  'Missing UTC plugin',
+  'To be able to use UTC or timezones, you have to enable the `utc` plugin',
+  'Find more information on https://mui.com/x/react-date-pickers/timezone/#day-js-and-utc',
+].join('\n');
+
+const MISSING_TIMEZONE_PLUGIN = [
+  'Missing timezone plugin',
+  'To be able to use timezones, you have to enable both the `utc` and the `timezone` plugin',
+  'Find more information on https://mui.com/x/react-date-pickers/timezone/#day-js-and-timezone',
+].join('\n');
+
 const withLocale = (dayjs: any, locale?: string): Constructor =>
   !locale ? dayjs : (...args) => dayjs(...args).locale(locale);
 
@@ -126,12 +138,14 @@ const withLocale = (dayjs: any, locale?: string): Constructor =>
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
+export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public isMUIAdapter = true;
 
-  public rawDayJsInstance: typeof defaultDayjs;
+  public isTimezoneCompatible = true;
 
   public lib = 'dayjs';
+
+  public rawDayJsInstance: typeof defaultDayjs;
 
   public dayjs: Constructor;
 
@@ -139,22 +153,62 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
 
   public formats: AdapterFormats;
 
-  constructor({ locale, formats, instance }: Opts = {}) {
+  public escapedCharacters = { start: '[', end: ']' };
+
+  public formatTokenMap = formatTokenMap;
+
+  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultDayjs> = {}) {
     this.rawDayJsInstance = instance || defaultDayjs;
     this.dayjs = withLocale(this.rawDayJsInstance, locale);
     this.locale = locale;
-
     this.formats = { ...defaultFormats, ...formats };
 
     defaultDayjs.extend(weekOfYear);
   }
 
-  public escapedCharacters = { start: '[', end: ']' };
+  private hasUTCPlugin = () => typeof defaultDayjs.utc !== 'undefined';
 
-  public formatTokenMap = formatTokenMap;
+  private hasTimezonePlugin = () => typeof defaultDayjs.tz !== 'undefined';
+
+  private isSame = (value: Dayjs, comparing: Dayjs, comparisonTemplate: string) => {
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
+
+    return value.format(comparisonTemplate) === comparingInValueTimezone.format(comparisonTemplate);
+  };
+
+  private createSystemDate = (value: string | undefined): Dayjs => {
+    // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)
+    return this.rawDayJsInstance(value);
+  };
+
+  private createUTCDate = (value: string | undefined): Dayjs => {
+    /* istanbul ignore next */
+    if (!this.hasUTCPlugin()) {
+      throw new Error(MISSING_UTC_PLUGIN);
+    }
+
+    return defaultDayjs.utc(value);
+  };
+
+  private createTZDate = (value: string | undefined, timezone: PickersTimezone): Dayjs => {
+    /* istanbul ignore next */
+    if (!this.hasUTCPlugin()) {
+      throw new Error(MISSING_UTC_PLUGIN);
+    }
+
+    /* istanbul ignore next */
+    if (!this.hasTimezonePlugin()) {
+      throw new Error(MISSING_TIMEZONE_PLUGIN);
+    }
+
+    const cleanTimezone = timezone === 'default' ? undefined : timezone;
+    const keepLocalTime = value !== undefined && !value.endsWith('Z');
+
+    return defaultDayjs(value).tz(cleanTimezone, keepLocalTime);
+  };
 
   private getLocaleFormats = () => {
-    const locales = this.rawDayJsInstance.Ls ?? defaultDayjs.Ls;
+    const locales = defaultDayjs.Ls;
     const locale = this.locale || 'en';
 
     let localeObject = locales[locale];
@@ -175,6 +229,82 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return this.dayjs(value);
   };
 
+  public dateWithTimezone = (
+    value: string | null | undefined,
+    timezone: PickersTimezone,
+  ): Dayjs | null => {
+    if (value === null) {
+      return null;
+    }
+
+    let parsedValue: Dayjs;
+
+    if (timezone === 'UTC') {
+      parsedValue = this.createUTCDate(value);
+    } else if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
+      parsedValue = this.createSystemDate(value);
+    } else {
+      parsedValue = this.createTZDate(value, timezone);
+    }
+
+    if (this.locale === undefined) {
+      return parsedValue;
+    }
+
+    return parsedValue.locale(this.locale);
+  };
+
+  public getTimezone = (value: Dayjs): string => {
+    if (this.hasUTCPlugin() && value.isUTC()) {
+      return 'UTC';
+    }
+
+    if (this.hasTimezonePlugin()) {
+      // @ts-ignore
+      const zone = value.$x?.$timezone;
+
+      return zone ?? 'system';
+    }
+
+    return 'system';
+  };
+
+  public setTimezone = (value: Dayjs, timezone: PickersTimezone): Dayjs => {
+    if (this.getTimezone(value) === timezone) {
+      return value;
+    }
+
+    if (timezone === 'UTC') {
+      /* istanbul ignore next */
+      if (!this.hasUTCPlugin()) {
+        throw new Error(MISSING_UTC_PLUGIN);
+      }
+
+      return value.utc();
+    }
+
+    if (timezone === 'system') {
+      if (this.hasUTCPlugin()) {
+        return value.local();
+      }
+
+      return value;
+    }
+
+    if (!this.hasTimezonePlugin()) {
+      if (timezone === 'default') {
+        return value;
+      }
+
+      /* istanbul ignore next */
+      throw new Error(MISSING_TIMEZONE_PLUGIN);
+    }
+
+    const cleanZone = timezone === 'default' ? undefined : timezone;
+
+    return defaultDayjs.tz(value, cleanZone);
+  };
+
   public toJsDate = (value: Dayjs) => {
     return value.toDate();
   };
@@ -187,7 +317,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return value.toISOString();
   };
 
-  public parse = (value: any, format: string) => {
+  public parse = (value: string, format: string) => {
     if (value === '') {
       return null;
     }
@@ -231,28 +361,28 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
   };
 
-  public isNull = (date: Dayjs | null) => {
-    return date === null;
+  public isNull = (value: Dayjs | null) => {
+    return value === null;
   };
 
   public isValid = (value: any) => {
     return this.dayjs(value).isValid();
   };
 
-  public format = (date: Dayjs, formatKey: keyof AdapterFormats) => {
-    return this.formatByString(date, this.formats[formatKey]);
+  public format = (value: Dayjs, formatKey: keyof AdapterFormats) => {
+    return this.formatByString(value, this.formats[formatKey]);
   };
 
-  public formatByString = (date: Dayjs, formatString: string) => {
-    return this.dayjs(date).format(formatString);
+  public formatByString = (value: Dayjs, formatString: string) => {
+    return this.dayjs(value).format(formatString);
   };
 
   public formatNumber = (numberToFormat: string) => {
     return numberToFormat;
   };
 
-  public getDiff = (date: Dayjs, comparing: Dayjs, units?: AdapterUnits) => {
-    return date.diff(comparing, units as AdapterUnits);
+  public getDiff = (value: Dayjs, comparing: Dayjs | string, unit?: AdapterUnits) => {
+    return value.diff(comparing, unit as AdapterUnits);
   };
 
   public isEqual = (value: any, comparing: any) => {
@@ -263,184 +393,208 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return this.dayjs(value).isSame(comparing);
   };
 
-  public isSameYear = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'year');
+  public isSameYear = (value: Dayjs, comparing: Dayjs) => {
+    return this.isSame(value, comparing, 'YYYY');
   };
 
-  public isSameMonth = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'month');
+  public isSameMonth = (value: Dayjs, comparing: Dayjs) => {
+    return this.isSame(value, comparing, 'YYYY-MM');
   };
 
-  public isSameDay = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'day');
+  public isSameDay = (value: Dayjs, comparing: Dayjs) => {
+    return this.isSame(value, comparing, 'YYYY-MM-DD');
   };
 
-  public isSameHour = (date: Dayjs, comparing: Dayjs) => {
-    return date.isSame(comparing, 'hour');
+  public isSameHour = (value: Dayjs, comparing: Dayjs) => {
+    return value.isSame(comparing, 'hour');
   };
 
-  public isAfter = (date: Dayjs, value: Dayjs) => {
-    return date.isAfter(value);
+  public isAfter = (value: Dayjs, comparing: Dayjs) => {
+    return value > comparing;
   };
 
-  public isAfterYear = (date: Dayjs, value: Dayjs) => {
-    return date.isAfter(value, 'year');
+  public isAfterYear = (value: Dayjs, comparing: Dayjs) => {
+    if (!this.hasUTCPlugin()) {
+      return value.isAfter(comparing, 'year');
+    }
+
+    return !this.isSameYear(value, comparing) && value.utc() > comparing.utc();
   };
 
-  public isAfterDay = (date: Dayjs, value: Dayjs) => {
-    return date.isAfter(value, 'day');
+  public isAfterDay = (value: Dayjs, comparing: Dayjs) => {
+    if (!this.hasUTCPlugin()) {
+      return value.isAfter(comparing, 'day');
+    }
+
+    return !this.isSameDay(value, comparing) && value.utc() > comparing.utc();
   };
 
-  public isBefore = (date: Dayjs, value: Dayjs) => {
-    return date.isBefore(value);
+  public isBefore = (value: Dayjs, comparing: Dayjs) => {
+    return value < comparing;
   };
 
-  public isBeforeYear = (date: Dayjs, value: Dayjs) => {
-    return date.isBefore(value, 'year');
+  public isBeforeYear = (value: Dayjs, comparing: Dayjs) => {
+    if (!this.hasUTCPlugin()) {
+      return value.isBefore(comparing, 'year');
+    }
+
+    return !this.isSameYear(value, comparing) && value.utc() < comparing.utc();
   };
 
-  public isBeforeDay = (date: Dayjs, value: Dayjs) => {
-    return date.isBefore(value, 'day');
+  public isBeforeDay = (value: Dayjs, comparing: Dayjs) => {
+    if (!this.hasUTCPlugin()) {
+      return value.isBefore(comparing, 'day');
+    }
+
+    return !this.isSameDay(value, comparing) && value.utc() < comparing.utc();
   };
 
-  public isWithinRange = (date: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
-    return date.isBetween(start, end, null, '[]');
+  public isWithinRange = (value: Dayjs, [start, end]: [Dayjs, Dayjs]) => {
+    return value >= start && value <= end;
   };
 
-  public startOfYear = (date: Dayjs) => {
-    return date.startOf('year');
+  public startOfYear = (value: Dayjs) => {
+    return value.startOf('year');
   };
 
-  public startOfMonth = (date: Dayjs) => {
-    return date.startOf('month');
+  public startOfMonth = (value: Dayjs) => {
+    return value.startOf('month');
   };
 
-  public endOfYear = (date: Dayjs) => {
-    return date.endOf('year');
+  public startOfWeek = (value: Dayjs) => {
+    return value.startOf('week');
   };
 
-  public startOfWeek = (date: Dayjs) => {
-    return date.startOf('week');
+  public startOfDay = (value: Dayjs) => {
+    return value.startOf('day');
   };
 
-  public startOfDay = (date: Dayjs) => {
-    return date.startOf('day');
+  public endOfYear = (value: Dayjs) => {
+    return value.endOf('year');
   };
 
-  public endOfMonth = (date: Dayjs) => {
-    return date.endOf('month');
+  public endOfMonth = (value: Dayjs) => {
+    return value.endOf('month');
   };
 
-  public endOfWeek = (date: Dayjs) => {
-    return date.endOf('week');
+  public endOfWeek = (value: Dayjs) => {
+    return value.endOf('week');
   };
 
-  public endOfDay = (date: Dayjs) => {
-    return date.endOf('day');
+  public endOfDay = (value: Dayjs) => {
+    return value.endOf('day');
   };
 
-  public addYears = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'year') : date.add(count, 'year');
+  public addYears = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'year') : value.add(amount, 'year');
   };
 
-  public addMonths = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'month') : date.add(count, 'month');
+  public addMonths = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'month') : value.add(amount, 'month');
   };
 
-  public addWeeks = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'week') : date.add(count, 'week');
+  public addWeeks = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'week') : value.add(amount, 'week');
   };
 
-  public addDays = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'day') : date.add(count, 'day');
+  public addDays = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'day') : value.add(amount, 'day');
   };
 
-  public addHours = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'hour') : date.add(count, 'hour');
+  public addHours = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'hour') : value.add(amount, 'hour');
   };
 
-  public addMinutes = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'minute') : date.add(count, 'minute');
+  public addMinutes = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'minute') : value.add(amount, 'minute');
   };
 
-  public addSeconds = (date: Dayjs, count: number) => {
-    return count < 0 ? date.subtract(Math.abs(count), 'second') : date.add(count, 'second');
+  public addSeconds = (value: Dayjs, amount: number) => {
+    return amount < 0 ? value.subtract(Math.abs(amount), 'second') : value.add(amount, 'second');
   };
 
-  public getYear = (date: Dayjs) => {
-    return date.year();
+  public getYear = (value: Dayjs) => {
+    return value.year();
   };
 
-  public getMonth = (date: Dayjs) => {
-    return date.month();
+  public getMonth = (value: Dayjs) => {
+    return value.month();
   };
 
-  public getDate = (date: Dayjs) => {
-    return date.date();
+  public getDate = (value: Dayjs) => {
+    return value.date();
   };
 
-  public getHours = (date: Dayjs) => {
-    return date.hour();
+  public getHours = (value: Dayjs) => {
+    return value.hour();
   };
 
-  public getMinutes = (date: Dayjs) => {
-    return date.minute();
+  public getMinutes = (value: Dayjs) => {
+    return value.minute();
   };
 
-  public getSeconds = (date: Dayjs) => {
-    return date.second();
+  public getSeconds = (value: Dayjs) => {
+    return value.second();
   };
 
-  public setYear = (date: Dayjs, year: number) => {
-    return date.set('year', year);
+  public getMilliseconds = (value: Dayjs) => {
+    return value.millisecond();
   };
 
-  public setMonth = (date: Dayjs, count: number) => {
-    return date.set('month', count);
+  public setYear = (value: Dayjs, year: number) => {
+    return value.set('year', year);
   };
 
-  public setDate = (date: Dayjs, count: number) => {
-    return date.set('date', count);
+  public setMonth = (value: Dayjs, month: number) => {
+    return value.set('month', month);
   };
 
-  public setHours = (date: Dayjs, count: number) => {
-    return date.set('hour', count);
+  public setDate = (value: Dayjs, date: number) => {
+    return value.set('date', date);
   };
 
-  public setMinutes = (date: Dayjs, count: number) => {
-    return date.set('minute', count);
+  public setHours = (value: Dayjs, hours: number) => {
+    return value.set('hour', hours);
   };
 
-  public setSeconds = (date: Dayjs, count: number) => {
-    return date.set('second', count);
+  public setMinutes = (value: Dayjs, minutes: number) => {
+    return value.set('minute', minutes);
   };
 
-  public getDaysInMonth = (date: Dayjs) => {
-    return date.daysInMonth();
+  public setSeconds = (value: Dayjs, seconds: number) => {
+    return value.set('second', seconds);
   };
 
-  public getNextMonth = (date: Dayjs) => {
-    return date.add(1, 'month');
+  public setMilliseconds = (value: Dayjs, milliseconds: number) => {
+    return value.set('millisecond', milliseconds);
   };
 
-  public getPreviousMonth = (date: Dayjs) => {
-    return date.subtract(1, 'month');
+  public getDaysInMonth = (value: Dayjs) => {
+    return value.daysInMonth();
   };
 
-  public getMonthArray = (date: Dayjs) => {
-    const firstMonth = date.startOf('year');
+  public getNextMonth = (value: Dayjs) => {
+    return value.add(1, 'month');
+  };
+
+  public getPreviousMonth = (value: Dayjs) => {
+    return value.subtract(1, 'month');
+  };
+
+  public getMonthArray = (value: Dayjs) => {
+    const firstMonth = value.startOf('year');
     const monthArray = [firstMonth];
 
     while (monthArray.length < 12) {
       const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
+      monthArray.push(this.addMonths(prevMonth, 1));
     }
 
     return monthArray;
   };
 
-  public mergeDateAndTime = (date: Dayjs, time: Dayjs) => {
-    return date.hour(time.hour()).minute(time.minute()).second(time.second());
+  public mergeDateAndTime = (dateParam: Dayjs, timeParam: Dayjs) => {
+    return dateParam.hour(timeParam.hour()).minute(timeParam.minute()).second(timeParam.second());
   };
 
   public getWeekdays = () => {
@@ -448,15 +602,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return [0, 1, 2, 3, 4, 5, 6].map((diff) => this.formatByString(start.add(diff, 'day'), 'dd'));
   };
 
-  public getWeekArray = (date: Dayjs) => {
-    const start = this.dayjs(date).startOf('month').startOf('week');
-    const end = this.dayjs(date).endOf('month').endOf('week');
+  public getWeekArray = (value: Dayjs) => {
+    const start = value.startOf('month').startOf('week');
+    const end = value.endOf('month').endOf('week');
 
     let count = 0;
     let current = start;
     const nestedWeeks: Dayjs[][] = [];
 
-    while (current.isBefore(end)) {
+    while (current < end) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
       nestedWeeks[weekNumber].push(current);
@@ -468,17 +622,17 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs> {
     return nestedWeeks;
   };
 
-  public getWeekNumber = (date: Dayjs) => {
-    return date.week();
+  public getWeekNumber = (value: Dayjs) => {
+    return value.week();
   };
 
   public getYearRange = (start: Dayjs, end: Dayjs) => {
-    const startDate = this.dayjs(start).startOf('year');
-    const endDate = this.dayjs(end).endOf('year');
+    const startDate = start.startOf('year');
+    const endDate = end.endOf('year');
     const years: Dayjs[] = [];
 
     let current = startDate;
-    while (current.isBefore(endDate)) {
+    while (current < endDate) {
       years.push(current);
       current = current.add(1, 'year');
     }

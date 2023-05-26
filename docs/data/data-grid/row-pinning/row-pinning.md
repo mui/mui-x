@@ -52,7 +52,6 @@ Pagination does not impact pinned rows as well - they stay pinned regardless the
 :::info
 Pinned rows do not support the following features:
 
-- editing ([issue #5591](https://github.com/mui/mui-x/issues/5591))
 - selection
 - row grouping
 - tree data

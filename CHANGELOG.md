@@ -3,6 +3,282 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v6.5.0
+
+_May 19, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
+
+  https://github.com/mui/mui-x/assets/12609561/c4c2bfec-59cf-4cab-932d-dc1983081de9
+
+  See [the documentation](https://mui.com/x/react-data-grid/filtering/#header-filters) for more information
+
+- 🌍 Improve Hebrew (he-IL) and Czech (cs-CZ) locales
+- 📝 Support for editing on pinned rows
+- 🚀 Performance improvements
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@6.5.0` / `@mui/x-data-grid-pro@6.5.0` / `@mui/x-data-grid-premium@6.5.0`
+
+#### Changes
+
+- [DataGrid] Fix grid size calculation when `.MuiDataGrid-main` has border (#8882) @cherniavskii
+- [DataGridPro] Filtering on Column Header (#7760) @MBilalShafi
+- [DataGridPro] Improve `treeData` and `rowGrouping` performance (#8990) @MBilalShafi
+- [DataGridPro] Support pinned rows editing (#8921) @cherniavskii
+- [l10n] Improve Hebrew (he-IL) locale (#8943) @Itzik-Tech
+- [l10n] Improve Czech (cs-CZ) locale (#8829) @harastaivan
+- [l10n] Improve Czech (cs-CZ) locale (#8956) @davidzemancz
+
+### `@mui/x-date-pickers@6.5.0` / `@mui/x-date-pickers-pro@6.5.0`
+
+#### Changes
+
+- [fields] Select the first section instead of last when clicking right of content (#9005) @noraleonte
+- [fields] Refactor prop drilling in fields (#8660) @flaviendelangle
+- [pickers] Allow to render the months before `currentMonth` instead of the one after (#8592) @flaviendelangle
+- [pickers] Fix view management when `openTo` or `views` is modified (#8997) @alexfauquette
+- [l10n] Improve Czech (cs-CZ) locale (#8829) @harastaivan
+
+### Docs
+
+- [docs] Clarify what Controlled / Uncontrolled means (#8926) @flaviendelangle
+- [docs] Fix docs using wrong service worker (#9030) @cherniavskii
+- [docs] Remove prop-types from JS demos (#9008) @flaviendelangle
+
+### Core
+
+- [core] Add assertion about checkbox rerenders (#8974) @oliviertassinari
+- [core] Allow selecting a section by type in field tests (#9009) @flaviendelangle
+- [core] Fix `yarn.lock` (#8988) @flaviendelangle
+- [core] Fix flacky adapter test (#8995) @flaviendelangle
+- [charts] Clean the axis rendering (#8948) @alexfauquette
+- [DataGrid] Memoize root props for better performance (#8942) @romgrk
+- [test] Skip flaky unit tests in JSDOM (#8994) @cherniavskii
+
+## v6.4.0
+
+_May 12, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce clipboard paste support for `DataGridPremium`:
+
+  https://github.com/mui/mui-x/assets/13808724/abfcb5c6-9db6-4677-9ba7-ae97de441080
+
+  See [the documentation](https://mui.com/x/react-data-grid/clipboard/#clipboard-paste) for more information
+
+- 🌍 Improve French (fr-FR), German (de-DE), Portuguese (pt-BR) and Ukrainian (uk-UA) locales on the data grid
+- 🌍 Add Slovak (sk-SK) locale on the pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.4.0` / `@mui/x-data-grid-pro@v6.4.0` / `@mui/x-data-grid-premium@v6.4.0`
+
+#### Changes
+
+- [DataGrid] Fix DataGrid rendering in JSDOM (#8968) @cherniavskii
+- [DataGrid] Fix layout when rendered inside a parent with `display: grid` (#8577) @cherniavskii
+- [DataGrid] Add Joy UI icon slots (#8940) @siriwatknp
+- [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
+- [DataGrid] Extract `baseChip` slot (#8748) @cherniavskii
+- [DataGridPremium] Implement Clipboard import (#7389) @cherniavskii
+- [l10n] Improve French (fr-FR) locale (#8825) @vallereaugabriel
+- [l10n] Improve German (de-DE) locale (#8898) @marcauberer
+- [l10n] Improve Portuguese (pt-BR) locale (#8960) @Sorriso337
+- [l10n] Improve Ukrainian (uk-UA) locale (#8863) @Neonin
+
+### `@mui/x-date-pickers@v6.4.0` / `@mui/x-date-pickers-pro@v6.4.0`
+
+#### Changes
+
+- [pickers] Fix trailing zeros inconsistency in `LuxonAdapter` (#8955) @alexfauquette
+- [pickers] Stop using deprecated adapter methods (#8735) @flaviendelangle
+- [pickers] Strictly type the `adapterLocale` prop of `LocalizationProvider` (#8780) @flaviendelangle
+- [l10n] Add Slovak (sk-SK) locale (#8875) @MatejFacko
+
+### Docs
+
+- [docs] Fix date pickers typo in the docs  (#8939) @richbustos
+- [docs] Fix master detail demo (#8894) @m4theushw
+- [docs] Fix typo in clipboard docs (#8971) @MBilalShafi
+- [docs] Reduce list of dependencies in Codesandbox/Stackblitz demos (#8535) @cherniavskii
+
+### Core
+
+- [core] Improve testing of the adapters (#8789) @flaviendelangle
+- [core] Update license key for tests (#8917) @LukasTy
+- [charts] Make introduction docs pages for each chart (#8869) @alexfauquette
+- [charts] Document Tooltip and Highlighs (#8867) @alexfauquette
+- [test] Cover row grouping regression with a unit test (#8870) @cherniavskii
+- [test] Fix flaky regression tests (#8954) @cherniavskii
+
+## 6.3.1
+
+_May 5, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.3.1` / `@mui/x-data-grid-pro@v6.3.1` / `@mui/x-data-grid-premium@v6.3.1`
+
+#### Changes
+
+- [DataGrid] Fix broken filtering in the value formatter demo (#8621) @cherniavskii
+- [DataGrid] Fix falsy filter values not showing in filter button tooltip (#8550) @ithrforu
+- [DataGrid] Fix missing watermark in Pro and Premium packages (#8797) @cherniavskii
+- [DataGrid] Remove unwarranted warning log (#8847) @romgrk
+- [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
+- [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
+
+### `@mui/x-date-pickers@v6.3.1` / `@mui/x-date-pickers-pro@v6.3.1`
+
+#### Changes
+
+- [pickers] Fix `minutesStep` validation prop behavior (#8794) @LukasTy
+- [pickers] Fix time picker `viewRenderers` overriding (#8830) @LukasTy
+- [pickers] Remove last additional character when using LTR (#8848) @alexfauquette
+
+### Docs
+
+- [docs] Fix controlled mode demo on Editing page (#8800) @yaredtsy
+- [docs] Fix scrolling demo not working with React 18 (#6489) @cherniavskii
+- [docs] Update demo to support agregation on popular feature cell (#8617) @BalaM314
+- [docs] Clarify what `<path>` is (#8764) @alexfauquette
+
+### Core
+
+- [core] Do not include playground pages in `yarn typescript` script (#8822) @cherniavskii
+- [core] Limit `typescript:ci` step memory limit (#8796) @LukasTy
+- [core] Upgrade monorepo (#8835) @cherniavskii
+- [test] Use `fake` clock on `MobileDateRangePicker` (#8861) @LukasTy
+- [charts] Clean some styling (#8778) @alexfauquette
+- [charts] Improve tooltip (#8792) @alexfauquette
+- [charts] Improvement and docs on axis (#8654) @alexfauquette
+- [charts] Defaultize attributes (#8788) @alexfauquette
+
+## 6.3.0
+
+_Apr 28, 2023_
+
+We'd like to offer a big thanks to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 New [time-picking UI](https://mui.com/x/react-date-pickers/digital-clock/) designed for desktops (#7958) @LukasTy
+
+  <img src="https://user-images.githubusercontent.com/4941090/235072007-de39a397-e4a4-4c98-8e10-5ee4ad440108.gif" width="494" />
+
+- ✨ Picker fields [now always include a leading zero](https://mui.com/x/react-date-pickers/adapters-locale/#respect-leading-zeros-in-fields) on digit sections (#8527) @flaviendelangle
+- 🌍 Improve Chinese (zh-CN), French (fr-FR), and Turkish (tr-TR) locales
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.3.0` / `@mui/x-data-grid-pro@v6.3.0` / `@mui/x-data-grid-premium@v6.3.0`
+
+#### Changes
+
+- [DataGrid] Add overlay classes to `gridClasses` (#8686) @lindapaiste
+- [DataGrid] Avoid passing `api` prop to div (#8679) @someden
+- [DataGrid] Fix 'ResizeObserver loop limit exceeded' error (#8744) @m4theushw
+- [DataGrid] Add Joy UI slots (button and switch) (#8699) @siriwatknp
+- [DataGrid] Fix aggregation label alignment (#8694) @joserodolfofreitas
+- [DataGridPremium] Fix infinite loop when updating grouped rows (#8693) @cherniavskii
+- [DataGridPro] Fix error after updating `columns` and `columnGroupingModel` at once (#8730) @cherniavskii
+- [l10n] Improve Chinese (zh-CN) locale (#8753) @SakumyZ
+- [l10n] Improve French (fr-FR) locale (#8704) @Jul13nT
+- [l10n] Improve Turkish (tr-TR) locale (#8783) @cccaaannn
+
+### `@mui/x-date-pickers@v6.3.0` / `@mui/x-date-pickers-pro@v6.3.0`
+
+#### Changes
+
+- [fields] Always add leading zeroes on digit sections (#8527) @flaviendelangle
+- [fields] Pass the `readOnly` prop to `InputProps` instead of `inputProps` (#8659) @flaviendelangle
+- [pickers] Add missing export for `caES` locale (#8782) @flaviendelangle
+- [pickers] Add new `DigitalClock` desktop time picking experience (#7958) @LukasTy
+- [pickers] Do not use `instanceOf DateTime` in `AdapterLuxon` (#8734) @flaviendelangle
+- [pickers] Fix date calendar `selected` & `disabled` day style (#8773) @LukasTy
+- [pickers] Migrate `AdapterDateFns` to our repository (#8736) @flaviendelangle
+- [pickers] Migrate `AdapterLuxon` to our repository (#8600) @flaviendelangle
+- [pickers] Migrate `AdapterMomentHijri` to our repository (#8776) @flaviendelangle
+- [pickers] Migrate `AdapterMomentJalaali` and `AdapterDateFnsJalali` to our repository (#8741) @flaviendelangle
+- [pickers] Migrate `AdapterMoment` to our repository (#8700) @flaviendelangle
+- [pickers] Refactor the validation files (#8622) @flaviendelangle
+- [pickers] Use `en dash` instead of `em dash` in multi input range fields (#8738) @flaviendelangle
+- [l10n] Improve Chinese (zh-CN) locale (#8753) @SakumyZ
+- [l10n] Improve Turkish (tr-TR) locale (#8783) @cccaaannn
+
+### Docs
+
+- [docs] Add icons for charts menu (#8752) @alexfauquette
+- [docs] Document the supported formats (#8746) @flaviendelangle
+- [docs] Fix Hijri demo (#8698) @alexfauquette
+- [docs] Fix `x-codemod` package version in changelog (#8690) @MBilalShafi
+- [docs] Fix columns special properties code example (#8414) @mikkelhl
+- [docs] Fix error in `minDateTime` `validation` page section (#8777) @LukasTy
+- [docs] Update custom field pickers using theme scoping (#8609) @siriwatknp
+- [docs] Use community version of data grid for column grouping demo (#7346) @ASchwad
+- [docs] Use new `slots` / `slotProps` props in the pickers migration guide (#8341) @flaviendelangle
+
+### Core
+
+- [core] Cleanup picker tests (#8652) @flaviendelangle
+- [core] Use `adapter.lib` instead of `adapterName` in `describeAdapters` (#8779) @flaviendelangle
+- [charts] Adapt line and scatter plot to the "band" scale type (#8701) @alexfauquette
+- [charts] Link the Gantt Charts issue in the docs (#8739) @flaviendelangle
+
+## 6.2.1
+
+_Apr 20, 2023_
+
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Add virtualization to row detail panels (#7969) @yaredtsy
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.2.1` / `@mui/x-data-grid-pro@v6.2.1` / `@mui/x-data-grid-premium@v6.2.1`
+
+#### Changes
+
+- [DataGrid] Add `getTogglableColumns` to `Hide all` and `Show all` actions (#8496) @MBilalShafi
+- [DataGrid] Add Grid + Joy UI experiment page (#8067) @cherniavskii
+- [DataGrid] Fix print style when rendering inside Shadow DOM (#8656) @Bwatermelon
+- [DataGrid] Replace `GridAutoSizer` with `ResizeObserver` (#8091) @m4theushw
+- [DataGrid] Use stable ID for the placeholder filter item (#8603) @m4theushw
+- [DataGridPro] Virtualize row detail panels (#7969) @yaredtsy
+
+### `@mui/x-date-pickers@v6.2.1` / `@mui/x-date-pickers-pro@v6.2.1`
+
+#### Changes
+
+- [pickers] Do not include the time in date components when going to today (#8657) @flaviendelangle
+- [pickers] Sync internal state with controlled value (#8674) @alexfauquette
+
+### `@mui/x-codemod@v6.2.1`
+
+#### Changes
+
+- [codemod] Avoid filter failures on object prototype properties (#8647) @LukasTy
+
+### Docs
+
+- [docs] Add no-op service worker to fix stale cache issue (#8598) @cherniavskii
+- [docs] Clarify what `AdapterDayjs` is in the Getting Started page (#8219) @flaviendelangle
+- [docs] Fix typo on picker page description (#8611) @maxolasersquad
+- [docs] Improve section title in Getting Started page (#8648) @flaviendelangle
+- [docs] Inform about input format modification (#8458) @alexfauquette
+
+### Core
+
+- [core] Fix release date (#8618) @flaviendelangle
+- [core] Upgrade monorepo (#8668) @MBilalShafi
+- [charts] Support Tooltip (#8356) @alexfauquette
+
 ## 6.2.0
 
 _Apr 14, 2023_
@@ -147,9 +423,9 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [fields] Add missing tokens to `AdapterDateFnsJalali` (#8402) @flaviendelangle
 - [fields] Clean the active date manager (#8370) @flaviendelangle
-- [fields] Cleanup `useFieldState`  (#8292) @flaviendelangle
+- [fields] Cleanup `useFieldState` (#8292) @flaviendelangle
 - [fields] Only add RTL characters when needed (#8325) @flaviendelangle
-- [pickers] Add support for single input fields in range pickers  (#7927) @flaviendelangle
+- [pickers] Add support for single input fields in range pickers (#7927) @flaviendelangle
 - [pickers] Allows non token characters in format (#8256) @alexfauquette
 - [pickers] Avoid root imports and move public models to the models folder (#8337) @flaviendelangle
 - [pickers] Update `view` when `views` or `openTo` changes (#8361) @LukasTy

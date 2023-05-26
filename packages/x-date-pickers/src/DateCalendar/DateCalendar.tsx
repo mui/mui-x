@@ -17,11 +17,15 @@ import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
 import { PickersCalendarHeader } from './PickersCalendarHeader';
-import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
+import {
+  findClosestEnabledDate,
+  applyDefaultDate,
+  mergeDateAndTime,
+} from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
@@ -239,7 +243,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
     if (value && day) {
       // If there is a date already selected, then we want to keep its time
-      return setValueAndGoToNextView(utils.mergeDateAndTime(day, value), 'finish');
+      return setValueAndGoToNextView(mergeDateAndTime(utils, day, value), 'finish');
     }
 
     return setValueAndGoToNextView(day, 'finish');

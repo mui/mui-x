@@ -5,11 +5,8 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  BaseSingleInputFieldProps,
-  FieldSelectedSections,
-  DateOrTimeView,
-} from '@mui/x-date-pickers/models';
+import { BaseSingleInputFieldProps, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { PickersInputLocaleText } from '@mui/x-date-pickers/locales';
 import {
   BaseFieldProps,
@@ -55,7 +52,9 @@ export interface RangePickerFieldSlotsComponent {
 
 export interface RangePickerFieldSlotsComponentsProps<TDate> {
   field?: SlotComponentProps<
-    React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, unknown>>,
+    React.ElementType<
+      BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
+    >,
     {},
     UsePickerProps<DateRange<TDate>, any, RangeFieldSection, any, any, any>
   >;
@@ -71,13 +70,14 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
 
 export interface UseEnrichedRangePickerFieldPropsParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
-  FieldProps extends BaseFieldProps<DateRange<TDate>, RangeFieldSection, TError> = BaseFieldProps<
+  FieldProps extends BaseFieldProps<
     DateRange<TDate>,
+    TDate,
     RangeFieldSection,
     TError
-  >,
+  > = BaseFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>,
 > extends Pick<
       UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
       'open' | 'actions'
@@ -97,7 +97,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   fieldProps: FieldProps;
 }
 
-const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError>({
+const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
   wrapperVariant,
   open,
   actions,
@@ -115,9 +115,9 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError
   TDate,
   TView,
   TError,
-  BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>
+  BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>
 >) => {
-  type ReturnType = BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>;
+  type ReturnType = BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>;
 
   const localeText = useLocaleText<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
@@ -230,7 +230,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError
   return enrichedFieldProps;
 };
 
-const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError>({
+const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
   wrapperVariant,
   open,
   actions,
@@ -250,9 +250,9 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
   TDate,
   TView,
   TError,
-  BaseSingleInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>
+  BaseSingleInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>
 >) => {
-  type ReturnType = BaseSingleInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>;
+  type ReturnType = BaseSingleInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleInputRef = useForkRef(inInputRef, inputRef);
@@ -328,7 +328,11 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
   return enrichedFieldProps;
 };
 
-export const useEnrichedRangePickerFieldProps = <TDate, TView extends DateOrTimeView, TError>(
+export const useEnrichedRangePickerFieldProps = <
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+>(
   params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TError>,
 ) => {
   /* eslint-disable react-hooks/rules-of-hooks */

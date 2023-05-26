@@ -60,6 +60,10 @@ export interface GridCorePrivateApi<
    * The React ref of the grid virtual scroller container element.
    */
   virtualScrollerRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid main container div element.
+   */
+  mainElementRef?: React.RefObject<HTMLDivElement>;
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
@@ -81,6 +85,10 @@ export interface GridCorePrivateApi<
    * The React ref of the grid column container virtualized div element.
    */
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid header filter row element.
+   */
+  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The React ref of the grid column headers container element.
    */

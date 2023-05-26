@@ -1,22 +1,27 @@
-import { ScatterSeriesType, DefaultizedScatterSeriesType } from './scatter';
-import { LineSeriesType, DefaultizedLineSeriesType } from './line';
-import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import { ScatterSeriesType, DefaultizedScatterSeriesType, ScatterItemIdentifier } from './scatter';
+import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { AxisConfig } from '../axis';
+import { DefaultizedProps } from '../helpers';
+import { StackingGroupsType } from '../../internals/stackSeries';
 
 interface ChartsSeriesConfig {
   bar: {
-    seriesInput: BarSeriesType & { color: string };
+    seriesInput: DefaultizedProps<BarSeriesType, 'id'> & { color: string };
     series: DefaultizedBarSeriesType;
     canBeStacked: true;
+    itemIdentifier: BarItemIdentifier;
   };
   line: {
-    seriesInput: LineSeriesType & { color: string };
+    seriesInput: DefaultizedProps<LineSeriesType, 'id'> & { color: string };
     series: DefaultizedLineSeriesType;
     canBeStacked: true;
+    itemIdentifier: LineItemIdentifier;
   };
   scatter: {
-    seriesInput: ScatterSeriesType & { color: string };
+    seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> & { color: string };
     series: DefaultizedScatterSeriesType;
+    itemIdentifier: ScatterItemIdentifier;
   };
 }
 
@@ -28,9 +33,16 @@ export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] exten
   ? ChartsSeriesConfig[T]['seriesInput'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['seriesInput'];
 
+export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T]['series'] &
+  ChartSeries<T>;
+
+export type ChartItemIdentifier<T extends ChartSeriesType> =
+  ChartsSeriesConfig[T]['itemIdentifier'];
+
 type ExtremumGetterParams<T extends ChartSeriesType> = {
   series: { [id: string]: ChartSeries<T> };
   axis: AxisConfig;
+  isDefaultAxis: boolean;
 };
 
 export type ExtremumGetterResult = [number, number] | [null, null];
@@ -45,12 +57,12 @@ export type FormatterParams<T extends ChartSeriesType> = {
 };
 
 export type FormatterResult<T extends ChartSeriesType> = {
-  series: { [id: string]: ChartSeries<T> };
+  series: { [id: string]: ChartSeriesDefaultized<T> };
   seriesOrder: string[];
 } & (ChartsSeriesConfig[T] extends {
   canBeStacked: true;
 }
-  ? { stackingGroups: string[][] }
+  ? { stackingGroups: StackingGroupsType }
   : {});
 
 export type Formatter<T extends ChartSeriesType> = (

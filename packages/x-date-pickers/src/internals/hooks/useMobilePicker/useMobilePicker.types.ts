@@ -11,12 +11,7 @@ import {
   PickersModalDialogSlotsComponentsProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import {
-  BaseSingleInputFieldProps,
-  FieldSection,
-  DateOrTimeView,
-  MuiPickersAdapter,
-} from '../../../models';
+import { BaseSingleInputFieldProps, FieldSection, MuiPickersAdapter } from '../../../models';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -25,14 +20,15 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue.types';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
+import { DateOrTimeViewWithMeridiem } from '../../models';
 
-export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeView>
+export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends PickersModalDialogSlotsComponent,
     ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
-  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, any>>;
+  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, any>>;
   /**
    * Form control with an input to render the value inside the default field.
    * Receives the same props as `@mui/material/TextField`.
@@ -41,19 +37,23 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
   TextField?: React.ElementType<TextFieldProps>;
 }
 
-export interface ExportedUseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends PickersModalDialogSlotsComponentsProps,
+export interface ExportedUseMobilePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersModalDialogSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
-    React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, unknown>>,
+    React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},
     UsePickerProps<TDate | null, any, FieldSection, any, any, any>
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
-export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedUseMobilePickerSlotsComponentsProps<TDate, TView>,
+export interface UseMobilePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedUseMobilePickerSlotsComponentsProps<TDate, TView>,
     Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps<TDate>
@@ -64,7 +64,7 @@ export interface MobileOnlyPickerProps<TDate>
 
 export interface UseMobilePickerProps<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
@@ -83,11 +83,11 @@ export interface UseMobilePickerProps<
 
 export interface UseMobilePickerParams<
   TDate,
-  TView extends DateOrTimeView,
+  TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, FieldSection, TExternalProps, {}>,
-    'valueManager' | 'validator'
+    'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
   getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;

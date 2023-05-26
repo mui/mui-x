@@ -1,3 +1,4 @@
+export * from './caES';
 export * from './nlNL';
 export * from './plPL';
 export * from './ptBR';
@@ -23,4 +24,6 @@ export * from './urPK';
 export * from './beBY';
 export * from './ruRU';
 export * from './heIL';
+export * from './skSK';
+export * from './viVN';
 export * from './utils/pickersLocaleTextApi';
