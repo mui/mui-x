@@ -23,11 +23,31 @@ import {
 
 import 'dayjs/locale/fr';
 import 'dayjs/locale/de';
-// We import it here just to have the typing
+// We import the plugins here just to have the typing
 import 'dayjs/plugin/utc';
+import 'dayjs/plugin/timezone';
 
 describe('<AdapterDayjs />', () => {
-  describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss' });
+  describeGregorianAdapter(AdapterDayjs, {
+    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
+    setDefaultTimezone: dayjs.tz.setDefault,
+    frenchLocale: 'fr',
+  });
+
+  // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
+  describeGregorianAdapter(AdapterDayjs, {
+    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
+    prepareAdapter: (adapter) => {
+      // @ts-ignore
+      adapter.hasUTCPlugin = () => false;
+      // @ts-ignore
+      adapter.hasTimezonePlugin = () => false;
+      // Makes sure that we don't run timezone related tests, that would not work.
+      adapter.isTimezoneCompatible = false;
+    },
+    setDefaultTimezone: dayjs.tz.setDefault,
+    frenchLocale: 'fr',
+  });
 
   describe('Adapter localization', () => {
     describe('English', () => {
@@ -152,7 +172,8 @@ describe('<AdapterDayjs />', () => {
     });
   });
 
-  describe('UTC plugin', () => {
+  // TODO v7: Remove
+  describe('UTC plugin - LEGACY APPROACH', () => {
     const { render } = createPickerRenderer({
       clock: 'fake',
       adapterName: 'dayjs',

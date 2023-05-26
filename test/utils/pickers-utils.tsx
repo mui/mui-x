@@ -98,6 +98,7 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: Locale;
   adapterName?: AdapterName;
+  instance?: any;
 }
 
 export function wrapPickerMount(
@@ -110,6 +111,7 @@ export function wrapPickerMount(
 export function createPickerRenderer({
   locale,
   adapterName,
+  instance,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
@@ -126,8 +128,8 @@ export function createPickerRenderer({
     adapterLocale = adapterLocale.slice(0, 2);
   }
   const adapter = adapterName
-    ? new availableAdapters[adapterName]({ locale: adapterLocale })
-    : new AdapterClassToUse({ locale: adapterLocale });
+    ? new availableAdapters[adapterName]({ locale: adapterLocale, instance })
+    : new AdapterClassToUse({ locale: adapterLocale, instance });
 
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (

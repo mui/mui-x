@@ -1,0 +1,10 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "axisContent": "Component to override the tooltip content when triger is set to &#39;axis&#39;.",
+    "itemContent": "Component to override the tooltip content when triger is set to &#39;item&#39;.",
+    "trigger": "Select the kind of tooltip to display - &#39;item&#39;: Shows data about the item below the mouse. - &#39;axis&#39;: Shows values associated with the hovered x value - &#39;none&#39;: Does not display tooltip"
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
+}

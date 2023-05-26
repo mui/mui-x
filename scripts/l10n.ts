@@ -81,11 +81,17 @@ function plugin(existingTranslations: Translations): babel.PluginObj {
           }
 
           node.init.properties.forEach((property) => {
-            if (!babelTypes.isObjectProperty(property) || !babelTypes.isIdentifier(property.key)) {
+            if (
+              !babelTypes.isObjectProperty(property) ||
+              !(babelTypes.isIdentifier(property.key) || babelTypes.isStringLiteral(property.key))
+            ) {
               return;
             }
-            const name = property.key.name;
-            existingTranslations[name] = property.value;
+            // The stringLiteral keys are wrapped into `'` such that we can distinguish them from identifiers.
+            const key = babelTypes.isIdentifier(property.key)
+              ? (property.key as babelTypes.Identifier).name
+              : `'${(property.key as babelTypes.StringLiteral).value}'`;
+            existingTranslations[key] = property.value;
           });
         },
         exit(visitorPath) {
@@ -131,7 +137,7 @@ function extractTranslations(translationsPath: string): [TranslationsByGroup, Tr
 
         const key =
           (property.key as babelTypes.Identifier).name ||
-          (property.key as babelTypes.StringLiteral).value;
+          `'${(property.key as babelTypes.StringLiteral).value}'`;
 
         // Ignore translations for MUI Core components, e.g. MuiTablePagination
         if (key.startsWith('Mui')) {
@@ -185,7 +191,7 @@ function extractAndReplaceTranslations(localePath: string) {
     configFile: false,
     retainLines: true,
   })!;
-  return { translations, transformedCode: code, rawCode: file };
+  return { translations, transformedCode: code };
 }
 
 function injectTranslations(
@@ -200,7 +206,9 @@ function injectTranslations(
     lines.push(`\n\n// ${group}`);
 
     Object.entries(translations).forEach(([key, value]) => {
-      const valueToTransform = existingTranslations[key] || value;
+      const valueToTransform =
+        existingTranslations[key] || existingTranslations[`'${key}'`] || value;
+      const isKeyStringLiteral = !existingTranslations[key] && existingTranslations[`'${key}'`];
       const ast = astBuilder({ value: valueToTransform }) as babelTypes.Statement;
       const result = babel.transformFromAstSync(babelTypes.program([ast]), undefined, {
         plugins: BABEL_PLUGINS,
@@ -208,9 +216,9 @@ function injectTranslations(
       });
 
       const valueAsCode = result!.code!.replace(/^const _ = (.*);/gs, '$1');
-      const comment = !existingTranslations[key] ? '// ' : '';
+      const comment = !existingTranslations[key] && !existingTranslations[`'${key}'`] ? '// ' : '';
 
-      lines.push(`${comment}${key}: ${valueAsCode},`);
+      lines.push(`${comment}${isKeyStringLiteral ? `'${key}'` : key}: ${valueAsCode},`);
     });
   });
 
@@ -396,11 +404,8 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
     const locales = findLocales(localesDirectory, constantsPath);
 
     locales.forEach(([localePath, localeCode]) => {
-      const {
-        translations: existingTranslations,
-        transformedCode,
-        rawCode,
-      } = extractAndReplaceTranslations(localePath);
+      const { translations: existingTranslations, transformedCode } =
+        extractAndReplaceTranslations(localePath);
 
       if (!transformedCode || Object.keys(existingTranslations).length === 0) {
         return;
@@ -432,10 +437,13 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
           missingKeys: [],
         };
       }
-      const lines = rawCode.split('\n');
+      const lines = codeWithNewTranslations.split('\n');
       Object.entries(baseTranslations).forEach(([key]) => {
-        if (!existingTranslations[key]) {
-          const location = lines.findIndex((line) => line.trim().startsWith(`// ${key}:`));
+        if (!existingTranslations[key] && !existingTranslations[`'${key}'`]) {
+          const location = lines.findIndex(
+            (line) =>
+              line.trim().startsWith(`// ${key}:`) || line.trim().startsWith(`// '${key}':`),
+          );
           // Ignore when both the translation and the placeholder are missing
           if (location >= 0) {
             missingTranslations[localeCode][packageInfo.key].missingKeys.push({

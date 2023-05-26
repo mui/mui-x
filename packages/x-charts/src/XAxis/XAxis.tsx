@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
@@ -30,7 +31,7 @@ const defaultProps = {
   tickSize: 6,
 } as const;
 
-export function XAxis(inProps: XAxisProps) {
+function XAxis(inProps: XAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiXAxis' });
   const {
     xAxis: {
@@ -67,6 +68,7 @@ export function XAxis(inProps: XAxisProps) {
       {!disableLine && (
         <Line x1={xScale.range()[0]} x2={xScale.range()[1]} className={classes.line} />
       )}
+
       {xTicks.map(({ value, offset }, index) => (
         <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
           {!disableTicks && <Tick y2={positionSigne * tickSize} className={classes.tick} />}
@@ -81,6 +83,7 @@ export function XAxis(inProps: XAxisProps) {
           </TickLabel>
         </g>
       ))}
+
       {label && (
         <Label
           transform={`translate(${left + width / 2}, ${
@@ -97,3 +100,63 @@ export function XAxis(inProps: XAxisProps) {
     </g>
   );
 }
+
+XAxis.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Id of the axis to render.
+   */
+  axisId: PropTypes.string.isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * If true, the axis line is disabled.
+   * @default false
+   */
+  disableLine: PropTypes.bool,
+  /**
+   * If true, the ticks are disabled.
+   * @default false
+   */
+  disableTicks: PropTypes.bool,
+  /**
+   * The fill color of the axis text.
+   * @default 'currentColor'
+   */
+  fill: PropTypes.string,
+  /**
+   * The label of the axis.
+   */
+  label: PropTypes.string,
+  /**
+   * The font size of the axis label.
+   * @default 14
+   */
+  labelFontSize: PropTypes.number,
+  /**
+   * Position of the axis.
+   */
+  position: PropTypes.oneOf(['bottom', 'top']),
+  /**
+   * The stroke color of the axis line.
+   * @default 'currentColor'
+   */
+  stroke: PropTypes.string,
+  /**
+   * The font size of the axis ticks text.
+   * @default 12
+   */
+  tickFontSize: PropTypes.number,
+  /**
+   * The size of the ticks.
+   * @default 6
+   */
+  tickSize: PropTypes.number,
+} as any;
+
+export { XAxis };

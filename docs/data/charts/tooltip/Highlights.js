@@ -11,10 +11,10 @@ const lineChartsParams = {
       label: 'cos(x)',
     },
     {
-      data: [...Array(100)].map((v, i) => Math.abs(Math.sin(0.1 * i))),
+      data: [...Array(100)].map((v, i) => Math.abs(Math.sin(0.1 * i)) + 0.001),
       stack: '1',
       area: true,
-      label: 'sin(x)',
+      label: '|sin(x)|',
     },
     {
       data: [...Array(100)].map((v, i) => Math.abs(Math.cos(0.1 * i))),
