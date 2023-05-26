@@ -22,8 +22,11 @@ export type CartesianSeriesType = {
 
 export type StackableSeriesType = {
   stack?: string;
-  stackOffset?: keyof typeof StackOffset;
-  stackOrder?: keyof typeof StackOrder;
+  stackOffset?: StackOffsetType;
+  stackOrder?: StackOrderType;
 };
+
+export type StackOrderType = keyof typeof StackOrder;
+export type StackOffsetType = keyof typeof StackOffset;
 
 export type DefaultizedCartesianSeriesType = Required<CartesianSeriesType>;

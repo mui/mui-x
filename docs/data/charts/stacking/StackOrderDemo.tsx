@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { StackOrderType } from '@mui/x-charts/models';
 
 // Data comming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [
@@ -82,11 +83,8 @@ const availableStackOrder = [
 ] as const;
 
 export default function StackOrderDemo() {
-  const [stackOrder, setStackOrder] = React.useState<
-    'reverse' | 'appearance' | 'ascending' | 'descending' | 'none'
-  >('none');
+  const [stackOrder, setStackOrder] = React.useState<StackOrderType>('none');
 
-  // const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
     <Box>

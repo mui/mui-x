@@ -6,10 +6,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { StackOffsetType } from '@mui/x-charts/models';
 
 type GetSeriesParams = {
   hasNegativeValue: boolean;
-  stackOffset: 'expand' | 'diverging' | 'none';
+  stackOffset: StackOffsetType;
 };
 
 const availableStackOffset = ['expand', 'diverging', 'none'] as const;
@@ -39,9 +40,7 @@ const getSeries = ({ hasNegativeValue, stackOffset }: GetSeriesParams) => [
 ];
 
 export default function StackOffsetDemo() {
-  const [stackOffset, setStackOffset] = React.useState<
-    'expand' | 'diverging' | 'none'
-  >('none');
+  const [stackOffset, setStackOffset] = React.useState<StackOffsetType>('none');
 
   const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
 

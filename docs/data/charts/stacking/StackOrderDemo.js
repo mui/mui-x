@@ -89,7 +89,6 @@ const availableStackOrder = [
 export default function StackOrderDemo() {
   const [stackOrder, setStackOrder] = React.useState('none');
 
-  // const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
     <Box>
