@@ -171,9 +171,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   private hasTimezonePlugin = () => typeof defaultDayjs.tz !== 'undefined';
 
   private isSame = (value: Dayjs, comparing: Dayjs, comparisonTemplate: string) => {
-    const comparingInDateTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value))!;
 
-    return value.format(comparisonTemplate) === comparingInDateTimezone.format(comparisonTemplate);
+    return value.format(comparisonTemplate) === comparingInValueTimezone.format(comparisonTemplate);
   };
 
   private createSystemDate = (value: string | undefined): Dayjs => {
