@@ -144,15 +144,13 @@ export const useGridRowsMeta = (
         rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
       }
 
-      const initialHeights = Object.entries(sizes).reduce<Record<string, number>>(
-        (acc, [key, size]) => {
-          if (/^base[A-Z]/.test(key)) {
-            acc[key] = size;
-          }
-          return acc;
-        },
-        {},
-      );
+      const initialHeights = {} as Record<string, number>;
+      /* eslint-disable-next-line no-restricted-syntax */
+      for (const key in sizes) {
+        if (/^base[A-Z]/.test(key)) {
+          initialHeights[key] = sizes[key];
+        }
+      }
       initialHeights.baseCenter = baseRowHeight;
 
       if (getRowSpacing) {
@@ -188,13 +186,15 @@ export const useGridRowsMeta = (
       let otherSizes = 0;
 
       const processedSizes = calculateRowProcessedSizes(row);
-      Object.entries(processedSizes).forEach(([size, value]) => {
-        if (/^base[A-Z]/.test(size)) {
+      /* eslint-disable-next-line no-restricted-syntax, guard-for-in */
+      for (const key in processedSizes) {
+        const value = processedSizes[key];
+        if (/^base[A-Z]/.test(key)) {
           maximumBaseSize = value > maximumBaseSize ? value : maximumBaseSize;
         } else {
           otherSizes += value;
         }
-      });
+      }
 
       return acc + maximumBaseSize + otherSizes;
     }, 0);
