@@ -362,40 +362,46 @@ export const useGridFilter = (
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
-      if (props.filterMode === 'client' && params.isRowMatchingFilters) {
-        const tree = gridRowTreeSelector(apiRef);
-        const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
-        const filteredRowsLookup: Record<GridRowId, boolean> = {};
-        for (let i = 0; i < rowIds.length; i += 1) {
-          const rowId = rowIds[i];
-          let isRowPassing;
-          if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
-            isRowPassing = true;
-          } else {
-            const { passingFilterItems, passingQuickFilterValues } =
-              params.isRowMatchingFilters(rowId);
-            isRowPassing = passFilterLogic(
-              [passingFilterItems],
-              [passingQuickFilterValues],
-              params.filterModel,
-              apiRef,
-            );
-          }
-          filteredRowsLookup[rowId] = isRowPassing;
-        }
+      if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
         return {
-          filteredRowsLookup,
-          // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
-          visibleRowsLookup: filteredRowsLookup,
+          visibleRowsLookup: new Set(),
+          filteredRowsLookup: new Set(),
           filteredDescendantCountLookup: {},
         };
       }
 
+      const tree = gridRowTreeSelector(apiRef);
+      const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
+      const filteredRowsLookup = new Set<GridRowId>();
+
+      for (let i = 0; i < rowIds.length; i += 1) {
+        const rowId = rowIds[i];
+
+        if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
+          filteredRowsLookup.add(rowId)
+        } else {
+          const { passingFilterItems, passingQuickFilterValues } =
+            params.isRowMatchingFilters(rowId);
+
+          const isRowPassing = passFilterLogic(
+            [passingFilterItems],
+            [passingQuickFilterValues],
+            params.filterModel,
+            apiRef,
+          );
+
+          if (isRowPassing)
+            filteredRowsLookup.add(rowId)
+        }
+      }
+
       return {
-        visibleRowsLookup: {},
-        filteredRowsLookup: {},
+        filteredRowsLookup,
+        // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
+        visibleRowsLookup: filteredRowsLookup,
         filteredDescendantCountLookup: {},
       };
+
     },
     [apiRef, props.filterMode],
   );

@@ -83,8 +83,8 @@ export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
   const { rowTree, isRowMatchingFilters, filterModel } = params;
-  const visibleRowsLookup: Record<GridRowId, boolean> = {};
-  const filteredRowsLookup: Record<GridRowId, boolean> = {};
+  const visibleRowsLookup = new Set<GridRowId>();
+  const filteredRowsLookup = new Set<GridRowId>();
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
   const filterTreeNode = (
@@ -138,13 +138,15 @@ export const filterRowTreeFromGroupingColumns = (
       }
     }
 
-    visibleRowsLookup[node.id] = isPassingFiltering && areAncestorsExpanded;
-    filteredRowsLookup[node.id] = isPassingFiltering;
+    if (isPassingFiltering && areAncestorsExpanded)
+      visibleRowsLookup.add(node.id);
+    if (isPassingFiltering)
+      filteredRowsLookup.add(node.id);
 
     // TODO rows v6: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
     if (node.type === 'group' && node.footerId != null) {
-      visibleRowsLookup[node.footerId] =
-        isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded;
+      if (isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded)
+        visibleRowsLookup.add(node.footerId);
     }
 
     if (!isPassingFiltering) {
