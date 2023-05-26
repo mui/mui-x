@@ -232,6 +232,21 @@ export const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
+  if (appliers.length === 1) {
+    const applier = appliers[0];
+    const applierFn = applier.fn;
+
+    const fn = eval(`(rowId, shouldApplyFilter) => {
+      if (shouldApplyFilter && !shouldApplyFilter(applier.item.field)) {
+        return {};
+      }
+      // ${applierFn.name} <- Keep a ref, prevent the bundler from optimizing away
+      return { '${applier.item.id!}': applierFn(rowId) };
+    }`);
+
+    return fn;
+  }
+
   return (rowId, shouldApplyFilter) => {
     const resultPerItemId: GridFilterItemResult = {};
 
