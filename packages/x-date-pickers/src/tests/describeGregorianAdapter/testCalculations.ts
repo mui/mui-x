@@ -1,33 +1,31 @@
 import { expect } from 'chai';
+import { PickersTimezone } from '@mui/x-date-pickers/models';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 
-export const testCalculations: DescribeGregorianAdapterTestSuite = ({ adapter }) => {
+export const testCalculations: DescribeGregorianAdapterTestSuite = ({
+  adapter,
+  adapterTZ,
+  adapterFr,
+  setDefaultTimezone,
+}) => {
   const testDateIso = adapter.date(TEST_DATE_ISO_STRING)!;
   const testDateLocale = adapter.date(TEST_DATE_LOCALE_STRING)!;
 
   describe('Method: date', () => {
     it('should parse strings', () => {
-      expect(adapter.isEqual(testDateIso, adapter.date(TEST_DATE_ISO_STRING))).to.equal(true);
-      expect(adapter.isEqual(testDateLocale, adapter.date(TEST_DATE_LOCALE_STRING))).to.equal(true);
+      expect(adapter.date(TEST_DATE_ISO_STRING)).toEqualDateTime(testDateIso);
+      expect(adapter.date(TEST_DATE_LOCALE_STRING)).toEqualDateTime(testDateLocale);
     });
 
     it('should parse native Date object', () => {
-      expect(adapter.isEqual(testDateIso, adapter.date(new Date(TEST_DATE_ISO_STRING)))).to.equal(
-        true,
-      );
-      expect(
-        adapter.isEqual(testDateLocale, adapter.date(new Date(TEST_DATE_LOCALE_STRING))),
-      ).to.equal(true);
+      expect(adapter.date(new Date(TEST_DATE_ISO_STRING))).toEqualDateTime(testDateIso);
+      expect(adapter.date(new Date(TEST_DATE_LOCALE_STRING))).toEqualDateTime(testDateLocale);
     });
 
     it('should parse already-parsed object', () => {
-      expect(
-        adapter.isEqual(testDateIso, adapter.date(adapter.date(TEST_DATE_ISO_STRING))),
-      ).to.equal(true);
-      expect(
-        adapter.isEqual(testDateLocale, adapter.date(adapter.date(TEST_DATE_LOCALE_STRING))),
-      ).to.equal(true);
+      expect(adapter.date(testDateIso)).toEqualDateTime(testDateIso);
+      expect(adapter.date(testDateLocale)).toEqualDateTime(testDateLocale);
     });
 
     it('should parse null', () => {
@@ -38,6 +36,140 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({ adapter })
       expect(
         Math.abs(adapter.toJsDate(adapter.date(undefined)!).getTime() - Date.now()),
       ).to.be.lessThan(5);
+    });
+  });
+
+  describe('Method: dateWithTimezone', () => {
+    it('should parse ISO strings', () => {
+      if (adapter.isTimezoneCompatible) {
+        const test = (timezone: PickersTimezone, expectedTimezones: string = timezone) => {
+          [adapterTZ, adapterFr].forEach((instance) => {
+            const dateWithZone = instance.dateWithTimezone(TEST_DATE_ISO_STRING, timezone)!;
+            expect(instance.getTimezone(dateWithZone)).to.equal(expectedTimezones);
+
+            // Should keep the time of the value in the UTC timezone
+            expect(dateWithZone).toEqualDateTime(TEST_DATE_ISO_STRING);
+          });
+        };
+
+        test('UTC');
+        test('system');
+        test('America/New_York');
+        test('Europe/Paris');
+
+        setDefaultTimezone('America/New_York');
+        test('default', 'America/New_York');
+
+        setDefaultTimezone('Europe/Paris');
+        test('default', 'Europe/Paris');
+
+        // Reset to the default timezone
+        setDefaultTimezone(undefined);
+      } else {
+        expect(adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system')).toEqualDateTime(
+          TEST_DATE_ISO_STRING,
+        );
+        expect(adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'default')).toEqualDateTime(
+          TEST_DATE_ISO_STRING,
+        );
+      }
+    });
+
+    it('should parse locale strings', () => {
+      if (adapter.isTimezoneCompatible) {
+        const test = (timezone: PickersTimezone) => {
+          [adapterTZ, adapterFr].forEach((instance) => {
+            const dateWithZone = instance.dateWithTimezone(TEST_DATE_LOCALE_STRING, timezone)!;
+            expect(instance.getTimezone(dateWithZone)).to.equal(timezone);
+
+            // Should keep the time of the date in the target timezone
+            expect(instance.format(dateWithZone, 'fullTime24h')).to.equal('00:00');
+          });
+        };
+
+        test('UTC');
+        test('system');
+        test('America/New_York');
+        test('Europe/Paris');
+      } else {
+        expect(adapter.dateWithTimezone(TEST_DATE_LOCALE_STRING, 'system')).toEqualDateTime(
+          TEST_DATE_LOCALE_STRING,
+        );
+      }
+    });
+
+    it('should parse null', () => {
+      expect(adapter.dateWithTimezone(null, 'system')).to.equal(null);
+
+      if (adapter.isTimezoneCompatible) {
+        expect(adapter.dateWithTimezone(null, 'UTC')).to.equal(null);
+        expect(adapter.dateWithTimezone(null, 'America/New_York')).to.equal(null);
+      }
+    });
+
+    it('should parse undefined', () => {
+      const expectedDate = new Date();
+
+      expect(adapter.dateWithTimezone(undefined, 'system')).toEqualDateTime(expectedDate);
+
+      if (adapter.isTimezoneCompatible) {
+        const testTodayZone = (timezone: PickersTimezone) => {
+          const dateWithZone = adapterTZ.dateWithTimezone(undefined, timezone)!;
+          expect(adapterTZ.getTimezone(dateWithZone)).to.equal(timezone);
+          expect(adapterTZ.getDiff(dateWithZone, adapterTZ.date(new Date())!)).to.be.lessThan(5);
+          expect(Math.abs(adapterTZ.toJsDate(dateWithZone).getTime() - Date.now())).to.be.lessThan(
+            5,
+          );
+        };
+
+        testTodayZone('system');
+        testTodayZone('UTC');
+        testTodayZone('America/New_York');
+      }
+    });
+  });
+
+  it('Method: getTimezone', () => {
+    if (!adapter.isTimezoneCompatible) {
+      return;
+    }
+
+    const testTimezone = (timezone: string, expectedTimezone = timezone) => {
+      expect(adapter.getTimezone(adapter.dateWithTimezone(undefined, timezone))).to.equal(
+        expectedTimezone,
+      );
+    };
+
+    testTimezone('system');
+    testTimezone('Europe/Paris');
+    testTimezone('America/New_York');
+    testTimezone('UTC');
+
+    setDefaultTimezone('America/Chicago');
+    testTimezone('default', 'America/Chicago');
+    setDefaultTimezone(undefined);
+  });
+
+  describe('Method: setTimezone', () => {
+    it('should support "default"', () => {
+      if (adapter.isTimezoneCompatible) {
+        const test = (timezone: PickersTimezone) => {
+          setDefaultTimezone(timezone);
+          const dateWithLocaleTimezone = adapter.dateWithTimezone(undefined, 'system')!;
+          const dateWithDefaultTimezone = adapter.setTimezone(dateWithLocaleTimezone, 'default');
+
+          expect(adapter.getTimezone(dateWithDefaultTimezone)).to.equal(timezone);
+        };
+
+        test('America/New_York');
+        test('Europe/Paris');
+
+        // Reset to the default timezone
+        setDefaultTimezone(undefined);
+      } else {
+        const localeDate = adapter.dateWithTimezone(undefined, 'system')!;
+        expect(adapter.setTimezone(localeDate, 'default')).to.equal(localeDate);
+      }
     });
   });
 
@@ -164,122 +296,343 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({ adapter })
     });
   });
 
-  it('Method: isEqual', () => {
-    expect(adapter.isEqual(adapter.date(null), null)).to.equal(true);
-    expect(adapter.isEqual(testDateIso, adapter.date(TEST_DATE_ISO_STRING))).to.equal(true);
-    expect(adapter.isEqual(null, testDateIso)).to.equal(false);
-    expect(adapter.isEqual(testDateLocale, adapter.date(TEST_DATE_LOCALE_STRING))).to.equal(true);
-    expect(adapter.isEqual(null, testDateLocale)).to.equal(false);
+  describe('Method: isEqual', () => {
+    it('should work in the same timezone', () => {
+      expect(adapter.isEqual(adapter.date(null), null)).to.equal(true);
+      expect(adapter.isEqual(testDateIso, adapter.date(TEST_DATE_ISO_STRING))).to.equal(true);
+      expect(adapter.isEqual(null, testDateIso)).to.equal(false);
+      expect(adapter.isEqual(testDateLocale, adapter.date(TEST_DATE_LOCALE_STRING))).to.equal(true);
+      expect(adapter.isEqual(null, testDateLocale)).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      const dateInLondonTZ = adapterTZ.setTimezone(testDateIso, 'Europe/London');
+      const dateInParisTZ = adapterTZ.setTimezone(testDateIso, 'Europe/Paris');
+
+      expect(adapterTZ.isEqual(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+    });
   });
 
-  it('Method: isSameYear', () => {
-    expect(adapter.isSameYear(testDateIso, adapter.date('2018-10-01T00:00:00.000Z')!)).to.equal(
-      true,
-    );
-    expect(adapter.isSameYear(testDateIso, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
-      false,
-    );
-    expect(adapter.isSameYear(testDateLocale, adapter.date('2018-10-01T00:00:00.000Z')!)).to.equal(
-      true,
-    );
-    expect(adapter.isSameYear(testDateLocale, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
-      false,
-    );
+  describe('Method: isSameYear', () => {
+    it('should work in the same timezone', () => {
+      expect(adapter.isSameYear(testDateIso, adapter.date('2018-10-01T00:00:00.000Z')!)).to.equal(
+        true,
+      );
+      expect(adapter.isSameYear(testDateIso, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
+        false,
+      );
+      expect(
+        adapter.isSameYear(testDateLocale, adapter.date('2018-10-01T00:00:00.000Z')!),
+      ).to.equal(true);
+      expect(
+        adapter.isSameYear(testDateLocale, adapter.date('2019-10-01T00:00:00.000Z')!),
+      ).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
+      // The adapter should still consider that they are in the same year.
+      const dateInLondonTZ = adapterTZ.endOfYear(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isSameYear(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameYear(dateInParisTZ, dateInLondonTZ)).to.equal(true);
+    });
   });
 
-  it('Method: isSameMonth', () => {
-    expect(adapter.isSameMonth(testDateIso, adapter.date('2018-10-01T00:00:00.000Z')!)).to.equal(
-      true,
-    );
-    expect(adapter.isSameMonth(testDateIso, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
-      false,
-    );
-    expect(adapter.isSameMonth(testDateLocale, adapter.date('2018-10-01T00:00:00.000Z')!)).to.equal(
-      true,
-    );
-    expect(adapter.isSameMonth(testDateLocale, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
-      false,
-    );
+  describe('Method: isSameMonth', () => {
+    it('should work in the same timezone', () => {
+      expect(adapter.isSameMonth(testDateIso, adapter.date('2018-10-01T00:00:00.000Z')!)).to.equal(
+        true,
+      );
+      expect(adapter.isSameMonth(testDateIso, adapter.date('2019-10-01T00:00:00.000Z')!)).to.equal(
+        false,
+      );
+      expect(
+        adapter.isSameMonth(testDateLocale, adapter.date('2018-10-01T00:00:00.000Z')!),
+      ).to.equal(true);
+      expect(
+        adapter.isSameMonth(testDateLocale, adapter.date('2019-10-01T00:00:00.000Z')!),
+      ).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same month when represented in their respective timezone.
+      // The adapter should still consider that they are in the same month.
+      const dateInLondonTZ = adapterTZ.endOfMonth(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isSameMonth(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameMonth(dateInParisTZ, dateInLondonTZ)).to.equal(true);
+    });
   });
 
-  it('Method: isSameDay', () => {
-    expect(adapter.isSameDay(testDateIso, adapter.date('2018-10-30T00:00:00.000Z')!)).to.equal(
-      true,
-    );
-    expect(adapter.isSameDay(testDateIso, adapter.date('2019-10-30T00:00:00.000Z')!)).to.equal(
-      false,
-    );
-    expect(adapter.isSameDay(testDateLocale, adapter.date('2018-10-30T00:00:00.000Z')!)).to.equal(
-      true,
-    );
-    expect(adapter.isSameDay(testDateLocale, adapter.date('2019-10-30T00:00:00.000Z')!)).to.equal(
-      false,
-    );
+  describe('Method: isSameDay', () => {
+    it('should work in the same timezone', () => {
+      expect(adapter.isSameDay(testDateIso, adapter.date('2018-10-30T00:00:00.000Z')!)).to.equal(
+        true,
+      );
+      expect(adapter.isSameDay(testDateIso, adapter.date('2019-10-30T00:00:00.000Z')!)).to.equal(
+        false,
+      );
+      expect(adapter.isSameDay(testDateLocale, adapter.date('2018-10-30T00:00:00.000Z')!)).to.equal(
+        true,
+      );
+      expect(adapter.isSameDay(testDateLocale, adapter.date('2019-10-30T00:00:00.000Z')!)).to.equal(
+        false,
+      );
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
+      // The adapter should still consider that they are in the same day.
+      const dateInLondonTZ = adapterTZ.endOfDay(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isSameDay(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameDay(dateInParisTZ, dateInLondonTZ)).to.equal(true);
+    });
   });
 
-  it('Method: isSameHour', () => {
-    expect(adapter.isSameHour(testDateIso, adapter.date('2018-10-30T11:00:00.000Z')!)).to.equal(
-      true,
-    );
-    expect(adapter.isSameHour(testDateIso, adapter.date('2018-10-30T12:00:00.000Z')!)).to.equal(
-      false,
-    );
+  describe('Method: isSameHour', () => {
+    it('should work in the same timezone', () => {
+      expect(adapter.isSameHour(testDateIso, adapter.date('2018-10-30T11:00:00.000Z')!)).to.equal(
+        true,
+      );
+      expect(adapter.isSameHour(testDateIso, adapter.date('2018-10-30T12:00:00.000Z')!)).to.equal(
+        false,
+      );
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
+      // The adapter should still consider that they are in the same day.
+      const dateInLondonTZ = adapterTZ.setTimezone(testDateIso, 'Europe/London');
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isSameHour(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapterTZ.isSameHour(dateInParisTZ, dateInLondonTZ)).to.equal(true);
+    });
   });
 
-  it('Method: isAfter', () => {
-    expect(adapter.isAfter(adapter.date()!, testDateIso)).to.equal(true);
-    expect(adapter.isAfter(testDateIso, adapter.date()!)).to.equal(false);
+  describe('Method: isAfter', () => {
+    it('should work with the same timezone', () => {
+      expect(adapter.isAfter(adapter.date()!, testDateIso)).to.equal(true);
+      expect(adapter.isAfter(testDateIso, adapter.date()!)).to.equal(false);
 
-    expect(adapter.isAfter(adapter.date()!, testDateLocale)).to.equal(true);
-    expect(adapter.isAfter(testDateLocale, adapter.date()!)).to.equal(false);
+      expect(adapter.isAfter(adapter.date()!, testDateLocale)).to.equal(true);
+      expect(adapter.isAfter(testDateLocale, adapter.date()!)).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      const dateInLondonTZ = adapterTZ.endOfDay(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.addMinutes(
+        adapterTZ.endOfDay(adapterTZ.setTimezone(testDateIso, 'Europe/Paris')),
+        30,
+      );
+
+      expect(adapter.isAfter(dateInLondonTZ, dateInParisTZ)).to.equal(true);
+      expect(adapter.isAfter(dateInParisTZ, dateInLondonTZ)).to.equal(false);
+    });
   });
 
-  it('Method: isAfterYear', () => {
-    const nextYearIso = adapter.addYears(testDateIso, 1);
-    expect(adapter.isAfterYear(nextYearIso, testDateIso)).to.equal(true);
-    expect(adapter.isAfterYear(testDateIso, nextYearIso)).to.equal(false);
+  describe('Method: isAfterYear', () => {
+    it('should work in the same timezone', () => {
+      const nextYearIso = adapter.addYears(testDateIso, 1);
+      expect(adapter.isAfterYear(nextYearIso, testDateIso)).to.equal(true);
+      expect(adapter.isAfterYear(testDateIso, nextYearIso)).to.equal(false);
 
-    const nextYearLocale = adapter.addYears(testDateLocale, 1);
-    expect(adapter.isAfterYear(nextYearLocale, testDateLocale)).to.equal(true);
-    expect(adapter.isAfterYear(testDateLocale, nextYearLocale)).to.equal(false);
+      const nextYearLocale = adapter.addYears(testDateLocale, 1);
+      expect(adapter.isAfterYear(nextYearLocale, testDateLocale)).to.equal(true);
+      expect(adapter.isAfterYear(testDateLocale, nextYearLocale)).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
+      // The adapter should still consider that they are in the same year.
+      const dateInLondonTZ = adapterTZ.endOfYear(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isAfterYear(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isAfterYear(dateInParisTZ, dateInLondonTZ)).to.equal(false);
+    });
   });
 
-  it('Method: isAfterDay', () => {
-    const nextDayIso = adapter.addDays(testDateIso, 1);
-    expect(adapter.isAfterDay(nextDayIso, testDateIso)).to.equal(true);
-    expect(adapter.isAfterDay(testDateIso, nextDayIso)).to.equal(false);
+  describe('Method: isAfterDay', () => {
+    it('should work with the same timezone', () => {
+      const nextDayIso = adapter.addDays(testDateIso, 1);
+      expect(adapter.isAfterDay(nextDayIso, testDateIso)).to.equal(true);
+      expect(adapter.isAfterDay(testDateIso, nextDayIso)).to.equal(false);
 
-    const nextDayLocale = adapter.addDays(testDateLocale, 1);
-    expect(adapter.isAfterDay(nextDayLocale, testDateLocale)).to.equal(true);
-    expect(adapter.isAfterDay(testDateLocale, nextDayLocale)).to.equal(false);
+      const nextDayLocale = adapter.addDays(testDateLocale, 1);
+      expect(adapter.isAfterDay(nextDayLocale, testDateLocale)).to.equal(true);
+      expect(adapter.isAfterDay(testDateLocale, nextDayLocale)).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
+      // The adapter should still consider that they are in the same day.
+      const dateInLondonTZ = adapterTZ.endOfDay(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isAfterDay(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isAfterDay(dateInParisTZ, dateInLondonTZ)).to.equal(false);
+
+      // Both dates below have the same day when represented in their respective timezone,
+      // But not when represented in the same timezone
+      // The adapter should consider that they are not in the same day
+      const dateInLondonTZ2 = adapterTZ.startOfDay(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ2 = adapterTZ.addHours(
+        adapterTZ.setTimezone(dateInLondonTZ2, 'Europe/Paris'),
+        -1,
+      );
+
+      expect(adapterTZ.isAfterDay(dateInLondonTZ2, dateInParisTZ2)).to.equal(true);
+      expect(adapterTZ.isAfterDay(dateInParisTZ2, dateInLondonTZ2)).to.equal(false);
+    });
   });
 
-  it('Method: isBefore', () => {
-    expect(adapter.isBefore(testDateIso, adapter.date()!)).to.equal(true);
-    expect(adapter.isBefore(adapter.date()!, testDateIso)).to.equal(false);
+  describe('Method: isBefore', () => {
+    it('should work with the same timezone', () => {
+      expect(adapter.isBefore(testDateIso, adapter.date()!)).to.equal(true);
+      expect(adapter.isBefore(adapter.date()!, testDateIso)).to.equal(false);
 
-    expect(adapter.isBefore(testDateLocale, adapter.date()!)).to.equal(true);
-    expect(adapter.isBefore(adapter.date()!, testDateLocale)).to.equal(false);
+      expect(adapter.isBefore(testDateLocale, adapter.date()!)).to.equal(true);
+      expect(adapter.isBefore(adapter.date()!, testDateLocale)).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      const dateInLondonTZ = adapterTZ.endOfDay(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.addMinutes(
+        adapterTZ.endOfDay(adapterTZ.setTimezone(testDateIso, 'Europe/Paris')),
+        30,
+      );
+
+      expect(adapter.isBefore(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapter.isBefore(dateInParisTZ, dateInLondonTZ)).to.equal(true);
+    });
   });
 
-  it('Method: isBeforeYear', () => {
-    const nextYearIso = adapter.addYears(testDateIso, -1);
-    expect(adapter.isBeforeYear(nextYearIso, testDateIso)).to.equal(true);
-    expect(adapter.isBeforeYear(testDateIso, nextYearIso)).to.equal(false);
+  describe('Method: isBeforeYear', () => {
+    it('should work in the same timezone', () => {
+      const nextYearIso = adapter.addYears(testDateIso, -1);
+      expect(adapter.isBeforeYear(nextYearIso, testDateIso)).to.equal(true);
+      expect(adapter.isBeforeYear(testDateIso, nextYearIso)).to.equal(false);
 
-    const nextYearLocale = adapter.addYears(testDateLocale, -1);
-    expect(adapter.isBeforeYear(nextYearLocale, testDateLocale)).to.equal(true);
-    expect(adapter.isBeforeYear(testDateLocale, nextYearLocale)).to.equal(false);
+      const nextYearLocale = adapter.addYears(testDateLocale, -1);
+      expect(adapter.isBeforeYear(nextYearLocale, testDateLocale)).to.equal(true);
+      expect(adapter.isBeforeYear(testDateLocale, nextYearLocale)).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same year when represented in their respective timezone.
+      // The adapter should still consider that they are in the same year.
+      const dateInLondonTZ = adapterTZ.endOfYear(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isBeforeYear(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isBeforeYear(dateInParisTZ, dateInLondonTZ)).to.equal(false);
+    });
   });
 
-  it('Method: isBeforeDay', () => {
-    const nextDayIso = adapter.addDays(testDateIso, -1);
-    expect(adapter.isBeforeDay(nextDayIso, testDateIso)).to.equal(true);
-    expect(adapter.isBeforeDay(testDateIso, nextDayIso)).to.equal(false);
+  describe('Method: isBeforeDay', () => {
+    it('should work with the same timezone', () => {
+      const previousDayIso = adapter.addDays(testDateIso, -1);
+      expect(adapter.isBeforeDay(previousDayIso, testDateIso)).to.equal(true);
+      expect(adapter.isBeforeDay(testDateIso, previousDayIso)).to.equal(false);
 
-    const nextDayLocale = adapter.addDays(testDateLocale, -1);
-    expect(adapter.isBeforeDay(nextDayLocale, testDateLocale)).to.equal(true);
-    expect(adapter.isBeforeDay(testDateLocale, nextDayLocale)).to.equal(false);
+      const previousDayLocale = adapter.addDays(testDateLocale, -1);
+      expect(adapter.isBeforeDay(previousDayLocale, testDateLocale)).to.equal(true);
+      expect(adapter.isBeforeDay(testDateLocale, previousDayLocale)).to.equal(false);
+    });
+
+    it('should work with different timezones', function test() {
+      if (!adapter.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      // Both dates below have the same timestamp, but they are not in the same day when represented in their respective timezone.
+      // The adapter should still consider that they are in the same day.
+      const dateInLondonTZ = adapterTZ.endOfDay(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ = adapterTZ.setTimezone(dateInLondonTZ, 'Europe/Paris');
+
+      expect(adapterTZ.isBeforeDay(dateInLondonTZ, dateInParisTZ)).to.equal(false);
+      expect(adapterTZ.isBeforeDay(dateInParisTZ, dateInLondonTZ)).to.equal(false);
+
+      // Both dates below have the same day when represented in their respective timezone,
+      // But not when represented in the same timezone
+      // The adapter should consider that they are not in the same day
+      const dateInLondonTZ2 = adapterTZ.endOfDay(
+        adapterTZ.setTimezone(testDateIso, 'Europe/London'),
+      );
+      const dateInParisTZ2 = adapterTZ.addHours(
+        adapterTZ.setTimezone(dateInLondonTZ2, 'Europe/Paris'),
+        -1,
+      );
+
+      expect(adapterTZ.isBeforeDay(dateInLondonTZ2, dateInParisTZ2)).to.equal(false);
+      expect(adapterTZ.isBeforeDay(dateInParisTZ2, dateInLondonTZ2)).to.equal(true);
+    });
   });
 
   describe('Method: isWithinRange', () => {

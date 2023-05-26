@@ -54,6 +54,16 @@ export const rangeValueManager: RangePickerValueManager = {
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
   hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
+  getTimezone: (utils, value) => {
+    const timezoneStart = value[0] == null ? null : utils.getTimezone(value[0]);
+    const timezoneEnd = value[1] == null ? null : utils.getTimezone(value[1]);
+
+    if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
+      throw new Error('MUI: The timezone of the start and the end date should be the same');
+    }
+
+    return timezoneStart ?? timezoneEnd;
+  },
 };
 
 export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, RangeFieldSection> = {

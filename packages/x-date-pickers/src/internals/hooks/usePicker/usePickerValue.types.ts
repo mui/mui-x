@@ -96,6 +96,15 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * The value identifying no error, used to initialise the error state.
    */
   defaultErrorState: TError;
+  /**
+   * Return the timezone of the date inside a value.
+   * Throw an error on range picker if both values don't have the same timezone.
+   @template TValue, TDate
+   @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   @param {TValue} value The current value.
+   @returns {string | null} The timezone of the current value.
+   */
+  getTimezone: (utils: MuiPickersAdapter<TDate>, value: TValue) => string | null;
 }
 
 export interface PickerChangeHandlerContext<TError> {

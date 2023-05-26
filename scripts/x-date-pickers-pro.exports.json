@@ -238,6 +238,7 @@
   { "name": "pickersSlideTransitionClasses", "kind": "Variable" },
   { "name": "PickersSlideTransitionClasses", "kind": "Interface" },
   { "name": "PickersSlideTransitionClassKey", "kind": "TypeAlias" },
+  { "name": "PickersTimezone", "kind": "TypeAlias" },
   { "name": "PickersTranslationKeys", "kind": "TypeAlias" },
   { "name": "pickersYearClasses", "kind": "Variable" },
   { "name": "PickersYearClasses", "kind": "Interface" },

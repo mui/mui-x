@@ -110,6 +110,8 @@ export class AdapterMomentJalaali
   extends AdapterMoment
   implements MuiPickersAdapter<Moment, string>
 {
+  public isTimezoneCompatible = false;
+
   public lib = 'moment-jalaali';
 
   public moment: typeof defaultJMoment;
@@ -130,6 +132,18 @@ export class AdapterMomentJalaali
     }
 
     return this.moment(value).locale('fa');
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Moment): Moment => {
+    return value;
   };
 
   public parseISO = (isoString: string) => {

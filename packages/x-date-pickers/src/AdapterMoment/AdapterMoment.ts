@@ -6,6 +6,7 @@ import {
   AdapterUnits,
   FieldFormatTokenMap,
   MuiPickersAdapter,
+  PickersTimezone,
 } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
@@ -83,6 +84,12 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'L HH:mm',
 };
 
+const MISSING_TIMEZONE_PLUGIN = [
+  'Missing timezone plugin',
+  'To be able to use timezones, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`',
+  'Find more information on https://mui.com/x/react-date-pickers/timezone/#moment-and-timezone',
+].join('\n');
+
 /**
  * Based on `@date-io/moment`
  *
@@ -111,6 +118,8 @@ const defaultFormats: AdapterFormats = {
 export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   public isMUIAdapter = true;
 
+  public isTimezoneCompatible = true;
+
   public lib = 'moment';
 
   public moment: typeof defaultMoment;
@@ -129,6 +138,44 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
+  private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
+
+  private createSystemDate = (value: string | undefined): Moment => {
+    const parsedValue = this.moment(value).local();
+
+    if (this.locale === undefined) {
+      return parsedValue;
+    }
+
+    return parsedValue.locale(this.locale);
+  };
+
+  private createUTCDate = (value: string | undefined): Moment => {
+    const parsedValue = this.moment.utc(value);
+
+    if (this.locale === undefined) {
+      return parsedValue;
+    }
+
+    return parsedValue.locale(this.locale);
+  };
+
+  private createTZDate = (value: string | undefined, timezone: PickersTimezone): Moment => {
+    /* istanbul ignore next */
+    if (!this.hasTimezonePlugin()) {
+      throw new Error(MISSING_TIMEZONE_PLUGIN);
+    }
+
+    const parsedValue =
+      timezone === 'default' ? this.moment(value) : this.moment.tz(value, timezone);
+
+    if (this.locale === undefined) {
+      return parsedValue;
+    }
+
+    return parsedValue.locale(this.locale);
+  };
+
   public date = (value?: any) => {
     if (value === null) {
       return null;
@@ -138,6 +185,68 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     moment.locale(this.getCurrentLocaleCode());
 
     return moment;
+  };
+
+  public dateWithTimezone = (
+    value: string | null | undefined,
+    timezone: PickersTimezone,
+  ): Moment | null => {
+    if (value === null) {
+      return null;
+    }
+
+    if (timezone === 'UTC') {
+      return this.createUTCDate(value);
+    }
+
+    if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
+      return this.createSystemDate(value);
+    }
+
+    return this.createTZDate(value, timezone);
+  };
+
+  public getTimezone = (value: Moment): string => {
+    if (value.isUTC()) {
+      return 'UTC';
+    }
+
+    // @ts-ignore
+    // eslint-disable-next-line no-underscore-dangle
+    const zone = value._z?.name;
+
+    // @ts-ignore
+    return zone ?? this.moment.defaultZone?.name ?? 'system';
+  };
+
+  public setTimezone = (value: Moment, timezone: PickersTimezone): Moment => {
+    if (timezone === 'UTC') {
+      return value.clone().utc();
+    }
+
+    if (timezone === 'system') {
+      return value.clone().local();
+    }
+
+    if (!this.hasTimezonePlugin()) {
+      if (timezone === 'default') {
+        return value;
+      }
+
+      /* istanbul ignore next */
+      throw new Error(MISSING_TIMEZONE_PLUGIN);
+    }
+
+    const cleanZone =
+      timezone === 'default'
+        ? // @ts-ignore
+          this.moment.defaultZone?.name ?? 'system'
+        : timezone;
+
+    const newValue = value.clone();
+    newValue.tz(cleanZone);
+
+    return newValue;
   };
 
   public toJsDate = (value: Moment) => {

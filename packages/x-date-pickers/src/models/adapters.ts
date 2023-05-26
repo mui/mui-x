@@ -1,4 +1,5 @@
 import { FieldSectionContentType, FieldSectionType } from './fields';
+import { PickersTimezone } from './timezone';
 
 export interface AdapterFormats {
   /** Localized full date @example "Jan 1, 2019" */
@@ -93,6 +94,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * A boolean confirming that the adapter used is an MUI adapter.
    */
   isMUIAdapter: boolean;
+  isTimezoneCompatible: boolean;
   formats: AdapterFormats;
   locale?: TLocale;
   /**
@@ -108,6 +110,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   formatTokenMap: FieldFormatTokenMap;
 
+  // TODO v7: Replace with dateWithTimezone
   /**
    * Create a date in the date library format.
    * If no `value` parameter is provided, creates a date with the current timestamp.
@@ -117,6 +120,30 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {TDate | null} The parsed date.
    */
   date(value?: any): TDate | null;
+  /**
+   * Create a date in the date library format.
+   * If no `value` parameter is provided, creates a date with the current timestamp.
+   * If a `value` parameter is provided, pass it to the date library to try to parse it.
+   * @template TDate
+   * @param {string | null | undefined} value The optional value to parse.
+   * @param {string} timezone The timezone of the date.
+   * @returns {TDate | null} The parsed date.
+   */
+  dateWithTimezone(value: string | null | undefined, timezone: PickersTimezone): TDate | null;
+  /**
+   * Extracts the timezone from a date.
+   * @template TDate
+   * @param {TDate} value The date from which we want to get the timezone.
+   */
+  getTimezone(value: TDate | null): string;
+  /**
+   * Convert a date to another timezone.
+   * @template TDate
+   * @param {TDate} value The date to convert.
+   * @param {string} timezone The timezone to convert the date to.
+   * @returns {TDate} The converted date.
+   */
+  setTimezone(value: TDate, timezone: PickersTimezone): TDate;
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
    * @template TDate
@@ -221,14 +248,14 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
   // TODO v7: Type `value` and `comparing` to be `TDate | null`.
   /**
-   * Check if the two dates are equal.
+   * Check if the two dates are equal (e.g: they represent the same timestamp).
    * @param {any} value The reference date.
    * @param {any} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
    */
   isEqual(value: any, comparing: any): boolean;
   /**
-   * Check if the two dates are in the same year.
+   * Check if the two dates are in the same year (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -236,7 +263,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isSameYear(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the two dates are in the same month.
+   * Check if the two dates are in the same month (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -244,7 +271,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isSameMonth(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the two dates are in the same day.
+   * Check if the two dates are in the same day (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -252,7 +279,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isSameDay(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the two dates are at the same hour.
+   * Check if the two dates are at the same hour (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -269,7 +296,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isAfter(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
-   * Check if the year of the reference date is after the year of the second date.
+   * Check if the year of the reference date is after the year of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -278,7 +305,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isAfterYear(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
-   * Check if the day of the reference date is after the day of the second date.
+   * Check if the day of the reference date is after the day of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -295,7 +322,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isBefore(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
-   * Check if the year of the reference date is before the year of the second date.
+   * Check if the year of the reference date is before the year of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -304,7 +331,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isBeforeYear(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
-   * Check if the day of the reference date is before the day of the second date.
+   * Check if the day of the reference date is before the day of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
