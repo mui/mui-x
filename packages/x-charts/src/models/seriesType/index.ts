@@ -18,7 +18,7 @@ type StackableSeriesType = DefaultizedBarSeriesType | DefaultizedLineSeriesType;
 export * from './line';
 export * from './bar';
 export * from './scatter';
-export { StackOrderType, StackOffsetType } from './common';
+export type { StackOrderType, StackOffsetType } from './common';
 export type {
   // PieSeriesType,
   AllSeriesType,
