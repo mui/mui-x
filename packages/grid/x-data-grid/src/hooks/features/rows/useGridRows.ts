@@ -92,7 +92,7 @@ export const useGridRows = (
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => {
-      const model = gridRowsLookupSelector(apiRef)[id] as any;
+      const model = apiRef.current.state.rows.dataRowIdToModelLookup[id] as any;
 
       if (model) {
         return model;
