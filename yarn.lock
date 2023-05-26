@@ -1846,7 +1846,7 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.13.2"
-  resolved "https://github.com/mui/material-ui.git#5f642d5ccc04725f5429908bcae521b1696dabfe"
+  resolved "https://github.com/mui/material-ui.git#33f879bb53343b16feac5aee5d467f63b1faf832"
 
 "@mui/private-theming@^5.12.3":
   version "5.12.3"
@@ -3069,10 +3069,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.2.4":
-  version "18.2.4"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.4.tgz#970e6d56f6d3fd8bd2cb1d1f042aef1d0426d08e"
-  integrity sha512-IvAIhJTmKAAJmCIcaa6+5uagjyh+9GvcJ/thPZcw+i+vx+22eHlTy2Q1bJg/prES57jehjebq9DnIhOTtIhmLw==
+"@types/react@*", "@types/react@^18.2.7":
+  version "18.2.7"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.7.tgz#dfb4518042a3117a045b8c222316f83414a783b3"
+  integrity sha512-ojrXpSH2XFCmHm7Jy3q44nXDyN54+EYKP2lBhJ2bqfyPj6cIUW/FZW/Csdia34NQgq7KYcAlHi5184m4X88+yw==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
