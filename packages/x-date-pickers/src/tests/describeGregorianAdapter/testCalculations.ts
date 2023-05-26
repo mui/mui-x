@@ -129,7 +129,26 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
   });
 
-  it('Method: getTimezone', () => {});
+  it('Method: getTimezone', () => {
+    if (!adapter.isTimezoneCompatible) {
+      return;
+    }
+
+    const testTimezone = (timezone: string, expectedTimezone = timezone) => {
+      expect(adapter.getTimezone(adapter.dateWithTimezone(undefined, timezone))).to.equal(
+        expectedTimezone,
+      );
+    };
+
+    testTimezone('system');
+    testTimezone('Europe/Paris');
+    testTimezone('America/New_York');
+    testTimezone('UTC');
+
+    setDefaultTimezone('America/Chicago');
+    testTimezone('default', 'America/Chicago');
+    setDefaultTimezone(undefined);
+  });
 
   describe('Method: setTimezone', () => {
     it('should support "default"', () => {
