@@ -23,6 +23,7 @@ import dateFnsFormat from 'date-fns-jalali/format';
 import formatISO from 'date-fns-jalali/formatISO';
 import getHours from 'date-fns-jalali/getHours';
 import getSeconds from 'date-fns-jalali/getSeconds';
+import getMilliseconds from 'date-fns-jalali/getMilliseconds';
 import getWeek from 'date-fns-jalali/getWeek';
 import getYear from 'date-fns-jalali/getYear';
 import getMonth from 'date-fns-jalali/getMonth';
@@ -44,6 +45,7 @@ import setHours from 'date-fns-jalali/setHours';
 import setMinutes from 'date-fns-jalali/setMinutes';
 import setMonth from 'date-fns-jalali/setMonth';
 import setSeconds from 'date-fns-jalali/setSeconds';
+import setMilliseconds from 'date-fns-jalali/setMilliseconds';
 import setYear from 'date-fns-jalali/setYear';
 import startOfDay from 'date-fns-jalali/startOfDay';
 import startOfMonth from 'date-fns-jalali/startOfMonth';
@@ -200,6 +202,8 @@ const NUMBER_SYMBOL_MAP = {
 export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLocale> {
   public isMUIAdapter = true;
 
+  public isTimezoneCompatible = false;
+
   public lib = 'date-fns-jalali';
 
   public locale?: DateFnsLocale;
@@ -225,6 +229,18 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     }
 
     return new Date(value);
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Date | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Date): Date => {
+    return value;
   };
 
   public toJsDate = (value: Date) => {
@@ -467,6 +483,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     return getSeconds(value);
   };
 
+  public getMilliseconds = (value: Date) => {
+    return getMilliseconds(value);
+  };
+
   public setYear = (value: Date, year: number) => {
     return setYear(value, year);
   };
@@ -489,6 +509,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
 
   public setSeconds = (value: Date, seconds: number) => {
     return setSeconds(value, seconds);
+  };
+
+  public setMilliseconds = (value: Date, milliseconds: number) => {
+    return setMilliseconds(value, milliseconds);
   };
 
   public getDaysInMonth = (value: Date) => {

@@ -22,14 +22,14 @@ export function LinePlot() {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g>
-      {stackingGroups.flatMap((groupIds) => {
-        return groupIds.flatMap((seriesId) => {
-          const {
-            xAxisKey = defaultXAxisId,
-            yAxisKey = defaultYAxisId,
-            stackedData,
-          } = series[seriesId];
+      <g>
+        {stackingGroups.flatMap(({ ids: groupIds }) => {
+          return groupIds.flatMap((seriesId) => {
+            const {
+              xAxisKey = defaultXAxisId,
+              yAxisKey = defaultYAxisId,
+              stackedData,
+            } = series[seriesId];
 
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;

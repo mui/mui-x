@@ -21,7 +21,7 @@ export function MarkPlot() {
 
   return (
     <g>
-      {stackingGroups.flatMap((groupIds) => {
+      {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
             xAxisKey = defaultXAxisId,

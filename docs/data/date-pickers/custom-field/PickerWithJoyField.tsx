@@ -125,6 +125,7 @@ interface JoyMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs>,
     BaseMultiInputFieldProps<
       DateRange<Dayjs>,
+      Dayjs,
       RangeFieldSection,
       DateRangeValidationError
     > {}
@@ -210,7 +211,12 @@ function JoyDateRangePicker(props: DateRangePickerProps<Dayjs>) {
 
 interface JoyDateFieldProps
   extends UseDateFieldProps<Dayjs>,
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {}
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateValidationError
+    > {}
 
 function JoyDateField(props: JoyDateFieldProps) {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
