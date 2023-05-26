@@ -244,7 +244,10 @@ export const useField = <
         activeSection.end -
         cleanString(activeSection.endSeparator || '').length;
 
-      keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
+      keyPressed = cleanValueStr.slice(
+        activeSection.start + cleanString(activeSection.startSeparator || '').length,
+        activeSectionEndRelativeToNewValue,
+      );
     }
 
     if (isAndroid() && keyPressed.length === 0) {
