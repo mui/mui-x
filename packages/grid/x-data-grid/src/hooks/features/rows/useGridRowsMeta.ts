@@ -144,7 +144,7 @@ export const useGridRowsMeta = (
         rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
       }
 
-      const existingBaseSizes = Object.entries(sizes).reduce<Record<string, number>>(
+      const initialHeights = Object.entries(sizes).reduce<Record<string, number>>(
         (acc, [key, size]) => {
           if (/^base[A-Z]/.test(key)) {
             acc[key] = size;
@@ -153,12 +153,7 @@ export const useGridRowsMeta = (
         },
         {},
       );
-
-      // We use an object to make simple to check if a height is already added or not
-      const initialHeights: Record<string, number> = {
-        ...existingBaseSizes,
-        baseCenter: baseRowHeight,
-      };
+      initialHeights.baseCenter = baseRowHeight;
 
       if (getRowSpacing) {
         const indexRelativeToCurrentPage = apiRef.current.getRowIndexRelativeToVisibleRows(row.id);
