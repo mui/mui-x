@@ -202,7 +202,8 @@ export const useField = <
     let keyPressed: string;
     if (
       selectedSectionIndexes.startIndex === 0 &&
-      selectedSectionIndexes.endIndex === state.sections.length - 1
+      selectedSectionIndexes.endIndex === state.sections.length - 1 &&
+      cleanValueStr.length === 1
     ) {
       keyPressed = cleanValueStr;
     } else {
@@ -243,7 +244,10 @@ export const useField = <
         activeSection.end -
         cleanString(activeSection.endSeparator || '').length;
 
-      keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
+      keyPressed = cleanValueStr.slice(
+        activeSection.start + cleanString(activeSection.startSeparator || '').length,
+        activeSectionEndRelativeToNewValue,
+      );
     }
 
     if (isAndroid() && keyPressed.length === 0) {
