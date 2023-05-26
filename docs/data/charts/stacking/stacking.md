@@ -5,7 +5,7 @@ title: Charts - Stacking
 
 # Charts - Stacking
 
-<p class="description">Stacking allows to display the decomposition of values.</p>
+<p class="description">Stacking allows displaying the decomposition of values.</p>
 
 ## Basics
 
@@ -56,9 +56,9 @@ The evolution of the series at the bottom is the easiest to read since its basel
 If you know the data you are displaying, you can use `'none'` which respects the order you defined the series in.
 Otherwise, it might be interesting to order them according to their properties.
 
-With `'appearance'` you take into consideration the position of the maximal series value.
+With `'appearance'`, the position of the maximal series value is taken into consideration.
 
-With `'ascending'` and `'descending'` you take into consideration, the sum of values.
+With `'ascending'` and `'descending'`, the sum of values is taken into consideration.
 Which corresponds to the area taken by the series on the chart.
 
 | value          | description                                                                                                                               |
@@ -71,11 +71,12 @@ Which corresponds to the area taken by the series on the chart.
 
 To experiment with stack orders, here are statistics about the transport used to go to the office depending on the distance between home and office.
 
-With the `'appearance'` order, walking will be the first since its maximal percentage is for 0-1km. And the last one is common transportation because its maximum value is at the ">50km" distance.
-
-With the `'ascending'` order, stacking starts with bicycles and motorbikes since their values respectively sum to 41.7 and 55.4.
-Then arrives walking (with values sum to 94.1).
-And common transportation and cars which are visually more important.
-The `'descending'` order is the strict opposite.
-
 {{"demo": "StackOrderDemo.js"}}
+
+With the `'appearance'` order, **walking** will be the first since its maximal percentage is for **0-1km**. And the last one is **common transportation** because its maximum value is at the **>50km** distance.
+
+With the `'ascending'` order, stacking starts with **bicycles** and **motorbikes** since their values respectively sum to **41.7** and **55.4**.
+Then arrives **walking** (with values sum to **94.1**).
+Lastly, comes **common transportation** and **cars** which are visually more important.
+
+The `'descending'` order is the strict opposite.
