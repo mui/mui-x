@@ -116,8 +116,14 @@ export type {
   DateTimeValidationProps,
 } from './models/validation';
 
-export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
+export {
+  applyDefaultDate,
+  replaceInvalidDateByNull,
+  areDatesEqual,
+  getTodayDate,
+} from './utils/date-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
+export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,

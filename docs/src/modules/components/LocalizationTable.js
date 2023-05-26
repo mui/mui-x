@@ -3,35 +3,65 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
+import { green } from '@mui/material/colors';
 import Link from 'docs/src/modules/components/Link';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 
 const Root = styled('div')(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
-  width: 'fit-content',
+  minWidth: '100%',
+  display: 'flex',
+  justifyContent: 'center',
   paddingLeft: theme.spacing(1),
   paddingRight: theme.spacing(1),
   borderRadius: 5,
+  fontWeight: 600,
+  color: (theme.vars || theme).palette.text.secondary,
+
   '&.low': {
-    color: (theme.vars || theme).palette.error.contrastText,
-    backgroundColor: (theme.vars || theme).palette.error.light,
+    color:
+      (theme.vars || theme).palette.mode === 'dark'
+        ? (theme.vars || theme).palette.text.primary
+        : (theme.vars || theme).palette.error.dark,
+
     '& .progress-bar': {
-      backgroundColor: (theme.vars || theme).palette.error.dark,
+      backgroundColor: (theme.vars || theme).palette.error.main,
+      opacity: 0.3,
+    },
+    '& .progress-background': {
+      border: `1.5px solid ${(theme.vars || theme).palette.error.dark}`,
     },
   },
   '&.medium': {
-    color: (theme.vars || theme).palette.warning.contrastText,
-    backgroundColor: (theme.vars || theme).palette.warning.light,
+    color:
+      (theme.vars || theme).palette.mode === 'dark'
+        ? (theme.vars || theme).palette.text.primary
+        : (theme.vars || theme).palette.warning.dark,
+
     '& .progress-bar': {
-      backgroundColor: (theme.vars || theme).palette.warning.dark,
+      backgroundColor: (theme.vars || theme).palette.warning.main,
+      opacity: 0.3,
+    },
+    '& .progress-background': {
+      border: `1.5px solid ${(theme.vars || theme).palette.warning.dark}`,
     },
   },
   '&.high': {
-    color: (theme.vars || theme).palette.success.contrastText,
-    backgroundColor: (theme.vars || theme).palette.success.light,
+    color:
+      (theme.vars || theme).palette.mode === 'dark'
+        ? (theme.vars || theme).palette.text.primary
+        : (theme.vars || theme).palette.success.dark,
+
     '& .progress-bar': {
-      backgroundColor: (theme.vars || theme).palette.success.dark,
+      backgroundColor: (theme.vars || theme).palette.success.main,
+      opacity: 0.3,
+    },
+    '& .progress-background': {
+      border: `1.5px solid ${green[200]}`,
+      '&.completed': {
+        border: `1.5px solid ${(theme.vars || theme).palette.success.dark}`,
+      },
     },
   },
 }));
@@ -48,10 +78,19 @@ const Bar = styled('div')({
   left: 0,
   bottom: 0,
 });
+const Background = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  borderRadius: 5,
+});
 
 const ProgressBar = React.memo(function ProgressBar(props) {
   const { numerator, denumerator } = props;
-  const valueInPercent = Math.floor((numerator / denumerator) * 100);
+  const valueInPercent =
+    numerator === denumerator ? 100 : Math.floor((numerator / denumerator) * 95);
 
   return (
     <Root
@@ -61,8 +100,13 @@ const ProgressBar = React.memo(function ProgressBar(props) {
         high: valueInPercent > 80,
       })}
     >
+      <Background
+        className={
+          numerator === denumerator ? 'progress-background completed' : 'progress-background'
+        }
+      />
       <Bar className="progress-bar" style={{ right: `${100 - valueInPercent}%` }} />
-      <Value>{`${numerator}/${denumerator}`}</Value>
+      <Value>{numerator === denumerator ? 'Done! 🎉' : `${numerator}/${denumerator}`}</Value>
     </Root>
   );
 });

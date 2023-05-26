@@ -371,6 +371,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return value.get('seconds');
   };
 
+  public getMilliseconds = (value: Moment) => {
+    return value.get('milliseconds');
+  };
+
   public setYear = (value: Moment, year: number) => {
     return value.clone().year(year);
   };
@@ -393,6 +397,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
 
   public setSeconds = (value: Moment, seconds: number) => {
     return value.clone().seconds(seconds);
+  };
+
+  public setMilliseconds = (value: Moment, milliseconds: number) => {
+    return value.clone().milliseconds(milliseconds);
   };
 
   public getDaysInMonth = (value: Moment) => {

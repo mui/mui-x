@@ -8,6 +8,7 @@ import {
   FieldValueType,
   MuiPickersAdapter,
 } from '../../../models';
+import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -35,6 +36,26 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) => TValue;
+  /**
+   * @template TDate, TValue
+   * Method returning the reference value to use when mounting the component.
+   * @param {object} params The params of the method.
+   * @param {TDate | undefined} params.referenceDate The referenceDate provided by the user.
+   * @param {TValue} params.value The value provided by the user.
+   * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute the reference value.
+   * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
+   * @param {FieldValueType} params.valueType The type of the value being edited.
+   * @param {granularity} params.granularity The granularity of the selection possible on this component.
+   * @returns {TValue} The reference value to use for non-provided dates.
+   */
+  getInitialReferenceValue: (params: {
+    referenceDate: TDate | undefined;
+    value: TValue;
+    props: GetDefaultReferenceDateProps<TDate>;
+    utils: MuiPickersAdapter<TDate>;
+    valueType: FieldValueType;
+    granularity: number;
+  }) => TValue;
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
    * @template TDate, TValue
@@ -190,7 +211,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
  */
 export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSection>
   extends Pick<
-    UseFieldInternalProps<TValue, TSection, unknown>,
+    UseFieldInternalProps<TValue, unknown, TSection, unknown>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
@@ -252,7 +273,7 @@ export interface UsePickerValueActions {
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
   Pick<
-    UseFieldInternalProps<TValue, TSection, TError>,
+    UseFieldInternalProps<TValue, unknown, TSection, TError>,
     'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
   >
 >;

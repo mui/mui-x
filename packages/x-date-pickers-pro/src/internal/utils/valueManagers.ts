@@ -5,6 +5,8 @@ import {
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
   areDatesEqual,
+  getTodayDate,
+  getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
@@ -26,10 +28,25 @@ export type RangePickerValueManager<
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
-  getTodayValue: (utils, valueType) =>
-    valueType === 'date'
-      ? [utils.startOfDay(utils.date())!, utils.startOfDay(utils.date())!]
-      : [utils.date()!, utils.date()!],
+  getTodayValue: (utils, valueType) => [
+    getTodayDate(utils, valueType),
+    getTodayDate(utils, valueType),
+  ],
+  getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
+    const shouldKeepStartDate = value[0] != null && params.utils.isValid(value[0]);
+    const shouldKeepEndDate = value[1] != null && params.utils.isValid(value[1]);
+
+    if (shouldKeepStartDate && shouldKeepEndDate) {
+      return value;
+    }
+
+    const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
+
+    return [
+      shouldKeepStartDate ? value[0] : referenceDate,
+      shouldKeepEndDate ? value[1] : referenceDate,
+    ];
+  },
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
   areValuesEqual: (utils, a, b) =>

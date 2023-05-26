@@ -389,6 +389,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.second();
   };
 
+  public getMilliseconds = (value: Dayjs) => {
+    return value.millisecond();
+  };
+
   public setYear = (value: Dayjs, year: number) => {
     return value.set('year', year);
   };
@@ -411,6 +415,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public setSeconds = (value: Dayjs, seconds: number) => {
     return value.set('second', seconds);
+  };
+
+  public setMilliseconds = (value: Dayjs, milliseconds: number) => {
+    return value.set('millisecond', milliseconds);
   };
 
   public getDaysInMonth = (value: Dayjs) => {
