@@ -4,7 +4,7 @@ import { LicenseStatus } from '../utils/licenseStatus';
 
 function getLicenseErrorMessage(licenseStatus: LicenseStatus) {
   switch (licenseStatus) {
-    case LicenseStatus.Expired:
+    case LicenseStatus.ExpiredAnnual:
       return 'MUI X Expired license key';
     case LicenseStatus.ExpiredVersion:
       return 'MUI X Expired package version';
