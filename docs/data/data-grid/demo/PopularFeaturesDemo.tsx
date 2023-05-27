@@ -217,12 +217,19 @@ const getChipProperties = (plan: string) => {
 function PlanTag(props: { plan: string }) {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
-    <Avatar src={chipPropperties.avatarLink} />
+    <Avatar src={chipPropperties.avatarLink} imgProps={{ width: 21 }} alt="" />
   );
   return (
     <Chip
       avatar={avatar}
-      sx={{ background: chipPropperties.color, color: 'rgba(0, 0, 0, 0.87)' }}
+      sx={{
+        backgroundColor: chipPropperties.color,
+        color: 'rgba(0, 0, 0, 0.87)',
+        '& .MuiChip-avatar': {
+          borderRadius: 0,
+          width: 'auto',
+        },
+      }}
       label={props.plan}
     />
   );
@@ -393,7 +400,7 @@ export default function PopularFeaturesDemo() {
   }, []);
 
   return (
-    <div style={{ height: 'fit-content', width: '100%' }}>
+    <div style={{ minHeight: 1000, width: '100%' }}>
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
