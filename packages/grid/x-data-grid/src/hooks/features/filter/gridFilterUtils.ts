@@ -237,10 +237,10 @@ export const buildAggregatedFilterItemsApplier = (
     const applierFn = applier.fn;
 
     const fn = eval(`(rowId, shouldApplyFilter) => {
-      if (shouldApplyFilter && !shouldApplyFilter(applier.item.field)) {
-        return {};
-      }
       // ${applierFn.name} <- Keep a ref, prevent the bundler from optimizing away
+      if (shouldApplyFilter && !shouldApplyFilter(applier.item.field)) {
+        return { '${applier.item.id!}': false };
+      }
       return { '${applier.item.id!}': applierFn(rowId) };
     }`);
 
