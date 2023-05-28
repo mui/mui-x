@@ -44,7 +44,7 @@ export interface GridFilterInitialState {
 export interface GridAggregatedFilterItemApplierResult {
   passingFilterItems: null | GridFilterItemResult;
   passingQuickFilterValues: null | GridQuickFilterValueResult;
-};
+}
 
 /**
  * @param {GridRowId} rowId The id of the row we want to filter.
