@@ -86,25 +86,39 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
   return selector;
 };
 
-export const createRawSelector: CreateSelectorFunction = (...selectors: any) => {
-  const selector = (stateOrApiRef: any) => {
-    const isApiRef = !!stateOrApiRef.current;
-    const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
+export const createRawSelector: CreateSelectorFunction = ((
+  a: Function,
+  b?: Function,
+  c?: Function,
+  d?: Function,
+  ...rest: any[]
+) => {
+  if (rest.length > 0) throw new Error('Unsupported number of selectors');
 
-    let result = state;
-    for (const selector of selectors) {
-      result = selector(result);
-    }
+  let selector: any;
 
-    return result
-  };
+  if (a && b && c && d) {
+    selector = (stateOrApiRef: any) => {
+      return d(c(b(a(stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef))));
+    };
+  } else if (a && b && c) {
+    selector = (stateOrApiRef: any) => {
+      return c(b(a(stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef)));
+    };
+  } else if (a && b) {
+    selector = (stateOrApiRef: any) => {
+      return b(a(stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef));
+    };
+  } else {
+    throw new Error('Missing arguments');
+  }
 
   // We use this property to detect if the selector was created with createSelector
   // or it's only a simple function the receives the state and returns part of it.
   selector.acceptsApiRef = true;
 
   return selector;
-};
+}) as unknown as CreateSelectorFunction;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_resetCreateSelectorCache = () => {
