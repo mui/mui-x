@@ -63,8 +63,7 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
 export const gridExpandedSortedRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
-  (visibleRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => visibleRowsLookup.has(row.id)),
+  (visibleRowsLookup, sortedRows) => sortedRows.filter((row) => visibleRowsLookup.has(row.id)),
 );
 
 /**
@@ -85,8 +84,7 @@ export const gridExpandedSortedRowIdsSelector = createSelector(
 export const gridFilteredSortedRowEntriesSelector = createSelector(
   gridFilteredRowsLookupSelector,
   gridSortedRowEntriesSelector,
-  (filteredRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => filteredRowsLookup.has(row.id)),
+  (filteredRowsLookup, sortedRows) => sortedRows.filter((row) => filteredRowsLookup.has(row.id)),
 );
 
 /**

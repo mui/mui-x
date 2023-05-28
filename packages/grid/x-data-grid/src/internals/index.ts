@@ -52,7 +52,7 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
-export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
+export { passFilterLogic, passFilterLogicSingle } from '../hooks/features/filter/gridFilterUtils';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type {
   GridAggregatedFilterItemApplier,

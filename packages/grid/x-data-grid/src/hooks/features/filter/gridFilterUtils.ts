@@ -131,26 +131,26 @@ export const mergeStateWithFilterModel =
     filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
   });
 
-
 export const isFastFilterFn = <T extends Function>(fn: T) => {
   return (fn as any).isFastFilter === true;
-}
+};
 
 export const wrapFastFilterFn = <T extends Function | null>(fn: T) => {
   if (fn) {
     (fn as any).isFastFilter = true;
   }
   return fn;
-}
+};
 
-export const wrapFastFilterOperators =
-  <T extends GridFilterOperator<any, any, any>[]>(operators: T) => {
-    return operators.map(operator => ({
-      ...operator,
-      getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef<any, any, any>) =>
-        wrapFastFilterFn(operator.getApplyFilterFn(filterItem, column))
-    }))
-  }
+export const wrapFastFilterOperators = <T extends GridFilterOperator<any, any, any>[]>(
+  operators: T,
+) => {
+  return operators.map((operator) => ({
+    ...operator,
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef<any, any, any>) =>
+      wrapFastFilterFn(operator.getApplyFilterFn(filterItem, column)),
+  }));
+};
 
 const getFilterCallbackFromItem = (
   filterItem: GridFilterItem,
