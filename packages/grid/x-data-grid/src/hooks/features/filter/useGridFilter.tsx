@@ -25,7 +25,7 @@ import {
   sanitizeFilterModel,
   mergeStateWithFilterModel,
   cleanFilterItem,
-  passFilterLogic,
+  passFilterLogicSingle,
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
@@ -388,9 +388,9 @@ export const useGridFilter = (
         } else {
           isRowMatchingFilters(rowId, undefined, result);
 
-          const isRowPassing = passFilterLogic(
-            [result.passingFilterItems],
-            [result.passingQuickFilterValues],
+          const isRowPassing = passFilterLogicSingle(
+            result.passingFilterItems,
+            result.passingQuickFilterValues,
             params.filterModel,
             apiRef,
           );

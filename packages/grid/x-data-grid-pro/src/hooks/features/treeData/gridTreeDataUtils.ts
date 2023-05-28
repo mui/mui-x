@@ -9,7 +9,7 @@ import {
   GridAggregatedFilterItemApplier,
   GridAggregatedFilterItemApplierResult,
   GridApiCommunity,
-  passFilterLogic,
+  passFilterLogicSingle,
 } from '@mui/x-data-grid/internals';
 
 interface FilterRowTreeFromTreeDataParams {
@@ -54,9 +54,9 @@ export const filterRowTreeFromTreeData = (
       isMatchingFilters = true;
     } else {
       isRowMatchingFilters(node.id, undefined, filterResults);
-      isMatchingFilters = passFilterLogic(
-        [filterResults.passingFilterItems],
-        [filterResults.passingQuickFilterValues],
+      isMatchingFilters = passFilterLogicSingle(
+        filterResults.passingFilterItems,
+        filterResults.passingQuickFilterValues,
         params.filterModel,
         params.apiRef,
       );
