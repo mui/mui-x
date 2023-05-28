@@ -7,6 +7,7 @@ import {
 } from '@mui/x-data-grid';
 import {
   GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
   GridApiCommunity,
   passFilterLogic,
 } from '@mui/x-data-grid/internals';
@@ -34,6 +35,11 @@ export const filterRowTreeFromTreeData = (
   const filteredRowsLookup = new Set<GridRowId>();
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
+  const filterResults: GridAggregatedFilterItemApplierResult = {
+    passingFilterItems: null,
+    passingQuickFilterValues: null,
+  };
+
   const filterTreeNode = (
     node: GridTreeNode,
     isParentMatchingFilters: boolean,
@@ -47,10 +53,10 @@ export const filterRowTreeFromTreeData = (
     } else if (!isRowMatchingFilters || node.type === 'footer') {
       isMatchingFilters = true;
     } else {
-      const { passingFilterItems, passingQuickFilterValues } = isRowMatchingFilters(node.id);
+      isRowMatchingFilters(node.id, undefined, filterResults);
       isMatchingFilters = passFilterLogic(
-        [passingFilterItems],
-        [passingQuickFilterValues],
+        [filterResults.passingFilterItems],
+        [filterResults.passingQuickFilterValues],
         params.filterModel,
         params.apiRef,
       );

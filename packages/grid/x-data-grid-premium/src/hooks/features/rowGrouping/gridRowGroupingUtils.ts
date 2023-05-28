@@ -13,6 +13,7 @@ import {
 import {
   passFilterLogic,
   GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
   GridColumnRawLookup,
   GridApiCommunity,
 } from '@mui/x-data-grid-pro/internals';
@@ -90,10 +91,10 @@ export const filterRowTreeFromGroupingColumns = (
   const filterTreeNode = (
     node: GridTreeNode,
     areAncestorsExpanded: boolean,
-    ancestorsResults: ReturnType<GridAggregatedFilterItemApplier>[],
+    ancestorsResults: GridAggregatedFilterItemApplierResult[],
   ): number => {
     let isPassingFiltering = false;
-    let filterResults: ReturnType<GridAggregatedFilterItemApplier> = {
+    const filterResults: GridAggregatedFilterItemApplierResult = {
       passingFilterItems: null,
       passingQuickFilterValues: null,
     };
@@ -104,7 +105,7 @@ export const filterRowTreeFromGroupingColumns = (
           ? (columnField: string) => shouldApplyFilterItemOnGroup(columnField, node)
           : undefined;
 
-      filterResults = isRowMatchingFilters(node.id, shouldApplyItem);
+      isRowMatchingFilters(node.id, shouldApplyItem, filterResults);
     } else {
       isPassingFiltering = true;
     }
@@ -117,7 +118,7 @@ export const filterRowTreeFromGroupingColumns = (
           childNode,
 
           areAncestorsExpanded && !!node.childrenExpanded,
-          [...ancestorsResults, filterResults],
+          [...ancestorsResults, Object.assign({}, filterResults)],
         );
         filteredDescendantCount += childSubTreeSize;
       });
@@ -128,7 +129,7 @@ export const filterRowTreeFromGroupingColumns = (
         // If node has children - it's passing if at least one child passes filters
         isPassingFiltering = filteredDescendantCount > 0;
       } else {
-        const allResults = [...ancestorsResults, filterResults];
+        const allResults = [...ancestorsResults, Object.assign({}, filterResults)];
         isPassingFiltering = passFilterLogic(
           allResults.map((result) => result.passingFilterItems),
           allResults.map((result) => result.passingQuickFilterValues),

@@ -41,17 +41,20 @@ export interface GridFilterInitialState {
   filterModel?: GridFilterModel;
 }
 
+export interface GridAggregatedFilterItemApplierResult {
+  passingFilterItems: null | GridFilterItemResult;
+  passingQuickFilterValues: null | GridQuickFilterValueResult;
+};
+
 /**
  * @param {GridRowId} rowId The id of the row we want to filter.
  * @param {(filterItem: GridFilterItem) => boolean} shouldApplyItem An optional callback to allow the filtering engine to only apply some items.
  */
 export type GridAggregatedFilterItemApplier = (
   rowId: GridRowId,
-  shouldApplyItem?: (field: string) => boolean,
-) => {
-  passingFilterItems: null | GridFilterItemResult;
-  passingQuickFilterValues: null | GridQuickFilterValueResult;
-};
+  shouldApplyItem: ((field: string) => boolean) | undefined,
+  result: GridAggregatedFilterItemApplierResult,
+) => void;
 
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;

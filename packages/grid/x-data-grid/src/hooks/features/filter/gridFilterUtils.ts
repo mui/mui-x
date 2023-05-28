@@ -333,12 +333,10 @@ export const buildAggregatedFilterApplier = (
   const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(filterModel, apiRef);
   const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(filterModel, apiRef);
 
-  return (rowId, shouldApplyFilter) => ({
-    passingFilterItems:
-      isRowMatchingFilterItems && isRowMatchingFilterItems(rowId, shouldApplyFilter),
-    passingQuickFilterValues:
-      isRowMatchingQuickFilter && isRowMatchingQuickFilter(rowId, shouldApplyFilter),
-  });
+  return function isRowMatchingFilters(rowId, shouldApplyFilter, result) {
+    result.passingFilterItems = isRowMatchingFilterItems?.(rowId, shouldApplyFilter) ?? null;
+    result.passingQuickFilterValues = isRowMatchingQuickFilter?.(rowId, shouldApplyFilter) ?? null;
+  };
 };
 
 const filterModelItems = defaultMemoize(

@@ -373,6 +373,12 @@ export const useGridFilter = (
       const tree = gridRowTreeSelector(apiRef);
       const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
       const filteredRowsLookup = new Set<GridRowId>();
+      const { isRowMatchingFilters } = params;
+
+      const result = {
+        passingFilterItems: null,
+        passingQuickFilterValues: null,
+      };
 
       for (let i = 0; i < rowIds.length; i += 1) {
         const rowId = rowIds[i];
@@ -380,12 +386,11 @@ export const useGridFilter = (
         if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
           filteredRowsLookup.add(rowId)
         } else {
-          const { passingFilterItems, passingQuickFilterValues } =
-            params.isRowMatchingFilters(rowId);
+          isRowMatchingFilters(rowId, undefined, result);
 
           const isRowPassing = passFilterLogic(
-            [passingFilterItems],
-            [passingQuickFilterValues],
+            [result.passingFilterItems],
+            [result.passingQuickFilterValues],
             params.filterModel,
             apiRef,
           );
