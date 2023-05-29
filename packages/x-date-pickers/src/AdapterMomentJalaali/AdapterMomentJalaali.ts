@@ -1,12 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultJMoment, { Moment } from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';
-import { AdapterFormats, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterMomentJalaaliOptions {
-  instance?: typeof defaultJMoment;
-  formats?: Partial<AdapterFormats>;
-}
+import { AdapterFormats, AdapterOptions, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -111,22 +106,19 @@ const NUMBER_SYMBOL_MAP = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAdapter<Moment> {
-  public isMUIAdapter = true;
+export class AdapterMomentJalaali
+  extends AdapterMoment
+  implements MuiPickersAdapter<Moment, string>
+{
+  public isTimezoneCompatible = false;
 
   public lib = 'moment-jalaali';
 
   public moment: typeof defaultJMoment;
 
-  public locale?: string;
-
-  public formats: AdapterFormats;
-
   public formatTokenMap = formatTokenMap;
 
-  public escapedCharacters = { start: '[', end: ']' };
-
-  constructor({ formats, instance }: AdapterMomentJalaaliOptions = {}) {
+  constructor({ formats, instance }: AdapterOptions<string, typeof defaultJMoment> = {}) {
     super({ locale: 'fa', instance });
 
     this.moment = instance || defaultJMoment;
@@ -134,16 +126,28 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  private toJMoment = (value?: Moment | undefined) => {
-    return this.moment(value ? value.clone() : undefined).locale('fa');
-  };
-
   public date = (value?: any) => {
     if (value === null) {
       return null;
     }
 
     return this.moment(value).locale('fa');
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Moment): Moment => {
+    return value;
+  };
+
+  public parseISO = (isoString: string) => {
+    return this.moment(isoString).locale('fa');
   };
 
   public parse = (value: string, format: string) => {
@@ -184,6 +188,18 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
     }
 
     return this.moment(value).isSame(comparing);
+  };
+
+  public isSameYear = (value: Moment, comparing: Moment) => {
+    // `isSame` seems to mutate the date on `moment-jalaali`
+    // @ts-ignore
+    return value.clone().isSame(comparing, 'jYear');
+  };
+
+  public isSameMonth = (value: Moment, comparing: Moment) => {
+    // `isSame` seems to mutate the date on `moment-jalaali`
+    // @ts-ignore
+    return value.clone().isSame(comparing, 'jMonth');
   };
 
   public isAfterYear = (value: Moment, comparing: Moment) => {
@@ -256,7 +272,7 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
 
   public getWeekdays = () => {
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.toJMoment().weekday(dayOfWeek).format('dd');
+      return this.date()!.weekday(dayOfWeek).format('dd');
     });
   };
 
@@ -299,8 +315,6 @@ export class AdapterMomentJalaali extends AdapterMoment implements MuiPickersAda
   };
 
   public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am'
-      ? this.toJMoment().hours(2).format('A')
-      : this.toJMoment().hours(14).format('A');
+    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
   };
 }

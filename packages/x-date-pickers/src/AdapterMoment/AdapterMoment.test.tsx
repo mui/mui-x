@@ -1,10 +1,12 @@
 import * as React from 'react';
 import moment from 'moment';
+import momentTZ from 'moment-timezone';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   createPickerRenderer,
   expectInputPlaceholder,
@@ -15,16 +17,35 @@ import 'moment/locale/fr';
 import 'moment/locale/ko';
 import {
   describeGregorianAdapter,
-  TEST_DATE_ISO,
+  TEST_DATE_ISO_STRING,
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterMoment />', () => {
-  describeGregorianAdapter(AdapterMoment, { formatDateTime: 'YYYY-MM-DD HH:mm:ss', locale: 'en' });
+  describeGregorianAdapter(AdapterMoment, {
+    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
+    dateLibInstanceWithTimezoneSupport: momentTZ,
+    setDefaultTimezone: momentTZ.tz.setDefault,
+    frenchLocale: 'fr',
+  });
+
+  // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
+  describeGregorianAdapter(AdapterMoment, {
+    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
+    dateLibInstanceWithTimezoneSupport: momentTZ,
+    prepareAdapter: (adapter) => {
+      // @ts-ignore
+      adapter.hasTimezonePlugin = () => false;
+      // Makes sure that we don't run timezone related tests, that would not work.
+      adapter.isTimezoneCompatible = false;
+    },
+    setDefaultTimezone: momentTZ.tz.setDefault,
+    frenchLocale: 'fr',
+  });
 
   describe('Adapter localization', () => {
     describe('English', () => {
       const adapter = new AdapterMoment({ locale: 'en' });
-      const date = adapter.date(TEST_DATE_ISO)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('getWeekdays: should start on Monday', () => {
         const result = adapter.getWeekdays();
@@ -39,11 +60,15 @@ describe('<AdapterMoment />', () => {
       it('is12HourCycleInCurrentLocale: should have meridiem', () => {
         expect(adapter.is12HourCycleInCurrentLocale()).to.equal(true);
       });
+
+      it('parse: should have the right locale', () => {
+        expect(adapter.parse('01/01/2020', 'MM/DD/YYYY')!.locale()).to.equal('en');
+      });
     });
 
     describe('Russian', () => {
       const adapter = new AdapterMoment({ locale: 'ru' });
-      const date = adapter.date(TEST_DATE_ISO)!;
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       beforeEach(() => {
         moment.locale('ru');
@@ -70,6 +95,10 @@ describe('<AdapterMoment />', () => {
       it('getCurrentLocaleCode: should return locale code', () => {
         expect(adapter.getCurrentLocaleCode()).to.equal('ru');
       });
+
+      it('parse: should have the right locale', () => {
+        expect(adapter.parse('01/01/2020', 'MM/DD/YYYY')!.locale()).to.equal('ru');
+      });
     });
 
     describe('Korean', () => {
@@ -86,6 +115,10 @@ describe('<AdapterMoment />', () => {
       it('getMeridiemText: should translate meridiem format', () => {
         expect(adapter.getMeridiemText('am')).to.equal('오전');
         expect(adapter.getMeridiemText('pm')).to.equal('오후');
+      });
+
+      it('parse: should have the right locale', () => {
+        expect(adapter.parse('01/01/2020', 'MM/DD/YYYY')!.locale()).to.equal('ko');
       });
     });
 
@@ -160,5 +193,13 @@ describe('<AdapterMoment />', () => {
         });
       });
     });
+  });
+
+  it('should use moment custom instance if provided', () => {
+    const spiedInstance = spy(moment);
+
+    const adapter = new AdapterMoment({ instance: spiedInstance as unknown as typeof moment });
+    adapter.date()!;
+    expect(spiedInstance.callCount).to.equal(1);
   });
 });

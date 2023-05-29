@@ -29,11 +29,7 @@ export const testMinutesViewValidation: DescribeValidationTestSuite = (
       view: 'minutes',
       openTo: 'minutes',
       reduceAnimations: true,
-      ...(componentFamily.includes('legacy-')
-        ? {
-            componentsProps: { toolbar: { hidden: true } },
-          }
-        : { slotProps: { toolbar: { hidden: true } } }),
+      slotProps: { toolbar: { hidden: true } },
     };
 
     it('should apply shouldDisableTime', function test() {

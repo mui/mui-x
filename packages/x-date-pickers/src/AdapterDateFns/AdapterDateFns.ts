@@ -21,12 +21,12 @@ import endOfWeek from 'date-fns/endOfWeek';
 import endOfYear from 'date-fns/endOfYear';
 import dateFnsFormat from 'date-fns/format';
 import getDate from 'date-fns/getDate';
-import getDay from 'date-fns/getDay';
 import getDaysInMonth from 'date-fns/getDaysInMonth';
 import getHours from 'date-fns/getHours';
 import getMinutes from 'date-fns/getMinutes';
 import getMonth from 'date-fns/getMonth';
 import getSeconds from 'date-fns/getSeconds';
+import getMilliseconds from 'date-fns/getMilliseconds';
 import getWeek from 'date-fns/getWeek';
 import getYear from 'date-fns/getYear';
 import isAfter from 'date-fns/isAfter';
@@ -43,6 +43,7 @@ import setHours from 'date-fns/setHours';
 import setMinutes from 'date-fns/setMinutes';
 import setMonth from 'date-fns/setMonth';
 import setSeconds from 'date-fns/setSeconds';
+import setMilliseconds from 'date-fns/setMilliseconds';
 import setYear from 'date-fns/setYear';
 import startOfDay from 'date-fns/startOfDay';
 import startOfMonth from 'date-fns/startOfMonth';
@@ -55,14 +56,15 @@ import isWithinInterval from 'date-fns/isWithinInterval';
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 type DateFnsLocale = typeof defaultLocale;
-
-interface AdapterDateFnsOptions {
-  locale?: DateFnsLocale;
-  formats?: Partial<AdapterFormats>;
-}
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -184,8 +186,10 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFns implements MuiPickersAdapter<Date> {
+export class AdapterDateFns implements MuiPickersAdapter<Date, DateFnsLocale> {
   public isMUIAdapter = true;
+
+  public isTimezoneCompatible = false;
 
   public lib = 'date-fns';
 
@@ -197,7 +201,7 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  constructor({ locale, formats }: AdapterDateFnsOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
@@ -212,6 +216,18 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
     }
 
     return new Date(value);
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Date | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Date): Date => {
+    return value;
   };
 
   public toJsDate = (value: Date) => {
@@ -453,6 +469,10 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
     return getSeconds(value);
   };
 
+  public getMilliseconds = (value: Date) => {
+    return getMilliseconds(value);
+  };
+
   public setYear = (value: Date, year: number) => {
     return setYear(value, year);
   };
@@ -475,6 +495,10 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
 
   public setSeconds = (value: Date, seconds: number) => {
     return setSeconds(value, seconds);
+  };
+
+  public setMilliseconds = (value: Date, milliseconds: number) => {
+    return setMilliseconds(value, milliseconds);
   };
 
   public getDaysInMonth = (value: Date) => {
@@ -526,18 +550,16 @@ export class AdapterDateFns implements MuiPickersAdapter<Date> {
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
-    let lastDay: number | null = null;
+
     while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      const day = getDay(current);
-      if (lastDay !== day) {
-        lastDay = day;
-        nestedWeeks[weekNumber].push(current);
-        count += 1;
-      }
+      nestedWeeks[weekNumber].push(current);
+
       current = addDays(current, 1);
+      count += 1;
     }
+
     return nestedWeeks;
   };
 

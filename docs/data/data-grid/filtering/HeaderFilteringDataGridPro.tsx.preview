@@ -1,0 +1,13 @@
+<DataGridPro
+  {...data}
+  initialState={{
+    ...data.initialState,
+    columns: {
+      columnVisibilityModel: {
+        avatar: false,
+        id: false,
+      },
+    },
+  }}
+  unstable_headerFilters
+/>

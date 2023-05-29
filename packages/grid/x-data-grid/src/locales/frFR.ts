@@ -10,7 +10,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Density selector toolbar button text
   toolbarDensity: 'Densité',
   toolbarDensityLabel: 'Densité',
-  toolbarDensityCompact: 'Compact',
+  toolbarDensityCompact: 'Compacte',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Confortable',
 
@@ -27,7 +27,7 @@ const frFRGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtres actifs` : `${count} filtre actif`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Recherche…',
+  toolbarQuickFilterPlaceholder: 'Rechercher…',
   toolbarQuickFilterLabel: 'Recherche',
   toolbarQuickFilterDeleteIconLabel: 'Supprimer',
 
@@ -39,7 +39,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Télécharger pour Excel',
 
   // Columns panel text
-  columnsPanelTextFieldLabel: 'Chercher colonne',
+  columnsPanelTextFieldLabel: 'Chercher une colonne',
   columnsPanelTextFieldPlaceholder: 'Titre de la colonne',
   columnsPanelDragIconLabel: 'Réorganiser la colonne',
   columnsPanelShowAllButton: 'Tout afficher',
@@ -53,13 +53,13 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
-  filterPanelColumns: 'Colonnes',
+  filterPanelColumns: 'Colonne',
   filterPanelInputLabel: 'Valeur',
   filterPanelInputPlaceholder: 'Filtrer la valeur',
 
   // Filter operators text
   filterOperatorContains: 'contient',
-  filterOperatorEquals: 'égal à',
+  filterOperatorEquals: 'est égal à',
   filterOperatorStartsWith: 'commence par',
   filterOperatorEndsWith: 'se termine par',
   filterOperatorIs: 'est',
@@ -71,6 +71,33 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
   filterOperatorIsAnyOf: 'fait partie de',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Contient',
+  headerFilterOperatorEquals: 'Est égal à',
+  headerFilterOperatorStartsWith: 'Commence par',
+  headerFilterOperatorEndsWith: 'Se termine par',
+  headerFilterOperatorIs: 'Est',
+  headerFilterOperatorNot: "N'est pas",
+  headerFilterOperatorAfter: 'Postérieur',
+  headerFilterOperatorOnOrAfter: 'Égal ou postérieur',
+  headerFilterOperatorBefore: 'Antérieur',
+  headerFilterOperatorOnOrBefore: 'Égal ou antérieur',
+  headerFilterOperatorIsEmpty: 'Est vide',
+  headerFilterOperatorIsNotEmpty: "N'est pas vide",
+  headerFilterOperatorIsAnyOf: 'Fait partie de',
+  'headerFilterOperator=': 'Est égal à',
+  'headerFilterOperator!=': "N'est pas égal à",
+  'headerFilterOperator>': 'Est supérieur à',
+  'headerFilterOperator>=': 'Est supérieur ou égal à',
+  'headerFilterOperator<': 'Est inférieur à',
+  'headerFilterOperator<=': 'Est inférieur ou égal à',
 
   // Filter values text
   filterValueAny: 'tous',
@@ -100,7 +127,7 @@ const frFRGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} ligne sélectionnée`,
 
   // Total row amount footer text
-  footerTotalRows: 'Lignes totales :',
+  footerTotalRows: 'Total de lignes :',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

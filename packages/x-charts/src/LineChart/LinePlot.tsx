@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { line as d3Line, area as d3Area } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { LineElement } from './LineElement';
 import { AreaElement } from './AreaElement';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { MarkElement } from './MarkElement';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
@@ -20,32 +18,19 @@ export function LinePlot() {
   if (seriesData === undefined) {
     return null;
   }
-  const { series, seriesOrder, stackingGroups } = seriesData;
-  const { xAxis, yAxis } = axisData;
-
-  const seriesPerAxis: { [key: string]: LineSeriesType[] } = {};
-
-  seriesOrder.forEach((seriesId) => {
-    const xAxisKey = series[seriesId].xAxisKey; // ?? DEFAULT_X_AXIS_KEY;
-    const yAxisKey = series[seriesId].yAxisKey; // ?? DEFAULT_Y_AXIS_KEY;
-
-    const key = `${xAxisKey}-${yAxisKey}`;
-
-    if (seriesPerAxis[key] === undefined) {
-      seriesPerAxis[key] = [series[seriesId]];
-    } else {
-      seriesPerAxis[key].push(series[seriesId]);
-    }
-  });
+  const { series, stackingGroups } = seriesData;
+  const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
+  const defaultXAxisId = xAxisIds[0];
+  const defaultYAxisId = yAxisIds[0];
 
   return (
     <React.Fragment>
       <g>
-        {stackingGroups.flatMap((groupIds) => {
+        {stackingGroups.flatMap(({ ids: groupIds }) => {
           return groupIds.flatMap((seriesId) => {
             const {
-              xAxisKey = DEFAULT_X_AXIS_KEY,
-              yAxisKey = DEFAULT_Y_AXIS_KEY,
+              xAxisKey = defaultXAxisId,
+              yAxisKey = defaultYAxisId,
               stackedData,
             } = series[seriesId];
 
@@ -76,7 +61,7 @@ export function LinePlot() {
                   key={seriesId}
                   id={seriesId}
                   d={areaPath.curve(curve)(d3Data) || undefined}
-                  color={series[seriesId].area.color ?? series[seriesId].color}
+                  color={series[seriesId].color}
                 />
               )
             );
@@ -84,11 +69,11 @@ export function LinePlot() {
         })}
       </g>
       <g>
-        {stackingGroups.flatMap((groupIds) => {
+        {stackingGroups.flatMap(({ ids: groupIds }) => {
           return groupIds.flatMap((seriesId) => {
             const {
-              xAxisKey = DEFAULT_X_AXIS_KEY,
-              yAxisKey = DEFAULT_Y_AXIS_KEY,
+              xAxisKey = defaultXAxisId,
+              yAxisKey = defaultYAxisId,
               stackedData,
             } = series[seriesId];
 
@@ -109,13 +94,14 @@ export function LinePlot() {
               .x((d) => xScale(d.x))
               .y((d) => yScale(d.y[1]));
 
+            const curve = getCurveFactory(series[seriesId].curve);
             const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
             return (
               <LineElement
                 key={seriesId}
                 id={seriesId}
-                d={linePath(d3Data) || undefined}
+                d={linePath.curve(curve)(d3Data) || undefined}
                 color={series[seriesId].color}
                 {...getInteractionItemProps({ type: 'line', seriesId })}
               />
@@ -124,11 +110,11 @@ export function LinePlot() {
         })}
       </g>
       <g>
-        {stackingGroups.flatMap((groupIds) => {
+        {stackingGroups.flatMap(({ ids: groupIds }) => {
           return groupIds.flatMap((seriesId) => {
             const {
-              xAxisKey = DEFAULT_X_AXIS_KEY,
-              yAxisKey = DEFAULT_Y_AXIS_KEY,
+              xAxisKey = defaultXAxisId,
+              yAxisKey = defaultYAxisId,
               stackedData,
             } = series[seriesId];
 

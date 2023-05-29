@@ -1,12 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterMomentOptions {
-  locale?: string;
-  instance?: typeof defaultMoment;
-  formats?: Partial<AdapterFormats>;
-}
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+  PickersTimezone,
+} from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -83,6 +84,12 @@ const defaultFormats: AdapterFormats = {
   keyboardDateTime24h: 'L HH:mm',
 };
 
+const MISSING_TIMEZONE_PLUGIN = [
+  'Missing timezone plugin',
+  'To be able to use timezones, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`',
+  'Find more information on https://mui.com/x/react-date-pickers/timezone/#moment-and-timezone',
+].join('\n');
+
 /**
  * Based on `@date-io/moment`
  *
@@ -108,8 +115,10 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMoment implements MuiPickersAdapter<Moment> {
+export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   public isMUIAdapter = true;
+
+  public isTimezoneCompatible = true;
 
   public lib = 'moment';
 
@@ -123,11 +132,49 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats, instance }: AdapterMomentOptions = {}) {
+  constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultMoment> = {}) {
     this.moment = instance || defaultMoment;
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
+
+  private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
+
+  private createSystemDate = (value: string | undefined): Moment => {
+    const parsedValue = this.moment(value).local();
+
+    if (this.locale === undefined) {
+      return parsedValue;
+    }
+
+    return parsedValue.locale(this.locale);
+  };
+
+  private createUTCDate = (value: string | undefined): Moment => {
+    const parsedValue = this.moment.utc(value);
+
+    if (this.locale === undefined) {
+      return parsedValue;
+    }
+
+    return parsedValue.locale(this.locale);
+  };
+
+  private createTZDate = (value: string | undefined, timezone: PickersTimezone): Moment => {
+    /* istanbul ignore next */
+    if (!this.hasTimezonePlugin()) {
+      throw new Error(MISSING_TIMEZONE_PLUGIN);
+    }
+
+    const parsedValue =
+      timezone === 'default' ? this.moment(value) : this.moment.tz(value, timezone);
+
+    if (this.locale === undefined) {
+      return parsedValue;
+    }
+
+    return parsedValue.locale(this.locale);
+  };
 
   public date = (value?: any) => {
     if (value === null) {
@@ -138,6 +185,68 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
     moment.locale(this.getCurrentLocaleCode());
 
     return moment;
+  };
+
+  public dateWithTimezone = (
+    value: string | null | undefined,
+    timezone: PickersTimezone,
+  ): Moment | null => {
+    if (value === null) {
+      return null;
+    }
+
+    if (timezone === 'UTC') {
+      return this.createUTCDate(value);
+    }
+
+    if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
+      return this.createSystemDate(value);
+    }
+
+    return this.createTZDate(value, timezone);
+  };
+
+  public getTimezone = (value: Moment): string => {
+    if (value.isUTC()) {
+      return 'UTC';
+    }
+
+    // @ts-ignore
+    // eslint-disable-next-line no-underscore-dangle
+    const zone = value._z?.name;
+
+    // @ts-ignore
+    return zone ?? this.moment.defaultZone?.name ?? 'system';
+  };
+
+  public setTimezone = (value: Moment, timezone: PickersTimezone): Moment => {
+    if (timezone === 'UTC') {
+      return value.clone().utc();
+    }
+
+    if (timezone === 'system') {
+      return value.clone().local();
+    }
+
+    if (!this.hasTimezonePlugin()) {
+      if (timezone === 'default') {
+        return value;
+      }
+
+      /* istanbul ignore next */
+      throw new Error(MISSING_TIMEZONE_PLUGIN);
+    }
+
+    const cleanZone =
+      timezone === 'default'
+        ? // @ts-ignore
+          this.moment.defaultZone?.name ?? 'system'
+        : timezone;
+
+    const newValue = value.clone();
+    newValue.tz(cleanZone);
+
+    return newValue;
   };
 
   public toJsDate = (value: Moment) => {
@@ -371,6 +480,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
     return value.get('seconds');
   };
 
+  public getMilliseconds = (value: Moment) => {
+    return value.get('milliseconds');
+  };
+
   public setYear = (value: Moment, year: number) => {
     return value.clone().year(year);
   };
@@ -395,6 +508,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
     return value.clone().seconds(seconds);
   };
 
+  public setMilliseconds = (value: Moment, milliseconds: number) => {
+    return value.clone().milliseconds(milliseconds);
+  };
+
   public getDaysInMonth = (value: Moment) => {
     return value.daysInMonth();
   };
@@ -408,7 +525,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
   };
 
   public getMonthArray = (value: Moment) => {
-    const firstMonth = value.clone().startOf('year');
+    const firstMonth = this.startOfYear(value);
     const monthArray = [firstMonth];
 
     while (monthArray.length < 12) {
@@ -472,7 +589,7 @@ export class AdapterMoment implements MuiPickersAdapter<Moment> {
   public getMeridiemText = (ampm: 'am' | 'pm') => {
     if (this.is12HourCycleInCurrentLocale()) {
       // AM/PM translation only possible in those who have 12 hour cycle in locale.
-      return this.moment
+      return defaultMoment
         .localeData(this.getCurrentLocaleCode())
         .meridiem(ampm === 'am' ? 0 : 13, 0, false);
     }
