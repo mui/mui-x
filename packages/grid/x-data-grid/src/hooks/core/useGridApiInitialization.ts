@@ -26,28 +26,21 @@ const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extend
 
   privateOnlyApi.register = (visibility, methods) => {
     Object.keys(methods).forEach((methodName) => {
-      if (visibility === 'public') {
-        publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
-      } else {
+      if (visibility === 'private') {
         privateOnlyApi[methodName as keyof PrivateOnlyApi] = (methods as any)[methodName];
+        Object.defineProperty(publicApi, methodName, {
+          enumerable: false,
+          value: (methods as any)[methodName],
+        });
+      } else {
+        publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
       }
     });
   };
 
-  const handler: ProxyHandler<GridApiCommon> = {
-    get: (obj, prop) => {
-      if (prop in obj) {
-        return obj[prop as keyof typeof obj];
-      }
-      return privateOnlyApi[prop as keyof PrivateOnlyApi];
-    },
-    set: (obj, prop, value) => {
-      obj[prop as keyof typeof obj] = value;
-      return true;
-    },
-  };
+  Object.assign(publicApi, privateOnlyApi);
 
-  return new Proxy(publicApi, handler) as PrivateApi;
+  return publicApi as unknown as PrivateApi;
 };
 
 export function useGridApiInitialization<
