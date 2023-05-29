@@ -8,6 +8,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { GridCellEventLookup, GridEvents, GridCellModes, GridRowId } from '../../models';
 import { GridRenderEditCellParams, FocusElement, GridCellParams } from '../../models/params/gridCellParams';
@@ -64,21 +65,6 @@ const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> =
   formattedValue: '__unset__',
   isEditable: false,
 };
-
-
-// Based on https://stackoverflow.com/a/59518678
-let cachedSupportsPreventScroll: boolean;
-function doesSupportPreventScroll(): boolean {
-  if (cachedSupportsPreventScroll === undefined) {
-    document.createElement('div').focus({
-      get preventScroll() {
-        cachedSupportsPreventScroll = true;
-        return false;
-      },
-    });
-  }
-  return cachedSupportsPreventScroll;
-}
 
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder'> & {
   isEditable?: boolean;
