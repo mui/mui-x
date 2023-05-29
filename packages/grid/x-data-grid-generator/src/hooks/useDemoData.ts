@@ -1,7 +1,7 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
 import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
-import { GridDemoData, getRealGridData, getRealGridDataSync } from '../services/real-data-service';
+import { GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
 import asyncWorker from '../services/asyncWorker';
@@ -205,36 +205,6 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     index,
     columns,
   ]);
-
-  return {
-    data,
-    loading,
-    setRowLength,
-    loadNewData: () => {
-      setIndex((oldIndex) => oldIndex + 1);
-    },
-  };
-};
-
-export const useDemoDataSync = (options: UseDemoDataOptions): DemoDataReturnType => {
-  const [rowLength, setRowLength] = React.useState(options.rowLength);
-  const [, setIndex] = React.useState(0);
-  const [loading] = React.useState(true);
-
-  const columns = React.useMemo(() => {
-    return getColumnsFromOptions({
-      dataSet: options.dataSet,
-      editable: options.editable,
-      maxColumns: options.maxColumns,
-      visibleFields: options.visibleFields,
-    });
-  }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
-
-  const data = addTreeDataOptionsToDemoData(getRealGridDataSync(rowLength, columns), {
-    maxDepth: options.treeData?.maxDepth,
-    groupingField: options.treeData?.groupingField,
-    averageChildren: options.treeData?.averageChildren,
-  });
 
   return {
     data,
