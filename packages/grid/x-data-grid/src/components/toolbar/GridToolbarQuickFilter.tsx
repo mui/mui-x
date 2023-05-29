@@ -24,7 +24,7 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
     marginLeft: theme.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+    borderBottom: `1px solid ${((theme as any).vars || theme).palette.divider}`,
   },
   [`& input[type=search]::-ms-clear,
 & input[type=search]::-ms-reveal`]: {

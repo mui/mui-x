@@ -48,7 +48,7 @@ const GridPaperRoot = styled(Paper, {
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+  backgroundColor: ((theme as any).vars || theme).palette.background.paper,
   minWidth: 300,
   maxHeight: 450,
   display: 'flex',
