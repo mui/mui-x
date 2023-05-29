@@ -1,4 +1,3 @@
-// TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
 import {
   DataGridPro,
@@ -7,7 +6,7 @@ import {
   useGridApiRef,
   useGridRootProps,
 } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses, styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
@@ -136,22 +135,20 @@ const getChildren = (parentPath) => {
 const fakeDataFetcher = (parentPath = []) =>
   new Promise((resolve) => {
     setTimeout(() => {
-      const rows = getChildren(parentPath).reduce((acc, row) => {
-        const descendantCount = getChildren(row.hierarchy).length;
-        acc.push({ ...row, descendantCount });
-
-        if (descendantCount > 0) {
-          acc.push({
-            id: `placeholder-children-${row.id}`,
-            hierarchy: [...row.hierarchy, ''],
-          });
-        }
-
-        return acc;
-      }, []);
+      const rows = getChildren(parentPath).map((row) => ({
+        ...row,
+        descendantCount: getChildren(row.hierarchy).length,
+      }));
       resolve(rows);
     }, 500 + Math.random() * 300);
   });
+
+const LoadingContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
+});
 
 const getTreeDataPath = (row) => row.hierarchy;
 
@@ -171,29 +168,20 @@ const useUtilityClasses = (ownerState) => {
  * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
  */
 function GroupingCellWithLazyLoading(props) {
-  const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
-
-  const [isLoading, setIsLoading] = React.useState(false);
+  const { id, rowNode, row, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses({ classes: rootProps.classes });
 
+  const isLoading = rowNode.childrenExpanded ? !row.childrenFetched : false;
+
   const Icon = rowNode.childrenExpanded
     ? rootProps.slots.treeDataCollapseIcon
     : rootProps.slots.treeDataExpandIcon;
 
-  React.useEffect(() => {
-    setIsLoading((prev) => prev === true && false);
-  }, [rowNode.childrenExpanded]);
-
-  const handleClick = (event) => {
+  const handleClick = () => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
-    apiRef.current.setCellFocus(id, field);
-    event.stopPropagation();
-    if (!rowNode.childrenExpanded) {
-      setIsLoading(true);
-    }
   };
 
   return (
@@ -201,7 +189,9 @@ function GroupingCellWithLazyLoading(props) {
       <div className={classes.toggle}>
         {row.descendantCount > 0 &&
           (isLoading ? (
-            <CircularProgress size="1.5rem" />
+            <LoadingContainer>
+              <CircularProgress size="1rem" color="inherit" />
+            </LoadingContainer>
           ) : (
             <IconButton
               size="small"
@@ -231,12 +221,39 @@ const CUSTOM_GROUPING_COL_DEF = {
   renderCell: (params) => <GroupingCellWithLazyLoading {...params} />,
 };
 
+// Optional
+const getRowId = (row) => {
+  if (typeof row?.id === 'string' && row?.id.startsWith('placeholder-children-')) {
+    return row.id;
+  }
+  return row.id;
+};
+
+function updateRows(apiRef, rows) {
+  if (!apiRef.current) {
+    return;
+  }
+  const rowsToAdd = [...rows];
+  rows.forEach((row) => {
+    if (row.descendantCount && row.descendantCount > 0) {
+      // Add a placeholder row to make the row expandable
+      rowsToAdd.push({
+        id: `placeholder-children-${getRowId(row)}`,
+        hierarchy: [...row.hierarchy, ''],
+      });
+    }
+  });
+  apiRef.current.updateRows(rowsToAdd);
+}
+
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
-  const [rows, setRows] = React.useState([]);
+  const [rows] = React.useState([]);
 
   React.useEffect(() => {
-    fakeDataFetcher().then(setRows);
+    fakeDataFetcher().then((rowsData) => {
+      updateRows(apiRef, rowsData);
+    });
 
     const handleRowExpansionChange = async (node) => {
       const row = apiRef.current.getRow(node.id);
@@ -245,47 +262,18 @@ export default function TreeDataLazyLoading() {
         return;
       }
 
-      apiRef.current.updateRows([
-        {
-          id: `placeholder-children-${node.id}`,
-          hierarchy: [...row.hierarchy, ''],
-        },
-      ]);
-
       const childrenRows = await fakeDataFetcher(row.hierarchy);
-      apiRef.current.updateRows([
+      updateRows(apiRef, [
         ...childrenRows,
-        { id: node.id, childrenFetched: true },
+        { ...row, childrenFetched: true },
         { id: `placeholder-children-${node.id}`, _action: 'delete' },
       ]);
-
-      if (childrenRows.length) {
-        apiRef.current.setRowChildrenExpansion(node.id, true);
-      }
     };
 
-    /**
-     * By default, the grid does not toggle the expansion of rows with 0 children
-     * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
-     */
-    const handleCellKeyDown = (params, event) => {
-      const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
-        event.stopPropagation();
-        event.preventDefault();
-        event.defaultMuiPrevented = true;
-
-        apiRef.current.setRowChildrenExpansion(
-          params.id,
-          !params.rowNode.childrenExpanded,
-        );
-      }
-    };
-
-    apiRef.current.subscribeEvent('rowExpansionChange', handleRowExpansionChange);
-    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
-      isFirst: true,
-    });
+    return apiRef.current.subscribeEvent(
+      'rowExpansionChange',
+      handleRowExpansionChange,
+    );
   }, [apiRef]);
 
   return (
@@ -298,6 +286,7 @@ export default function TreeDataLazyLoading() {
         getTreeDataPath={getTreeDataPath}
         groupingColDef={CUSTOM_GROUPING_COL_DEF}
         disableChildrenFiltering
+        getRowId={getRowId}
       />
     </div>
   );
