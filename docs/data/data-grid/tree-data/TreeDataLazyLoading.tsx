@@ -1,4 +1,3 @@
-// TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
 import {
   DataGridPro,
@@ -308,10 +307,21 @@ export default function TreeDataLazyLoading() {
       }
     };
 
-    apiRef.current.subscribeEvent('rowExpansionChange', handleRowExpansionChange);
-    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
-      isFirst: true,
-    });
+    const unsubscribe = apiRef.current.subscribeEvent(
+      'rowExpansionChange',
+      handleRowExpansionChange,
+    );
+    const unsubscribe2 = apiRef.current.subscribeEvent(
+      'cellKeyDown',
+      handleCellKeyDown,
+      {
+        isFirst: true,
+      },
+    );
+    return () => {
+      unsubscribe();
+      unsubscribe2();
+    };
   }, [apiRef]);
 
   return (
