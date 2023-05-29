@@ -1,4 +1,5 @@
-import { GridValidRowModel, GridRowId, GridTreeNode } from '../gridRows';
+import { GridColDef } from '../colDef';
+import { GridValidRowModel, GridRowId, GridTreeNode, GridRowModel } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridRowParams } from '../params/gridRowParams';
@@ -12,6 +13,14 @@ export interface GridParamsApi {
    * @returns {v} The cell value.
    */
   getCellValue: <V extends any = any>(id: GridRowId, field: string) => V;
+  /**
+   * Gets the value of a row
+   * @template V
+   * @param {GridRowModel} row The row model.
+   * @param {GridColDef} field The column definition.
+   * @returns {v} The cell value.
+   */
+  getRowValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
   /**
    * Gets the underlying DOM element for a cell at the given `id` and `field`.
    * @param {GridRowId} id The id of the row.

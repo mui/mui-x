@@ -105,7 +105,8 @@ export const filterRowTreeFromGroupingColumns = (
           ? (columnField: string) => shouldApplyFilterItemOnGroup(columnField, node)
           : undefined;
 
-      isRowMatchingFilters(node.id, shouldApplyItem, filterResults);
+      const row = params.apiRef.current.getRow(node.id);
+      isRowMatchingFilters(row, shouldApplyItem, filterResults);
     } else {
       isPassingFiltering = true;
     }

@@ -55,6 +55,8 @@ export const useGridFilter = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
+    | 'rows'
+    | 'getRowId'
     | 'initialState'
     | 'filterModel'
     | 'onFilterModelChange'
@@ -79,7 +81,9 @@ export const useGridFilter = (
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
-        props.filterMode === 'client' ? buildAggregatedFilterApplier(filterModel, apiRef) : null;
+        props.filterMode === 'client'
+          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef)
+          : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
@@ -370,8 +374,7 @@ export const useGridFilter = (
         };
       }
 
-      const tree = gridRowTreeSelector(apiRef);
-      const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
+      const rows = props.rows;
       const filteredRowsLookup = new Set<GridRowId>();
       const { isRowMatchingFilters } = params;
 
@@ -380,25 +383,23 @@ export const useGridFilter = (
         passingQuickFilterValues: null,
       };
 
-      for (let i = 0; i < rowIds.length; i += 1) {
-        const rowId = rowIds[i];
+      for (let i = 0; i < rows.length; i += 1) {
+        const row = rows[i];
 
-        if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
-          filteredRowsLookup.add(rowId)
-        } else {
-          isRowMatchingFilters(rowId, undefined, result);
+        isRowMatchingFilters(row, undefined, result);
 
-          const isRowPassing = passFilterLogicSingle(
-            result.passingFilterItems,
-            result.passingQuickFilterValues,
-            params.filterModel,
-            apiRef,
-          );
+        const isRowPassing = passFilterLogicSingle(
+          result.passingFilterItems,
+          result.passingQuickFilterValues,
+          params.filterModel,
+          apiRef,
+        );
 
-          if (isRowPassing)
-            filteredRowsLookup.add(rowId)
-        }
+        if (isRowPassing) filteredRowsLookup.add(row.id);
       }
+
+      // XXX: Is props.rows what we want?
+      // XXX: Handle footer rows
 
       return {
         filteredRowsLookup,
@@ -406,9 +407,8 @@ export const useGridFilter = (
         visibleRowsLookup: filteredRowsLookup,
         filteredDescendantCountLookup: {},
       };
-
     },
-    [apiRef, props.filterMode],
+    [apiRef, props.filterMode, props.rows],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);

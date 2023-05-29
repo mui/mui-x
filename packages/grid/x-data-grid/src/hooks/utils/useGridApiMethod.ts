@@ -23,7 +23,6 @@ export function useGridApiMethod<
       privateApiRef.current.register(visibility, {
         [methodName]: apiMethodsRef.current[methodName],
       });
-
     });
   }, [apiMethodsNames, privateApiRef, visibility]);
 

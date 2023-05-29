@@ -28,12 +28,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
 >[] => [
   {
     value: '=',
-    getApplyFilterFn: (filterItem) => {
+    getApplyFilterFnV7: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value, _, __): boolean => {
         return parseNumericValue(value) === filterItem.value;
       };
     },
@@ -42,12 +42,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: '!=',
-    getApplyFilterFn: (filterItem) => {
+    getApplyFilterFnV7: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value, _, __): boolean => {
         return parseNumericValue(value) !== filterItem.value;
       };
     },
@@ -56,12 +56,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: '>',
-    getApplyFilterFn: (filterItem) => {
+    getApplyFilterFnV7: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value, _, __): boolean => {
         if (value == null) {
           return false;
         }
@@ -74,12 +74,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: '>=',
-    getApplyFilterFn: (filterItem) => {
+    getApplyFilterFnV7: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value, _, __): boolean => {
         if (value == null) {
           return false;
         }
@@ -92,12 +92,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: '<',
-    getApplyFilterFn: (filterItem) => {
+    getApplyFilterFnV7: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value, _, __): boolean => {
         if (value == null) {
           return false;
         }
@@ -110,12 +110,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: '<=',
-    getApplyFilterFn: (filterItem) => {
+    getApplyFilterFnV7: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value, _, __): boolean => {
         if (value == null) {
           return false;
         }
@@ -128,8 +128,8 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: 'isEmpty',
-    getApplyFilterFn: () => {
-      return ({ value }): boolean => {
+    getApplyFilterFnV7: () => {
+      return (value, _, __): boolean => {
         return value == null;
       };
     },
@@ -137,8 +137,8 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: 'isNotEmpty',
-    getApplyFilterFn: () => {
-      return ({ value }): boolean => {
+    getApplyFilterFnV7: () => {
+      return (value, _, __): boolean => {
         return value != null;
       };
     },
@@ -146,12 +146,12 @@ export const getGridNumericOperators = (): GridFilterOperator<
   },
   {
     value: 'isAnyOf',
-    getApplyFilterFn: (filterItem) => {
+    getApplyFilterFnV7: (filterItem) => {
       if (!Array.isArray(filterItem.value) || filterItem.value.length === 0) {
         return null;
       }
 
-      return ({ value }): boolean => {
+      return (value, _, __): boolean => {
         return value != null && filterItem.value.includes(Number(value));
       };
     },
