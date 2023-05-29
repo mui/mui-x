@@ -1,7 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LinePlot } from './LinePlot';
-import { ResponsiveChartContainer, ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis/Axis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';

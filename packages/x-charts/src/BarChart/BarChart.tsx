@@ -1,7 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { BarPlot } from './BarPlot';
-import { ResponsiveChartContainer, ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';

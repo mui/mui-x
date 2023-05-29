@@ -1,14 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ScatterPlot } from './ScatterPlot';
-import { ResponsiveChartContainer, ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
 
-export interface ScatterChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
+export interface ScatterChartProps
+  extends Omit<ResponsiveChartContainerProps, 'series'>,
+    AxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
