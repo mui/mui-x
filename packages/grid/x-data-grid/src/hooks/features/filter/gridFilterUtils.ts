@@ -5,11 +5,9 @@ import {
   GridColDef,
   GridFilterItem,
   GridFilterModel,
-  GridFilterOperator,
   GridLogicOperator,
   GridRowId,
   GridRowIdGetter,
-  GridTreeNode,
   GridValidRowModel,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
