@@ -1,7 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import { styled } from '@mui/system';
 import {
   GridEventListener,
@@ -137,13 +140,17 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     };
   }, []);
 
-  const toggleDragging = React.useCallback(() => {
-    setDragging((prevDragging) => !prevDragging);
-  }, []);
+  const handleColumnHeaderDragStart = useEventCallback(() => {
+    setDragging(true);
+  });
+
+  const handleColumnHeaderDragEnd = useEventCallback(() => {
+    setDragging(false);
+  });
 
   useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScrolling);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', toggleDragging);
-  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', toggleDragging);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnHeaderDragStart);
+  useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleColumnHeaderDragEnd);
 
   if (!dragging || !canScrollMore) {
     return null;
