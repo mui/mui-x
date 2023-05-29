@@ -7,6 +7,8 @@ import {
   GridGroupNode,
   GridRowId,
   GRID_CHECKBOX_SELECTION_FIELD,
+  GRID_ROOT_GROUP_ID,
+  GridServerSideGroupNode,
 } from '@mui/x-data-grid';
 import {
   GridPipeProcessor,
@@ -19,7 +21,11 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from './gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { filterRowTreeFromTreeData, TREE_DATA_STRATEGY } from './gridTreeDataUtils';
+import {
+  filterRowTreeFromTreeData,
+  iterateTreeNodes,
+  TREE_DATA_LAZY_LOADING_STRATEGY,
+} from './gridTreeDataUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import {
   GridGroupingColDefOverride,
@@ -34,7 +40,7 @@ import {
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
 
-export const useGridTreeDataPreProcessors = (
+export const useGridTreeDataLazyLoadingPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
@@ -46,13 +52,14 @@ export const useGridTreeDataPreProcessors = (
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
     | 'rowsLoadingMode'
+    | 'isServerSideRow'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       'rowTree',
-      TREE_DATA_STRATEGY,
-      props.treeData && props.rowsLoadingMode === 'client' ? () => true : () => false,
+      TREE_DATA_LAZY_LOADING_STRATEGY,
+      props.treeData && props.rowsLoadingMode === 'server' ? () => true : () => false,
     );
   }, [privateApiRef, props.treeData, props.rowsLoadingMode]);
 
@@ -62,7 +69,7 @@ export const useGridTreeDataPreProcessors = (
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
     if (typeof groupingColDefProp === 'function') {
       const params: GridGroupingColDefOverrideParams = {
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TREE_DATA_LAZY_LOADING_STRATEGY,
         fields: [],
       };
 
@@ -154,7 +161,7 @@ export const useGridTreeDataPreProcessors = (
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-          groupingName: TREE_DATA_STRATEGY,
+          groupingName: TREE_DATA_LAZY_LOADING_STRATEGY,
           onDuplicatePath,
         });
       }
@@ -169,7 +176,7 @@ export const useGridTreeDataPreProcessors = (
         previousTreeDepth: params.previousTreeDepths!,
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
-        groupingName: TREE_DATA_STRATEGY,
+        groupingName: TREE_DATA_LAZY_LOADING_STRATEGY,
       });
     },
     [props.getTreeDataPath, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
@@ -204,15 +211,52 @@ export const useGridTreeDataPreProcessors = (
     [privateApiRef, props.disableChildrenSorting],
   );
 
+  const setServerSideGroups = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
+    (params) => {
+      // To investigate: Avoid dual processing, make this part of `rowTreeCreation` strategy processor
+      if (Object.keys(params.tree).length === 1) {
+        // TODO: Fix this hack
+        (params.tree[GRID_ROOT_GROUP_ID] as GridServerSideGroupNode).isLoading = true;
+        return params;
+      }
+
+      if (props.rowsLoadingMode !== 'server' || !props.isServerSideRow || !props.treeData) {
+        return params;
+      }
+
+      iterateTreeNodes(
+        params.dataRowIdToModelLookup,
+        params.tree,
+        GRID_ROOT_GROUP_ID,
+        props.isServerSideRow,
+      );
+
+      return params;
+    },
+    [props.isServerSideRow, props.treeData, props.rowsLoadingMode],
+  );
+
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);
+  useGridRegisterPipeProcessor(privateApiRef, 'hydrateRows', setServerSideGroups);
+
   useGridRegisterStrategyProcessor(
     privateApiRef,
-    TREE_DATA_STRATEGY,
+    TREE_DATA_LAZY_LOADING_STRATEGY,
     'rowTreeCreation',
     createRowTreeForTreeData,
   );
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'filtering', filterRows);
-  useGridRegisterStrategyProcessor(privateApiRef, TREE_DATA_STRATEGY, 'sorting', sortRows);
+  useGridRegisterStrategyProcessor(
+    privateApiRef,
+    TREE_DATA_LAZY_LOADING_STRATEGY,
+    'filtering',
+    filterRows,
+  );
+  useGridRegisterStrategyProcessor(
+    privateApiRef,
+    TREE_DATA_LAZY_LOADING_STRATEGY,
+    'sorting',
+    sortRows,
+  );
 
   /**
    * 1ST RENDER

@@ -1,15 +1,8 @@
 // TODO rows v6: Adapt to new lazy loading api
 import * as React from 'react';
-import {
-  DataGridPro,
-  getDataGridUtilityClass,
-  useGridApiContext,
-  useGridApiRef,
-  useGridRootProps,
-} from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
+import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 export const isNavigationKey = (key) =>
   key === 'Home' ||
@@ -128,155 +121,77 @@ const getChildren = (parentPath) => {
   );
 };
 
-/**
- * This is a naive implementation with terrible performances on a real dataset.
- * This fake server is only here for demonstration purposes.
- */
 const fakeDataFetcher = (parentPath = []) =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     setTimeout(() => {
       const rows = getChildren(parentPath).map((row) => ({
         ...row,
         descendantCount: getChildren(row.hierarchy).length,
       }));
+      if (parentPath.length !== 0 && Math.random() > 0.7) {
+        // 30% probablity of failure
+        reject(new Error('Network call failed randomly'));
+      }
       resolve(rows);
-    }, 500 + Math.random() * 300);
+    }, 1000 + Math.random() * 300);
   });
 
 const getTreeDataPath = (row) => row.hierarchy;
 
-const useUtilityClasses = (ownerState) => {
-  const { classes } = ownerState;
-
-  const slots = {
-    root: ['treeDataGroupingCell'],
-    toggle: ['treeDataGroupingCellToggle'],
-  };
-
-  return composeClasses(slots, getDataGridUtilityClass, classes);
-};
-
-/**
- * Reproduce the behavior of the `GridTreeDataGroupingCell` component in `@mui/x-data-grid-pro`
- * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
- */
-function GroupingCellWithLazyLoading(props) {
-  const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
-
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
-  const classes = useUtilityClasses({ classes: rootProps.classes });
-
-  const Icon = rowNode.childrenExpanded
-    ? rootProps.slots.treeDataCollapseIcon
-    : rootProps.slots.treeDataExpandIcon;
-
-  const handleClick = (event) => {
-    apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
-    apiRef.current.setCellFocus(id, field);
-    event.stopPropagation();
-  };
-
-  return (
-    <Box className={classes.root} sx={{ ml: rowNode.depth * 2 }}>
-      <div className={classes.toggle}>
-        {row.descendantCount > 0 && (
-          <IconButton
-            size="small"
-            onClick={handleClick}
-            tabIndex={-1}
-            aria-label={
-              rowNode.childrenExpanded
-                ? apiRef.current.getLocaleText('treeDataCollapse')
-                : apiRef.current.getLocaleText('treeDataExpand')
-            }
-          >
-            <Icon fontSize="inherit" />
-          </IconButton>
-        )}
-      </div>
-      <span>
-        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
-        {!hideDescendantCount && row.descendantCount > 0
-          ? ` (${row.descendantCount})`
-          : ''}
-      </span>
-    </Box>
-  );
-}
-
-const CUSTOM_GROUPING_COL_DEF = {
-  renderCell: (params) => <GroupingCellWithLazyLoading {...params} />,
-};
+const initRows = [];
 
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
-  const [rows, setRows] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [showSnackbar, setShowSnackbar] = React.useState(false);
 
-  React.useEffect(() => {
-    fakeDataFetcher().then(setRows);
-
-    const handleRowExpansionChange = async (node) => {
-      const row = apiRef.current.getRow(node.id);
-
-      if (!node.childrenExpanded || !row || row.childrenFetched) {
-        return;
+  const onFetchRowChildren = React.useCallback(
+    async ({ row, helpers }) => {
+      if (showSnackbar) {
+        setShowSnackbar(false);
       }
-
-      apiRef.current.updateRows([
-        {
-          id: `placeholder-children-${node.id}`,
-          hierarchy: [...row.hierarchy, ''],
-        },
-      ]);
-
-      const childrenRows = await fakeDataFetcher(row.hierarchy);
-      apiRef.current.updateRows([
-        ...childrenRows,
-        { id: node.id, childrenFetched: true },
-        { id: `placeholder-children-${node.id}`, _action: 'delete' },
-      ]);
-
-      if (childrenRows.length) {
-        apiRef.current.setRowChildrenExpansion(node.id, true);
+      try {
+        if (!row) {
+          setLoading(true);
+        }
+        const path = row ? getTreeDataPath(row) : [];
+        const data = await fakeDataFetcher(path);
+        helpers.success(data);
+        if (!row) {
+          setLoading(false);
+        }
+      } catch (error) {
+        // simulate network error
+        helpers.error();
+        setShowSnackbar(true);
+        console.error(error);
       }
-    };
-
-    /**
-     * By default, the grid does not toggle the expansion of rows with 0 children
-     * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
-     */
-    const handleCellKeyDown = (params, event) => {
-      const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
-        event.stopPropagation();
-        event.preventDefault();
-        event.defaultMuiPrevented = true;
-
-        apiRef.current.setRowChildrenExpansion(
-          params.id,
-          !params.rowNode.childrenExpanded,
-        );
-      }
-    };
-
-    apiRef.current.subscribeEvent('rowExpansionChange', handleRowExpansionChange);
-    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
-      isFirst: true,
-    });
-  }, [apiRef]);
+    },
+    [showSnackbar],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
+        loading={loading}
         treeData
         apiRef={apiRef}
-        rows={rows}
+        rows={initRows}
         columns={columns}
         getTreeDataPath={getTreeDataPath}
-        groupingColDef={CUSTOM_GROUPING_COL_DEF}
-        disableChildrenFiltering
+        onFetchRowChildren={onFetchRowChildren}
+        isServerSideRow={(row) => row.descendantCount > 0}
+        rowsLoadingMode="server"
       />
+      <Snackbar
+        open={showSnackbar}
+        onClose={() => setShowSnackbar(false)}
+        autoHideDuration={6000}
+      >
+        <Alert onClose={() => setShowSnackbar(false)} severity="error">
+          Could not fetch data, please try again.
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

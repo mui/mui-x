@@ -56,7 +56,9 @@ import {
   columnResizeStateInitializer,
 } from '../hooks/features/columnResize/useGridColumnResize';
 import { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
+import { useGridTreeDataLazyLoading } from '../hooks/features/treeData/useGridTreeDataLazyLoading';
 import { useGridTreeDataPreProcessors } from '../hooks/features/treeData/useGridTreeDataPreProcessors';
+import { useGridTreeDataLazyLoadingPreProcessors } from '../hooks/features/treeData/useGridTreeDataLazyLoadingPreProcessors';
 import {
   useGridColumnPinning,
   columnPinningStateInitializer,
@@ -89,6 +91,7 @@ export const useDataGridProComponent = (
   useGridRowSelectionPreProcessors(apiRef, props);
   useGridRowReorderPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridTreeDataLazyLoadingPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridDetailPanelPreProcessors(apiRef, props);
@@ -122,6 +125,7 @@ export const useDataGridProComponent = (
 
   useGridHeaderFiltering(apiRef, props);
   useGridTreeData(apiRef);
+  useGridTreeDataLazyLoading(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumnPinning(apiRef, props);

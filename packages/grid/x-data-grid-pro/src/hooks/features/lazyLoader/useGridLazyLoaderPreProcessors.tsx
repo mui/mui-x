@@ -13,7 +13,10 @@ const getSkeletonRowId = (index: number) => `${GRID_SKELETON_ROW_ROOT_ID}-${inde
 
 export const useGridLazyLoaderPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode' | 'experimentalFeatures'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'rowCount' | 'rowsLoadingMode' | 'experimentalFeatures' | 'treeData' | 'onFetchRows'
+  >,
 ) => {
   const { lazyLoading } = (props.experimentalFeatures ?? {}) as GridExperimentalProFeatures;
 
@@ -26,7 +29,11 @@ export const useGridLazyLoaderPreProcessors = (
         !lazyLoading ||
         props.rowsLoadingMode !== 'server' ||
         !props.rowCount ||
-        rootGroup.children.length >= props.rowCount
+        rootGroup.children.length >= props.rowCount ||
+        !props.onFetchRows ||
+        // To avoid situations like https://codesandbox.io/s/nice-yalow-dkfb5n
+        // TODO: To remove when `treeData` supports (root level) lazy-loading
+        props.treeData
       ) {
         return groupingParams;
       }
@@ -55,7 +62,7 @@ export const useGridLazyLoaderPreProcessors = (
         tree,
       };
     },
-    [props.rowCount, props.rowsLoadingMode, lazyLoading],
+    [props.rowCount, props.rowsLoadingMode, lazyLoading, props.treeData, props.onFetchRows],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateRows', addSkeletonRows);

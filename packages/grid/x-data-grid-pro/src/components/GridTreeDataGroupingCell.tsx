@@ -8,10 +8,13 @@ import {
   getDataGridUtilityClass,
   GridRenderCellParams,
   GridGroupNode,
+  GridServerSideGroupNode,
 } from '@mui/x-data-grid';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import { getLazyLoadingHelpers } from '../hooks/features/treeData/useGridTreeDataLazyLoading';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -26,7 +29,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, any, GridGroupNode> {
+interface GridTreeDataGroupingCellProps
+  extends GridRenderCellParams<any, any, any, GridGroupNode | GridServerSideGroupNode> {
   hideDescendantCount?: boolean;
   /**
    * The cell offset multiplier used for calculating cell offset (`rowNode.depth * offsetMultiplier` px).
@@ -35,11 +39,62 @@ interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, a
   offsetMultiplier?: number;
 }
 
+interface GridTreeDataGroupingCellIconProps
+  extends Pick<GridTreeDataGroupingCellProps, 'id' | 'field' | 'rowNode'> {
+  descendantCount: number;
+}
+
+function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
+  const { rowNode, id, field, descendantCount } = props;
+  const apiRef = useGridPrivateApiContext();
+  const rootProps = useGridRootProps();
+
+  const isServerSideNode = (rowNode as GridServerSideGroupNode).isServerSide;
+  const isDataLoading = (rowNode as GridServerSideGroupNode).isLoading;
+  const areChildrenFetched = (rowNode as GridServerSideGroupNode).childrenFetched;
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (isServerSideNode && !rowNode.childrenExpanded && !areChildrenFetched) {
+      const helpers = getLazyLoadingHelpers(apiRef, rowNode as GridServerSideGroupNode);
+      const row = apiRef.current.getRow(rowNode.id);
+      apiRef.current.setRowLoadingStatus(rowNode.id, true);
+      apiRef.current.publishEvent('fetchRowChildren', { row, helpers });
+    } else {
+      apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
+    }
+    apiRef.current.setCellFocus(id, field);
+    event.stopPropagation(); // TODO remove event.stopPropagation
+  };
+
+  const Icon = rowNode.childrenExpanded
+    ? rootProps.slots.treeDataCollapseIcon
+    : rootProps.slots.treeDataExpandIcon;
+
+  if (isDataLoading) {
+    return <CircularProgress size="1rem" color="inherit" />;
+  }
+  return descendantCount > 0 || isServerSideNode ? (
+    <rootProps.slots.baseIconButton
+      size="small"
+      onClick={handleClick}
+      tabIndex={-1}
+      aria-label={
+        rowNode.childrenExpanded
+          ? apiRef.current.getLocaleText('treeDataCollapse')
+          : apiRef.current.getLocaleText('treeDataExpand')
+      }
+      {...rootProps?.slotProps?.baseIconButton}
+    >
+      <Icon fontSize="inherit" />
+    </rootProps.slots.baseIconButton>
+  ) : null;
+}
+
 function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
-  const { id, field, formattedValue, rowNode, hideDescendantCount, offsetMultiplier = 2 } = props;
+  const { formattedValue, rowNode, hideDescendantCount, offsetMultiplier = 2, id, field } = props;
 
   const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const ownerState: OwnerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const filteredDescendantCountLookup = useGridSelector(
@@ -49,34 +104,15 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
 
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
-  const Icon = rowNode.childrenExpanded
-    ? rootProps.slots.treeDataCollapseIcon
-    : rootProps.slots.treeDataExpandIcon;
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
-    apiRef.current.setCellFocus(id, field);
-    event.stopPropagation(); // TODO remove event.stopPropagation
-  };
-
   return (
     <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>
       <div className={classes.toggle}>
-        {filteredDescendantCount > 0 && (
-          <rootProps.slots.baseIconButton
-            size="small"
-            onClick={handleClick}
-            tabIndex={-1}
-            aria-label={
-              rowNode.childrenExpanded
-                ? apiRef.current.getLocaleText('treeDataCollapse')
-                : apiRef.current.getLocaleText('treeDataExpand')
-            }
-            {...rootProps?.slotProps?.baseIconButton}
-          >
-            <Icon fontSize="inherit" />
-          </rootProps.slots.baseIconButton>
-        )}
+        <GridTreeDataGroupingCellIcon
+          id={id}
+          field={field}
+          rowNode={rowNode}
+          descendantCount={filteredDescendantCount}
+        />
       </div>
       <span>
         {formattedValue === undefined ? rowNode.groupingKey : formattedValue}

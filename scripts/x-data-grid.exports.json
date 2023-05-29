@@ -420,6 +420,7 @@
   { "name": "GridSearchIcon", "kind": "Variable" },
   { "name": "GridSelectedRowCount", "kind": "Variable" },
   { "name": "GridSeparatorIcon", "kind": "Variable" },
+  { "name": "GridServerSideGroupNode", "kind": "Interface" },
   { "name": "GridSignature", "kind": "Enum" },
   { "name": "GridSingleSelectColDef", "kind": "Interface" },
   { "name": "GridSkeletonCell", "kind": "Function" },

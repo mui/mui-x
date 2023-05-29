@@ -10,6 +10,7 @@ import type {
 } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
+import { GridFetchRowChildrenParams } from '../hooks/features/treeData/useGridTreeDataLazyLoading';
 
 export interface GridColDefPro<R extends GridValidRowModel = any, V = any, F = V> {
   /**
@@ -47,6 +48,10 @@ export interface GridEventLookupPro {
    * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
    */
   fetchRows: { params: GridFetchRowsParams };
+  /**
+   * Fired when a new batch of rows is requested to be loaded. Called with a [[GridFetchRowsParams]] object.
+   */
+  fetchRowChildren: { params: GridFetchRowChildrenParams };
 }
 
 export interface GridPipeProcessingLookupPro {

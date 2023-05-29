@@ -247,6 +247,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**
+   * Callback fired when children rows of a parent row are requested to be loaded.
+   * @param {GridFetchRowChildrenParams} params With all properties from [[GridFetchRowChildrenParams]].
+   */
+  onFetchRowChildren?: GridEventListener<'fetchRowChildren'>;
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows?: GridPinnedRowsProp<R>;
@@ -259,4 +264,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps?: GridProSlotProps;
+  /**
+   * Callback that returns true for those rows which have children on server.
+   * @param {GridValidRowModel} row The row to test.
+   * @returns {boolean} A boolean indicating if the row has children on server.
+   */
+  isServerSideRow?: (row: GridValidRowModel) => boolean;
 }

@@ -407,6 +407,12 @@ DataGridProRaw.propTypes = {
    */
   isRowSelectable: PropTypes.func,
   /**
+   * Callback that returns true for those rows which have children on server.
+   * @param {GridValidRowModel} row The row to test.
+   * @returns {boolean} A boolean indicating if the row has children on server.
+   */
+  isServerSideRow: PropTypes.func,
+  /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
    * @default false
@@ -566,6 +572,11 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
+  /**
+   * Callback fired when children rows of a parent row are requested to be loaded.
+   * @param {GridFetchRowChildrenParams} params With all properties from [[GridFetchRowChildrenParams]].
+   */
+  onFetchRowChildren: PropTypes.func,
   /**
    * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].

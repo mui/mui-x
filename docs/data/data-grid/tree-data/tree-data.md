@@ -115,17 +115,43 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 
 ## Children lazy-loading
 
-:::warning
-This feature isn't implemented yet. It's coming.
+To lazy-load tree data children, set the `rowsLoadingMode` prop to `server` and listen to the `fetchRowChildren` event or pass a handler to `onFetchRowChildren` prop. It is fired when user tries to expand a row, it recieves the parent row object and a `helpers` object as parameters which has the following signature.
 
-👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
-:::
+```tsx
+interface GridTreeDataLazyLoadHelpers {
+  success: (rows: GridRowModel[]) => void;
+  error: () => void;
+}
 
-Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.
-This implementation does not support every feature of the data grid but can be a good starting point for large datasets.
+interface GridFetchRowChildrenParams {
+  row: GridRowModel | undefined;
+  helpers: GridTreeDataLazyLoadHelpers;
+}
+```
 
-The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
-To do so, you need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.
+Do the API call in the `onFetchRowChildren` handler and call `helpers.success(newRows)` and `helpers.error()` respectively in case of success or error to let the grid update the related internal states.
+
+```tsx
+async function onFetchRowChildren({ row, server }: GridFetchRowChildrenParams) {
+  try {
+    const childRows = await fetchRows(row);
+    helpers.success(childRows);
+  } catch (error) {
+    helpers.error();
+  }
+}
+
+<DataGridPro
+  {...otherProps}
+  treeData
+  getTreeDataPath={getTreeDataPath}
+  onFetchRowChildren={onFetchRowChildren}
+  isServerSideRow={(row) => row.descendantCount! > 0}
+  rowsLoadingMode="server"
+/>;
+```
+
+Following demo implements a simple lazy-loading tree data grid using mock server.
 
 {{"demo": "TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
 
