@@ -188,7 +188,7 @@ const getFilterCallbackFromItem = (
       item: newFilterItem,
       fn: (row: GridValidRowModel) => {
         const value = apiRef.current.getRowValue(row, column);
-        return applyFilterOnRow(value, row, column);
+        return applyFilterOnRow(value, row, column, apiRef);
       },
     };
   }

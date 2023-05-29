@@ -29,6 +29,7 @@ const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extend
       if (visibility === 'private') {
         privateOnlyApi[methodName as keyof PrivateOnlyApi] = (methods as any)[methodName];
         Object.defineProperty(publicApi, methodName, {
+          writable: true,
           enumerable: false,
           value: (methods as any)[methodName],
         });
