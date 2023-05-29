@@ -15,6 +15,7 @@ import {
   useGridApiRef,
   useGridRootProps,
   GridRowModelUpdate,
+  GridRowIdGetter,
 } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses, styled } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -247,6 +248,14 @@ const CUSTOM_GROUPING_COL_DEF: GridGroupingColDefOverride = {
   ),
 };
 
+// Optional
+const getRowId: GridRowIdGetter = (row) => {
+  if (typeof row?.id === 'string' && row?.id.startsWith('placeholder-children-')) {
+    return row.id;
+  }
+  return row.id;
+};
+
 function updateRows(
   apiRef: React.MutableRefObject<GridApi>,
   rows: GridRowModelUpdate[],
@@ -259,7 +268,7 @@ function updateRows(
     if (row.descendantCount && row.descendantCount > 0) {
       // Add a placeholder row to make the row expandable
       rowsToAdd.push({
-        id: `placeholder-children-${row.id}`,
+        id: `placeholder-children-${getRowId(row)}`,
         hierarchy: [...row.hierarchy, ''],
       });
     }
@@ -288,7 +297,7 @@ export default function TreeDataLazyLoading() {
       const childrenRows = await fakeDataFetcher(row.hierarchy);
       updateRows(apiRef, [
         ...childrenRows,
-        { id: node.id, childrenFetched: true },
+        { ...row, childrenFetched: true },
         { id: `placeholder-children-${node.id}`, _action: 'delete' },
       ]);
     };
@@ -309,6 +318,7 @@ export default function TreeDataLazyLoading() {
         getTreeDataPath={getTreeDataPath}
         groupingColDef={CUSTOM_GROUPING_COL_DEF}
         disableChildrenFiltering
+        getRowId={getRowId}
       />
     </div>
   );
