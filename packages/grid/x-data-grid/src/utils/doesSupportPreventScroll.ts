@@ -1,4 +1,3 @@
-
 // Based on https://stackoverflow.com/a/59518678
 let cachedSupportsPreventScroll: boolean;
 export function doesSupportPreventScroll(): boolean {

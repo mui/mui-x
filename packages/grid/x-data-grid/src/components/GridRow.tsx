@@ -25,6 +25,7 @@ import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSele
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
+import { GridCellWrapper } from './cell/GridCell';
 import type { GridCellProps } from './cell/GridCell';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 
@@ -259,8 +260,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
-  const CellComponent = slots.cell;
-
   const getCell = (
     column: GridStateColDef,
     cellProps: Pick<
@@ -276,7 +275,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         Object.keys(editRowsState).length > 0);
 
     return (
-      <CellComponent
+      <GridCellWrapper
         key={column.field}
         column={column}
         width={cellProps.width}
@@ -388,7 +387,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         const contentWidth = Math.round(randomNumber());
 
         cells.push(
-          <rootProps.slots.skeletonCell
+          <slots.skeletonCell
             key={column.field}
             width={width}
             contentWidth={contentWidth}

@@ -10,8 +10,18 @@ import {
 } from '@mui/utils';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import { GridCellEventLookup, GridEvents, GridCellModes, GridRowId } from '../../models';
-import { GridRenderEditCellParams, FocusElement, GridCellParams } from '../../models/params/gridCellParams';
+import {
+  GridCellEventLookup,
+  GridEvents,
+  GridCellModes,
+  GridRowId,
+  GridCellMode,
+} from '../../models';
+import {
+  GridRenderEditCellParams,
+  FocusElement,
+  GridCellParams,
+} from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector, shallowCompare } from '../../hooks/utils/useGridSelector';
@@ -21,7 +31,7 @@ import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusState
 import { gridEditRowsStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export interface GridCellProps {
+export interface GridCellWrapperProps {
   align: GridAlignment;
   className?: string;
   colIndex: number;
@@ -41,6 +51,18 @@ export interface GridCellProps {
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
   [x: string]: any;
 }
+
+export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
+  field: string;
+  formattedValue?: F;
+  hasFocus?: boolean;
+  isEditable?: boolean;
+  isSelected?: boolean;
+  value?: V;
+  cellMode?: GridCellMode;
+  children: React.ReactNode;
+  tabIndex: 0 | -1;
+};
 
 const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
   id: -1,
@@ -92,49 +114,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 let warnedOnce = false;
 
-const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) => {
-  const {
-    align,
-    colIndex,
-    column,
-    height,
-    rowId,
-    width,
-    className,
-    showRightBorder,
-    extendRowFullWidth,
-    row,
-    colSpan,
-    disableDragEvents,
-    onClick,
-    onDoubleClick,
-    onMouseDown,
-    onMouseUp,
-    onMouseOver,
-    onKeyDown,
-    onKeyUp,
-    onDragEnter,
-    onDragOver,
-    ...other
-  } = props;
+const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props, ref) => {
+  const { column, rowId } = props;
 
-  const field = column.field;
-  const cellRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(ref, cellRef);
-  const focusElementRef = React.useRef<FocusElement>(null);
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
-
-  const { classes: rootClasses, getCellClassName } = rootProps;
-
-  const isSelected = useGridSelector(apiRef, () =>
-    apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
-      id: rowId,
-      field,
-    }),
-  );
+  const field = column.field;
 
   const cellParams = useGridSelector(
     apiRef,
@@ -153,6 +139,23 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     },
     shallowCompare,
   );
+
+  const isSelected = useGridSelector(apiRef, () =>
+    apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+      id: rowId,
+      field,
+    }),
+  );
+
+  const { cellMode, hasFocus, isEditable, value, formattedValue } = cellParams;
+
+  const managesOwnFocus = column.type === 'actions';
+  const tabIndex =
+    (cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParams.tabIndex : -1;
+
+  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+
+  const { classes: rootClasses, getCellClassName } = rootProps;
 
   const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
     id: rowId,
@@ -174,54 +177,116 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   }
 
   const editCellState = editRowsState[rowId]?.[column.field] ?? null;
-  const managesOwnFocus = column.type === 'actions';
 
-  const cellMode = cellParams.cellMode;
-  const hasFocus = cellParams.hasFocus;
-  const isEditable = cellParams.isEditable;
-  const valueToRender =
-    cellParams.formattedValue == null ? cellParams.value : cellParams.formattedValue;
+  let children: React.ReactNode;
+  if (editCellState == null && column.renderCell) {
+    children = column.renderCell({ ...cellParams, api: apiRef.current });
+    classNames.push(clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']));
+  }
+
+  if (editCellState != null && column.renderEditCell) {
+    const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
+
+    const params: GridRenderEditCellParams = {
+      ...cellParams,
+      row: updatedRow,
+      ...editCellStateRest,
+      api: apiRef.current,
+    };
+
+    children = column.renderEditCell(params);
+    classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
+  }
+
+  if (cellParams === EMPTY_CELL_PARAMS) return null;
+
+  const { slots, slotProps } = rootProps;
+
+  const CellComponent = slots.cell;
+
+  const cellProps: GridCellProps = Object.assign(
+    {
+      ref,
+      field,
+      formattedValue,
+      hasFocus,
+      isEditable,
+      isSelected,
+      value,
+      cellMode,
+      children,
+      tabIndex,
+    },
+    props,
+    slotProps?.cell,
+  );
+
+  return React.createElement(CellComponent, cellProps);
+});
+
+const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) => {
+  const {
+    align,
+    children: childrenProp,
+    colIndex,
+    column,
+    cellMode,
+    field,
+    formattedValue,
+    hasFocus,
+    height,
+    isEditable,
+    isSelected,
+    rowId,
+    tabIndex,
+    value,
+    width,
+    className,
+    showRightBorder,
+    extendRowFullWidth,
+    row,
+    colSpan,
+    disableDragEvents,
+    onClick,
+    onDoubleClick,
+    onMouseDown,
+    onMouseUp,
+    onMouseOver,
+    onKeyDown,
+    onKeyUp,
+    onDragEnter,
+    onDragOver,
+    ...other
+  } = props;
+
+  const cellRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, cellRef);
+  const focusElementRef = React.useRef<FocusElement>(null);
+  const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
+
+  const managesOwnFocus = column.type === 'actions';
 
   const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
   const classes = useUtilityClasses(ownerState);
 
-  let children: React.ReactNode;
-  /* eslint-disable-next-line no-lone-blocks */
-  {
-    if (editCellState == null && column.renderCell) {
-      children = column.renderCell({ ...cellParams, api: apiRef.current });
-      classNames.push(clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']));
-    }
+  const valueToRender = formattedValue == null ? value : formattedValue;
 
-    if (editCellState != null && column.renderEditCell) {
-      const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
+  let children: React.ReactNode = childrenProp;
+  if (children === undefined) {
+    const valueString = valueToRender?.toString();
+    children = (
+      <div className={classes.content} title={valueString}>
+        {valueString}
+      </div>
+    );
+  }
 
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
-
-      const params: GridRenderEditCellParams = {
-        ...cellParams,
-        row: updatedRow,
-        ...editCellStateRest,
-        api: apiRef.current,
-      };
-
-      children = column.renderEditCell(params);
-      classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
-    }
-
-    if (children === undefined) {
-      const valueString = valueToRender?.toString();
-      children = (
-        <div className={classes.content} title={valueString}>
-          {valueString}
-        </div>
-      );
-    }
-
-    if (React.isValidElement(children) && managesOwnFocus) {
-      children = React.cloneElement<any>(children, { focusElementRef });
-    }
+  if (React.isValidElement(children) && managesOwnFocus) {
+    children = React.cloneElement<any>(children, { focusElementRef });
   }
 
   const publishMouseUp = React.useCallback(
@@ -324,9 +389,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     };
   }
 
-  if (cellParams === EMPTY_CELL_PARAMS)
-    return null;
-
   const draggableEventHandlers = disableDragEvents
     ? null
     : {
@@ -337,14 +399,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   return (
     <div
       ref={handleRef}
-      className={clsx(className, classes.root, ...classNames)}
+      className={clsx(className, classes.root)}
       role="cell"
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
       aria-colspan={colSpan}
       style={style}
-      tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParams.tabIndex : -1}
+      tabIndex={tabIndex}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
       onMouseOver={publish('cellMouseOver', onMouseOver)}
@@ -361,9 +423,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   );
 });
 
-const MemoizedCell = React.memo(GridCell);
+const MemoizedCellWrapper = React.memo(GridCellWrapper);
 
-GridCell.propTypes = {
+GridCellWrapper.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -387,4 +449,37 @@ GridCell.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { MemoizedCell as GridCell };
+GridCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  align: PropTypes.oneOf(['center', 'left', 'right']),
+  cellMode: PropTypes.oneOf(['edit', 'view']),
+  children: PropTypes.node,
+  className: PropTypes.string,
+  colIndex: PropTypes.number,
+  colSpan: PropTypes.number,
+  column: PropTypes.object,
+  disableDragEvents: PropTypes.bool,
+  field: PropTypes.string,
+  formattedValue: PropTypes.any,
+  hasFocus: PropTypes.bool,
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  isEditable: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onDragEnter: PropTypes.func,
+  onDragOver: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  showRightBorder: PropTypes.bool,
+  tabIndex: PropTypes.oneOf([-1, 0]),
+  value: PropTypes.any,
+  width: PropTypes.number,
+} as any;
+
+export { MemoizedCellWrapper as GridCellWrapper, GridCell };
