@@ -16,7 +16,7 @@ import {
   useGridRootProps,
   GridRowModelUpdate,
 } from '@mui/x-data-grid-pro';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses, styled } from '@mui/material';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
@@ -162,6 +162,13 @@ const fakeDataFetcher = (parentPath: string[] = []) =>
     }, 500 + Math.random() * 300);
   });
 
+const LoadingContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '100%',
+});
+
 const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.hierarchy;
 
 const useUtilityClasses = (ownerState: { classes: DataGridProProps['classes'] }) => {
@@ -207,7 +214,9 @@ function GroupingCellWithLazyLoading(props: GroupingCellWithLazyLoadingProps) {
       <div className={classes.toggle}>
         {row.descendantCount > 0 &&
           (isLoading ? (
-            <CircularProgress size="1.5rem" />
+            <LoadingContainer>
+              <CircularProgress size="1rem" color="inherit" />
+            </LoadingContainer>
           ) : (
             <IconButton
               size="small"
