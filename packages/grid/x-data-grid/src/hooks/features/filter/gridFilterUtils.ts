@@ -234,6 +234,9 @@ const buildAggregatedFilterItemsApplier = (
     const applier = appliers[0];
     const applierFn = applier.fn;
 
+    const applierCall = applier.v7
+      ? 'applierFn(row)'
+      : 'applierFn(getRowId ? getRowId(row) : row.id)';
     const fn = eval(`
       (row, shouldApplyFilter) => {
         // ${applierFn.name} <- Keep a ref, prevent the bundler from optimizing away
@@ -241,9 +244,7 @@ const buildAggregatedFilterItemsApplier = (
         if (shouldApplyFilter && !shouldApplyFilter(applier.item.field)) {
           return { '${applier.item.id!}': false };
         }
-        return { '${applier.item.id!}': ${
-      applier.v7 ? 'applierFn(row)' : 'applierFn(getRowId ? getRowId(row) : row.id)'
-    } };
+        return { '${applier.item.id!}': ${applierCall} };
       }
     `);
 
@@ -286,10 +287,10 @@ const buildAggregatedQuickFilterApplier = (
 
   const appliersPerField = [] as {
     field: string;
-    column: GridColDef,
+    column: GridColDef;
     appliers: {
       v7: boolean;
-      fn: (null | ((...args: any[]) => boolean));
+      fn: null | ((...args: any[]) => boolean);
     }[];
   }[];
 
@@ -307,8 +308,7 @@ const buildAggregatedQuickFilterApplier = (
           fn: getApplyQuickFilterFnV7(value, column, apiRef),
         })),
       });
-    }
-    else if (getApplyQuickFilterFn) {
+    } else if (getApplyQuickFilterFn) {
       appliersPerField.push({
         field,
         column,
@@ -321,7 +321,6 @@ const buildAggregatedQuickFilterApplier = (
   });
 
   return (row, shouldApplyFilter) => {
-
     const result = {} as GridQuickFilterValueResult;
     const usedCellParams = {} as { [field: string]: GridCellParams };
 
@@ -345,25 +344,24 @@ const buildAggregatedQuickFilterApplier = (
         if (applier.v7) {
           const isMatching = applier.fn(value, row, column, apiRef);
           if (isMatching) {
-            result[filterValue] = true
+            result[filterValue] = true;
             continue outer;
           }
         } else {
-          const cellParams = usedCellParams[field] ?? apiRef.current.getCellParams(
-            getRowId ? getRowId(row) : row.id,
-            field,
-          );
+          const cellParams =
+            usedCellParams[field] ??
+            apiRef.current.getCellParams(getRowId ? getRowId(row) : row.id, field);
           usedCellParams[field] = cellParams;
 
           const isMatching = applier.fn(cellParams);
           if (isMatching) {
-            result[filterValue] = true
+            result[filterValue] = true;
             continue outer;
           }
         }
       }
 
-      result[filterValue] = false
+      result[filterValue] = false;
     }
 
     return result;

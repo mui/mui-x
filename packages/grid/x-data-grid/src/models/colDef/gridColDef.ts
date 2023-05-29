@@ -32,8 +32,12 @@ export type ValueOptions = string | number | { value: any; label: string } | Rec
  */
 export type GridKeyValue = string | number | boolean;
 
-export type GridApplyQuickFilterV7<R extends GridValidRowModel = GridValidRowModel, V = any> =
-  (value: V, row: R, column: GridColDef, apiRef: React.MutableRefObject<GridApiCommunity>) => boolean;
+export type GridApplyQuickFilterV7<R extends GridValidRowModel = GridValidRowModel, V = any> = (
+  value: V,
+  row: R,
+  column: GridColDef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => boolean;
 
 /**
  * Column Definition base interface.
