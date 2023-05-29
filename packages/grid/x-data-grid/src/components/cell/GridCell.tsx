@@ -265,32 +265,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     ...other
   } = props;
 
+  const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const focusElementRef = React.useRef<FocusElement>(null);
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-
-  const managesOwnFocus = column.type === 'actions';
-
   const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
   const classes = useUtilityClasses(ownerState);
-
-  const valueToRender = formattedValue == null ? value : formattedValue;
-
-  let children: React.ReactNode = childrenProp;
-  if (children === undefined) {
-    const valueString = valueToRender?.toString();
-    children = (
-      <div className={classes.content} title={valueString}>
-        {valueString}
-      </div>
-    );
-  }
-
-  if (React.isValidElement(children) && managesOwnFocus) {
-    children = React.cloneElement<any>(children, { focusElementRef });
-  }
 
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
@@ -390,6 +372,22 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         warnedOnce = true;
       }
     };
+  }
+
+  const managesOwnFocus = column.type === 'actions';
+
+  let children: React.ReactNode = childrenProp;
+  if (children === undefined) {
+    const valueString = valueToRender?.toString();
+    children = (
+      <div className={classes.content} title={valueString}>
+        {valueString}
+      </div>
+    );
+  }
+
+  if (React.isValidElement(children) && managesOwnFocus) {
+    children = React.cloneElement<any>(children, { focusElementRef });
   }
 
   const draggableEventHandlers = disableDragEvents
