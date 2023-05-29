@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { OutputSelector } from '../../utils/createSelector';
+import { useLazyRef } from '../../hooks/utils/useLazyRef';
 import { buildWarning } from '../../utils/warning';
 import { fastShallowCompare } from '../../utils/fastShallowCompare';
 
@@ -9,6 +10,7 @@ const stateNotInitializedWarning = buildWarning([
   'This hook can only be used inside the context of the grid.',
 ]);
 
+const noop = () => {};
 const EMPTY = [] as unknown[];
 
 function isOutputSelector<Api extends GridApiCommon, T>(
@@ -30,6 +32,8 @@ export function applySelector<Api extends GridApiCommon, T>(
 export const defaultCompare = Object.is;
 export const shallowCompare = fastShallowCompare;
 
+const createRefs = () => ({ state: null, equals: null, selector: null } as any);
+
 export const useGridSelector = <Api extends GridApiCommon, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: ((state: Api['state']) => T) | OutputSelector<Api['state'], T>,
@@ -41,26 +45,41 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
     }
   }
 
-  const selectorRef = React.useRef<typeof selector>();
-  const [state, setState] = React.useState<T>(
-    (selectorRef.current ? null : applySelector(apiRef, selector)) as T,
-  );
-  const stateRef = React.useRef<T>(state);
+  const refs = useLazyRef<
+    {
+      state: T;
+      equals: typeof equals;
+      selector: typeof selector;
+    },
+    never
+  >(createRefs);
 
-  stateRef.current = state;
-  selectorRef.current = selector;
+  const didInit = refs.current.state !== null;
+
+  const [state, setState] = React.useState<T>(
+    (didInit ? null : applySelector(apiRef, selector)) as T,
+  );
 
   /* eslint-disable react-hooks/exhaustive-deps */
-  React.useEffect(() => {
-    return apiRef.current.store.subscribe(() => {
-      const newState = applySelector(apiRef, selectorRef.current!);
-      if (!equals(stateRef.current, newState)) {
-        stateRef.current = newState;
-        setState(newState);
-      }
-    });
-  }, EMPTY);
+  React.useEffect(
+    didInit
+      ? noop
+      : () => {
+          return apiRef.current.store.subscribe(() => {
+            const newState = applySelector(apiRef, refs.current.selector);
+            if (!equals(refs.current.state, newState)) {
+              refs.current.state = newState;
+              setState(newState);
+            }
+          });
+        },
+    EMPTY,
+  );
   /* eslint-enable react-hooks/exhaustive-deps */
+
+  refs.current.state = state;
+  refs.current.equals = equals;
+  refs.current.selector = selector;
 
   return state;
 };
