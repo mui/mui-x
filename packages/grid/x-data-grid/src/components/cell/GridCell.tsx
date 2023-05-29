@@ -114,6 +114,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 let warnedOnce = false;
 
+// TODO(v7): Remove the wrapper, merge with the cell component
 const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props, ref) => {
   const { column, rowId } = props;
 
