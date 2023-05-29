@@ -5,6 +5,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -44,6 +45,32 @@ export const filterStateInitializer: GridStateInitializer<
     },
   };
 };
+
+export const visibleRowsStateInitializer: GridStateInitializer = (state) => {
+  return {
+    ...state,
+    visibleRows: {
+      lookup: {},
+    },
+  };
+};
+
+const getVisibleRows: GridStrategyProcessor<'visibleRows'> = (params) => {
+  // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
+  return {
+    lookup: params.filteredRowsLookup,
+  };
+};
+
+function getVisibleRowsState(
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  state: GridStateCommunity,
+) {
+  return apiRef.current.applyStrategyProcessor('visibleRows', {
+    tree: state.rows.tree,
+    filteredRowsLookup: state.filter.filteredRowsLookup,
+  });
+}
 
 /**
  * @requires useGridColumns (method, event)
@@ -85,12 +112,19 @@ export const useGridFilter = (
         filterModel: filterModel ?? getDefaultGridFilterModel(),
       });
 
-      return {
+      const newState = {
         ...state,
         filter: {
           ...state.filter,
           ...filteringResult,
         },
+      };
+
+      const visibleRowsState = getVisibleRowsState(apiRef, newState);
+
+      return {
+        ...newState,
+        visibleRows: visibleRowsState,
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
@@ -401,6 +435,7 @@ export const useGridFilter = (
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'filtering', flatFilteringMethod);
+  useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'visibleRows', getVisibleRows);
 
   /**
    * EVENTS
@@ -428,11 +463,22 @@ export const useGridFilter = (
     [apiRef],
   );
 
+  const updateVisibleRowsState = React.useCallback(() => {
+    apiRef.current.setState((state) => {
+      return {
+        ...state,
+        visibleRows: getVisibleRowsState(apiRef, state),
+      };
+    });
+    apiRef.current.forceUpdate();
+  }, [apiRef]);
+
   // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
   // Otherwise, the state is not consistent during the render
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsState);
 
   /**
    * 1ST RENDER

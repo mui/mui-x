@@ -60,7 +60,6 @@ import {
   columnGroupsStateInitializer,
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
-  useGridVisibleRowsState,
   visibleRowsStateInitializer,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
@@ -148,7 +147,6 @@ export const useDataGridPremiumComponent = (
   useGridRowPinning(privateApiRef, props);
   useGridColumns(privateApiRef, props);
   useGridRows(privateApiRef, props);
-  useGridVisibleRowsState(privateApiRef);
   useGridParamsApi(privateApiRef);
   useGridDetailPanel(privateApiRef, props);
   useGridColumnSpanning(privateApiRef);

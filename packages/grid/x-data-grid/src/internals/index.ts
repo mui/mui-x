@@ -51,7 +51,11 @@ export type {
 export { useGridDensity, densityStateInitializer } from '../hooks/features/density/useGridDensity';
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
-export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+export {
+  useGridFilter,
+  filterStateInitializer,
+  visibleRowsStateInitializer,
+} from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
@@ -82,10 +86,6 @@ export type {
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
-export {
-  useGridVisibleRowsState,
-  visibleRowsStateInitializer,
-} from '../hooks/features/rows/useGridVisibleRowsState';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
 export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
 export {

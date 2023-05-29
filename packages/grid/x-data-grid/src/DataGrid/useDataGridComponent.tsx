@@ -11,7 +11,11 @@ import { useGridColumns, columnsStateInitializer } from '../hooks/features/colum
 import { densityStateInitializer, useGridDensity } from '../hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 import { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
-import { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+import {
+  useGridFilter,
+  filterStateInitializer,
+  visibleRowsStateInitializer,
+} from '../hooks/features/filter/useGridFilter';
 import { focusStateInitializer, useGridFocus } from '../hooks/features/focus/useGridFocus';
 import { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 import {
@@ -36,10 +40,6 @@ import { useGridScroll } from '../hooks/features/scroll/useGridScroll';
 import { useGridEvents } from '../hooks/features/events/useGridEvents';
 import { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
-import {
-  useGridVisibleRowsState,
-  visibleRowsStateInitializer,
-} from '../hooks/features/rows/useGridVisibleRowsState';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 import {
@@ -84,7 +84,6 @@ export const useDataGridComponent = (
   useGridRowSelection(privateApiRef, props);
   useGridColumns(privateApiRef, props);
   useGridRows(privateApiRef, props);
-  useGridVisibleRowsState(privateApiRef);
   useGridParamsApi(privateApiRef);
   useGridColumnSpanning(privateApiRef);
   useGridColumnGrouping(privateApiRef, props);

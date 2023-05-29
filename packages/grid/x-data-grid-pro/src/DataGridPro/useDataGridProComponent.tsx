@@ -40,7 +40,6 @@ import {
   rowSelectionStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
-  useGridVisibleRowsState,
   visibleRowsStateInitializer,
   headerFilteringStateInitializer,
   useGridHeaderFiltering,
@@ -131,7 +130,6 @@ export const useDataGridProComponent = (
   useGridRowPinning(apiRef, props);
   useGridColumns(apiRef, props);
   useGridRows(apiRef, props);
-  useGridVisibleRowsState(apiRef);
   useGridParamsApi(apiRef);
   useGridDetailPanel(apiRef, props);
   useGridColumnSpanning(apiRef);
