@@ -62,14 +62,15 @@ describe('<DigitalClock /> - Describes', () => {
       }
     },
     setNewValue: (value) => {
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 30);
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const formattedLabel = adapterToUse.format(
-        value,
+        newValue,
         hasMeridiem ? 'fullTime12h' : 'fullTime24h',
       );
       userEvent.mousePress(screen.getByRole('option', { name: formattedLabel }));
 
-      return value;
+      return newValue;
     },
   }));
 });

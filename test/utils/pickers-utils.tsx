@@ -366,6 +366,7 @@ export type FieldSectionSelector = (
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
     props: P,
+    hook?: (props: P) => Record<string, any>,
     componentFamily?: 'picker' | 'field',
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     input: HTMLInputElement;
@@ -419,13 +420,19 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  const renderWithProps = (props: P, componentFamily: 'picker' | 'field' = 'field') => {
+  const renderWithProps: BuildFieldInteractionsResponse<P>['renderWithProps'] = (
+    props,
+    hook,
+    componentFamily = 'field',
+  ) => {
     let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
 
     function WrappedComponent() {
       fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+      const hookResult = hook?.(props);
       const allProps = {
         ...props,
+        ...hookResult,
       } as any;
 
       if (componentFamily === 'field') {
@@ -615,13 +622,40 @@ export class MockedDataTransfer implements DataTransfer {
   }
 }
 
-export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily) => {
   switch (componentFamily) {
     case 'clock':
-      return 2;
     case 'multi-section-digital-clock':
       return 3;
     default:
       return 1;
   }
+};
+
+export const getExpectedOnChangeCount = (
+  componentFamily: PickerComponentFamily,
+  params: OpenPickerParams,
+) => {
+  if (componentFamily === 'digital-clock') {
+    return getChangeCountForComponentFamily(componentFamily);
+  }
+  if (params.type === 'date-time') {
+    return (
+      getChangeCountForComponentFamily(componentFamily) +
+      getChangeCountForComponentFamily(
+        params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+      )
+    );
+  }
+  if (componentFamily === 'picker' && params.type === 'time') {
+    return getChangeCountForComponentFamily(
+      params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+    );
+  }
+  if (componentFamily === 'clock') {
+    // the `TimeClock` fires change for both touch move and touch end
+    // but does not have meridiem control
+    return (getChangeCountForComponentFamily(componentFamily) - 1) * 2;
+  }
+  return getChangeCountForComponentFamily(componentFamily);
 };

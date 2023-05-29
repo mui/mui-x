@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { DateOrTimeView, DateTimeValidationError } from '../models';
+import { DateTimeValidationError } from '../models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   DateCalendarSlotsComponent,
@@ -36,7 +36,7 @@ import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
-import { TimeViewWithMeridiem } from '../internals/models';
+import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../internals/models';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -66,8 +66,8 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
   toolbar?: ExportedDateTimePickerToolbarProps;
 }
 
-export interface BaseDateTimePickerProps<TDate>
-  extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
+export interface BaseDateTimePickerProps<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends BasePickerInputProps<TDate | null, TDate, TView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedBaseClockProps<TDate>,
     DateTimeValidationProps<TDate> {
@@ -106,8 +106,8 @@ export interface BaseDateTimePickerProps<TDate>
   viewRenderers?: Partial<
     PickerViewRendererLookup<
       TDate | null,
-      DateOrTimeView,
-      DateViewRendererProps<TDate, DateOrTimeView> &
+      TView,
+      DateViewRendererProps<TDate, TView> &
         TimeViewRendererProps<TimeViewWithMeridiem, BaseClockProps<TDate, TimeViewWithMeridiem>>,
       {}
     >
@@ -116,7 +116,8 @@ export interface BaseDateTimePickerProps<TDate>
 
 type UseDateTimePickerDefaultizedProps<
   TDate,
-  Props extends BaseDateTimePickerProps<TDate>,
+  TView extends DateOrTimeViewWithMeridiem,
+  Props extends BaseDateTimePickerProps<TDate, TView>,
 > = LocalizedComponent<
   TDate,
   DefaultizedProps<
@@ -132,11 +133,12 @@ type UseDateTimePickerDefaultizedProps<
 
 export function useDateTimePickerDefaultizedProps<
   TDate,
-  Props extends BaseDateTimePickerProps<TDate>,
+  TView extends DateOrTimeViewWithMeridiem,
+  Props extends BaseDateTimePickerProps<TDate, TView>,
 >(
   props: Props,
   name: string,
-): Omit<UseDateTimePickerDefaultizedProps<TDate, Props>, 'components' | 'componentsProps'> {
+): Omit<UseDateTimePickerDefaultizedProps<TDate, TView, Props>, 'components' | 'componentsProps'> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -164,8 +166,8 @@ export function useDateTimePickerDefaultizedProps<
     ...applyDefaultViewProps({
       views: themeProps.views,
       openTo: themeProps.openTo,
-      defaultViews: ['year', 'day', 'hours', 'minutes'],
-      defaultOpenTo: 'day',
+      defaultViews: ['year', 'day', 'hours', 'minutes'] as TView[],
+      defaultOpenTo: 'day' as TView,
     }),
     ampm,
     localeText,

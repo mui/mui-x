@@ -5,25 +5,26 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Time, DateRange } from '../internals/components/icons';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
   DateTimePickerTabsClasses,
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import { isDatePickerView } from '../internals/utils/date-utils';
 
 type TabValue = 'date' | 'time';
 
-const viewToTab = (view: DateOrTimeView): TabValue => {
-  if (['day', 'month', 'year'].includes(view)) {
+const viewToTab = (view: DateOrTimeViewWithMeridiem): TabValue => {
+  if (isDatePickerView(view)) {
     return 'date';
   }
 
   return 'time';
 };
 
-const tabToView = (tab: TabValue): DateOrTimeView => {
+const tabToView = (tab: TabValue): DateOrTimeViewWithMeridiem => {
   if (tab === 'date') {
     return 'day';
   }
@@ -51,7 +52,7 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
 
 export interface DateTimePickerTabsProps
   extends ExportedDateTimePickerTabsProps,
-    BaseTabsProps<DateOrTimeView> {
+    BaseTabsProps<DateOrTimeViewWithMeridiem> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -158,7 +159,8 @@ DateTimePickerTabs.propTypes = {
   /**
    * Currently visible picker view.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year'])
+    .isRequired,
 } as any;
 
 export { DateTimePickerTabs };
