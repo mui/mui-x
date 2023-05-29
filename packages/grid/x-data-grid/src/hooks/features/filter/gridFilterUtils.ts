@@ -284,55 +284,89 @@ const buildAggregatedQuickFilterApplier = (
 
   const columnsFields = gridColumnFieldsSelector(apiRef);
 
-  const appliersPerField: {
-    [field: string]: (null | ((params: GridCellParams) => boolean))[];
-  } = {};
+  const appliersPerField = [] as {
+    field: string;
+    column: GridColDef,
+    appliers: {
+      v7: boolean;
+      fn: (null | ((...args: any[]) => boolean));
+    }[];
+  }[];
+
   columnsFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
-    if (!getApplyQuickFilterFn) {
-      return;
+    const getApplyQuickFilterFnV7 = column?.getApplyQuickFilterFnV7;
+
+    if (getApplyQuickFilterFnV7) {
+      appliersPerField.push({
+        field,
+        column,
+        appliers: quickFilterValues.map((value) => ({
+          v7: true,
+          fn: getApplyQuickFilterFnV7(value, column, apiRef),
+        })),
+      });
     }
-    appliersPerField[field] = quickFilterValues.map((value) =>
-      getApplyQuickFilterFn(value, column, apiRef),
-    );
+    else if (getApplyQuickFilterFn) {
+      appliersPerField.push({
+        field,
+        column,
+        appliers: quickFilterValues.map((value) => ({
+          v7: false,
+          fn: getApplyQuickFilterFn(value, column, apiRef),
+        })),
+      });
+    }
   });
 
-  // If some value does not have an applier we ignore them
-  const sanitizedQuickFilterValues = quickFilterValues.filter((value, index) =>
-    Object.keys(appliersPerField).some((field) => appliersPerField[field][index] != null),
-  );
-
-  if (sanitizedQuickFilterValues.length === 0) {
-    return null;
-  }
-
   return (row, shouldApplyFilter) => {
-    const usedCellParams: { [field: string]: GridCellParams } = {};
-    const fieldsToFilter: string[] = [];
 
-    Object.keys(appliersPerField).forEach((field) => {
-      if (!shouldApplyFilter || shouldApplyFilter(field)) {
-        usedCellParams[field] = apiRef.current.getCellParams(
-          getRowId ? getRowId(row) : row.id,
-          field,
-        );
-        fieldsToFilter.push(field);
-      }
-    });
+    const result = {} as GridQuickFilterValueResult;
+    const usedCellParams = {} as { [field: string]: GridCellParams };
 
-    const quickFilterValueResult: GridQuickFilterValueResult = {};
-    sanitizedQuickFilterValues.forEach((value, index) => {
-      const isPassing = fieldsToFilter.some((field) => {
-        if (appliersPerField[field][index] == null) {
-          return false;
+    outer: for (let v = 0; v < quickFilterValues.length; v += 1) {
+      const filterValue = quickFilterValues[v];
+
+      for (let i = 0; i < appliersPerField.length; i += 1) {
+        const { field, column, appliers } = appliersPerField[i];
+
+        if (shouldApplyFilter && !shouldApplyFilter(field)) {
+          continue;
         }
-        return appliersPerField[field][index]?.(usedCellParams[field]);
-      });
-      quickFilterValueResult[value] = isPassing;
-    });
 
-    return quickFilterValueResult;
+        const applier = appliers[v];
+        const value = apiRef.current.getRowValue(row, column);
+
+        if (applier.fn === null) {
+          continue;
+        }
+
+        if (applier.v7) {
+          const isMatching = applier.fn(value, row, column, apiRef);
+          if (isMatching) {
+            result[filterValue] = true
+            continue outer;
+          }
+        } else {
+          const cellParams = usedCellParams[field] ?? apiRef.current.getCellParams(
+            getRowId ? getRowId(row) : row.id,
+            field,
+          );
+          usedCellParams[field] = cellParams;
+
+          const isMatching = applier.fn(cellParams);
+          if (isMatching) {
+            result[filterValue] = true
+            continue outer;
+          }
+        }
+      }
+
+      result[filterValue] = false
+    }
+
+    return result;
   };
 };
 

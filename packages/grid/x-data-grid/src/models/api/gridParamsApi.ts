@@ -22,6 +22,14 @@ export interface GridParamsApi {
    */
   getRowValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
   /**
+   * Gets the formatted value of a row
+   * @template V
+   * @param {GridRowModel} row The row model.
+   * @param {GridColDef} field The column definition.
+   * @returns {v} The cell value.
+   */
+  getRowFormattedValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
+  /**
    * Gets the underlying DOM element for a cell at the given `id` and `field`.
    * @param {GridRowId} id The id of the row.
    * @param {string} field The column field.

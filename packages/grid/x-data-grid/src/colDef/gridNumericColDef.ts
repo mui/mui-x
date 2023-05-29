@@ -13,5 +13,5 @@ export const GRID_NUMERIC_COL_DEF: GridColTypeDef<number | string | null, string
   valueParser: (value) => (value === '' ? null : Number(value)),
   valueFormatter: ({ value }) => (isNumber(value) ? value.toLocaleString() : value || ''),
   filterOperators: getGridNumericOperators(),
-  getApplyQuickFilterFn: getGridNumericQuickFilterFn,
+  getApplyQuickFilterFnV7: getGridNumericQuickFilterFn,
 };

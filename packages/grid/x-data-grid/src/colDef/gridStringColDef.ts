@@ -24,5 +24,5 @@ export const GRID_STRING_COL_DEF: GridColTypeDef<any, any> = {
   align: 'left',
   filterOperators: getGridStringOperators(),
   renderEditCell: renderEditInputCell,
-  getApplyQuickFilterFn: getGridStringQuickFilterFn,
+  getApplyQuickFilterFnV7: getGridStringQuickFilterFn,
 };

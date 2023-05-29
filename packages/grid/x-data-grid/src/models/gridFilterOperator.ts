@@ -3,11 +3,13 @@ import { GridFilterItem } from './gridFilterItem';
 import { GridCellParams } from './params/gridCellParams';
 import type { GridColDef } from './colDef/gridColDef';
 import type { GridValidRowModel } from './gridRows';
+import type { GridApiCommunity } from './api/gridApiCommunity';
 
-export type ApplyFilterV7<R extends GridValidRowModel = any, V = any, F = V> = (
+export type GridApplyFilterV7<R extends GridValidRowModel = any, V = any, F = V> = (
   value: V,
   row: R,
   column: GridColDef<R, V, F>,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => boolean;
 
 type ApplyFilterInterface<R extends GridValidRowModel = any, V = any, F = V> =
@@ -35,7 +37,7 @@ type ApplyFilterInterface<R extends GridValidRowModel = any, V = any, F = V> =
       getApplyFilterFnV7: (
         filterItem: GridFilterItem,
         column: GridColDef<R, V, F>,
-      ) => null | ApplyFilterV7<R, V, F>;
+      ) => null | GridApplyFilterV7<R, V, F>;
     };
 
 /**

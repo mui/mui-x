@@ -1,7 +1,7 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import { GridCellParams } from '../models';
+import type { GridApplyQuickFilterV7 } from '../models/colDef/gridColDef';
 
 const parseNumericValue = (value: unknown) => {
   if (value == null) {
@@ -11,12 +11,12 @@ const parseNumericValue = (value: unknown) => {
   return Number(value);
 };
 
-export const getGridNumericQuickFilterFn = (value: any) => {
+export const getGridNumericQuickFilterFn = (value: any): GridApplyQuickFilterV7 | null => {
   if (value == null || Number.isNaN(value) || value === '') {
     return null;
   }
 
-  return ({ value: columnValue }: GridCellParams): boolean => {
+  return (columnValue, _, __, ___): boolean => {
     return parseNumericValue(columnValue) === parseNumericValue(value);
   };
 };
@@ -33,7 +33,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         return parseNumericValue(value) === filterItem.value;
       };
     },
@@ -47,7 +47,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         return parseNumericValue(value) !== filterItem.value;
       };
     },
@@ -61,7 +61,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         if (value == null) {
           return false;
         }
@@ -79,7 +79,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         if (value == null) {
           return false;
         }
@@ -97,7 +97,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         if (value == null) {
           return false;
         }
@@ -115,7 +115,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         if (value == null) {
           return false;
         }
@@ -129,7 +129,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
   {
     value: 'isEmpty',
     getApplyFilterFnV7: () => {
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         return value == null;
       };
     },
@@ -138,7 +138,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
   {
     value: 'isNotEmpty',
     getApplyFilterFnV7: () => {
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         return value != null;
       };
     },
@@ -151,7 +151,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return null;
       }
 
-      return (value, _, __): boolean => {
+      return (value, _, __, ___): boolean => {
         return value != null && filterItem.value.includes(Number(value));
       };
     },

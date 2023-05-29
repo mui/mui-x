@@ -174,6 +174,24 @@ export function useGridParamsApi(
     [apiRef, getBaseCellParams, getRowId],
   );
 
+  const getRowFormattedValue = React.useCallback<GridParamsApi['getRowFormattedValue']>(
+    (row, colDef) => {
+      const value = getRowValue(row, colDef);
+
+      if (!colDef || !colDef.valueFormatter) {
+        return value;
+      }
+
+      return colDef.valueFormatter({
+        id: getRowId ? getRowId(row) : row.id,
+        field: colDef.field,
+        value: value,
+        api: apiRef.current,
+      });
+    },
+    [apiRef, getBaseCellParams, getRowId, getRowValue],
+  );
+
   const getColumnHeaderElement = React.useCallback<GridParamsApi['getColumnHeaderElement']>(
     (field) => {
       if (!apiRef.current.rootElementRef!.current) {
@@ -205,6 +223,7 @@ export function useGridParamsApi(
 
   const paramsApi: GridParamsApi = {
     getRowValue,
+    getRowFormattedValue,
     getCellValue,
     getCellParams,
     getCellElement,
