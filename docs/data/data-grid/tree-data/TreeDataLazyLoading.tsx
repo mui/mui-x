@@ -256,10 +256,10 @@ const CUSTOM_GROUPING_COL_DEF: GridGroupingColDefOverride = {
 
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
-  const [rows, setRows] = React.useState<GridRowsProp>([]);
+  const [rows] = React.useState<GridRowsProp>([]);
 
   React.useEffect(() => {
-    fakeDataFetcher().then(setRows);
+    fakeDataFetcher().then(apiRef.current.updateRows);
 
     const handleRowExpansionChange: GridEventListener<'rowExpansionChange'> = async (
       node,
