@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
@@ -31,7 +32,7 @@ const defaultProps = {
   tickSize: 6,
 } as const;
 
-export function YAxis(inProps: YAxisProps) {
+function YAxis(inProps: YAxisProps) {
   const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiYAxis' });
   const {
     yAxis: {
@@ -69,6 +70,7 @@ export function YAxis(inProps: YAxisProps) {
       {!disableLine && (
         <Line y1={yScale.range()[0]} y2={yScale.range()[1]} className={classes.line} />
       )}
+
       {yTicks.map(({ value, offset }, index) => (
         <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
           {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
@@ -83,6 +85,7 @@ export function YAxis(inProps: YAxisProps) {
           </TickLabel>
         </g>
       ))}
+
       {label && (
         <Label
           transform={`translate(${positionSigne * (tickFontSize + tickSize + 20)}, ${
@@ -99,3 +102,63 @@ export function YAxis(inProps: YAxisProps) {
     </g>
   );
 }
+
+YAxis.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Id of the axis to render.
+   */
+  axisId: PropTypes.string.isRequired,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * If true, the axis line is disabled.
+   * @default false
+   */
+  disableLine: PropTypes.bool,
+  /**
+   * If true, the ticks are disabled.
+   * @default false
+   */
+  disableTicks: PropTypes.bool,
+  /**
+   * The fill color of the axis text.
+   * @default 'currentColor'
+   */
+  fill: PropTypes.string,
+  /**
+   * The label of the axis.
+   */
+  label: PropTypes.string,
+  /**
+   * The font size of the axis label.
+   * @default 14
+   */
+  labelFontSize: PropTypes.number,
+  /**
+   * Position of the axis.
+   */
+  position: PropTypes.oneOf(['left', 'right']),
+  /**
+   * The stroke color of the axis line.
+   * @default 'currentColor'
+   */
+  stroke: PropTypes.string,
+  /**
+   * The font size of the axis ticks text.
+   * @default 12
+   */
+  tickFontSize: PropTypes.number,
+  /**
+   * The size of the ticks.
+   * @default 6
+   */
+  tickSize: PropTypes.number,
+} as any;
+
+export { YAxis };

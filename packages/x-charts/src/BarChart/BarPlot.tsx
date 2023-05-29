@@ -19,7 +19,7 @@ export function BarPlot() {
 
   return (
     <React.Fragment>
-      {stackingGroups.flatMap((groupIds, groupIndex) => {
+      {stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
         return groupIds.flatMap((seriesId) => {
           const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
           const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;

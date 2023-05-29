@@ -92,11 +92,21 @@ On the examples below, you can see that the typing of the props received by a cu
 ```tsx
 interface JoyDateFieldProps
   extends UseDateFieldProps<Dayjs>, // The headless field props
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {} // The DOM field props
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateValidationError
+    > {} // The DOM field props
 
 interface JoyDateTimeFieldProps
   extends UseDateTimeFieldProps<Dayjs>, // The headless field props
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateTimeValidationError> {} // The DOM field props
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateTimeValidationError
+    > {} // The DOM field props
 ```
 
 ### The headless field props

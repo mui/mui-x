@@ -13,7 +13,12 @@ import { RangeFieldSection } from './fields';
 
 export interface UseDateTimeRangeFieldProps<TDate>
   extends MakeOptional<
-      UseFieldInternalProps<DateRange<TDate>, RangeFieldSection, DateTimeRangeValidationError>,
+      UseFieldInternalProps<
+        DateRange<TDate>,
+        TDate,
+        RangeFieldSection,
+        DateTimeRangeValidationError
+      >,
       'format'
     >,
     DayRangeValidationProps<TDate>,
