@@ -3,13 +3,19 @@ import { Dayjs } from 'dayjs';
 import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DateRange as DateRangeIcon } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   DateRangePicker,
   DateRangePickerProps,
 } from '@mui/x-date-pickers-pro/DateRangePicker';
+import {
+  unstable_useSingleInputDateRangeField as useSingleInputDateRangeField,
+  SingleInputDateRangeFieldProps,
+} from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
@@ -28,7 +34,8 @@ import {
   FieldSection,
 } from '@mui/x-date-pickers-pro';
 
-interface BrowserFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface BrowserFieldProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: React.ReactNode;
   InputProps?: {
     ref?: React.Ref<any>;
@@ -65,12 +72,92 @@ const BrowserField = React.forwardRef(
         ref={containerRef}
       >
         {startAdornment}
-        <input disabled={disabled} ref={inputRef} {...other} />
+        <input disabled={disabled} ref={inputRef} width="100%" {...other} />
         {endAdornment}
       </Box>
     );
   },
 ) as BrowserFieldComponent;
+
+interface BrowserSingleInputDateRangeFieldProps
+  extends SingleInputDateRangeFieldProps<
+    Dayjs,
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>
+  > {
+  onAdornmentClick?: () => void;
+}
+
+type BrowserSingleInputDateRangeFieldComponent = ((
+  props: BrowserSingleInputDateRangeFieldProps &
+    React.RefAttributes<HTMLInputElement>,
+) => JSX.Element) & { fieldType?: string };
+
+const BrowserSingleInputDateRangeField = React.forwardRef(
+  (
+    props: BrowserSingleInputDateRangeFieldProps,
+    ref: React.Ref<HTMLInputElement>,
+  ) => {
+    const { slots, slotProps, onAdornmentClick, ...other } = props;
+
+    const {
+      inputRef: externalInputRef,
+      ...textFieldProps
+    }: SingleInputDateRangeFieldProps<Dayjs> = useSlotProps({
+      elementType: null as any,
+      externalSlotProps: slotProps?.textField,
+      externalForwardedProps: other,
+      ownerState: props as any,
+    });
+
+    const response = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>({
+      props: textFieldProps,
+      inputRef: externalInputRef,
+    });
+
+    return (
+      <BrowserField
+        {...response}
+        style={{
+          minWidth: 300,
+        }}
+        InputProps={{
+          ...response.InputProps,
+          ref,
+          endAdornment: (
+            <IconButton onClick={onAdornmentClick}>
+              <DateRangeIcon />
+            </IconButton>
+          ),
+        }}
+      />
+    );
+  },
+) as BrowserSingleInputDateRangeFieldComponent;
+
+BrowserSingleInputDateRangeField.fieldType = 'single-input';
+
+function BrowserSingleInputDateRangePicker(props: DateRangePickerProps<Dayjs>) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const toggleOpen = () => setIsOpen((currentOpen) => !currentOpen);
+
+  const handleOpen = () => setIsOpen(true);
+
+  const handleClose = () => setIsOpen(false);
+
+  return (
+    <DateRangePicker
+      open={isOpen}
+      onClose={handleClose}
+      onOpen={handleOpen}
+      slots={{ field: BrowserSingleInputDateRangeField }}
+      slotProps={{
+        field: { onAdornmentClick: toggleOpen } as any,
+      }}
+      {...props}
+    />
+  );
+}
 
 interface BrowserMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs>,
@@ -189,8 +276,11 @@ function BrowserDatePicker(props: DatePickerProps<Dayjs>) {
 export default function PickerWithBrowserField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker', 'DateRangePicker']}>
+      <DemoContainer
+        components={['DatePicker', 'SingleInputDateRangeField', 'DateRangePicker']}
+      >
         <BrowserDatePicker />
+        <BrowserSingleInputDateRangePicker />
         <BrowserDateRangePicker />
       </DemoContainer>
     </LocalizationProvider>

@@ -254,7 +254,7 @@
   { "name": "renderTimeViewClock", "kind": "Variable" },
   { "name": "ruRU", "kind": "Variable" },
   { "name": "SingleInputDateRangeField", "kind": "Variable" },
-  { "name": "SingleInputDateRangeFieldProps", "kind": "Interface" },
+  { "name": "SingleInputDateRangeFieldProps", "kind": "TypeAlias" },
   { "name": "SingleInputDateTimeRangeField", "kind": "Variable" },
   { "name": "SingleInputDateTimeRangeFieldProps", "kind": "Interface" },
   { "name": "SingleInputTimeRangeField", "kind": "Variable" },
