@@ -1,14 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ScatterPlot } from './ScatterPlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ResponsiveChartContainer, ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
 
-export interface ScatterChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface ScatterChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
@@ -34,7 +34,7 @@ function ScatterChart(props: ScatterChartProps) {
   } = props;
 
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'scatter', ...s }))}
       width={width}
       height={height}
@@ -49,7 +49,7 @@ function ScatterChart(props: ScatterChartProps) {
       <Highlight x="none" y="none" {...highlight} />
       <Tooltip trigger="item" {...tooltip} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
 }
 

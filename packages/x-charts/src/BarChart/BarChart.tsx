@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { BarPlot } from './BarPlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ResponsiveChartContainer, ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
@@ -9,7 +9,7 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
 
-export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface BarChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
@@ -35,7 +35,7 @@ function BarChart(props: BarChartProps) {
   } = props;
 
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'bar', ...s }))}
       width={width}
       height={height}
@@ -63,7 +63,7 @@ function BarChart(props: BarChartProps) {
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
 }
 

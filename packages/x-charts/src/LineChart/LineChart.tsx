@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { LinePlot } from './LinePlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ResponsiveChartContainer, ResponsiveChartContainerProps } from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis/Axis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
@@ -9,7 +9,7 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
 
-export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface LineChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
@@ -34,7 +34,7 @@ function LineChart(props: LineChartProps) {
   } = props;
 
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'line', ...s }))}
       width={width}
       height={height}
@@ -62,7 +62,7 @@ function LineChart(props: LineChartProps) {
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
 }
 
