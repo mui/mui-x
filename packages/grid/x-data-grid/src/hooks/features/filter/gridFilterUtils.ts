@@ -19,7 +19,7 @@ import {
   GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
-import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
+import { gridFilterableColumnLookupSelector, gridColumnLookupSelector } from '../columns';
 
 type GridFilterItemApplier =
   | {
@@ -281,10 +281,9 @@ const buildAggregatedQuickFilterApplier = (
     return null;
   }
 
-  const columnsFields = gridColumnFieldsSelector(apiRef);
+  const columnsByField = gridFilterableColumnLookupSelector(apiRef);
 
   const appliersPerField = [] as {
-    field: string;
     column: GridColDef;
     appliers: {
       v7: boolean;
@@ -292,14 +291,12 @@ const buildAggregatedQuickFilterApplier = (
     }[];
   }[];
 
-  columnsFields.forEach((field) => {
-    const column = apiRef.current.getColumn(field);
+  Object.values(columnsByField).forEach((column) => {
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
     const getApplyQuickFilterFnV7 = column?.getApplyQuickFilterFnV7;
 
     if (getApplyQuickFilterFnV7) {
       appliersPerField.push({
-        field,
         column,
         appliers: quickFilterValues.map((value) => ({
           v7: true,
@@ -308,7 +305,6 @@ const buildAggregatedQuickFilterApplier = (
       });
     } else if (getApplyQuickFilterFn) {
       appliersPerField.push({
-        field,
         column,
         appliers: quickFilterValues.map((value) => ({
           v7: false,
@@ -318,7 +314,7 @@ const buildAggregatedQuickFilterApplier = (
     }
   });
 
-  return (row, shouldApplyFilter) => {
+  return function isRowMatchingQuickFilter(row, shouldApplyFilter) {
     const result = {} as GridQuickFilterValueResult;
     const usedCellParams = {} as { [field: string]: GridCellParams };
 
@@ -326,7 +322,8 @@ const buildAggregatedQuickFilterApplier = (
       const filterValue = quickFilterValues[v];
 
       for (let i = 0; i < appliersPerField.length; i += 1) {
-        const { field, column, appliers } = appliersPerField[i];
+        const { column, appliers } = appliersPerField[i];
+        const { field } = column;
 
         if (shouldApplyFilter && !shouldApplyFilter(field)) {
           continue;
