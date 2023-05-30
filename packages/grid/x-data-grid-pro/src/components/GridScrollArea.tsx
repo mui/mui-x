@@ -6,6 +6,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { styled } from '@mui/system';
+import { getTotalHeaderHeight } from '@mui/x-data-grid/internals';
 import {
   GridEventListener,
   GridScrollParams,
@@ -53,6 +54,7 @@ const GridScrollAreaRawRoot = styled('div', {
   zIndex: 101,
   width: 20,
   bottom: 0,
+  backgroundColor: 'yellow',
   [`&.${gridClasses['scrollArea--left']}`]: {
     left: 0,
   },
@@ -79,6 +81,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const rootProps = useGridRootProps();
   const ownerState = { ...rootProps, scrollDirection };
   const classes = useUtilityClasses(ownerState);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
   const handleScrolling = React.useCallback<GridEventListener<'scrollPositionChange'>>(
@@ -162,7 +165,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
       className={clsx(classes.root)}
       ownerState={ownerState}
       onDragOver={handleDragOver}
-      style={{ height: headerHeight }}
+      style={{ height: headerHeight, top: totalHeaderHeight - headerHeight }}
     />
   );
 }
