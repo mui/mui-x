@@ -6,6 +6,7 @@ import type {
   GridDensityState,
   GridFilterInitialState,
   GridFilterState,
+  GridVisibleRowsState,
   GridFocusState,
   GridPaginationInitialState,
   GridPaginationState,
@@ -17,7 +18,6 @@ import type {
   GridTabIndexState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
-import { GridVisibleRowsState } from '../hooks/features/rows/gridVisibleRowsInterfaces';
 import type { GridEditingState } from './gridEditRowModel';
 import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';

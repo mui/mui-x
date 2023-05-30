@@ -7,12 +7,12 @@ import {
   GridFilteringMethodParams,
   GridFilteringMethodValue,
   GridFilterState,
+  GridVisibleRowsMethodValue,
 } from '../../features/filter/gridFilterState';
 import {
   GridSortingMethodParams,
   GridSortingMethodValue,
 } from '../../features/sorting/gridSortingState';
-import type { GridVisibleRowsMethodValue } from '../../features/rows/gridVisibleRowsInterfaces';
 
 export type GridStrategyProcessorName = keyof GridStrategyProcessingLookup;
 
