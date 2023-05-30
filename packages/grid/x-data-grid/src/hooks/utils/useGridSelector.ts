@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { OutputSelector } from '../../utils/createSelector';
-import { useLazyRef } from '../../hooks/utils/useLazyRef';
+import { useLazyRef } from './useLazyRef';
 import { buildWarning } from '../../utils/warning';
 import { fastShallowCompare } from '../../utils/fastShallowCompare';
 

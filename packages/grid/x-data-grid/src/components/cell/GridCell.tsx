@@ -31,7 +31,9 @@ import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusState
 import { gridEditRowsStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-export interface GridCellWrapperProps {
+// These props are passed down to the cell component, eslint thinks they're not used
+/* eslint-disable react/no-unused-prop-types */
+export type GridCellWrapperProps = {
   align: GridAlignment;
   className?: string;
   colIndex: number;
@@ -51,6 +53,7 @@ export interface GridCellWrapperProps {
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
   [x: string]: any;
 }
+/* eslint-enable react/no-unused-prop-types */
 
 export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
   field: string;
@@ -202,7 +205,9 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
     classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
   }
 
-  if (cellParams === EMPTY_CELL_PARAMS) return null;
+  if (cellParams === EMPTY_CELL_PARAMS) {
+    return null;
+  }
 
   const { slots, slotProps } = rootProps;
 
