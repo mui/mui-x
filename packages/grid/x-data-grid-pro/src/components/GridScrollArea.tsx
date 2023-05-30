@@ -54,7 +54,6 @@ const GridScrollAreaRawRoot = styled('div', {
   zIndex: 101,
   width: 20,
   bottom: 0,
-  backgroundColor: 'yellow',
   [`&.${gridClasses['scrollArea--left']}`]: {
     left: 0,
   },
