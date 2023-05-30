@@ -41,6 +41,13 @@ function Component({ rows }) {
 }
 ```
 
+## Visualization
+
+The DataGrid memoizes some of its subcomponents to avoid re-rendering more than needed. Below is a visualization that
+shows you which cells re-render in reaction to your interaction with the grid.
+
+{{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

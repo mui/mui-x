@@ -10,7 +10,6 @@ const stateNotInitializedWarning = buildWarning([
   'This hook can only be used inside the context of the grid.',
 ]);
 
-const noop = () => {};
 const EMPTY = [] as unknown[];
 
 function isOutputSelector<Api extends GridApiCommon, T>(
