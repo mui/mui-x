@@ -32,7 +32,7 @@ export const gridQuickFilterValuesSelector = createSelector(
  * @category Visible rows
  * @ignore - do not document.
  */
-export const gridVisibleRowsStateSelector = (state: GridStateCommunity) => state.visibleRows;
+const gridVisibleRowsStateSelector = (state: GridStateCommunity) => state.visibleRows;
 
 /**
  * @category Visible rows

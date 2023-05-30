@@ -6,7 +6,6 @@ import type {
   GridDensityState,
   GridFilterInitialState,
   GridFilterState,
-  GridVisibleRowsState,
   GridFocusState,
   GridPaginationInitialState,
   GridPaginationState,
@@ -21,6 +20,7 @@ import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState
 import type { GridEditingState } from './gridEditRowModel';
 import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
+import type { GridVisibleRowsState } from '../hooks/features/filter/gridFilterState';
 
 /**
  * The state of `DataGrid`.
