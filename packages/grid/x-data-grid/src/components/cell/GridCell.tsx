@@ -52,7 +52,7 @@ export type GridCellWrapperProps = {
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
   [x: string]: any;
-}
+};
 /* eslint-enable react/no-unused-prop-types */
 
 export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
