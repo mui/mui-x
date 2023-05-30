@@ -72,7 +72,7 @@ const BrowserField = React.forwardRef(
         ref={containerRef}
       >
         {startAdornment}
-        <input disabled={disabled} ref={inputRef} width="100%" {...other} />
+        <input disabled={disabled} ref={inputRef} {...other} />
         {endAdornment}
       </Box>
     );
