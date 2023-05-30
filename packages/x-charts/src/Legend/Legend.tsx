@@ -52,12 +52,12 @@ function getTranslePosition({
   let xValue: string;
   switch (position.horizontal) {
     case 'left':
-      xValue = `calc(${offsetX + drawingArea.left}px - var(--Legend-width))`;
+      xValue = `calc(${offsetX + drawingArea.left}px - var(--Legend-rootWidth))`;
       break;
     case 'middle':
       xValue = `calc(${
         offsetX + drawingArea.left + drawingArea.width / 2
-      }px - 0.5 *var(--Legend-width))`;
+      }px - 0.5 *var(--Legend-rootWidth))`;
       break;
     default:
       xValue = `calc(${offsetX}px + ${drawingArea.left + drawingArea.width}px)`;
@@ -66,12 +66,12 @@ function getTranslePosition({
   let yValue: string;
   switch (position.vertical) {
     case 'top':
-      yValue = `calc(${offsetY + drawingArea.top}px - var(--Legend-height))`;
+      yValue = `calc(${offsetY + drawingArea.top}px - var(--Legend-rootHeight))`;
       break;
     case 'middle':
       yValue = `calc(${
         offsetY + drawingArea.top + drawingArea.height / 2
-      }px - 0.5 * var(--Legend-height))`;
+      }px - 0.5 * var(--Legend-rootHeight))`;
       break;
     default:
       yValue = `calc(${offsetY + drawingArea.top + drawingArea.height}px)`;
@@ -88,16 +88,16 @@ export const LegendRoot = styled('g', {
   const { direction, drawingArea, offsetX, offsetY, seriesNumber, position } = ownerState;
 
   return {
-    '--Legend-width':
+    '--Legend-rootWidth':
       direction === 'row'
-        ? `calc(var(--Legend-item-width) * ${seriesNumber} + var(--Legend-spacing) *${
+        ? `calc(var(--Legend-itemWidth) * ${seriesNumber} + var(--Legend-rootSpacing) *${
             seriesNumber - 1
           } )`
-        : 'var(--Legend-item-width)',
-    '--Legend-height':
+        : 'var(--Legend-itemWidth)',
+    '--Legend-rootHeight':
       direction === 'row'
-        ? 'var(--Legend-mark-size)'
-        : `calc(var(--Legend-mark-size) * ${seriesNumber} + var(--Legend-spacing) *${
+        ? 'var(--Legend-itemMarkSize)'
+        : `calc(var(--Legend-itemMarkSize) * ${seriesNumber} + var(--Legend-rootSpacing) *${
             seriesNumber - 1
           } )`,
     ...getTranslePosition({ position, drawingArea, offsetX, offsetY }),
@@ -113,11 +113,11 @@ export const SeriesLegendGroup = styled('g', {
 
   if (direction === 'row') {
     return {
-      transform: `translate(calc(${seriesIndex} * (var(--Legend-item-width) + var(--Legend-spacing))), 0)`,
+      transform: `translate(calc(${seriesIndex} * (var(--Legend-itemWidth) + var(--Legend-rootSpacing))), 0)`,
     };
   }
   return {
-    transform: `translate(0, calc(${seriesIndex} * (var(--Legend-mark-size) + var(--Legend-spacing))))`,
+    transform: `translate(0, calc(${seriesIndex} * (var(--Legend-itemMarkSize) + var(--Legend-rootSpacing))))`,
   };
 });
 
@@ -128,8 +128,8 @@ export const LegendMark = styled('rect', {
 })<{ ownerState: { color: string } }>(({ ownerState }) => ({
   x: 0,
   y: 0,
-  width: 'var(--Legend-mark-size)',
-  height: 'var(--Legend-mark-size)',
+  width: 'var(--Legend-itemMarkSize)',
+  height: 'var(--Legend-itemMarkSize)',
   fill: ownerState.color,
 }));
 export const LegendLabel = styled('text', {
@@ -140,8 +140,8 @@ export const LegendLabel = styled('text', {
   ...theme.typography.body1,
   color: 'inherit',
   transform: `translate(
-      calc(var(--Legend-mark-size) + var(--Legend-spacing)),
-      calc(0.5 * var(--Legend-mark-size))
+      calc(var(--Legend-itemMarkSize) + var(--Legend-rootSpacing)),
+      calc(0.5 * var(--Legend-itemMarkSize))
       )`,
   fill: theme.palette.text.primary,
   alignmentBaseline: 'central',
