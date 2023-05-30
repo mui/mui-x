@@ -603,7 +603,7 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      fireEvent.click(document.getElementById('outside-grid')!);
+      userEvent.mousePress(document.getElementById('outside-grid')!);
       await act(() => Promise.resolve());
 
       expect(onCellEditStop.callCount).to.equal(1);
