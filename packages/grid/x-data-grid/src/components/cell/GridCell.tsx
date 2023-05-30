@@ -29,6 +29,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
+import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 // These props are passed down to the cell component, eslint thinks they're not used
@@ -135,7 +136,7 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
       try {
         return apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(rowId, field);
       } catch (e) {
-        if ((e as Error).message.startsWith('No row with id')) {
+        if (e instanceof MissingRowIdError) {
           return EMPTY_CELL_PARAMS;
         }
         throw e;

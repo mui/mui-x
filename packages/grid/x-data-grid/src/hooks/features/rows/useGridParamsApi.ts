@@ -12,6 +12,8 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
+export class MissingRowIdError extends Error {}
+
 /**
  * @requires useGridColumns (method)
  * @requires useGridRows (method)
@@ -34,7 +36,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       const row = apiRef.current.getRow(id);
 
       if (!row) {
-        throw new Error(`No row with id #${id} found`);
+        throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
       const params: GridRowParams = {
@@ -53,7 +55,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       const rowNode = apiRef.current.getRowNode<GridTreeNodeWithRender>(id);
 
       if (!row || !rowNode) {
-        throw new Error(`No row with id #${id} found`);
+        throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
       const cellFocus = gridFocusCellSelector(apiRef);
@@ -85,7 +87,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       const rowNode = apiRef.current.getRowNode(id);
 
       if (!row || !rowNode) {
-        throw new Error(`No row with id #${id} found`);
+        throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
       const cellFocus = gridFocusCellSelector(apiRef);
@@ -127,7 +129,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         const rowModel = apiRef.current.getRow(id);
 
         if (!rowModel) {
-          throw new Error(`No row with id #${id} found`);
+          throw new MissingRowIdError(`No row with id #${id} found`);
         }
 
         return rowModel[field];
