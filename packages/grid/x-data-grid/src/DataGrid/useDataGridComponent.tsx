@@ -11,11 +11,7 @@ import { useGridColumns, columnsStateInitializer } from '../hooks/features/colum
 import { densityStateInitializer, useGridDensity } from '../hooks/features/density/useGridDensity';
 import { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 import { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
-import {
-  useGridFilter,
-  filterStateInitializer,
-  visibleRowsStateInitializer,
-} from '../hooks/features/filter/useGridFilter';
+import { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 import { focusStateInitializer, useGridFocus } from '../hooks/features/focus/useGridFocus';
 import { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 import {
@@ -68,7 +64,6 @@ export const useDataGridComponent = (
   useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
   useGridInitializeState(rowsStateInitializer, privateApiRef, props);
-  useGridInitializeState(visibleRowsStateInitializer, privateApiRef, props);
   useGridInitializeState(editingStateInitializer, privateApiRef, props);
   useGridInitializeState(focusStateInitializer, privateApiRef, props);
   useGridInitializeState(sortingStateInitializer, privateApiRef, props);

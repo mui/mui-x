@@ -43,12 +43,6 @@ export const filterStateInitializer: GridStateInitializer<
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       filteredDescendantCountLookup: {},
     },
-  };
-};
-
-export const visibleRowsStateInitializer: GridStateInitializer = (state) => {
-  return {
-    ...state,
     visibleRows: {
       lookup: {},
     },
