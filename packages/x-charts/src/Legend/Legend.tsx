@@ -38,43 +38,41 @@ type LegendRootOwnerState = {
   position: AnchorPosition;
   direction: 'row' | 'column';
   drawingArea: DrawingArea;
-  offsetX: number;
-  offsetY: number;
+  offsetX?: number;
+  offsetY?: number;
   seriesNumber: number;
 };
 
 function getTranslePosition({
   position,
   drawingArea,
-  offsetX,
-  offsetY,
 }: Omit<LegendRootOwnerState, 'direction' | 'seriesNumber'>) {
   let xValue: string;
   switch (position.horizontal) {
     case 'left':
-      xValue = `calc(${offsetX + drawingArea.left}px - var(--Legend-rootWidth))`;
+      xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${drawingArea.left}px - var(--Legend-rootWidth))`;
       break;
     case 'middle':
-      xValue = `calc(${
-        offsetX + drawingArea.left + drawingArea.width / 2
+      xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${
+        drawingArea.left + drawingArea.width / 2
       }px - 0.5 *var(--Legend-rootWidth))`;
       break;
     default:
-      xValue = `calc(${offsetX}px + ${drawingArea.left + drawingArea.width}px)`;
+      xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${drawingArea.left + drawingArea.width}px)`;
       break;
   }
   let yValue: string;
   switch (position.vertical) {
     case 'top':
-      yValue = `calc(${offsetY + drawingArea.top}px - var(--Legend-rootHeight))`;
+      yValue = `calc(var(--Legend-rootOffsetY, 0px) + ${drawingArea.top}px - var(--Legend-rootHeight))`;
       break;
     case 'middle':
-      yValue = `calc(${
-        offsetY + drawingArea.top + drawingArea.height / 2
+      yValue = `calc(var(--Legend-rootOffsetY, 0px) + ${
+        drawingArea.top + drawingArea.height / 2
       }px - 0.5 * var(--Legend-rootHeight))`;
       break;
     default:
-      yValue = `calc(${offsetY + drawingArea.top + drawingArea.height}px)`;
+      yValue = `calc(var(--Legend-rootOffsetY, 0px) + ${drawingArea.top + drawingArea.height}px)`;
       break;
   }
   return { transform: `translate(${xValue}, ${yValue})` };
@@ -88,6 +86,8 @@ export const LegendRoot = styled('g', {
   const { direction, drawingArea, offsetX, offsetY, seriesNumber, position } = ownerState;
 
   return {
+    '--Legend-rootOffsetX': typeof offsetX === 'number' ? `${offsetX}px` : undefined,
+    '--Legend-rootOffsetY': typeof offsetY === 'number' ? `${offsetY}px` : undefined,
     '--Legend-rootWidth':
       direction === 'row'
         ? `calc(var(--Legend-itemWidth) * ${seriesNumber} + var(--Legend-rootSpacing) *${
@@ -170,15 +170,12 @@ export function Legend(inProps: LegendProps) {
 
   const seriesToDisplay = getSeriesToDisplay(series);
 
-  const offsetX = offset?.x ?? 0;
-  const offsetY = offset?.y ?? -20;
-
   return (
     <LegendRoot
       ownerState={{
         direction,
-        offsetX,
-        offsetY,
+        offsetX: offset?.x,
+        offsetY: offset?.y,
         seriesNumber: seriesToDisplay.length,
         position,
         drawingArea,
