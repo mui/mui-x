@@ -246,9 +246,10 @@ function updateRows(apiRef, rows) {
   apiRef.current.updateRows(rowsToAdd);
 }
 
+const initialRows = [];
+
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
-  const [rows] = React.useState([]);
 
   React.useEffect(() => {
     fakeDataFetcher().then((rowsData) => {
@@ -281,7 +282,7 @@ export default function TreeDataLazyLoading() {
       <DataGridPro
         treeData
         apiRef={apiRef}
-        rows={rows}
+        rows={initialRows}
         columns={columns}
         getTreeDataPath={getTreeDataPath}
         groupingColDef={CUSTOM_GROUPING_COL_DEF}

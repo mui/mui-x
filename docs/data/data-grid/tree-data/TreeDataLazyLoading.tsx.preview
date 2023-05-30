@@ -1,7 +1,7 @@
 <DataGridPro
   treeData
   apiRef={apiRef}
-  rows={rows}
+  rows={initialRows}
   columns={columns}
   getTreeDataPath={getTreeDataPath}
   groupingColDef={CUSTOM_GROUPING_COL_DEF}
