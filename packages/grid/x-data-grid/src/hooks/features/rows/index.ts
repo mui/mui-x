@@ -12,6 +12,5 @@ export {
   gridRowMaximumTreeDepthSelector,
   gridDataRowIdsSelector,
 } from './gridRowsSelector';
-export { gridVisibleRowsLookupSelector } from './gridVisibleRowsSelector';
 export type { GridRowsState, GridRowIdToModelLookup } from './gridRowsInterfaces';
 export { GRID_ROOT_GROUP_ID, checkGridRowIdIsValid } from './gridRowsUtils';

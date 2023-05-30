@@ -4,7 +4,6 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
-import { gridVisibleRowsLookupSelector } from '../rows/gridVisibleRowsSelector';
 
 /**
  * @category Filtering
@@ -27,6 +26,21 @@ export const gridFilterModelSelector = createSelector(
 export const gridQuickFilterValuesSelector = createSelector(
   gridFilterModelSelector,
   (filterModel) => filterModel.quickFilterValues,
+);
+
+/**
+ * @category Visible rows
+ * @ignore - do not document.
+ */
+export const gridVisibleRowsStateSelector = (state: GridStateCommunity) => state.visibleRows;
+
+/**
+ * @category Visible rows
+ * @ignore - do not document.
+ */
+export const gridVisibleRowsLookupSelector = createSelector(
+  gridVisibleRowsStateSelector,
+  (visibleRowsState) => visibleRowsState.lookup,
 );
 
 /**
