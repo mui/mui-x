@@ -140,7 +140,7 @@ export const LegendLabel = styled('text', {
   ...theme.typography.body1,
   color: 'inherit',
   transform: `translate(
-      calc(var(--Legend-itemMarkSize) + var(--Legend-rootSpacing)),
+      calc(var(--Legend-itemMarkSize) + var(--Legend-labelSpacing)),
       calc(0.5 * var(--Legend-itemMarkSize))
       )`,
   fill: theme.palette.text.primary,
