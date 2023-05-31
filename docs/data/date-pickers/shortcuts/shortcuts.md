@@ -62,7 +62,7 @@ In the following demonstration, it is used to get the next available week and we
 
 ## Behavior when selecting a shortcut
 
-By default, the selection of a shortcut acts like the selection of a value in the last view of a picker.
+By default, the selection of a shortcut triggers the same behavior as the selection of a value in the last view of a picker.
 On desktop, it will fire `onChange`, `onAccept` and close the picker.
 On mobile, it will fire `onChange`, but the user will have to press "OK" or click outside the modal to fire `onAccept` and close the picker.
 
