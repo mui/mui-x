@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { Time, DateRange } from '../internals/components/icons';
+import { TimeIcon, DateRangeIcon } from '../icons';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
@@ -86,9 +86,9 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
-    dateIcon = <DateRange />,
+    dateIcon = <DateRangeIcon />,
     onViewChange,
-    timeIcon = <Time />,
+    timeIcon = <TimeIcon />,
     view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
   } = props;

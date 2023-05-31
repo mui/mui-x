@@ -10,7 +10,7 @@ import { renderDesktopDateTimeView } from '../dateTimeViewRenderers';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { Calendar } from '../internals/components/icons';
+import { CalendarIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
@@ -78,7 +78,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     timeSteps,
     slots: {
       field: DateTimeField,
-      openPickerIcon: Calendar,
+      openPickerIcon: CalendarIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {
