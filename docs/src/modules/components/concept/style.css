@@ -1,0 +1,89 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #efefef;
+  background: #1f2227;
+  padding: 20px;
+
+  --row-height: 22px;
+}
+
+.wrapper {
+  position: relative;
+}
+
+.container {
+  position: relative;
+  border: 2px solid #599eff;
+  height: 200px;
+  overflow: scroll;
+  contain: strict;
+}
+.container {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.container::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.column {
+  display: inline-block;
+  width: 120px;
+  height: var(--row-height);
+  padding: 2px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header {
+  position: sticky;
+        z-index: 2;
+  top: 0;
+  display: flex;
+  flex: row;
+  flex-wrap: nowrap;
+}
+.header > .column {
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: black;
+}
+
+.fake-scroll-vertical {
+  position: absolute;
+  z-index: 1;
+  top: var(--row-height);
+  right: 0;
+  display: inline-block;
+  width: 14px;
+  height: calc(100% - var(--row-height));
+  border: 1px solid red;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.fake-scroll-vertical-content {
+  display: inline-block;
+}
+
+.content {
+  position: relative;
+}
+
+.block {
+  position: absolute;
+  top: 0;
+}
+
+.row {
+  display: flex;
+}
+.row > .column {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: none;
+  border-left: none;
+}
