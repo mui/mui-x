@@ -115,7 +115,7 @@ export const GridRootStyles = styled('div', {
     outline: 'none',
     height: '100%',
     display: 'flex',
-    overflow: 'hidden',
+    minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
     [`&.${gridClasses.autoHeight}`]: {
