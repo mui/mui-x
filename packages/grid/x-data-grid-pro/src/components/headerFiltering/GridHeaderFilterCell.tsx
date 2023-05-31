@@ -199,6 +199,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         onKeyDown: publish('headerFilterKeyDown', onKeyDown),
         onClick: publish('headerFilterClick'),
         onMouseDown: publish('headerFilterMouseDown', onMouseDown),
+        onBlur: publish('headerFilterBlur'),
       }),
       [onMouseDown, onKeyDown, publish],
     );
