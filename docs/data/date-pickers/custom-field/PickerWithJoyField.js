@@ -20,7 +20,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import IconButton from '@mui/joy/IconButton';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { DateRange as DateRangeIcon } from '@mui/x-date-pickers/internals';
+import { DateRange as DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';

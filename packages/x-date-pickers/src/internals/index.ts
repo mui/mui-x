@@ -156,4 +156,3 @@ export type {
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
-export * from '../icons';
