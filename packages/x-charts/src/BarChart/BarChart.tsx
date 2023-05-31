@@ -60,7 +60,7 @@ function BarChart(props: BarChartProps) {
     >
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <BarPlot />
-      <Highlight {...highlight} />
+      <Highlight x="band" {...highlight} />
       <Tooltip {...tooltip} />
       {children}
     </ChartContainer>
