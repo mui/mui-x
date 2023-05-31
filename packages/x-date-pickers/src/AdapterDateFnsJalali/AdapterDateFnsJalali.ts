@@ -202,6 +202,8 @@ const NUMBER_SYMBOL_MAP = {
 export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLocale> {
   public isMUIAdapter = true;
 
+  public isTimezoneCompatible = false;
+
   public lib = 'date-fns-jalali';
 
   public locale?: DateFnsLocale;
@@ -227,6 +229,18 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLoca
     }
 
     return new Date(value);
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Date | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Date): Date => {
+    return value;
   };
 
   public toJsDate = (value: Date) => {

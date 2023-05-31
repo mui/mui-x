@@ -3,6 +3,7 @@ import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from '.
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { AxisConfig } from '../axis';
 import { DefaultizedProps } from '../helpers';
+import { StackingGroupsType } from '../../internals/stackSeries';
 
 interface ChartsSeriesConfig {
   bar: {
@@ -61,7 +62,7 @@ export type FormatterResult<T extends ChartSeriesType> = {
 } & (ChartsSeriesConfig[T] extends {
   canBeStacked: true;
 }
-  ? { stackingGroups: string[][] }
+  ? { stackingGroups: StackingGroupsType }
   : {});
 
 export type Formatter<T extends ChartSeriesType> = (

@@ -394,7 +394,16 @@ export const useFieldState = <
     setState((prev) => ({ ...prev, tempValueStrAndroid }));
 
   React.useEffect(() => {
+    let shouldUpdate = false;
     if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
+      shouldUpdate = true;
+    } else {
+      shouldUpdate =
+        valueManager.getTimezone(utils, state.value) !==
+        valueManager.getTimezone(utils, valueFromTheOutside);
+    }
+
+    if (shouldUpdate) {
       setState((prevState) => ({
         ...prevState,
         value: valueFromTheOutside,

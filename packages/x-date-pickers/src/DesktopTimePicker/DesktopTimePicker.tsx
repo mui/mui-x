@@ -6,7 +6,7 @@ import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, validateTime } from '../internals';
-import { Clock } from '../internals/components/icons';
+import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
@@ -75,7 +75,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: TimeField,
-      openPickerIcon: Clock,
+      openPickerIcon: ClockIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {

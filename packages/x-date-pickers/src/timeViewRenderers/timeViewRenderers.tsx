@@ -50,13 +50,13 @@ export const renderTimeViewClock = <TDate extends unknown>({
   autoFocus,
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
-}: TimeViewRendererProps<TimeViewWithMeridiem, TimeClockProps<TDate, TimeViewWithMeridiem>>) => (
+}: TimeViewRendererProps<TimeView, TimeClockProps<TDate, TimeView>>) => (
   <TimeClock<TDate>
-    view={view as TimeView}
+    view={view}
     onViewChange={onViewChange}
-    focusedView={focusedView as TimeView}
+    focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
-    views={views.filter(isTimeView) as TimeView[]}
+    views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
     onChange={onChange}

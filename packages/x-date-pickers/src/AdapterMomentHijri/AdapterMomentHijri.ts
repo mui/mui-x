@@ -112,6 +112,8 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
 
   public moment: typeof defaultHMoment;
 
+  public isTimezoneCompatible = false;
+
   public formatTokenMap = formatTokenMap;
 
   constructor({ formats, instance }: AdapterOptions<string, typeof defaultHMoment> = {}) {
@@ -128,6 +130,18 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     }
 
     return this.moment(value).locale('ar-SA');
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Moment): Moment => {
+    return value;
   };
 
   public parse = (value: string, format: string) => {

@@ -6,6 +6,7 @@ import {
   AdapterUnits,
   FieldFormatTokenMap,
   MuiPickersAdapter,
+  PickersTimezone,
 } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
@@ -112,6 +113,8 @@ const defaultFormats: AdapterFormats = {
 export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public isMUIAdapter = true;
 
+  public isTimezoneCompatible = true;
+
   public lib = 'luxon';
 
   public locale: string;
@@ -147,6 +150,40 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
     // @ts-ignore
     return DateTime.fromJSDate(value, { locale: this.locale });
+  };
+
+  public dateWithTimezone = (
+    value: string | null | undefined,
+    timezone: PickersTimezone,
+  ): DateTime | null => {
+    if (value === null) {
+      return null;
+    }
+
+    if (typeof value === 'undefined') {
+      // @ts-ignore
+      return DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
+    }
+
+    // @ts-ignore
+    return DateTime.fromISO(value, { locale: this.locale, zone: timezone });
+  };
+
+  public getTimezone = (value: DateTime): string => {
+    // When using the system zone, we want to return "system", not something like "Europe/Paris"
+    if (value.zone.type === 'system') {
+      return 'system';
+    }
+
+    return value.zoneName ?? 'system';
+  };
+
+  public setTimezone = (value: DateTime, timezone: PickersTimezone): DateTime => {
+    if (!value.zone.equals(Info.normalizeZone(timezone))) {
+      return value.setZone(timezone);
+    }
+
+    return value;
   };
 
   public toJsDate = (value: DateTime) => {
@@ -259,23 +296,27 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
       return false;
     }
 
-    return this.date(value)!.equals(this.date(comparing)!);
+    return +this.date(value)! === +this.date(comparing)!;
   };
 
   public isSameYear = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'year');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'year');
   };
 
   public isSameMonth = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'month');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'month');
   };
 
   public isSameDay = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'day');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'day');
   };
 
   public isSameHour = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'hour');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'hour');
   };
 
   public isAfter = (value: DateTime, comparing: DateTime) => {
@@ -283,12 +324,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public isAfterYear = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.endOf('year'), 'years').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.endOf('year'), 'years').toObject();
     return diff.years! > 0;
   };
 
   public isAfterDay = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.endOf('day'), 'days').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.endOf('day'), 'days').toObject();
     return diff.days! > 0;
   };
 
@@ -297,12 +340,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public isBeforeYear = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.startOf('year'), 'years').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.startOf('year'), 'years').toObject();
     return diff.years! < 0;
   };
 
   public isBeforeDay = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.startOf('day'), 'days').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.startOf('day'), 'days').toObject();
     return diff.days! < 0;
   };
 

@@ -1,8 +1,4 @@
-import {
-  stack as d3Stack,
-  stackOrderNone as d3StackOrderNone,
-  stackOffsetNone as d3StackOffsetNone,
-} from 'd3-shape';
+import { stack as d3Stack } from 'd3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
 import { ChartSeries, Formatter } from '../models/seriesType/config';
 import defaultizeValueFormatter from '../internals/defaultizeValueFormatter';
@@ -28,12 +24,12 @@ const formatter: Formatter<'line'> = (params) => {
 
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain
-    const stackedSeries = d3Stack()
-      .keys(stackingGroup)
-      .order(d3StackOrderNone)
-      .offset(d3StackOffsetNone)(d3Dataset);
+    const { ids, stackingOrder, stackingOffset } = stackingGroup;
+    const stackedSeries = d3Stack().keys(ids).order(stackingOrder).offset(stackingOffset)(
+      d3Dataset,
+    );
 
-    stackingGroup.forEach((id, index) => {
+    ids.forEach((id, index) => {
       completedSeries[id] = {
         ...series[id],
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
