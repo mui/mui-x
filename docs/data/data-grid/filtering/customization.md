@@ -2,111 +2,6 @@
 
 <p class="description">Ways to customize your filters.</p>
 
-## Pass filters to the Data Grid
-
-### Structure of the model
-
-The full typing details can be found on the [GridFilterModel API page](/x/api/data-grid/grid-filter-model/).
-
-The filter model is composed of a list of `items` and a `logicOperator`:
-
-#### The `items`
-
-A filter item represents a filtering rule and is composed of several elements:
-
-- `filterItem.field`: the field on which the rule applies.
-- `filterItem.value`: the value to look for.
-- `filterItem.operator`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
-- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): required when multiple filter items are used.
-
-:::info
-Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
-:::
-
-#### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
-
-The `logicOperator` tells the data grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
-
-```ts
-// Example 1: get rows with rating > 4 OR isAdmin = true
-const filterModel: GridFilterModel = {
-  items: [
-    { id: 1, field: 'rating', operator: '>', value: '4' },
-    { id: 2, field: 'isAdmin', operator: 'is', value: 'true' },
-  ],
-  logicOperator: GridLogicOperator.Or,
-};
-
-// Example 2: get rows with rating > 4 AND isAdmin = true
-const filterModel: GridFilterModel = {
-  items: [
-    { id: 1, field: 'rating', operator: '>', value: '4' },
-    { id: 2, field: 'isAdmin', operator: 'is', value: 'true' },
-  ],
-  logicOperator: GridLogicOperator.And,
-};
-```
-
-If no `logicOperator` is provided, the data grid will use `GridLogicOperator.Or` by default.
-
-### Initialize the filters
-
-To initialize the filters without controlling them, provide the model to the `initialState` prop.
-
-```jsx
-<DataGrid
-  initialState={{
-    filter: {
-      filterModel: {
-        items: [{ field: 'rating', operator: '>', value: '2.5' }],
-      },
-    },
-  }}
-/>
-```
-
-{{"demo": "InitialFilters.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Controlled filters
-
-Use the `filterModel` prop to control the filter applied on the rows.
-
-You can use the `onFilterModelChange` prop to listen to changes to the filters and update the prop accordingly.
-
-```jsx
-<DataGrid
-  filterModel={{
-    items: [{ field: 'rating', operator: '>', value: '2.5' }],
-  }}
-/>
-```
-
-{{"demo": "ControlledFilters.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## Disable the filters
-
-### For all columns
-
-Filters are enabled by default, but you can easily disable this feature by setting the `disableColumnFilter` prop.
-
-```jsx
-<DataGrid disableColumnFilter />
-```
-
-{{"demo": "DisableFilteringGridAllColumns.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### For some columns
-
-To disable the filter of a single column, set the `filterable` property in `GridColDef` to `false`.
-
-In the example below, the _rating_ column can not be filtered.
-
-```js
-<DataGrid columns={[...columns, { field: 'rating', filterable: false }]} />
-```
-
-{{"demo": "DisableFilteringGridSomeColumns.js", "bg": "inline", "defaultCodeOpen": false}}
-
 ## Customize the operators
 
 The full typing details can be found on the [GridFilterOperator API page](/x/api/data-grid/grid-filter-operator/).
@@ -283,3 +178,12 @@ To pass props directly to the `InputComponent` and not its wrapper, you can use 
 The demo below shows how to anchor the filter panel to the toolbar button instead of the column header.
 
 {{"demo": "CustomFilterPanelPosition.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## API
+
+- [GridFilterOperator](/x/api/data-grid/grid-filter-operator/)
+- [GridFilterItem](/x/api/data-grid/grid-filter-item/)
+- [GridFilterPanel](/x/api/data-grid/grid-filter-panel/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)
