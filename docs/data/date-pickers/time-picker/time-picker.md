@@ -77,7 +77,7 @@ Use the `views` prop to change this behavior:
 
 {{"demo": "TimePickerViews.js"}}
 
-By default, the component renders the `hours` view on mount.
+By default, the `MobileTimePicker` component renders the `hours` view on mount.
 Use the `openTo` prop to change this behavior:
 
 {{"demo": "TimePickerOpenTo.js"}}
