@@ -44,12 +44,12 @@ export interface GridFilterPanelProps
     | 'filterColumns'
   >;
 
-  /*
+  /**
    * If `true`, the `Add filter` button will not be displayed.
    * @default false
    */
   disableAddFilterButton?: boolean;
-  /*
+  /**
    * If `true`, the `Remove all` button will be disabled
    * @default false
    */
