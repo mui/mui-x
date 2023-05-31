@@ -11,7 +11,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -505,8 +505,6 @@ export default function App() {
                 />
               ))}
             </DemoContainer>
-          </Stack>
-          <Stack spacing={2} direction="row" mt={3} flexWrap="wrap">
             <DemoContainer
               components={[
                 'DesktopDateRangePicker',
@@ -515,23 +513,22 @@ export default function App() {
               ]}
             >
               {DATE_RANGE_PICKERS.map(({ name, component: Component, props }) => (
-                <DemoItem key={name} label={name} component={name}>
-                  <Component
-                    label={name}
-                    value={rangeValue}
-                    onChange={setRangeValue}
-                    calendars={singleCalendar ? 1 : undefined}
-                    {...props}
-                    slotProps={{
-                      ...props.slotProps,
-                      ...(displayShortcuts && {
-                        shortcuts: {
-                          items: shortcutsItems,
-                        },
-                      }),
-                    }}
-                  />
-                </DemoItem>
+                <Component
+                  key={name}
+                  label={name}
+                  value={rangeValue}
+                  onChange={setRangeValue}
+                  calendars={singleCalendar ? 1 : undefined}
+                  {...props}
+                  slotProps={{
+                    ...props.slotProps,
+                    ...(displayShortcuts && {
+                      shortcuts: {
+                        items: shortcutsItems,
+                      },
+                    }),
+                  }}
+                />
               ))}
             </DemoContainer>
           </Stack>
