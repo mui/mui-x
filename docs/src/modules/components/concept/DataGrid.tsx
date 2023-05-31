@@ -10,6 +10,9 @@ const BLOCK_ROW_SIZE = 4
 const BLOCK_COL_SIZE = 7
 const BLOCKS_AROUND = 1
 
+const ROWS_AROUND = 20
+const COLUMNS_AROUND = 2
+
 const noop = () => {}
 const debug = console.log
 
@@ -226,10 +229,10 @@ export class DataGrid extends React.Component<Props, {}> {
     allBlocks.push(...aboveBlocks)
 
     const belowBlocks = this.blockTree.search({
-      minX: range.maxX + 1,
-      maxX: this.rows.length,
-      minY: 0,
-      maxY: range.minY - 1,
+      minX: 0,
+      maxX: this.columns.length,
+      minY: range.maxY + 1,
+      maxY: this.rows.length,
     })
     allBlocks.push(...belowBlocks)
 
@@ -243,7 +246,7 @@ export class DataGrid extends React.Component<Props, {}> {
 
     const rightBlocks = this.blockTree.search({
       minX: range.maxX + 1,
-      maxX: this.columns.length,
+      maxX: Math.max(range.maxX + 1, this.columns.length),
       minY: range.minY,
       maxY: range.maxY
     })
@@ -271,26 +274,22 @@ export class DataGrid extends React.Component<Props, {}> {
     const firstVisibleRow = Math.floor(top / this.rowHeight)
     const lastVisibleRow = firstVisibleRow + Math.ceil(height / this.rowHeight)
 
-    const firstRow =
-      Math.max(0,
-        firstVisibleRow - (firstVisibleRow % BLOCK_ROW_SIZE) - BLOCKS_AROUND * BLOCK_ROW_SIZE)
+    const firstRowRequest = firstVisibleRow - ROWS_AROUND
+    const lastRowRequest = lastVisibleRow + ROWS_AROUND
 
-    const lastRow =
-      Math.min(this.rows.length,
-        lastVisibleRow + (BLOCK_ROW_SIZE - lastVisibleRow % BLOCK_ROW_SIZE) + BLOCKS_AROUND * BLOCK_ROW_SIZE)
+    const firstRow = Math.max(0, firstRowRequest - (firstRowRequest % BLOCK_ROW_SIZE))
+    const lastRow = Math.min(this.rows.length, lastRowRequest + (BLOCK_ROW_SIZE - lastRowRequest % BLOCK_ROW_SIZE))
 
     const left = this.container.current!.scrollLeft
     const width = this.container.current!.clientWidth
     const firstVisibleColumn = Math.floor(left / this.columnWidth)
     const lastVisibleColumn = firstVisibleColumn + Math.ceil(width / this.columnWidth)
 
-    const firstColumn =
-      Math.max(0,
-        firstVisibleColumn - (firstVisibleColumn % BLOCK_COL_SIZE) - BLOCKS_AROUND * BLOCK_COL_SIZE)
+    const firstColumnRequest = firstVisibleColumn - COLUMNS_AROUND
+    const lastColumnRequest = lastVisibleColumn + COLUMNS_AROUND
 
-    const lastColumn =
-      Math.min(this.rows.length,
-        lastVisibleColumn + (BLOCK_COL_SIZE - lastVisibleColumn % BLOCK_COL_SIZE) + BLOCKS_AROUND * BLOCK_COL_SIZE)
+    const firstColumn = Math.max(0, firstColumnRequest - (firstColumnRequest % BLOCK_COL_SIZE))
+    const lastColumn  = Math.min(this.columns.length, lastColumnRequest + (BLOCK_COL_SIZE - lastColumnRequest % BLOCK_COL_SIZE))
 
     this.screenRange = {
       minX: firstVisibleColumn,
@@ -318,10 +317,12 @@ export class DataGrid extends React.Component<Props, {}> {
 
     const element = document.createElement('div')
     element.className = 'block'
-    element.setAttribute('data-row', String(rowIndex))
-    element.setAttribute('data-col', String(columnIndex))
-    element.style.transform =
-      `translate3d(${columnIndex * this.columnWidth}px, ${rowIndex * this.rowHeight}px, 0)`
+    // element.setAttribute('data-row', String(rowIndex))
+    // element.setAttribute('data-col', String(columnIndex))
+
+    const xPx = columnIndex * this.columnWidth
+    const yPx = rowIndex * this.rowHeight
+    element.style.transform = `translate3d(${xPx}px, ${yPx}px, 0)`
     // element.style.top = `${rowIndex * this.rowHeight}px`
     // element.style.left = `${columnIndex * this.columnWidth}px`
     // element.style.containIntrinsicWidth = `${BLOCK_COL_SIZE * this.columnWidth}px`
@@ -347,9 +348,9 @@ export class DataGrid extends React.Component<Props, {}> {
 
     const block = {
       minX: x,
-      maxX: x + BLOCK_COL_SIZE - 1,
+      maxX: Math.min(x + BLOCK_COL_SIZE - 1, this.columns.length),
       minY: y,
-      maxY: y + BLOCK_ROW_SIZE - 1,
+      maxY: Math.min(y + BLOCK_ROW_SIZE - 1, this.rows.length),
       didMount: false,
       element,
       root,
@@ -371,30 +372,32 @@ export class DataGrid extends React.Component<Props, {}> {
     ctx.fillRect(0, 0, w, h)
 
     const f = 0.1
-    const cellHeight = this.rowHeight * f
-    const cellWidth = this.columnWidth * f
+    const cellHeight = Math.round(this.rowHeight * f * 0.5)
+    const cellWidth = Math.round(this.columnWidth * f)
 
     ctx.lineWidth = 0.5
 
-    const drawRect = (range: Range) => {
+    const doRect = (range: Range, op = ctx.strokeRect.bind(ctx)) => {
       const x = range.minX * cellWidth
       const y = range.minY * cellHeight
       const w = (range.maxX + 1) * cellWidth - x
       const h = (range.maxY + 1) * cellHeight - y
-      ctx.strokeRect(x + 0.5, y + 0.5, w, h)
+      op(x + 0.5, y + 0.5, w, h)
     }
 
     ctx.strokeStyle = 'blue'
     const blocks = this.blockTree.all()
     for (const block of blocks) {
-      drawRect(block)
+      doRect(block)
     }
 
     ctx.strokeStyle = 'red'
-    drawRect(this.displayRange)
+    doRect(this.displayRange)
 
     ctx.strokeStyle = 'yellow'
-    drawRect(this.screenRange)
+    ctx.fillStyle = 'rgba(255, 255, 0, 0.1)'
+    doRect(this.screenRange)
+    doRect(this.screenRange, ctx.fillRect.bind(ctx))
 
 
     this.canvasFrameId = requestAnimationFrame(this.updateCanvas)
