@@ -6,20 +6,23 @@ body {
   color: #efefef;
   background: #1f2227;
   padding: 20px;
+  color-scheme: dark;
 
   --row-height: 22px;
 }
 
-.wrapper {
+.grid {
   position: relative;
+  font-size: 14px;
 }
 
 .container {
+  contain: strict;
   position: relative;
   border: 2px solid #599eff;
-  height: 200px;
+  border-radius: 8px;
+  height: 300px;
   overflow: scroll;
-  contain: strict;
 }
 .container {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -30,10 +33,11 @@ body {
 }
 
 .column {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   width: 120px;
   height: var(--row-height);
-  padding: 2px;
+  padding: 5px;
   flex: 0 0 auto;
   white-space: nowrap;
   overflow: hidden;
@@ -55,14 +59,15 @@ body {
 }
 
 .fake-scroll-vertical {
+  contain: strict;
   position: absolute;
   z-index: 1;
-  top: var(--row-height);
-  right: 0;
+  top: calc(var(--row-height) + 2px);
+  right: 2px;
   display: inline-block;
   width: 14px;
-  height: calc(100% - var(--row-height));
-  border: 1px solid red;
+  height: calc(100% - var(--row-height) - 4px);
+  /* border: 1px solid red; */
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -75,6 +80,7 @@ body {
 }
 
 .block {
+  /* contain: strict; */
   position: absolute;
   top: 0;
 }
