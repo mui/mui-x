@@ -150,18 +150,20 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
-  [`&.${pickersDayClasses.selected}`]: {
-    color: (theme.vars || theme).palette.primary.contrastText,
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
-    transition: theme.transitions.create('background-color', {
-      duration: theme.transitions.duration.short,
-    }),
-    '&:hover': {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
+  ...(!ownerState.outsideCurrentMonth && {
+    [`&.${pickersDayClasses.selected}`]: {
+      color: (theme.vars || theme).palette.primary.contrastText,
+      backgroundColor: (theme.vars || theme).palette.primary.main,
+      fontWeight: theme.typography.fontWeightMedium,
+      transition: theme.transitions.create('background-color', {
+        duration: theme.transitions.duration.short,
+      }),
+      '&:hover': {
+        willChange: 'background-color',
+        backgroundColor: (theme.vars || theme).palette.primary.dark,
+      },
     },
-  },
+  }),
   [`&.${pickersDayClasses.disabled}:not(.${pickersDayClasses.selected})`]: {
     color: (theme.vars || theme).palette.text.disabled,
   },
