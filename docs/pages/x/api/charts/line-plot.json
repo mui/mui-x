@@ -1,0 +1,9 @@
+{
+  "props": {},
+  "slots": {},
+  "name": "LinePlot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },
+  "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "LinePlot" }]
+}

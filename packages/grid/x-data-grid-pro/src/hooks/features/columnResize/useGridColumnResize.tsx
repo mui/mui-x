@@ -136,6 +136,7 @@ export const useGridColumnResize = (
 
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
+  const headerFilterElementRef = React.useRef<HTMLDivElement>();
   const colGroupingElementRef = React.useRef<Element[]>();
   const colCellElementsRef = React.useRef<Element[]>();
   const theme = useTheme();
@@ -162,6 +163,14 @@ export const useGridColumnResize = (
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
     colElementRef.current!.style.maxWidth = `${newWidth}px`;
+
+    const headerFilterElement = headerFilterElementRef.current;
+
+    if (headerFilterElement) {
+      headerFilterElement.style.width = `${newWidth}px`;
+      headerFilterElement.style.minWidth = `${newWidth}px`;
+      headerFilterElement.style.maxWidth = `${newWidth}px`;
+    }
 
     [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
       const div = element as HTMLDivElement;
@@ -257,6 +266,14 @@ export const useGridColumnResize = (
           `[data-field="${colDef.field}"]`,
         )!;
 
+      const headerFilterRowElement = apiRef.current.headerFiltersElementRef?.current;
+
+      if (headerFilterRowElement) {
+        headerFilterElementRef.current = headerFilterRowElement.querySelector<HTMLDivElement>(
+          `[data-field="${colDef.field}"]`,
+        ) as HTMLDivElement;
+      }
+
       colGroupingElementRef.current = findGroupHeaderElementsFromField(
         apiRef.current.columnHeadersContainerElementRef?.current!,
         colDef.field,
@@ -297,6 +314,17 @@ export const useGridColumnResize = (
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
       apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
+      if (colDefRef.current) {
+        apiRef.current.publishEvent(
+          'columnWidthChange',
+          {
+            element: colElementRef.current,
+            colDef: colDefRef.current,
+            width: colDefRef.current?.computedWidth,
+          },
+          nativeEvent,
+        );
+      }
     });
 
     logger.debug(

@@ -163,7 +163,7 @@ export const useGridFilter = (
   );
 
   const showFilterPanel = React.useCallback<GridFilterApi['showFilterPanel']>(
-    (targetColumnField) => {
+    (targetColumnField, panelId, labelId) => {
       logger.debug('Displaying filter panel');
       if (targetColumnField) {
         const filterModel = gridFilterModelSelector(apiRef);
@@ -226,7 +226,7 @@ export const useGridFilter = (
           items: newFilterItems,
         });
       }
-      apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
+      apiRef.current.showPreferences(GridPreferencePanelsValue.filters, panelId, labelId);
     },
     [apiRef, logger, props.disableMultipleColumnsFiltering],
   );

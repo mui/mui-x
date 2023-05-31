@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "slots": {},
+  "name": "LineElement",
+  "styles": {
+    "classes": ["root", "highlighted", "faded"],
+    "globalClasses": {},
+    "name": "MuiLineElement"
+  },
+  "filename": "/packages/x-charts/src/LineChart/LineElement.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "LineElement" }]
+}
