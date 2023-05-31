@@ -43,17 +43,13 @@ export const filterStateInitializer: GridStateInitializer<
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       filteredDescendantCountLookup: {},
     },
-    visibleRows: {
-      lookup: {},
-    },
+    visibleRowsLookup: {},
   };
 };
 
-const getVisibleRows: GridStrategyProcessor<'visibleRows'> = (params) => {
+const getVisibleRowsLookup: GridStrategyProcessor<'visibleRows'> = (params) => {
   // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
-  return {
-    lookup: params.filteredRowsLookup,
-  };
+  return params.filteredRowsLookup;
 };
 
 function getVisibleRowsState(
@@ -429,7 +425,12 @@ export const useGridFilter = (
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'filtering', flatFilteringMethod);
-  useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'visibleRows', getVisibleRows);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    GRID_DEFAULT_STRATEGY,
+    'visibleRows',
+    getVisibleRowsLookup,
+  );
 
   /**
    * EVENTS
