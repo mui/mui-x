@@ -237,7 +237,7 @@ export const useGridRowGroupingPreProcessors = (
   useGridRegisterStrategyProcessor(
     apiRef,
     ROW_GROUPING_STRATEGY,
-    'visibleRows',
+    'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );
 

@@ -216,7 +216,7 @@ export const useGridTreeDataPreProcessors = (
   useGridRegisterStrategyProcessor(
     privateApiRef,
     TREE_DATA_STRATEGY,
-    'visibleRows',
+    'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );
 

@@ -47,7 +47,7 @@ export const filterStateInitializer: GridStateInitializer<
   };
 };
 
-const getVisibleRowsLookup: GridStrategyProcessor<'visibleRows'> = (params) => {
+const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookupCreation'> = (params) => {
   // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
   return params.filteredRowsLookup;
 };
@@ -56,7 +56,7 @@ function getVisibleRowsState(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   state: GridStateCommunity,
 ) {
-  return apiRef.current.applyStrategyProcessor('visibleRows', {
+  return apiRef.current.applyStrategyProcessor('visibleRowsLookupCreation', {
     tree: state.rows.tree,
     filteredRowsLookup: state.filter.filteredRowsLookup,
   });
@@ -428,7 +428,7 @@ export const useGridFilter = (
   useGridRegisterStrategyProcessor(
     apiRef,
     GRID_DEFAULT_STRATEGY,
-    'visibleRows',
+    'visibleRowsLookupCreation',
     getVisibleRowsLookup,
   );
 

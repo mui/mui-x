@@ -35,7 +35,7 @@ export interface GridStrategyProcessingLookup {
     params: GridSortingMethodParams;
     value: GridSortingMethodValue;
   };
-  visibleRows: {
+  visibleRowsLookupCreation: {
     group: 'rowTree';
     params: {
       tree: GridRowsState['tree'];
