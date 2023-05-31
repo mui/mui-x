@@ -341,13 +341,22 @@ const pages: MuiPage[] = [
             { pathname: '/x/react-charts/lines', title: 'Lines' },
             { pathname: '/x/react-charts/scatter', title: 'Scatter' },
             {
-              pathname: '',
+              pathname: '/x/react-charts-common-components',
               title: 'Common components',
               children: [
                 { pathname: '/x/react-charts/axis', title: 'Axis' },
                 { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
                 { pathname: '/x/react-charts/styling', title: 'Styling' },
                 { pathname: '/x/react-charts/stacking', title: 'Stacking' },
+              ],
+            },
+            {
+              pathname: '/x/react-charts-demos',
+              title: 'Demos',
+              children: [
+                { pathname: '/x/react-charts/bar-demo', title: 'Bar' },
+                { pathname: '/x/react-charts/line-demo', title: 'Line' },
+                { pathname: '/x/react-charts/scatter-demo', title: 'Scatter' },
               ],
             },
             { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
