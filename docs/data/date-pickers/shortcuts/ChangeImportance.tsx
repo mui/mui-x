@@ -1,15 +1,19 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
+import { PickerChangeImportance } from '@mui/x-date-pickers/models';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 
-const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
+const getMonthWeekday = (
+  monthIndex: number,
+  weekdayIndex: number,
+  dayRank: number,
+) => {
   // Helper to find for example the 3rd monday in Jun
   const today = dayjs();
   const firstDayOfMonth = today.month(monthIndex).startOf('month');
@@ -23,7 +27,7 @@ const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
   );
 };
 
-const shortcutsItems = [
+const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: "New Year's Day",
     getValue: () => {
@@ -74,18 +78,19 @@ const shortcutsItems = [
   },
 ];
 
-export default function EventImportance() {
-  const [eventImportance, setEventImportance] = React.useState('finish');
+export default function ChangeImportance() {
+  const [changeImportance, setChangeImportance] =
+    React.useState<PickerChangeImportance>('finish');
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3} sx={{ width: 300 }}>
         <ToggleButtonGroup
-          value={eventImportance}
+          value={changeImportance}
           exclusive
           fullWidth
           onChange={(event, newEventImportance) =>
-            setEventImportance(newEventImportance)
+            setChangeImportance(newEventImportance)
           }
         >
           <ToggleButton value="finish">finish</ToggleButton>
@@ -96,7 +101,7 @@ export default function EventImportance() {
           slotProps={{
             shortcuts: {
               items: shortcutsItems,
-              eventImportance,
+              changeImportance,
             },
           }}
         />

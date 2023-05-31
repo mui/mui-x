@@ -4,4 +4,4 @@ export interface TimeStepOptions {
   seconds?: number;
 }
 
-export type PickerChangeEventImportance = 'shallow' | 'partial' | 'finish';
+export type PickerChangeImportance = 'shallow' | 'partial' | 'finish';

@@ -66,7 +66,7 @@ By default, the selection of a shortcut acts like the selection of a value in th
 On desktop, it will fire `onChange`, `onAccept` and close the picker.
 On mobile, it will fire `onChange`, but the user will have to press "OK" or click outside the modal to fire `onAccept` and close the picker.
 
-You can change this behavior using the `eventImportance` property:
+You can change this behavior using the `changeImportance` property:
 
 - `finish` (_default value_): fires `onChange`, on desktop also fires `onAccept` and closes the picker
 - `draft`: fires `onChange`

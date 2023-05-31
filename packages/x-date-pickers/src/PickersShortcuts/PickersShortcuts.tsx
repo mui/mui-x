@@ -4,7 +4,7 @@ import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { PickerChangeEventImportance } from '../models';
+import { PickerChangeImportance } from '../models';
 
 interface PickersShortcutsItemGetValueParams<TValue> {
   isValid: (value: TValue) => boolean;
@@ -22,17 +22,24 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
    * @default `[]`
    */
   items?: PickersShortcutsItem<TValue>[];
-  eventImportance?: PickerChangeEventImportance;
+  /**
+   * Importance of the change when picking a shortcut:
+   * - "finish": fires `onChange`, on desktop also fires `onAccept` and closes the picker.
+   * - "draft": fires `onChange`.
+   * - "shallow": just selects the value visually.
+   * @default "finish"
+   */
+  changeImportance?: PickerChangeImportance;
 }
 
 export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (newValue: TValue, eventImportance?: PickerChangeEventImportance) => void;
+  onChange: (newValue: TValue, changeImportance?: PickerChangeImportance) => void;
   isValid: (value: TValue) => boolean;
 }
 
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, eventImportance = 'finish', isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance = 'finish', isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -44,7 +51,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue, eventImportance);
+        onChange(newValue, changeImportance);
       },
       disabled: !isValid(newValue),
     };
@@ -92,7 +99,7 @@ PickersShortcuts.propTypes = {
    * @default false
    */
   disablePadding: PropTypes.bool,
-  eventImportance: PropTypes.oneOf(['finish', 'partial', 'shallow']),
+  changeImportance: PropTypes.oneOf(['finish', 'partial', 'shallow']),
   isLandscape: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   /**
