@@ -8,6 +8,7 @@ import {
   GridRowMultiSelectionApi,
   GridColumnReorderApi,
   GridRowProApi,
+  GridTreeDataLazyLoadingApi,
 } from '@mui/x-data-grid-pro';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
@@ -20,6 +21,7 @@ import { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSe
 export interface GridApiPremium
   extends GridApiCommon<GridStatePremium, GridInitialStatePremium>,
     GridRowProApi,
+    GridTreeDataLazyLoadingApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
     GridRowGroupingApi,
