@@ -1,8 +1,6 @@
 import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { unstable_capitalize as capitalize } from '@mui/utils';
 import {
   useGridApiContext,
@@ -11,7 +9,6 @@ import {
   GridFilterItem,
   GridColDef,
 } from '@mui/x-data-grid';
-import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
 interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
@@ -82,8 +79,7 @@ function GridHeaderFilterMenu({
               selected={op.value === item.operator}
               key={`${field}-${op.value}`}
             >
-              <ListItemIcon>{OPERATOR_SYMBOL_MAPPING[op.value]}</ListItemIcon>
-              <ListItemText>{label}</ListItemText>
+              {label}
             </MenuItem>
           );
         })}

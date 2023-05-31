@@ -240,36 +240,37 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       >
         {headerFilterComponent}
         {InputComponent && headerFilterComponent === undefined ? (
-          <InputComponent
-            apiRef={apiRef}
-            item={item}
-            inputRef={inputRef}
-            applyValue={applyFilterChanges}
-            onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
-            onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
-            placeholder={apiRef.current.getLocaleText('columnMenuFilter')}
-            label={isFilterActive ? capitalize(label) : ' '}
-            isFilterActive={isFilterActive}
-            headerFilterMenu={
-              <GridHeaderFilterAdornment
-                operators={filterOperators!}
-                item={item}
-                field={colDef.field}
-                applyFilterChanges={applyFilterChanges}
-                headerFilterMenuRef={headerFilterMenuRef}
-                buttonRef={buttonRef}
-              />
-            }
-            clearButton={
-              showClearIcon && isApplied ? (
-                <GridHeaderFilterClearButton onClick={clearFilterItem} />
-              ) : null
-            }
-            disabled={isNoInputOperator}
-            tabIndex={-1}
-            {...currentOperator?.InputComponentProps}
-            {...InputComponentProps}
-          />
+          <React.Fragment>
+            <GridHeaderFilterAdornment
+              operators={filterOperators!}
+              item={item}
+              field={colDef.field}
+              applyFilterChanges={applyFilterChanges}
+              headerFilterMenuRef={headerFilterMenuRef}
+              buttonRef={buttonRef}
+            />
+            <InputComponent
+              apiRef={apiRef}
+              item={item}
+              inputRef={inputRef}
+              applyValue={applyFilterChanges}
+              onFocus={() => apiRef.current.startHeaderFilterEditMode(colDef.field)}
+              onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
+              label={capitalize(label)}
+              placeholder=""
+              isFilterActive={isFilterActive}
+              clearButton={
+                showClearIcon && isApplied ? (
+                  <GridHeaderFilterClearButton onClick={clearFilterItem} />
+                ) : null
+              }
+              disabled={isNoInputOperator}
+              tabIndex={-1}
+              InputLabelProps={null}
+              {...currentOperator?.InputComponentProps}
+              {...InputComponentProps}
+            />
+          </React.Fragment>
         ) : null}
       </div>
     );

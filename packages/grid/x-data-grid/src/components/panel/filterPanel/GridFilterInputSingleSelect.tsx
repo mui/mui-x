@@ -51,7 +51,6 @@ const SingleSelectOperatorContainer = styled('div')({
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps &
   Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
-    headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -73,7 +72,6 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
-    headerFilterMenu,
     isFilterActive,
     clearButton,
     ...others
@@ -165,7 +163,6 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           labelId={labelId}
           value={filterValueState}
           onChange={onFilterChange}
-          startAdornment={isFilterActive ? headerFilterMenu : null}
           variant="standard"
           type={type || 'text'}
           inputProps={{
@@ -218,7 +215,6 @@ GridFilterInputSingleSelect.propTypes = {
    * @returns {string} The value to be used.
    */
   getOptionValue: PropTypes.func,
-  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)

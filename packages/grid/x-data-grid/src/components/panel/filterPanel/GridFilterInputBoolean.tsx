@@ -8,7 +8,6 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
-    headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -29,7 +28,6 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     applyValue,
     apiRef,
     focusElementRef,
-    headerFilterMenu,
     isFilterActive,
     clearButton,
     tabIndex,
@@ -82,7 +80,6 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
           variant="standard"
           native={isSelectNative}
           displayEmpty
-          startAdornment={isFilterActive ? headerFilterMenu : null}
           inputProps={{ ref: focusElementRef, tabIndex }}
           {...others}
           {...baseSelectProps}
@@ -131,7 +128,6 @@ GridFilterInputBoolean.propTypes = {
       current: PropTypes.any.isRequired,
     }),
   ]),
-  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)

@@ -7,14 +7,16 @@ import {
   GridColDef,
 } from '@mui/x-data-grid';
 import { unstable_useId as useId } from '@mui/utils';
+import DropUpIcon from '@mui/icons-material/ArrowDropUp';
+import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
 const sx = {
   width: 22,
   height: 22,
-  padding: '0px 0px 2px 2px',
+  marginTop: 1,
+  marginRight: 1,
 };
 
 function GridHeaderFilterAdornment(props: {
@@ -45,26 +47,26 @@ function GridHeaderFilterAdornment(props: {
     return null;
   }
 
+  const Icon = open ? DropUpIcon : DropDownIcon;
+
   return (
     <React.Fragment>
-      <rootProps.slots.baseInputAdornment position="start">
-        <rootProps.slots.baseIconButton
-          id={buttonId}
-          ref={buttonRef}
-          aria-label={apiRef.current.getLocaleText('filterPanelOperator')}
-          title={apiRef.current.getLocaleText('filterPanelOperator')}
-          aria-controls={menuId}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
-          tabIndex={-1}
-          size="small"
-          onClick={handleClick}
-          sx={sx}
-          {...rootProps.slotProps?.baseIconButton}
-        >
-          {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? '='}
-        </rootProps.slots.baseIconButton>
-      </rootProps.slots.baseInputAdornment>
+      <rootProps.slots.baseIconButton
+        id={buttonId}
+        ref={buttonRef}
+        aria-label={apiRef.current.getLocaleText('filterPanelOperator')}
+        title={apiRef.current.getLocaleText('filterPanelOperator')}
+        aria-controls={menuId}
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="true"
+        tabIndex={-1}
+        size="small"
+        onClick={handleClick}
+        sx={sx}
+        {...rootProps.slotProps?.baseIconButton}
+      >
+        <Icon fontSize="small" />
+      </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}
         open={open}
