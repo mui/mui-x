@@ -101,6 +101,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 ## API
 
+- [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
