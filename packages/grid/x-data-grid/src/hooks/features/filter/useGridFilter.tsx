@@ -52,7 +52,7 @@ const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookupCreation'> =
   return params.filteredRowsLookup;
 };
 
-function getVisibleRowsState(
+function getVisibleRowsLookupState(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   state: GridStateCommunity,
 ) {
@@ -110,11 +110,11 @@ export const useGridFilter = (
         },
       };
 
-      const visibleRowsState = getVisibleRowsState(apiRef, newState);
+      const visibleRowsLookupState = getVisibleRowsLookupState(apiRef, newState);
 
       return {
         ...newState,
-        visibleRows: visibleRowsState,
+        visibleRowsLookup: visibleRowsLookupState,
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
@@ -458,11 +458,11 @@ export const useGridFilter = (
     [apiRef],
   );
 
-  const updateVisibleRowsState = React.useCallback(() => {
+  const updateVisibleRowsLookupState = React.useCallback(() => {
     apiRef.current.setState((state) => {
       return {
         ...state,
-        visibleRows: getVisibleRowsState(apiRef, state),
+        visibleRowsLookup: getVisibleRowsLookupState(apiRef, state),
       };
     });
     apiRef.current.forceUpdate();
@@ -473,7 +473,7 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsState);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
 
   /**
    * 1ST RENDER
