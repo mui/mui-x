@@ -9,7 +9,7 @@ import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DateComponentValidationProps } from '../internals/utils/validation/validateDate';
-import { ArrowDropDown } from '../internals/components/icons';
+import { ArrowDropDown } from '../icons';
 import {
   PickersArrowSwitcher,
   ExportedPickersArrowSwitcherProps,

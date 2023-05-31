@@ -5,7 +5,7 @@ import { useTheme, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
-import { ArrowLeft, ArrowRight } from '../icons';
+import { ArrowLeft, ArrowRight } from '../../../icons';
 import {
   PickersArrowSwitcherOwnerState,
   PickersArrowSwitcherProps,

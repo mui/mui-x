@@ -6,7 +6,7 @@ import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, validateTime } from '../internals';
-import { Clock } from '../internals/components/icons';
+import { Clock } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';

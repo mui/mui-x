@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { Time, DateRange } from '../internals/components/icons';
+import { Time, DateRange } from '../icons';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
