@@ -270,4 +270,10 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @returns {boolean} A boolean indicating if the row has children on server.
    */
   isServerSideRow?: (row: GridValidRowModel) => boolean;
+  /**
+   * Callback that checks the number of children for server side rows. i.e. rows that have `isServerSideRow` returning true.
+   * @param {GridValidRowModel} row The row to test.
+   * @returns {number} A boolean indicating if the row has children on server.
+   */
+  getDescendantCount?: (row: GridValidRowModel) => number;
 }

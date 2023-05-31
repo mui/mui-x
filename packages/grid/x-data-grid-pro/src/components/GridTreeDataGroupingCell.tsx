@@ -40,12 +40,12 @@ interface GridTreeDataGroupingCellProps
 }
 
 interface GridTreeDataGroupingCellIconProps
-  extends Pick<GridTreeDataGroupingCellProps, 'id' | 'field' | 'rowNode'> {
+  extends Pick<GridTreeDataGroupingCellProps, 'id' | 'field' | 'rowNode' | 'row'> {
   descendantCount: number;
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const { rowNode, id, field, descendantCount } = props;
+  const { rowNode, row, id, field, descendantCount } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
 
@@ -56,7 +56,6 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (isServerSideNode && !rowNode.childrenExpanded && !areChildrenFetched) {
       const helpers = getLazyLoadingHelpers(apiRef, rowNode as GridServerSideGroupNode);
-      const row = apiRef.current.getRow(rowNode.id);
       apiRef.current.setRowLoadingStatus(rowNode.id, true);
       apiRef.current.publishEvent('fetchRowChildren', { row, helpers });
     } else {
@@ -95,6 +94,8 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
 
   const rootProps = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
+  const row = apiRef.current.getRow(rowNode.id);
+  const isServerSideNode = (rowNode as GridServerSideGroupNode).isServerSide;
   const ownerState: OwnerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
   const filteredDescendantCountLookup = useGridSelector(
@@ -104,6 +105,11 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
 
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
+  const descendantCount =
+    isServerSideNode && rootProps.getDescendantCount
+      ? rootProps.getDescendantCount(row)
+      : filteredDescendantCount;
+
   return (
     <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>
       <div className={classes.toggle}>
@@ -111,12 +117,13 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
           id={id}
           field={field}
           rowNode={rowNode}
-          descendantCount={filteredDescendantCount}
+          row={row}
+          descendantCount={descendantCount}
         />
       </div>
       <span>
         {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
-        {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
+        {!hideDescendantCount && descendantCount > 0 ? ` (${descendantCount})` : ''}
       </span>
     </Box>
   );

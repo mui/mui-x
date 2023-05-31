@@ -129,10 +129,12 @@ interface GridFetchRowChildrenParams {
 }
 ```
 
-Do the API call in the `onFetchRowChildren` handler and call `helpers.success(newRows)` and `helpers.error()` respectively in case of success or error to let the grid update the related internal states.
+The `onFetchRowChildren` handler is fired when the data for a specific row is requested, use it to fetch the data and call `helpers.success(newRows)` and `helpers.error()` respectively in case of success or error to let the grid update the related internal states.
+
+To enable lazy-loading for a given row, you also need to set the `isServerSideRow` prop to a function that returns `true` for the rows that have children and `false` for the rows that don't have children. If you have the information on server, you can provide an optional `getDescendantCount` prop which returns the number of descendants for a parent row.
 
 ```tsx
-async function onFetchRowChildren({ row, server }: GridFetchRowChildrenParams) {
+async function onFetchRowChildren({ row, helpers }: GridFetchRowChildrenParams) {
   try {
     const childRows = await fetchRows(row);
     helpers.success(childRows);
@@ -146,7 +148,8 @@ async function onFetchRowChildren({ row, server }: GridFetchRowChildrenParams) {
   treeData
   getTreeDataPath={getTreeDataPath}
   onFetchRowChildren={onFetchRowChildren}
-  isServerSideRow={(row) => row.descendantCount! > 0}
+  isServerSideRow={(row) => row.hasChildren}
+  getDescendantCount={(row) => row.descendantCount}
   rowsLoadingMode="server"
 />;
 ```
