@@ -10,7 +10,13 @@ const data = Array.from({ length: 50 }, () => ({
   y: chance.floating({ min: -20, max: 20 }),
 })).map((d, index) => ({ ...d, id: index }));
 
-export default function LegendCustomizationNoSnap() {
+const cssVarToKey = {
+  '--Legend-itemWidth': 'item width',
+  '--Legend-itemMarkSize': 'item mark size',
+  '--Legend-labelSpacing': 'label spacing',
+  '--Legend-rootSpacing': 'root spacing',
+};
+export default function DimensionsNoSnap() {
   return (
     <ChartsUsageDemo
       componentName="Legend"
@@ -21,28 +27,10 @@ export default function LegendCustomizationNoSnap() {
           defaultValue: 'row',
           options: ['row', 'column'],
         },
-        {
-          propName: 'vertical',
-          knob: 'select',
-          defaultValue: 'top',
-          options: ['top', 'middle', 'bottom'],
-        },
-        {
-          propName: 'horizontal',
-          knob: 'select',
-          defaultValue: 'middle',
-          options: ['left', 'middle', 'right'],
-        },
-        {
-          propName: 'offsetX',
-          knob: 'number',
-          defaultValue: 0,
-        },
-        {
-          propName: 'offsetY',
-          knob: 'number',
-          defaultValue: -20,
-        },
+        { propName: 'item width', knob: 'number', defaultValue: 70 },
+        { propName: 'item mark size', knob: 'number', defaultValue: 20 },
+        { propName: 'label spacing', knob: 'number', defaultValue: 5 },
+        { propName: 'root spacing', knob: 'number', defaultValue: 5 },
       ]}
       renderDemo={(props) => (
         <ScatterChart
@@ -60,19 +48,28 @@ export default function LegendCustomizationNoSnap() {
           ]}
           legend={{
             direction: props.direction,
-            position: { vertical: props.vertical, horizontal: props.horizontal },
           }}
           margin={{
-            top: 70,
-            bottom: 70,
-            left: 100,
-            right: 100,
+            top: 100,
+            bottom: 30,
           }}
           sx={{
-            '--Legend-rootOffsetX':
-              typeof props.offsetX === 'number' ? `${props.offsetX}px` : undefined,
-            '--Legend-rootOffsetY':
-              typeof props.offsetY === 'number' ? `${props.offsetY}px` : undefined,
+            '--Legend-itemWidth':
+              typeof props['item width'] === 'number'
+                ? `${props['item width']}px`
+                : undefined,
+            '--Legend-itemMarkSize':
+              typeof props['item mark size'] === 'number'
+                ? `${props['item mark size']}px`
+                : undefined,
+            '--Legend-labelSpacing':
+              typeof props['label spacing'] === 'number'
+                ? `${props['label spacing']}px`
+                : undefined,
+            '--Legend-rootSpacing':
+              typeof props['root spacing'] === 'number'
+                ? `${props['root spacing']}px`
+                : undefined,
           }}
           width={400}
           height={300}
@@ -83,22 +80,19 @@ export default function LegendCustomizationNoSnap() {
           `import { ScatterChart } from '@mui/x-charts/ScatterChart';`,
           '',
           `<ScatterChart`,
-          '  margin={{ top: 70, bottom: 70, left: 100, right:100 }}',
           '  {/** ... */}',
           '  legend={{',
           `    directon: "${props.direction}"`,
-          '    position: {',
-          `      vertical: "${props.vertical}",`,
-          `      horizontal: "${props.horizontal}"`,
-          '    }',
           '  }}',
           '  sx={{',
-          ...(typeof props.offsetX === 'number'
-            ? [`    "--Legend-rootOffsetX": "${props.offsetX}px",`]
-            : []),
-          ...(typeof props.offsetY === 'number'
-            ? [`    "--Legend-rootOffsetY": "${props.offsetY}px",`]
-            : []),
+          ...[
+            '--Legend-itemWidth',
+            '--Legend-itemMarkSize',
+            '--Legend-labelSpacing',
+            '--Legend-rootSpacing',
+          ]
+            .filter((key) => typeof props[key] === 'number')
+            .map((key) => `    '${key}': ${props[cssVarToKey[key]]}px,`),
           '  }}',
           '/>',
         ].join('\n');
