@@ -171,7 +171,7 @@ export class DataGrid extends React.Component<Props, {}> {
     this.aroundAnimation = animate({
       from: 0,
       to: 1,
-      duration: scrollDirection === ScrollDirection.HORIZONTAL ? 100 : 1000,
+      duration: scrollDirection === ScrollDirection.HORIZONTAL ? 100 : 500,
       onChange: (factor) => {
         this.rowsAround = Math.round(lerp(factor, initialRowsAround, rowsAround))
         this.colsAround = Math.round(lerp(factor, initialColsAround, colsAround))
