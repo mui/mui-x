@@ -1,20 +1,25 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import RTree from 'rbush';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { Button } from '@mui/material';
 import type { DataGridPremium } from '@mui/x-data-grid-premium';
+import { animate, lerp, Animation } from './animate'
 
 type Props = Parameters<typeof DataGridPremium>[0]
 
-const BLOCK_ROW_SIZE = 4
-const BLOCK_COL_SIZE = 7
-const BLOCKS_AROUND = 1
+const BLOCK_ROW_SIZE = 6
+const BLOCK_COL_SIZE = 2
 
-const ROWS_AROUND = 20
-const COLUMNS_AROUND = 2
+const ROWS_AROUND = 100
+const COLS_AROUND = 1
 
-const noop = () => {}
-const debug = console.log
+const ROWS_AROUND_WHILE_HORIZONTAL = 5
+const COLS_AROUND_WHILE_HORIZONTAL = 10
+
+
+const noop = (() => {}) as any
+const debug = noop
 
 // x: column
 // y: row
@@ -27,6 +32,7 @@ type Range = {
 
 type Block = Range & {
   didMount: boolean,
+  didRender: boolean,
   element: HTMLElement,
   root: ReturnType<typeof ReactDOM.createRoot>,
 }
@@ -39,25 +45,22 @@ const EMPTY_RANGE = {
 } as Range
 
 
-// const config = { childList: true }
-//
-// const observer = new MutationObserver((mutationList) => {
-//   for (const mutation of mutationList) {
-//     // const addedNode = mutation.addedNodes[0]
-//     // const removedNode = mutation.addedNodes[0]
-//     // console.log(mutation.addedNodes[0])
-//     // if (mutation.type === "childList") {
-//     //   console.log("A child node has been added or removed.");
-//     // } else if (mutation.type === "attributes") {
-//     //   console.log(`The ${mutation.attributeName} attribute was modified.`);
-//     // }
-//   }
-// });
+const config = { childList: true, subtree: true }
+
+enum ScrollDirection {
+  NONE,
+  VERTICAL,
+  HORIZONTAL,
+}
 
 export class DataGrid extends React.Component<Props, {}> {
   static defaultProps = {
     rowHeight: 22,
   }
+
+  rowsAround = ROWS_AROUND
+  colsAround = COLS_AROUND
+  aroundAnimation = null as Animation | null
 
   content = React.createRef<HTMLDivElement>()
   container = React.createRef<HTMLDivElement>()
@@ -71,11 +74,27 @@ export class DataGrid extends React.Component<Props, {}> {
   lastScrollTop = 0
   lastScrollLeft = 0
   lastScrollTimestamp = 0
+  scrollDirection = ScrollDirection.NONE
 
   cleanupTimeout = 0
 
   screenRange = EMPTY_RANGE
   displayRange = EMPTY_RANGE
+
+  observer = typeof MutationObserver !== 'undefined' ? new MutationObserver((mutationList) => {
+    for (const mutation of mutationList) {
+
+      const target = mutation.target as HTMLElement
+      if (target.className.includes('block') && target.children.length === BLOCK_ROW_SIZE) {
+        const col = parseInt(target.getAttribute('data-col')!)
+        const row = parseInt(target.getAttribute('data-row')!)
+        const [block] = this.blockTree.search({ minX: col, maxX: col, minY: row, maxY: row })
+        if (block) {
+          block.didRender = true
+        }
+      }
+    }
+  }) : null as any
 
   constructor(props: Props) {
     super(props);
@@ -100,12 +119,12 @@ export class DataGrid extends React.Component<Props, {}> {
   }
 
   componentDidMount() {
-    this.updateDisplayRange()
+    this.updateScreenRange()
     this.updateHeight()
     this.renderBlocks(this.displayRange)
 
-    // observer.observe(this.content.current!, config)
-    
+    this.observer.observe(this.content.current!, config)
+
     this.container.current!.addEventListener('wheel', this.onContainerWheel)
     this.container.current!.addEventListener('scroll', this.onContainerScroll)
 
@@ -115,7 +134,7 @@ export class DataGrid extends React.Component<Props, {}> {
   }
 
   componentWillUnmount() {
-    // observer.disconnect()
+    this.observer.disconnect()
 
     this.container.current!.removeEventListener('wheel', this.onContainerWheel)
     this.container.current!.removeEventListener('scroll', this.onContainerScroll)
@@ -126,9 +145,41 @@ export class DataGrid extends React.Component<Props, {}> {
   }
 
   componentDidUpdate() {
-    this.updateDisplayRange()
+    this.updateScreenRange()
     this.updateHeight()
     this.renderBlocks(this.displayRange)
+  }
+
+  resetScrollDirection = debounce(() => {
+    this.changeScrollDirection(ScrollDirection.NONE)
+  }, 300)
+
+  changeScrollDirection(scrollDirection: ScrollDirection) {
+    const rowsAround =
+      scrollDirection === ScrollDirection.HORIZONTAL ?
+        ROWS_AROUND_WHILE_HORIZONTAL : ROWS_AROUND
+
+    const colsAround =
+      scrollDirection === ScrollDirection.HORIZONTAL ?
+        COLS_AROUND_WHILE_HORIZONTAL : COLS_AROUND
+
+    const initialRowsAround = this.rowsAround
+    const initialColsAround = this.colsAround
+
+    this.scrollDirection = scrollDirection
+    this.aroundAnimation?.cancel()
+    this.aroundAnimation = animate({
+      from: 0,
+      to: 1,
+      duration: scrollDirection === ScrollDirection.HORIZONTAL ? 100 : 1000,
+      onChange: (factor) => {
+        this.rowsAround = Math.round(lerp(factor, initialRowsAround, rowsAround))
+        this.colsAround = Math.round(lerp(factor, initialColsAround, colsAround))
+
+        this.updateDisplayRange()
+        this.renderBlocks(this.displayRange)
+      }
+    })
   }
 
   scheduleCleanup = (minimalDelay?: number) => {
@@ -138,7 +189,7 @@ export class DataGrid extends React.Component<Props, {}> {
     const elapsed = performance.now() - this.lastScrollTimestamp
     if (elapsed < 300) {
       debug('schedule:debounce')
-      this.cleanupTimeout = setTimeout(this.scheduleCleanup, 300) as any
+      this.cleanupTimeout = setTimeout(this.scheduleCleanup, 500) as any
       return
     }
 
@@ -153,7 +204,7 @@ export class DataGrid extends React.Component<Props, {}> {
 
   scheduleCleanupNextFrame = () => {
     afterAnimationFrame(() => {
-      this.updateDisplayRange()
+      this.updateScreenRange()
       this.removeBlocks(this.displayRange)
     })
   }
@@ -183,7 +234,7 @@ export class DataGrid extends React.Component<Props, {}> {
     //   })
     // }
 
-    this.updateDisplayRange()
+    this.updateScreenRange()
     this.renderBlocks(this.displayRange)
     this.scheduleCleanup()
   }
@@ -192,6 +243,19 @@ export class DataGrid extends React.Component<Props, {}> {
     performance.mark('WHEEL: ' + ev.deltaY)
 
     this.lastScrollTimestamp = ev.timeStamp;
+
+    let scrollDirection: ScrollDirection
+    if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) {
+      scrollDirection = ScrollDirection.VERTICAL
+    } else {
+      scrollDirection = ScrollDirection.HORIZONTAL
+    }
+
+    if (scrollDirection !== this.scrollDirection) {
+      this.changeScrollDirection(scrollDirection)
+    }
+
+    this.resetScrollDirection()
 
     // TODO: scroll prediction
   }
@@ -258,7 +322,7 @@ export class DataGrid extends React.Component<Props, {}> {
       if (performance.now() - start > MAX_DURATION) {
         debug('cleanup:', (performance.now() - start) + 'ms', allBlocks.length + ' blocks', '(aborted)')
         debug('block:', this.blockTree.all().length)
-        return this.scheduleCleanup(50)
+        return this.scheduleCleanup(20)
       }
     }
 
@@ -266,30 +330,16 @@ export class DataGrid extends React.Component<Props, {}> {
     debug('block:', this.blockTree.all().length)
   }
 
-  updateDisplayRange() {
-    debug('display-range:', this.displayRange)
-
+  updateScreenRange() {
     const top = this.container.current!.scrollTop
     const height = this.container.current!.clientHeight
     const firstVisibleRow = Math.floor(top / this.rowHeight)
     const lastVisibleRow = firstVisibleRow + Math.ceil(height / this.rowHeight)
 
-    const firstRowRequest = firstVisibleRow - ROWS_AROUND
-    const lastRowRequest = lastVisibleRow + ROWS_AROUND
-
-    const firstRow = Math.max(0, firstRowRequest - (firstRowRequest % BLOCK_ROW_SIZE))
-    const lastRow = Math.min(this.rows.length, lastRowRequest + (BLOCK_ROW_SIZE - lastRowRequest % BLOCK_ROW_SIZE))
-
     const left = this.container.current!.scrollLeft
     const width = this.container.current!.clientWidth
     const firstVisibleColumn = Math.floor(left / this.columnWidth)
     const lastVisibleColumn = firstVisibleColumn + Math.ceil(width / this.columnWidth)
-
-    const firstColumnRequest = firstVisibleColumn - COLUMNS_AROUND
-    const lastColumnRequest = lastVisibleColumn + COLUMNS_AROUND
-
-    const firstColumn = Math.max(0, firstColumnRequest - (firstColumnRequest % BLOCK_COL_SIZE))
-    const lastColumn  = Math.min(this.columns.length, lastColumnRequest + (BLOCK_COL_SIZE - lastColumnRequest % BLOCK_COL_SIZE))
 
     this.screenRange = {
       minX: firstVisibleColumn,
@@ -297,6 +347,24 @@ export class DataGrid extends React.Component<Props, {}> {
       minY: firstVisibleRow,
       maxY: lastVisibleRow,
     }
+
+    this.updateDisplayRange()
+
+    debug('screen-range:', this.displayRange)
+  }
+
+  updateDisplayRange() {
+    const firstRowRequest = this.screenRange.minY - this.rowsAround
+    const lastRowRequest = this.screenRange.maxY + this.rowsAround
+
+    const firstRow = Math.max(0, firstRowRequest - (firstRowRequest % BLOCK_ROW_SIZE))
+    const lastRow = Math.min(this.rows.length, lastRowRequest + (BLOCK_ROW_SIZE - lastRowRequest % BLOCK_ROW_SIZE))
+
+    const firstColumnRequest = this.screenRange.minX - this.colsAround
+    const lastColumnRequest = this.screenRange.maxX + this.colsAround
+
+    const firstColumn = Math.max(0, firstColumnRequest - (firstColumnRequest % BLOCK_COL_SIZE))
+    const lastColumn  = Math.min(this.columns.length, lastColumnRequest + (BLOCK_COL_SIZE - lastColumnRequest % BLOCK_COL_SIZE))
 
     this.displayRange = {
       minX: firstColumn,
@@ -317,8 +385,8 @@ export class DataGrid extends React.Component<Props, {}> {
 
     const element = document.createElement('div')
     element.className = 'block'
-    // element.setAttribute('data-row', String(rowIndex))
-    // element.setAttribute('data-col', String(columnIndex))
+    element.setAttribute('data-row', String(rowIndex))
+    element.setAttribute('data-col', String(columnIndex))
 
     const xPx = columnIndex * this.columnWidth
     const yPx = rowIndex * this.rowHeight
@@ -352,6 +420,7 @@ export class DataGrid extends React.Component<Props, {}> {
       minY: y,
       maxY: Math.min(y + BLOCK_ROW_SIZE - 1, this.rows.length),
       didMount: false,
+      didRender: false,
       element,
       root,
     }
@@ -372,25 +441,26 @@ export class DataGrid extends React.Component<Props, {}> {
     ctx.fillRect(0, 0, w, h)
 
     const f = 0.1
-    const cellHeight = Math.round(this.rowHeight * f * 0.5)
-    const cellWidth = Math.round(this.columnWidth * f)
+    const cellHeight = this.rowHeight * f * 0.1
+    const cellWidth = Math.round(this.columnWidth * f * 0.4)
 
-    ctx.lineWidth = 0.5
+    ctx.lineWidth = 0.125
 
     const doRect = (range: Range, op = ctx.strokeRect.bind(ctx)) => {
       const x = range.minX * cellWidth
       const y = range.minY * cellHeight
-      const w = (range.maxX + 1) * cellWidth - x
-      const h = (range.maxY + 1) * cellHeight - y
+      const w = (range.maxX + 1) * cellWidth - x - ctx.lineWidth
+      const h = (range.maxY + 1) * cellHeight - y - ctx.lineWidth
       op(x + 0.5, y + 0.5, w, h)
     }
 
-    ctx.strokeStyle = 'blue'
     const blocks = this.blockTree.all()
     for (const block of blocks) {
+      ctx.strokeStyle = block.didRender ? 'green' : 'blue'
       doRect(block)
     }
 
+    ctx.lineWidth = 0.25
     ctx.strokeStyle = 'red'
     doRect(this.displayRange)
 
@@ -414,7 +484,7 @@ export class DataGrid extends React.Component<Props, {}> {
           <div ref={this.container} className='container'>
             <div className='header'>
               {this.columns.map((c) =>
-                <div className='column'>{c.headerName ?? c.field}</div>
+                <div className='column' key={c.field}>{c.headerName ?? c.field}</div>
               )}
             </div>
 
