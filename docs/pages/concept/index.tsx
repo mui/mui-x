@@ -36,6 +36,7 @@ export default function BasicExampleDataGrid() {
     ...columnsSimplified,
     ...columnsSimplified,
     ...columnsSimplified,
+    ...columnsSimplified,
   ]
   const props = { ...data, columns }
 
