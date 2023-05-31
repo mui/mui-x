@@ -1,3 +1,5 @@
+import type { StackOffset, StackOrder } from '../../internals/stackSeries';
+
 export type CommonSeriesType = {
   id?: string;
 };
@@ -17,5 +19,14 @@ export type CartesianSeriesType = {
   xAxisKey?: string;
   yAxisKey?: string;
 };
+
+export type StackableSeriesType = {
+  stack?: string;
+  stackOffset?: StackOffsetType;
+  stackOrder?: StackOrderType;
+};
+
+export type StackOrderType = keyof typeof StackOrder;
+export type StackOffsetType = keyof typeof StackOffset;
 
 export type DefaultizedCartesianSeriesType = Required<CartesianSeriesType>;
