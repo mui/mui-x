@@ -78,6 +78,10 @@ export const getTimePickerFormatFromViews = (
     return formats.seconds;
   }
 
+  if (areViewEquals(views, ['minutes', 'seconds'])) {
+    return `${formats.minutes} ${formats.seconds}`;
+  }
+
   if (areViewEquals(views, ['hours', 'minutes', 'seconds'])) {
     return ampm
       ? `${formats.hours12h}:${formats.minutes}:${formats.seconds} ${formats.meridiem}`
