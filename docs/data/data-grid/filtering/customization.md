@@ -1,4 +1,4 @@
-# Data Grid - Customize the filters
+# Data Grid - Filter customization
 
 <p class="description">Ways to customize your filters.</p>
 

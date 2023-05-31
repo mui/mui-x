@@ -99,7 +99,7 @@ export const featuresSet = [
     name: 'Quick filter',
     description: 'Use a single text input to filter multiple fields',
     plan: 'Community',
-    detailPage: '/filtering/#quick-filter',
+    detailPage: '/filtering/quick-filter/',
     demo: <QuickFilteringGrid />,
   },
   {

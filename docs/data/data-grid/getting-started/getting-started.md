@@ -178,7 +178,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Cell range selection](/x/react-data-grid/cell-selection/)                             |    ❌     |                 ❌                 |                     ✅                     |
 | **Filtering**                                                                          |           |                                    |                                            |
 | [Quick filter](/x/react-data-grid/filtering/quick-filter/)                             |    ✅     |                 ✅                 |                     ✅                     |
-| [Column filters](/x/react-data-grid/filtering/overview/#single-and-multi-filters)      |    ✅     |                 ✅                 |                     ✅                     |
+| [Column filters](/x/react-data-grid/filtering/#single-and-multi-filters)               |    ✅     |                 ✅                 |                     ✅                     |
 | [Multi-column filtering](/x/react-data-grid/filtering/multi-filters/)                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Header filtering](/x/react-data-grid/filtering/header-filters/)                       |    ❌     |                 ✅                 |                     ✅                     |
 | **Sorting**                                                                            |           |                                    |                                            |
