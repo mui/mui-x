@@ -166,6 +166,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     defaultDayjs.extend(weekOfYear);
   }
 
+  private setLocaleToValue = (value: Dayjs) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale()) {
+      return value;
+    }
+
+    return value.locale(expectedLocale);
+  };
+
   private hasUTCPlugin = () => typeof defaultDayjs.utc !== 'undefined';
 
   private hasTimezonePlugin = () => typeof defaultDayjs.tz !== 'undefined';
@@ -603,8 +612,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
-    const start = value.startOf('month').startOf('week');
-    const end = value.endOf('month').endOf('week');
+    const cleanLocale = this.setLocaleToValue(value);
+    const start = cleanLocale.startOf('month').startOf('week');
+    const end = cleanLocale.endOf('month').endOf('week');
 
     let count = 0;
     let current = start;
