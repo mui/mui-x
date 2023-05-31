@@ -1,7 +1,9 @@
 import * as React from 'react';
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import useEventCallback from '@mui/utils/useEventCallback';
-import useForkRef from '@mui/utils/useForkRef';
+import {
+  unstable_useEnhancedEffect as useEnhancedEffect,
+  unstable_useEventCallback as useEventCallback,
+  unstable_useForkRef as useForkRef,
+} from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import { useValidation } from '../useValidation';
 import { useUtils } from '../useUtils';
