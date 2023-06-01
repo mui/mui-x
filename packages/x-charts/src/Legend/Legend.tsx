@@ -55,7 +55,7 @@ function getTranslePosition({
     case 'middle':
       xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${
         drawingArea.left + drawingArea.width / 2
-      }px - 0.5 *var(--Legend-rootWidth))`;
+      }px - 0.5 * var(--Legend-rootWidth))`;
       break;
     default:
       xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${drawingArea.left + drawingArea.width}px)`;
@@ -90,14 +90,14 @@ export const LegendRoot = styled('g', {
     '--Legend-rootOffsetY': typeof offsetY === 'number' ? `${offsetY}px` : undefined,
     '--Legend-rootWidth':
       direction === 'row'
-        ? `calc(var(--Legend-itemWidth) * ${seriesNumber} + var(--Legend-rootSpacing) *${
+        ? `calc(var(--Legend-itemWidth) * ${seriesNumber} + var(--Legend-rootSpacing) * ${
             seriesNumber - 1
           } )`
         : 'var(--Legend-itemWidth)',
     '--Legend-rootHeight':
       direction === 'row'
         ? 'var(--Legend-itemMarkSize)'
-        : `calc(var(--Legend-itemMarkSize) * ${seriesNumber} + var(--Legend-rootSpacing) *${
+        : `calc(var(--Legend-itemMarkSize) * ${seriesNumber} + var(--Legend-rootSpacing) * ${
             seriesNumber - 1
           } )`,
     ...getTranslePosition({ position, drawingArea, offsetX, offsetY }),
@@ -158,7 +158,7 @@ const defaultProps = {
 export function Legend(inProps: LegendProps) {
   const props: DefaultizedLegendProps = useThemeProps({
     props: { ...defaultProps, ...inProps },
-    name: 'MuiLegend',
+    name: 'MuiChartsLegend',
   });
 
   const { position, direction, offset } = props;
