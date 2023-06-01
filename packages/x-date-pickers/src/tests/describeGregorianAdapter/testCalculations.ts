@@ -108,10 +108,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it('should parse undefined', () => {
-      const expectedDate = new Date();
-
-      expect(adapter.dateWithTimezone(undefined, 'system')).toEqualDateTime(expectedDate);
-
       if (adapter.isTimezoneCompatible) {
         const testTodayZone = (timezone: PickersTimezone) => {
           const dateWithZone = adapterTZ.dateWithTimezone(undefined, timezone)!;
@@ -125,6 +121,13 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         testTodayZone('system');
         testTodayZone('UTC');
         testTodayZone('America/New_York');
+      } else {
+        expect(
+          Math.abs(
+            adapterTZ.toJsDate(adapter.dateWithTimezone(undefined, 'system')!).getTime() -
+              Date.now(),
+          ),
+        ).to.be.lessThan(5);
       }
     });
   });
