@@ -35,7 +35,7 @@ export function MarkPlot() {
 
           const xDomain = xAxis[xAxisKey].scale.domain();
           const yDomain = yScale.domain();
-          const isInRange = ({ x, y }) => {
+          const isInRange = ({ x, y }: { x: number; y: number }) => {
             if (x < xDomain[0] || x > xDomain[1]) {
               return false;
             }

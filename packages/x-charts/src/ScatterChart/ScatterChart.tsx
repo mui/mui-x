@@ -46,7 +46,6 @@ function ScatterChart(props: ScatterChartProps) {
     >
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <ScatterPlot />
-
       <Highlight x="none" y="none" {...highlight} />
       <Tooltip trigger="item" {...tooltip} />
       {children}
@@ -143,8 +142,8 @@ ScatterChart.propTypes = {
       data: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-          x: PropTypes.any.isRequired,
-          y: PropTypes.any.isRequired,
+          x: PropTypes.number.isRequired,
+          y: PropTypes.number.isRequired,
         }),
       ).isRequired,
       id: PropTypes.string,

@@ -21,7 +21,7 @@ function Scatter(props: ScatterProps) {
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
-  const isInRange = ({ x, y }) => {
+  const isInRange = ({ x, y }: { x: number; y: number }) => {
     if (x < xDomain[0] || x > xDomain[1]) {
       return false;
     }
@@ -57,8 +57,8 @@ Scatter.propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        x: PropTypes.any.isRequired,
-        y: PropTypes.any.isRequired,
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
       }),
     ).isRequired,
     id: PropTypes.string.isRequired,
