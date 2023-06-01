@@ -158,7 +158,10 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
   const tabIndex =
     (cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParams.tabIndex : -1;
 
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+  const editCellState = useGridSelector(apiRef, (state: any) => {
+    const editRowsState = gridEditRowsStateSelector(state)
+    return editRowsState[rowId]?.[column.field] ?? null;
+  });
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -180,8 +183,6 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
   if (getCellClassName) {
     classNames.push(getCellClassName(cellParams));
   }
-
-  const editCellState = editRowsState[rowId]?.[column.field] ?? null;
 
   let children: React.ReactNode;
   if (editCellState == null && column.renderCell) {
