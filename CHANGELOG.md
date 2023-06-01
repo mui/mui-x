@@ -28,6 +28,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Fix filter input select accessibility (#9018) @Jul13nT
 - [DataGrid] Fix accessibility issues in panels and toolbar buttons (#8862) @romgrk
 - [DataGrid] Do not apply filters on `rowExpansionChange` (#8671) @cherniavskii
+- [DataGrid] Fix `onCellEditStop` not invoked (#8857) @romgrk
 - [DataGridPro] Fix auto-scroll when reordering columns (#8856) @m4theushw
 - [DataGridPro] Fix row id type casting in detail panels lookup (#8976) @minchaej
 - [DataGridPro] Emit `columnWidthChange` event on `touchEnd` of column resize (#8669) @MBilalShafi
