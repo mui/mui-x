@@ -129,23 +129,24 @@ export function CartesianContextProvider({
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
       const scaleType = axis.scaleType ?? 'linear';
-      const domain = [drawingArea.left, drawingArea.left + drawingArea.width];
+      const range = [drawingArea.left, drawingArea.left + drawingArea.width];
 
       if (scaleType === 'band') {
         completedXAxis[axis.id] = {
           ...axis,
           scaleType,
-          scale: scaleBand(axis.data!, domain),
+          scale: scaleBand(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
         return;
       }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, domain });
+      const ticksNumber = getTicksNumber({ ...axis, range });
+
       completedXAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, domain).nice(ticksNumber),
+        scale: getScale(scaleType, extremums, range),
         ticksNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
@@ -161,24 +162,24 @@ export function CartesianContextProvider({
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
-      const domain = [drawingArea.top + drawingArea.height, drawingArea.top];
+      const range = [drawingArea.top + drawingArea.height, drawingArea.top];
 
       const scaleType: ScaleName = axis.scaleType ?? 'linear';
       if (scaleType === 'band') {
         completedYAxis[axis.id] = {
           ...axis,
           scaleType,
-          scale: scaleBand(axis.data!, domain),
+          scale: scaleBand(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
         return;
       }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, domain });
+      const ticksNumber = getTicksNumber({ ...axis, range });
       completedYAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, domain).nice(ticksNumber),
+        scale: getScale(scaleType, extremums, range).nice(ticksNumber),
         ticksNumber,
       } as AxisDefaultized<typeof scaleType>;
     });

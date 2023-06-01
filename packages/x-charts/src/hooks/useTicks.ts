@@ -9,12 +9,12 @@ export type TickParams = {
 
 export function getTicksNumber(
   params: TickParams & {
-    domain: any[];
+    range: any[];
   },
 ) {
-  const { maxTicks = 999, minTicks = 2, tickSpacing = 50, domain } = params;
+  const { maxTicks = 999, minTicks = 2, tickSpacing = 50, range } = params;
 
-  const estimatedTickNumber = Math.floor(Math.abs(domain[1] - domain[0]) / tickSpacing);
+  const estimatedTickNumber = Math.floor(Math.abs(range[1] - range[0]) / tickSpacing);
   return Math.min(maxTicks, Math.max(minTicks, estimatedTickNumber));
 }
 
