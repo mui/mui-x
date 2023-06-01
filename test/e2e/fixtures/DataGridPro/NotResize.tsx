@@ -24,7 +24,7 @@ const baselineProps = {
 
 export default function NotResize() {
   return (
-    <div style={{width: 300, height: 300}}>
+    <div style={{ width: 300, height: 300 }}>
       <DataGridPro
         {...baselineProps}
         initialState={{

@@ -228,8 +228,8 @@ describe('e2e', () => {
       const separator = await page.$('.MuiDataGrid-columnSeparator--resizable');
       const boundingBox = (await separator?.boundingBox())!;
 
-      const x = boundingBox.x + boundingBox.width / 2
-      const y = boundingBox.y + boundingBox.height / 2
+      const x = boundingBox.x + boundingBox.width / 2;
+      const y = boundingBox.y + boundingBox.height / 2;
 
       await page.mouse.move(x, y, { steps: 5 });
       await page.mouse.down();
@@ -237,8 +237,11 @@ describe('e2e', () => {
       await page.mouse.up();
 
       expect(
-        await page.evaluate(() =>
-          document.querySelector('.MuiDataGrid-columnHeader--sorted')!.getAttribute('data-field')!
+        await page.evaluate(
+          () =>
+            document
+              .querySelector('.MuiDataGrid-columnHeader--sorted')!
+              .getAttribute('data-field')!,
         ),
       ).to.equal('brand');
     });
