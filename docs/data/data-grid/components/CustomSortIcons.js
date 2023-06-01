@@ -16,8 +16,6 @@ export function UnsortedIcon() {
   return <SortIcon className="icon" />;
 }
 
-
-
 const rows = [
   {
     id: 1,

@@ -1,9 +1,0 @@
-<DataGrid
-  columns={columns}
-  rows={rows}
-  sortModel={[{ field: 'name', sort: 'asc' }]}
-  slots={{
-    columnSortedDescendingIcon: SortedDescendingIcon,
-    columnSortedAscendingIcon: SortedAscendingIcon,
-  }}
-/>
