@@ -215,19 +215,18 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
   const CellComponent = slots.cell;
 
   const cellProps: GridCellProps = {
-    
     ...props,
     ref,
-      field,
-      formattedValue,
-      hasFocus,
-      isEditable,
-      isSelected,
-      value,
-      cellMode,
-      children,
-      tabIndex,
-      className: clsx(classNames),
+    field,
+    formattedValue,
+    hasFocus,
+    isEditable,
+    isSelected,
+    value,
+    cellMode,
+    children,
+    tabIndex,
+    className: clsx(classNames),
     ...slotProps?.cell,
   };
 
