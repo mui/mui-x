@@ -7,7 +7,13 @@ import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { XAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../Axis/axisClasses';
-import { Line, Tick, TickLabel, Label } from '../internals/components/AxisSharedComponents';
+import {
+  Line,
+  Tick,
+  TickLabel,
+  Label,
+  AxisRoot,
+} from '../internals/components/AxisSharedComponents';
 
 const useUtilityClasses = (ownerState: XAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -61,7 +67,7 @@ function XAxis(inProps: XAxisProps) {
   const positionSigne = position === 'bottom' ? 1 : -1;
 
   return (
-    <g
+    <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
       className={classes.root}
     >
@@ -73,7 +79,7 @@ function XAxis(inProps: XAxisProps) {
         <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
           {!disableTicks && <Tick y2={positionSigne * tickSize} className={classes.tick} />}
           <TickLabel
-            transform={`translate(0, ${positionSigne * (tickFontSize + tickSize + 2)})`}
+            y={positionSigne * (tickSize + 3)}
             sx={{
               fontSize: tickFontSize,
             }}
@@ -97,7 +103,7 @@ function XAxis(inProps: XAxisProps) {
           {label}
         </Label>
       )}
-    </g>
+    </AxisRoot>
   );
 }
 

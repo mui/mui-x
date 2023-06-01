@@ -6,7 +6,13 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { YAxisProps } from '../models/axis';
-import { Line, Tick, TickLabel, Label } from '../internals/components/AxisSharedComponents';
+import {
+  Line,
+  Tick,
+  TickLabel,
+  Label,
+  AxisRoot,
+} from '../internals/components/AxisSharedComponents';
 import { getAxisUtilityClass } from '../Axis/axisClasses';
 
 const useUtilityClasses = (ownerState: YAxisProps & { theme: Theme }) => {
@@ -63,7 +69,7 @@ function YAxis(inProps: YAxisProps) {
   const positionSigne = position === 'right' ? 1 : -1;
 
   return (
-    <g
+    <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
     >
@@ -75,7 +81,7 @@ function YAxis(inProps: YAxisProps) {
         <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
           {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
           <TickLabel
-            transform={`translate(${positionSigne * (tickFontSize + tickSize + 2)}, 0)`}
+            x={`${positionSigne * (tickSize + 2)}`}
             sx={{
               fontSize: tickFontSize,
             }}
@@ -99,7 +105,7 @@ function YAxis(inProps: YAxisProps) {
           {label}
         </Label>
       )}
-    </g>
+    </AxisRoot>
   );
 }
 
