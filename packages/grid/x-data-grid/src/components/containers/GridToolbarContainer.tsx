@@ -32,7 +32,8 @@ const GridToolbarContainerRoot = styled('div', {
   alignItems: 'center',
   flexWrap: 'wrap',
   gap: theme.spacing(1),
-  padding: theme.spacing(0.5, 0.5, 0),
+  padding: theme.spacing(0.5, 0.5, 0.5),
+  borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(

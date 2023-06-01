@@ -99,6 +99,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     }
   }, [apiRef, hasFocus]);
 
+  const showColumnHeaderSeparator = !rootProps.disableColumnResize && !!resizable;
   return (
     <div
       ref={handleRef}
@@ -133,13 +134,15 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
         </div>
         {columnMenuIconButton}
       </div>
-      <GridColumnHeaderSeparator
-        resizable={!rootProps.disableColumnResize && !!resizable}
-        resizing={isResizing}
-        height={height}
-        side={separatorSide}
-        {...columnHeaderSeparatorProps}
-      />
+      {showColumnHeaderSeparator ? (
+        <GridColumnHeaderSeparator
+          resizable={!rootProps.disableColumnResize && !!resizable}
+          resizing={isResizing}
+          height={height}
+          side={separatorSide}
+          {...columnHeaderSeparatorProps}
+        />
+      ) : null}
       {columnMenu}
     </div>
   );

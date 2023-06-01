@@ -155,6 +155,7 @@ export const GridRootStyles = styled('div', {
       position: 'relative',
       display: 'flex',
       alignItems: 'center',
+      borderRight: '1px solid transparent',
     },
     [`& .${gridClasses['columnHeader--sorted']} .${gridClasses.iconButtonContainer}, & .${gridClasses['columnHeader--filtered']} .${gridClasses.iconButtonContainer}`]:
       {
@@ -237,11 +238,15 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
-    [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
-      {
+    [`& .${gridClasses.columnHeaders}:hover`]: {
+      [`&  .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
         visibility: 'visible',
         width: 'auto',
       },
+      [`& .${gridClasses.columnHeader}`]: {
+        borderRightColor: `${borderColor}`,
+      },
+    },
     [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
       left: -12,
     },
@@ -412,6 +417,7 @@ export const GridRootStyles = styled('div', {
     },
     [`.${gridClasses.withBorderColor}`]: {
       borderColor,
+      borderRightColor: 'transparent',
     },
     [`& .${gridClasses['cell--withRightBorder']}`]: {
       borderRightWidth: '1px',
