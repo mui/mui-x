@@ -15,7 +15,7 @@ const sx = {
   width: 22,
   height: 22,
   marginTop: 1,
-  marginRight: 1,
+  marginLeft: 1,
 };
 
 function GridHeaderFilterAdornment(props: {

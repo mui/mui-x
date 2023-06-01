@@ -246,14 +246,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         {headerFilterComponent}
         {InputComponent && headerFilterComponent === undefined ? (
           <React.Fragment>
-            <GridHeaderFilterAdornment
-              operators={filterOperators!}
-              item={item}
-              field={colDef.field}
-              applyFilterChanges={applyFilterChanges}
-              headerFilterMenuRef={headerFilterMenuRef}
-              buttonRef={buttonRef}
-            />
             <InputComponent
               apiRef={apiRef}
               item={item}
@@ -276,6 +268,14 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
+            />
+            <GridHeaderFilterAdornment
+              operators={filterOperators!}
+              item={item}
+              field={colDef.field}
+              applyFilterChanges={applyFilterChanges}
+              headerFilterMenuRef={headerFilterMenuRef}
+              buttonRef={buttonRef}
             />
           </React.Fragment>
         ) : null}

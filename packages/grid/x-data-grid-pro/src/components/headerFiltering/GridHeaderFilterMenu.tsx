@@ -55,7 +55,7 @@ function GridHeaderFilterMenu({
 
   return (
     <GridMenu
-      placement="bottom-start"
+      placement="bottom-end"
       open={open}
       target={targetRef.current}
       onClickAway={hideMenu}
