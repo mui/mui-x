@@ -203,21 +203,25 @@ export const featuresSet: Row[] = [
   },
 ];
 
-const getChipProperties = (plan: string) => {
-  switch (plan.toLowerCase()) {
-    case 'premium':
+function getChipProperties(plan: string) {
+  switch (plan) {
+    case 'Premium':
       return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
-    case 'pro':
+    case 'Pro':
       return { avatarLink: '/static/x/pro.svg', color: '#c8e9ff' };
     default:
       return { avatarLink: undefined, color: '#c8ffdb' };
   }
-};
+}
 
 function PlanTag(props: { plan: string }) {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
-    <Avatar src={chipPropperties.avatarLink} imgProps={{ width: 21 }} alt="" />
+    <Avatar
+      src={chipPropperties.avatarLink}
+      imgProps={{ width: 21, height: 24 }}
+      alt=""
+    />
   );
   return (
     <Chip
@@ -227,7 +231,7 @@ function PlanTag(props: { plan: string }) {
         color: 'rgba(0, 0, 0, 0.87)',
         '& .MuiChip-avatar': {
           borderRadius: 0,
-          width: 'auto',
+          width: 21,
         },
       }}
       label={props.plan}
@@ -250,8 +254,8 @@ function RowDemo(props: { row: Row }) {
   const panelColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
 
   return (
-    <Box sx={{ py: 2, background: panelColor }}>
-      <Box style={{ width: '90%', margin: 'auto', background: gridBgColor }}>
+    <Box sx={{ py: 2, backgroundColor: panelColor }}>
+      <Box sx={{ width: '90%', margin: 'auto', backgroundColor: gridBgColor }}>
         {row.demo}
       </Box>
     </Box>
@@ -400,7 +404,7 @@ export default function PopularFeaturesDemo() {
   }, []);
 
   return (
-    <div style={{ minHeight: 1000, width: '100%' }}>
+    <Box sx={{ minHeight: 1000, width: '100%' }}>
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
@@ -446,6 +450,6 @@ export default function PopularFeaturesDemo() {
         hideFooter
         groupingColDef={memoizedGroupingDef}
       />
-    </div>
+    </Box>
   );
 }
