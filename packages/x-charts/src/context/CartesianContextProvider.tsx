@@ -143,10 +143,14 @@ export function CartesianContextProvider({
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
+      const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
+      const niceDomain = niceScale.domain();
+      const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
+
       completedXAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, range),
+        scale: niceScale.domain(domain),
         ticksNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
@@ -176,10 +180,15 @@ export function CartesianContextProvider({
       }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
+
+      const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
+      const niceDomain = niceScale.domain();
+      const domain = [axis.min ?? niceDomain[0], axis.max ?? niceDomain[1]];
+
       completedYAxis[axis.id] = {
         ...axis,
         scaleType,
-        scale: getScale(scaleType, extremums, range).nice(ticksNumber),
+        scale: niceScale.domain(domain),
         ticksNumber,
       } as AxisDefaultized<typeof scaleType>;
     });
