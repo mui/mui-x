@@ -91,8 +91,8 @@ export default function DimensionsNoSnap() {
             '--Legend-labelSpacing',
             '--Legend-rootSpacing',
           ]
-            .filter((key) => typeof props[key] === 'number')
-            .map((key) => `    '${key}': ${props[cssVarToKey[key]]}px,`),
+            .filter((cssVar) => typeof props[cssVarToKey[cssVar]] === 'number')
+            .map((cssVar) => `    '${cssVar}': ${props[cssVarToKey[cssVar]]}px,`),
           '  }}',
           '/>',
         ].join('\n');
