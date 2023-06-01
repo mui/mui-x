@@ -33,15 +33,28 @@ export function MarkPlot() {
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
+          const xDomain = xAxis[xAxisKey].scale.domain();
+          const yDomain = yScale.domain();
+          const isInRange = ({ x, y }) => {
+            if (x < xDomain[0] || x > xDomain[1]) {
+              return false;
+            }
+            return !(y < yDomain[0] || y > yDomain[1]);
+          };
+
           if (xData === undefined) {
             throw new Error(
               `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
             );
           }
 
-          return xData?.map((x, index) => {
-            const y = stackedData[index][1];
-            return (
+          return xData
+            ?.map((x, index) => {
+              const y = stackedData[index][1];
+              return { x, y, index };
+            })
+            .filter(isInRange)
+            .map(({ x, y, index }) => (
               <MarkElement
                 key={`${seriesId}-${index}`}
                 id={seriesId}
@@ -52,8 +65,7 @@ export function MarkPlot() {
                 y={yScale(y)}
                 {...getInteractionItemProps({ type: 'line', seriesId, dataIndex: index })}
               />
-            );
-          });
+            ));
         });
       })}
     </g>
