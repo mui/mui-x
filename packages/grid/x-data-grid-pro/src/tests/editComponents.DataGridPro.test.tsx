@@ -594,11 +594,9 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       render(
         <div>
-          <TestCase
-            onCellEditStop={onCellEditStop}
-          />
-          <div id="outside-grid"></div>
-        </div>
+          <TestCase onCellEditStop={onCellEditStop} />
+          <div id="outside-grid" />
+        </div>,
       );
 
       const cell = getCell(0, 0);
