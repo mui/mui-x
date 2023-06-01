@@ -9,10 +9,15 @@ _Jun 1, 2023_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- Add `DigitalClock` to [`DesktopDateTimePicker`](https://mui.com/x/react-date-pickers/date-time-picker/)
+- 🚀 New date time picking UI on [`DesktopDateTimePicker`](https://mui.com/x/react-date-pickers/date-time-picker/)
+
+  <img src="https://user-images.githubusercontent.com/4941090/242533399-2b106390-8158-4aba-9ca4-b621c6310977.gif" width="628" />
+
 - 🚀 Performance improvements
 - 🐞 Bugfixes
 - 📚 Documentation improvements
+- 🌍 Improve Dutch (nl-NL) and French (fr-FR) locales on the data grid
+- 🌍 Add Vietnamese (vi-VN) locale on the pickers
 
 ### `@mui/x-data-grid@v6.6.0` / `@mui/x-data-grid-pro@v6.6.0` / `@mui/x-data-grid-premium@v6.6.0`
 
@@ -26,7 +31,6 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGridPro] Fix row id type casting in detail panels lookup (#8976) @minchaej
 - [DataGridPro] Emit `columnWidthChange` event on `touchEnd` of column resize (#8669) @MBilalShafi
 - [DataGridPremium] Improve grid excel export interface (#9128) @TiagoPortfolio
-- [l10n] Add Vietnamese (vi-VN) locale (#9099) @nhannt201
 - [l10n] Improve Dutch (nl-NL) locale (#9043) @thedutchruben
 - [l10n] Improve French (fr-FR) locale (#9109) @Jul13nT
 
@@ -35,6 +39,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 #### Changes
 
 - [fields] Allow to explicitly define the reference value and improve its default value (#9019) @flaviendelangle
+- [l10n] Add Vietnamese (vi-VN) locale (#9099) @nhannt201
 - [pickers] Add `DigitalClock` to `DesktopDateTimePicker` (#8946) @LukasTy
 - [pickers] Add support for timezones on the adapters (#9068) @flaviendelangle
 - [pickers] Fix `MonthCalendar` and `YearCalendar` disabled validation (#9149) @LukasTy
