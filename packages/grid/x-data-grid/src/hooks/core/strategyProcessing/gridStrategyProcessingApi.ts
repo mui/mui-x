@@ -7,7 +7,7 @@ import {
   GridFilteringMethodParams,
   GridFilteringMethodValue,
   GridFilterState,
-  GridVisibleRowsMethodValue,
+  GridVisibleRowsLookupState,
 } from '../../features/filter/gridFilterState';
 import {
   GridSortingMethodParams,
@@ -41,7 +41,7 @@ export interface GridStrategyProcessingLookup {
       tree: GridRowsState['tree'];
       filteredRowsLookup: GridFilterState['filteredRowsLookup'];
     };
-    value: GridVisibleRowsMethodValue;
+    value: GridVisibleRowsLookupState;
   };
 }
 
