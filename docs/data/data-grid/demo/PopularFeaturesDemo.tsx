@@ -13,7 +13,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
@@ -217,11 +216,7 @@ function getChipProperties(plan: string) {
 function PlanTag(props: { plan: string }) {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
-    <Avatar
-      src={chipPropperties.avatarLink}
-      imgProps={{ width: 21, height: 24 }}
-      alt=""
-    />
+    <img src={chipPropperties.avatarLink} width={21} height={24} alt="" />
   );
   return (
     <Chip
@@ -230,7 +225,6 @@ function PlanTag(props: { plan: string }) {
         backgroundColor: chipPropperties.color,
         color: 'rgba(0, 0, 0, 0.87)',
         '& .MuiChip-avatar': {
-          borderRadius: 0,
           width: 21,
         },
       }}
