@@ -18,8 +18,11 @@ export type GridFilterInputBooleanProps = GridFilterInputValueProps &
 
 const BooleanOperatorContainer = styled('div')({
   display: 'flex',
-  alignItems: 'flex-end',
+  alignItems: 'center',
   width: '100%',
+  [`& button`]: {
+    margin: 'auto 0px 5px 5px',
+  },
 });
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {

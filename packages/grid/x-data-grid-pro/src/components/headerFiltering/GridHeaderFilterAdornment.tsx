@@ -14,8 +14,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 const sx = {
   width: 22,
   height: 22,
-  marginTop: 1,
-  marginLeft: 1,
+  margin: 'auto 0 10px 5px',
 };
 
 function GridHeaderFilterAdornment(props: {

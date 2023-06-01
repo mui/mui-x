@@ -46,6 +46,9 @@ const SingleSelectOperatorContainer = styled('div')({
   display: 'flex',
   alignItems: 'flex-end',
   width: '100%',
+  [`& button`]: {
+    margin: 'auto 0px 5px 5px',
+  },
 });
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
