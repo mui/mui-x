@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, SxProps, Theme } from '@mui/system';
+import { alpha, styled, darken, lighten, Theme, SxProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -22,6 +22,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+function getBorderColor(theme: Theme) {
+  if (theme.vars) {
+    return theme.vars.palette.TableCell.border;
+  }
+  if (theme.palette.mode === 'light') {
+    return lighten(alpha(theme.palette.divider, 1), 0.88);
+  }
+  return darken(alpha(theme.palette.divider, 1), 0.68);
+}
 
 const GridToolbarContainerRoot = styled('div', {
   name: 'MuiDataGrid',
@@ -33,7 +42,7 @@ const GridToolbarContainerRoot = styled('div', {
   flexWrap: 'wrap',
   gap: theme.spacing(1),
   padding: theme.spacing(0.5, 0.5, 0.5),
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${getBorderColor(theme)}`,
 }));
 
 const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
