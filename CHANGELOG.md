@@ -27,13 +27,13 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [DataGrid] Avoid allocations in `hydrateRowsMeta` (#9121) @romgrk
 - [DataGrid] Fix filter input select accessibility (#9018) @Jul13nT
 - [DataGrid] Fix accessibility issues in panels and toolbar buttons (#8862) @romgrk
-- [DataGrid] Do not apply filters on `rowExpansionChange` (#8671) @cherniavskii
 - [DataGrid] Fix `onCellEditStop` not invoked (#8857) @romgrk
 - [DataGridPro] Fix auto-scroll when reordering columns (#8856) @m4theushw
-- [DataGridPro] Fix row id type casting in detail panels lookup (#8976) @minchaej
+- [DataGridPro] Fix row ID type casting in detail panels lookup (#8976) @minchaej
 - [DataGridPro] Emit `columnWidthChange` event on `touchEnd` of column resize (#8669) @MBilalShafi
+- [DataGridPro] Do not apply filters on `rowExpansionChange` (#8671) @cherniavskii
 - [DataGridPro] Prevent click event on sorting after a resize (#9117) @romgrk
-- [DataGridPremium] Improve grid excel export interface (#9128) @TiagoPortfolio
+- [DataGridPremium] Improve Excel export interface (#9128) @TiagoPortfolio
 - [l10n] Improve Dutch (nl-NL) locale (#9043) @thedutchruben
 - [l10n] Improve French (fr-FR) locale (#9109) @Jul13nT
 
@@ -54,9 +54,9 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - [docs] Add single input range picker demo (#9159) @LukasTy
 - [docs] Align `DateCalendar` demo views with labels (#9152) @LukasTy
-- [docs] Clarify the peer dependency with react (#9067) @oliviertassinari
+- [docs] Clarify the peer dependency with React (#9067) @oliviertassinari
 - [docs] Fix Norwegian locale typo (#9168) @LukasTy
-- [docs] Fix add column menu item demo (#9071) @MBilalShafi
+- [docs] Fix column menu item demo (#9071) @MBilalShafi
 - [docs] Improve localization table progress bars (#9033) @noraleonte
 - [docs] Smooth performance animation (#8986) @oliviertassinari
 - [docs] Use responsive time and date time pickers and the views sections (#9127) @flaviendelangle
@@ -66,7 +66,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 ### Core
 
-- [core] Allow string literals as keys in localesText (#9045) @MBilalShafi
+- [core] Allow string literals as keys in `localesText` (#9045) @MBilalShafi
 - [core] Fix `randomInt` producing values exceeding `max` value (#9086) @cherniavskii
 - [core] Fix flaky test on `dateWithTimezone` adapter test (#9129) @flaviendelangle
 - [core] Lock `@types/node` on v18 (#9107) @LukasTy
