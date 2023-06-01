@@ -4,7 +4,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { color as d3Color } from 'd3-color';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
@@ -50,13 +49,15 @@ const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: MarkElementOwnerState }>(({ ownerState }) => ({
-  transform: `translate(${ownerState.x}px, ${ownerState.y}px) ${
-    ownerState.isHighlighted ? 'scale(1.5)' : ''
-  }`,
-  fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
+})<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
+  transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
+  fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
+  '&.MuiMarkElement-highlighted': {
+    fill: ownerState.color,
+    stroke: (theme.vars || theme).palette.background.paper,
+  },
 }));
 
 MarkElementPath.propTypes = {
