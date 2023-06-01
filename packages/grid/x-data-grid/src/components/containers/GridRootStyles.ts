@@ -422,10 +422,12 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses['cell--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
+      borderRightColor: borderColor,
     },
     [`& .${gridClasses['columnHeader--withRightBorder']}`]: {
       borderRightWidth: '1px',
       borderRightStyle: 'solid',
+      borderRightColor: borderColor,
     },
     [`& .${gridClasses['cell--textLeft']}`]: {
       justifyContent: 'flex-start',

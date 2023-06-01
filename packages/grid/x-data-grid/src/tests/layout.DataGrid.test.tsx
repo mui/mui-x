@@ -627,7 +627,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           },
           {
             field: 'name',
-            flex: 0.5,
+            flex: 1,
           },
         ];
 
@@ -641,7 +641,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
         expect(
           Array.from(document.querySelectorAll('[role="columnheader"]')).reduce(
-            (width, item) => width + item.clientWidth,
+            (width, item) => width + (item as HTMLElement).offsetWidth,
             0,
           ),
         ).to.equal(totalWidth - 2);
