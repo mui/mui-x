@@ -19,10 +19,10 @@ export interface LegendClasses {
 }
 
 export function getLegendUtilityClass(slot: string) {
-  return generateUtilityClass('MuiChartsLegend', slot);
+  return generateUtilityClass('MuiLegend', slot);
 }
 
-export const legendClasses: LegendClasses = generateUtilityClasses('MuiChartsLegend', [
+export const legendClasses: LegendClasses = generateUtilityClasses('MuiLegend', [
   'root',
   'series',
   'mark',

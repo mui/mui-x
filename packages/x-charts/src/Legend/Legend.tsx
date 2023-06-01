@@ -79,7 +79,7 @@ function getTranslePosition({
 }
 
 export const LegendRoot = styled('g', {
-  name: 'MuiChartsLegend',
+  name: 'MuiLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: LegendRootOwnerState }>(({ ownerState }) => {
@@ -105,7 +105,7 @@ export const LegendRoot = styled('g', {
 });
 
 export const SeriesLegendGroup = styled('g', {
-  name: 'MuiChartsLegend',
+  name: 'MuiLegend',
   slot: 'SeriesLegendGroup',
   overridesResolver: (props, styles) => styles.series,
 })<{ ownerState: SeriesLegendOwnerState }>(({ ownerState }) => {
@@ -122,7 +122,7 @@ export const SeriesLegendGroup = styled('g', {
 });
 
 export const LegendMark = styled('rect', {
-  name: 'MuiChartsLegend',
+  name: 'MuiLegend',
   slot: 'Mark',
   overridesResolver: (props, styles) => styles.mark,
 })<{ ownerState: { color: string } }>(({ ownerState }) => ({
@@ -133,7 +133,7 @@ export const LegendMark = styled('rect', {
   fill: ownerState.color,
 }));
 export const LegendLabel = styled('text', {
-  name: 'MuiChartsLegend',
+  name: 'MuiLegend',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
@@ -158,7 +158,7 @@ const defaultProps = {
 export function Legend(inProps: LegendProps) {
   const props: DefaultizedLegendProps = useThemeProps({
     props: { ...defaultProps, ...inProps },
-    name: 'MuiChartsLegend',
+    name: 'MuiLegend',
   });
 
   const { position, direction, offset } = props;

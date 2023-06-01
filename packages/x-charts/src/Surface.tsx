@@ -21,7 +21,7 @@ export interface SurfaceProps {
 }
 
 const ChartSurfaceStyles = styled('svg', {
-  name: 'MuiChartsSurface',
+  name: 'MuiSurface',
   slot: 'Root',
 })(() => ({}));
 
