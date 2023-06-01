@@ -61,6 +61,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const dateSx = {
+  [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
+};
+
 const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCellProps>(
   (props, ref) => {
     const {
@@ -268,6 +272,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               disabled={isNoInputOperator}
               tabIndex={-1}
               InputLabelProps={null}
+              sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
