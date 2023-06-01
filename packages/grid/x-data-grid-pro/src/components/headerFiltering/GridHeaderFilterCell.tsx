@@ -268,6 +268,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               disabled={isNoInputOperator}
               tabIndex={-1}
               InputLabelProps={null}
+              {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
             />

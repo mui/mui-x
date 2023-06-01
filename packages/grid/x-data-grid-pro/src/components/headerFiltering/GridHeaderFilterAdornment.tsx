@@ -7,8 +7,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid';
 import { unstable_useId as useId } from '@mui/utils';
-import DropUpIcon from '@mui/icons-material/ArrowDropUp';
-import DropDownIcon from '@mui/icons-material/ArrowDropDown';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -47,8 +46,6 @@ function GridHeaderFilterAdornment(props: {
     return null;
   }
 
-  const Icon = open ? DropUpIcon : DropDownIcon;
-
   return (
     <React.Fragment>
       <rootProps.slots.baseIconButton
@@ -65,7 +62,7 @@ function GridHeaderFilterAdornment(props: {
         sx={sx}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <Icon fontSize="small" />
+        <FilterListIcon fontSize="small" />
       </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}
