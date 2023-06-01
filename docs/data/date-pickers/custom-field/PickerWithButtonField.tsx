@@ -14,7 +14,12 @@ import {
 
 interface ButtonFieldProps
   extends UseDateFieldProps<Dayjs>,
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateValidationError
+    > {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

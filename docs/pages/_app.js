@@ -14,6 +14,7 @@ import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
 import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
+import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -34,35 +35,14 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid-premium']) {
-      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
-      // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
-      // use `import 'exceljs'` in demonstrations instead
-      newDeps.exceljs = versions.exceljs;
-    }
-
-    if (newDeps['@mui/x-data-grid-pro']) {
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
-    }
-
-    if (newDeps['@mui/x-data-grid']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-    }
+    newDeps['@mui/material'] = versions['@mui/material'];
 
     if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid']; // TS types are imported from @mui/x-data-grid
-      newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
     }
 
-    if (newDeps['@mui/x-date-pickers-pro']) {
-      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
-    }
-
-    if (newDeps['@mui/x-date-pickers']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['date-fns'] = versions['date-fns'];
+    if (newDeps['@mui/x-date-pickers'] || newDeps['@mui/x-date-pickers-pro']) {
+      newDeps.dayjs = versions.dayjs;
     }
 
     return newDeps;
@@ -77,6 +57,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       'date-fns': 'latest',
+      dayjs: 'latest',
       exceljs: 'latest',
     };
     return output;
@@ -147,7 +128,7 @@ async function registerServiceWorker() {
     window.location.host.indexOf('mui.com') !== -1
   ) {
     // register() automatically attempts to refresh the sw.js.
-    const registration = await navigator.serviceWorker.register('/sw.js');
+    const registration = await navigator.serviceWorker.register('/x/sw.js');
     // Force the page reload for users.
     forcePageReload(registration);
   }
@@ -209,11 +190,87 @@ function AppWrapper(props) {
     ];
   }
 
+  const { canonicalAs } = pathnameToLanguage(router.asPath);
+
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
 
-    return { activePage, activePageParents, pages };
-  }, [router.pathname]);
+    const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
+
+    let productIdentifier = {
+      name: 'Advanced components',
+      metadata: 'MUI X',
+    };
+
+    if (
+      canonicalAs.startsWith('/x/react-data-grid/') ||
+      canonicalAs.startsWith('/x/api/data-grid/')
+    ) {
+      productIdentifier = {
+        name: 'Data Grid',
+        metadata: 'MUI X',
+        versions: [
+          {
+            text: 'v6',
+            ...(process.env.DATA_GRID_VERSION.startsWith('6')
+              ? {
+                  text: `v${process.env.DATA_GRID_VERSION}`,
+                  current: true,
+                }
+              : {
+                  href: `https://mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+          {
+            text: 'v5',
+            ...(process.env.DATA_GRID_VERSION.startsWith('5')
+              ? {
+                  text: `v${process.env.DATA_GRID_VERSION}`,
+                  current: true,
+                }
+              : {
+                  href: `https://v5.mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+          { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+        ],
+      };
+    } else if (
+      canonicalAs.startsWith('/x/react-date-pickers/') ||
+      canonicalAs.startsWith('/x/api/date-pickers/')
+    ) {
+      productIdentifier = {
+        name: 'Date pickers',
+        metadata: 'MUI X',
+        versions: [
+          {
+            ...(process.env.DATE_PICKERS_VERSION.startsWith('6')
+              ? {
+                  text: `v${process.env.DATE_PICKERS_VERSION}`,
+                  current: true,
+                }
+              : {
+                  text: `v6`,
+                  href: `https://next.mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+          {
+            ...(process.env.DATE_PICKERS_VERSION.startsWith('5')
+              ? {
+                  text: `v${process.env.DATE_PICKERS_VERSION}`,
+                  current: true,
+                }
+              : {
+                  text: `v5`,
+                  href: `https://v5.mui.com${languagePrefix}/components/data-grid/`,
+                }),
+          },
+        ],
+      };
+    }
+
+    return { activePage, activePageParents, pages, productIdentifier };
+  }, [canonicalAs, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.

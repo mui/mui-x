@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -16,10 +15,6 @@ function CustomToolbar({ setFilterButtonEl }) {
     </GridToolbarContainer>
   );
 }
-
-CustomToolbar.propTypes = {
-  setFilterButtonEl: PropTypes.func.isRequired,
-};
 
 export default function CustomFilterPanelPosition() {
   const { data } = useDemoData({

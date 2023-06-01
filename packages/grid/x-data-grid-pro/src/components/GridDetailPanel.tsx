@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { GridRowId, useGridRootProps } from '@mui/x-data-grid';
+import { GridRowId } from '@mui/x-data-grid';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
@@ -38,7 +39,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const { rowId, height, style: styleProp = {}, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement>();
-  const rootProps = useGridRootProps() as DataGridProProcessedProps;
+  const rootProps = useGridRootProps();
   const ownerState = rootProps;
 
   React.useLayoutEffect(() => {

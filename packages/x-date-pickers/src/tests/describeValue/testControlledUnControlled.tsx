@@ -8,10 +8,11 @@ import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.ty
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,
-  getOptions,
+  options,
 ) => {
   const {
     render,
+    renderWithProps,
     values,
     componentFamily,
     emptyValue,
@@ -19,7 +20,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     setNewValue,
     clock,
     ...pickerParams
-  } = getOptions();
+  } = options;
 
   const params = pickerParams as DescribeValueOptions<'picker', any>;
 
@@ -47,12 +48,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      render(<ElementToTest defaultValue={values[0]} onChange={onChange} />);
-      const newValue = setNewValue(values[0]);
+      const { selectSection } = renderWithProps({ defaultValue: values[0], onChange });
+      const newValue = setNewValue(values[0], { selectSection });
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -65,10 +66,25 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.value`', () => {
       const onChange = spy();
 
-      render(<ElementToTest value={values[0]} onChange={onChange} />);
-      const newValue = setNewValue(values[0]);
+      const useControlledElement = (props) => {
+        const [value, setValue] = React.useState(props?.value || null);
+        const handleChange = React.useCallback(
+          (newValue) => {
+            setValue(newValue);
+            props?.onChange(newValue);
+          },
+          [props],
+        );
+        return { value, onChange: handleChange };
+      };
 
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
+      const { selectSection } = renderWithProps(
+        { value: values[0], onChange },
+        useControlledElement,
+      );
+      const newValue = setNewValue(values[0], { selectSection });
+
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);

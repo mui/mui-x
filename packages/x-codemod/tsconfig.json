@@ -7,7 +7,10 @@
     "src/**/*",
     "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
     "../../node_modules/@mui/material/themeCssVarsAugmentation",
-    "../../node_modules/date-fns"
+    "../../node_modules/date-fns",
+    "../../node_modules/dayjs/plugin/utc.d.ts",
+    "../../node_modules/dayjs/plugin/timezone.d.ts",
+    "../../node_modules/moment-timezone/index.d.ts"
   ],
   "exclude": ["src/**/actual*.ts*"]
 }

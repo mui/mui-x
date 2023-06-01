@@ -7,7 +7,7 @@ import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../Date
 import { useLocaleText, useUtils, validateDate } from '../internals';
 import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { Calendar } from '../internals/components/icons';
+import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -44,7 +44,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
-      openPickerIcon: Calendar,
+      openPickerIcon: CalendarIcon,
       field: DateField,
       ...defaultizedProps.slots,
     },

@@ -42,7 +42,7 @@ describe('<MobileDatePicker /> - Describes', () => {
         expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
       );
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'date', variant: 'mobile' });
       }

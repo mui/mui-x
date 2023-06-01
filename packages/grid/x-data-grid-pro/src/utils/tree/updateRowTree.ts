@@ -35,6 +35,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
     const { id, path } = params.nodes.inserted[i];
 
     insertDataRowInTree({
+      previousTree: params.previousTree,
       tree,
       treeDepths,
       updatedGroupsManager,
@@ -71,6 +72,7 @@ export const updateRowTree = (params: UpdateRowTreeParams): GridRowTreeCreationV
       });
 
       insertDataRowInTree({
+        previousTree: params.previousTree,
         tree,
         treeDepths,
         updatedGroupsManager,

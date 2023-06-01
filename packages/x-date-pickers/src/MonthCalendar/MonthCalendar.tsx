@@ -11,7 +11,7 @@ import {
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
 import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
-import { applyDefaultDate } from '../internals/utils/date-utils';
+import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
 
@@ -140,29 +140,32 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     }
   });
 
-  const isMonthDisabled = useEventCallback((month: TDate) => {
-    const firstEnabledMonth = utils.startOfMonth(
-      disablePast && utils.isAfter(now, minDate) ? now : minDate,
-    );
+  const isMonthDisabled = React.useCallback(
+    (month: TDate) => {
+      const firstEnabledMonth = utils.startOfMonth(
+        disablePast && utils.isAfter(now, minDate) ? now : minDate,
+      );
 
-    const lastEnabledMonth = utils.startOfMonth(
-      disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
-    );
+      const lastEnabledMonth = utils.startOfMonth(
+        disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
+      );
 
-    if (utils.isBefore(month, firstEnabledMonth)) {
-      return true;
-    }
+      if (utils.isBefore(month, firstEnabledMonth)) {
+        return true;
+      }
 
-    if (utils.isAfter(month, lastEnabledMonth)) {
-      return true;
-    }
+      if (utils.isAfter(month, lastEnabledMonth)) {
+        return true;
+      }
 
-    if (!shouldDisableMonth) {
-      return false;
-    }
+      if (!shouldDisableMonth) {
+        return false;
+      }
 
-    return shouldDisableMonth(month);
-  });
+      return shouldDisableMonth(month);
+    },
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, utils],
+  );
 
   const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
     if (readOnly) {
@@ -237,7 +240,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      {utils.getMonthArray(selectedDateOrStartOfMonth).map((month) => {
+      {getMonthsInYear(utils, selectedDateOrStartOfMonth).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
         const isSelected = monthNumber === selectedMonth;

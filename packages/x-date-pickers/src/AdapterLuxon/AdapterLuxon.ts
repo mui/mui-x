@@ -1,17 +1,19 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime, Info } from 'luxon';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterLuxonOptions {
-  formats?: Partial<AdapterFormats>;
-  locale?: string;
-}
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+  PickersTimezone,
+} from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
   y: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
   yy: 'year',
-  yyyy: 'year',
+  yyyy: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
   L: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
@@ -108,8 +110,10 @@ const defaultFormats: AdapterFormats = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
+export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public isMUIAdapter = true;
+
+  public isTimezoneCompatible = true;
 
   public lib = 'luxon';
 
@@ -121,7 +125,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
 
   public formatTokenMap = formatTokenMap;
 
-  constructor({ locale, formats }: AdapterLuxonOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<string, never> = {}) {
     this.locale = locale || 'en-US';
     this.formats = { ...defaultFormats, ...formats };
   }
@@ -146,6 +150,40 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
 
     // @ts-ignore
     return DateTime.fromJSDate(value, { locale: this.locale });
+  };
+
+  public dateWithTimezone = (
+    value: string | null | undefined,
+    timezone: PickersTimezone,
+  ): DateTime | null => {
+    if (value === null) {
+      return null;
+    }
+
+    if (typeof value === 'undefined') {
+      // @ts-ignore
+      return DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
+    }
+
+    // @ts-ignore
+    return DateTime.fromISO(value, { locale: this.locale, zone: timezone });
+  };
+
+  public getTimezone = (value: DateTime): string => {
+    // When using the system zone, we want to return "system", not something like "Europe/Paris"
+    if (value.zone.type === 'system') {
+      return 'system';
+    }
+
+    return value.zoneName ?? 'system';
+  };
+
+  public setTimezone = (value: DateTime, timezone: PickersTimezone): DateTime => {
+    if (!value.zone.equals(Info.normalizeZone(timezone))) {
+      return value.setZone(timezone);
+    }
+
+    return value;
   };
 
   public toJsDate = (value: DateTime) => {
@@ -184,11 +222,6 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
   };
 
   public expandFormat = (format: string) => {
-    if (!DateTime.expandFormat) {
-      throw Error(
-        'Your luxon version does not support `expandFormat`. Consider upgrading it to v3.0.2',
-      );
-    }
     // Extract escaped section to avoid extending them
     const longFormatRegexp = /''|'(''|[^'])+('|$)|[^']*/g;
     return (
@@ -249,6 +282,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     if (unit) {
       return Math.floor(value.diff(comparing).as(unit));
     }
+
     return value.diff(comparing).as('millisecond');
   };
 
@@ -262,23 +296,27 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
       return false;
     }
 
-    return this.date(value)!.equals(this.date(comparing)!);
+    return +this.date(value)! === +this.date(comparing)!;
   };
 
   public isSameYear = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'year');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'year');
   };
 
   public isSameMonth = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'month');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'month');
   };
 
   public isSameDay = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'day');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'day');
   };
 
   public isSameHour = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'hour');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'hour');
   };
 
   public isAfter = (value: DateTime, comparing: DateTime) => {
@@ -286,12 +324,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
   };
 
   public isAfterYear = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.endOf('year'), 'years').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.endOf('year'), 'years').toObject();
     return diff.years! > 0;
   };
 
   public isAfterDay = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.endOf('day'), 'days').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.endOf('day'), 'days').toObject();
     return diff.days! > 0;
   };
 
@@ -300,12 +340,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
   };
 
   public isBeforeYear = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.startOf('year'), 'years').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.startOf('year'), 'years').toObject();
     return diff.years! < 0;
   };
 
   public isBeforeDay = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.startOf('day'), 'days').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.startOf('day'), 'days').toObject();
     return diff.days! < 0;
   };
 
@@ -402,6 +444,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     return value.get('second');
   };
 
+  public getMilliseconds = (value: DateTime) => {
+    return value.get('millisecond');
+  };
+
   public setYear = (value: DateTime, year: number) => {
     return value.set({ year });
   };
@@ -426,6 +472,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
     return value.set({ second: seconds });
   };
 
+  public setMilliseconds = (value: DateTime, milliseconds: number) => {
+    return value.set({ millisecond: milliseconds });
+  };
+
   public getDaysInMonth = (value: DateTime) => {
     return value.daysInMonth!;
   };
@@ -444,7 +494,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime> {
 
     while (monthArray.length < 12) {
       const prevMonth = monthArray[monthArray.length - 1];
-      monthArray.push(this.getNextMonth(prevMonth));
+      monthArray.push(this.addMonths(prevMonth, 1));
     }
 
     return monthArray;

@@ -201,6 +201,10 @@ DateField.propTypes = {
    */
   onChange: PropTypes.func,
   /**
+   * @ignore
+   */
+  onClick: PropTypes.func,
+  /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
@@ -220,6 +224,12 @@ DateField.propTypes = {
    * @default false
    */
   readOnly: PropTypes.bool,
+  /**
+   * The date used to generate a part of the date-time that is not present in the format when both `value` and `defaultValue` are not present.
+   * For example, on time fields it will be used to determine the date to set.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
+   */
+  referenceDate: PropTypes.any,
   /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false

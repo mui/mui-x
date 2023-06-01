@@ -6,7 +6,7 @@ import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
 import { useLocaleText, validateTime } from '../internals';
-import { Clock } from '../internals/components/icons';
+import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
@@ -56,9 +56,13 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
     ? []
     : ['accept'];
-  const views: readonly TimeViewWithMeridiem[] = defaultizedProps.ampm
-    ? [...defaultizedProps.views, 'meridiem']
-    : defaultizedProps.views;
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views: readonly TimeViewWithMeridiem[] =
+    defaultizedProps.ampm && shouldHoursRendererContainMeridiemView
+      ? [...defaultizedProps.views, 'meridiem']
+      : defaultizedProps.views;
 
   // Props with the default values specific to the desktop variant
   const props = {
@@ -71,7 +75,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: TimeField,
-      openPickerIcon: Clock,
+      openPickerIcon: ClockIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -80,7 +84,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        ampm: defaultizedProps.ampm,
       }),
       toolbar: {
         hidden: true,

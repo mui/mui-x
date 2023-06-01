@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useThemeProps } from '@mui/material/styles';
 import { DesktopDateTimePicker } from '../DesktopDateTimePicker';
-import { MobileDateTimePicker } from '../MobileDateTimePicker';
+import { MobileDateTimePicker, MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { DateTimePickerProps } from './DateTimePicker.types';
 import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
@@ -26,7 +26,7 @@ const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
     return <DesktopDateTimePicker ref={ref} {...other} />;
   }
 
-  return <MobileDateTimePicker ref={ref} {...other} />;
+  return <MobileDateTimePicker ref={ref} {...(other as MobileDateTimePickerProps<TDate>)} />;
 }) as DateTimePickerComponent;
 
 DateTimePicker.propTypes = {
@@ -272,7 +272,7 @@ DateTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  openTo: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Force rendering in particular orientation.
    */
@@ -365,6 +365,11 @@ DateTimePicker.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -383,6 +388,17 @@ DateTimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   */
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
+  /**
    * The selected value.
    * Used when the component is controlled.
    */
@@ -392,7 +408,7 @@ DateTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  view: PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -401,6 +417,7 @@ DateTimePicker.propTypes = {
   viewRenderers: PropTypes.shape({
     day: PropTypes.func,
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     month: PropTypes.func,
     seconds: PropTypes.func,

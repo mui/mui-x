@@ -1,4 +1,5 @@
-import { MuiPickersAdapter } from '../../models';
+import { DateView, FieldValueType, MuiPickersAdapter } from '../../models';
+import { DateOrTimeViewWithMeridiem } from '../models';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
@@ -109,3 +110,35 @@ export const areDatesEqual = <TDate>(utils: MuiPickersAdapter<TDate>, a: TDate, 
 
   return utils.isEqual(a, b);
 };
+
+export const getMonthsInYear = <TDate>(utils: MuiPickersAdapter<TDate>, year: TDate) => {
+  const firstMonth = utils.startOfYear(year);
+  const months = [firstMonth];
+
+  while (months.length < 12) {
+    const prevMonth = months[months.length - 1];
+    months.push(utils.addMonths(prevMonth, 1));
+  }
+
+  return months;
+};
+
+export const mergeDateAndTime = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateParam: TDate,
+  timeParam: TDate,
+) => {
+  let mergedDate = dateParam;
+  mergedDate = utils.setHours(mergedDate, utils.getHours(timeParam));
+  mergedDate = utils.setMinutes(mergedDate, utils.getMinutes(timeParam));
+  mergedDate = utils.setSeconds(mergedDate, utils.getSeconds(timeParam));
+
+  return mergedDate;
+};
+
+export const getTodayDate = <TDate>(utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) =>
+  valueType === 'date' ? utils.startOfDay(utils.date()!) : utils.date()!;
+
+const dateViews = ['year', 'month', 'day'];
+export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>
+  dateViews.includes(view);
