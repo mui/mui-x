@@ -153,6 +153,7 @@ BarChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(
     PropTypes.shape({
+      color: PropTypes.string,
       data: PropTypes.arrayOf(PropTypes.number).isRequired,
       id: PropTypes.string,
       label: PropTypes.string,
@@ -167,6 +168,7 @@ BarChart.propTypes = {
         'reverse',
       ]),
       type: PropTypes.oneOf(['bar']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),

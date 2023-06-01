@@ -153,6 +153,7 @@ LineChart.propTypes = {
   series: PropTypes.arrayOf(
     PropTypes.shape({
       area: PropTypes.bool,
+      color: PropTypes.string,
       curve: PropTypes.oneOf([
         'catmullRom',
         'linear',
@@ -177,6 +178,7 @@ LineChart.propTypes = {
         'reverse',
       ]),
       type: PropTypes.oneOf(['line']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),

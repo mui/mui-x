@@ -5,6 +5,8 @@
   { "name": "AreaElementOwnerState", "kind": "Interface" },
   { "name": "AreaElementProps", "kind": "TypeAlias" },
   { "name": "Axis", "kind": "Function" },
+  { "name": "axisClasses", "kind": "Variable" },
+  { "name": "AxisClasses", "kind": "Interface" },
   { "name": "AxisProps", "kind": "Interface" },
   { "name": "BarChart", "kind": "Function" },
   { "name": "BarPlot", "kind": "Function" },
@@ -14,6 +16,7 @@
   { "name": "DEFAULT_X_AXIS_KEY", "kind": "Variable" },
   { "name": "DEFAULT_Y_AXIS_KEY", "kind": "Variable" },
   { "name": "getAreaElementUtilityClass", "kind": "Function" },
+  { "name": "getAxisUtilityClass", "kind": "Function" },
   { "name": "getLineElementUtilityClass", "kind": "Function" },
   { "name": "getMarkElementUtilityClass", "kind": "Function" },
   { "name": "LineChart", "kind": "Function" },
@@ -36,5 +39,6 @@
   { "name": "Tooltip", "kind": "Function" },
   { "name": "TooltipProps", "kind": "TypeAlias" },
   { "name": "XAxis", "kind": "Function" },
+  { "name": "XAxisClassKey", "kind": "TypeAlias" },
   { "name": "YAxis", "kind": "Function" }
 ]
