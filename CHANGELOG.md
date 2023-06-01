@@ -4440,7 +4440,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 👔 **Excel export**. You can find this new Premium feature at: https://mui.com/x/react-data-grid/export/#excel-export.
 
-- 🔎 **Quick filtering**. You can now add a quick filtering search bar to your grid. To do so, either pass `showQuickFilter` prop to the `<GridToolbar />` or use the `<GridToolbarQuickFilter />` component in your custom toolbar. More information about how to customize the filtering logic is in the [documentation](https://mui.com/x/react-data-grid/filtering/#quick-filter).
+- 🔎 **Quick filtering**. You can now add a quick filtering search bar to your grid. To do so, either pass `showQuickFilter` prop to the `<GridToolbar />` or use the `<GridToolbarQuickFilter />` component in your custom toolbar. More information about how to customize the filtering logic is in the [documentation](https://mui.com/x/react-data-grid/filtering/quick-filter/).
 
   <img src="https://user-images.githubusercontent.com/13808724/167700105-5a5acc7c-5463-4871-8514-3d09e2f365ae.png" width="724">
 
