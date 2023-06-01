@@ -214,11 +214,10 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
 
   const CellComponent = slots.cell;
 
-  const cellProps: GridCellProps = Object.assign(
-    {},
-    props,
-    {
-      ref,
+  const cellProps: GridCellProps = {
+    
+    ...props,
+    ref,
       field,
       formattedValue,
       hasFocus,
@@ -229,9 +228,8 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
       children,
       tabIndex,
       className: clsx(classNames),
-    },
-    slotProps?.cell,
-  );
+    ...slotProps?.cell,
+  };
 
   return React.createElement(CellComponent, cellProps);
 });

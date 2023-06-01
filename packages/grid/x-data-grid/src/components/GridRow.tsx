@@ -292,7 +292,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const sizes = useGridSelector(
     apiRef,
-    () => Object.assign({}, apiRef.current.unstable_getRowInternalSizes(rowId)),
+    () => ({ ...apiRef.current.unstable_getRowInternalSizes(rowId)}),
     shallowCompare,
   );
 

@@ -70,7 +70,6 @@ module.exports = {
    */
   rules: {
     ...baseline.rules,
-    'prefer-object-spread': 'off',
     'import/prefer-default-export': 'off',
     // TODO move rule into the main repo once it has upgraded
     '@typescript-eslint/return-await': 'off',

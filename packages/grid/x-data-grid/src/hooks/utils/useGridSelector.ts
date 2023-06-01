@@ -55,6 +55,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
   const didInit = refs.current.selector !== null;
 
   const [state, setState] = React.useState<T>(
+    // We don't use an initialization function to avoid allocations
     (didInit ? null : applySelector(apiRef, selector)) as T,
   );
 
