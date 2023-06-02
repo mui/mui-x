@@ -10,10 +10,10 @@ export const AxisRoot = styled('g', {
     '.MuiAxis-label': { alignmentBaseline: 'baseline', textAnchor: 'middle' },
   },
   '&.MuiAxis-left': {
-    '.MuiAxis-tickLabel': { alignmentBaseline: 'middle', textAnchor: 'end' },
+    '.MuiAxis-tickLabel': { alignmentBaseline: 'central', textAnchor: 'end' },
   },
   '&.MuiAxis-right': {
-    '.MuiAxis-tickLabel': { alignmentBaseline: 'middle', textAnchor: 'start' },
+    '.MuiAxis-tickLabel': { alignmentBaseline: 'central', textAnchor: 'start' },
   },
   '&.MuiAxis-bottom': {
     '.MuiAxis-tickLabel, .MuiAxis-label': { alignmentBaseline: 'hanging', textAnchor: 'middle' },
