@@ -10,11 +10,14 @@ type Props = Parameters<typeof DataGridPremium>[0]
 const BLOCK_ROW_SIZE = 6
 const BLOCK_COL_SIZE = 2
 
-const ROWS_AROUND = 100
+const ROWS_AROUND = 2
 const COLS_AROUND = 1
 
-const ROWS_AROUND_WHILE_HORIZONTAL = 5
-const COLS_AROUND_WHILE_HORIZONTAL = 10
+const ROWS_AROUND_WHILE_ACTIVE = 20
+const COLS_AROUND_WHILE_ACTIVE = 10
+
+const ROWS_AROUND_WHILE_UNKNOWN = 20
+const COLS_AROUND_WHILE_UNKNOWN = COLS_AROUND
 
 
 const noop = (() => {}) as any
@@ -48,8 +51,10 @@ const config = { childList: true, subtree: true }
 
 enum ScrollDirection {
   NONE,
-  VERTICAL,
-  HORIZONTAL,
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
 }
 
 export class DataGrid extends React.Component<Props, {}> {
@@ -57,8 +62,12 @@ export class DataGrid extends React.Component<Props, {}> {
     rowHeight: 22,
   }
 
-  rowsAround = ROWS_AROUND
-  colsAround = COLS_AROUND
+  cellsAround = {
+    up: ROWS_AROUND,
+    down: ROWS_AROUND,
+    left: COLS_AROUND,
+    right: COLS_AROUND,
+  }
   aroundAnimation = null as Animation | null
 
   content = React.createRef<HTMLDivElement>()
@@ -74,6 +83,7 @@ export class DataGrid extends React.Component<Props, {}> {
   lastScrollLeft = 0
   lastScrollTimestamp = 0
   scrollDirection = ScrollDirection.NONE
+  isScrolling = false
 
   cleanupTimeout = 0
 
@@ -155,31 +165,47 @@ export class DataGrid extends React.Component<Props, {}> {
     this.renderBlocks(this.displayRange)
   }
 
-  resetScrollDirection = debounce(() => {
-    this.changeScrollDirection(ScrollDirection.NONE)
-  }, 300)
+  scheduleResetScrollFlag = debounce(() => {
+    this.isScrolling = false
+    if (this.scrollDirection === ScrollDirection.LEFT || this.scrollDirection === ScrollDirection.RIGHT) {
+      this.changeScrollDirection(ScrollDirection.NONE)
+      this.updateDisplayRange()
+      this.renderBlocks(this.displayRange)
+    }
+  }, 400)
 
-  changeScrollDirection(scrollDirection: ScrollDirection) {
-    const rowsAround =
-      scrollDirection === ScrollDirection.HORIZONTAL ?
-        ROWS_AROUND_WHILE_HORIZONTAL : ROWS_AROUND
+  changeScrollDirection(direction: ScrollDirection) {
+    const isHorizontal = 
+      direction === ScrollDirection.LEFT ||
+      direction === ScrollDirection.RIGHT
 
-    const colsAround =
-      scrollDirection === ScrollDirection.HORIZONTAL ?
-        COLS_AROUND_WHILE_HORIZONTAL : COLS_AROUND
+    const initial = { ...this.cellsAround }
+    const target =
+      direction === ScrollDirection.NONE ? 
+        {
+          up:    ROWS_AROUND_WHILE_UNKNOWN,
+          down:  ROWS_AROUND_WHILE_UNKNOWN,
+          left:  COLS_AROUND_WHILE_UNKNOWN,
+          right: COLS_AROUND_WHILE_UNKNOWN,
+        } :
+        {
+          up:    direction === ScrollDirection.UP    ? ROWS_AROUND_WHILE_ACTIVE : ROWS_AROUND,
+          down:  direction === ScrollDirection.DOWN  ? ROWS_AROUND_WHILE_ACTIVE : ROWS_AROUND,
+          left:  direction === ScrollDirection.LEFT  ? COLS_AROUND_WHILE_ACTIVE : COLS_AROUND,
+          right: direction === ScrollDirection.RIGHT ? COLS_AROUND_WHILE_ACTIVE : COLS_AROUND,
+        }
 
-    const initialRowsAround = this.rowsAround
-    const initialColsAround = this.colsAround
-
-    this.scrollDirection = scrollDirection
+    this.scrollDirection = direction
     this.aroundAnimation?.cancel()
     this.aroundAnimation = animate({
       from: 0,
       to: 1,
-      duration: scrollDirection === ScrollDirection.HORIZONTAL ? 100 : 500,
+      duration: isHorizontal ? 100 : 500,
       onChange: (factor) => {
-        this.rowsAround = Math.round(lerp(factor, initialRowsAround, rowsAround))
-        this.colsAround = Math.round(lerp(factor, initialColsAround, colsAround))
+        this.cellsAround.up    = Math.round(lerp(factor, initial.up,    target.up))
+        this.cellsAround.down  = Math.round(lerp(factor, initial.down,  target.down))
+        this.cellsAround.left  = Math.round(lerp(factor, initial.left,  target.left))
+        this.cellsAround.right = Math.round(lerp(factor, initial.right, target.right))
 
         this.updateDisplayRange()
         this.renderBlocks(this.displayRange)
@@ -229,7 +255,8 @@ export class DataGrid extends React.Component<Props, {}> {
   onContainerScroll = (ev: Event) => {
     performance.mark('SCROLL: ' + this.container.current!.scrollTop)
 
-    this.lastScrollTimestamp = ev.timeStamp;
+    this.lastScrollTimestamp = ev.timeStamp
+    this.isScrolling = true
 
     // if (this.lockScroll === false) {
     //   this.lockScroll = true
@@ -238,6 +265,24 @@ export class DataGrid extends React.Component<Props, {}> {
     //     this.lockScroll = false
     //   })
     // }
+
+    const scrollTop  = this.container.current!.scrollTop
+    const scrollLeft = this.container.current!.scrollLeft
+    const deltaY = scrollTop - this.lastScrollTop
+    const deltaX = scrollLeft - this.lastScrollLeft
+    this.lastScrollTop = scrollTop
+    this.lastScrollLeft = scrollLeft
+
+    let direction: ScrollDirection
+    if (Math.abs(deltaY) > Math.abs(deltaX)) {
+      direction = deltaY > 0 ? ScrollDirection.DOWN : ScrollDirection.UP
+    } else {
+      direction = deltaX > 0 ? ScrollDirection.LEFT : ScrollDirection.RIGHT
+    }
+    if (direction !== this.scrollDirection) {
+      this.changeScrollDirection(direction)
+    }
+    this.scheduleResetScrollFlag()
 
     this.updateScreenRange()
     this.renderBlocks(this.displayRange)
@@ -248,19 +293,6 @@ export class DataGrid extends React.Component<Props, {}> {
     performance.mark('WHEEL: ' + ev.deltaY)
 
     this.lastScrollTimestamp = ev.timeStamp;
-
-    let scrollDirection: ScrollDirection
-    if (Math.abs(ev.deltaY) > Math.abs(ev.deltaX)) {
-      scrollDirection = ScrollDirection.VERTICAL
-    } else {
-      scrollDirection = ScrollDirection.HORIZONTAL
-    }
-
-    if (scrollDirection !== this.scrollDirection) {
-      this.changeScrollDirection(scrollDirection)
-    }
-
-    this.resetScrollDirection()
 
     // TODO: scroll prediction
   }
@@ -359,14 +391,14 @@ export class DataGrid extends React.Component<Props, {}> {
   }
 
   updateDisplayRange() {
-    const firstRowRequest = this.screenRange.minY - this.rowsAround
-    const lastRowRequest = this.screenRange.maxY + this.rowsAround
+    const firstRowRequest = this.screenRange.minY - this.cellsAround.up
+    const lastRowRequest  = this.screenRange.maxY + this.cellsAround.down
 
     const firstRow = Math.max(0, firstRowRequest - (firstRowRequest % BLOCK_ROW_SIZE))
     const lastRow = Math.min(this.rows.length, lastRowRequest + (BLOCK_ROW_SIZE - lastRowRequest % BLOCK_ROW_SIZE))
 
-    const firstColumnRequest = this.screenRange.minX - this.colsAround
-    const lastColumnRequest = this.screenRange.maxX + this.colsAround
+    const firstColumnRequest = this.screenRange.minX - this.cellsAround.right
+    const lastColumnRequest  = this.screenRange.maxX + this.cellsAround.left
 
     const firstColumn = Math.max(0, firstColumnRequest - (firstColumnRequest % BLOCK_COL_SIZE))
     const lastColumn  = Math.min(this.columns.length, lastColumnRequest + (BLOCK_COL_SIZE - lastColumnRequest % BLOCK_COL_SIZE))
