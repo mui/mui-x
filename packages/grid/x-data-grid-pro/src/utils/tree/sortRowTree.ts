@@ -36,7 +36,9 @@ class Node<T> {
     list.first.previous = this;
 
     list.last.next = next;
-    if (next) {next.previous = list.last;}
+    if (next) {
+      next.previous = list.last;
+    }
   }
 }
 
@@ -77,7 +79,9 @@ class List<T> {
   }
 
   static from<T>(array: T[]): List<T> {
-    if (array.length === 0) {return new List(null, null);}
+    if (array.length === 0) {
+      return new List(null, null);
+    }
 
     let index = 0;
     const first = new Node(array[index], null, null);
@@ -92,7 +96,6 @@ class List<T> {
     return new List(first, current);
   }
 }
-
 
 export const sortRowTree = (params: SortRowTreeParams) => {
   const { rowTree, disableChildrenSorting, sortRowList, shouldRenderGroupBelowLeaves } = params;
