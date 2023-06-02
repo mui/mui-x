@@ -11,7 +11,10 @@ import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
 import { getFirstColumnIndexToRender, getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
-import { areRenderContextsEqual, getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
+import {
+  areRenderContextsEqual,
+  getRenderableIndexes,
+} from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -109,11 +112,15 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
   const setRenderContext = (nextRenderContext: GridRenderContext | null) => {
-    if (renderContext && nextRenderContext && areRenderContextsEqual(renderContext, nextRenderContext)) {
+    if (
+      renderContext &&
+      nextRenderContext &&
+      areRenderContextsEqual(renderContext, nextRenderContext)
+    ) {
       return;
     }
     setRenderContextRaw(nextRenderContext);
-  }
+  };
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;

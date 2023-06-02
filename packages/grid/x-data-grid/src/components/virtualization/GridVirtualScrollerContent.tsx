@@ -8,7 +8,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = DataGridProcessedProps;
 
-const useUtilityClasses = (props: DataGridProcessedProps, overflowedContent: boolean ) => {
+const useUtilityClasses = (props: DataGridProcessedProps, overflowedContent: boolean) => {
   const { classes } = props;
 
   const slots = {

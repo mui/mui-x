@@ -5,6 +5,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
+import { fastMemo } from '../utils/fastMemo';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
@@ -465,6 +466,6 @@ GridRow.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object),
 } as any;
 
-const MemoizedGridRow = React.memo(GridRow);
+const MemoizedGridRow = fastMemo(GridRow);
 
 export { MemoizedGridRow as GridRow };

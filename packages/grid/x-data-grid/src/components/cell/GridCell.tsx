@@ -8,6 +8,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import { fastMemo } from '../../utils/fastMemo';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
@@ -427,7 +428,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   );
 });
 
-const MemoizedCellWrapper = React.memo(GridCellWrapper);
+const MemoizedCellWrapper = fastMemo(GridCellWrapper);
 
 GridCellWrapper.propTypes = {
   // ----------------------------- Warning --------------------------------

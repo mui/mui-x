@@ -81,7 +81,10 @@ export const getRenderableIndexes = ({
   ];
 };
 
-export const areRenderContextsEqual = (context1: GridRenderContext, context2: GridRenderContext) => {
+export const areRenderContextsEqual = (
+  context1: GridRenderContext,
+  context2: GridRenderContext,
+) => {
   if (context1 === context2) {
     return true;
   }
@@ -673,7 +676,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       ...props,
       style: props.style ? { ...props.style, ...rootStyle } : rootStyle,
     }),
-    getContentProps: ({ style }: { style?: object } = {}) => ({ style: style ? { ...style, ...contentSize } : contentSize }),
+    getContentProps: ({ style }: { style?: object } = {}) => ({
+      style: style ? { ...style, ...contentSize } : contentSize,
+    }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
   };
 };
