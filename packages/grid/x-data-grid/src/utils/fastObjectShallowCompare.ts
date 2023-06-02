@@ -16,10 +16,10 @@ export function fastObjectShallowCompare<T extends Record<string, any> | null>(a
   for (const key in a) {
     aLength += 1;
 
-    if (!(key in b)) {
+    if (!is(a[key], b[key])) {
       return false;
     }
-    if (!is(a[key], b[key])) {
+    if (!(key in b)) {
       return false;
     }
   }
