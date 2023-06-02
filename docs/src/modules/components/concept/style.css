@@ -9,6 +9,7 @@ body {
   color-scheme: dark;
 
   --row-height: 22px;
+  --header-height: var(--row-height);
 }
 
 .grid {
@@ -46,7 +47,7 @@ body {
 
 .header {
   position: sticky;
-        z-index: 2;
+  z-index: 2;
   top: 0;
   display: flex;
   flex: row;
@@ -77,6 +78,7 @@ body {
 
 .content {
   position: relative;
+  background-position: 0 var(--header-height);
 }
 
 .block {
@@ -89,7 +91,4 @@ body {
   display: flex;
 }
 .row > .column {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-top: none;
-  border-left: none;
 }

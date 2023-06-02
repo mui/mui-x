@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import RTree from 'rbush';
 import { unstable_debounce as debounce } from '@mui/utils';
-import { Button } from '@mui/material';
 import type { DataGridPremium } from '@mui/x-data-grid-premium';
 import { animate, lerp, Animation } from './animate'
 
@@ -81,6 +80,8 @@ export class DataGrid extends React.Component<Props, {}> {
   screenRange = EMPTY_RANGE
   displayRange = EMPTY_RANGE
 
+  backgroundImageURL = null as string | null
+
   observer = typeof MutationObserver !== 'undefined' ? new MutationObserver((mutationList) => {
     for (const mutation of mutationList) {
 
@@ -120,7 +121,7 @@ export class DataGrid extends React.Component<Props, {}> {
 
   componentDidMount() {
     this.updateScreenRange()
-    this.updateHeight()
+    this.updateDimensions()
     this.renderBlocks(this.displayRange)
 
     this.observer.observe(this.content.current!, config)
@@ -142,11 +143,15 @@ export class DataGrid extends React.Component<Props, {}> {
     this.scrollVertical.current!.removeEventListener('scroll', this.onVerticalScroll)
 
     cancelAnimationFrame(this.canvasFrameId)
+
+    if (this.backgroundImageURL) {
+      URL.revokeObjectURL(this.backgroundImageURL);
+    }
   }
 
   componentDidUpdate() {
     this.updateScreenRange()
-    this.updateHeight()
+    this.updateDimensions()
     this.renderBlocks(this.displayRange)
   }
 
@@ -374,9 +379,33 @@ export class DataGrid extends React.Component<Props, {}> {
     }
   }
 
-  updateHeight() {
-    this.content.current!.style.height = `${this.rowHeight * this.rows.length}px`;
-    (this.scrollVertical.current!.children[0] as HTMLElement).style.height = `${this.rowHeight * this.rows.length}px`
+  updateDimensions() {
+    const scrollVerticalContent = this.scrollVertical.current!.children[0] as HTMLElement;
+    scrollVerticalContent.style.height = `${this.rowHeight * this.rows.length}px`
+
+    const rowHeight  = this.rowHeight;
+    const totalWidth = this.columns.length * this.columnWidth;
+
+    const borderColor = 'rgba(255, 255, 255, 0.3)';
+    const svg = `
+      <svg width="${totalWidth}" height="${rowHeight}" viewBox="0 0 ${totalWidth} ${rowHeight}" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="${rowHeight}" x2="${totalWidth}" y2="${rowHeight}" stroke="${borderColor}" />
+      </svg>
+    `
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob); // XXX: 
+
+    const content = this.content.current!;
+    content.style.height = `${this.rowHeight * this.rows.length}px`;
+    content.style.width = `${totalWidth}px`;
+    content.style.backgroundImage = `url(${url})`
+    content.style.backgroundSize = `${totalWidth}px ${rowHeight}px`
+    content.style.backgroundRepeat = 'repeat-y';
+
+    if (this.backgroundImageURL) {
+      URL.revokeObjectURL(this.backgroundImageURL);
+    }
+    this.backgroundImageURL = url
   }
 
   renderBlock(x: number, y: number) {
@@ -476,7 +505,13 @@ export class DataGrid extends React.Component<Props, {}> {
   render() {
     return (
       <div>
-        <div className='grid' style={{ '--row-height': `${this.rowHeight}px` } as React.CSSProperties}>
+        <div
+          className='grid'
+          style={{
+            '--row-height': `${this.rowHeight}px`,
+            '--header-height': `${this.rowHeight}px`,
+          } as React.CSSProperties}
+        >
           <div ref={this.scrollVertical} className='fake-scroll-vertical'>
             <div className='fake-scroll-vertical-content'></div>
           </div>
