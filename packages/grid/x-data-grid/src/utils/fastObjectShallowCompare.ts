@@ -1,6 +1,6 @@
 const is = Object.is;
 
-export function fastShallowCompare<T extends Record<string, any> | null>(a: T, b: T) {
+export function fastObjectShallowCompare<T extends Record<string, any> | null>(a: T, b: T) {
   if (a === b) {
     return true;
   }

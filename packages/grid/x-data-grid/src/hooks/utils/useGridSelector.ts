@@ -4,7 +4,7 @@ import { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
 import { useOnMount } from './useOnMount';
 import { buildWarning } from '../../utils/warning';
-import { fastShallowCompare } from '../../utils/fastShallowCompare';
+import { fastObjectShallowCompare } from '../../utils/fastObjectShallowCompare';
 
 const stateNotInitializedWarning = buildWarning([
   'MUI: `useGridSelector` has been called before the initialization of the state.',
@@ -28,7 +28,7 @@ export function applySelector<Api extends GridApiCommon, T>(
 }
 
 export const defaultCompare = Object.is;
-export const shallowCompare = fastShallowCompare;
+export const shallowCompare = fastObjectShallowCompare;
 
 const createRefs = () => ({ state: null, equals: null, selector: null } as any);
 
