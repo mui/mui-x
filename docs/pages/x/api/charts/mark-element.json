@@ -1,21 +1,18 @@
 {
   "props": {
-    "dataIndex": { "type": { "name": "number" }, "required": true },
+    "dataIndex": { "type": { "name": "number" }, "required": true, "additionalPropsInfo": {} },
     "shape": {
       "type": {
         "name": "enum",
         "description": "'circle'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
       },
-      "required": true
+      "required": true,
+      "additionalPropsInfo": {}
     }
   },
   "slots": {},
   "name": "MarkElement",
-  "styles": {
-    "classes": ["root", "highlighted", "faded"],
-    "globalClasses": {},
-    "name": "MuiMarkElement"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkElement" },
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "MarkElement" }]

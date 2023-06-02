@@ -1,40 +1,55 @@
 {
   "props": {
-    "day": { "type": { "name": "any" }, "required": true },
-    "isFirstVisibleCell": { "type": { "name": "bool" }, "required": true },
-    "isLastVisibleCell": { "type": { "name": "bool" }, "required": true },
-    "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
+    "day": { "type": { "name": "any" }, "required": true, "additionalPropsInfo": {} },
+    "isFirstVisibleCell": {
+      "type": { "name": "bool" },
+      "required": true,
+      "additionalPropsInfo": {}
+    },
+    "isLastVisibleCell": {
+      "type": { "name": "bool" },
+      "required": true,
+      "additionalPropsInfo": {}
+    },
+    "outsideCurrentMonth": {
+      "type": { "name": "bool" },
+      "required": true,
+      "additionalPropsInfo": {}
+    },
     "action": {
       "type": {
         "name": "union",
         "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
-    "centerRipple": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disableMargin": { "type": { "name": "bool" } },
-    "disableRipple": { "type": { "name": "bool" } },
-    "disableTouchRipple": { "type": { "name": "bool" } },
-    "focusRipple": { "type": { "name": "bool" } },
-    "focusVisibleClassName": { "type": { "name": "string" } },
-    "onFocusVisible": { "type": { "name": "func" } },
-    "selected": { "type": { "name": "bool" } },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "centerRipple": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableHighlightToday": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableMargin": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableRipple": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableTouchRipple": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "focusRipple": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "focusVisibleClassName": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "onFocusVisible": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "selected": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
-    "today": { "type": { "name": "bool" } },
-    "TouchRippleProps": { "type": { "name": "object" } },
+    "today": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "TouchRippleProps": { "type": { "name": "object" }, "additionalPropsInfo": {} },
     "touchRippleRef": {
       "type": {
         "name": "union",
         "description": "func<br>&#124;&nbsp;{ current?: { pulsate: func, start: func, stop: func } }"
-      }
+      },
+      "additionalPropsInfo": {}
     }
   },
   "slots": {},

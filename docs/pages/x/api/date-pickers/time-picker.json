@@ -1,112 +1,184 @@
 {
   "props": {
-    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
-    "autoFocus": { "type": { "name": "bool" } },
-    "className": { "type": { "name": "string" } },
+    "ampm": {
+      "type": { "name": "bool" },
+      "default": "`utils.is12HourCycleInCurrentLocale()`",
+      "additionalPropsInfo": {}
+    },
+    "ampmInClock": {
+      "type": { "name": "bool" },
+      "default": "true on desktop, false on mobile",
+      "additionalPropsInfo": {}
+    },
+    "autoFocus": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).",
+      "additionalPropsInfo": {}
     },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
+      "deprecationInfo": "Please use <code>slots</code>.",
+      "additionalPropsInfo": {}
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>.",
+      "additionalPropsInfo": {}
     },
-    "defaultValue": { "type": { "name": "any" } },
+    "defaultValue": { "type": { "name": "any" }, "additionalPropsInfo": {} },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
-      "default": "'@media (pointer: fine)'"
+      "default": "'@media (pointer: fine)'",
+      "additionalPropsInfo": {}
     },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
-    "disableOpenPicker": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
-    "format": { "type": { "name": "string" } },
+    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableIgnoringDatePartForTimeValidation": {
+      "type": { "name": "bool" },
+      "additionalPropsInfo": {}
+    },
+    "disableOpenPicker": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "format": { "type": { "name": "string" }, "additionalPropsInfo": {} },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
-      "default": "\"dense\""
+      "default": "\"dense\"",
+      "additionalPropsInfo": {}
     },
     "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" },
+      "additionalPropsInfo": {}
     },
-    "label": { "type": { "name": "node" } },
-    "localeText": { "type": { "name": "object" } },
-    "maxTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
-    "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "onAccept": { "type": { "name": "func" } },
-    "onChange": { "type": { "name": "func" } },
-    "onClose": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onOpen": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
-    "open": { "type": { "name": "bool" } },
+    "label": { "type": { "name": "node" }, "additionalPropsInfo": {} },
+    "localeText": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "maxTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "minTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "minutesStep": { "type": { "name": "number" }, "default": "1", "additionalPropsInfo": {} },
+    "onAccept": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] },
+      "additionalPropsInfo": {}
+    },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onClose": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onOpen": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] },
+      "additionalPropsInfo": {}
+    },
+    "open": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "openTo": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" },
+      "additionalPropsInfo": {}
     },
     "selectedSections": {
       "type": {
         "name": "union",
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
+      "signature": {
+        "type": "function(clockValue: number, view: TimeView) => boolean",
+        "describedArgs": ["clockValue", "view"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
     },
-    "shouldDisableTime": { "type": { "name": "func" } },
-    "skipDisabled": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "skipDisabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
-    "thresholdToRenderTimeInASingleColumn": { "type": { "name": "number" }, "default": "24" },
+    "thresholdToRenderTimeInASingleColumn": {
+      "type": { "name": "number" },
+      "default": "24",
+      "additionalPropsInfo": {}
+    },
     "timeSteps": {
       "type": {
         "name": "shape",
         "description": "{ hours?: number, minutes?: number, seconds?: number }"
       },
-      "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+      "default": "{ hours: 1, minutes: 5, seconds: 5 }",
+      "additionalPropsInfo": {}
     },
-    "value": { "type": { "name": "any" } },
+    "value": { "type": { "name": "any" }, "additionalPropsInfo": {} },
     "view": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "viewRenderers": {
       "type": {
         "name": "shape",
         "description": "{ hours?: func, meridiem?: func, minutes?: func, seconds?: func }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "views": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      }
+      },
+      "additionalPropsInfo": {}
     }
   },
   "slots": {

@@ -4,19 +4,22 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
+      "deprecationInfo": "Please use <code>slots</code>.",
+      "additionalPropsInfo": {}
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>.",
+      "additionalPropsInfo": {}
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" },
+      "additionalPropsInfo": {}
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" }
+    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
@@ -26,11 +29,7 @@
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "PickersLayout",
-  "styles": {
-    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs", "shortcuts"],
-    "globalClasses": {},
-    "name": "MuiPickersLayout"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPickersLayout" },
   "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
   "packages": [

@@ -1,101 +1,167 @@
 {
   "props": {
-    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "autoFocus": { "type": { "name": "bool" } },
+    "ampm": {
+      "type": { "name": "bool" },
+      "default": "`utils.is12HourCycleInCurrentLocale()`",
+      "additionalPropsInfo": {}
+    },
+    "autoFocus": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "color": {
       "type": {
         "name": "enum",
         "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
       },
-      "default": "'primary'"
+      "default": "'primary'",
+      "additionalPropsInfo": {}
     },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
+      "deprecationInfo": "Please use <code>slots</code>.",
+      "additionalPropsInfo": {}
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>.",
+      "additionalPropsInfo": {}
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
-    "focused": { "type": { "name": "bool" } },
-    "format": { "type": { "name": "string" } },
+    "defaultValue": {
+      "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
+      "additionalPropsInfo": {}
+    },
+    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableIgnoringDatePartForTimeValidation": {
+      "type": { "name": "bool" },
+      "additionalPropsInfo": {}
+    },
+    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "focused": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "format": { "type": { "name": "string" }, "additionalPropsInfo": {} },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
-      "default": "\"dense\""
+      "default": "\"dense\"",
+      "additionalPropsInfo": {}
     },
-    "FormHelperTextProps": { "type": { "name": "object" } },
-    "fullWidth": { "type": { "name": "bool" } },
-    "helperText": { "type": { "name": "node" } },
-    "hiddenLabel": { "type": { "name": "bool" } },
-    "id": { "type": { "name": "string" } },
-    "InputLabelProps": { "type": { "name": "object" } },
-    "inputProps": { "type": { "name": "object" } },
-    "InputProps": { "type": { "name": "object" } },
+    "FormHelperTextProps": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "fullWidth": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "helperText": { "type": { "name": "node" }, "additionalPropsInfo": {} },
+    "hiddenLabel": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "id": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "InputLabelProps": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "inputProps": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "InputProps": { "type": { "name": "object" }, "additionalPropsInfo": {} },
     "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current: any }" }
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current: any }" },
+      "additionalPropsInfo": {}
     },
-    "label": { "type": { "name": "node" } },
+    "label": { "type": { "name": "node" }, "additionalPropsInfo": {} },
     "margin": {
       "type": {
         "name": "enum",
         "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
       },
-      "default": "'none'"
+      "default": "'none'",
+      "additionalPropsInfo": {}
     },
-    "maxTime": { "type": { "name": "any" } },
-    "minTime": { "type": { "name": "any" } },
-    "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "name": { "type": { "name": "string" } },
-    "onChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
-    "readOnly": { "type": { "name": "bool" } },
+    "maxTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "minTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "minutesStep": { "type": { "name": "number" }, "default": "1", "additionalPropsInfo": {} },
+    "name": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "readOnly": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "referenceDate": {
       "type": { "name": "any" },
-      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.",
+      "additionalPropsInfo": {}
     },
-    "required": { "type": { "name": "bool" } },
+    "required": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "selectedSections": {
       "type": {
         "name": "union",
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
+      "signature": {
+        "type": "function(clockValue: number, view: TimeView) => boolean",
+        "describedArgs": ["clockValue", "view"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
     },
-    "shouldDisableTime": { "type": { "name": "func" } },
-    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
-    "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "shouldRespectLeadingZeros": {
+      "type": { "name": "bool" },
+      "default": "`false`",
+      "additionalPropsInfo": {}
+    },
+    "size": {
+      "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" },
+      "additionalPropsInfo": {}
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "unstableFieldRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" },
+      "additionalPropsInfo": {}
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "value": {
+      "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
+      "additionalPropsInfo": {}
+    },
     "variant": {
       "type": {
         "name": "enum",
         "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
       },
-      "default": "'outlined'"
+      "default": "'outlined'",
+      "additionalPropsInfo": {}
     }
   },
   "slots": {

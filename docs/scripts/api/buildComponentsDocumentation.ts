@@ -295,7 +295,14 @@ const buildComponentDocumentation = async (options: {
 
   const componentApi: {
     componentDescription: string;
-    propDescriptions: { [key: string]: string | undefined };
+    propDescriptions: {
+      [key: string]: {
+        description: string;
+        notes?: string;
+        deprecated?: string;
+        typeDescriptions?: { [t: string]: string };
+      };
+    };
     classDescriptions: { [key: string]: { description: string; conditions?: string } };
     slotDescriptions: { [key: string]: string | undefined };
   } = {
@@ -329,24 +336,47 @@ const buildComponentDocumentation = async (options: {
         return [] as any;
       }
 
-      let description = generatePropDescription(prop, propName);
-      description = renderMarkdownInline(description);
+      const {
+        deprecated,
+        jsDocText,
+        signature: signatureType,
+        signatureArgs,
+        signatureReturn,
+        notes,
+      } = generatePropDescription(prop, propName);
+      let description = renderMarkdownInline(jsDocText);
 
+      const additionalPropsInfo: { sx?: boolean; classes?: boolean } = {};
       if (propName === 'classes') {
-        description += ' See <a href="#css">CSS API</a> below for more details.';
+        additionalPropsInfo.classes = true;
+        // description += ' See <a href="#css">CSS API</a> below for more details.';
       } else if (propName === 'sx') {
-        description +=
-          ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
+        additionalPropsInfo.sx = true;
+        // description +=
+        //   ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
       }
       // Parse and generate `@see` doc with a {@link}
       const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
       if (seeTag && seeTag.description) {
-        description += ` ${seeTag.description.replace(
+        description += `<br>${seeTag.description.replace(
           /{@link ([^|| ]*)[|| ]([^}]*)}/,
           '<a href="$1">$2</a>',
         )}`;
       }
-      componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
+
+      const typeDescriptions: { [t: string]: string } = {};
+      [...(signatureArgs ?? []), ...(signatureReturn ? [signatureReturn] : [])].forEach(
+        ({ name, description: paramDescription }) => {
+          typeDescriptions[name] = renderMarkdownInline(paramDescription);
+        },
+      );
+
+      componentApi.propDescriptions[propName] = {
+        description: linkify(description, documentedInterfaces, 'html'),
+        notes,
+        deprecated,
+        typeDescriptions,
+      };
 
       const jsdocDefaultValue = getJsdocDefaultValue(
         parseDoctrine(propDescriptor.description || '', {
@@ -375,6 +405,14 @@ const buildComponentDocumentation = async (options: {
 
       const deprecation = (propDescriptor.description || '').match(/@deprecated(\s+(?<info>.*))?/);
 
+      let signature;
+      if (signatureType !== undefined) {
+        signature = {
+          type: signatureType,
+          describedArgs: signatureArgs?.map((arg) => arg.name),
+          returned: signatureReturn?.name,
+        };
+      }
       return [
         propName,
         {
@@ -389,6 +427,8 @@ const buildComponentDocumentation = async (options: {
           deprecated: !!deprecation || undefined,
           deprecationInfo:
             renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
+          signature,
+          additionalPropsInfo,
         },
       ];
     }),

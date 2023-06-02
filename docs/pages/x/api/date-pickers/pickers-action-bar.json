@@ -5,19 +5,21 @@
         "name": "arrayOf",
         "description": "Array&lt;'accept'<br>&#124;&nbsp;'cancel'<br>&#124;&nbsp;'clear'<br>&#124;&nbsp;'today'&gt;"
       },
-      "default": "`['cancel', 'accept']` for mobile and `[]` for desktop"
+      "default": "`['cancel', 'accept']` for mobile and `[]` for desktop",
+      "additionalPropsInfo": {}
     },
-    "disableSpacing": { "type": { "name": "bool" } },
+    "disableSpacing": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "slots": {},
   "name": "PickersActionBar",
-  "styles": { "classes": ["root", "spacing"], "globalClasses": {}, "name": "MuiPickersActionBar" },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPickersActionBar" },
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",

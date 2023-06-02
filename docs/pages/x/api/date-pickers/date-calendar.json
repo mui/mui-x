@@ -1,91 +1,167 @@
 {
   "props": {
-    "autoFocus": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
+      "deprecationInfo": "Please use <code>slots</code>.",
+      "additionalPropsInfo": {}
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>.",
+      "additionalPropsInfo": {}
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()"
+      "default": "(day) => day.charAt(0).toUpperCase()",
+      "signature": {
+        "type": "function(day: string) => string",
+        "describedArgs": ["day"],
+        "returned": "string"
+      },
+      "additionalPropsInfo": {}
     },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
-    "defaultValue": { "type": { "name": "any" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
-    "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "defaultCalendarMonth": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "defaultValue": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableHighlightToday": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "displayWeekNumber": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "fixedWeekNumber": {
+      "type": { "name": "number" },
+      "default": "undefined",
+      "additionalPropsInfo": {}
+    },
     "focusedView": {
       "type": {
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
-      }
+      },
+      "additionalPropsInfo": {}
     },
-    "loading": { "type": { "name": "bool" } },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
+    "loading": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "maxDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "minDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
-      "default": "3"
+      "default": "3",
+      "additionalPropsInfo": {}
     },
-    "onChange": { "type": { "name": "func" } },
-    "onFocusedViewChange": { "type": { "name": "func" } },
-    "onMonthChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
-    "onYearChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate | null, selectionState: PickerSelectionState | undefined) => void",
+        "describedArgs": ["value", "selectionState"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(view: TView, hasFocus: boolean) => void",
+        "describedArgs": ["view", "hasFocus"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] },
+      "additionalPropsInfo": {}
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] },
+      "additionalPropsInfo": {}
+    },
+    "onYearChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] },
+      "additionalPropsInfo": {}
+    },
     "openTo": {
       "type": {
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
-      }
+      },
+      "additionalPropsInfo": {}
     },
-    "readOnly": { "type": { "name": "bool" } },
+    "readOnly": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)",
+      "additionalPropsInfo": {}
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
+      "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
+      "signature": {
+        "type": "function() => React.ReactNode",
+        "describedArgs": [],
+        "returned": "React.ReactNode"
+      },
+      "additionalPropsInfo": {}
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
-    "shouldDisableYear": { "type": { "name": "func" } },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate) => boolean",
+        "describedArgs": ["day"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "shouldDisableMonth": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(month: TDate) => boolean",
+        "describedArgs": ["month"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "shouldDisableYear": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(year: TDate) => boolean",
+        "describedArgs": ["year"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
-    "value": { "type": { "name": "any" } },
+    "value": { "type": { "name": "any" }, "additionalPropsInfo": {} },
     "view": {
       "type": {
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "views": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
-      "default": "3"
+      "default": "3",
+      "additionalPropsInfo": {}
     }
   },
   "slots": {

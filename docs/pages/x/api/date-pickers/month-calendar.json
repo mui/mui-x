@@ -1,28 +1,42 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" } },
-    "className": { "type": { "name": "string" } },
-    "defaultValue": { "type": { "name": "any" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "defaultValue": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableHighlightToday": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "maxDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "minDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
-      "default": "3"
+      "default": "3",
+      "additionalPropsInfo": {}
     },
-    "onChange": { "type": { "name": "func" } },
-    "readOnly": { "type": { "name": "bool" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TDate | null) => void", "describedArgs": ["value"] },
+      "additionalPropsInfo": {}
+    },
+    "readOnly": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "shouldDisableMonth": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(month: TDate) => boolean",
+        "describedArgs": ["month"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
-    "value": { "type": { "name": "any" } }
+    "value": { "type": { "name": "any" }, "additionalPropsInfo": {} }
   },
   "slots": {},
   "name": "MonthCalendar",

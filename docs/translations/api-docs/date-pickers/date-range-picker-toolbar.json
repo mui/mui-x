@@ -1,10 +1,30 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "className": "className applied to the root component.",
-    "hidden": "If <code>true</code>, show the toolbar even in desktop mode.",
-    "toolbarFormat": "Toolbar date format.",
-    "toolbarPlaceholder": "Toolbar value placeholder—it is displayed when the value is empty."
+    "className": {
+      "description": "className applied to the root component.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "hidden": {
+      "description": "If <code>true</code>, show the toolbar even in desktop mode.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "toolbarFormat": {
+      "description": "Toolbar date format.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "toolbarPlaceholder": {
+      "description": "Toolbar value placeholder—it is displayed when the value is empty.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },

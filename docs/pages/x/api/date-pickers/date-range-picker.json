@@ -1,100 +1,187 @@
 {
   "props": {
-    "autoFocus": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "2"
+      "default": "2",
+      "additionalPropsInfo": {}
     },
-    "className": { "type": { "name": "string" } },
+    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).",
+      "additionalPropsInfo": {}
     },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>."
+      "deprecationInfo": "Please use <code>slots</code>.",
+      "additionalPropsInfo": {}
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>.",
+      "additionalPropsInfo": {}
     },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "1"
+      "default": "1",
+      "additionalPropsInfo": {}
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()"
+      "default": "(day) => day.charAt(0).toUpperCase()",
+      "signature": {
+        "type": "function(day: string) => string",
+        "describedArgs": ["day"],
+        "returned": "string"
+      },
+      "additionalPropsInfo": {}
     },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultCalendarMonth": { "type": { "name": "any" }, "additionalPropsInfo": {} },
     "defaultRangePosition": {
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
-      "default": "'start'"
+      "default": "'start'",
+      "additionalPropsInfo": {}
     },
-    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "defaultValue": {
+      "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
+      "additionalPropsInfo": {}
+    },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
-      "default": "'@media (pointer: fine)'"
+      "default": "'@media (pointer: fine)'",
+      "additionalPropsInfo": {}
     },
-    "disableAutoMonthSwitching": { "type": { "name": "bool" } },
-    "disabled": { "type": { "name": "bool" } },
-    "disableDragEditing": { "type": { "name": "bool" } },
-    "disableFuture": { "type": { "name": "bool" } },
-    "disableHighlightToday": { "type": { "name": "bool" } },
-    "disableOpenPicker": { "type": { "name": "bool" } },
-    "disablePast": { "type": { "name": "bool" } },
-    "displayWeekNumber": { "type": { "name": "bool" } },
-    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
-    "format": { "type": { "name": "string" } },
+    "disableAutoMonthSwitching": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableDragEditing": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableHighlightToday": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableOpenPicker": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "displayWeekNumber": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "fixedWeekNumber": {
+      "type": { "name": "number" },
+      "default": "undefined",
+      "additionalPropsInfo": {}
+    },
+    "format": { "type": { "name": "string" }, "additionalPropsInfo": {} },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
-      "default": "\"dense\""
+      "default": "\"dense\"",
+      "additionalPropsInfo": {}
     },
     "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" },
+      "additionalPropsInfo": {}
     },
-    "label": { "type": { "name": "node" } },
-    "loading": { "type": { "name": "bool" } },
-    "localeText": { "type": { "name": "object" } },
-    "maxDate": { "type": { "name": "any" } },
-    "minDate": { "type": { "name": "any" } },
-    "onAccept": { "type": { "name": "func" } },
-    "onChange": { "type": { "name": "func" } },
-    "onClose": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onMonthChange": { "type": { "name": "func" } },
-    "onOpen": { "type": { "name": "func" } },
-    "onRangePositionChange": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
-    "open": { "type": { "name": "bool" } },
-    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
+    "label": { "type": { "name": "node" }, "additionalPropsInfo": {} },
+    "loading": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "localeText": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "maxDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "minDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "onAccept": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] },
+      "additionalPropsInfo": {}
+    },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onClose": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] },
+      "additionalPropsInfo": {}
+    },
+    "onOpen": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "onRangePositionChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(rangePosition: RangePosition) => void",
+        "describedArgs": ["rangePosition"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "open": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "rangePosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "additionalPropsInfo": {}
+    },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)",
+      "additionalPropsInfo": {}
     },
-    "renderLoading": { "type": { "name": "func" }, "default": "() => \"...\"" },
+    "renderLoading": {
+      "type": { "name": "func" },
+      "default": "() => \"...\"",
+      "signature": {
+        "type": "function() => React.ReactNode",
+        "describedArgs": [],
+        "returned": "React.ReactNode"
+      },
+      "additionalPropsInfo": {}
+    },
     "selectedSections": {
       "type": {
         "name": "union",
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate, position: string) => boolean",
+        "describedArgs": ["day", "position"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
-    "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
+    "value": {
+      "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
+      "additionalPropsInfo": {}
+    },
+    "viewRenderers": {
+      "type": { "name": "shape", "description": "{ day?: func }" },
+      "additionalPropsInfo": {}
+    }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },

@@ -1,33 +1,75 @@
 {
   "props": {
-    "applyFilterChanges": { "type": { "name": "func" }, "required": true },
-    "applyMultiFilterOperatorChanges": { "type": { "name": "func" }, "required": true },
-    "deleteFilter": { "type": { "name": "func" }, "required": true },
-    "hasMultipleFilters": { "type": { "name": "bool" }, "required": true },
+    "applyFilterChanges": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(item: GridFilterItem) => void", "describedArgs": ["item"] },
+      "additionalPropsInfo": {}
+    },
+    "applyMultiFilterOperatorChanges": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(operator: GridLogicOperator) => void",
+        "describedArgs": ["operator"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "deleteFilter": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(item: GridFilterItem) => void", "describedArgs": ["item"] },
+      "additionalPropsInfo": {}
+    },
+    "hasMultipleFilters": {
+      "type": { "name": "bool" },
+      "required": true,
+      "additionalPropsInfo": {}
+    },
     "item": {
       "type": {
         "name": "shape",
         "description": "{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }"
       },
-      "required": true
+      "required": true,
+      "additionalPropsInfo": {}
     },
-    "columnInputProps": { "type": { "name": "any" }, "default": "{}" },
-    "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
-    "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },
-    "disableMultiFilterOperator": { "type": { "name": "bool" } },
-    "filterColumns": { "type": { "name": "func" } },
-    "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
-    "logicOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
+    "columnInputProps": { "type": { "name": "any" }, "default": "{}", "additionalPropsInfo": {} },
+    "columnsSort": {
+      "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
+      "additionalPropsInfo": {}
+    },
+    "deleteIconProps": { "type": { "name": "any" }, "default": "{}", "additionalPropsInfo": {} },
+    "disableMultiFilterOperator": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "filterColumns": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(args: FilterColumnsArgs) => void",
+        "describedArgs": ["args"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "focusElementRef": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" },
+      "additionalPropsInfo": {}
+    },
+    "logicOperatorInputProps": {
+      "type": { "name": "any" },
+      "default": "{}",
+      "additionalPropsInfo": {}
+    },
     "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
-      "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
+      "default": "[GridLogicOperator.And, GridLogicOperator.Or]",
+      "additionalPropsInfo": {}
     },
     "multiFilterOperator": {
-      "type": { "name": "enum", "description": "'and'<br>&#124;&nbsp;'or'" }
+      "type": { "name": "enum", "description": "'and'<br>&#124;&nbsp;'or'" },
+      "additionalPropsInfo": {}
     },
-    "operatorInputProps": { "type": { "name": "any" }, "default": "{}" },
-    "showMultiFilterOperators": { "type": { "name": "bool" } },
-    "valueInputProps": { "type": { "name": "any" }, "default": "{}" }
+    "operatorInputProps": { "type": { "name": "any" }, "default": "{}", "additionalPropsInfo": {} },
+    "showMultiFilterOperators": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "valueInputProps": { "type": { "name": "any" }, "default": "{}", "additionalPropsInfo": {} }
   },
   "slots": {},
   "name": "GridFilterForm",

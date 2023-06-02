@@ -1,22 +1,35 @@
 {
   "props": {
-    "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
+    "columnsSort": {
+      "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
+      "additionalPropsInfo": {}
+    },
     "filterFormProps": {
       "type": {
         "name": "shape",
         "description": "{ columnInputProps?: any, columnsSort?: 'asc'<br>&#124;&nbsp;'desc', deleteIconProps?: any, filterColumns?: func, logicOperatorInputProps?: any, operatorInputProps?: any, valueInputProps?: any }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
-    "getColumnForNewFilter": { "type": { "name": "func" } },
+    "getColumnForNewFilter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(args: GetColumnForNewFilterArgs) => void",
+        "describedArgs": ["args"]
+      },
+      "additionalPropsInfo": {}
+    },
     "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
-      "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
+      "default": "[GridLogicOperator.And, GridLogicOperator.Or]",
+      "additionalPropsInfo": {}
     },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "slots": {},

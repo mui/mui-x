@@ -1,9 +1,17 @@
 {
   "props": {
-    "className": { "type": { "name": "string" } },
-    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "hidden": {
+      "type": { "name": "bool" },
+      "default": "`true` for Desktop, `false` for Mobile.",
+      "additionalPropsInfo": {}
+    },
+    "toolbarFormat": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "toolbarPlaceholder": {
+      "type": { "name": "node" },
+      "default": "\"––\"",
+      "additionalPropsInfo": {}
+    }
   },
   "slots": {},
   "name": "DateRangePickerToolbar",

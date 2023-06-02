@@ -1,34 +1,35 @@
 {
   "props": {
-    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] },
+      "additionalPropsInfo": {}
+    },
     "view": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       },
-      "required": true
+      "required": true,
+      "additionalPropsInfo": {}
     },
-    "className": { "type": { "name": "string" } },
-    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "hidden": {
+      "type": { "name": "bool" },
+      "default": "`true` for Desktop, `false` for Mobile.",
+      "additionalPropsInfo": {}
+    },
+    "toolbarFormat": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "toolbarPlaceholder": {
+      "type": { "name": "node" },
+      "default": "\"––\"",
+      "additionalPropsInfo": {}
+    }
   },
   "slots": {},
   "name": "TimePickerToolbar",
-  "styles": {
-    "classes": [
-      "root",
-      "separator",
-      "hourMinuteLabel",
-      "hourMinuteLabelLandscape",
-      "hourMinuteLabelReverse",
-      "ampmSelection",
-      "ampmLandscape",
-      "ampmLabel"
-    ],
-    "globalClasses": {},
-    "name": "MuiTimePickerToolbar"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePickerToolbar" },
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [

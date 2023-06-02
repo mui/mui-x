@@ -1,30 +1,38 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "components": "Overridable components.",
-    "componentsProps": "The props used for each component slot.",
-    "orientation": "Force rendering in particular orientation.",
-    "slotProps": "The props used for each component slot.",
-    "slots": "Overridable component slots."
-  },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
-    "landscape": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root element in landscape orientation"
+    "components": {
+      "description": "Overridable components.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
     },
-    "contentWrapper": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the contentWrapper element (which contains the tabs and the view itself)"
+    "componentsProps": {
+      "description": "The props used for each component slot.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
     },
-    "toolbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the toolbar" },
-    "actionBar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the action bar" },
-    "tabs": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tabs" },
-    "shortcuts": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the shortcuts container"
+    "orientation": {
+      "description": "Force rendering in particular orientation.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
     }
   },
+  "classDescriptions": {},
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",

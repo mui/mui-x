@@ -1,187 +1,505 @@
 {
   "props": {
-    "columns": { "type": { "name": "custom", "description": "array" }, "required": true },
+    "columns": {
+      "type": { "name": "custom", "description": "array" },
+      "required": true,
+      "additionalPropsInfo": {}
+    },
     "rows": {
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
-      "required": true
+      "required": true,
+      "additionalPropsInfo": {}
     },
-    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
-    "aria-label": { "type": { "name": "string" } },
-    "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": { "type": { "name": "bool" } },
-    "autoPageSize": { "type": { "name": "bool" } },
-    "cellModesModel": { "type": { "name": "object" } },
-    "checkboxSelection": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" } },
-    "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
-    "columnBuffer": { "type": { "name": "number" }, "default": "3" },
-    "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
-    "columnThreshold": { "type": { "name": "number" }, "default": "3" },
-    "columnVisibilityModel": { "type": { "name": "object" } },
+    "apiRef": {
+      "type": { "name": "shape", "description": "{ current: object }" },
+      "additionalPropsInfo": {}
+    },
+    "aria-label": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "aria-labelledby": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "autoHeight": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "autoPageSize": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "cellModesModel": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "checkboxSelection": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "clipboardCopyCellDelimiter": {
+      "type": { "name": "string" },
+      "default": "'\\t'",
+      "additionalPropsInfo": {}
+    },
+    "columnBuffer": { "type": { "name": "number" }, "default": "3", "additionalPropsInfo": {} },
+    "columnHeaderHeight": {
+      "type": { "name": "number" },
+      "default": "56",
+      "additionalPropsInfo": {}
+    },
+    "columnThreshold": { "type": { "name": "number" }, "default": "3", "additionalPropsInfo": {} },
+    "columnVisibilityModel": { "type": { "name": "object" }, "additionalPropsInfo": {} },
     "components": {
       "type": { "name": "object" },
       "deprecated": true,
-      "deprecationInfo": "Use <code>slots</code> instead."
+      "deprecationInfo": "Use <code>slots</code> instead.",
+      "additionalPropsInfo": {}
     },
     "componentsProps": {
       "type": { "name": "object" },
       "deprecated": true,
-      "deprecationInfo": "Use the <code>slotProps</code> prop instead."
+      "deprecationInfo": "Use the <code>slotProps</code> prop instead.",
+      "additionalPropsInfo": {}
     },
     "density": {
       "type": {
         "name": "enum",
         "description": "'comfortable'<br>&#124;&nbsp;'compact'<br>&#124;&nbsp;'standard'"
       },
-      "default": "\"standard\""
+      "default": "\"standard\"",
+      "additionalPropsInfo": {}
     },
-    "disableColumnFilter": { "type": { "name": "bool" } },
-    "disableColumnMenu": { "type": { "name": "bool" } },
-    "disableColumnSelector": { "type": { "name": "bool" } },
-    "disableDensitySelector": { "type": { "name": "bool" } },
-    "disableRowSelectionOnClick": { "type": { "name": "bool" } },
-    "disableVirtualization": { "type": { "name": "bool" } },
+    "disableColumnFilter": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableColumnMenu": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableColumnSelector": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableDensitySelector": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableRowSelectionOnClick": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableVirtualization": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "editMode": {
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
-      "default": "\"cell\""
+      "default": "\"cell\"",
+      "additionalPropsInfo": {}
     },
     "experimentalFeatures": {
       "type": {
         "name": "shape",
         "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
-      "default": "\"client\""
+      "default": "\"client\"",
+      "additionalPropsInfo": {}
     },
     "filterModel": {
       "type": {
         "name": "shape",
         "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
-      }
+      },
+      "additionalPropsInfo": {}
     },
-    "getCellClassName": { "type": { "name": "func" } },
-    "getDetailPanelContent": { "type": { "name": "func" } },
-    "getEstimatedRowHeight": { "type": { "name": "func" } },
-    "getRowClassName": { "type": { "name": "func" } },
-    "getRowHeight": { "type": { "name": "func" } },
-    "getRowId": { "type": { "name": "func" } },
-    "getRowSpacing": { "type": { "name": "func" } },
-    "hideFooter": { "type": { "name": "bool" } },
-    "hideFooterPagination": { "type": { "name": "bool" } },
-    "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
-    "initialState": { "type": { "name": "object" } },
-    "isCellEditable": { "type": { "name": "func" } },
-    "isRowSelectable": { "type": { "name": "func" } },
-    "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
-    "loading": { "type": { "name": "bool" } },
-    "localeText": { "type": { "name": "object" } },
+    "getCellClassName": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams) => string",
+        "describedArgs": ["params"],
+        "returned": "string"
+      },
+      "additionalPropsInfo": {}
+    },
+    "getDetailPanelContent": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams) => JSX.Element",
+        "describedArgs": ["params"],
+        "returned": "JSX.Element"
+      },
+      "additionalPropsInfo": {}
+    },
+    "getEstimatedRowHeight": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowHeightParams) => number | null",
+        "describedArgs": ["params"],
+        "returned": "number | null"
+      },
+      "additionalPropsInfo": {}
+    },
+    "getRowClassName": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowClassNameParams) => string",
+        "describedArgs": ["params"],
+        "returned": "string"
+      },
+      "additionalPropsInfo": {}
+    },
+    "getRowHeight": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowHeightParams) => GridRowHeightReturnValue",
+        "describedArgs": ["params"],
+        "returned": "GridRowHeightReturnValue"
+      },
+      "additionalPropsInfo": {}
+    },
+    "getRowId": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "getRowSpacing": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowSpacingParams) => GridRowSpacing",
+        "describedArgs": ["params"],
+        "returned": "GridRowSpacing"
+      },
+      "additionalPropsInfo": {}
+    },
+    "hideFooter": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "hideFooterPagination": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "hideFooterSelectedRowCount": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "initialState": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "isCellEditable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams) => boolean",
+        "describedArgs": ["params"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "isRowSelectable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams) => boolean",
+        "describedArgs": ["params"],
+        "returned": "boolean"
+      },
+      "additionalPropsInfo": {}
+    },
+    "keepNonExistentRowsSelected": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "loading": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "localeText": { "type": { "name": "object" }, "additionalPropsInfo": {} },
     "logger": {
       "type": {
         "name": "shape",
         "description": "{ debug: func, error: func, info: func, warn: func }"
       },
-      "default": "console"
+      "default": "console",
+      "additionalPropsInfo": {}
     },
     "logLevel": {
       "type": {
         "name": "enum",
         "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;false"
       },
-      "default": "\"error\" (\"warn\" in dev mode)"
+      "default": "\"error\" (\"warn\" in dev mode)",
+      "additionalPropsInfo": {}
     },
-    "nonce": { "type": { "name": "string" } },
-    "onCellClick": { "type": { "name": "func" } },
-    "onCellDoubleClick": { "type": { "name": "func" } },
-    "onCellEditStart": { "type": { "name": "func" } },
-    "onCellEditStop": { "type": { "name": "func" } },
-    "onCellKeyDown": { "type": { "name": "func" } },
-    "onCellModesModelChange": { "type": { "name": "func" } },
-    "onClipboardCopy": { "type": { "name": "func" } },
-    "onColumnHeaderClick": { "type": { "name": "func" } },
-    "onColumnHeaderDoubleClick": { "type": { "name": "func" } },
-    "onColumnHeaderEnter": { "type": { "name": "func" } },
-    "onColumnHeaderLeave": { "type": { "name": "func" } },
-    "onColumnHeaderOut": { "type": { "name": "func" } },
-    "onColumnHeaderOver": { "type": { "name": "func" } },
-    "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnVisibilityModelChange": { "type": { "name": "func" } },
-    "onFilterModelChange": { "type": { "name": "func" } },
-    "onMenuClose": { "type": { "name": "func" } },
-    "onMenuOpen": { "type": { "name": "func" } },
-    "onPaginationModelChange": { "type": { "name": "func" } },
-    "onPreferencePanelClose": { "type": { "name": "func" } },
-    "onPreferencePanelOpen": { "type": { "name": "func" } },
-    "onProcessRowUpdateError": { "type": { "name": "func" } },
-    "onResize": { "type": { "name": "func" } },
-    "onRowClick": { "type": { "name": "func" } },
-    "onRowDoubleClick": { "type": { "name": "func" } },
-    "onRowEditCommit": { "type": { "name": "func" } },
-    "onRowEditStart": { "type": { "name": "func" } },
-    "onRowEditStop": { "type": { "name": "func" } },
-    "onRowModesModelChange": { "type": { "name": "func" } },
-    "onRowSelectionModelChange": { "type": { "name": "func" } },
-    "onSortModelChange": { "type": { "name": "func" } },
+    "nonce": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "onCellClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onCellDoubleClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onCellEditStart": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onCellEditStop": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<MuiBaseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onCellKeyDown": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onCellModesModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(cellModesModel: GridCellModesModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["cellModesModel", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onClipboardCopy": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(data: string) => void", "describedArgs": ["data"] },
+      "additionalPropsInfo": {}
+    },
+    "onColumnHeaderClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onColumnHeaderDoubleClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onColumnHeaderEnter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onColumnHeaderLeave": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onColumnHeaderOut": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onColumnHeaderOver": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onColumnOrderChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnOrderChangeParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onColumnVisibilityModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridColumnVisibilityModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onFilterModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridFilterModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onMenuClose": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridMenuParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onMenuOpen": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridMenuParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onPaginationModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridPaginationModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onPreferencePanelClose": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridPreferencePanelParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onPreferencePanelOpen": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridPreferencePanelParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onProcessRowUpdateError": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(error: any) => void", "describedArgs": ["error"] },
+      "additionalPropsInfo": {}
+    },
+    "onResize": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(containerSize: ElementSize, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["containerSize", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onRowClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onRowDoubleClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onRowEditCommit": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(id: GridRowId, event: MuiEvent<MuiBaseEvent>) => void",
+        "describedArgs": ["id", "event"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onRowEditStart": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onRowEditStop": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<MuiBaseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onRowModesModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["rowModesModel", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onRowSelectionModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["rowSelectionModel", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
+    "onSortModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridSortModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      },
+      "additionalPropsInfo": {}
+    },
     "pageSizeOptions": {
       "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
-      "default": "[25, 50, 100]"
+      "default": "[25, 50, 100]",
+      "additionalPropsInfo": {}
     },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
-      "default": "\"client\""
+      "default": "\"client\"",
+      "additionalPropsInfo": {}
     },
     "paginationModel": {
-      "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
+      "type": { "name": "shape", "description": "{ page: number, pageSize: number }" },
+      "additionalPropsInfo": {}
     },
-    "processRowUpdate": { "type": { "name": "func" } },
-    "rowBuffer": { "type": { "name": "number" }, "default": "3" },
-    "rowCount": { "type": { "name": "number" } },
-    "rowHeight": { "type": { "name": "number" }, "default": "52" },
-    "rowModesModel": { "type": { "name": "object" } },
-    "rowSelection": { "type": { "name": "bool" }, "default": "true" },
+    "processRowUpdate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newRow: R, oldRow: R) => Promise<R> | R",
+        "describedArgs": ["newRow", "oldRow"],
+        "returned": "Promise<R> | R"
+      },
+      "additionalPropsInfo": {}
+    },
+    "rowBuffer": { "type": { "name": "number" }, "default": "3", "additionalPropsInfo": {} },
+    "rowCount": { "type": { "name": "number" }, "additionalPropsInfo": {} },
+    "rowHeight": { "type": { "name": "number" }, "default": "52", "additionalPropsInfo": {} },
+    "rowModesModel": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "rowSelection": { "type": { "name": "bool" }, "default": "true", "additionalPropsInfo": {} },
     "rowSelectionModel": {
       "type": {
         "name": "union",
         "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
-      "default": "\"margin\""
+      "default": "\"margin\"",
+      "additionalPropsInfo": {}
     },
-    "rowThreshold": { "type": { "name": "number" }, "default": "3" },
-    "scrollbarSize": { "type": { "name": "number" } },
-    "showCellVerticalBorder": { "type": { "name": "bool" } },
-    "showColumnVerticalBorder": { "type": { "name": "bool" } },
-    "slotProps": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" } },
+    "rowThreshold": { "type": { "name": "number" }, "default": "3", "additionalPropsInfo": {} },
+    "scrollbarSize": { "type": { "name": "number" }, "additionalPropsInfo": {} },
+    "showCellVerticalBorder": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "showColumnVerticalBorder": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "slotProps": { "type": { "name": "object" }, "additionalPropsInfo": {} },
+    "slots": { "type": { "name": "object" }, "additionalPropsInfo": {} },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
-      "default": "\"client\""
+      "default": "\"client\"",
+      "additionalPropsInfo": {}
     },
     "sortingOrder": {
       "type": { "name": "arrayOf", "description": "Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;" },
-      "default": "['asc', 'desc', null]"
+      "default": "['asc', 'desc', null]",
+      "additionalPropsInfo": {}
     },
     "sortModel": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ field: string, sort?: 'asc'<br>&#124;&nbsp;'desc' }&gt;"
-      }
+      },
+      "additionalPropsInfo": {}
     },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "unstable_ignoreValueFormatterDuringExport": {
       "type": {
         "name": "union",
         "description": "{ clipboardExport?: bool, csvExport?: bool }<br>&#124;&nbsp;bool"
       },
-      "default": ": false"
+      "default": ": false",
+      "additionalPropsInfo": {}
     }
   },
   "slots": {
