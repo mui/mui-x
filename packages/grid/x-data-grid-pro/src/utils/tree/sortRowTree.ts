@@ -53,14 +53,6 @@ class List<T> {
     this.last = last;
   }
 
-  nodes() {
-    const array = [] as Node<T>[];
-    this.forEach((node) => {
-      array.push(node);
-    });
-    return array;
-  }
-
   data() {
     const array = [] as T[];
     this.forEach((node) => {
@@ -153,20 +145,14 @@ export const sortRowTree = (params: SortRowTreeParams) => {
 
   const rootList = List.from<GridRowId>(sortedGroupedByParentRows.get(GRID_ROOT_GROUP_ID)!);
 
-  const fillList = (nodes: Node<GridRowId>[]) => {
-    nodes.forEach((node) => {
-      const children = sortedGroupedByParentRows.get(node.data);
+  rootList.forEach((node) => {
+    const children = sortedGroupedByParentRows.get(node.data);
 
-      if (children?.length) {
-        const sublist = List.from(children);
-        const subnodes = sublist.nodes();
-        node.insertAfter(sublist);
-        fillList(subnodes);
-      }
-    });
-  };
-
-  fillList(rootList.nodes());
+    if (children?.length) {
+      const sublist = List.from(children);
+      node.insertAfter(sublist);
+    }
+  });
 
   return rootList.data();
 };
