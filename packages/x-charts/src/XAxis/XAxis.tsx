@@ -93,7 +93,7 @@ function XAxis(inProps: XAxisProps) {
       {label && (
         <Label
           transform={`translate(${left + width / 2}, ${
-            positionSigne * (tickFontSize + tickSize + 20)
+            positionSigne * (tickFontSize + tickSize + 2)
           })`}
           sx={{
             fontSize: labelFontSize,

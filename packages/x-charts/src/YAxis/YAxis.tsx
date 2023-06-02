@@ -68,6 +68,10 @@ function YAxis(inProps: YAxisProps) {
 
   const positionSigne = position === 'right' ? 1 : -1;
 
+  const labelRefPoint = {
+    x: positionSigne * (3 * tickFontSize + tickSize + 2),
+    y: top + height / 2,
+  };
   return (
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
@@ -94,11 +98,11 @@ function YAxis(inProps: YAxisProps) {
 
       {label && (
         <Label
-          transform={`translate(${positionSigne * (tickFontSize + tickSize + 20)}, ${
-            top + height / 2
-          }) rotate(${positionSigne * 90})`}
+          {...labelRefPoint}
           sx={{
             fontSize: labelFontSize,
+            transform: `rotate(${positionSigne * 90}deg)`,
+            transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
           }}
           className={classes.label}
         >
