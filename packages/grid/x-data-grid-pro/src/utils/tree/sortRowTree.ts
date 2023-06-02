@@ -141,8 +141,7 @@ export const sortRowTree = (params: SortRowTreeParams) => {
     const children = sortedGroupedByParentRows.get(node.data);
 
     if (children?.length) {
-      const sublist = List.from(children);
-      node.insertAfter(sublist);
+      node.insertAfter(List.from(children));
     }
   });
 
