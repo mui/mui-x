@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
+import {
+  unstable_ownerDocument as ownerDocument,
+  unstable_useEventCallback as useEventcallback,
+} from '@mui/utils';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
@@ -422,6 +425,26 @@ export const useGridFocus = (
     }
   }, [apiRef]);
 
+  const handlePaginationModelChange = useEventcallback(() => {
+    const currentFocusedCell = gridFocusCellSelector(apiRef);
+    if (!currentFocusedCell) {
+      return;
+    }
+
+    const currentPage = getVisibleRows(apiRef, {
+      pagination: props.pagination,
+      paginationMode: props.paginationMode,
+    });
+
+    const rowIsInCurrentPage = currentPage.rows.find((row) => row.id === currentFocusedCell.id);
+    if (rowIsInCurrentPage) {
+      return;
+    }
+
+    const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
+    apiRef.current.setCellFocus(currentPage.rows[0].id, visibleColumns[0].field);
+  });
+
   const focusApi: GridFocusApi = {
     setCellFocus,
     setColumnHeaderFocus,
@@ -454,4 +477,5 @@ export const useGridFocus = (
   useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
   useGridApiEventHandler(apiRef, 'columnGroupHeaderFocus', handleColumnGroupHeaderFocus);
   useGridApiEventHandler(apiRef, 'rowsSet', handleRowSet);
+  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
 };
