@@ -2,6 +2,7 @@ import * as React from 'react';
 import { GridApiCommon } from '../../models/api/gridApiCommon';
 import { OutputSelector } from '../../utils/createSelector';
 import { useLazyRef } from './useLazyRef';
+import { useOnMount } from './useOnMount';
 import { buildWarning } from '../../utils/warning';
 import { fastShallowCompare } from '../../utils/fastShallowCompare';
 
@@ -9,8 +10,6 @@ const stateNotInitializedWarning = buildWarning([
   'MUI: `useGridSelector` has been called before the initialization of the state.',
   'This hook can only be used inside the context of the grid.',
 ]);
-
-const EMPTY = [] as unknown[];
 
 function isOutputSelector<Api extends GridApiCommon, T>(
   selector: any,
@@ -63,8 +62,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
   refs.current.equals = equals;
   refs.current.selector = selector;
 
-  /* eslint-disable react-hooks/exhaustive-deps */
-  React.useEffect(() => {
+  useOnMount(() => {
     return apiRef.current.store.subscribe(() => {
       const newState = applySelector(apiRef, refs.current.selector);
       if (!refs.current.equals(refs.current.state, newState)) {
@@ -72,8 +70,7 @@ export const useGridSelector = <Api extends GridApiCommon, T>(
         setState(newState);
       }
     });
-  }, EMPTY);
-  /* eslint-enable react-hooks/exhaustive-deps */
+  });
 
   return state;
 };
