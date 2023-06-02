@@ -15,14 +15,11 @@ interface SortRowTreeParams {
 
 // Double-linked list node
 class Node<T> {
-  previous: null | Node<T>;
-
   next: null | Node<T>;
 
   data: T;
 
-  constructor(data: T, previous: null | Node<T>, next: null | Node<T>) {
-    this.previous = previous;
+  constructor(data: T, next: null | Node<T>) {
     this.next = next;
     this.data = data;
   }
@@ -33,12 +30,7 @@ class Node<T> {
     }
     const next = this.next;
     this.next = list.first;
-    list.first.previous = this;
-
     list.last.next = next;
-    if (next) {
-      next.previous = list.last;
-    }
   }
 }
 
@@ -76,11 +68,11 @@ class List<T> {
     }
 
     let index = 0;
-    const first = new Node(array[index], null, null);
+    const first = new Node(array[index], null);
     let current = first;
     while (index + 1 < array.length) {
       index += 1;
-      const node = new Node(array[index], current, null);
+      const node = new Node(array[index], null);
       current.next = node;
       current = node;
     }
