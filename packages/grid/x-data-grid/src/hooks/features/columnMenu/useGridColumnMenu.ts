@@ -53,6 +53,10 @@ export const useGridColumnMenu = (
   const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
     const columnMenuState = gridColumnMenuSelector(apiRef.current.state);
 
+    if (!columnMenuState.open) {
+      return;
+    }
+
     if (columnMenuState.field) {
       const columnLookup = gridColumnLookupSelector(apiRef);
       const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
@@ -79,22 +83,11 @@ export const useGridColumnMenu = (
       apiRef.current.setColumnHeaderFocus(fieldToFocus);
     }
 
-    const shouldUpdate = apiRef.current.setState((state) => {
-      if (!state.columnMenu.open && state.columnMenu.field === undefined) {
-        return state;
-      }
-
-      logger.debug('Hiding Column Menu');
-
-      return {
-        ...state,
-        columnMenu: { ...state.columnMenu, open: false, field: undefined },
-      };
-    });
-
-    if (shouldUpdate) {
-      apiRef.current.forceUpdate();
-    }
+    apiRef.current.setState((state) => ({
+      ...state,
+      columnMenu: { ...state.columnMenu, open: false, field: undefined },
+    }));
+    apiRef.current.forceUpdate();
   }, [apiRef, logger]);
 
   const toggleColumnMenu = React.useCallback<GridColumnMenuApi['toggleColumnMenu']>(
