@@ -1,4 +1,5 @@
 import * as React from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { DataGridPremium as DataGrid, GridToolbar } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -10,7 +11,6 @@ function useConstantData() {
     rowLength: 100_000,
   })
 }
-import CssBaseline from '@mui/material/CssBaseline';
 
 const darkTheme = createTheme({
   palette: {
@@ -44,12 +44,14 @@ export default function BasicExampleDataGrid() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
         <div>
-          <div>
-            <DataGridConcept
-              {...props}
-              rowHeight={rowHeight}
-            />
-          </div>
+          {
+            <div>
+              <DataGridConcept
+                {...props}
+                rowHeight={rowHeight}
+              />
+            </div>
+          }
           <br/>
           <br/>
           {

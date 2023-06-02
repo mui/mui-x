@@ -4,6 +4,7 @@ import RTree from 'rbush';
 import { unstable_debounce as debounce } from '@mui/utils';
 import type { DataGridPremium } from '@mui/x-data-grid-premium';
 import { animate, lerp, Animation } from './animate'
+import { setImmediate } from './setImmediate'
 
 type Props = Parameters<typeof DataGridPremium>[0]
 
@@ -134,14 +135,14 @@ export class DataGrid extends React.Component<Props, {}> {
     this.updateDimensions()
     this.renderBlocks(this.displayRange)
 
-    this.observer.observe(this.content.current!, config)
+    // this.observer.observe(this.content.current!, config)
 
     this.container.current!.addEventListener('wheel', this.onContainerWheel)
     this.container.current!.addEventListener('scroll', this.onContainerScroll)
 
     this.scrollVertical.current!.addEventListener('scroll', this.onVerticalScroll)
 
-    this.canvasFrameId = requestAnimationFrame(this.updateCanvas)
+    // this.updateCanvas()
   }
 
   componentWillUnmount() {
@@ -253,40 +254,43 @@ export class DataGrid extends React.Component<Props, {}> {
   }
 
   onContainerScroll = (ev: Event) => {
-    performance.mark('SCROLL: ' + this.container.current!.scrollTop)
+    performance.mark('SCROLL: (event)')
+    afterAnimationFrame(() => {
+      performance.mark('SCROLL: ' + this.container.current!.scrollTop)
 
-    this.lastScrollTimestamp = ev.timeStamp
-    this.isScrolling = true
+      this.lastScrollTimestamp = ev.timeStamp
+      this.isScrolling = true
 
-    // if (this.lockScroll === false) {
-    //   this.lockScroll = true
-    //   this.scrollVertical.current!.scrollTop = this.container.current!.scrollTop
-    //   Promise.resolve().then(() => {
-    //     this.lockScroll = false
-    //   })
-    // }
+      // if (this.lockScroll === false) {
+      //   this.lockScroll = true
+      //   this.scrollVertical.current!.scrollTop = this.container.current!.scrollTop
+      //   Promise.resolve().then(() => {
+      //     this.lockScroll = false
+      //   })
+      // }
 
-    const scrollTop  = this.container.current!.scrollTop
-    const scrollLeft = this.container.current!.scrollLeft
-    const deltaY = scrollTop - this.lastScrollTop
-    const deltaX = scrollLeft - this.lastScrollLeft
-    this.lastScrollTop = scrollTop
-    this.lastScrollLeft = scrollLeft
+      const scrollTop  = this.container.current!.scrollTop
+      const scrollLeft = this.container.current!.scrollLeft
+      const deltaY = scrollTop - this.lastScrollTop
+      const deltaX = scrollLeft - this.lastScrollLeft
+      this.lastScrollTop = scrollTop
+      this.lastScrollLeft = scrollLeft
 
-    let direction: ScrollDirection
-    if (Math.abs(deltaY) > Math.abs(deltaX)) {
-      direction = deltaY > 0 ? ScrollDirection.DOWN : ScrollDirection.UP
-    } else {
-      direction = deltaX > 0 ? ScrollDirection.LEFT : ScrollDirection.RIGHT
-    }
-    if (direction !== this.scrollDirection) {
-      this.changeScrollDirection(direction)
-    }
-    this.scheduleResetScrollFlag()
+      let direction: ScrollDirection
+      if (Math.abs(deltaY) > Math.abs(deltaX)) {
+        direction = deltaY > 0 ? ScrollDirection.DOWN : ScrollDirection.UP
+      } else {
+        direction = deltaX > 0 ? ScrollDirection.LEFT : ScrollDirection.RIGHT
+      }
+      if (direction !== this.scrollDirection) {
+        this.changeScrollDirection(direction)
+      }
+      this.scheduleResetScrollFlag()
 
-    this.updateScreenRange()
-    this.renderBlocks(this.displayRange)
-    this.scheduleCleanup()
+      this.updateScreenRange()
+      this.renderBlocks(this.displayRange)
+      this.scheduleCleanup()
+    })
   }
 
   onContainerWheel = (ev: WheelEvent) => {
@@ -594,6 +598,6 @@ function Block({ instance, rowIndex, columnIndex, onDidMount, onDidUnmount }: {
 
 function afterAnimationFrame(fn: Function) {
   requestAnimationFrame(() => {
-    setTimeout(fn, 0)
+    setImmediate(fn)
   })
 }
