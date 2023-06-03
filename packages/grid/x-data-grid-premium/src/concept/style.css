@@ -15,6 +15,7 @@ body {
 .grid {
   position: relative;
   font-size: 14px;
+  width: 700px;
 }
 
 .container {

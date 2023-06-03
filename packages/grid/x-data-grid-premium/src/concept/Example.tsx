@@ -81,7 +81,7 @@ export function Example() {
           }
           {
             mode === Mode.ORIGINAL &&
-              <div key={String(mode)} style={{ height: 300, width: '100%' }}>
+              <div key={String(mode)} style={{ height: 300, width: 700 }}>
                 <DataGrid
                   {...props}
                   rowHeight={rowHeight}
