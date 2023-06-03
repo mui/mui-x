@@ -208,7 +208,9 @@ export const useGridCellEditing = (
           try {
             const textFromClipboard = await navigator.clipboard.readText();
             startCellEditModeParams.initialValue = textFromClipboard;
-          } catch (e) {}
+          } catch (e) {
+            console.error(e);
+          }
         } else {
           startCellEditModeParams.initialValue = key;
         }
