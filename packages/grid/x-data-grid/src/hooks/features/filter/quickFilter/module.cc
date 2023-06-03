@@ -48,12 +48,6 @@ __attribute__((used)) extern "C" size_t run(
         (const char *)search_term, search_term_length
       );
 
-      // if (did_match) {
-      //   log_number(op);
-      //   log_string((const char *)search_term, search_term_length);
-      //   log_string((const char *)row_text, row_text_length);
-      // }
-
       if (did_match && op == OPERATOR_OR) {
         total_matches += 1;
         *current_output++ = current_row_index;
