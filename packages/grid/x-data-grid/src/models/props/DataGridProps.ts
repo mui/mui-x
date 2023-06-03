@@ -43,6 +43,10 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Enable WASM quick-filtering
+   */
+  wasmQuickFilter: boolean;
 }
 
 /**

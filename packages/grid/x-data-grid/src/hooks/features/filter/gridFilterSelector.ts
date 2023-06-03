@@ -61,7 +61,7 @@ export const gridExpandedSortedRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
   (visibleRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => visibleRowsLookup[row.id] !== false),
+    sortedRows.filter((row) => visibleRowsLookup[row.id] === true),
 );
 
 /**
@@ -83,7 +83,7 @@ export const gridFilteredSortedRowEntriesSelector = createSelector(
   gridFilteredRowsLookupSelector,
   gridSortedRowEntriesSelector,
   (filteredRowsLookup, sortedRows) =>
-    sortedRows.filter((row) => filteredRowsLookup[row.id] !== false),
+    sortedRows.filter((row) => filteredRowsLookup[row.id] === true),
 );
 
 /**

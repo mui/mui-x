@@ -97,6 +97,10 @@ module.exports = withDocsInfra({
               replace: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
             },
           },
+          {
+            test: /\.wasm$/,
+            type: 'asset/resource',
+          },
         ]),
       },
     };

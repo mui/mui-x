@@ -1,6 +1,7 @@
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
+import { QuickFilterParams } from './quickFilter'
 
 export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
 export type GridQuickFilterValueResult = { [key: string]: boolean };
@@ -29,6 +30,10 @@ export interface GridFilterState {
    * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters.
    */
   filteredDescendantCountLookup: Record<GridRowId, number>;
+  /**
+   * Quick filter buffers
+   */
+  quickFilterBuffers: QuickFilterParams;
 }
 
 export interface GridFilterInitialState {

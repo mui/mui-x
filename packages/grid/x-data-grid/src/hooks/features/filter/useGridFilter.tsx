@@ -30,6 +30,7 @@ import {
 } from './gridFilterUtils';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { isDeepEqual } from '../../../utils/utils';
+import * as quickFilter from './quickFilter'
 
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
@@ -42,6 +43,11 @@ export const filterStateInitializer: GridStateInitializer<
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       filteredDescendantCountLookup: {},
+      quickFilterBuffers: {
+        input: new Uint8Array(0),
+        output: new Uint32Array(0),
+        search: new Uint8Array(0),
+      },
     },
     visibleRowsLookup: {},
   };
@@ -79,6 +85,7 @@ export const useGridFilter = (
     | 'slots'
     | 'slotProps'
     | 'disableColumnFilter'
+    | 'experimentalFeatures'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -385,6 +392,32 @@ export const useGridFilter = (
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
+
+      if (props.experimentalFeatures?.wasmQuickFilter && params.filterModel.items.length === 0 && params.filterModel.quickFilterValues?.length) {
+        const { dataRowIds } = apiRef.current.state.rows;
+        const { quickFilterBuffers } = apiRef.current.state.filter;
+
+        let start, end
+        start = performance.now()
+        const indexes = quickFilter.run(
+          quickFilterBuffers,
+          params.filterModel.quickFilterValues,
+          quickFilter.Operator.AND,
+        )
+        const filteredRowsLookup = {} as Record<string, boolean>;
+        indexes.forEach(i => {
+          filteredRowsLookup[dataRowIds[i]] = true;
+        })
+        end = performance.now()
+        console.log('FILTERING', end - start)
+
+        return {
+          filteredRowsLookup,
+          filteredDescendantCountLookup: {},
+          quickFilterBuffers: apiRef.current.state.filter.quickFilterBuffers,
+        };
+      }
+
       if (props.filterMode === 'client' && params.isRowMatchingFilters) {
         const tree = gridRowTreeSelector(apiRef);
         const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
@@ -409,12 +442,14 @@ export const useGridFilter = (
         return {
           filteredRowsLookup,
           filteredDescendantCountLookup: {},
+          quickFilterBuffers: apiRef.current.state.filter.quickFilterBuffers,
         };
       }
 
       return {
         filteredRowsLookup: {},
         filteredDescendantCountLookup: {},
+        quickFilterBuffers: apiRef.current.state.filter.quickFilterBuffers,
       };
     },
     [apiRef, props.filterMode],
@@ -468,9 +503,55 @@ export const useGridFilter = (
     apiRef.current.forceUpdate();
   }, [apiRef]);
 
+  const generateQuickFilterBuffer = () => {
+    let start, end
+    start = performance.now()
+
+    const data = [] as string[][];
+
+    const columns = Object.values(gridFilterableColumnLookupSelector(apiRef));
+    const rowById = apiRef.current.state.rows.dataRowIdToModelLookup;
+    const rowIds = apiRef.current.state.rows.dataRowIds;
+
+    for (let i = 0; i < rowIds.length; i++) {
+      const rowId = rowIds[i];
+      const row = rowById[rowId];
+      const rowData = [] as string[];
+      for (let j = 0; j < columns.length; j++) {
+        const column = columns[j];
+        rowData.push(apiRef.current.getCellValue(row.id, column.field));
+      }
+      data.push(rowData)
+    }
+
+    const quickFilterData = quickFilter.createBuffers(data)
+
+    end = performance.now()
+    console.log('BUFFERS', end - start)
+
+    return quickFilterData;
+  }
+
+  const updateQuickFilterBuffer = async () => {
+    if (!props.experimentalFeatures?.wasmQuickFilter)
+      return;
+
+    await quickFilter.ready;
+
+    apiRef.current.setState({
+      ...apiRef.current.state,
+      filter: {
+        ...apiRef.current.state.filter,
+        quickFilterBuffers: generateQuickFilterBuffer()
+      }
+    })
+  }
+
   // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
   // Otherwise, the state is not consistent during the render
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
+  useGridApiEventHandler(apiRef, 'rowsSet', updateQuickFilterBuffer);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', apiRef.current.unstable_applyFilters);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);

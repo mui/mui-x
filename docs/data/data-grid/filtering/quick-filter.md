@@ -99,6 +99,10 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## WASM demo
+
+{{"demo": "QuickFilteringGridWasm.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## API
 
 - [GridToolbarQuickFilter](/x/api/data-grid/grid-toolbar-quick-filter/)
