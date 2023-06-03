@@ -21,7 +21,7 @@ type ApplyFilterInterface<R extends GridValidRowModel = any, V = any, F = V> =
        * @param {GridColDef} column The column from which we want to filter the rows.
        * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter item or not.
        */
-      getApplyFilterFn: (
+      getApplyFilterFn?: (
         filterItem: GridFilterItem,
         column: GridColDef<R, V, F>,
       ) => null | ((params: GridCellParams<R, V, F>) => boolean);
@@ -34,7 +34,7 @@ type ApplyFilterInterface<R extends GridValidRowModel = any, V = any, F = V> =
        * @param {GridColDef} column The column from which we want to filter the rows.
        * @returns {null | ((value: V, row: R, column: GridColDef<R, V, F>) => boolean)} The function to call to check if a row pass this filter item or not.
        */
-      getApplyFilterFnV7: (
+      getApplyFilterFnV7?: (
         filterItem: GridFilterItem,
         column: GridColDef<R, V, F>,
       ) => null | GridApplyFilterV7<R, V, F>;

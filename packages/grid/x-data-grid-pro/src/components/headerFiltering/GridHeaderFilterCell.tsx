@@ -285,7 +285,7 @@ GridHeaderFilterCell.propTypes = {
   colIndex: PropTypes.number.isRequired,
   filterOperators: PropTypes.arrayOf(
     PropTypes.shape({
-      getApplyFilterFn: PropTypes.func.isRequired,
+      getApplyFilterFn: PropTypes.func,
       getValueAsString: PropTypes.func,
       headerLabel: PropTypes.string,
       InputComponent: PropTypes.elementType,
