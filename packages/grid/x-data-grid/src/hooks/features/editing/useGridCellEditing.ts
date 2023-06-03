@@ -199,8 +199,10 @@ export const useGridCellEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
         } else {
-          const textFromClipboard = await navigator.clipboard.readText();
-          startCellEditModeParams.initialValue = textFromClipboard;
+          if (navigator.clipboard && params.isEditable) {
+            const textFromClipboard = await navigator.clipboard.readText();
+            startCellEditModeParams.initialValue = textFromClipboard;
+          }
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
         startCellEditModeParams.deleteValue = true;
