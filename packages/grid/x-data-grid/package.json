@@ -50,6 +50,7 @@
     "@mui/utils": "^5.13.1",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
+    "rbush": "^3.0.1",
     "reselect": "^4.1.8"
   },
   "peerDependencies": {

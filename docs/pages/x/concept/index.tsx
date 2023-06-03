@@ -3,7 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { DataGridPremium as DataGrid, GridToolbar } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGrid as DataGridConcept } from '../../src/modules/components/concept/DataGrid'
+import { DataGridConcept } from '@mui/x-data-grid';
 
 function useConstantData() {
   return useDemoData({
