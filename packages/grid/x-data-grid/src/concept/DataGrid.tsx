@@ -6,7 +6,9 @@ import type { DataGridPremium } from '@mui/x-data-grid-premium';
 import { animate, lerp, Animation } from './animate'
 import { setImmediate } from './setImmediate'
 
-type Props = Parameters<typeof DataGridPremium>[0]
+type Props = Parameters<typeof DataGridPremium>[0] & {
+  debug: boolean;
+};
 
 const BLOCK_ROW_SIZE = 6
 const BLOCK_COL_SIZE = 2
@@ -135,19 +137,18 @@ export class DataGrid extends React.Component<Props, {}> {
     this.updateDimensions()
     this.renderBlocks(this.displayRange)
 
-    // this.observer.observe(this.content.current!, config)
-
     this.container.current!.addEventListener('wheel', this.onContainerWheel)
     this.container.current!.addEventListener('scroll', this.onContainerScroll)
 
     this.scrollVertical.current!.addEventListener('scroll', this.onVerticalScroll)
 
-    // this.updateCanvas()
+    if (this.props.debug) {
+      this.observer.observe(this.content.current!, config)
+      this.updateCanvas()
+    }
   }
 
   componentWillUnmount() {
-    this.observer.disconnect()
-
     this.container.current!.removeEventListener('wheel', this.onContainerWheel)
     this.container.current!.removeEventListener('scroll', this.onContainerScroll)
 
@@ -158,6 +159,8 @@ export class DataGrid extends React.Component<Props, {}> {
     if (this.backgroundImageURL) {
       URL.revokeObjectURL(this.backgroundImageURL);
     }
+
+    this.observer.disconnect()
   }
 
   componentDidUpdate() {
@@ -506,7 +509,7 @@ export class DataGrid extends React.Component<Props, {}> {
     ctx.fillRect(0, 0, w, h)
 
     const f = 0.1
-    const cellHeight = this.rowHeight * f * 0.1
+    const cellHeight = this.rowHeight * f * 0.15
     const cellWidth = Math.round(this.columnWidth * f * 0.4)
 
     ctx.lineWidth = 0.125

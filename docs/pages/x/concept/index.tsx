@@ -21,6 +21,7 @@ const darkTheme = createTheme({
 const rowHeight = 36
 
 export default function BasicExampleDataGrid() {
+  const [debug, setDebug] = React.useState(true);
   const { data } = useConstantData();
   const columnsSimplified =
     data.columns
@@ -44,10 +45,17 @@ export default function BasicExampleDataGrid() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
         <div>
+          <div>
+            <button onClick={() => setDebug(!debug)}>
+              Debug mode: {String(debug)}
+            </button>
+          </div>
+          <br/>
           {
-            <div>
+            <div key={String(debug)}>
               <DataGridConcept
                 {...props}
+                debug={debug}
                 rowHeight={rowHeight}
               />
             </div>
