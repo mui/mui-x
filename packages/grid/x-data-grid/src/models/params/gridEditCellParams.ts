@@ -47,6 +47,7 @@ export interface GridCellEditStartParams<R extends GridValidRowModel = any, V = 
    * If the reason is related to a keyboard event, it contains which key was pressed.
    */
   key?: string;
+  isPasteAction?: boolean;
 }
 
 enum GridCellEditStopReasons {

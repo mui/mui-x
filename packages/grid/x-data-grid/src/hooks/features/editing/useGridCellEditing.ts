@@ -36,6 +36,7 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
+import { serializeCellValue } from '../export/serializers/csvSerializer';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
@@ -166,10 +167,11 @@ export const useGridCellEditing = (
         if (!canStartEditing) {
           return;
         }
-
+        let isPasteAction = false;
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
+          isPasteAction = true;
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
@@ -179,7 +181,12 @@ export const useGridCellEditing = (
         }
 
         if (reason) {
-          const newParams: GridCellEditStartParams = { ...params, reason, key: event.key };
+          const newParams: GridCellEditStartParams = {
+            ...params,
+            reason,
+            key: event.key,
+            isPasteAction,
+          };
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
@@ -199,9 +206,13 @@ export const useGridCellEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
         } else {
-          if (navigator.clipboard && params.isEditable) {
-            const textFromClipboard = await navigator.clipboard.readText();
-            startCellEditModeParams.initialValue = textFromClipboard;
+          if (params.isPasteAction) {
+            if (navigator.clipboard && params.isEditable) {
+              const textFromClipboard = await navigator.clipboard.readText();
+              startCellEditModeParams.initialValue = textFromClipboard;
+            }
+          } else {
+            startCellEditModeParams.initialValue = key;
           }
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
