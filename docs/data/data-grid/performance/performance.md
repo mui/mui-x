@@ -2,6 +2,9 @@
 
 <p class="description">Improve the performance of the DataGrid using the recommendations from this guide.</p>
 
+
+{{"demo": "Example.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Memoize inner components with `React.memo`
 
 The `DataGrid` component is composed of a central state object where all data is stored.
