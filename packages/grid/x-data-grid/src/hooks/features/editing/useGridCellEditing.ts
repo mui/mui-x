@@ -36,7 +36,6 @@ import {
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
-import { serializeCellValue } from '../export/serializers/csvSerializer';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
@@ -205,15 +204,11 @@ export const useGridCellEditing = (
           // In React 17, cleaning the input is enough.
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
+        } else if (params.isPasteAction && navigator.clipboard && params.isEditable){
+          const textFromClipboard = await navigator.clipboard.readText();
+          startCellEditModeParams.initialValue = textFromClipboard;
         } else {
-          if (params.isPasteAction) {
-            if (navigator.clipboard && params.isEditable) {
-              const textFromClipboard = await navigator.clipboard.readText();
-              startCellEditModeParams.initialValue = textFromClipboard;
-            }
-          } else {
-            startCellEditModeParams.initialValue = key;
-          }
+          startCellEditModeParams.initialValue = key;
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
         startCellEditModeParams.deleteValue = true;
