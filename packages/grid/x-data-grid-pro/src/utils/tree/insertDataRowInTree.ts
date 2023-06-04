@@ -102,12 +102,7 @@ export const insertDataRowInTree = ({
 
         updatedGroupsManager?.addAction(parentNodeId, 'insertChildren');
 
-        insertNodeInTree(
-          leafNode,
-          tree,
-          treeDepths,
-          previousTree,
-        );
+        insertNodeInTree(leafNode, tree, treeDepths, previousTree);
       } else {
         const existingNodeWithPartialPath = tree[existingNodeIdWithPartialPath];
 
