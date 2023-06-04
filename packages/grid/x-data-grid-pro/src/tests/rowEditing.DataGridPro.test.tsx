@@ -911,7 +911,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(spiedStartRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
           fieldToFocus: 'currencyPair',
-          initialValue: 'a',
+          deleteValue: true,
         });
       });
 

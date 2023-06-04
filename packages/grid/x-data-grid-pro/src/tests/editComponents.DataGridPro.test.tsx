@@ -259,7 +259,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
       expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
       expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
-      expect(spiedSetEditCellValue.lastCall.args[0].value).to.be.instanceOf(Date);
+      expect(spiedSetEditCellValue.lastCall.args[0].value).to.be.equal(null);
     });
 
     it('should call setEditCellValue with null when entered an empty value', () => {

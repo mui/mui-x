@@ -181,7 +181,7 @@ export const useGridCellEditing = (
         }
 
         if (reason) {
-          const newParams: GridCellEditStartParams = { ...params, reason, key: event.key };
+          const newParams: GridCellEditStartParams = { ...params, reason };
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
@@ -191,19 +191,12 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason, key } = params;
+      const { id, field, reason } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
-      if (reason === GridCellEditStartReasons.printableKeyDown) {
-        if (React.version.startsWith('17')) {
-          // In React 17, cleaning the input is enough.
-          // The sequence of events makes the key pressed by the end-users update the textbox directly.
-          startCellEditModeParams.deleteValue = true;
-        } else {
-          startCellEditModeParams.initialValue = key;
-        }
-      } else if (
+      if (
+        reason === GridCellEditStartReasons.printableKeyDown ||
         reason === GridCellEditStartReasons.deleteKeyDown ||
         reason === GridCellEditStartReasons.pasteKeyDown
       ) {
@@ -526,6 +519,7 @@ export const useGridCellEditing = (
     }
   }, [cellModesModelProp, updateCellModesModel]);
 
+  // Run this effect synchronously so that the keyboard event can impact the yet-to-be-rendered input.
   useEnhancedEffect(() => {
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
