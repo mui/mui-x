@@ -61,6 +61,7 @@ export const useGridCellEditing = (
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
+  const [textToPaste, setTextToPaste] = React.useState<string>();
   const cellModesModelRef = React.useRef(cellModesModel);
   const prevCellModesModel = React.useRef<GridCellModesModel>({});
   const {
@@ -205,12 +206,7 @@ export const useGridCellEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
         } else if (params.isPasteAction && navigator.clipboard && params.isEditable) {
-          try {
-            const textFromClipboard = await navigator.clipboard.readText();
-            startCellEditModeParams.initialValue = textFromClipboard;
-          } catch (e) {
-            console.error(e);
-          }
+          startCellEditModeParams.initialValue = textToPaste;
         } else {
           startCellEditModeParams.initialValue = key;
         }
@@ -553,4 +549,16 @@ export const useGridCellEditing = (
       });
     });
   }, [apiRef, cellModesModel, updateStateToStartCellEditMode, updateStateToStopCellEditMode]);
+
+  React.useEffect(() => {
+    const unsubscribe = apiRef.current.subscribeEvent(
+      'clipboardCopy',
+      (valueToBeCopied: string) => {
+        setTextToPaste(valueToBeCopied);
+      },
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, [apiRef]);
 };
