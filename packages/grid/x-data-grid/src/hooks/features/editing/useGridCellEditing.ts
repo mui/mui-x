@@ -61,7 +61,6 @@ export const useGridCellEditing = (
   >,
 ) => {
   const [cellModesModel, setCellModesModel] = React.useState<GridCellModesModel>({});
-  const textToPaste = React.useRef<string>();
   const cellModesModelRef = React.useRef(cellModesModel);
   const prevCellModesModel = React.useRef<GridCellModesModel>({});
   const {
@@ -167,12 +166,10 @@ export const useGridCellEditing = (
         if (!canStartEditing) {
           return;
         }
-        let isPasteAction = false;
         if (isPrintableKey(event)) {
           reason = GridCellEditStartReasons.printableKeyDown;
         } else if ((event.ctrlKey || event.metaKey) && event.key === 'v') {
-          isPasteAction = true;
-          reason = GridCellEditStartReasons.printableKeyDown;
+          reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
         } else if (event.key === 'Delete' || event.key === 'Backspace') {
@@ -181,12 +178,8 @@ export const useGridCellEditing = (
         }
 
         if (reason) {
-          const newParams: GridCellEditStartParams = {
-            ...params,
-            reason,
-            key: event.key,
-            isPasteAction,
-          };
+          const newParams: GridCellEditStartParams = { ...params, reason, key: event.key };
+          console.log('cellEditStart', event.key)
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
@@ -195,7 +188,7 @@ export const useGridCellEditing = (
   );
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
-    async (params) => {
+    (params) => {
       const { id, field, reason, key } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
@@ -205,15 +198,14 @@ export const useGridCellEditing = (
           // In React 17, cleaning the input is enough.
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
-        } else if (params.isPasteAction && navigator.clipboard && params.isEditable) {
-          startCellEditModeParams.initialValue = textToPaste.current;
         } else {
           startCellEditModeParams.initialValue = key;
         }
-      } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
+      } else if (reason === GridCellEditStartReasons.deleteKeyDown || reason === GridCellEditStartReasons.pasteKeyDown) {
         startCellEditModeParams.deleteValue = true;
       }
 
+      console.log('startCellEditMode', startCellEditModeParams)
       apiRef.current.startCellEditMode(startCellEditModeParams);
     },
     [apiRef],
@@ -549,16 +541,4 @@ export const useGridCellEditing = (
       });
     });
   }, [apiRef, cellModesModel, updateStateToStartCellEditMode, updateStateToStopCellEditMode]);
-
-  React.useEffect(() => {
-    const unsubscribe = apiRef.current.subscribeEvent(
-      'clipboardCopy',
-      (valueToBeCopied: string) => {
-        textToPaste.current = valueToBeCopied;
-      },
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, [apiRef]);
 };

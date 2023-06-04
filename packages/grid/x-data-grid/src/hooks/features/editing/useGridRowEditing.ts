@@ -247,9 +247,8 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
-          const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStartParams = {
-            ...rowParams,
+            ...apiRef.current.getRowParams(params.id),
             field: params.field,
             key: event.key,
             reason,

@@ -32,6 +32,7 @@ enum GridCellEditStartReasons {
   cellDoubleClick = 'cellDoubleClick',
   printableKeyDown = 'printableKeyDown',
   deleteKeyDown = 'deleteKeyDown',
+  pasteKeyDown = 'pasteKeyDown',
 }
 
 /**
