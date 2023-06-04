@@ -13,7 +13,7 @@ interface SortRowTreeParams {
   shouldRenderGroupBelowLeaves: boolean;
 }
 
-// Double-linked list node
+// Single-linked list node
 class Node<T> {
   next: null | Node<T>;
 
@@ -34,7 +34,7 @@ class Node<T> {
   }
 }
 
-// Double-linked list container
+// Single-linked list container
 class List<T> {
   first: Node<T> | null;
 
