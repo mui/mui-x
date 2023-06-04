@@ -525,11 +525,11 @@ export interface GridEventLookup
 
   // Selection
   /**
-   * Fired when the value of the selection checkbox of the header is changed
+   * Fired when the value of the selection checkbox of the header is changed.
    */
   headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };
   /**
-   * Fired when the value of the selection checkbox of a row is changed
+   * Fired when the value of the selection checkbox of a row is changed.
    */
   rowSelectionCheckboxChange: {
     params: GridRowSelectionCheckboxParams;
@@ -538,7 +538,7 @@ export interface GridEventLookup
 
   // Clipboard
   /**
-   * Fired when the data is copied to the clipboard
+   * Fired when the data is copied to the clipboard.
    */
   clipboardCopy: { params: string };
 

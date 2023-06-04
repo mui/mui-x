@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
+import {
+  unstable_useEventCallback as useEventCallback,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -179,7 +182,6 @@ export const useGridCellEditing = (
 
         if (reason) {
           const newParams: GridCellEditStartParams = { ...params, reason, key: event.key };
-          console.log('cellEditStart', event.key)
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
@@ -201,11 +203,13 @@ export const useGridCellEditing = (
         } else {
           startCellEditModeParams.initialValue = key;
         }
-      } else if (reason === GridCellEditStartReasons.deleteKeyDown || reason === GridCellEditStartReasons.pasteKeyDown) {
+      } else if (
+        reason === GridCellEditStartReasons.deleteKeyDown ||
+        reason === GridCellEditStartReasons.pasteKeyDown
+      ) {
         startCellEditModeParams.deleteValue = true;
       }
 
-      console.log('startCellEditMode', startCellEditModeParams)
       apiRef.current.startCellEditMode(startCellEditModeParams);
     },
     [apiRef],
@@ -522,7 +526,7 @@ export const useGridCellEditing = (
     }
   }, [cellModesModelProp, updateCellModesModel]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     const idToIdLookup = gridRowsDataRowIdToIdLookupSelector(apiRef);
 
     // Update the ref here because updateStateToStopCellEditMode may change it later
