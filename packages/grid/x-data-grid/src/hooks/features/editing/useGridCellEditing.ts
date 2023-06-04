@@ -216,7 +216,7 @@ export const useGridCellEditing = (
 
       apiRef.current.startCellEditMode(startCellEditModeParams);
     },
-    [apiRef],
+    [apiRef, textToPaste],
   );
 
   const handleCellEditStop = React.useCallback<GridEventListener<'cellEditStop'>>(
