@@ -132,33 +132,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'yyyy',
+  month: 'LLLL',
+  monthShort: 'MMM',
   dayOfMonth: 'd',
+  weekday: 'EEEE',
+  weekdayShort: 'EEE',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'aa',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'PPP',
   fullDateWithWeekday: 'PPPP',
+  keyboardDate: 'P',
+  shortDate: 'd MMM',
+  normalDate: 'd MMMM',
+  normalDateWithWeekday: 'EEE, d MMMM',
+  monthAndYear: 'LLLL yyyy',
+  monthAndDate: 'd MMMM',
+
   fullDateTime: 'PPP p',
   fullDateTime12h: 'PPP hh:mm aa',
   fullDateTime24h: 'PPP HH:mm',
+
   fullTime: 'p',
   fullTime12h: 'hh:mm aaa',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
-  keyboardDate: 'P',
   keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
-  minutes: 'mm',
-  month: 'LLLL',
-  monthAndDate: 'd MMMM',
-  monthAndYear: 'LLLL yyyy',
-  monthShort: 'MMM',
-  weekday: 'EEEE',
-  weekdayShort: 'EEE',
-  normalDate: 'd MMMM',
-  normalDateWithWeekday: 'EEE, d MMMM',
-  seconds: 'ss',
-  shortDate: 'd MMM',
-  year: 'yyyy',
 };
 
 const NUMBER_SYMBOL_MAP = {
