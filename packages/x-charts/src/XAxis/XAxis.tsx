@@ -32,7 +32,7 @@ const defaultProps = {
   position: 'bottom',
   disableLine: false,
   disableTicks: false,
-  tickFontSize: 10,
+  tickFontSize: 12,
   labelFontSize: 14,
   tickSize: 6,
 } as const;
@@ -93,7 +93,7 @@ function XAxis(inProps: XAxisProps) {
       {label && (
         <Label
           transform={`translate(${left + width / 2}, ${
-            positionSigne * (tickFontSize + tickSize + 2)
+            positionSigne * (tickFontSize + tickSize + 10)
           })`}
           sx={{
             fontSize: labelFontSize,

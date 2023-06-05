@@ -33,7 +33,7 @@ const defaultProps = {
   position: 'left',
   disableLine: false,
   disableTicks: false,
-  tickFontSize: 10,
+  tickFontSize: 12,
   labelFontSize: 14,
   tickSize: 6,
 } as const;
@@ -69,7 +69,7 @@ function YAxis(inProps: YAxisProps) {
   const positionSigne = position === 'right' ? 1 : -1;
 
   const labelRefPoint = {
-    x: positionSigne * (3 * tickFontSize + tickSize + 2),
+    x: positionSigne * (tickFontSize + tickSize + 10),
     y: top + height / 2,
   };
   return (
