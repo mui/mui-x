@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ChartContainer, LinePlot } from '@mui/x-charts';
+import { ChartContainer } from '@mui/x-charts';
+import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 
 const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
 const xLabels = [
@@ -26,6 +27,7 @@ export default function TinyLineChart() {
         },
         '.MuiMarkElement-root': {
           stroke: '#8884d8',
+          scale: '0.6',
           fill: '#fff',
           strokeWidth: 2,
         },
@@ -33,6 +35,7 @@ export default function TinyLineChart() {
       disableAxisListener
     >
       <LinePlot />
+      <MarkPlot />
     </ChartContainer>
   );
 }
