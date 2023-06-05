@@ -70,7 +70,6 @@ function BarChart(props: BarChartProps) {
         <BarPlot />
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-
       <Highlight x="band" {...highlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
