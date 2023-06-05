@@ -366,7 +366,7 @@ export const useGridSorting = (
   /**
    * EFFECTS
    */
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (props.sortModel !== undefined) {
       apiRef.current.setSortModel(props.sortModel);
     }
