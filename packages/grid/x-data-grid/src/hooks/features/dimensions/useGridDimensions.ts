@@ -229,11 +229,22 @@ export function useGridDimensions(
     const computedStyle = win.getComputedStyle(mainEl);
     const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
     const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
+    const paddingX = paddingLeft + paddingRight;
+
     const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
     const paddingBottom = parseInt(computedStyle.paddingBottom, 10) || 0;
+    const paddingY = paddingTop + paddingBottom;
 
-    const newHeight = height - paddingTop - paddingBottom;
-    const newWidth = width - paddingLeft - paddingRight;
+    const borderLeft = parseInt(computedStyle.borderLeftWidth, 10) || 0;
+    const borderRight = parseInt(computedStyle.borderRightWidth, 10) || 0;
+    const borderX = borderLeft + borderRight;
+
+    const borderTop = parseInt(computedStyle.borderTopWidth, 10) || 0;
+    const borderBottom = parseInt(computedStyle.borderBottomWidth, 10) || 0;
+    const borderY = borderTop + borderBottom;
+
+    const newHeight = height - paddingY - borderY;
+    const newWidth = width - paddingX - borderX;
 
     const hasHeightChanged = newHeight !== previousSize.current?.height;
     const hasWidthChanged = newWidth !== previousSize.current?.width;
