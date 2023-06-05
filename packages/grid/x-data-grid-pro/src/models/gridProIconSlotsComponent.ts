@@ -12,8 +12,8 @@ export interface GridProIconSlotsComponent {
    */
   ColumnMenuPinRightIcon: React.JSXElementConstructor<any>;
   /**
-   * Component responsible for clear icon in header filter
-   * @default GridHighlightOffIcon
+   * Component responsible for menu icon in header filter
+   * @default GridFilterListIcon
    */
-  HeaderFilterClearIcon: React.JSXElementConstructor<any>;
+  HeaderFilterMenuIcon: React.JSXElementConstructor<any>;
 }

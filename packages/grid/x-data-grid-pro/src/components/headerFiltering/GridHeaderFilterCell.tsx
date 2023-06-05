@@ -23,7 +23,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../models/dataGridProProps';
-import { GridHeaderFilterAdornment } from './GridHeaderFilterAdornment';
+import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
 export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'headerClassName'> {
@@ -32,7 +32,6 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   sortIndex?: number;
   hasFocus?: boolean;
   tabIndex: 0 | -1;
-  headerFilterComponent?: React.ReactNode;
   filterOperators?: GridFilterOperator[];
   width: number;
   colDef: GridColDef;
@@ -71,7 +70,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
       colIndex,
       height,
       hasFocus,
-      headerFilterComponent,
       filterOperators,
       width,
       headerClassName,
@@ -112,6 +110,11 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const clearFilterItem = React.useCallback(() => {
       apiRef.current.deleteFilterItem(item);
     }, [apiRef, item]);
+
+    let headerFilterComponent: React.ReactNode;
+    if (colDef.renderHeaderFilter) {
+      headerFilterComponent = colDef.renderHeaderFilter(props);
+    }
 
     React.useLayoutEffect(() => {
       if (hasFocus && !isMenuOpen) {
@@ -269,7 +272,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
             />
-            <GridHeaderFilterAdornment
+            <GridHeaderFilterMenuContainer
               operators={filterOperators!}
               item={item}
               field={colDef.field}

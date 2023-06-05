@@ -84,13 +84,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           ? 0
           : -1;
 
-      let headerFilterComponent: React.ReactNode;
-      if (colDef.renderHeaderFilter) {
-        headerFilterComponent = colDef.renderHeaderFilter(
-          apiRef.current.getColumnHeaderParams(colDef.field),
-        );
-      }
-
       const headerClassName =
         typeof colDef.headerClassName === 'function'
           ? colDef.headerClassName({ field: colDef.field, colDef })
@@ -114,7 +107,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           headerFilterMenuRef={headerFilterMenuRef}
-          headerFilterComponent={headerFilterComponent}
           headerClassName={headerClassName}
           filterOperators={filterOperators}
           data-field={colDef.field}

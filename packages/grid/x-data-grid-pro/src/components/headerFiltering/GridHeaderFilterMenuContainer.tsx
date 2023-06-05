@@ -7,7 +7,6 @@ import {
   GridColDef,
 } from '@mui/x-data-grid';
 import { unstable_useId as useId } from '@mui/utils';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
@@ -17,7 +16,7 @@ const sx = {
   margin: 'auto 0 10px 5px',
 };
 
-function GridHeaderFilterAdornment(props: {
+function GridHeaderFilterMenuContainer(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
   item: GridFilterItem;
@@ -61,7 +60,7 @@ function GridHeaderFilterAdornment(props: {
         sx={sx}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <FilterListIcon fontSize="small" />
+        <rootProps.slots.headerFilterMenuIcon fontSize="small" />
       </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}
@@ -77,7 +76,7 @@ function GridHeaderFilterAdornment(props: {
   );
 }
 
-GridHeaderFilterAdornment.propTypes = {
+GridHeaderFilterMenuContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -113,4 +112,4 @@ GridHeaderFilterAdornment.propTypes = {
   ).isRequired,
 } as any;
 
-export { GridHeaderFilterAdornment };
+export { GridHeaderFilterMenuContainer };
