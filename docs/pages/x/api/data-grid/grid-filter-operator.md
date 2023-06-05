@@ -7,7 +7,7 @@
 :::info
 For examples and details on the usage, check the following pages:
 
-- [Custom filter operator](/x/react-data-grid/filtering/#create-a-custom-operator)
+- [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
 
 :::
 
