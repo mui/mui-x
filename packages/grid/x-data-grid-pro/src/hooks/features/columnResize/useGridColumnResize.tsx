@@ -250,7 +250,7 @@ export const useGridColumnResize = (
       }
 
       // Skip if the column isn't resizable
-      if (!event.currentTarget.classList.contains(gridClasses['columnSeparator--resizable'])) {
+      if (!event.currentTarget.classList.contains(gridClasses.columnSeparator)) {
         return;
       }
 
@@ -363,10 +363,7 @@ export const useGridColumnResize = (
   });
 
   const handleTouchStart = useEventCallback((event: any) => {
-    const cellSeparator = findParentElementFromClassName(
-      event.target,
-      gridClasses['columnSeparator--resizable'],
-    );
+    const cellSeparator = findParentElementFromClassName(event.target, gridClasses.columnSeparator);
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) {
       return;

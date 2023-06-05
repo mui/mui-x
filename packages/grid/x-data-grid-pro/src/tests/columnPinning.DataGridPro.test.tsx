@@ -153,7 +153,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     )!;
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+    const separator = columnHeader.querySelector(`.${gridClasses.columnSeparator}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
@@ -172,7 +172,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     )!;
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
     const columnHeader = getColumnHeaderCell(0);
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+    const separator = columnHeader.querySelector(`.${gridClasses.columnSeparator}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
@@ -203,7 +203,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const columnHeader = getColumnHeaderCell(2);
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+    const separator = columnHeader.querySelector(`.${gridClasses.columnSeparator}`)!;
     fireEvent.mouseDown(separator, { clientX: 200 });
     fireEvent.mouseMove(separator, { clientX: 190, buttons: 1 });
     fireEvent.mouseUp(separator);
@@ -221,7 +221,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const columnHeader = getColumnHeaderCell(2);
     expect(columnHeader).toHaveInlineStyle({ width: '100px' });
 
-    const separator = columnHeader.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+    const separator = columnHeader.querySelector(`.${gridClasses.columnSeparator}`)!;
     fireEvent.mouseDown(separator, { clientX: 200 });
     fireEvent.mouseMove(separator, { clientX: 210, buttons: 1 });
     fireEvent.mouseUp(separator);

@@ -136,7 +136,6 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
       </div>
       {showColumnHeaderSeparator ? (
         <GridColumnHeaderSeparator
-          resizable={!rootProps.disableColumnResize && !!resizable}
           resizing={isResizing}
           height={height}
           side={separatorSide}

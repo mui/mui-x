@@ -193,10 +193,6 @@ export interface GridClasses {
    */
   'columnHeadersInner--scrollable': string;
   /**
-   * Styles applied to the column header separator if the column is resizable.
-   */
-  'columnSeparator--resizable': string;
-  /**
    * Styles applied to the column header separator if the column is being resized.
    */
   'columnSeparator--resizing': string;
@@ -581,7 +577,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeaders',
   'columnHeadersInner',
   'columnHeadersInner--scrollable',
-  'columnSeparator--resizable',
   'columnSeparator--resizing',
   'columnSeparator--sideLeft',
   'columnSeparator--sideRight',

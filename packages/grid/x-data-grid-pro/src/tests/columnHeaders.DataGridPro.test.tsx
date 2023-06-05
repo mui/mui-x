@@ -170,9 +170,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
 
-      const separator = columnToResizeCell.querySelector(
-        `.${gridClasses['columnSeparator--resizable']}`,
-      )!;
+      const separator = columnToResizeCell.querySelector(`.${gridClasses.columnSeparator}`)!;
       fireEvent.mouseDown(separator);
       clock.runToLast();
       expect(screen.queryByRole('menu')).to.equal(null);
