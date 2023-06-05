@@ -3,7 +3,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { color as d3Color } from 'd3-color';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 
@@ -44,7 +43,7 @@ const BarElementPath = styled('rect', {
 })<{ ownerState: BarElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
   shapeRendering: 'crispEdges',
-  fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
+  fill: ownerState.color,
   // opacity: ownerState.isNotHighlighted ? 0.3 : 1,
 }));
 
