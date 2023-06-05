@@ -42,9 +42,11 @@ export function DefaultAxisContent(props: AxisContentProps) {
       <TooltipTable>
         {axisValue != null && (
           <thead>
+            <tr>
             <TooltipCell colSpan={3}>
               <Typography variant="caption">{axisFormatter(axisValue)}</Typography>
             </TooltipCell>
+            </tr>
           </thead>
         )}
         <tbody>
