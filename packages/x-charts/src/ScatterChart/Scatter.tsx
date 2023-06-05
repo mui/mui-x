@@ -19,9 +19,18 @@ function Scatter(props: ScatterProps) {
   const getYPosition = getValueToPositionMapper(yScale);
   const getInteractionItemProps = useInteractionItemProps();
 
+  const xDomain = xScale.domain();
+  const yDomain = yScale.domain();
+  const isInRange = ({ x, y }: { x: number; y: number }) => {
+    if (x < xDomain[0] || x > xDomain[1]) {
+      return false;
+    }
+    return !(y < yDomain[0] || y > yDomain[1]);
+  };
+
   return (
     <g>
-      {series.data.map(({ x, y, id }, dataIndex) => (
+      {series.data.filter(isInRange).map(({ x, y, id }, dataIndex) => (
         <circle
           key={id}
           cx={0}
@@ -48,8 +57,8 @@ Scatter.propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        x: PropTypes.any.isRequired,
-        y: PropTypes.any.isRequired,
+        x: PropTypes.number.isRequired,
+        y: PropTypes.number.isRequired,
       }),
     ).isRequired,
     id: PropTypes.string.isRequired,
