@@ -5,6 +5,7 @@ import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridGroupNode, GridRowId } from '../../../models/gridRows';
+import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -40,11 +41,26 @@ export const filterStateInitializer: GridStateInitializer<
     ...state,
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
-      visibleRowsLookup: {},
       filteredDescendantCountLookup: {},
     },
+    visibleRowsLookup: {},
   };
 };
+
+const getVisibleRowsLookup: GridStrategyProcessor<'visibleRowsLookupCreation'> = (params) => {
+  // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
+  return params.filteredRowsLookup;
+};
+
+function getVisibleRowsLookupState(
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  state: GridStateCommunity,
+) {
+  return apiRef.current.applyStrategyProcessor('visibleRowsLookupCreation', {
+    tree: state.rows.tree,
+    filteredRowsLookup: state.filter.filteredRowsLookup,
+  });
+}
 
 /**
  * @requires useGridColumns (method, event)
@@ -86,12 +102,19 @@ export const useGridFilter = (
         filterModel: filterModel ?? getDefaultGridFilterModel(),
       });
 
-      return {
+      const newState = {
         ...state,
         filter: {
           ...state.filter,
           ...filteringResult,
         },
+      };
+
+      const visibleRowsLookupState = getVisibleRowsLookupState(apiRef, newState);
+
+      return {
+        ...newState,
+        visibleRowsLookup: visibleRowsLookupState,
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
@@ -385,14 +408,11 @@ export const useGridFilter = (
         }
         return {
           filteredRowsLookup,
-          // For flat tree, the `visibleRowsLookup` and the `filteredRowsLookup` are equals since no row is collapsed.
-          visibleRowsLookup: filteredRowsLookup,
           filteredDescendantCountLookup: {},
         };
       }
 
       return {
-        visibleRowsLookup: {},
         filteredRowsLookup: {},
         filteredDescendantCountLookup: {},
       };
@@ -405,6 +425,12 @@ export const useGridFilter = (
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridRegisterStrategyProcessor(apiRef, GRID_DEFAULT_STRATEGY, 'filtering', flatFilteringMethod);
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    GRID_DEFAULT_STRATEGY,
+    'visibleRowsLookupCreation',
+    getVisibleRowsLookup,
+  );
 
   /**
    * EVENTS
@@ -432,12 +458,22 @@ export const useGridFilter = (
     [apiRef],
   );
 
+  const updateVisibleRowsLookupState = React.useCallback(() => {
+    apiRef.current.setState((state) => {
+      return {
+        ...state,
+        visibleRowsLookup: getVisibleRowsLookupState(apiRef, state),
+      };
+    });
+    apiRef.current.forceUpdate();
+  }, [apiRef]);
+
   // Do not call `apiRef.current.forceUpdate` to avoid re-render before updating the sorted rows.
   // Otherwise, the state is not consistent during the render
   useGridApiEventHandler(apiRef, 'rowsSet', updateFilteredRows);
-  useGridApiEventHandler(apiRef, 'rowExpansionChange', apiRef.current.unstable_applyFilters);
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
+  useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
 
   /**
    * 1ST RENDER

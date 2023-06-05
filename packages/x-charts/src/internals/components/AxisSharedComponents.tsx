@@ -7,6 +7,7 @@ export const Line = styled('line', {
 })(({ theme }) => ({
   stroke: theme.palette.text.primary,
   shapeRendering: 'crispEdges',
+  strokeWidth: 1,
 }));
 
 export const Tick = styled('line', {
