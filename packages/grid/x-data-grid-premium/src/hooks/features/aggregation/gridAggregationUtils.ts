@@ -161,12 +161,7 @@ export const addFooterRows = ({
           type: 'footer',
         };
 
-        insertNodeInTree(
-          footerNode,
-          newGroupingParams.tree,
-          newGroupingParams.treeDepths,
-          null,
-        );
+        insertNodeInTree(footerNode, newGroupingParams.tree, newGroupingParams.treeDepths, null);
       }
     } else if (groupNode.footerId != null) {
       removeNodeFromTree({
