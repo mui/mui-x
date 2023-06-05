@@ -33,7 +33,13 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.forwardedProps}
+      >
         <GridHeader />
         <GridBody
           VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -313,6 +319,11 @@ DataGridPremiumRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps: PropTypes.object,
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.

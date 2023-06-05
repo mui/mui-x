@@ -40,33 +40,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'iYYYY',
+  month: 'iMMMM',
+  monthShort: 'iMMM',
   dayOfMonth: 'iD',
+  weekday: 'dddd',
+  weekdayShort: 'ddd',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'A',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'iYYYY, iMMMM Do',
   fullDateWithWeekday: 'iYYYY, iMMMM Do, dddd',
-  fullDateTime: 'iYYYY, iMMMM Do, hh:mm A',
-  fullDateTime12h: 'iD iMMMM hh:mm A',
-  fullDateTime24h: 'iD iMMMM HH:mm',
+  keyboardDateTime: 'iYYYY/iMM/iDD LT',
+  shortDate: 'iD iMMM',
+  normalDate: 'dddd, iD iMMM',
+  normalDateWithWeekday: 'DD iMMMM',
+  monthAndYear: 'iMMMM iYYYY',
+  monthAndDate: 'iD iMMMM',
+
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
+
+  fullDateTime: 'iYYYY, iMMMM Do, hh:mm A',
+  fullDateTime12h: 'iD iMMMM hh:mm A',
+  fullDateTime24h: 'iD iMMMM HH:mm',
   keyboardDate: 'iYYYY/iMM/iDD',
-  keyboardDateTime: 'iYYYY/iMM/iDD LT',
   keyboardDateTime12h: 'iYYYY/iMM/iDD hh:mm A',
   keyboardDateTime24h: 'iYYYY/iMM/iDD HH:mm',
-  minutes: 'mm',
-  month: 'iMMMM',
-  monthAndDate: 'iD iMMMM',
-  monthAndYear: 'iMMMM iYYYY',
-  monthShort: 'iMMM',
-  weekday: 'dddd',
-  weekdayShort: 'ddd',
-  normalDate: 'dddd, iD iMMM',
-  normalDateWithWeekday: 'DD iMMMM',
-  seconds: 'ss',
-  shortDate: 'iD iMMM',
-  year: 'iYYYY',
 };
 
 const NUMBER_SYMBOL_MAP = {
@@ -112,6 +116,8 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
 
   public moment: typeof defaultHMoment;
 
+  public isTimezoneCompatible = false;
+
   public formatTokenMap = formatTokenMap;
 
   constructor({ formats, instance }: AdapterOptions<string, typeof defaultHMoment> = {}) {
@@ -128,6 +134,18 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     }
 
     return this.moment(value).locale('ar-SA');
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Moment): Moment => {
+    return value;
   };
 
   public parse = (value: string, format: string) => {

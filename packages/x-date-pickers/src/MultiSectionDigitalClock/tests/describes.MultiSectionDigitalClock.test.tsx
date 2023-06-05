@@ -42,8 +42,8 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     type: 'time',
     variant: 'desktop',
     values: [
-      adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 16, 15)),
+      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 12, 35)),
     ],
     emptyValue: null,
     clock,
@@ -62,29 +62,30 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
         expect(selectedItems[1]).to.have.text(minutesLabel);
         if (hasMeridiem) {
           expect(selectedItems[2]).to.have.text(
-            adapterToUse.getMeridiemText(adapterToUse.getHours(expectedValue) > 12 ? 'pm' : 'am'),
+            adapterToUse.getMeridiemText(adapterToUse.getHours(expectedValue) >= 12 ? 'pm' : 'am'),
           );
         }
       }
     },
     setNewValue: (value) => {
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       const hoursLabel = parseInt(
-        adapterToUse.format(value, hasMeridiem ? 'hours12h' : 'hours24h'),
+        adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h'),
         10,
       );
-      const minutesLabel = adapterToUse.getMinutes(value).toString();
+      const minutesLabel = adapterToUse.getMinutes(newValue).toString();
       userEvent.mousePress(screen.getByRole('option', { name: `${hoursLabel} hours` }));
       userEvent.mousePress(screen.getByRole('option', { name: `${minutesLabel} minutes` }));
       if (hasMeridiem) {
         userEvent.mousePress(
           screen.getByRole('option', {
-            name: adapterToUse.getMeridiemText(adapterToUse.getHours(value) > 12 ? 'pm' : 'am'),
+            name: adapterToUse.getMeridiemText(adapterToUse.getHours(newValue) >= 12 ? 'pm' : 'am'),
           }),
         );
       }
 
-      return value;
+      return newValue;
     },
   }));
 });

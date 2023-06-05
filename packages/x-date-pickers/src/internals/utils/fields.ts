@@ -8,6 +8,7 @@ import {
 const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'value',
   'defaultValue',
+  'referenceDate',
   'format',
   'formatDensity',
   'onChange',

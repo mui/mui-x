@@ -1,59 +1,167 @@
 import { FieldSectionContentType, FieldSectionType } from './fields';
+import { PickersTimezone } from './timezone';
 
 export interface AdapterFormats {
-  /** Localized full date @example "Jan 1, 2019" */
-  fullDate: string;
-  /** Partially localized full date with weekday, useful for text-to-speech accessibility @example "Tuesday, January 1, 2019" */
-  fullDateWithWeekday: string;
-  /** Date format string with month and day of month @example "1 January" */
-  normalDate: string;
-  /** Date format string with weekday, month and day of month @example "Wed, Jan 1" */
-  normalDateWithWeekday: string;
-  /** Shorter day format @example "Jan 1" */
-  shortDate: string;
-  /** Year format string @example "2019" */
+  // Token formats
+  /**
+   * The 4-digit year.
+   * @example "2019"
+   */
   year: string;
-  /** Month format string @example "January" */
+  /**
+   * The full month name.
+   * @example "January"
+   */
   month: string;
-  /** Short month format string @example "Jan" */
+  /**
+   * The abbreviated month name.
+   * @example "Jan"
+   */
   monthShort: string;
-  /** Month with year format string @example "January 2018" */
-  monthAndYear: string;
-  /** Month with date format string @example "January 1" */
-  monthAndDate: string;
-  /** Weekday format string @example "Wednesday" */
-  weekday: string;
-  /** Short weekday format string @example "Wed" */
-  weekdayShort: string;
-  /** Day format string @example "1" */
+  /**
+   * The day of the month.
+   * @example "1"
+   */
   dayOfMonth: string;
-  /** Hours format string @example "11" */
-  hours12h: string;
-  /** Hours format string @example "23" */
+  /**
+   * The name of the day of the week.
+   * @example "Wednesday"
+   */
+  weekday: string;
+  /**
+   * The abbreviated name of the day of the week.
+   * @example "Wed"
+   * */
+  weekdayShort: string;
+  /**
+   * The hours, 24-hour clock.
+   * @example "23"
+   */
   hours24h: string;
-  /** Minutes format string @example "44" */
+  /**
+   * The hours, 12-hour clock.
+   * @example "11"
+   */
+  hours12h: string;
+  /**
+   * The meridiem.
+   * @example "AM"
+   */
+  meridiem: string;
+  /**
+   * The minutes.
+   * @example "44"
+   */
   minutes: string;
-  /** Seconds format string @example "00" */
+  /**
+   * The seconds.
+   * @example "00"
+   */
   seconds: string;
-  /** Full time localized format string @example "11:44 PM" for US, "23:44" for Europe */
-  fullTime: string;
-  /** Not localized full time format string @example "11:44 PM" */
-  fullTime12h: string;
-  /** Not localized full time format string @example "23:44" */
-  fullTime24h: string;
-  /** Date & time format string with localized time @example "Jan 1, 2018 11:44 PM" */
-  fullDateTime: string;
-  /** Not localized date & Time format 12h @example "Jan 1, 2018 11:44 PM" */
-  fullDateTime12h: string;
-  /** Not localized date & Time format 24h @example "Jan 1, 2018 23:44" */
-  fullDateTime24h: string;
-  /** Localized keyboard input friendly date format @example "02/13/2020 */
+
+  // Date formats
+  /** The localized full date.
+   * Used for the aria-label of the opening button of the `DatePicker`.
+   * @example "Jan 1, 2019"
+   */
+  fullDate: string;
+  /**
+   * The partially localized full date with weekday, useful for text-to-speech accessibility.
+   * @example "Tuesday, January 1, 2019"
+   * @deprecated Never used internally.
+   */
+  fullDateWithWeekday: string;
+  /**
+   * A keyboard input friendly date format.
+   * Used in the date fields.
+   * @example "02/13/2020
+   */
   keyboardDate: string;
-  /** Localized keyboard input friendly date/time format @example "02/13/2020 23:44" */
+  /**
+   * The abbreviated month name and the day of the month.
+   * Used in the `DateRangePicker` toolbar.
+   * @example "Jan 1"
+   */
+  shortDate: string;
+  /**
+   * The month name and the day of the month.
+   * Used in the `DatePicker` toolbar for non-english locales.
+   * @example "1 January"
+   */
+  normalDate: string;
+  /**
+   * The month name, the day of the week and the day of the month.
+   * Used in the `DatePicker` toolbar for english locales.
+   * @example "Sun, Jan 1"
+   */
+  normalDateWithWeekday: string;
+  /**
+   * The month name and the 4-digit year.
+   * @example "January 2018"
+   * @deprecated Use `${adapter.formats.month} ${adapter.formats.year}`
+   */
+  monthAndYear: string;
+  /**
+   * The month name and the day of the month.
+   * @example "January 1"
+   * @deprecated Use `${adapter.formats.month} ${adapter.formats.dayOfMonth}`
+   */
+  monthAndDate: string;
+
+  // Time formats
+  /**
+   * The hours and the minutes.
+   * Used for the aria-label of the opening button of the `TimePicker`.
+   * @example "11:44 PM" for locales with meridiem, "23:44" for locales without meridiem.
+   */
+  fullTime: string;
+  /**
+   * The hours with the meridiem and minutes.
+   * @example "11:44 PM"
+   */
+  fullTime12h: string;
+  /**
+   * The hours without the meridiem and minutes.
+   * @example "23:44"
+   */
+  fullTime24h: string;
+
+  // Date & Time formats
+  /**
+   * The combination of `fullDate` and `fullTime` formats.
+   * @example "Jan 1, 2018 11:44 PM"
+   * @deprecated Use `${adapter.formats.fullDate} ${adapter.formats.fullTime}`
+   */
+  fullDateTime: string;
+  /**
+   * The combination of `fullDate` and `fullTime12h` formats.
+   * @example "Jan 1, 2018 11:44 PM"
+   * @deprecated Use `${adapter.formats.fullDate} ${adapter.formats.fullTime12h}`
+   */
+  fullDateTime12h: string;
+  /**
+   * The combination of `fullDate` and `fullTime24h` formats.
+   * @example "Jan 1, 2018 23:44"
+   * @deprecated Use `${adapter.formats.fullDate} ${adapter.formats.fullTime24h}`
+   */
+  fullDateTime24h: string;
+  /**
+   * A keyboard input friendly time format.
+   * Used in the date-time fields.
+   * @example "02/13/2020 11:44 PM" for locales with meridiem, "02/13/2020 23:44" for locales without meridiem.
+   */
   keyboardDateTime: string;
-  /** Partially localized keyboard input friendly date/time 12h format @example "02/13/2020 11:44 PM" */
+  /**
+   * A keyboard input friendly time format for 12-hour clock.
+   * Used in the date-time fields.
+   * @example "02/13/2020 11:44 PM"
+   */
   keyboardDateTime12h: string;
-  /** Partially localized keyboard input friendly date/time 24h format @example "02/13/2020 23:44" */
+  /**
+   * A keyboard input friendly time format for 24-hour clock.
+   * Used in the date-time fields.
+   * @example "02/13/2020 23:44"
+   */
   keyboardDateTime24h: string;
 }
 
@@ -93,6 +201,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * A boolean confirming that the adapter used is an MUI adapter.
    */
   isMUIAdapter: boolean;
+  isTimezoneCompatible: boolean;
   formats: AdapterFormats;
   locale?: TLocale;
   /**
@@ -108,6 +217,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   formatTokenMap: FieldFormatTokenMap;
 
+  // TODO v7: Replace with dateWithTimezone
   /**
    * Create a date in the date library format.
    * If no `value` parameter is provided, creates a date with the current timestamp.
@@ -117,6 +227,30 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {TDate | null} The parsed date.
    */
   date(value?: any): TDate | null;
+  /**
+   * Create a date in the date library format.
+   * If no `value` parameter is provided, creates a date with the current timestamp.
+   * If a `value` parameter is provided, pass it to the date library to try to parse it.
+   * @template TDate
+   * @param {string | null | undefined} value The optional value to parse.
+   * @param {string} timezone The timezone of the date.
+   * @returns {TDate | null} The parsed date.
+   */
+  dateWithTimezone(value: string | null | undefined, timezone: PickersTimezone): TDate | null;
+  /**
+   * Extracts the timezone from a date.
+   * @template TDate
+   * @param {TDate} value The date from which we want to get the timezone.
+   */
+  getTimezone(value: TDate | null): string;
+  /**
+   * Convert a date to another timezone.
+   * @template TDate
+   * @param {TDate} value The date to convert.
+   * @param {string} timezone The timezone to convert the date to.
+   * @returns {TDate} The converted date.
+   */
+  setTimezone(value: TDate, timezone: PickersTimezone): TDate;
   /**
    * Convert a date in the library format into a JavaScript `Date` object.
    * @template TDate
@@ -221,14 +355,14 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   getDiff(value: TDate, comparing: TDate | string, unit?: AdapterUnits): number;
   // TODO v7: Type `value` and `comparing` to be `TDate | null`.
   /**
-   * Check if the two dates are equal.
+   * Check if the two dates are equal (e.g: they represent the same timestamp).
    * @param {any} value The reference date.
    * @param {any} comparing The date to compare with the reference date.
    * @returns {boolean} `true` if the two dates are equal.
    */
   isEqual(value: any, comparing: any): boolean;
   /**
-   * Check if the two dates are in the same year.
+   * Check if the two dates are in the same year (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -236,7 +370,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isSameYear(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the two dates are in the same month.
+   * Check if the two dates are in the same month (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -244,7 +378,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isSameMonth(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the two dates are in the same day.
+   * Check if the two dates are in the same day (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -252,7 +386,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   isSameDay(value: TDate, comparing: TDate): boolean;
   /**
-   * Check if the two dates are at the same hour.
+   * Check if the two dates are at the same hour (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -269,7 +403,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isAfter(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
-   * Check if the year of the reference date is after the year of the second date.
+   * Check if the year of the reference date is after the year of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -278,7 +412,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isAfterYear(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isAfter` and drop this method.
   /**
-   * Check if the day of the reference date is after the day of the second date.
+   * Check if the day of the reference date is after the day of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -295,7 +429,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isBefore(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
-   * Check if the year of the reference date is before the year of the second date.
+   * Check if the year of the reference date is before the year of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -304,7 +438,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   isBeforeYear(value: TDate, comparing: TDate): boolean;
   // TODO v7: Consider adding a `unit` param to `isBefore` and drop this method.
   /**
-   * Check if the day of the reference date is before the day of the second date.
+   * Check if the day of the reference date is before the day of the second date (using the timezone of the reference date).
    * @template TDate
    * @param {TDate} value The reference date.
    * @param {TDate} comparing The date to compare with the reference date.
@@ -475,6 +609,13 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    */
   getSeconds(value: TDate): number;
   /**
+   * Get the milliseconds of the given date.
+   * @template TDate
+   * @param {TDate} value The given date.
+   * @returns {number} The milliseconds of the given date.
+   */
+  getMilliseconds(value: TDate): number;
+  /**
    * Set the year to the given date.
    * @template TDate
    * @param {TDate} value The date to be changed.
@@ -522,6 +663,14 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @returns {TDate} The new date with the seconds set.
    */
   setSeconds(value: TDate, seconds: number): TDate;
+  /**
+   * Set the milliseconds to the given date.
+   * @template TDate
+   * @param {TDate} value The date to be changed.
+   * @param {number} milliseconds The milliseconds of the new date.
+   * @returns {TDate} The new date with the milliseconds set.
+   */
+  setMilliseconds(value: TDate, milliseconds: number): TDate;
   /**
    * Get the number of days in a month of the given date.
    * @template TDate

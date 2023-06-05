@@ -9,8 +9,10 @@ export interface GridFilterApi {
   /**
    * Shows the filter panel. If `targetColumnField` is given, a filter for this field is also added.
    * @param {string} targetColumnField The column field to add a filter.
+   * @param {string} panelId The unique panel id
+   * @param {string} labelId The unique button id
    */
-  showFilterPanel: (targetColumnField?: string) => void;
+  showFilterPanel: (targetColumnField?: string, panelId?: string, labelId?: string) => void;
   /**
    * Hides the filter panel.
    */

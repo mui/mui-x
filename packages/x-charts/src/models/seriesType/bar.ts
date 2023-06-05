@@ -1,10 +1,14 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
+import {
+  CartesianSeriesType,
+  CommonSeriesType,
+  DefaultizedCommonSeriesType,
+  StackableSeriesType,
+} from './common';
 
-export interface BarSeriesType extends CommonSeriesType, CartesianSeriesType {
+export interface BarSeriesType extends CommonSeriesType, CartesianSeriesType, StackableSeriesType {
   type: 'bar';
   data: number[];
-  stack?: string;
   label?: string;
 }
 

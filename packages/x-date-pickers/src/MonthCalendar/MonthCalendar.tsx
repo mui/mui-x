@@ -140,29 +140,32 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     }
   });
 
-  const isMonthDisabled = useEventCallback((month: TDate) => {
-    const firstEnabledMonth = utils.startOfMonth(
-      disablePast && utils.isAfter(now, minDate) ? now : minDate,
-    );
+  const isMonthDisabled = React.useCallback(
+    (month: TDate) => {
+      const firstEnabledMonth = utils.startOfMonth(
+        disablePast && utils.isAfter(now, minDate) ? now : minDate,
+      );
 
-    const lastEnabledMonth = utils.startOfMonth(
-      disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
-    );
+      const lastEnabledMonth = utils.startOfMonth(
+        disableFuture && utils.isBefore(now, maxDate) ? now : maxDate,
+      );
 
-    if (utils.isBefore(month, firstEnabledMonth)) {
-      return true;
-    }
+      if (utils.isBefore(month, firstEnabledMonth)) {
+        return true;
+      }
 
-    if (utils.isAfter(month, lastEnabledMonth)) {
-      return true;
-    }
+      if (utils.isAfter(month, lastEnabledMonth)) {
+        return true;
+      }
 
-    if (!shouldDisableMonth) {
-      return false;
-    }
+      if (!shouldDisableMonth) {
+        return false;
+      }
 
-    return shouldDisableMonth(month);
-  });
+      return shouldDisableMonth(month);
+    },
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableMonth, utils],
+  );
 
   const handleMonthSelection = useEventCallback((event: React.MouseEvent, month: number) => {
     if (readOnly) {

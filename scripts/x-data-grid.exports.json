@@ -414,7 +414,6 @@
   { "name": "gridRowTreeSelector", "kind": "Variable" },
   { "name": "GridSaveAltIcon", "kind": "Variable" },
   { "name": "GridScrollApi", "kind": "Interface" },
-  { "name": "GridScrollArea", "kind": "Variable" },
   { "name": "GridScrollFn", "kind": "TypeAlias" },
   { "name": "GridScrollParams", "kind": "Interface" },
   { "name": "GridSearchIcon", "kind": "Variable" },

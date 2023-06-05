@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fireEvent, userEvent } from '@mui/monorepo/test/utils';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
   getTextbox,
@@ -29,5 +29,22 @@ describe('<DesktopDatePicker /> - Field', () => {
 
     userEvent.keyPress(input, { key: 'Backspace' });
     expectInputValue(input, 'November DD');
+  });
+
+  it('should adapt the default field format based on the props of the picker', () => {
+    const testFormat = (props: DesktopDatePickerProps<any>, expectedFormat: string) => {
+      const { unmount } = render(<DesktopDatePicker {...props} />);
+      const input = getTextbox();
+      expectInputPlaceholder(input, expectedFormat);
+      unmount();
+    };
+
+    testFormat({ views: ['year'] }, 'YYYY');
+    testFormat({ views: ['month'] }, 'MMMM');
+    testFormat({ views: ['day'] }, 'DD');
+    testFormat({ views: ['month', 'day'] }, 'MMMM DD');
+    testFormat({ views: ['year', 'month'] }, 'MMMM YYYY');
+    testFormat({ views: ['year', 'month', 'day'] }, 'MM/DD/YYYY');
+    testFormat({ views: ['year', 'day'] }, 'MM/DD/YYYY');
   });
 });
