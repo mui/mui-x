@@ -138,7 +138,7 @@
   {
     "languageTag": "nb-NO",
     "importName": "nbNO",
-    "localeName": "Norwegian (bokmål)",
+    "localeName": "Norwegian (Bokmål)",
     "missingKeysCount": 25,
     "totalKeysCount": 119,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/nbNO.ts"

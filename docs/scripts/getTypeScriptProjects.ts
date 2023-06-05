@@ -190,6 +190,7 @@ export const getTypeScriptProjects = () => {
           'src/DataGrid/DataGrid.tsx',
           'src/components/panel/filterPanel/GridFilterForm.tsx',
           'src/components/panel/filterPanel/GridFilterPanel.tsx',
+          'src/components/toolbar/GridToolbarQuickFilter.tsx',
         ],
       }),
     }),

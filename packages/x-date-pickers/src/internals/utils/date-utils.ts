@@ -1,5 +1,6 @@
 import { DateView, FieldValueType, MuiPickersAdapter } from '../../models';
 import { DateOrTimeViewWithMeridiem } from '../models';
+import { areViewsEqual } from './views';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
@@ -142,3 +143,45 @@ export const getTodayDate = <TDate>(utils: MuiPickersAdapter<TDate>, valueType: 
 const dateViews = ['year', 'month', 'day'];
 export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>
   dateViews.includes(view);
+
+export const resolveDateFormat = (
+  utils: MuiPickersAdapter<any>,
+  { format, views }: { format?: string; views: readonly DateView[] },
+  isInToolbar: boolean,
+) => {
+  if (format != null) {
+    return format;
+  }
+
+  const formats = utils.formats;
+  if (areViewsEqual(views, ['year'])) {
+    return formats.year;
+  }
+
+  if (areViewsEqual(views, ['month'])) {
+    return formats.month;
+  }
+
+  if (areViewsEqual(views, ['day'])) {
+    return formats.dayOfMonth;
+  }
+
+  if (areViewsEqual(views, ['month', 'year'])) {
+    return `${formats.month} ${formats.year}`;
+  }
+
+  if (areViewsEqual(views, ['day', 'month'])) {
+    return `${formats.month} ${formats.dayOfMonth}`;
+  }
+
+  if (isInToolbar) {
+    // Little localization hack (Google is doing the same for android native pickers):
+    // For english localization it is convenient to include weekday into the date "Mon, Jun 1".
+    // For other locales using strings like "June 1", without weekday.
+    return /en/.test(utils.getCurrentLocaleCode())
+      ? formats.normalDateWithWeekday
+      : formats.normalDate;
+  }
+
+  return formats.keyboardDate;
+};
