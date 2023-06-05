@@ -627,7 +627,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           },
           {
             field: 'name',
-            flex: 1,
+            flex: 0.5,
           },
         ];
 
