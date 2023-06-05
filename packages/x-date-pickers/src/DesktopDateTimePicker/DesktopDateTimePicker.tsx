@@ -14,7 +14,7 @@ import { CalendarIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { getDateTimePickerFormatFromViews } from '../internals/utils/date-time-utils';
+import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDateTimePickerComponent = (<TDate>(
@@ -69,7 +69,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: getDateTimePickerFormatFromViews(utils, defaultizedProps),
+    format: resolveDateTimeFormat(utils, defaultizedProps),
     views: (defaultizedProps.ampm
       ? [...defaultizedProps.views, 'meridiem']
       : defaultizedProps.views) as DateOrTimeViewWithMeridiem[],

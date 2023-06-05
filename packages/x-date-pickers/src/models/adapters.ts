@@ -122,7 +122,7 @@ export interface AdapterFormats {
   fullTime12h: string;
   /**
    * The hours without the meridiem and minutes.
-   * @example "11:44 PM"
+   * @example "23:44"
    */
   fullTime24h: string;
 
@@ -141,25 +141,25 @@ export interface AdapterFormats {
   fullDateTime12h: string;
   /**
    * The combination of `fullDate` and `fullTime24h` formats.
-   * @example "Jan 1, 2018 11:44"
+   * @example "Jan 1, 2018 23:44"
    * @deprecated Use `${adapter.formats.fullDate} ${adapter.formats.fullTime24h}`
    */
   fullDateTime24h: string;
   /**
    * A keyboard input friendly time format.
-   * Used in the time fields.
+   * Used in the date-time fields.
    * @example "02/13/2020 11:44 PM" for locales with meridiem, "02/13/2020 23:44" for locales without meridiem.
    */
   keyboardDateTime: string;
   /**
    * A keyboard input friendly time format for 12-hour clock.
-   * Used in the time fields.
+   * Used in the date-time fields.
    * @example "02/13/2020 11:44 PM"
    */
   keyboardDateTime12h: string;
   /**
    * A keyboard input friendly time format for 24-hour clock.
-   * Used in the time fields.
+   * Used in the date-time fields.
    * @example "02/13/2020 23:44"
    */
   keyboardDateTime24h: string;

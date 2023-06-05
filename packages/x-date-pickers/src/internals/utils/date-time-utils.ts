@@ -1,8 +1,8 @@
 import { DateOrTimeView, DateView, MuiPickersAdapter, TimeView } from '../../models';
-import { getTimePickerFormatFromViews, isTimeView } from './time-utils';
-import { getDatePickerFormatFromViews } from './date-utils';
+import { resolveTimeFormat, isTimeView } from './time-utils';
+import { resolveDateFormat } from './date-utils';
 
-export const getDateTimePickerFormatFromViews = (
+export const resolveDateTimeFormat = (
   utils: MuiPickersAdapter<any>,
   { views, format, ...other }: { format?: string; views: readonly DateOrTimeView[]; ampm: boolean },
 ) => {
@@ -22,15 +22,15 @@ export const getDateTimePickerFormatFromViews = (
   });
 
   if (timeViews.length === 0) {
-    return getDatePickerFormatFromViews(utils, { views: dateViews, ...other }, false);
+    return resolveDateFormat(utils, { views: dateViews, ...other }, false);
   }
 
   if (dateViews.length === 0) {
-    return getTimePickerFormatFromViews(utils, { views: timeViews, ...other });
+    return resolveTimeFormat(utils, { views: timeViews, ...other });
   }
 
-  const timeFormat = getTimePickerFormatFromViews(utils, { views: timeViews, ...other });
-  const dateFormat = getDatePickerFormatFromViews(utils, { views: dateViews, ...other }, false);
+  const timeFormat = resolveTimeFormat(utils, { views: timeViews, ...other });
+  const dateFormat = resolveDateFormat(utils, { views: dateViews, ...other }, false);
 
   return `${dateFormat} ${timeFormat}`;
 };

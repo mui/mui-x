@@ -1,6 +1,6 @@
 import { DateView, FieldValueType, MuiPickersAdapter } from '../../models';
 import { DateOrTimeViewWithMeridiem } from '../models';
-import { areViewEquals } from './views';
+import { areViewsEqual } from './views';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
@@ -144,7 +144,7 @@ const dateViews = ['year', 'month', 'day'];
 export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>
   dateViews.includes(view);
 
-export const getDatePickerFormatFromViews = (
+export const resolveDateFormat = (
   utils: MuiPickersAdapter<any>,
   { format, views }: { format?: string; views: readonly DateView[] },
   isInToolbar: boolean,
@@ -154,23 +154,23 @@ export const getDatePickerFormatFromViews = (
   }
 
   const formats = utils.formats;
-  if (areViewEquals(views, ['year'])) {
+  if (areViewsEqual(views, ['year'])) {
     return formats.year;
   }
 
-  if (areViewEquals(views, ['month'])) {
+  if (areViewsEqual(views, ['month'])) {
     return formats.month;
   }
 
-  if (areViewEquals(views, ['day'])) {
+  if (areViewsEqual(views, ['day'])) {
     return formats.dayOfMonth;
   }
 
-  if (areViewEquals(views, ['month', 'year'])) {
+  if (areViewsEqual(views, ['month', 'year'])) {
     return `${formats.month} ${formats.year}`;
   }
 
-  if (areViewEquals(views, ['day', 'month'])) {
+  if (areViewsEqual(views, ['day', 'month'])) {
     return `${formats.month} ${formats.dayOfMonth}`;
   }
 

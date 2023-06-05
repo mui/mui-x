@@ -13,7 +13,7 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
-import { getDateTimePickerFormatFromViews } from '../internals/utils/date-time-utils';
+import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -48,7 +48,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: getDateTimePickerFormatFromViews(utils, defaultizedProps),
+    format: resolveDateTimeFormat(utils, defaultizedProps),
     ampmInClock,
     slots: {
       field: DateTimeField,

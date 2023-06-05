@@ -17,7 +17,7 @@ import {
 } from '../timeViewRenderers';
 import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { getTimePickerFormatFromViews } from '../internals/utils/time-utils';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -73,7 +73,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ampmInClock,
     timeSteps,
     viewRenderers,
-    format: getTimePickerFormatFromViews(utils, defaultizedProps),
+    format: resolveTimeFormat(utils, defaultizedProps),
     // Setting only `hours` time view in case of single column time picker
     // Allows for easy view lifecycle management
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,

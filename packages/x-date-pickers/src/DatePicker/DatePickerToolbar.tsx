@@ -11,7 +11,7 @@ import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
-import { getDatePickerFormatFromViews } from '../internals/utils/date-utils';
+import { resolveDateFormat } from '../internals/utils/date-utils';
 
 export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
   classes?: Partial<DatePickerToolbarClasses>;
@@ -76,11 +76,7 @@ const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
       return toolbarPlaceholder;
     }
 
-    const formatFromViews = getDatePickerFormatFromViews(
-      utils,
-      { format: toolbarFormat, views },
-      true,
-    );
+    const formatFromViews = resolveDateFormat(utils, { format: toolbarFormat, views }, true);
 
     return utils.formatByString(value, formatFromViews);
   }, [value, toolbarFormat, toolbarPlaceholder, utils, views]);

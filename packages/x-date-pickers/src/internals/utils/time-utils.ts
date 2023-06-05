@@ -1,6 +1,6 @@
 import { MuiPickersAdapter, TimeView } from '../../models';
 import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
-import { areViewEquals } from './views';
+import { areViewsEqual } from './views';
 
 const timeViews = ['hours', 'minutes', 'seconds'];
 export const isTimeView = (view: DateOrTimeViewWithMeridiem) => timeViews.includes(view);
@@ -57,7 +57,7 @@ export const createIsAfterIgnoreDatePart =
     return getSecondsInDay(dateLeft, utils) > getSecondsInDay(dateRight, utils);
   };
 
-export const getTimePickerFormatFromViews = (
+export const resolveTimeFormat = (
   utils: MuiPickersAdapter<any>,
   { format, views, ampm }: { format?: string; views: readonly TimeView[]; ampm: boolean },
 ) => {
@@ -66,23 +66,23 @@ export const getTimePickerFormatFromViews = (
   }
 
   const formats = utils.formats;
-  if (areViewEquals(views, ['hours'])) {
+  if (areViewsEqual(views, ['hours'])) {
     return ampm ? `${formats.hours12h} ${formats.meridiem}` : formats.hours24h;
   }
 
-  if (areViewEquals(views, ['minutes'])) {
+  if (areViewsEqual(views, ['minutes'])) {
     return formats.minutes;
   }
 
-  if (areViewEquals(views, ['seconds'])) {
+  if (areViewsEqual(views, ['seconds'])) {
     return formats.seconds;
   }
 
-  if (areViewEquals(views, ['minutes', 'seconds'])) {
-    return `${formats.minutes} ${formats.seconds}`;
+  if (areViewsEqual(views, ['minutes', 'seconds'])) {
+    return `${formats.minutes}:${formats.seconds}`;
   }
 
-  if (areViewEquals(views, ['hours', 'minutes', 'seconds'])) {
+  if (areViewsEqual(views, ['hours', 'minutes', 'seconds'])) {
     return ampm
       ? `${formats.hours12h}:${formats.minutes}:${formats.seconds} ${formats.meridiem}`
       : `${formats.hours24h}:${formats.minutes}:${formats.seconds}`;

@@ -12,7 +12,7 @@ import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { getDatePickerFormatFromViews } from '../internals/utils/date-utils';
+import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -42,7 +42,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: getDatePickerFormatFromViews(utils, defaultizedProps, false),
+    format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
       openPickerIcon: CalendarIcon,

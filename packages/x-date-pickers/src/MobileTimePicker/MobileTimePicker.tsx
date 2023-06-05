@@ -12,7 +12,7 @@ import { TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
-import { getTimePickerFormatFromViews } from '../internals/utils/time-utils';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -45,7 +45,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     ...defaultizedProps,
     ampmInClock,
     viewRenderers,
-    format: getTimePickerFormatFromViews(utils, defaultizedProps),
+    format: resolveTimeFormat(utils, defaultizedProps),
     slots: {
       field: TimeField,
       ...defaultizedProps.slots,
