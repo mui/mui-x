@@ -25,6 +25,7 @@ const useUtilityClasses = (ownerState: YAxisProps & { theme: Theme }) => {
 
 const defaultProps = {
   position: 'left',
+  hidden: false,
   disableLine: false,
   disableTicks: false,
   tickFontSize: 10,
@@ -33,7 +34,7 @@ const defaultProps = {
 } as const;
 
 function YAxis(inProps: YAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiYAxis' });
+  const props = useThemeProps({ props: inProps, name: 'MuiYAxis' });
   const {
     yAxis: {
       [props.axisId]: { scale: yScale, ticksNumber, ...settings },
@@ -43,6 +44,7 @@ function YAxis(inProps: YAxisProps) {
   const defaultizedProps = { ...defaultProps, ...settings, ...props };
   const {
     position,
+    hidden,
     disableLine,
     disableTicks,
     tickFontSize,
@@ -61,6 +63,10 @@ function YAxis(inProps: YAxisProps) {
   const yTicks = useTicks({ scale: yScale, ticksNumber });
 
   const positionSigne = position === 'right' ? 1 : -1;
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <g
@@ -131,6 +137,11 @@ YAxis.propTypes = {
    * @default 'currentColor'
    */
   fill: PropTypes.string,
+  /**
+   * If true, the axis will not be rendered.
+   * @default false
+   */
+  hidden: PropTypes.bool,
   /**
    * The label of the axis.
    */

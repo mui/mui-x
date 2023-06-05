@@ -24,6 +24,7 @@ const useUtilityClasses = (ownerState: XAxisProps & { theme: Theme }) => {
 };
 const defaultProps = {
   position: 'bottom',
+  hidden: false,
   disableLine: false,
   disableTicks: false,
   tickFontSize: 10,
@@ -32,7 +33,7 @@ const defaultProps = {
 } as const;
 
 function XAxis(inProps: XAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiXAxis' });
+  const props = useThemeProps({ props: inProps, name: 'MuiXAxis' });
   const {
     xAxis: {
       [props.axisId]: { scale: xScale, ticksNumber, ...settings },
@@ -42,6 +43,7 @@ function XAxis(inProps: XAxisProps) {
   const defaultizedProps = { ...defaultProps, ...settings, ...props };
   const {
     position,
+    hidden,
     disableLine,
     disableTicks,
     tickFontSize,
@@ -59,6 +61,10 @@ function XAxis(inProps: XAxisProps) {
 
   const xTicks = useTicks({ scale: xScale, ticksNumber });
   const positionSigne = position === 'bottom' ? 1 : -1;
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <g
@@ -129,6 +135,11 @@ XAxis.propTypes = {
    * @default 'currentColor'
    */
   fill: PropTypes.string,
+  /**
+   * If true, the axis will not be rendered.
+   * @default false
+   */
+  hidden: PropTypes.bool,
   /**
    * The label of the axis.
    */

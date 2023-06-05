@@ -8,25 +8,25 @@ import { XAxisProps, YAxisProps } from '../models/axis';
 
 export interface AxisProps {
   /**
-   * Indicate which axis to display the the top of the charts.
+   * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default null
    */
   topAxis?: null | string | XAxisProps;
   /**
-   * Indicate which axis to display the the bottom of the charts.
+   * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis?: null | string | XAxisProps;
   /**
-   * Indicate which axis to display the the left of the charts.
+   * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis?: null | string | YAxisProps;
   /**
-   * Indicate which axis to display the the right of the charts.
+   * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default null
    */
@@ -109,7 +109,7 @@ Axis.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Indicate which axis to display the the bottom of the charts.
+   * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
@@ -120,6 +120,7 @@ Axis.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
@@ -130,7 +131,7 @@ Axis.propTypes = {
     PropTypes.string,
   ]),
   /**
-   * Indicate which axis to display the the left of the charts.
+   * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
@@ -141,6 +142,7 @@ Axis.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
@@ -151,7 +153,7 @@ Axis.propTypes = {
     PropTypes.string,
   ]),
   /**
-   * Indicate which axis to display the the right of the charts.
+   * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default null
    */
@@ -162,6 +164,7 @@ Axis.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
@@ -172,7 +175,7 @@ Axis.propTypes = {
     PropTypes.string,
   ]),
   /**
-   * Indicate which axis to display the the top of the charts.
+   * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default null
    */
@@ -183,6 +186,7 @@ Axis.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),

@@ -321,6 +321,10 @@ const usdPrice: GridColTypeDef = {
 If an unsupported column type is used, the `string` column type will be used instead.
 :::
 
+### Sparkline column type
+
+{{"demo": "SparklineColumn.js", "bg": "inline"}}
+
 ## Selectors
 
 ### Visible columns

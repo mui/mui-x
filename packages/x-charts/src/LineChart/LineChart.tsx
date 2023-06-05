@@ -84,7 +84,7 @@ LineChart.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Indicate which axis to display the the bottom of the charts.
+   * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
@@ -95,6 +95,7 @@ LineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
@@ -115,7 +116,7 @@ LineChart.propTypes = {
     y: PropTypes.oneOf(['line', 'none']),
   }),
   /**
-   * Indicate which axis to display the the left of the charts.
+   * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
@@ -126,6 +127,7 @@ LineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
@@ -142,7 +144,7 @@ LineChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
-   * Indicate which axis to display the the right of the charts.
+   * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
    * @default null
    */
@@ -153,6 +155,7 @@ LineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
@@ -205,7 +208,7 @@ LineChart.propTypes = {
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
-   * Indicate which axis to display the the top of the charts.
+   * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
    * @default null
    */
@@ -216,6 +219,7 @@ LineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
@@ -240,6 +244,7 @@ LineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
@@ -264,6 +269,7 @@ LineChart.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hidden: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,

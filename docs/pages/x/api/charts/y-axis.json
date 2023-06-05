@@ -5,6 +5,7 @@
     "disableLine": { "type": { "name": "bool" } },
     "disableTicks": { "type": { "name": "bool" } },
     "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
+    "hidden": { "type": { "name": "bool" } },
     "label": { "type": { "name": "string" } },
     "labelFontSize": { "type": { "name": "number" }, "default": "14" },
     "position": { "type": { "name": "enum", "description": "'left'<br>&#124;&nbsp;'right'" } },

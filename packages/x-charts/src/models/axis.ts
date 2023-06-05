@@ -8,6 +8,11 @@ export interface AxisProps {
    */
   axisId: string;
   /**
+   * If true, the axis will not be rendered.
+   * @default false
+   */
+  hidden?: boolean;
+  /**
    * If true, the axis line is disabled.
    * @default false
    */
@@ -56,15 +61,18 @@ export interface YAxisProps extends AxisProps {
   /**
    * Position of the axis.
    */
-  position?: 'left' | 'right';
+  position?: YAxisPosition;
 }
 
 export interface XAxisProps extends AxisProps {
   /**
    * Position of the axis.
    */
-  position?: 'top' | 'bottom';
+  position?: XAxisPosition;
 }
+
+export type YAxisPosition = 'left' | 'right';
+export type XAxisPosition = 'top' | 'bottom';
 
 export type ScaleName = 'linear' | 'band' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
@@ -107,18 +115,21 @@ interface AxisScaleConfig {
   };
 }
 
-export type AxisConfig<S = ScaleName, V = any> = {
+export type AxisConfig<
+  S = ScaleName,
+  V = any,
+  P extends XAxisPosition | YAxisPosition = XAxisPosition | YAxisPosition,
+> = {
   id: string;
   scaleType?: S;
   min?: number;
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
-} & Partial<XAxisProps | YAxisProps> &
-  TickParams;
+} & Partial<AxisProps> & { position?: P } & TickParams;
 
-export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
-  AxisConfig<S, V>,
-  'scaleType'
-> &
-  AxisScaleConfig[S];
+export type AxisDefaultized<
+  S extends ScaleName = ScaleName,
+  V = any,
+  P extends XAxisPosition | YAxisPosition = XAxisPosition | YAxisPosition,
+> = Omit<AxisConfig<S, V, P>, 'scaleType'> & AxisScaleConfig[S];
