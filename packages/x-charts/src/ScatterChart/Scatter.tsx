@@ -19,28 +19,39 @@ function Scatter(props: ScatterProps) {
   const getYPosition = getValueToPositionMapper(yScale);
   const getInteractionItemProps = useInteractionItemProps();
 
-  const xDomain = xScale.domain();
-  const yDomain = yScale.domain();
+  const xRange = xScale.range();
+  const yRange = yScale.range();
+
   const isInRange = ({ x, y }: { x: number; y: number }) => {
-    if (x < xDomain[0] || x > xDomain[1]) {
+    if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
       return false;
     }
-    return !(y < yDomain[0] || y > yDomain[1]);
+    if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
+      return false;
+    }
+    return true;
   };
-
   return (
     <g>
-      {series.data.filter(isInRange).map(({ x, y, id }, dataIndex) => (
-        <circle
-          key={id}
-          cx={0}
-          cy={0}
-          r={markerSize}
-          transform={`translate(${getXPosition(x)}, ${getYPosition(y)})`}
-          fill={color}
-          {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
-        />
-      ))}
+      {series.data
+        .map(({ x, y, id }, index) => ({
+          x: getXPosition(x),
+          y: getYPosition(y),
+          id,
+          index,
+        }))
+        .filter(isInRange)
+        .map(({ x, y, id, index }) => (
+          <circle
+            key={id}
+            cx={0}
+            cy={0}
+            r={markerSize}
+            transform={`translate(${x}, ${y})`}
+            fill={color}
+            {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex: index })}
+          />
+        ))}
     </g>
   );
 }
