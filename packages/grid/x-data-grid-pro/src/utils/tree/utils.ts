@@ -91,7 +91,7 @@ export const insertNodeInTree = (
     // Register the node from its parents `children` and `childrenFromPath` properties.
     const groupingFieldName = (node as GridGroupNode).groupingField ?? '__no_field__';
     const groupingKeyName = (node as GridGroupNode).groupingKey ?? '__no_key__';
-    const groupingField = parentNode.childrenFromPath[groupingFieldName];
+    const groupingField = parentNode.childrenFromPath?.[groupingFieldName];
 
     if (previousTree !== null && previousTree[parentNode.id] === tree[parentNode.id]) {
       parentNode.children = [...parentNode.children, node.id];
