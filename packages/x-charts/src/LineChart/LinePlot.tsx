@@ -26,7 +26,7 @@ export function LinePlot() {
   return (
     <React.Fragment>
       <g>
-        {stackingGroups.flatMap((groupIds) => {
+        {stackingGroups.flatMap(({ ids: groupIds }) => {
           return groupIds.flatMap((seriesId) => {
             const {
               xAxisKey = defaultXAxisId,
@@ -69,7 +69,7 @@ export function LinePlot() {
         })}
       </g>
       <g>
-        {stackingGroups.flatMap((groupIds) => {
+        {stackingGroups.flatMap(({ ids: groupIds }) => {
           return groupIds.flatMap((seriesId) => {
             const {
               xAxisKey = defaultXAxisId,
@@ -110,7 +110,7 @@ export function LinePlot() {
         })}
       </g>
       <g>
-        {stackingGroups.flatMap((groupIds) => {
+        {stackingGroups.flatMap(({ ids: groupIds }) => {
           return groupIds.flatMap((seriesId) => {
             const {
               xAxisKey = defaultXAxisId,

@@ -114,8 +114,8 @@ import { DateTime } from 'luxon';
 ### Stop rendering a clock on desktop
 
 In desktop mode, the `DateTimePicker` and `TimePicker` components will no longer render the [`TimeClock`](/x/react-date-pickers/time-clock/) component.
-The `DateTimePicker` component currently has no replacement, but on `TimePicker` a new [`DigitalClock`](/x/react-date-pickers/digital-clock/) component has been introduced instead.
-The behavior on mobile mode is still the same.
+The `TimeClock` component has been replaced with a new [`DigitalClock`](/x/react-date-pickers/digital-clock/) component instead.
+The behavior on `Mobile` and `Static` variants is still the same.
 If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/base-concepts/#testing-caveats) to choose the best replacement for it.
 
 You can manually re-enable the previous clock component using the new `viewRenderers` prop.

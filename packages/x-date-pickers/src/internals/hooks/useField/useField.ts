@@ -23,7 +23,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -202,7 +202,8 @@ export const useField = <
     let keyPressed: string;
     if (
       selectedSectionIndexes.startIndex === 0 &&
-      selectedSectionIndexes.endIndex === state.sections.length - 1
+      selectedSectionIndexes.endIndex === state.sections.length - 1 &&
+      cleanValueStr.length === 1
     ) {
       keyPressed = cleanValueStr;
     } else {
@@ -243,7 +244,10 @@ export const useField = <
         activeSection.end -
         cleanString(activeSection.endSeparator || '').length;
 
-      keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
+      keyPressed = cleanValueStr.slice(
+        activeSection.start + cleanString(activeSection.startSeparator || '').length,
+        activeSectionEndRelativeToNewValue,
+      );
     }
 
     if (isAndroid() && keyPressed.length === 0) {
@@ -385,7 +389,12 @@ export const useField = <
     ) {
       // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
       const currentScrollTop = inputRef.current!.scrollTop;
-      inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      // On multi input range pickers we want to update selection range only for the active input
+      // This helps avoiding the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
+      // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
+      if (inputRef.current && inputRef.current === getActiveElement(document)) {
+        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      }
       // Even reading this variable seems to do the trick, but also setting it just to make use of it
       inputRef.current!.scrollTop = currentScrollTop;
     }

@@ -270,7 +270,7 @@ const addColumnGroupingHeaders = (
 type SerializedColumns = Array<{
   key: string;
   width: number;
-  style: Excel.Style;
+  style: Partial<Excel.Style>;
   headerText: string;
 }>;
 
