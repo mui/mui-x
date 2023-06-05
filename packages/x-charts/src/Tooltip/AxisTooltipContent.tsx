@@ -43,9 +43,9 @@ export function DefaultAxisContent(props: AxisContentProps) {
         {axisValue != null && (
           <thead>
             <tr>
-            <TooltipCell colSpan={3}>
-              <Typography variant="caption">{axisFormatter(axisValue)}</Typography>
-            </TooltipCell>
+              <TooltipCell colSpan={3}>
+                <Typography variant="caption">{axisFormatter(axisValue)}</Typography>
+              </TooltipCell>
             </tr>
           </thead>
         )}
@@ -57,7 +57,7 @@ export function DefaultAxisContent(props: AxisContentProps) {
               </TooltipCell>
 
               <TooltipCell>
-                <Typography variant="caption">{label ?? id}</Typography>
+                {label ? <Typography variant="caption">{label}</Typography> : null}
               </TooltipCell>
 
               <TooltipCell>
