@@ -22,7 +22,3 @@ title: Charts - Line demonstration
 ## BiaxialLineChart
 
 {{"demo": "BiaxialLineChart.js", "bg": "inline"}}
-
-## LineChartHasMultiSeries
-
-{{"demo": "LineChartHasMultiSeries.js", "bg": "inline"}}
