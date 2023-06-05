@@ -6,7 +6,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
-import type { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -19,6 +18,7 @@ import { gridAggregationModelSelector } from '../hooks/features/aggregation/grid
 import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
 const MenuItem = styled(MUIMenuItem)(() => ({
+  cursor: 'default',
   '&:hover': {
     backgroundColor: 'transparent',
   },
@@ -33,6 +33,22 @@ const MenuItem = styled(MUIMenuItem)(() => ({
     marginLeft: 4,
   },
 }));
+
+const iconSx = { marginRight: 1.5 };
+
+function ClearIcon({
+  handleChange,
+}: {
+  handleChange: (event: { target: { value: string } }) => void;
+}) {
+  const rootProps = useGridRootProps();
+
+  return (
+    <rootProps.slots.baseIconButton sx={iconSx} onClick={handleChange}>
+      <rootProps.slots.columnMenuClearIcon fontSize="small" color="action" />
+    </rootProps.slots.baseIconButton>
+  );
+}
 
 function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
@@ -69,7 +85,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
     return '';
   }, [rootProps.aggregationFunctions, aggregationModel, colDef]);
 
-  const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
+  const handleAggregationItemChange = (event: { target: { value: string } }) => {
     const newAggregationItem = event.target?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
     const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
@@ -100,6 +116,11 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
             color="primary"
             onChange={handleAggregationItemChange}
             onBlur={(e: FocusEvent) => e.stopPropagation()}
+            endAdornment={
+              selectedAggregationRule ? (
+                <ClearIcon handleChange={handleAggregationItemChange} />
+              ) : null
+            }
             fullWidth
           >
             {availableAggregationFunctions.map((aggFunc) => (
@@ -114,11 +135,6 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
               </rootProps.slots.baseSelectOption>
             ))}
           </rootProps.slots.baseSelect>
-          {selectedAggregationRule ? (
-            <rootProps.slots.baseIconButton onClick={handleAggregationItemChange}>
-              <rootProps.slots.columnMenuClearIcon fontSize="small" color="action" />
-            </rootProps.slots.baseIconButton>
-          ) : null}
         </rootProps.slots.baseFormControl>
       </ListItemText>
     </MenuItem>

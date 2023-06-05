@@ -8,8 +8,8 @@ import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
 
-const StyledMenuList = styled(MenuList)(() => ({
-  '@media (pointer: fine)': {
+const StyledMenuList = styled(MenuList)(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: {
     minWidth: 248,
   },
 }));
