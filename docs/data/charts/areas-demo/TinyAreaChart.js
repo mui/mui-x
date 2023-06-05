@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChartContainer, LinePlot } from '@mui/x-charts';
+import { ChartContainer, AreaPlot } from '@mui/x-charts';
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
 const xLabels = [
@@ -29,7 +29,7 @@ export default function TinyAreaChart() {
       ]}
       xAxis={[{ scaleType: 'band', data: xLabels }]}
     >
-      <LinePlot />
+      <AreaPlot />
     </ChartContainer>
   );
 }
