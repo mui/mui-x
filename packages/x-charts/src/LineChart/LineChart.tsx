@@ -3,8 +3,11 @@ import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
 import { AreaPlot } from './AreaPlot';
 import { LinePlot } from './LinePlot';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
 import { MarkPlot } from './MarkPlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { Axis, AxisProps } from '../Axis/Axis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
@@ -13,7 +16,7 @@ import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
 import { ClipPath } from '../ClipPath/ClipPath';
 
-export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface LineChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
@@ -41,7 +44,7 @@ function LineChart(props: LineChartProps) {
   const clipPathId = `${id}-clip-path`;
 
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'line', ...s }))}
       width={width}
       height={height}
@@ -74,7 +77,7 @@ function LineChart(props: LineChartProps) {
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
 }
 
@@ -109,7 +112,7 @@ LineChart.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   highlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['line', 'none']),
@@ -231,7 +234,7 @@ LineChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
