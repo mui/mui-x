@@ -220,8 +220,9 @@ export function useGridDimensions(
       return;
     }
 
-    const height = mainEl.clientHeight || 0;
-    const width = mainEl.clientWidth || 0;
+    const rect = mainEl.getBoundingClientRect();
+    const height = rect.height || 0;
+    const width = rect.width || 0;
 
     const win = ownerWindow(mainEl);
 
