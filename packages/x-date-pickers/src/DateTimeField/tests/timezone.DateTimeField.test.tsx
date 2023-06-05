@@ -10,7 +10,7 @@ const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
 describe('<DateTimeField /> - Timezone', () => {
   describeAdapters('Timezone prop', DateTimeField, ({ adapter, render, clickOnInput }) => {
-    if (!adapter.isTimezoneCompatible || adapter.lib !== 'dayjs') {
+    if (!adapter.isTimezoneCompatible) {
       return;
     }
 
