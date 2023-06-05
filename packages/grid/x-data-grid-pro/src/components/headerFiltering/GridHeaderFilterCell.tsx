@@ -311,7 +311,6 @@ GridHeaderFilterCell.propTypes = {
    * Class name that will be added in the column header cell.
    */
   headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  headerFilterComponent: PropTypes.node,
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,
   }).isRequired,

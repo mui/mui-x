@@ -11,9 +11,4 @@ export interface GridProIconSlotsComponent {
    * @default GridPushPinRightIcon
    */
   ColumnMenuPinRightIcon: React.JSXElementConstructor<any>;
-  /**
-   * Component responsible for menu icon in header filter
-   * @default GridFilterListIcon
-   */
-  HeaderFilterMenuIcon: React.JSXElementConstructor<any>;
 }

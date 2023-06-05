@@ -60,13 +60,13 @@ function GridHeaderFilterMenuContainer(props: {
         sx={sx}
         {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.slots.headerFilterMenuIcon fontSize="small" />
+        <rootProps.slots.openFilterButtonIcon fontSize="small" />
       </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}
         open={open}
         item={item}
-        targetRef={headerFilterMenuRef}
+        target={headerFilterMenuRef.current}
         operators={operators}
         labelledBy={buttonId!}
         id={menuId!}
