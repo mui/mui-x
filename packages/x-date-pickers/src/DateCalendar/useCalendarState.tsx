@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
-import { MuiPickersAdapter } from '../models';
+import { MuiPickersAdapter, PickersTimezone } from '../models';
 import { clamp } from '../internals/utils/date-utils';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 
@@ -106,6 +106,7 @@ interface CalendarStateInput<TDate>
     | 'shouldDisableDate'
   > {
   disableSwitchToMonthOnDayFocus?: boolean;
+  timezone: PickersTimezone;
 }
 
 export const useCalendarState = <TDate extends unknown>({
@@ -119,8 +120,9 @@ export const useCalendarState = <TDate extends unknown>({
   onMonthChange,
   reduceAnimations,
   shouldDisableDate,
+  timezone,
 }: CalendarStateInput<TDate>) => {
-  const now = useNow<TDate>();
+  const now = useNow<TDate>(timezone);
   const utils = useUtils<TDate>();
 
   const reducerFn = React.useRef(
@@ -177,6 +179,7 @@ export const useCalendarState = <TDate extends unknown>({
     maxDate,
     disableFuture,
     disablePast,
+    timezone,
   });
 
   const onMonthSwitchingAnimationEnd = React.useCallback(() => {

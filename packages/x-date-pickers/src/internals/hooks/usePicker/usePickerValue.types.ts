@@ -6,7 +6,9 @@ import {
   FieldSection,
   FieldSelectedSections,
   FieldValueType,
+  TimezoneProps,
   MuiPickersAdapter,
+  PickersTimezone,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
 
@@ -33,9 +35,14 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
    * @param {FieldValueType} valueType The type of the value being edited.
+   * @param {PickersTimezone} timezone The current timezone
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
-  getTodayValue: (utils: MuiPickersAdapter<TDate>, valueType: FieldValueType) => TValue;
+  getTodayValue: (
+    utils: MuiPickersAdapter<TDate>,
+    valueType: FieldValueType,
+    timezone: PickersTimezone,
+  ) => TValue;
   /**
    * @template TDate, TValue
    * Method returning the reference value to use when mounting the component.
@@ -45,7 +52,8 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute the reference value.
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
    * @param {FieldValueType} params.valueType The type of the value being edited.
-   * @param {granularity} params.granularity The granularity of the selection possible on this component.
+   * @param {number} params.granularity The granularity of the selection possible on this component.
+   * @param {PickersTimezone} params.timezone The current timezone
    * @returns {TValue} The reference value to use for non-provided dates.
    */
   getInitialReferenceValue: (params: {
@@ -55,6 +63,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
     utils: MuiPickersAdapter<TDate>;
     valueType: FieldValueType;
     granularity: number;
+    timezone: PickersTimezone;
   }) => TValue;
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
@@ -105,6 +114,19 @@ export interface PickerValueManager<TValue, TDate, TError> {
    @returns {string | null} The timezone of the current value.
    */
   getTimezone: (utils: MuiPickersAdapter<TDate>, value: TValue) => string | null;
+  /**
+   * Change the timezone of the dates inside a value.
+   @template TValue, TDate
+   @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   @param {PickersTimezone} timezone The current timezone
+   @param {TValue} value The value to convert.
+   @returns {TValue} The value with the new dates in the new timezone.
+   */
+  setTimezone: (
+    utils: MuiPickersAdapter<TDate>,
+    timezone: PickersTimezone,
+    value: TValue,
+  ) => TValue;
 }
 
 export interface PickerChangeHandlerContext<TError> {
@@ -250,7 +272,8 @@ export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSect
  */
 export interface UsePickerValueProps<TValue, TSection extends FieldSection, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
-    UsePickerValueNonStaticProps<TValue, TSection> {}
+    UsePickerValueNonStaticProps<TValue, TSection>,
+    TimezoneProps {}
 
 export interface UsePickerValueParams<
   TValue,

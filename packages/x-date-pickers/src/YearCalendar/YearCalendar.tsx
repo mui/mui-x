@@ -15,6 +15,8 @@ import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
+import { useValueWithDefaultizedTimezone } from '../internals/hooks/useDefaultizedTimezone';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -72,10 +74,6 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   inProps: YearCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const now = useNow<TDate>();
-  const theme = useTheme();
-  const utils = useUtils<TDate>();
-
   const props = useYearCalendarDefaultizedProps(inProps, 'MuiYearCalendar');
   const {
     autoFocus,
@@ -95,18 +93,25 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     hasFocus,
     onFocusedViewChange,
     yearsPerRow = 3,
+    timezone: timezoneProp,
     ...other
   } = props;
 
+  const { value, handleValueChange, timezone } = useValueWithDefaultizedTimezone({
+    name: 'YearCalendar',
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange: onChange as (value: TDate | null) => void,
+    valueManager: singleItemValueManager,
+  });
+
+  const now = useNow<TDate>(timezone);
+  const theme = useTheme();
+  const utils = useUtils<TDate>();
+
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
-
-  const [value, setValue] = useControlled({
-    name: 'YearCalendar',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
-  });
 
   const selectedDateOrStartOfYear = React.useMemo(
     () => value ?? utils.startOfYear(now),
@@ -170,8 +175,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     }
 
     const newDate = utils.setYear(selectedDateOrStartOfYear, year);
-    setValue(newDate);
-    onChange?.(newDate);
+    handleValueChange(newDate);
   });
 
   const focusYear = useEventCallback((year: number) => {
@@ -334,7 +338,7 @@ YearCalendar.propTypes = {
   /**
    * Callback fired when the value changes.
    * @template TDate
-   * @param {TDate | null} value The new value.
+   * @param {TDate} value The new value.
    */
   onChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
@@ -358,6 +362,14 @@ YearCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to the adequate timezone before being used.
+   * More information on how to use timezones with this component on https://mui.com/x/react-date-pickers/timezone/
+   * @default 'default'
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

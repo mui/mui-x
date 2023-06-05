@@ -21,6 +21,7 @@ import {
 } from './useField.utils';
 import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
+import { useExternalValueWithDefaultizedTimezone } from '../useDefaultizedTimezone';
 import {
   GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
@@ -72,19 +73,30 @@ export const useFieldState = <
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
       shouldRespectLeadingZeros = false,
+      timezone: timezoneProp,
     },
   } = params;
 
-  const firstDefaultValue = React.useRef(defaultValue);
-  const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
+  const { timezone, valueFromTheOutside, handleValueChange } =
+    useExternalValueWithDefaultizedTimezone({
+      timezone: timezoneProp,
+      value: valueProp,
+      defaultValue,
+      onChange,
+      valueManager,
+    });
 
-  const sectionsValueBoundaries = React.useMemo(() => getSectionsBoundaries<TDate>(utils), [utils]);
+  const sectionsValueBoundaries = React.useMemo(
+    () => getSectionsBoundaries<TDate>(utils, timezone),
+    [utils, timezone],
+  );
 
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
         splitFormatIntoSections(
           utils,
+          timezone,
           localeText,
           format,
           date,
@@ -93,7 +105,16 @@ export const useFieldState = <
           isRTL,
         ),
       ),
-    [fieldValueManager, format, localeText, isRTL, shouldRespectLeadingZeros, utils, formatDensity],
+    [
+      fieldValueManager,
+      format,
+      localeText,
+      isRTL,
+      shouldRespectLeadingZeros,
+      utils,
+      formatDensity,
+      timezone,
+    ],
   );
 
   const placeholder = React.useMemo(
@@ -124,6 +145,7 @@ export const useFieldState = <
       utils,
       props: internalProps as GetDefaultReferenceDateProps<TDate>,
       granularity,
+      timezone,
     });
 
     return {
@@ -190,13 +212,15 @@ export const useFieldState = <
       tempValueStrAndroid: null,
     }));
 
-    if (onChange) {
-      const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
-        validationError: validator({ adapter, value, props: { ...internalProps, value } }),
-      };
+    const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+      validationError: validator({
+        adapter,
+        value,
+        props: { ...internalProps, value, timezone },
+      }),
+    };
 
-      onChange(value, context);
-    }
+    handleValueChange(value, context);
   };
 
   const setSectionValue = (sectionIndex: number, newSectionValue: string) => {
@@ -269,6 +293,7 @@ export const useFieldState = <
 
       const sections = splitFormatIntoSections(
         utils,
+        timezone,
         localeText,
         format,
         date,
@@ -276,7 +301,7 @@ export const useFieldState = <
         shouldRespectLeadingZeros,
         isRTL,
       );
-      return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
+      return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
@@ -332,6 +357,7 @@ export const useFieldState = <
     if (!utils.isValid(newActiveDate)) {
       const clampedSections = clampDaySectionIfPossible(
         utils,
+        timezone,
         newActiveDateSections,
         sectionsValueBoundaries,
       );
@@ -352,6 +378,7 @@ export const useFieldState = <
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
+        timezone,
         newActiveDate,
         newActiveDateSections,
         activeDateManager.referenceDate,
@@ -437,5 +464,6 @@ export const useFieldState = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    timezone,
   };
 };

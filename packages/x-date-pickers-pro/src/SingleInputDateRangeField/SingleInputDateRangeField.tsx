@@ -312,6 +312,14 @@ SingleInputDateRangeField.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to the adequate timezone before being used.
+   * More information on how to use timezones with this component on https://mui.com/x/react-date-pickers/timezone/
+   * @default 'default'
+   */
+  timezone: PropTypes.string,
+  /**
    * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),

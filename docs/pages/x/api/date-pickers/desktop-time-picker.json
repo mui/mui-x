@@ -85,6 +85,7 @@
       },
       "default": "{ hours: 1, minutes: 5, seconds: 5 }"
     },
+    "timezone": { "type": { "name": "string" }, "default": "'default'" },
     "value": { "type": { "name": "any" } },
     "view": {
       "type": {

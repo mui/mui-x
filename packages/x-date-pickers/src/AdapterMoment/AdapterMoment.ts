@@ -558,9 +558,9 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const cleanLocale = this.setLocaleToValue(value);
-    const start = cleanLocale.clone().startOf('month').startOf('week');
-    const end = cleanLocale.clone().endOf('month').endOf('week');
+    const cleanValue = this.setLocaleToValue(value);
+    const start = cleanValue.clone().startOf('month').startOf('week');
+    const end = cleanValue.clone().endOf('month').endOf('week');
 
     let count = 0;
     let current = start;

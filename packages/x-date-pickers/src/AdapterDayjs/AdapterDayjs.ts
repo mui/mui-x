@@ -399,7 +399,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       return true;
     }
 
-    return this.dayjs(value).isSame(comparing);
+    return this.dayjs(value).toDate().getTime() === this.dayjs(comparing).toDate().getTime();
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
@@ -612,9 +612,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
-    const cleanLocale = this.setLocaleToValue(value);
-    const start = cleanLocale.startOf('month').startOf('week');
-    const end = cleanLocale.endOf('month').endOf('week');
+    const cleanValue = this.setLocaleToValue(value);
+    const start = cleanValue.startOf('month').startOf('week');
+    const end = cleanValue.endOf('month').endOf('week');
 
     let count = 0;
     let current = start;
@@ -626,6 +626,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       nestedWeeks[weekNumber].push(current);
 
       current = current.add(1, 'day');
+
+      // If the new day does not have the same offset as the old one (when switching to summer day time for example),
+      // Then dayjs will not automatically adjust the offset (moment does)
+      // We have to parse again the value to make sure the `fixOffset` method is applied
+      // See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
+      if (this.hasTimezonePlugin()) {
+        current = defaultDayjs.tz(current);
+      }
+
       count += 1;
     }
 

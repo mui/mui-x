@@ -7,6 +7,7 @@ import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue.types';
 import { isTimeView } from '../../utils/time-utils';
 import { DateOrTimeViewWithMeridiem } from '../../models';
+import { TimezoneProps } from '../../../models';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
   extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
@@ -51,7 +52,8 @@ export interface UsePickerViewsBaseProps<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
-> extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'> {
+> extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
+    TimezoneProps {
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -143,7 +145,7 @@ export const usePickerViews = <
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker, viewRenderers } = props;
+  const { views, openTo, onViewChange, disableOpenPicker, viewRenderers, timezone } = props;
   const { className, sx, ...propsToForwardToView } = props;
 
   const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
@@ -265,6 +267,7 @@ export const usePickerViews = <
         ...additionalViewProps,
         ...propsFromPickerValue,
         views,
+        timezone,
         onChange: setValueAndGoToNextView,
         view: popperView,
         onViewChange: setView,

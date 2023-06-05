@@ -1,6 +1,6 @@
 import { createIsAfterIgnoreDatePart } from './time-utils';
 import { mergeDateAndTime, getTodayDate } from './date-utils';
-import { FieldSection, FieldValueType, MuiPickersAdapter } from '../../models';
+import { FieldSection, FieldValueType, MuiPickersAdapter, PickersTimezone } from '../../models';
 
 export interface GetDefaultReferenceDateProps<TDate> {
   maxDate?: TDate;
@@ -59,13 +59,15 @@ export const getDefaultReferenceDate = <TDate>({
   utils,
   valueType,
   granularity,
+  timezone,
 }: {
   props: GetDefaultReferenceDateProps<TDate>;
   utils: MuiPickersAdapter<TDate>;
   valueType: FieldValueType;
   granularity: number;
+  timezone: PickersTimezone;
 }) => {
-  let referenceDate = roundDate(utils, granularity, getTodayDate(utils, valueType));
+  let referenceDate = roundDate(utils, granularity, getTodayDate(utils, valueType, timezone));
 
   if (props.minDate != null && utils.isAfterDay(props.minDate, referenceDate)) {
     referenceDate = roundDate(utils, granularity, props.minDate);

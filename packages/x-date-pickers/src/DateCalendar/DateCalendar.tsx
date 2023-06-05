@@ -6,7 +6,6 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_useEventCallback as useEventCallback,
-  unstable_useControlled as useControlled,
 } from '@mui/utils';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
@@ -26,7 +25,8 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
-import type { PickerSelectionState } from '../internals/hooks/usePicker';
+import { useValueWithDefaultizedTimezone } from '../internals/hooks/useDefaultizedTimezone';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -138,22 +138,18 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     displayWeekNumber,
     yearsPerRow,
     monthsPerRow,
+    timezone: timezoneProp,
     ...other
   } = props;
 
-  const [value, setValue] = useControlled({
+  const { value, handleValueChange, timezone } = useValueWithDefaultizedTimezone({
     name: 'DateCalendar',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: singleItemValueManager,
   });
-
-  const handleValueChange = useEventCallback(
-    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
-      setValue(newValue);
-      onChange?.(newValue, selectionState);
-    },
-  );
 
   const { view, setView, focusedView, setFocusedView, goToNextView, setValueAndGoToNextView } =
     useViews({
@@ -184,6 +180,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     shouldDisableDate,
     disablePast,
     disableFuture,
+    timezone,
   });
 
   const handleDateMonthChange = useEventCallback((newDate: TDate) => {
@@ -199,6 +196,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
           disablePast,
           disableFuture,
           isDateDisabled,
+          timezone,
         })
       : newDate;
 
@@ -226,6 +224,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
           disablePast,
           disableFuture,
           isDateDisabled,
+          timezone,
         })
       : newDate;
 
@@ -273,6 +272,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     disableHighlightToday,
     readOnly,
     disabled,
+    timezone,
   };
 
   const gridLabelId = `${id}-grid-label`;
@@ -316,6 +316,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         labelId={gridLabelId}
         slots={slots}
         slotProps={slotProps}
+        timezone={timezone}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -584,6 +585,14 @@ DateCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to the adequate timezone before being used.
+   * More information on how to use timezones with this component on https://mui.com/x/react-date-pickers/timezone/
+   * @default 'default'
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.
