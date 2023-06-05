@@ -70,18 +70,18 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'boş',
   filterOperatorIsNotEmpty: 'dolu',
   filterOperatorIsAnyOf: 'herhangi biri',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
-  // headerFilterOperatorContains: 'Contains',
-  // headerFilterOperatorEquals: 'Equals',
-  // headerFilterOperatorStartsWith: 'Starts with',
-  // headerFilterOperatorEndsWith: 'Ends with',
+  headerFilterOperatorContains: 'Şunu içerir', // Contains "apple" - Şunu içerir "apple"
+  headerFilterOperatorEquals: 'Şuna eşittir', // Equals "apple" - Şunua eşittir "apple"
+  headerFilterOperatorStartsWith: 'Şununla başlar', // Starts with "apple" - Şununla başlar "apple"
+  headerFilterOperatorEndsWith: 'Şununla biter', // Ends with "apple" - Şununla biter "apple"
   // headerFilterOperatorIs: 'Is',
   // headerFilterOperatorNot: 'Is not',
   // headerFilterOperatorAfter: 'Is after',
@@ -107,9 +107,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Sütunları göster',
   columnMenuManageColumns: 'Sütunları yönet',
-  columnMenuFilter: 'Filtre uygula',
+  columnMenuFilter: 'Filtre Ekle',
   columnMenuHideColumn: 'Gizle',
-  columnMenuUnsort: 'Sıralama',
+  columnMenuUnsort: 'Varsayılan Sıralama',
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',
 
