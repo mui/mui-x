@@ -138,6 +138,15 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     this.formats = { ...defaultFormats, ...formats };
   }
 
+  private setLocaleToValue = (value: Moment) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale()) {
+      return value;
+    }
+
+    return value.locale(expectedLocale);
+  };
+
   private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
 
   private createSystemDate = (value: string | undefined): Moment => {
@@ -549,8 +558,9 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const start = value.clone().startOf('month').startOf('week');
-    const end = value.clone().endOf('month').endOf('week');
+    const cleanLocale = this.setLocaleToValue(value);
+    const start = cleanLocale.clone().startOf('month').startOf('week');
+    const end = cleanLocale.clone().endOf('month').endOf('week');
 
     let count = 0;
     let current = start;

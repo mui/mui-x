@@ -142,24 +142,27 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     }
   });
 
-  const isYearDisabled = useEventCallback((dateToValidate: TDate) => {
-    if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
-      return true;
-    }
-    if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
-      return true;
-    }
-    if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
-      return true;
-    }
-    if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
-      return true;
-    }
-    if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
-      return true;
-    }
-    return false;
-  });
+  const isYearDisabled = React.useCallback(
+    (dateToValidate: TDate) => {
+      if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
+        return true;
+      }
+      if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
+        return true;
+      }
+      if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
+        return true;
+      }
+      if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
+        return true;
+      }
+      if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
+        return true;
+      }
+      return false;
+    },
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, utils],
+  );
 
   const handleYearSelection = useEventCallback((event: React.MouseEvent, year: number) => {
     if (readOnly) {
