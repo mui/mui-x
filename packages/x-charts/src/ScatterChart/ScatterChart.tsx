@@ -151,6 +151,10 @@ ScatterChart.propTypes = {
           y: PropTypes.number.isRequired,
         }),
       ).isRequired,
+      highlightScope: PropTypes.shape({
+        faded: PropTypes.oneOf(['global', 'none', 'series']),
+        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+      }),
       id: PropTypes.string,
       label: PropTypes.string,
       markerSize: PropTypes.number,

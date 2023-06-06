@@ -165,6 +165,10 @@ BarChart.propTypes = {
   series: PropTypes.arrayOf(
     PropTypes.shape({
       data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      highlightScope: PropTypes.shape({
+        faded: PropTypes.oneOf(['global', 'none', 'series']),
+        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+      }),
       id: PropTypes.string,
       label: PropTypes.string,
       stack: PropTypes.string,
