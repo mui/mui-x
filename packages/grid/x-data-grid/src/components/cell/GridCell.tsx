@@ -219,7 +219,7 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
     classNames.push(rootClasses?.['cell--editing']);
   }
 
-  const { slots, slotProps } = rootProps;
+  const { slots } = rootProps;
 
   const CellComponent = slots.cell;
 
@@ -236,7 +236,6 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
     children,
     tabIndex,
     className: clsx(classNames),
-    ...slotProps?.cell,
   };
 
   return React.createElement(CellComponent, cellProps);
