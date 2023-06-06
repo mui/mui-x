@@ -24,6 +24,7 @@ export function fastObjectShallowCompare<T extends Record<string, any> | null>(a
     }
   }
 
+  /* eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars */
   for (const _ in b) {
     bLength += 1;
   }

@@ -111,12 +111,19 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
-  const setRenderContext = React.useCallback((nextRenderContext: GridRenderContext | null) => {
-    if (renderContext && nextRenderContext && areRenderContextsEqual(renderContext, nextRenderContext)) {
-      return;
-    }
-    setRenderContextRaw(nextRenderContext);
-  }, [renderContext])
+  const setRenderContext = React.useCallback(
+    (nextRenderContext: GridRenderContext | null) => {
+      if (
+        renderContext &&
+        nextRenderContext &&
+        areRenderContextsEqual(renderContext, nextRenderContext)
+      ) {
+        return;
+      }
+      setRenderContextRaw(nextRenderContext);
+    },
+    [renderContext],
+  );
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;

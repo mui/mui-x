@@ -34,8 +34,6 @@ import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusState
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-// These props are passed down to the cell component, eslint thinks they're not used
-/* eslint-disable react/no-unused-prop-types */
 type GridCellWrapperProps = {
   align: GridAlignment;
   className?: string;
@@ -47,7 +45,7 @@ type GridCellWrapperProps = {
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
-  editCellState: GridEditCellProps<any> | null,
+  editCellState: GridEditCellProps<any> | null;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -71,7 +69,9 @@ export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
   tabIndex: 0 | -1;
 };
 
-type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & { api: GridApiCommunity };
+type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & {
+  api: GridApiCommunity;
+};
 const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   id: -1,
   field: '__unset__',
@@ -141,10 +141,13 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
       try {
-        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(rowId, field);
+        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+          rowId,
+          field,
+        );
         const result = cellParams as CellParamsWithAPI;
         result.api = apiRef.current;
-        return result
+        return result;
       } catch (e) {
         if (e instanceof MissingRowIdError) {
           return EMPTY_CELL_PARAMS;
@@ -533,10 +536,13 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
       try {
-        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(rowId, field);
+        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
+          rowId,
+          field,
+        );
         const result = cellParams as CellParamsWithAPI;
         result.api = apiRef.current;
-        return result
+        return result;
       } catch (e) {
         if (e instanceof MissingRowIdError) {
           return EMPTY_CELL_PARAMS;
@@ -553,10 +559,6 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props
       field,
     }),
   );
-
-  if (cellParamsWithAPI === EMPTY_CELL_PARAMS) {
-    return null;
-  }
 
   const { cellMode, hasFocus, isEditable, value, formattedValue } = cellParamsWithAPI;
 
@@ -659,6 +661,10 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props
       }
     }
   }, [hasFocus, cellMode, apiRef]);
+
+  if (cellParamsWithAPI === EMPTY_CELL_PARAMS) {
+    return null;
+  }
 
   let handleFocus: any = other.onFocus;
 
@@ -763,4 +769,4 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props
 
 const MemoizedGridCellV7 = fastMemo(GridCellV7);
 
-export { MemoizedGridCellV7 as GridCellV7 }
+export { MemoizedGridCellV7 as GridCellV7 };
