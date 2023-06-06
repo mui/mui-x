@@ -199,7 +199,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public toISO = (value: DateTime) => {
-    return value.toISO({ format: 'extended' })!;
+    return value.toUTC().toISO({ format: 'extended' })!;
   };
 
   public parse = (value: string, formatString: string) => {

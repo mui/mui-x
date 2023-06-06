@@ -256,6 +256,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
           this.moment.defaultZone?.name ?? 'system'
         : timezone;
 
+    if (cleanZone === 'system') {
+      return value.clone().local();
+    }
+
     const newValue = value.clone();
     newValue.tz(cleanZone);
 

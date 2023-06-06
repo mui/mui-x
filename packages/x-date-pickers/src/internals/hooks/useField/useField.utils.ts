@@ -653,7 +653,7 @@ export const getDateFromDateSections = <TDate>(
   const formatWithoutSeparator = sectionFormats.join(' ');
   const dateWithoutSeparatorStr = sectionValues.join(' ');
 
-  return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator);
+  return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator)!;
 };
 
 export const createDateStrForInputFromSections = (sections: FieldSection[], isRTL: boolean) => {

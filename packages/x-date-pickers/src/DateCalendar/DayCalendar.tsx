@@ -519,8 +519,9 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   ]);
 
   const weeksToDisplay = React.useMemo(() => {
-    const toDisplay = utils.getWeekArray(currentMonth);
-    let nextMonth = utils.addMonths(currentMonth, 1);
+    const a = utils.setTimezone(currentMonth, timezone);
+    const toDisplay = utils.getWeekArray(a);
+    let nextMonth = utils.addMonths(a, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
       const additionalWeeks = utils.getWeekArray(nextMonth);
       const hasCommonWeek = utils.isSameDay(
@@ -537,7 +538,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
       nextMonth = utils.addMonths(nextMonth, 1);
     }
     return toDisplay;
-  }, [currentMonth, fixedWeekNumber, utils]);
+  }, [currentMonth, fixedWeekNumber, utils, timezone]);
 
   return (
     <div role="grid" aria-labelledby={gridLabelId}>

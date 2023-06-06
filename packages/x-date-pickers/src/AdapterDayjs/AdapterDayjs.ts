@@ -149,7 +149,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public lib = 'dayjs';
 
-  public rawDayJsInstance: typeof defaultDayjs;
+  public rawDayJsInstance?: typeof defaultDayjs;
 
   public dayjs: Constructor;
 
@@ -162,8 +162,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public formatTokenMap = formatTokenMap;
 
   constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultDayjs> = {}) {
-    this.rawDayJsInstance = instance || defaultDayjs;
-    this.dayjs = withLocale(this.rawDayJsInstance, locale);
+    this.rawDayJsInstance = instance;
+    this.dayjs = withLocale(this.rawDayJsInstance ?? defaultDayjs, locale);
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
 
@@ -191,7 +191,20 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   private createSystemDate = (value: string | undefined): Dayjs => {
     // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)
-    return this.rawDayJsInstance(value);
+    if (this.rawDayJsInstance) {
+      return this.rawDayJsInstance(value);
+    }
+
+    if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
+      const timezone = defaultDayjs.tz.guess();
+      if (timezone === 'UTC') {
+        return defaultDayjs(value);
+      }
+
+      return defaultDayjs.tz(value, timezone);
+    }
+
+    return defaultDayjs(value);
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {
@@ -616,6 +629,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
+    const timezone = this.getTimezone(value);
+
     const cleanValue = this.setLocaleToValue(value);
     const start = cleanValue.startOf('month').startOf('week');
     const end = cleanValue.endOf('month').endOf('week');
@@ -635,8 +650,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       // Then dayjs will not automatically adjust the offset (moment does)
       // We have to parse again the value to make sure the `fixOffset` method is applied
       // See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
-      if (this.hasTimezonePlugin()) {
-        current = defaultDayjs.tz(current);
+      if (this.hasTimezonePlugin() && timezone !== 'UTC' && timezone !== 'system') {
+        const cleanTimezone = timezone === 'default' ? undefined : timezone;
+        current = current.tz(cleanTimezone, true);
       }
 
       count += 1;

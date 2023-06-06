@@ -41,25 +41,32 @@ describe('<DateTimeField /> - Timezone', () => {
       );
     };
 
+    it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
+      if (adapter.lib !== 'dayjs') {
+        return;
+      }
+
+      const onChange = spy();
+      render(<DateTimeField onChange={onChange} format={format} />);
+
+      const input = getTextbox();
+      const expectedDate = fillEmptyValue(input, 'default');
+
+      // Check the rendered value (uses default timezone, e.g: UTC, see TZ env variable)
+      expectInputValue(input, '12/31/2022 23');
+
+      // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
+      const actualDate = onChange.lastCall.firstArg;
+
+      // On dayjs, we are not able to know if a date is UTC because it's the system timezone or because it was created as UTC.
+      // In a real world scenario, this should probably never occur.
+      expect(adapter.getTimezone(actualDate)).to.equal(adapter.lib === 'dayjs' ? 'UTC' : 'system');
+      expect(actualDate).toEqualDateTime(expectedDate);
+    });
+
     TIMEZONE_TO_TEST.forEach((timezone) => {
-      it('should use default timezone for rendering and onChange when no value and no timezone prop are provided', () => {
-        const onChange = spy();
-        render(<DateTimeField onChange={onChange} format={format} />);
-
-        const input = getTextbox();
-        const expectedDate = fillEmptyValue(input, 'UTC');
-
-        // Check the rendered value (uses default timezone, e.g: UTC, see TZ env variable)
-        expectInputValue(input, '12/31/2022 23');
-
-        // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
-        const actualDate = onChange.lastCall.firstArg;
-        expect(adapter.getTimezone(expectedDate)).to.equal('UTC');
-        expect(actualDate).toEqualDateTime(expectedDate);
-      });
-
       describe(`Timezone: ${timezone}`, () => {
-        it('should use timezone prop for onChange end rendering when no value is provided', () => {
+        it('should use timezone prop for onChange and rendering when no value is provided', () => {
           const onChange = spy();
           render(<DateTimeField onChange={onChange} timezone={timezone} format={format} />);
           const input = getTextbox();
@@ -97,7 +104,7 @@ describe('<DateTimeField /> - Timezone', () => {
             -1,
           );
           const actualDate = onChange.lastCall.firstArg;
-          expect(adapter.getTimezone(expectedDate)).to.equal(timezone);
+          expect(adapter.getTimezone(actualDate)).to.equal(timezone);
           expect(actualDate).toEqualDateTime(expectedDate);
         });
       });

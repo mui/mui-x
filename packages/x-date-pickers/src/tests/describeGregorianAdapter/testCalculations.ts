@@ -191,9 +191,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     if (adapter.lib === 'date-fns') {
       // date-fns never suppress useless milliseconds in the end
       expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING.replace('.000Z', 'Z'));
-    } else if (adapter.lib === 'luxon') {
-      // luxon does not shorthand +00:00 to Z, which is also valid ISO string
-      expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING.replace('Z', '+00:00'));
     } else {
       expect(outputtedISO).to.equal(TEST_DATE_ISO_STRING);
     }
@@ -880,12 +877,43 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
   });
 
-  it('Method: getWeekArray', () => {
-    const weekArray = adapter.getWeekArray(testDateIso);
+  describe('Method: getWeekArray', () => {
+    it('should work without timezones', () => {
+      const weekArray = adapter.getWeekArray(testDateIso);
+      let expectedDate = adapter.startOfWeek(adapter.startOfMonth(testDateIso));
 
-    expect(weekArray).to.have.length(5);
-    weekArray.forEach((week) => {
-      expect(week).to.have.length(7);
+      expect(weekArray).to.have.length(5);
+      weekArray.forEach((week) => {
+        expect(week).to.have.length(7);
+        week.forEach((day) => {
+          expect(day).toEqualDateTime(expectedDate);
+          expectedDate = adapter.addDays(expectedDate, 1);
+        });
+      });
+    });
+
+    it('should respect the DST', function test() {
+      if (!adapterTZ.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      const referenceDate = adapterTZ.dateWithTimezone('2022-03-17', 'Europe/Paris')!;
+      const weekArray = adapterTZ.getWeekArray(referenceDate);
+      let expectedDate = adapter.startOfWeek(adapter.startOfMonth(referenceDate));
+      const lastNonDSTDay = adapterTZ.dateWithTimezone('2022-03-27', 'Europe/Paris')!;
+
+      expect(weekArray).to.have.length(5);
+      weekArray.forEach((week) => {
+        expect(week).to.have.length(7);
+        week.forEach((day) => {
+          expect(adapterTZ.startOfDay(day)).toEqualDateTime(adapterTZ.startOfDay(expectedDate));
+          expectedDate = adapterTZ.addDays(expectedDate, 1);
+
+          const offset = ((24 - adapterTZ.getHours(adapterTZ.setTimezone(day, 'UTC'))) % 24) * 60;
+
+          expect(offset).to.equal(adapterTZ.isAfter(day, lastNonDSTDay) ? 120 : 60);
+        });
+      });
     });
   });
 
