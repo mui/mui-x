@@ -125,7 +125,8 @@ let warnedOnce = false;
 
 // GridCellWrapper is a compatibility layer for the V6 cell slot. If we can use the more efficient
 // `GridCellV7`, we should. That component is a merge of `GridCellWrapper` and `GridCell`.
-// TODO(v7): Remove the wrapper & cellV6 and use the cellV7 exclusively
+// TODO(v7): Remove the wrapper & cellV6 and use the cellV7 exclusively.
+// TODO(v7): Removing the wrapper will break the docs performance visualization demo.
 const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props, ref) => {
   const { column, rowId, editCellState } = props;
 
