@@ -275,6 +275,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         treeDepth > 1 &&
         Object.keys(editRowsState).length > 0);
 
+    const editCellState = editRowsState[rowId]?.[column.field] ?? null;
+
     return (
       <GridCellWrapper
         key={column.field}
@@ -287,6 +289,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         colIndex={cellProps.indexRelativeToAllColumns}
         colSpan={cellProps.colSpan}
         disableDragEvents={disableDragEvents}
+        editCellState={editCellState}
       />
     );
   };

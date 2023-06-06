@@ -8,6 +8,7 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
+import type { GridApiCommunity } from '../../internals';
 import { fastMemo } from '../../utils/fastMemo';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
@@ -25,11 +26,11 @@ import {
 } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
+import { GridEditCellProps } from '../../models/gridEditRowModel';
 import { useGridSelector, shallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { gridEditRowsStateSelector } from '../../hooks/features/editing/gridEditingSelectors';
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
@@ -46,6 +47,7 @@ type GridCellWrapperProps = {
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
+  editCellState: GridEditCellProps<any> | null,
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -69,7 +71,8 @@ export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
   tabIndex: 0 | -1;
 };
 
-const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> = {
+type CellParamsWithAPI = GridCellParams<any, any, any, GridTreeNodeWithRender> & { api: GridApiCommunity };
+const EMPTY_CELL_PARAMS: CellParamsWithAPI = {
   id: -1,
   field: '__unset__',
   row: {},
@@ -91,6 +94,7 @@ const EMPTY_CELL_PARAMS: GridCellParams<any, any, any, GridTreeNodeWithRender> =
   value: null,
   formattedValue: '__unset__',
   isEditable: false,
+  api: {} as any,
 };
 
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder'> & {
@@ -121,21 +125,24 @@ let warnedOnce = false;
 
 // TODO(v7): Remove the wrapper, merge with the cell component
 const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props, ref) => {
-  const { column, rowId } = props;
+  const { column, rowId, editCellState } = props;
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const field = column.field;
 
-  const cellParams = useGridSelector(
+  const cellParamsWithAPI = useGridSelector(
     apiRef,
     () => {
       // This is required because `.getCellParams` tries to get the `state.rows.tree` entry
       // associated with `rowId`/`fieldId`, but this selector runs after the state has been
       // updated, while `rowId`/`fieldId` reference an entry in the old state.
       try {
-        return apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(rowId, field);
+        const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(rowId, field);
+        const result = cellParams as CellParamsWithAPI;
+        result.api = apiRef.current;
+        return result
       } catch (e) {
         if (e instanceof MissingRowIdError) {
           return EMPTY_CELL_PARAMS;
@@ -153,41 +160,40 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
     }),
   );
 
-  const { cellMode, hasFocus, isEditable, value, formattedValue } = cellParams;
+  if (cellParamsWithAPI === EMPTY_CELL_PARAMS) {
+    return null;
+  }
+
+  const { cellMode, hasFocus, isEditable, value, formattedValue } = cellParamsWithAPI;
 
   const managesOwnFocus = column.type === 'actions';
   const tabIndex =
-    (cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParams.tabIndex : -1;
-
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+    (cellMode === 'view' || !isEditable) && !managesOwnFocus ? cellParamsWithAPI.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
   const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
     id: rowId,
     field,
-  });
+  }) as (string | undefined)[];
 
   if (column.cellClassName) {
     classNames.push(
-      clsx(
-        typeof column.cellClassName === 'function'
-          ? column.cellClassName(cellParams)
-          : column.cellClassName,
-      ),
+      typeof column.cellClassName === 'function'
+        ? column.cellClassName(cellParamsWithAPI)
+        : column.cellClassName,
     );
   }
 
   if (getCellClassName) {
-    classNames.push(getCellClassName(cellParams));
+    classNames.push(getCellClassName(cellParamsWithAPI));
   }
-
-  const editCellState = editRowsState[rowId]?.[column.field] ?? null;
 
   let children: React.ReactNode;
   if (editCellState == null && column.renderCell) {
-    children = column.renderCell({ ...cellParams, api: apiRef.current });
-    classNames.push(clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']));
+    children = column.renderCell(cellParamsWithAPI);
+    classNames.push(gridClasses['cell--withRenderer']);
+    classNames.push(rootClasses?.['cell--withRenderer']);
   }
 
   if (editCellState != null && column.renderEditCell) {
@@ -197,18 +203,14 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
     const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
 
     const params: GridRenderEditCellParams = {
-      ...cellParams,
+      ...cellParamsWithAPI,
       row: updatedRow,
       ...editCellStateRest,
-      api: apiRef.current,
     };
 
     children = column.renderEditCell(params);
-    classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
-  }
-
-  if (cellParams === EMPTY_CELL_PARAMS) {
-    return null;
+    classNames.push(gridClasses['cell--editing']);
+    classNames.push(rootClasses?.['cell--editing']);
   }
 
   const { slots, slotProps } = rootProps;
