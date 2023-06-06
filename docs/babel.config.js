@@ -11,7 +11,7 @@ module.exports = function getBabelConfig(api) {
     docsx: './',
   };
 
-  const config = {
+  return {
     assumptions: baseConfig.assumptions,
     presets: ['next/babel'],
     plugins: [
@@ -41,7 +41,5 @@ module.exports = function getBabelConfig(api) {
         ],
       },
     },
-  }
-  console.log(JSON.stringify(config))
-  return config;
+  };
 };
