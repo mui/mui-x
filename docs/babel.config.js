@@ -4,13 +4,15 @@ module.exports = function getBabelConfig(api) {
   const baseConfig = getBaseConfig(api);
 
   const alias = {
-    ...getBaseConfig.getDefaultAlias(),
+    ...getBaseConfig.getSharedAlias(),
+    // '@mui/x-charts': '../packages/x-charts/src',
     '@mui/monorepo': '../node_modules/@mui/monorepo',
     '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
+    docs: '../node_modules/@mui/monorepo/docs',
     docsx: './',
   };
 
-  return {
+  const config = {
     assumptions: baseConfig.assumptions,
     presets: ['next/babel'],
     plugins: [
@@ -40,5 +42,7 @@ module.exports = function getBabelConfig(api) {
         ],
       },
     },
-  };
+  }
+  console.log(JSON.stringify(config))
+  return config;
 };

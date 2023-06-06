@@ -1,12 +1,15 @@
 const path = require('path');
 const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo');
 
-function getDefaultAlias() {
-  function resolve(relativeToBabelConf) {
-    const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
-    return `./${resolvedPath.replace('\\', '/')}`;
-  }
+function resolve(relativeToBabelConf) {
+  const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
+  const normalizedPath = resolvedPath.replace('\\', '/');
+  if (normalizedPath.startsWith('.') || normalizedPath.startsWith('/'))
+    return normalizedPath;
+  return `./${normalizedPath}`;
+}
 
+function getSharedAlias() {
   return {
     '@mui/x-charts': resolve('./packages/grid/x-charts/src'),
     '@mui/x-data-grid': resolve('./packages/grid/x-data-grid/src'),
@@ -18,16 +21,24 @@ function getDefaultAlias() {
     '@mui/x-license-pro': resolve('./packages/x-license-pro/src'),
     '@mui/markdown': '@mui/monorepo/packages/markdown',
     '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
+  };
+}
+
+function getLocalAlias() {
+  return {
     'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
     docs: resolve('./node_modules/@mui/monorepo/docs'),
     test: resolve('./test'),
     packages: resolve('./packages'),
-  };
+  }
 }
 
 function getBabelConfig(api) {
   const useESModules = api.env(['legacy', 'modern', 'stable', 'rollup']);
-  const defaultAlias = getDefaultAlias();
+  const defaultAlias = {
+    ...getSharedAlias(),
+    ...getLocalAlias(),
+  };
 
   const presets = [
     [
@@ -172,6 +183,6 @@ function getBabelConfig(api) {
   };
 }
 
-getBabelConfig.getDefaultAlias = getDefaultAlias;
+getBabelConfig.getSharedAlias = getSharedAlias;
 
 module.exports = getBabelConfig;
