@@ -1,6 +1,6 @@
 import { GridSlotsComponent } from '../models';
 import {
-  GridCell,
+  GridCellV7,
   GridSkeletonCell,
   GridColumnsPanel,
   GridFilterPanel,
@@ -20,7 +20,7 @@ import materialSlots from '../material';
 
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...materialSlots,
-  Cell: GridCell,
+  Cell: GridCellV7,
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,

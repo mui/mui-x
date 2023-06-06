@@ -26,7 +26,7 @@ import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSele
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
-import { GridCellWrapper } from './cell/GridCell';
+import { GridCellWrapper, GridCellV7 } from './cell/GridCell';
 import type { GridCellProps } from './cell/GridCell';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 
@@ -258,6 +258,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   );
 
   const { slots, disableColumnReorder } = rootProps;
+  const CellComponent = slots.cell === GridCellV7 ? GridCellV7 : GridCellWrapper;
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
@@ -278,7 +279,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     const editCellState = editRowsState[rowId]?.[column.field] ?? null;
 
     return (
-      <GridCellWrapper
+      <CellComponent
         key={column.field}
         column={column}
         width={cellProps.width}
