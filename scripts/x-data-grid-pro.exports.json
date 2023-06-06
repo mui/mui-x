@@ -107,6 +107,7 @@
   { "name": "GridCellModesModel", "kind": "TypeAlias" },
   { "name": "GridCellParams", "kind": "Interface" },
   { "name": "GridCellProps", "kind": "TypeAlias" },
+  { "name": "GridCellV7", "kind": "Variable" },
   { "name": "GridCellWrapper", "kind": "Variable" },
   { "name": "GridCheckCircleIcon", "kind": "Variable" },
   { "name": "GridCheckIcon", "kind": "Variable" },
