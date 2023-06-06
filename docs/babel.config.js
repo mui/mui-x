@@ -5,7 +5,6 @@ module.exports = function getBabelConfig(api) {
 
   const alias = {
     ...getBaseConfig.getSharedAlias(),
-    // '@mui/x-charts': '../packages/x-charts/src',
     '@mui/monorepo': '../node_modules/@mui/monorepo',
     '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
     docs: '../node_modules/@mui/monorepo/docs',

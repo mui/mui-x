@@ -11,7 +11,7 @@ function resolve(relativeToBabelConf) {
 
 function getSharedAlias() {
   return {
-    '@mui/x-charts': resolve('./packages/grid/x-charts/src'),
+    '@mui/x-charts': resolve('./packages/x-charts/src'),
     '@mui/x-data-grid': resolve('./packages/grid/x-data-grid/src'),
     '@mui/x-data-grid-generator': resolve('./packages/grid/x-data-grid-generator/src'),
     '@mui/x-data-grid-pro': resolve('./packages/grid/x-data-grid-pro/src'),
