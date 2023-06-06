@@ -2,26 +2,26 @@ const path = require('path');
 const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo');
 
 function getDefaultAlias() {
-  function resolveAliasPath(relativeToBabelConf) {
+  function resolve(relativeToBabelConf) {
     const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
     return `./${resolvedPath.replace('\\', '/')}`;
   }
 
   return {
-    '@mui/x-charts': resolveAliasPath('./packages/grid/x-charts/src'),
-    '@mui/x-data-grid': resolveAliasPath('./packages/grid/x-data-grid/src'),
-    '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
-    '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
-    '@mui/x-data-grid-premium': resolveAliasPath('./packages/grid/x-data-grid-premium/src'),
-    '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
-    '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
-    '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
+    '@mui/x-charts': resolve('./packages/grid/x-charts/src'),
+    '@mui/x-data-grid': resolve('./packages/grid/x-data-grid/src'),
+    '@mui/x-data-grid-generator': resolve('./packages/grid/x-data-grid-generator/src'),
+    '@mui/x-data-grid-pro': resolve('./packages/grid/x-data-grid-pro/src'),
+    '@mui/x-data-grid-premium': resolve('./packages/grid/x-data-grid-premium/src'),
+    '@mui/x-date-pickers': resolve('./packages/x-date-pickers/src'),
+    '@mui/x-date-pickers-pro': resolve('./packages/x-date-pickers-pro/src'),
+    '@mui/x-license-pro': resolve('./packages/x-license-pro/src'),
     '@mui/markdown': '@mui/monorepo/packages/markdown',
     '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
     'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
-    docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
-    test: resolveAliasPath('./test'),
-    packages: resolveAliasPath('./packages'),
+    docs: resolve('./node_modules/@mui/monorepo/docs'),
+    test: resolve('./test'),
+    packages: resolve('./packages'),
   };
 }
 
@@ -170,7 +170,7 @@ function getBabelConfig(api) {
       },
     },
   };
-};
+}
 
 getBabelConfig.getDefaultAlias = getDefaultAlias;
 

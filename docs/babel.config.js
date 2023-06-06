@@ -1,4 +1,4 @@
-const getBaseConfig = require('../babel.config')
+const getBaseConfig = require('../babel.config');
 
 module.exports = function getBabelConfig(api) {
   const baseConfig = getBaseConfig(api);
@@ -30,10 +30,7 @@ module.exports = function getBabelConfig(api) {
         },
       ],
     ],
-    ignore: [
-      ...baseConfig.ignore,
-      /@mui[\\|/]docs[\\|/]markdown/,
-    ],
+    ignore: [...baseConfig.ignore, /@mui[\\|/]docs[\\|/]markdown/],
     env: {
       production: {
         plugins: [
@@ -43,5 +40,5 @@ module.exports = function getBabelConfig(api) {
         ],
       },
     },
-  }
+  };
 };
