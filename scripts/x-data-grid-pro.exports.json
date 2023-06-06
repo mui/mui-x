@@ -1,5 +1,4 @@
 [
-  { "name": "applySelector", "kind": "Function" },
   { "name": "arSD", "kind": "Variable" },
   { "name": "BaseButtonPropsOverrides", "kind": "Interface" },
   { "name": "BaseCheckboxPropsOverrides", "kind": "Interface" },
@@ -32,7 +31,6 @@
   { "name": "DataGridProProps", "kind": "Interface" },
   { "name": "deDE", "kind": "Variable" },
   { "name": "DEFAULT_GRID_COL_TYPE_KEY", "kind": "Variable" },
-  { "name": "defaultCompare", "kind": "Variable" },
   { "name": "ElementSize", "kind": "Interface" },
   { "name": "elGR", "kind": "Variable" },
   { "name": "enUS", "kind": "Variable" },
@@ -110,7 +108,6 @@
   { "name": "GridCellParams", "kind": "Interface" },
   { "name": "GridCellProps", "kind": "TypeAlias" },
   { "name": "GridCellWrapper", "kind": "Variable" },
-  { "name": "GridCellWrapperProps", "kind": "TypeAlias" },
   { "name": "GridCheckCircleIcon", "kind": "Variable" },
   { "name": "GridCheckIcon", "kind": "Variable" },
   { "name": "GridChildrenFromPathLookup", "kind": "TypeAlias" },
