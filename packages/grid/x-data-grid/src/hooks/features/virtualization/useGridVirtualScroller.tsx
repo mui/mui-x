@@ -636,16 +636,25 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       minHeight: shouldExtendContent ? '100%' : 'auto',
     };
 
+    if (rootProps.autoHeight && currentPage.rows.length === 0) {
+      size.height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
+    }
+
     return size;
-  }, [rootRef, columnsTotalWidth, rowsMeta.currentPageTotalHeight, needsHorizontalScrollbar]);
+  }, [
+    apiRef,
+    rootRef,
+    columnsTotalWidth,
+    rowsMeta.currentPageTotalHeight,
+    needsHorizontalScrollbar,
+    rootProps.autoHeight,
+    rootProps.rowHeight,
+    currentPage.rows.length,
+  ]);
 
   React.useEffect(() => {
     apiRef.current.publishEvent('virtualScrollerContentSizeChange');
   }, [apiRef, contentSize]);
-
-  if (rootProps.autoHeight && currentPage.rows.length === 0) {
-    contentSize.height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
-  }
 
   const rootStyle = React.useMemo(() => {
     const style = {} as React.CSSProperties;
