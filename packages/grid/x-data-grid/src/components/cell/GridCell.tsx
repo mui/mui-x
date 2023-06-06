@@ -34,7 +34,7 @@ import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusState
 import { MissingRowIdError } from '../../hooks/features/rows/useGridParamsApi';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type GridCellWrapperProps = {
+type GridCellV7Props = {
   align: GridAlignment;
   className?: string;
   colIndex: number;
@@ -55,7 +55,8 @@ type GridCellWrapperProps = {
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
   [x: string]: any;
 };
-/* eslint-enable react/no-unused-prop-types */
+
+type GridCellWrapperProps = GridCellV7Props;
 
 export type GridCellProps<V = any, F = V> = GridCellWrapperProps & {
   field: string;
@@ -146,6 +147,7 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
           rowId,
           field,
         );
+
         const result = cellParams as CellParamsWithAPI;
         result.api = apiRef.current;
         return result;
@@ -474,12 +476,13 @@ GridCell.propTypes = {
   colSpan: PropTypes.number,
   column: PropTypes.object,
   disableDragEvents: PropTypes.bool,
-  field: PropTypes.string,
-  formattedValue: PropTypes.any,
-  hasFocus: PropTypes.bool,
+  editCellState: PropTypes.shape({
+    changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
+    isProcessingProps: PropTypes.bool,
+    isValidating: PropTypes.bool,
+    value: PropTypes.any,
+  }),
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
-  isEditable: PropTypes.bool,
-  isSelected: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,
@@ -489,14 +492,12 @@ GridCell.propTypes = {
   onMouseUp: PropTypes.func,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   showRightBorder: PropTypes.bool,
-  tabIndex: PropTypes.oneOf([-1, 0]),
-  value: PropTypes.any,
   width: PropTypes.number,
 } as any;
 
 export { MemoizedCellWrapper as GridCellWrapper, GridCell };
 
-const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props, ref) => {
+const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref) => {
   const {
     column,
     rowId,
@@ -540,6 +541,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props
           rowId,
           field,
         );
+
         const result = cellParams as CellParamsWithAPI;
         result.api = apiRef.current;
         return result;
@@ -766,6 +768,36 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((props
     </div>
   );
 });
+
+GridCellV7.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  align: PropTypes.oneOf(['center', 'left', 'right']),
+  className: PropTypes.string,
+  colIndex: PropTypes.number,
+  colSpan: PropTypes.number,
+  column: PropTypes.object,
+  disableDragEvents: PropTypes.bool,
+  editCellState: PropTypes.shape({
+    changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
+    isProcessingProps: PropTypes.bool,
+    isValidating: PropTypes.bool,
+    value: PropTypes.any,
+  }),
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onDragEnter: PropTypes.func,
+  onDragOver: PropTypes.func,
+  onKeyDown: PropTypes.func,
+  onMouseDown: PropTypes.func,
+  onMouseUp: PropTypes.func,
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  showRightBorder: PropTypes.bool,
+  width: PropTypes.number,
+} as any;
 
 const MemoizedGridCellV7 = fastMemo(GridCellV7);
 
