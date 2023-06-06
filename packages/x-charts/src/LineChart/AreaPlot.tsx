@@ -1,17 +1,14 @@
 import * as React from 'react';
-import { line as d3Line } from 'd3-shape';
+import { area as d3Area } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { LineElement } from './LineElement';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { AreaElement } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function LinePlot() {
+export function AreaPlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
-
-  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -37,28 +34,30 @@ export function LinePlot() {
 
           if (xData === undefined) {
             throw new Error(
-              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot.`,
             );
           }
 
-          const linePath = d3Line<{
+          const areaPath = d3Area<{
             x: any;
             y: any[];
           }>()
             .x((d) => xScale(d.x))
-            .y((d) => yScale(d.y[1]));
+            .y0((d) => yScale(d.y[0]))
+            .y1((d) => yScale(d.y[1]));
 
           const curve = getCurveFactory(series[seriesId].curve);
           const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
           return (
-            <LineElement
-              key={seriesId}
-              id={seriesId}
-              d={linePath.curve(curve)(d3Data) || undefined}
-              color={series[seriesId].color}
-              {...getInteractionItemProps({ type: 'line', seriesId })}
-            />
+            !!series[seriesId].area && (
+              <AreaElement
+                key={seriesId}
+                id={seriesId}
+                d={areaPath.curve(curve)(d3Data) || undefined}
+                color={series[seriesId].color}
+              />
+            )
           );
         });
       })}
