@@ -1,33 +1,33 @@
 const path = require('path');
 const generateReleaseInfo = require('./packages/x-license-pro/generateReleaseInfo');
 
-function resolveAliasPath(relativeToBabelConf) {
-  const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
-  return `./${resolvedPath.replace('\\', '/')}`;
+function getDefaultAlias() {
+  function resolveAliasPath(relativeToBabelConf) {
+    const resolvedPath = path.relative(process.cwd(), path.resolve(__dirname, relativeToBabelConf));
+    return `./${resolvedPath.replace('\\', '/')}`;
+  }
+
+  return {
+    '@mui/x-charts': resolveAliasPath('./packages/grid/x-charts/src'),
+    '@mui/x-data-grid': resolveAliasPath('./packages/grid/x-data-grid/src'),
+    '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
+    '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
+    '@mui/x-data-grid-premium': resolveAliasPath('./packages/grid/x-data-grid-premium/src'),
+    '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
+    '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
+    '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
+    '@mui/markdown': '@mui/monorepo/packages/markdown',
+    '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
+    'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
+    docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
+    test: resolveAliasPath('./test'),
+    packages: resolveAliasPath('./packages'),
+  };
 }
 
-const defaultAlias = {
-  '@mui/x-data-grid': resolveAliasPath('./packages/grid/x-data-grid/src'),
-  '@mui/x-data-grid-generator': resolveAliasPath('./packages/grid/x-data-grid-generator/src'),
-  '@mui/x-data-grid-pro': resolveAliasPath('./packages/grid/x-data-grid-pro/src'),
-  '@mui/x-data-grid-premium': resolveAliasPath('./packages/grid/x-data-grid-premium/src'),
-  '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
-  '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
-  '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
-  '@mui/markdown': '@mui/monorepo/packages/markdown',
-  '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
-  'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
-  docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
-  test: resolveAliasPath('./test'),
-  packages: resolveAliasPath('./packages'),
-};
-
-const productionPlugins = [
-  ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
-];
-
-module.exports = function getBabelConfig(api) {
+function getBabelConfig(api) {
   const useESModules = api.env(['legacy', 'modern', 'stable', 'rollup']);
+  const defaultAlias = getDefaultAlias();
 
   const presets = [
     [
@@ -51,12 +51,6 @@ module.exports = function getBabelConfig(api) {
 
   const plugins = [
     'babel-plugin-optimize-clsx',
-    // Need the following 3 proposals for all targets in .browserslistrc.
-    // With our usage the transpiled loose mode is equivalent to spec mode.
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ['@babel/plugin-proposal-private-methods', { loose: true }],
-    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
-    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
     [
       '@babel/plugin-transform-runtime',
       {
@@ -72,6 +66,10 @@ module.exports = function getBabelConfig(api) {
         ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
       },
     ],
+  ];
+
+  const productionPlugins = [
+    ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
   ];
 
   if (process.env.NODE_ENV === 'production') {
@@ -104,6 +102,10 @@ module.exports = function getBabelConfig(api) {
   return {
     assumptions: {
       noDocumentAll: true,
+      setPublicClassFields: true,
+      privateFieldsAsProperties: true,
+      objectRestNoSymbols: true,
+      setSpreadProperties: true,
     },
     presets,
     plugins,
@@ -169,3 +171,7 @@ module.exports = function getBabelConfig(api) {
     },
   };
 };
+
+getBabelConfig.getDefaultAlias = getDefaultAlias;
+
+module.exports = getBabelConfig;
