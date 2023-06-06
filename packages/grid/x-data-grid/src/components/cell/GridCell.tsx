@@ -35,7 +35,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 // These props are passed down to the cell component, eslint thinks they're not used
 /* eslint-disable react/no-unused-prop-types */
-export type GridCellWrapperProps = {
+type GridCellWrapperProps = {
   align: GridAlignment;
   className?: string;
   colIndex: number;

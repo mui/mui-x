@@ -17,7 +17,7 @@ function isOutputSelector<Api extends GridApiCommon, T>(
   return selector.acceptsApiRef;
 }
 
-export function applySelector<Api extends GridApiCommon, T>(
+function applySelector<Api extends GridApiCommon, T>(
   apiRef: React.MutableRefObject<Api>,
   selector: ((state: Api['state']) => T) | OutputSelector<Api['state'], T>,
 ) {
@@ -27,7 +27,7 @@ export function applySelector<Api extends GridApiCommon, T>(
   return selector(apiRef.current.state);
 }
 
-export const defaultCompare = Object.is;
+const defaultCompare = Object.is;
 export const shallowCompare = fastObjectShallowCompare;
 
 const createRefs = () => ({ state: null, equals: null, selector: null } as any);
