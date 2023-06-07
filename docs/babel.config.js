@@ -37,7 +37,8 @@ module.exports = function getBabelConfig(api) {
     env: {
       production: {
         plugins: [
-          '@babel/plugin-transform-react-constant-elements',
+          // https://github.com/mui/mui-x/pull/666
+          // '@babel/plugin-transform-react-constant-elements',
           ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
           ['babel-plugin-transform-react-remove-prop-types', { mode: 'remove' }],
         ],
