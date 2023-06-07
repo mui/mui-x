@@ -105,6 +105,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     onViewChange,
     value: valueProp,
     defaultValue,
+    referenceDate,
     disableFuture,
     disablePast,
     defaultCalendarMonth,
@@ -168,6 +169,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     });
 
   const {
+    initialMonth,
     calendarState,
     changeFocusedDay,
     changeMonth,
@@ -177,6 +179,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   } = useCalendarState({
     value,
     defaultCalendarMonth,
+    referenceDate,
     reduceAnimations,
     onMonthChange,
     minDate,
@@ -334,6 +337,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
               yearsPerRow={yearsPerRow}
+              referenceDate={initialMonth}
             />
           )}
 
@@ -348,6 +352,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
+              referenceDate={initialMonth}
             />
           )}
 
@@ -419,7 +424,8 @@ DateCalendar.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
+   * @deprecated Use `referenceDate` instead, which will also be used for the other views.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -528,6 +534,11 @@ DateCalendar.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to decide the month and year to display when `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.

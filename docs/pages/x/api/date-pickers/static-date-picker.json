@@ -18,7 +18,11 @@
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultCalendarMonth": {
+      "type": { "name": "any" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>referenceDate</code> instead, which will also be used for the other views."
+    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },

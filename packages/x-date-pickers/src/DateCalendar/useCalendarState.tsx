@@ -4,8 +4,9 @@ import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../models';
-import { clamp } from '../internals/utils/date-utils';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 
 interface CalendarState<TDate> {
   currentMonth: TDate;
@@ -92,10 +93,11 @@ export const createCalendarStateReducer =
     }
   };
 
-interface CalendarStateInput<TDate>
+interface UseCalendarStateParams<TDate>
   extends Pick<
     DateCalendarDefaultizedProps<TDate>,
     | 'value'
+    | 'referenceDate'
     | 'defaultCalendarMonth'
     | 'disableFuture'
     | 'disablePast'
@@ -108,18 +110,21 @@ interface CalendarStateInput<TDate>
   disableSwitchToMonthOnDayFocus?: boolean;
 }
 
-export const useCalendarState = <TDate extends unknown>({
-  value,
-  defaultCalendarMonth,
-  disableFuture,
-  disablePast,
-  disableSwitchToMonthOnDayFocus = false,
-  maxDate,
-  minDate,
-  onMonthChange,
-  reduceAnimations,
-  shouldDisableDate,
-}: CalendarStateInput<TDate>) => {
+export const useCalendarState = <TDate extends unknown>(params: UseCalendarStateParams<TDate>) => {
+  const {
+    value,
+    referenceDate,
+    defaultCalendarMonth,
+    disableFuture,
+    disablePast,
+    disableSwitchToMonthOnDayFocus = false,
+    maxDate,
+    minDate,
+    onMonthChange,
+    reduceAnimations,
+    shouldDisableDate,
+  } = params;
+
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
 
@@ -131,12 +136,23 @@ export const useCalendarState = <TDate extends unknown>({
     ),
   ).current;
 
+  const initialMonth = React.useMemo(
+    () =>
+      singleItemValueManager.getInitialReferenceValue({
+        value,
+        utils,
+        props: params,
+        referenceDate: referenceDate ?? defaultCalendarMonth,
+        // We are rounding manually after so there is no need to round here.
+        granularity: SECTION_TYPE_GRANULARITY.milliseconds,
+      }),
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
     focusedDay: value || now,
-    currentMonth: utils.startOfMonth(
-      value ?? defaultCalendarMonth ?? clamp(utils, now, minDate, maxDate),
-    ),
+    currentMonth: utils.startOfMonth(initialMonth),
     slideDirection: 'left',
   });
 
@@ -196,6 +212,7 @@ export const useCalendarState = <TDate extends unknown>({
   );
 
   return {
+    initialMonth,
     calendarState,
     changeMonth,
     changeFocusedDay,

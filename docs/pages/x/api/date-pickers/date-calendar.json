@@ -17,7 +17,11 @@
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
-    "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultCalendarMonth": {
+      "type": { "name": "any" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>referenceDate</code> instead, which will also be used for the other views."
+    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -53,6 +57,10 @@
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+    },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`."
     },
     "renderLoading": {
       "type": { "name": "func" },

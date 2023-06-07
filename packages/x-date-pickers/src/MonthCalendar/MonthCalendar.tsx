@@ -14,6 +14,8 @@ import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
 import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -78,6 +80,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     className,
     value: valueProp,
     defaultValue,
+    referenceDate,
     disabled,
     disableFuture,
     disablePast,
@@ -105,6 +108,20 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     default: defaultValue ?? null,
   });
 
+  const referenceMonth = React.useMemo(
+    () =>
+      utils.startOfMonth(
+        singleItemValueManager.getInitialReferenceValue({
+          value,
+          utils,
+          props,
+          referenceDate,
+          granularity: SECTION_TYPE_GRANULARITY.month,
+        }),
+      ),
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 
   const selectedDateOrStartOfMonth = React.useMemo(
@@ -121,8 +138,8 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       return null;
     }
 
-    return utils.getMonth(now);
-  }, [now, value, utils, disableHighlightToday]);
+    return utils.getMonth(referenceMonth);
+  }, [value, utils, disableHighlightToday, referenceMonth]);
   const [focusedMonth, setFocusedMonth] = React.useState(() => selectedMonth || todayMonth);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
@@ -333,6 +350,11 @@ MonthCalendar.propTypes = {
    * If `true` picker is readonly
    */
   readOnly: PropTypes.bool,
+  /**
+   * The date used to decide the month to display when `value` and `defaultValue` are empty.
+   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Disable specific month.
    * @template TDate

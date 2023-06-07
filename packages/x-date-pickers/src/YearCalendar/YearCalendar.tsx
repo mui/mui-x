@@ -15,6 +15,8 @@ import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -82,6 +84,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     className,
     value: valueProp,
     defaultValue,
+    referenceDate,
     disabled,
     disableFuture,
     disablePast,
@@ -108,6 +111,20 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     default: defaultValue ?? null,
   });
 
+  const referenceYear = React.useMemo(
+    () =>
+      utils.startOfYear(
+        singleItemValueManager.getInitialReferenceValue({
+          value,
+          utils,
+          props,
+          referenceDate,
+          granularity: SECTION_TYPE_GRANULARITY.year,
+        }),
+      ),
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
   const selectedDateOrStartOfYear = React.useMemo(
     () => value ?? utils.startOfYear(now),
     [now, utils, value],
@@ -123,8 +140,9 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       return null;
     }
 
-    return utils.getYear(now);
-  }, [now, value, utils, disableHighlightToday]);
+    return utils.getYear(referenceYear);
+  }, [value, utils, disableHighlightToday, referenceYear]);
+
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
   const [internalHasFocus, setInternalHasFocus] = useControlled({
@@ -343,6 +361,11 @@ YearCalendar.propTypes = {
    * If `true` picker is readonly
    */
   readOnly: PropTypes.bool,
+  /**
+   * The date used to decide the year to display when `value` and `defaultValue` are empty.
+   * @default The closest valid year using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Disable specific year.
    * @template TDate
