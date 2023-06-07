@@ -19,7 +19,7 @@ export default function TinyLineChart() {
       width={500}
       height={300}
       series={[{ type: 'line', data: pData }]}
-      xAxis={[{ data: xLabels, scaleType: 'band' }]}
+      xAxis={[{ scaleType: 'point', data: xLabels }]}
       sx={{
         '.MuiLineElement-root': {
           stroke: '#8884d8',

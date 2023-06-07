@@ -27,7 +27,7 @@ export default function TinyAreaChart() {
           color: '#8884d8',
         },
       ]}
-      xAxis={[{ scaleType: 'band', data: xLabels }]}
+      xAxis={[{ scaleType: 'point', data: xLabels }]}
     >
       <AreaPlot />
     </ChartContainer>

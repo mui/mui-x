@@ -22,7 +22,7 @@ export default function BiaxialLineChart() {
         { data: pData, label: 'pv', yAxisKey: 'leftAxisId' },
         { data: uData, label: 'uv', yAxisKey: 'rightAxisId' },
       ]}
-      xAxis={[{ scaleType: 'band', data: xLabels }]}
+      xAxis={[{ scaleType: 'point', data: xLabels }]}
       yAxis={[{ id: 'leftAxisId' }, { id: 'rightAxisId' }]}
       rightAxis="rightAxisId"
     />

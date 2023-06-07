@@ -22,7 +22,7 @@ export default function DashedLineChart() {
         { data: pData, label: 'pv', id: 'pvId', color: '#8884d8' },
         { data: uData, label: 'uv', id: 'uvId', color: '#82ca9d' },
       ]}
-      xAxis={[{ scaleType: 'band', data: xLabels }]}
+      xAxis={[{ scaleType: 'point', data: xLabels }]}
       sx={{
         '.MuiLineElement-root, .MuiMarkElement-root': {
           strokeWidth: 1,

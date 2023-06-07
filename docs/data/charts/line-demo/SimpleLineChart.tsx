@@ -22,7 +22,7 @@ export default function SimpleLineChart() {
         { data: pData, label: 'pv' },
         { data: uData, label: 'uv' },
       ]}
-      xAxis={[{ scaleType: 'band', data: xLabels }]}
+      xAxis={[{ scaleType: 'point', data: xLabels }]}
     />
   );
 }
