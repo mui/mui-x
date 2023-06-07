@@ -35,7 +35,7 @@ function useTicks(options: { scale: D3Scale; ticksNumber?: number }) {
           ? [
               {
                 value: undefined,
-                offset: scale(domain[domain.length - 1]) ?? 0 + scale.bandwidth(),
+                offset: scale.range()[1],
                 labelOffset: 0,
               },
             ]
