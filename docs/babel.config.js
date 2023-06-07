@@ -22,6 +22,8 @@ module.exports = function getBabelConfig(api) {
         },
       ],
       'babel-plugin-optimize-clsx',
+      // for Safari support
+      '@babel/plugin-transform-object-assign',
       'babel-plugin-preval',
       [
         'babel-plugin-module-resolver',
