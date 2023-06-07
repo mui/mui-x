@@ -6,7 +6,7 @@ import { expectInputValue } from 'test/utils/pickers-utils';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<SingleInputDateRangeField /> - Editing', () => {
-  ['Backspace'].forEach((keyToClearValue) => {
+  ['Backspace', 'Delete'].forEach((keyToClearValue) => {
     describeAdapters(
       `key: ${keyToClearValue}`,
       SingleInputDateRangeField,
