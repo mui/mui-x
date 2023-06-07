@@ -49,7 +49,14 @@ export default function PercentAreaChart() {
           color: '#ffc658',
         },
       ]}
-      xAxis={[{ scaleType: 'time', data: time, min: time[0].getTime() }]}
+      xAxis={[
+        {
+          scaleType: 'time',
+          data: time,
+          min: time[0].getTime(),
+          max: time[time.length - 1].getTime(),
+        },
+      ]}
       sx={{
         '.MuiMarkElement-root': {
           display: 'none',
