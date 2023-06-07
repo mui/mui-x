@@ -4,6 +4,7 @@ import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId, GridTreeNodeWithRender } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   getGridCellElement,
   getGridColumnHeaderElement,
@@ -31,7 +32,12 @@ function warnMissingColumn(field: string) {
  * TODO: Impossible priority - useGridEditing also needs to be after useGridParamsApi
  * TODO: Impossible priority - useGridFocus also needs to be after useGridParamsApi
  */
-export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCommunity>) {
+export function useGridParamsApi(
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'getRowId'>,
+) {
+  const { getRowId } = props;
+
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
       field,
@@ -154,6 +160,38 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     [apiRef, getBaseCellParams],
   );
 
+  const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
+    (row, colDef) => {
+      const id = getRowId ? getRowId(row) : row.id;
+      const field = colDef.field;
+
+      if (!colDef || !colDef.valueGetter) {
+        return row[field];
+      }
+
+      return colDef.valueGetter(getBaseCellParams(id, field));
+    },
+    [getBaseCellParams, getRowId],
+  );
+
+  const getRowFormattedValue = React.useCallback<GridParamsApi['getRowFormattedValue']>(
+    (row, colDef) => {
+      const value = getRowValue(row, colDef);
+
+      if (!colDef || !colDef.valueFormatter) {
+        return value;
+      }
+
+      return colDef.valueFormatter({
+        id: getRowId ? getRowId(row) : row.id,
+        field: colDef.field,
+        value,
+        api: apiRef.current,
+      });
+    },
+    [apiRef, getRowId, getRowValue],
+  );
+
   const getColumnHeaderElement = React.useCallback<GridParamsApi['getColumnHeaderElement']>(
     (field) => {
       if (!apiRef.current.rootElementRef!.current) {
@@ -187,6 +225,8 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     getCellValue,
     getCellParams,
     getCellElement,
+    getRowValue,
+    getRowFormattedValue,
     getRowParams,
     getRowElement,
     getColumnHeaderParams,

@@ -4,9 +4,11 @@ import {
   GridTreeNode,
   GridFilterState,
   GridFilterModel,
+  gridRowsLookupSelector,
 } from '@mui/x-data-grid';
 import {
   GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
   GridApiCommunity,
   passFilterLogic,
 } from '@mui/x-data-grid/internals';
@@ -29,9 +31,15 @@ export const TREE_DATA_STRATEGY = 'tree-data';
 export const filterRowTreeFromTreeData = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
-  const { rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
+  const { apiRef, rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
+  const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+
+  const filterResults: GridAggregatedFilterItemApplierResult = {
+    passingFilterItems: null,
+    passingQuickFilterValues: null,
+  };
 
   const filterTreeNode = (
     node: GridTreeNode,
@@ -46,10 +54,11 @@ export const filterRowTreeFromTreeData = (
     } else if (!isRowMatchingFilters || node.type === 'footer') {
       isMatchingFilters = true;
     } else {
-      const { passingFilterItems, passingQuickFilterValues } = isRowMatchingFilters(node.id);
+      const row = dataRowIdToModelLookup[node.id];
+      isRowMatchingFilters(row, undefined, filterResults);
       isMatchingFilters = passFilterLogic(
-        [passingFilterItems],
-        [passingQuickFilterValues],
+        [filterResults.passingFilterItems],
+        [filterResults.passingQuickFilterValues],
         params.filterModel,
         params.apiRef,
       );

@@ -32,6 +32,33 @@ export type ValueOptions = string | number | { value: any; label: string } | Rec
  */
 export type GridKeyValue = string | number | boolean;
 
+export type GridApplyQuickFilterV7<R extends GridValidRowModel = GridValidRowModel, V = any> = (
+  value: V,
+  row: R,
+  column: GridColDef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => boolean;
+
+interface GetApplyQuickFilterFnLegacy<
+  R extends GridValidRowModel = GridValidRowModel,
+  V = any,
+  F = V,
+> {
+  (value: any, colDef: GridStateColDef, apiRef: React.MutableRefObject<GridApiCommunity>):
+    | null
+    | ((params: GridCellParams<R, V, F>) => boolean);
+  v7?: false;
+}
+
+interface GetApplyQuickFilterFnV7<R extends GridValidRowModel = GridValidRowModel, V = any> {
+  (
+    value: any,
+    colDef: GridStateColDef,
+    apiRef: React.MutableRefObject<GridApiCommunity>,
+  ): null | GridApplyQuickFilterV7<R, V>;
+  v7: true;
+}
+
 /**
  * Column Definition base interface.
  */
@@ -214,13 +241,9 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * @param {any} value The value with which we want to filter the column.
    * @param {GridStateColDef} colDef The column from which we want to filter the rows.
    * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
-   * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter value or not.
+   * @returns {null | ((params: GridCellParams) => boolean) | GridApplyQuickFilterV7} The function to call to check if a row pass this filter value or not.
    */
-  getApplyQuickFilterFn?: (
-    value: any,
-    colDef: GridStateColDef,
-    apiRef: React.MutableRefObject<GridApiCommunity>,
-  ) => null | ((params: GridCellParams<R, V, F>) => boolean);
+  getApplyQuickFilterFn?: GetApplyQuickFilterFnLegacy<R, V, F> | GetApplyQuickFilterFnV7<R, V, F>;
   /**
    * If `true`, this column cannot be reordered.
    * @default false
