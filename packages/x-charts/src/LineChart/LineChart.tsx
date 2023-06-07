@@ -32,7 +32,7 @@ function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
-    highlight,
+    highlight = { x: 'line' },
     topAxis,
     leftAxis,
     rightAxis,
@@ -53,7 +53,7 @@ function LineChart(props: LineChartProps) {
         xAxis ?? [
           {
             id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'band',
+            scaleType: 'point',
             data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
               (_, index) => index,
             ),

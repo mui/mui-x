@@ -30,7 +30,7 @@ export default function StackedAreaChart() {
           color: '#ffc658',
         },
       ]}
-      xAxis={[{ scaleType: 'band', data: xLabels }]}
+      xAxis={[{ scaleType: 'point', data: xLabels }]}
       sx={{
         '.MuiLineElement-root, .MuiMarkElement-root': {
           display: 'none',

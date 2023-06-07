@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { scaleBand } from 'd3-scale';
+import { scaleBand, scalePoint } from 'd3-scale';
 import {
   getExtremumX as getBarExtremumX,
   getExtremumY as getBarExtremumY,
@@ -140,6 +140,15 @@ export function CartesianContextProvider({
         };
         return;
       }
+      if (scaleType === 'point') {
+        completedXAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scalePoint(axis.data!, range),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
@@ -174,6 +183,15 @@ export function CartesianContextProvider({
           ...axis,
           scaleType,
           scale: scaleBand(axis.data!, range),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
+      if (scaleType === 'point') {
+        completedYAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scalePoint(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
         return;

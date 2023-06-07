@@ -75,18 +75,21 @@ function XAxis(inProps: XAxisProps) {
         <Line x1={xScale.range()[0]} x2={xScale.range()[1]} className={classes.line} />
       )}
 
-      {xTicks.map(({ value, offset }, index) => (
+      {xTicks.map(({ value, offset, labelOffset }, index) => (
         <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
           {!disableTicks && <Tick y2={positionSigne * tickSize} className={classes.tick} />}
-          <TickLabel
-            y={positionSigne * (tickSize + 3)}
-            sx={{
-              fontSize: tickFontSize,
-            }}
-            className={classes.tickLabel}
-          >
-            {value.toLocaleString()}
-          </TickLabel>
+          {value !== undefined && (
+            <TickLabel
+              x={labelOffset ?? 0}
+              y={positionSigne * (tickSize + 3)}
+              sx={{
+                fontSize: tickFontSize,
+              }}
+              className={classes.tickLabel}
+            >
+              {value.toLocaleString()}
+            </TickLabel>
+          )}
         </g>
       ))}
 
