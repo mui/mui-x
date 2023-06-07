@@ -243,7 +243,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
    * @returns {null | ((params: GridCellParams) => boolean) | GridApplyQuickFilterV7} The function to call to check if a row pass this filter value or not.
    */
-  getApplyQuickFilterFn?: GetApplyQuickFilterFnLegacy<R, V, F> | GetApplyQuickFilterFnV7<R, V, F>;
+  getApplyQuickFilterFn?: GetApplyQuickFilterFnLegacy<R, V, F> | GetApplyQuickFilterFnV7<R, V>;
   /**
    * If `true`, this column cannot be reordered.
    * @default false
