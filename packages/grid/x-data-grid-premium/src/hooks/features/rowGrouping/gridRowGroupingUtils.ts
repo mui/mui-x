@@ -89,16 +89,17 @@ export const filterRowTreeFromGroupingColumns = (
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
+  const filterResults: GridAggregatedFilterItemApplierResult = {
+    passingFilterItems: null,
+    passingQuickFilterValues: null,
+  };
+
   const filterTreeNode = (
     node: GridTreeNode,
     areAncestorsExpanded: boolean,
     ancestorsResults: GridAggregatedFilterItemApplierResult[],
   ): number => {
     let isPassingFiltering = false;
-    const filterResults: GridAggregatedFilterItemApplierResult = {
-      passingFilterItems: null,
-      passingQuickFilterValues: null,
-    };
 
     if (isRowMatchingFilters && node.type !== 'footer') {
       const shouldApplyItem =
