@@ -516,7 +516,7 @@
   { "name": "selectedGridRowsCountSelector", "kind": "Variable" },
   { "name": "selectedGridRowsSelector", "kind": "Variable" },
   { "name": "selectedIdsLookupSelector", "kind": "Variable" },
-  { "name": "shallowCompare", "kind": "Variable" },
+  { "name": "objectShallowCompare", "kind": "Variable" },
   { "name": "skSK", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_DATE_STROKE_TIME", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_STROKE_TIME", "kind": "Variable" },

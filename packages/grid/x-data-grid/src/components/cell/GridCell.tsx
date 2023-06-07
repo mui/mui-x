@@ -27,7 +27,7 @@ import {
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
 import { GridEditCellProps } from '../../models/gridEditRowModel';
-import { useGridSelector, shallowCompare } from '../../hooks/utils/useGridSelector';
+import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -158,7 +158,7 @@ const GridCellWrapper = React.forwardRef<HTMLDivElement, GridCellWrapperProps>((
         throw e;
       }
     },
-    shallowCompare,
+    objectShallowCompare,
   );
 
   const isSelected = useGridSelector(apiRef, () =>
@@ -552,7 +552,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         throw e;
       }
     },
-    shallowCompare,
+    objectShallowCompare,
   );
 
   const isSelected = useGridSelector(apiRef, () =>

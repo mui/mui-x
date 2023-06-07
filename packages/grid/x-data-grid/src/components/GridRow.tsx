@@ -15,7 +15,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector, shallowCompare } from '../hooks/utils/useGridSelector';
+import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
@@ -299,7 +299,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   const sizes = useGridSelector(
     apiRef,
     () => ({ ...apiRef.current.unstable_getRowInternalSizes(rowId) }),
-    shallowCompare,
+    objectShallowCompare,
   );
 
   let minHeight = rowHeight;

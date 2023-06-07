@@ -28,7 +28,7 @@ function applySelector<Api extends GridApiCommon, T>(
 }
 
 const defaultCompare = Object.is;
-export const shallowCompare = fastObjectShallowCompare;
+export const objectShallowCompare = fastObjectShallowCompare;
 
 const createRefs = () => ({ state: null, equals: null, selector: null } as any);
 
