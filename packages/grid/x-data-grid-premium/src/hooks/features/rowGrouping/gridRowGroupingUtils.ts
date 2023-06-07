@@ -9,7 +9,6 @@ import {
   GridRowModel,
   GridColDef,
   GridKeyValue,
-  gridRowsLookupSelector,
 } from '@mui/x-data-grid-pro';
 import {
   passFilterLogic,
@@ -85,7 +84,6 @@ export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
-  const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
@@ -107,7 +105,7 @@ export const filterRowTreeFromGroupingColumns = (
           ? (columnField: string) => shouldApplyFilterItemOnGroup(columnField, node)
           : undefined;
 
-      const row = dataRowIdToModelLookup[node.id];
+      const row = apiRef.current.getRow(node.id);
       isRowMatchingFilters(row, shouldApplyItem, filterResults);
     } else {
       isPassingFiltering = true;

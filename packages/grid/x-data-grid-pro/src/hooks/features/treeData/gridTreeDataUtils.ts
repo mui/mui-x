@@ -4,7 +4,6 @@ import {
   GridTreeNode,
   GridFilterState,
   GridFilterModel,
-  gridRowsLookupSelector,
 } from '@mui/x-data-grid';
 import {
   GridAggregatedFilterItemApplier,
@@ -32,7 +31,6 @@ export const filterRowTreeFromTreeData = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
-  const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
@@ -54,7 +52,7 @@ export const filterRowTreeFromTreeData = (
     } else if (!isRowMatchingFilters || node.type === 'footer') {
       isMatchingFilters = true;
     } else {
-      const row = dataRowIdToModelLookup[node.id];
+      const row = apiRef.current.getRow(node.id);
       isRowMatchingFilters(row, undefined, filterResults);
       isMatchingFilters = passFilterLogic(
         [filterResults.passingFilterItems],
