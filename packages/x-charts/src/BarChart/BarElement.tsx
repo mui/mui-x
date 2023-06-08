@@ -3,10 +3,13 @@ import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import {
+  getIsFaded,
+  getIsHighlighted,
+  useInteractionItemProps,
+} from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
 import { HighlightScope } from '../context/HighlightProvider';
-import { BarItemIdentifier, LineItemIdentifier, ScatterItemIdentifier } from '../models';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -54,57 +57,6 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
   React.ComponentPropsWithoutRef<'path'> & {
     highlightScope?: Partial<HighlightScope>;
   };
-
-const getIsHighlighted = (
-  selectedItem: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier | null,
-  currentItem: BarItemIdentifier,
-  highlightScope?: Partial<HighlightScope>,
-) => {
-  if (
-    !highlightScope?.highlighted ||
-    highlightScope.highlighted === 'none' ||
-    selectedItem === null
-  ) {
-    return false;
-  }
-
-  const isSeriesSelected =
-    selectedItem.type === 'bar' && selectedItem.seriesId === currentItem.seriesId;
-
-  if (!isSeriesSelected) {
-    return false;
-  }
-
-  if (highlightScope.highlighted === 'series') {
-    return isSeriesSelected;
-  }
-
-  return selectedItem.dataIndex === currentItem.dataIndex;
-};
-
-const getIsFaded = (
-  selectedItem: BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier | null,
-  currentItem: BarItemIdentifier,
-  highlightScope?: Partial<HighlightScope>,
-) => {
-  if (!highlightScope?.faded || highlightScope.faded === 'none' || selectedItem === null) {
-    return false;
-  }
-
-  const isSeriesSelected =
-    selectedItem.type === 'bar' && selectedItem.seriesId === currentItem.seriesId;
-
-  if (highlightScope.faded === 'series') {
-    return isSeriesSelected && selectedItem.dataIndex !== currentItem.dataIndex;
-  }
-  if (highlightScope.faded === 'global') {
-    if (!isSeriesSelected) {
-      return true;
-    }
-    return selectedItem.dataIndex !== currentItem.dataIndex;
-  }
-  return false;
-};
 
 export function BarElement(props: BarElementProps) {
   const { id, dataIndex, classes: innerClasses, color, highlightScope, ...other } = props;
