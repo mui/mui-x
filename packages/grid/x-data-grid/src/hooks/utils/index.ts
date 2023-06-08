@@ -4,3 +4,4 @@ export * from './useGridLogger';
 export * from './useGridSelector';
 export * from './useGridNativeEventListener';
 export * from './useFirstRender';
+export * from './useGridAutoHeight';

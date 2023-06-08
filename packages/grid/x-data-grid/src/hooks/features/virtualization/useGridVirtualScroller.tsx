@@ -630,8 +630,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return size;
   }, [rootRef, columnsTotalWidth, rowsMeta.currentPageTotalHeight, needsHorizontalScrollbar]);
 
-  React.useEffect(() => {
-    apiRef.current.publishEvent('virtualScrollerContentSizeChange');
+  useEnhancedEffect(() => {
+    apiRef.current.publishEvent('virtualScrollerContentSizeChange', contentSize);
   }, [apiRef, contentSize]);
 
   if (rootProps.autoHeight && currentPage.rows.length === 0) {

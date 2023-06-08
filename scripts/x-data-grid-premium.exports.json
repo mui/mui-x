@@ -632,6 +632,7 @@
   { "name": "useGridApiMethod", "kind": "Function" },
   { "name": "useGridApiOptionHandler", "kind": "Function" },
   { "name": "useGridApiRef", "kind": "Variable" },
+  { "name": "useGridAutoHeight", "kind": "Variable" },
   { "name": "useGridLogger", "kind": "Function" },
   { "name": "useGridNativeEventListener", "kind": "Variable" },
   { "name": "useGridRootProps", "kind": "Variable" },

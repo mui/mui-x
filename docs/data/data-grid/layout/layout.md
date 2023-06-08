@@ -30,6 +30,34 @@ This is not recommended for large datasets as row virtualization will not be abl
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
 
+### Auto height with max height limit
+
+You can set maximum height when using `autoHeight` to limit the height of the grid.
+To do so, use the `useGridAutoHeight` hook:
+
+```tsx
+const maxHeight = 500;
+function Component() {
+  const apiRef = useGridApiRef();
+  const autoHeight = useGridAutoHeight(apiRef, maxHeight);
+
+  return (
+    <div style={{ height: autoHeight ? 'auto' : maxHeight }}>
+      <DataGrid apiRef={apiRef} autoHeight={autoHeight} />
+    </div>
+  );
+}
+```
+
+:::warning
+Note that `maxHeight` supports numeric values only.
+:::
+
+In the demo below, the `autoHeight` is enabled, but when the grid height exceeds 500 pixels,
+the `autoHeight` is disabled and the grid height is limited to 500 pixels.
+
+{{"demo": "AutoHeightGridMaxHeight.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

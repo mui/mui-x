@@ -517,7 +517,9 @@ export interface GridEventLookup
    * Fired when the content size used by the `GridVirtualScroller` changes.
    * @ignore - do not document.
    */
-  virtualScrollerContentSizeChange: {};
+  virtualScrollerContentSizeChange: {
+    params: { height: number; width: number | string; minHeight: string };
+  };
   /**
    * Fired when the content is scrolled by the mouse wheel.
    * It's attached to the "mousewheel" event.
