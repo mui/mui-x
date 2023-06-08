@@ -239,11 +239,12 @@ export const GridRootStyles = styled('div', {
       color: borderColor,
     },
     '@media (pointer: fine)': {
-      [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
-        {
+      [`& .${gridClasses.columnHeaders}:hover`]: {
+        [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
           visibility: 'visible',
           width: 'auto',
         },
+      },
       [`& .${gridClasses.columnHeader}:hover`]: {
         [`& .${gridClasses.iconButtonContainer}`]: {
           visibility: 'visible',
@@ -256,11 +257,12 @@ export const GridRootStyles = styled('div', {
       },
     },
     '@media (pointer: coarse)': {
-      [`& .${gridClasses.columnHeaders} .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
-        {
+      [`& .${gridClasses.columnHeaders}`]: {
+        [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
           visibility: 'visible',
           width: 'auto',
         },
+      },
       [`& .${gridClasses.columnHeader}`]: {
         [`& .${gridClasses.iconButtonContainer}`]: {
           visibility: 'visible',
