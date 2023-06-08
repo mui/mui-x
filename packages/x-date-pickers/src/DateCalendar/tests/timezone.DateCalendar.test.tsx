@@ -31,7 +31,7 @@ describe('<DateCalendar /> - Timezone', () => {
 
     TIMEZONE_TO_TEST.forEach((timezone) => {
       describe(`Timezone: ${timezone}`, () => {
-        it('should use timezone prop for onChange and rendering when no value is provided', () => {
+        it('should use timezone prop for onChange when no value is provided', () => {
           const onChange = spy();
           render(<DateCalendar onChange={onChange} timezone={timezone} />);
           userEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
@@ -46,18 +46,14 @@ describe('<DateCalendar /> - Timezone', () => {
           expect(actualDate).toEqualDateTime(expectedDate);
         });
 
-        it('should use timezone prop for rendering and value timezone for onChange when a value is provided', () => {
+        it('should use value timezone for onChange when a value is provided', () => {
           const onChange = spy();
-          render(
-            <DateCalendar
-              value={adapter.dateWithTimezone('2022-04-17T15:30', timezone)}
-              onChange={onChange}
-              timezone="America/Chicago"
-            />,
-          );
+          const value = adapter.dateWithTimezone('2022-04-25T15:30', timezone)!;
+
+          render(<DateCalendar value={value} onChange={onChange} timezone="America/Chicago" />);
 
           userEvent.mousePress(screen.getByRole('gridcell', { name: '25' }));
-          const expectedDate = adapter.dateWithTimezone('2022-04-25T15:30', timezone)!;
+          const expectedDate = adapter.setDate(value, 25);
 
           // Check the `onChange` value (uses timezone prop)
           const actualDate = onChange.lastCall.firstArg;

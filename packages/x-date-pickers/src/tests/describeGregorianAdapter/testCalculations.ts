@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { PickersTimezone } from '@mui/x-date-pickers/models';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
+import { getDateOffset } from 'test/utils/pickers-utils';
 
 export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   adapter,
@@ -909,9 +910,9 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
           expect(adapterTZ.startOfDay(day)).toEqualDateTime(adapterTZ.startOfDay(expectedDate));
           expectedDate = adapterTZ.addDays(expectedDate, 1);
 
-          const offset = ((24 - adapterTZ.getHours(adapterTZ.setTimezone(day, 'UTC'))) % 24) * 60;
-
-          expect(offset).to.equal(adapterTZ.isAfter(day, lastNonDSTDay) ? 120 : 60);
+          expect(getDateOffset(adapterTZ, day)).to.equal(
+            adapterTZ.isAfter(day, lastNonDSTDay) ? 120 : 60,
+          );
         });
       });
     });

@@ -72,8 +72,8 @@ export const useValueWithDefaultizedTimezone = <
   });
 
   const handleValueChange = useEventCallback((newValue: TValue, ...otherParams: any[]) => {
-    setValue(newValue);
     const newValueWithInputTimezone = setInputTimezone(newValue);
+    setValue(newValueWithInputTimezone);
     onChange?.(newValueWithInputTimezone, ...otherParams);
   }) as TChange;
 
