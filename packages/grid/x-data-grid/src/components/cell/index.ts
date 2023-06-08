@@ -1,4 +1,4 @@
-export { GridCell } from './GridCell';
+export { GridCell, GridCellProps } from './GridCell';
 export * from './GridBooleanCell';
 export * from './GridEditBooleanCell';
 export * from './GridEditDateCell';
