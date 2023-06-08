@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { PickersTimezone } from '@mui/x-date-pickers/models';
+import { getDateOffset } from 'test/utils/pickers-utils';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
-import { getDateOffset } from 'test/utils/pickers-utils';
 
 export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   adapter,
