@@ -72,6 +72,7 @@ export const useField = <
     sectionsValueBoundaries,
     setTempAndroidValueStr,
   });
+
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -466,7 +467,6 @@ export const useField = <
     valueManager.emptyValue,
   );
   const shouldShowPlaceholder = !inputHasFocus && areAllSectionsEmpty;
-  const isInputHovered = state.isHovered;
 
   React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,
@@ -489,6 +489,9 @@ export const useField = <
   }));
 
   const handleClearValue = useEventCallback((event: React.MouseEvent, ...args) => {
+    if (readOnly) {
+      return;
+    }
     // the click event of the endAdornmnet propagates to the input and triggers the `handleInputClick` handler.
     event.stopPropagation();
     event.preventDefault();
@@ -525,7 +528,8 @@ export const useField = <
     onClear: handleClearValue,
     error: inputError,
     ref: handleRef,
-    clearable: Boolean(clearable && !areAllSectionsEmpty && (inputHasFocus || isInputHovered)),
+    clearable: Boolean(clearable && !areAllSectionsEmpty),
+    focused: inputHasFocus,
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,
   };

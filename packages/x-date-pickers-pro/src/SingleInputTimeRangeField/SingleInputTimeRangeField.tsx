@@ -1,9 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useClearField } from '@mui/x-date-pickers/internals/hooks/useClearField';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { SingleInputTimeRangeFieldProps } from './SingleInputTimeRangeField.types';
+import {
+  SingleInputTimeRangeFieldProps,
+  SingleInputTimeRangeFieldSlotsComponent,
+  SingleInputTimeRangeFieldSlotsComponentsProps,
+} from './SingleInputTimeRangeField.types';
 import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
@@ -42,17 +47,33 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     onPaste,
     inputMode,
     readOnly,
+    clearable,
+    onClear,
     ...fieldProps
   } = useSingleInputTimeRangeField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearField<
+    typeof fieldProps,
+    typeof fieldProps.InputProps,
+    SingleInputTimeRangeFieldSlotsComponent,
+    SingleInputTimeRangeFieldSlotsComponentsProps<TDate>
+  >({
+    onClear,
+    clearable,
+    fieldProps,
+    InputProps: fieldProps.InputProps,
+    slots,
+    slotProps,
+  });
+
   return (
     <TextField
       ref={ref}
-      {...fieldProps}
-      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      {...processedFieldProps}
+      InputProps={{ ...ProcessedInputProps, readOnly }}
       inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
     />
   );

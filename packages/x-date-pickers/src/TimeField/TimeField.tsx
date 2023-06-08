@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { TimeFieldProps } from './TimeField.types';
+import {
+  TimeFieldProps,
+  TimeFieldSlotsComponent,
+  TimeFieldSlotsComponentsProps,
+} from './TimeField.types';
 import { useTimeField } from './useTimeField';
+import { useClearField } from '../internals/hooks/useClearField';
 
 type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -41,17 +46,33 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     onPaste,
     inputMode,
     readOnly,
+    clearable,
+    onClear,
     ...fieldProps
   } = useTimeField<TDate, typeof textFieldProps>({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearField<
+    typeof fieldProps,
+    typeof fieldProps.InputProps,
+    TimeFieldSlotsComponent,
+    TimeFieldSlotsComponentsProps<TDate>
+  >({
+    onClear,
+    clearable,
+    fieldProps,
+    InputProps: fieldProps.InputProps,
+    slots,
+    slotProps,
+  });
+
   return (
     <TextField
       ref={ref}
-      {...fieldProps}
-      InputProps={{ ...fieldProps.InputProps, readOnly }}
+      {...processedFieldProps}
+      InputProps={{ ...ProcessedInputProps, readOnly }}
       inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
     />
   );

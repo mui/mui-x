@@ -9,7 +9,7 @@ import {
   DateFieldSlotsComponentsProps,
 } from './DateField.types';
 import { useDateField } from './useDateField';
-import { useClearEndAdornment } from '../internals/hooks/useClearEndAdornment/useClearEndAdornment';
+import { useClearField } from '../internals/hooks/useClearField';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -24,12 +24,20 @@ const DateField = React.forwardRef(function DateField<TDate>(
     name: 'MuiDateField',
   });
 
-  const { components, componentsProps, slots, slotProps, InputProps, inputProps, ...other } =
-    themeProps;
+  const {
+    components,
+    componentsProps,
+    slots,
+    slotProps,
+    InputProps: DateFieldInputProps,
+    inputProps,
+    ...other
+  } = themeProps;
 
   const ownerState = themeProps;
 
   const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
+
   const { inputRef: externalInputRef, ...textFieldProps }: DateFieldProps<TDate> = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
@@ -39,7 +47,7 @@ const DateField = React.forwardRef(function DateField<TDate>(
 
   // TODO: Remove when mui/material-ui#35088 will be merged
   textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
-  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
+  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...DateFieldInputProps };
 
   const {
     ref: inputRef,
@@ -54,13 +62,15 @@ const DateField = React.forwardRef(function DateField<TDate>(
     inputRef: externalInputRef,
   });
 
-  const ProcessedInputProps = useClearEndAdornment<
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearField<
+    typeof fieldProps,
     typeof fieldProps.InputProps,
     DateFieldSlotsComponent,
     DateFieldSlotsComponentsProps<TDate>
   >({
     onClear,
     clearable,
+    fieldProps,
     InputProps: fieldProps.InputProps,
     slots,
     slotProps,
@@ -69,7 +79,7 @@ const DateField = React.forwardRef(function DateField<TDate>(
   return (
     <TextField
       ref={ref}
-      {...fieldProps}
+      {...processedFieldProps}
       InputProps={{
         ...ProcessedInputProps,
         readOnly,
