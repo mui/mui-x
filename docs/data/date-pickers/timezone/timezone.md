@@ -124,7 +124,7 @@ function App() {
 ### Luxon and timezone
 
 ```tsx
-import { DateTime } from 'luxon';
+import { DateTime, Settings } from 'luxon';
 
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
