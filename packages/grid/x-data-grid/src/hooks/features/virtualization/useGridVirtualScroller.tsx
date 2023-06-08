@@ -536,7 +536,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       prevGetRowProps.current !== getRowProps || prevRootRowStyle.current !== rootRowStyle;
 
     if (invalidatesCachedRowStyle) {
-      rowStyleCache.current = {};
+      rowStyleCache.current = Object.create(null);
     }
 
     const rows: JSX.Element[] = [];
