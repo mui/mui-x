@@ -67,7 +67,7 @@
     "moment-hijri": "^2.1.2",
     "next": "^13.3.1",
     "nprogress": "^0.2.0",
-    "postcss": "^8.4.23",
+    "postcss": "^8.4.24",
     "prismjs": "^1.29.0",
     "prop-types": "^15.8.1",
     "raw-loader": "^1.0.0",
