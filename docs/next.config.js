@@ -6,7 +6,12 @@ const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const { findPages } = require('./src/modules/utils/find');
-const { LANGUAGES, LANGUAGES_SSR } = require('./config');
+const {
+  LANGUAGES,
+  LANGUAGES_SSR,
+  LANGUAGES_IGNORE_PAGES,
+  LANGUAGES_IN_PROGRESS,
+} = require('./config');
 
 const workspaceRoot = path.join(__dirname, '../');
 
@@ -68,6 +73,8 @@ module.exports = withDocsInfra({
                   {
                     loader: require.resolve('@mui/monorepo/packages/markdown/loader'),
                     options: {
+                      ignoreLanguagePages: LANGUAGES_IGNORE_PAGES,
+                      languagesInProgress: LANGUAGES_IN_PROGRESS,
                       env: {
                         SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
                         LIB_VERSION: options.config.env.LIB_VERSION,
