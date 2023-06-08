@@ -1,15 +1,20 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
 import { BarPlot } from './BarPlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Highlight, HighlightProps } from '../Highlight';
+import { ClipPath } from '../ClipPath/ClipPath';
 
-export interface BarChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface BarChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   highlight?: HighlightProps;
@@ -34,8 +39,11 @@ function BarChart(props: BarChartProps) {
     children,
   } = props;
 
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
+
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'bar', ...s }))}
       width={width}
       height={height}
@@ -58,12 +66,15 @@ function BarChart(props: BarChartProps) {
         tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
       }
     >
+      <g clipPath={`url(#${clipPathId})`}>
+        <BarPlot />
+      </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-      <BarPlot />
       <Highlight {...highlight} />
       <Tooltip {...tooltip} />
+      <ClipPath id={clipPathId} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
 }
 
@@ -98,7 +109,7 @@ BarChart.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
-  height: PropTypes.number.isRequired,
+  height: PropTypes.number,
   highlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['line', 'none']),
@@ -209,7 +220,7 @@ BarChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,

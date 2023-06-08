@@ -44,12 +44,12 @@ export interface GridFilterPanelProps
     | 'filterColumns'
   >;
 
-  /*
+  /**
    * If `true`, the `Add filter` button will not be displayed.
    * @default false
    */
   disableAddFilterButton?: boolean;
-  /*
+  /**
    * If `true`, the `Remove all` button will be disabled
    * @default false
    */
@@ -279,7 +279,15 @@ GridFilterPanel.propTypes = {
    * If not specified, the order is derived from the `columns` prop.
    */
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
+  /**
+   * If `true`, the `Add filter` button will not be displayed.
+   * @default false
+   */
   disableAddFilterButton: PropTypes.bool,
+  /**
+   * If `true`, the `Remove all` button will be disabled
+   * @default false
+   */
   disableRemoveAllButton: PropTypes.bool,
   /**
    * Props passed to each filter form.
