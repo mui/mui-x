@@ -14,10 +14,10 @@ materialDesign: https://material.io/components/time-pickers
 :::success
 This component has received several major improvements on the new **v6 beta**:
 
-- [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
-- [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
+- [Fields: the new default input for pickers](https://mui.com/x/react-date-pickers/fields/).
+- [Improved layout customization](https://mui.com/x/react-date-pickers/custom-layout/)
 
-You can also take a look at [the dedicated blog post](https://mui.com/blog/v6-beta-pickers/) and the [new documentation of the TimePicker](https://next.mui.com/x/react-date-pickers/time-picker/) for more information.
+You can also take a look at [the dedicated blog post](https://mui.com/blog/v6-beta-pickers/) and the [new documentation of the TimePicker](https://mui.com/x/react-date-pickers/time-picker/) for more information.
 :::
 
 The selected time is indicated by the filled circle at the end of the clock hand.
