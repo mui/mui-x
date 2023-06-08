@@ -101,10 +101,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   headerFilterOperatorIsAnyOf: 'Je jeden z',
   'headerFilterOperator=': 'Rovná se',
   'headerFilterOperator!=': 'Nerovná se',
-  'headerFilterOperator>': 'Je větší než',
-  'headerFilterOperator>=': 'Je větší než nebo rovno',
-  'headerFilterOperator<': 'Je menší než',
-  'headerFilterOperator<=': 'Je menší než nebo rovno',
+  'headerFilterOperator>': 'Větší než',
+  'headerFilterOperator>=': 'Větší než nebo rovno',
+  'headerFilterOperator<': 'Menší než',
+  'headerFilterOperator<=': 'Menší než nebo rovno',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',
