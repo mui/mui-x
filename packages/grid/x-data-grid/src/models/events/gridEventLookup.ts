@@ -217,6 +217,14 @@ export interface GridHeaderFilterEventLookup {
     params: GridColumnHeaderParams;
     event: React.KeyboardEvent<HTMLElement>;
   };
+  /**
+   * Fired when a column header filter is blurred.
+   * @ignore - do not document.
+   */
+  headerFilterBlur: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
 }
 
 export interface GridColumnGroupHeaderEventLookup {
