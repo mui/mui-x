@@ -1,7 +1,12 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -44,16 +49,16 @@ const scatterChartsParams = {
     },
     {
       data: [
-        { x: 2.1e-1, y: 2.1, id: 0 },
-        { x: 1.3e-1, y: 2.0, id: 1 },
-        { x: 2.0, y: 2.0e-3, id: 2 },
-        { x: 9.5e-1, y: -1.2e-1, id: 3 },
-        { x: 6.9e-1, y: 3.0e-1, id: 4 },
-        { x: 1.3, y: 1.0, id: 5 },
-        { x: 3.0, y: 2.3, id: 6 },
-        { x: 2.6, y: 2.0, id: 7 },
-        { x: 3.0e-1, y: 5.9e-1, id: 8 },
-        { x: 8.6e-1, y: 4.1e-1, id: 9 },
+        { x: 1.8, y: -1.7e-2, id: 0 },
+        { x: 7.1e-1, y: 2.6e-1, id: 1 },
+        { x: -1.2, y: 9.8e-1, id: 2 },
+        { x: 2.0, y: -2.0e-1, id: 3 },
+        { x: 9.4e-1, y: -2.7e-1, id: 4 },
+        { x: -4.8e-1, y: -1.6e-1, id: 5 },
+        { x: -1.5, y: 1.1, id: 6 },
+        { x: 1.3, y: 3.4e-1, id: 7 },
+        { x: -4.2e-1, y: 1.0e-1, id: 8 },
+        { x: 5.4e-2, y: 4.0e-1, id: 9 },
       ],
       label: 'B',
     },
@@ -66,46 +71,82 @@ export type HighlightOptions = 'none' | 'item' | 'series';
 export type FadeOptions = 'none' | 'series' | 'global';
 
 export default function ElementHighlights() {
+  const [chartType, setChartType] = React.useState('bar');
+  const [withArea, setWithArea] = React.useState(false);
   const [highlighted, setHighlighted] = React.useState('none');
   const [faded, setFaded] = React.useState('none');
+
+  const handleChartType = (event: any, newChartType: string) => {
+    if (newChartType !== null) {
+      setChartType(newChartType);
+    }
+  };
+
   return (
     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-      <BarChart
-        {...barChartsParams}
-        series={barChartsParams.series.map((series) => ({
-          ...series,
-          highlightScope: {
-            highlighted: highlighted as HighlightOptions,
-            faded: faded as FadeOptions,
-          },
-        }))}
-      />
-      <LineChart
-        {...lineChartsParams}
-        series={lineChartsParams.series.map((series) => ({
-          ...series,
-          highlightScope: {
-            highlighted: highlighted as HighlightOptions,
-            faded: faded as FadeOptions,
-          },
-        }))}
-      />
-      <ScatterChart
-        {...scatterChartsParams}
-        series={scatterChartsParams.series.map((series) => ({
-          ...series,
-          highlightScope: {
-            highlighted: highlighted as HighlightOptions,
-            faded: faded as FadeOptions,
-          },
-        }))}
-      />
-      <Stack direction={{ xs: 'row', sm: 'column' }} spacing={3}>
+      <Box>
+        <ToggleButtonGroup
+          value={chartType}
+          exclusive
+          onChange={handleChartType}
+          aria-label="chart type"
+          fullWidth
+        >
+          {['bar', 'line', 'scatter'].map((type) => (
+            <ToggleButton key={type} value={type} aria-label="left aligned">
+              {type}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+        {chartType === 'bar' && (
+          <BarChart
+            {...barChartsParams}
+            series={barChartsParams.series.map((series) => ({
+              ...series,
+              highlightScope: {
+                highlighted: highlighted as HighlightOptions,
+                faded: faded as FadeOptions,
+              },
+            }))}
+          />
+        )}
+        {chartType === 'line' && (
+          <LineChart
+            {...lineChartsParams}
+            series={lineChartsParams.series.map((series) => ({
+              ...series,
+              area: withArea,
+              highlightScope: {
+                highlighted: highlighted as HighlightOptions,
+                faded: faded as FadeOptions,
+              },
+            }))}
+          />
+        )}
+        {chartType === 'scatter' && (
+          <ScatterChart
+            {...scatterChartsParams}
+            series={scatterChartsParams.series.map((series) => ({
+              ...series,
+              highlightScope: {
+                highlighted: highlighted as HighlightOptions,
+                faded: faded as FadeOptions,
+              },
+            }))}
+          />
+        )}
+      </Box>
+      <Stack
+        direction={{ xs: 'row', sm: 'column' }}
+        justifyContent="center"
+        spacing={3}
+      >
         <TextField
           select
           label="highlighted"
           value={highlighted}
           onChange={(event) => setHighlighted(event.target.value)}
+          sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
           <MenuItem value={'item'}>item</MenuItem>
@@ -116,11 +157,24 @@ export default function ElementHighlights() {
           label="faded"
           value={faded}
           onChange={(event) => setFaded(event.target.value)}
+          sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
           <MenuItem value={'series'}>series</MenuItem>
           <MenuItem value={'global'}>global</MenuItem>
         </TextField>
+        {chartType === 'line' && (
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked
+                checked={withArea}
+                onChange={(event) => setWithArea(event.target.checked)}
+              />
+            }
+            label="Label"
+          />
+        )}
       </Stack>
     </Stack>
   );
