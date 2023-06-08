@@ -97,6 +97,24 @@ export const GridRootStyles = styled('div', {
   const borderColor = getBorderColor(theme);
   const radius = theme.shape.borderRadius;
 
+  const columnHeadersStyles = {
+    [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
+      visibility: 'visible',
+      width: 'auto',
+    },
+  };
+
+  const columnHeaderStyles = {
+    [`& .${gridClasses.iconButtonContainer}`]: {
+      visibility: 'visible',
+      width: 'auto',
+    },
+    [`& .${gridClasses.menuIcon}`]: {
+      width: 'auto',
+      visibility: 'visible',
+    },
+  };
+
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--unstable_DataGrid-headWeight': theme.typography.fontWeightMedium,
@@ -239,40 +257,12 @@ export const GridRootStyles = styled('div', {
       color: borderColor,
     },
     '@media (pointer: fine)': {
-      [`& .${gridClasses.columnHeaders}:hover`]: {
-        [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
-          visibility: 'visible',
-          width: 'auto',
-        },
-      },
-      [`& .${gridClasses.columnHeader}:hover`]: {
-        [`& .${gridClasses.iconButtonContainer}`]: {
-          visibility: 'visible',
-          width: 'auto',
-        },
-        [`& .${gridClasses.menuIcon}`]: {
-          width: 'auto',
-          visibility: 'visible',
-        },
-      },
+      [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
+      [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
     },
     '@media (pointer: coarse)': {
-      [`& .${gridClasses.columnHeaders}`]: {
-        [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
-          visibility: 'visible',
-          width: 'auto',
-        },
-      },
-      [`& .${gridClasses.columnHeader}`]: {
-        [`& .${gridClasses.iconButtonContainer}`]: {
-          visibility: 'visible',
-          width: 'auto',
-        },
-        [`& .${gridClasses.menuIcon}`]: {
-          width: 'auto',
-          visibility: 'visible',
-        },
-      },
+      [`& .${gridClasses.columnHeaders}`]: columnHeadersStyles,
+      [`& .${gridClasses.columnHeader}`]: columnHeaderStyles,
     },
     [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
       left: -12,
