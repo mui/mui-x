@@ -256,7 +256,7 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
-    '@media (pointer: fine)': {
+    '@media (hover: hover)': {
       [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
       [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
     },
