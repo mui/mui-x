@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
+import { HighlightScope } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -26,6 +27,7 @@ const lineChartsParams = {
     { data: [4, 3, 1, 5, 8], label: 'B', area: false, stack: 'total' },
     { data: [4, 2, 5, 4, 1], label: 'C', area: false, stack: 'total' },
   ],
+  xAxis: [{ data: [1, 2, 3, 4, 5], type: 'linear' }],
   width: 600,
   height: 400,
 };
@@ -67,9 +69,6 @@ const scatterChartsParams = {
   height: 400,
 };
 
-export type HighlightOptions = 'none' | 'item' | 'series';
-export type FadeOptions = 'none' | 'series' | 'global';
-
 export default function ElementHighlights() {
   const [chartType, setChartType] = React.useState('bar');
   const [withArea, setWithArea] = React.useState(false);
@@ -104,9 +103,9 @@ export default function ElementHighlights() {
             series={barChartsParams.series.map((series) => ({
               ...series,
               highlightScope: {
-                highlighted: highlighted as HighlightOptions,
-                faded: faded as FadeOptions,
-              },
+                highlighted,
+                faded,
+              } as HighlightScope,
             }))}
           />
         )}
@@ -117,9 +116,9 @@ export default function ElementHighlights() {
               ...series,
               area: withArea,
               highlightScope: {
-                highlighted: highlighted as HighlightOptions,
-                faded: faded as FadeOptions,
-              },
+                highlighted,
+                faded,
+              } as HighlightScope,
             }))}
           />
         )}
@@ -129,9 +128,9 @@ export default function ElementHighlights() {
             series={scatterChartsParams.series.map((series) => ({
               ...series,
               highlightScope: {
-                highlighted: highlighted as HighlightOptions,
-                faded: faded as FadeOptions,
-              },
+                highlighted,
+                faded,
+              } as HighlightScope,
             }))}
           />
         )}
@@ -172,7 +171,7 @@ export default function ElementHighlights() {
                 onChange={(event) => setWithArea(event.target.checked)}
               />
             }
-            label="Label"
+            label="Fill line area"
           />
         )}
       </Stack>
