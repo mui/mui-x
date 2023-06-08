@@ -260,7 +260,7 @@ export const GridRootStyles = styled('div', {
       [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
       [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
     },
-    '@media (pointer: coarse)': {
+    '@media (hover: none)': {
       [`& .${gridClasses.columnHeaders}`]: columnHeadersStyles,
       [`& .${gridClasses.columnHeader}`]: columnHeaderStyles,
     },
