@@ -35,6 +35,15 @@ export default function AxisWithComposition() {
       ]}
       width={600}
       height={500}
+      margin={{ left: 70, right: 70 }}
+      sx={{
+        [`.MuiAxis-left .MuiAxis-label`]: {
+          transform: 'rotate(-90deg) translate(0px, -20px)',
+        },
+        [`.MuiAxis-right .MuiAxis-label`]: {
+          transform: 'rotate(90deg) translate(0px, -20px)',
+        },
+      }}
     >
       <BarPlot />
       <LinePlot />

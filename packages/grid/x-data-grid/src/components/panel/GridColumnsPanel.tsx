@@ -66,19 +66,19 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    */
   sort?: 'asc' | 'desc';
   searchPredicate?: (column: GridColDef, searchValue: string) => boolean;
-  /*
+  /**
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
    * This helps to avoid input keyboard panel to popup automatically on touch devices.
    * @default true
    */
   autoFocusSearchField?: boolean;
-  /*
+  /**
    * If `true`, the `Hide all` button will not be displayed.
    * @default false
    */
   disableHideAllButton?: boolean;
-  /*
+  /**
    * If `true`, the `Show all` button will be disabled
    * @default false
    */
@@ -292,8 +292,22 @@ GridColumnsPanel.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the column search field will be focused automatically.
+   * If `false`, the first column switch input will be focused automatically.
+   * This helps to avoid input keyboard panel to popup automatically on touch devices.
+   * @default true
+   */
   autoFocusSearchField: PropTypes.bool,
+  /**
+   * If `true`, the `Hide all` button will not be displayed.
+   * @default false
+   */
   disableHideAllButton: PropTypes.bool,
+  /**
+   * If `true`, the `Show all` button will be disabled
+   * @default false
+   */
   disableShowAllButton: PropTypes.bool,
   /**
    * Returns the list of togglable columns.
