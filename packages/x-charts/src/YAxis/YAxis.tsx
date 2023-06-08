@@ -6,7 +6,13 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { YAxisProps } from '../models/axis';
-import { Line, Tick, TickLabel, Label } from '../internals/components/AxisSharedComponents';
+import {
+  Line,
+  Tick,
+  TickLabel,
+  Label,
+  AxisRoot,
+} from '../internals/components/AxisSharedComponents';
 import { getAxisUtilityClass } from '../Axis/axisClasses';
 
 const useUtilityClasses = (ownerState: YAxisProps & { theme: Theme }) => {
@@ -28,7 +34,7 @@ const defaultProps = {
   hidden: false,
   disableLine: false,
   disableTicks: false,
-  tickFontSize: 10,
+  tickFontSize: 12,
   labelFontSize: 14,
   tickSize: 6,
 } as const;
@@ -64,12 +70,17 @@ function YAxis(inProps: YAxisProps) {
 
   const positionSigne = position === 'right' ? 1 : -1;
 
+  const labelRefPoint = {
+    x: positionSigne * (tickFontSize + tickSize + 10),
+    y: top + height / 2,
+  };
+
   if (hidden) {
     return null;
   }
 
   return (
-    <g
+    <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
     >
@@ -81,7 +92,7 @@ function YAxis(inProps: YAxisProps) {
         <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
           {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
           <TickLabel
-            transform={`translate(${positionSigne * (tickFontSize + tickSize + 2)}, 0)`}
+            x={`${positionSigne * (tickSize + 2)}`}
             sx={{
               fontSize: tickFontSize,
             }}
@@ -94,18 +105,18 @@ function YAxis(inProps: YAxisProps) {
 
       {label && (
         <Label
-          transform={`translate(${positionSigne * (tickFontSize + tickSize + 20)}, ${
-            top + height / 2
-          }) rotate(${positionSigne * 90})`}
+          {...labelRefPoint}
           sx={{
             fontSize: labelFontSize,
+            transform: `rotate(${positionSigne * 90}deg)`,
+            transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
           }}
           className={classes.label}
         >
           {label}
         </Label>
       )}
-    </g>
+    </AxisRoot>
   );
 }
 
