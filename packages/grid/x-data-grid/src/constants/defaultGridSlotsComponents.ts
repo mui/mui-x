@@ -1,6 +1,5 @@
 import { GridSlotsComponent } from '../models';
 import {
-  GridCellV7,
   GridSkeletonCell,
   GridColumnsPanel,
   GridFilterPanel,
@@ -13,6 +12,7 @@ import {
   GridRow,
   GridColumnHeaderFilterIconButton,
 } from '../components';
+import { GridCellV7 } from '../components/cell/GridCell'
 import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
