@@ -102,7 +102,7 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 By default, the data grid uses native browser inputs for editing `date` and `dateTime` columns.
 
-While [MUI X Date / Time Pickers](/x/react-date-pickers/getting-started/) are not supported by the data grid out of the box yet, it is easy to integrate them by creating [custom edit components](/x/react-data-grid/editing/#create-your-own-edit-component) and [custom filter operators](/x/react-data-grid/filtering/#create-a-custom-operator).
+While [MUI X Date / Time Pickers](/x/react-date-pickers/getting-started/) are not supported by the data grid out of the box yet, it is easy to integrate them by creating [custom edit components](/x/react-data-grid/editing/#create-your-own-edit-component) and [custom filter operators](/x/react-data-grid/filtering/customization/#create-a-custom-operator).
 
 The example below uses `@mui/x-date-pickers` for both `date` and `dateTime` column types:
 

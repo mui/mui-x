@@ -243,10 +243,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
     if (value && day) {
       // If there is a date already selected, then we want to keep its time
-      return setValueAndGoToNextView(mergeDateAndTime(utils, day, value), 'finish');
+      return handleValueChange(mergeDateAndTime(utils, day, value), 'finish');
     }
 
-    return setValueAndGoToNextView(day, 'finish');
+    return handleValueChange(day, 'finish');
   });
 
   React.useEffect(() => {

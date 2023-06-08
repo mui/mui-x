@@ -2,9 +2,7 @@ import * as React from 'react';
 import { DateCalendar, DateCalendarProps } from '../DateCalendar';
 import { DateView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-
-const isDatePickerView = (view: unknown): view is DateView =>
-  view === 'year' || view === 'month' || view === 'day';
+import { isDatePickerView } from '../internals/utils/date-utils';
 
 export interface DateViewRendererProps<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends Omit<
@@ -56,12 +54,12 @@ export const renderDateViewCalendar = <TDate extends unknown>({
   autoFocus,
   fixedWeekNumber,
   displayWeekNumber,
-}: DateViewRendererProps<TDate, any>) => (
+}: DateViewRendererProps<TDate, DateView>) => (
   <DateCalendar
-    view={view as DateView}
+    view={view}
     onViewChange={onViewChange}
     views={views.filter(isDatePickerView)}
-    focusedView={focusedView as DateView | null}
+    focusedView={focusedView && isDatePickerView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
     value={value}
     defaultValue={defaultValue}

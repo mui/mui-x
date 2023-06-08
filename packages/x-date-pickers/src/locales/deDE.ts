@@ -51,7 +51,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
 
   // Digital clock labels
-  selectViewText: (view) => `Auswählen ${timeViews[view]}`,
+  selectViewText: (view) => `${timeViews[view]} auswählen`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Kalenderwoche',
@@ -78,7 +78,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'TT',
   // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  fieldHoursPlaceholder: () => 'ss',
+  fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',

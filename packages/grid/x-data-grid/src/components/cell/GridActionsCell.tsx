@@ -199,9 +199,9 @@ function GridActionsCell(props: GridActionsCellProps) {
           ref={buttonRef}
           id={buttonId}
           aria-label={apiRef.current.getLocaleText('actionsCellMore')}
-          aria-controls={menuId}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? menuId : undefined}
           role="menuitem"
           size="small"
           onClick={showMenu}

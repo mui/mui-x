@@ -366,6 +366,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
+  /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
    * @ignore - do not document.
