@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { defaultMemoize } from 'reselect';
 import {
   GridCellParams,
   GridFilterItem,
@@ -295,36 +296,36 @@ export const buildAggregatedFilterApplier = (
   });
 };
 
+const filterModelItems = defaultMemoize(
+  (apiRef: React.MutableRefObject<GridApiCommunity>, items: GridFilterItem[]) =>
+    items.filter((item) => getFilterCallbackFromItem(item, apiRef) !== null),
+);
+
+const isValidFilterItemResult = (
+  result: null | GridFilterItemResult,
+): result is GridFilterItemResult => result != null;
+const isValidQuickFilterResult = (
+  result: null | GridQuickFilterValueResult,
+): result is GridQuickFilterValueResult => result != null;
+
 export const passFilterLogic = (
   allFilterItemResults: (null | GridFilterItemResult)[],
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): boolean => {
-  const cleanedFilterItems = filterModel.items.filter(
-    (item) => getFilterCallbackFromItem(item, apiRef) !== null,
-  );
-
-  const cleanedAllFilterItemResults = allFilterItemResults.filter(
-    (result): result is GridFilterItemResult => result != null,
-  );
-
-  const cleanedAllQuickFilterResults = allQuickFilterResults.filter(
-    (result): result is GridQuickFilterValueResult => result != null,
-  );
-
-  // Defaultize operators
-  const quickFilterLogicOperator =
-    filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
-  const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
+  const cleanedFilterItems = filterModelItems(apiRef, filterModel.items);
+  const cleanedFilterItemResults = allFilterItemResults.filter(isValidFilterItemResult);
+  const cleanedQuickFilterResults = allQuickFilterResults.filter(isValidQuickFilterResult);
 
   // get result for filter items model
-  if (cleanedAllFilterItemResults.length > 0) {
+  if (cleanedFilterItemResults.length > 0) {
     // Return true if the item pass with one of the rows
     const filterItemPredicate = (item: GridFilterItem) => {
-      return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
+      return cleanedFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
     };
 
+    const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
     if (logicOperator === GridLogicOperator.And) {
       const passesAllFilters = cleanedFilterItems.every(filterItemPredicate);
       if (!passesAllFilters) {
@@ -339,14 +340,16 @@ export const passFilterLogic = (
   }
 
   // get result for quick filter model
-  if (cleanedAllQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
+  if (cleanedQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
     // Return true if the item pass with one of the rows
     const quickFilterValuePredicate = (value: string) => {
-      return cleanedAllQuickFilterResults.some(
+      return cleanedQuickFilterResults.some(
         (quickFilterValueResult) => quickFilterValueResult[value],
       );
     };
 
+    const quickFilterLogicOperator =
+      filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
     if (quickFilterLogicOperator === GridLogicOperator.And) {
       const passesAllQuickFilterValues =
         filterModel.quickFilterValues.every(quickFilterValuePredicate);
