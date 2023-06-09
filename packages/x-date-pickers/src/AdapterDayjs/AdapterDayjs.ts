@@ -69,30 +69,34 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
-  normalDateWithWeekday: 'ddd, MMM D',
-  normalDate: 'D MMMM',
-  shortDate: 'MMM D',
-  monthAndDate: 'MMMM D',
-  dayOfMonth: 'D',
   year: 'YYYY',
   month: 'MMMM',
   monthShort: 'MMM',
-  monthAndYear: 'MMMM YYYY',
+  dayOfMonth: 'D',
   weekday: 'dddd',
   weekdayShort: 'ddd',
-  minutes: 'mm',
-  hours12h: 'hh',
   hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'A',
+  minutes: 'mm',
   seconds: 'ss',
+
+  fullDate: 'll',
+  fullDateWithWeekday: 'dddd, LL',
+  keyboardDate: 'L',
+  shortDate: 'MMM D',
+  normalDate: 'D MMMM',
+  normalDateWithWeekday: 'ddd, MMM D',
+  monthAndYear: 'MMMM YYYY',
+  monthAndDate: 'MMMM D',
+
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
-  fullDate: 'll',
-  fullDateWithWeekday: 'dddd, LL',
+
   fullDateTime: 'lll',
   fullDateTime12h: 'll hh:mm A',
   fullDateTime24h: 'll HH:mm',
-  keyboardDate: 'L',
   keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
@@ -165,6 +169,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
     defaultDayjs.extend(weekOfYear);
   }
+
+  private setLocaleToValue = (value: Dayjs) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale()) {
+      return value;
+    }
+
+    return value.locale(expectedLocale);
+  };
 
   private hasUTCPlugin = () => typeof defaultDayjs.utc !== 'undefined';
 
@@ -603,8 +616,9 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
-    const start = value.startOf('month').startOf('week');
-    const end = value.endOf('month').endOf('week');
+    const cleanLocale = this.setLocaleToValue(value);
+    const start = cleanLocale.startOf('month').startOf('week');
+    const end = cleanLocale.endOf('month').endOf('week');
 
     let count = 0;
     let current = start;

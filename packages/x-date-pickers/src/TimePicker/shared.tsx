@@ -86,7 +86,7 @@ type UseTimePickerDefaultizedProps<
 > = LocalizedComponent<
   TDate,
   Omit<
-    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>,
+    DefaultizedProps<Props, 'views' | 'openTo' | 'ampm' | keyof BaseTimeValidationProps>,
     'components' | 'componentsProps'
   >
 >;

@@ -23,12 +23,6 @@ export interface GridFilterState {
    */
   filteredRowsLookup: Record<GridRowId, boolean>;
   /**
-   * Visibility status for each row.
-   * A row is visible if it is passing the filters AND if its parents are expanded.
-   * If a row is not registered in this lookup, it is visible.
-   */
-  visibleRowsLookup: Record<GridRowId, boolean>;
-  /**
    * Amount of descendants that are passing the filters.
    * For the Tree Data, it includes all the intermediate depth levels (= amount of children + amount of grand children + ...).
    * For the Row grouping by column, it does not include the intermediate depth levels (= amount of descendant of maximum depth).
@@ -59,3 +53,10 @@ export interface GridFilteringMethodParams {
 }
 
 export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;
+
+/**
+ * Visibility status for each row.
+ * A row is visible if it is passing the filters AND if its parents are expanded.
+ * If a row is not registered in this lookup, it is visible.
+ */
+export type GridVisibleRowsLookupState = Record<GridRowId, boolean>;

@@ -5,12 +5,15 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import { PickerViewRendererLookup, useLocaleText, validateDateTime } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateOrTimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
+import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -21,6 +24,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
@@ -44,6 +48,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: resolveDateTimeFormat(utils, defaultizedProps),
     ampmInClock,
     slots: {
       field: DateTimeField,
