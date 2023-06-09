@@ -126,7 +126,6 @@ export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/ex
 export {
   createSelector,
   createSelectorMemoized,
-  createSelectorUnmemoized,
   unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
 export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
