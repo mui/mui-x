@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.7.0
+
+_Jun 9, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Improve the default `format` prop value on the pickers.
+
+  Here are a few examples:
+
+  ```tsx
+  <TimePicker views={['hours', 'minutes', 'seconds']} ampm />
+  // Format before v6.7.0: `hh:mm aa`
+  // Format after v6.7.0: `hh:mm:ss aa`
+ 
+  <DatePicker views={['year']} />
+  // Format before v6.7.0: `MM/DD/YYYY`
+  // Format after v6.7.0: `YYYY`
+  
+  <DateTimePicker views={['day', 'hours', 'minutes']} ampm />
+  // Format before v6.7.0: `MM/DD/YYYY hh:mm aa`
+  // Format after v6.7.0: `DD hh:mm aa`
+  ```
+
+- 🌍 Add Romanian (ro-RO) locale on the pickers
+- 🌍 Improve German (de-DE) locale on the pickers
+- 🌍 Improve Czech (cs-CZ), German (de-DE) and Turkish (tr-TR) locales on the data grid
+- 🚀 Performance improvements
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.7.0` / `@mui/x-data-grid-pro@v6.7.0` / `@mui/x-data-grid-premium@v6.7.0`
+
+#### Changes
+
+- [DataGrid] Allow overflowing grid root element (#9179) @cherniavskii
+- [DataGrid] Fix module augmentation error when using `@mui/lab` (#9235) @cherniavskii
+- [DataGrid] Fix row with ids matching `Object` prototype (#9265) @romgrk
+- [DataGrid] Fix `sortModel` and `filterModel` resetting when columns change (#9239) @alexgonch
+- [DataGrid] Improve grouping performance for large datasets (#9200) @romgrk
+- [DataGrid] Increase threshold to trigger memory leak warning (#9263) @m4theushw
+- [DataGrid] Update data grid migration guide to include updated type (#9272) @MBilalShafi
+- [DataGridPro] Improve header filter menu visuals (#9181) @MBilalShafi
+- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
+- [l10n] Improve Czech (cs-CZ) locale (#9266) @MartinSkarpa
+- [l10n] Improve German (de-DE) locale (#9259) @ximex
+- [l10n] Improve Turkish (tr-TR) locale (#9237) @MCErtan
+
+### `@mui/x-date-pickers@v6.7.0` / `@mui/x-date-pickers-pro@v6.7.0`
+
+#### Changes
+
+- [l10n] Add Romanian (ro-RO) locale (#9257) @ximex
+- [l10n] Improve German (de-DE) locale (#9258) @ximex
+- [pickers] Apply dynamic default format depending on views for all desktop and mobile pickers (#9126) @flaviendelangle
+- [pickers] Update `DateRangePickerDay` props JSDoc (#9191) @stevus
+
+### Docs
+
+- [docs] Fix missing props on the `GridFilterPanel` API page (#9180) @cherniavskii
+- [docs] Fix overview page typo (#9230) @LukasTy
+- [docs] Fix version redirect (#9273) @alexfauquette
+
+### Core
+
+- [core] Temporarily remove the Argos upload on the regression testing (#9267) @flaviendelangle
+- [charts] Add clip-path to avoid charts overflow (#9012) @alexfauquette
+- [charts] Add style customization on bar (#8935) @alexfauquette
+- [charts] Enforce axis `min`/`max` over the `nice()` method (#9189) @alexfauquette
+- [charts] Improve axis label and ticks label alignements (#9190) @alexfauquette
+- [charts] Simplify the switch between responsive and fix dimensions (#9151) @alexfauquette
+
 ## 6.6.0
 
 _Jun 1, 2023_
