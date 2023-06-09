@@ -179,7 +179,11 @@ export const useGridCellEditing = (
         }
 
         if (reason) {
-          const newParams: GridCellEditStartParams = { ...params, reason, key: event.key };
+          const newParams: GridCellEditStartParams = {
+            ...params,
+            reason,
+            key: params.colDef.type === 'number' ? Number(event.key) : event.key,
+          };
           apiRef.current.publishEvent('cellEditStart', newParams, event);
         }
       }
