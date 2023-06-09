@@ -48,7 +48,71 @@ const missingInstanceIdWarning = buildWarning([
   'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g `mySelector(state, apiRef.current.instanceId)`.',
 ]);
 
-export const createSelector: CreateSelectorFunction = (...args: any) => {
+export const createSelectorUnmemoized = ((
+  a: Function,
+  b?: Function,
+  c?: Function,
+  d?: Function,
+  e?: Function,
+  f?: Function,
+  ...rest: any[]
+) => {
+  if (rest.length > 0) throw new Error('Unsupported number of selectors');
+
+  let selector: any;
+
+  if (a && b && c && d && e && f) {
+    selector = (stateOrApiRef: any) => {
+      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state)
+      const vb = b(state)
+      const vc = c(state)
+      const vd = d(state)
+      const ve = e(state)
+      return f(va, vb, vc, vd, ve)
+    };
+  } else if (a && b && c && d && e) {
+    selector = (stateOrApiRef: any) => {
+      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state)
+      const vb = b(state)
+      const vc = c(state)
+      const vd = d(state)
+      return e(va, vb, vc, vd)
+    };
+  } else if (a && b && c && d) {
+    selector = (stateOrApiRef: any) => {
+      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state)
+      const vb = b(state)
+      const vc = c(state)
+      return d(va, vb, vc)
+    };
+  } else if (a && b && c) {
+    selector = (stateOrApiRef: any) => {
+      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state)
+      const vb = b(state)
+      return c(va, vb)
+    };
+  } else if (a && b) {
+    selector = (stateOrApiRef: any) => {
+      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state);
+      return b(va);
+    };
+  } else {
+    throw new Error('Missing arguments');
+  }
+
+  // We use this property to detect if the selector was created with createSelector
+  // or it's only a simple function the receives the state and returns part of it.
+  selector.acceptsApiRef = true;
+
+  return selector;
+}) as unknown as CreateSelectorFunction;
+
+export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
     const isApiRef = !!stateOrApiRef.current;
@@ -85,6 +149,8 @@ export const createSelector: CreateSelectorFunction = (...args: any) => {
 
   return selector;
 };
+
+export const createSelector = createSelectorMemoized;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_resetCreateSelectorCache = () => {
