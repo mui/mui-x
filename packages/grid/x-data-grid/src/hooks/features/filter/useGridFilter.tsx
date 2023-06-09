@@ -396,7 +396,7 @@ export const useGridFilter = (
         };
       }
 
-      const rows = props.rows;
+      const rows = apiRef.current.caches.rows.rows;
       const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup: Record<GridRowId, boolean> = {};
       const { isRowMatchingFilters } = params;
