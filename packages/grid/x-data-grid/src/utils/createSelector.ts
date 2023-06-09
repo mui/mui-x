@@ -48,6 +48,10 @@ const missingInstanceIdWarning = buildWarning([
   'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g `mySelector(state, apiRef.current.instanceId)`.',
 ]);
 
+function isAPIRef(value: any) {
+  return ('current' in value) && ('instanceId' in value.current)
+}
+
 export const createSelectorUnmemoized = ((
   a: Function,
   b?: Function,
@@ -62,43 +66,53 @@ export const createSelectorUnmemoized = ((
   let selector: any;
 
   if (a && b && c && d && e && f) {
-    selector = (stateOrApiRef: any) => {
-      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state)
-      const vb = b(state)
-      const vc = c(state)
-      const vd = d(state)
-      const ve = e(state)
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPI = isAPIRef(stateOrApiRef);
+      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId)
+      const vb = b(state, instanceId)
+      const vc = c(state, instanceId)
+      const vd = d(state, instanceId)
+      const ve = e(state, instanceId)
       return f(va, vb, vc, vd, ve)
     };
   } else if (a && b && c && d && e) {
-    selector = (stateOrApiRef: any) => {
-      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state)
-      const vb = b(state)
-      const vc = c(state)
-      const vd = d(state)
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPI = isAPIRef(stateOrApiRef);
+      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId)
+      const vb = b(state, instanceId)
+      const vc = c(state, instanceId)
+      const vd = d(state, instanceId)
       return e(va, vb, vc, vd)
     };
   } else if (a && b && c && d) {
-    selector = (stateOrApiRef: any) => {
-      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state)
-      const vb = b(state)
-      const vc = c(state)
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPI = isAPIRef(stateOrApiRef);
+      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId)
+      const vb = b(state, instanceId)
+      const vc = c(state, instanceId)
       return d(va, vb, vc)
     };
   } else if (a && b && c) {
-    selector = (stateOrApiRef: any) => {
-      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state)
-      const vb = b(state)
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPI = isAPIRef(stateOrApiRef);
+      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId)
+      const vb = b(state, instanceId)
       return c(va, vb)
     };
   } else if (a && b) {
-    selector = (stateOrApiRef: any) => {
-      const state = stateOrApiRef.current ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state);
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPI = isAPIRef(stateOrApiRef);
+      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId);
       return b(va);
     };
   } else {
@@ -115,9 +129,9 @@ export const createSelectorUnmemoized = ((
 export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
-    const isApiRef = !!stateOrApiRef.current;
-    const cacheKey = isApiRef ? stateOrApiRef.current.instanceId : instanceId ?? { id: 'default' };
-    const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
+    const isAPI = isAPIRef(stateOrApiRef);
+    const cacheKey = isAPI ? stateOrApiRef.current.instanceId : instanceId ?? { id: 'default' };
+    const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
       if (cacheKey.id === 'default') {
