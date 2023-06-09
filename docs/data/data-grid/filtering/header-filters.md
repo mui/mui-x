@@ -37,7 +37,7 @@ You can use the `renderHeaderFilter` method of the `GridColDef` to customize the
 const columns: GridColDef[] = [
   {
     field: 'isAdmin',
-    renderHeaderFilter: (params: GridColumnHeaderParams<R, V, F>) => (
+    renderHeaderFilter: (params: GridHeaderFilterCellProps) => (
       <MyCustomHeaderFilter {...params} />
     ),
   },
