@@ -6,6 +6,8 @@
   { "name": "AreaElementProps", "kind": "TypeAlias" },
   { "name": "AreaPlot", "kind": "Function" },
   { "name": "Axis", "kind": "Function" },
+  { "name": "axisClasses", "kind": "Variable" },
+  { "name": "AxisClasses", "kind": "Interface" },
   { "name": "AxisHighlight", "kind": "Function" },
   { "name": "AxisHighlightProps", "kind": "TypeAlias" },
   { "name": "AxisProps", "kind": "Interface" },
