@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { scaleBand } from 'd3-scale';
 import {
   getExtremumX as getBarExtremumX,
@@ -64,11 +65,7 @@ export const CartesianContext = React.createContext<{
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
-export function CartesianContextProvider({
-  xAxis,
-  yAxis,
-  children,
-}: CartesianContextProviderProps) {
+function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextProviderProps) {
   const formattedSeries = React.useContext(SeriesContext);
   const drawingArea = React.useContext(DrawingContext);
 
@@ -212,3 +209,61 @@ export function CartesianContextProvider({
   // @ts-ignore
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
+
+CartesianContextProvider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  xAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.string,
+      classes: PropTypes.object,
+      data: PropTypes.array,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      id: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      max: PropTypes.number,
+      maxTicks: PropTypes.number,
+      min: PropTypes.number,
+      minTicks: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
+      valueFormatter: PropTypes.func,
+    }),
+  ),
+  yAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.string,
+      classes: PropTypes.object,
+      data: PropTypes.array,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      id: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      max: PropTypes.number,
+      maxTicks: PropTypes.number,
+      min: PropTypes.number,
+      minTicks: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
+      valueFormatter: PropTypes.func,
+    }),
+  ),
+} as any;
+
+export { CartesianContextProvider };

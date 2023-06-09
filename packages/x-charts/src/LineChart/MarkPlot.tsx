@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { MarkElement } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 
 export function MarkPlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
-
-  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -63,7 +60,7 @@ export function MarkPlot() {
                 color={series[seriesId].color}
                 x={xScale(x)}
                 y={yScale(y)}
-                {...getInteractionItemProps({ type: 'line', seriesId, dataIndex: index })}
+                highlightScope={series[seriesId].highlightScope}
               />
             ));
         });

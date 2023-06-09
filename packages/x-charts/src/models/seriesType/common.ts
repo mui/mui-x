@@ -1,7 +1,9 @@
+import type { HighlightScope } from '@mui/x-charts/context/HighlightProvider';
 import type { StackOffset, StackOrder } from '../../internals/stackSeries';
 
 export type CommonSeriesType = {
   id?: string;
+  highlightScope?: Partial<HighlightScope>;
 };
 
 export type DefaultizedCommonSeriesType<TValue> = {
@@ -13,6 +15,7 @@ export type DefaultizedCommonSeriesType<TValue> = {
    * @returns {string} The string to dispaly.
    */
   valueFormatter: (value: TValue) => string;
+  highlightScope?: Partial<HighlightScope>;
 };
 
 export type CartesianSeriesType = {
