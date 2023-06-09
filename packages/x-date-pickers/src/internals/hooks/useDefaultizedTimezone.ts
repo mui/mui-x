@@ -80,6 +80,14 @@ export const useValueWithDefaultizedTimezone = <
   return { value, handleValueChange, timezone };
 };
 
+/**
+ *
+ * @param timezoneProp
+ * @param valueProp
+ * @param defaultValue
+ * @param onChange
+ * @param valueManager
+ */
 export const useExternalValueWithDefaultizedTimezone = <
   TDate,
   TValue,

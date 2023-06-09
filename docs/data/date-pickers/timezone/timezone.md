@@ -26,7 +26,7 @@ You can use the `timezone` prop to explicitly define the timezone in which the v
 
 {{"demo": "BasicTimezoneProp.js"}}
 
-This will be needed you have no `value` or `defaultValue` to pass to your component and to deduct your timezone from or you don't want to render the value in its original timezone.
+This will be needed if the component has no `value` or `defaultValue` to deduct the timezone from it or if you don't want to render the value in its original timezone.
 
 ## Supported timezones
 
@@ -69,7 +69,7 @@ function App() {
 
 ### Day.js and timezones
 
-To be able to use timezones, you have to enable both the `utc` and the `timezone` plugin:
+To use the pickers with timezones, enable both the `utc` and `timezone` plugins:
 
 ```tsx
 import dayjs from 'dayjs';
@@ -103,17 +103,46 @@ You can check out the documentation of the [dayjs timezone plugin](https://day.j
 
 ### Luxon and UTC
 
+:::info
+**How to create an UTC date with Luxon?**
+
+If your whole application is using UTC dates, set the `defaultZone` to `"UTC"`:
+
 ```tsx
-import { DateTime } from 'luxon';
+import { Settings } from 'luxon';
+
+Settings.defaultZone = 'UTC';
+
+const date1 = DateTime.fromISO('2022-04-17T15:30');
+const date2 = DateTime.fromSQL('2022-04-17 15:30:00');
+```
+
+If you only want to use UTC dates on some parts of your application, create a UTC date using `DateTime.utc` or with the `zone` parameter of Luxon methods:
+
+```tsx
+const date1 = DateTime.utc(2022, 4, 17, 15, 30);
+const date2 = DateTime.fromISO('2022-04-17T15:30', { zone: 'UTC' });
+const date3 = DateTime.fromSQL('2022-04-17 15:30:00', { zone: 'UTC' });
+```
+
+You can check out the documentation of the [UTC and timezone on Luxon](https://moment.github.io/luxon/#/zones) for more details.
+:::
+
+You can then pass your UTC date to your picker:
+
+```tsx
+import { DateTime, Settings } from 'luxon';
 
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
+Settings.defaultZone = 'UTC';
+
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
-      <DateTimePicker defaultValue={DateTime.utc(2022, 4, 17, 15, 30)} />
+      <DateTimePicker defaultValue={DateTime.fromISO('2022-04-17T15:30')} />
     </LocalizationProvider>
   );
 }
@@ -122,6 +151,32 @@ function App() {
 {{"demo": "LuxonUTC.js", "defaultCodeOpen": false}}
 
 ### Luxon and timezone
+
+:::info
+**How to create a date in a specific timezone with Luxon?**
+
+If your whole application is using dates from the same timezone, set the `defaultZone` to your timezone name:
+
+```tsx
+import { Settings } from 'luxon';
+
+Settings.defaultZone = 'America/New_York';
+
+const date1 = DateTime.fromISO('2022-04-17T15:30');
+const date2 = DateTime.fromSQL('2022-04-17 15:30:00');
+```
+
+If you only want to use dates with this timezone on some parts of your application, create a date in this timezone using the `zone` parameter of Luxon methods:
+
+```tsx
+const date1 = DateTime.fromISO('2022-04-17T15:30', { zone: 'America/New_York' });
+const date2 = DateTime.fromSQL('2022-04-17 15:30:00', { zone: 'America/New_York' });
+```
+
+You can check out the documentation of the [UTC and timezone on Luxon](https://moment.github.io/luxon/#/zones) for more details.
+:::
+
+You can then pass your date in the wanted timezone to your picker:
 
 ```tsx
 import { DateTime, Settings } from 'luxon';
@@ -144,7 +199,7 @@ function App() {
 {{"demo": "LuxonTimezone.js", "defaultCodeOpen": false}}
 
 :::info
-You can check out the documentation of the [timezone on Luxon](https://moment.github.io/luxon/#/zones) for more details on how to manipulate the timezones.
+You can check out the documentation of the [UTC and timezone on Luxon](https://moment.github.io/luxon/#/zones) for more details on how to manipulate the timezones.
 :::
 
 ## Usage with Moment
@@ -171,7 +226,7 @@ function App() {
 
 ### Moment and timezone
 
-To be able to use timezones, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`:
+To use the pickers with timezones, pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`
 
 ```tsx
 import moment from 'moment-timezone';
