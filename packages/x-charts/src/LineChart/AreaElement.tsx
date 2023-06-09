@@ -118,6 +118,10 @@ AreaElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
 } as any;
 
 export { AreaElement };

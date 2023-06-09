@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { getValueToPositionMapper, isBandScale } from '../hooks/useScale';
@@ -8,7 +9,7 @@ export type AxisHighlightProps = {
   y?: 'none' | 'line';
 };
 
-export function AxisHighlight(props: AxisHighlightProps) {
+function AxisHighlight(props: AxisHighlightProps) {
   const { x: xAxisHighlight, y: yAxisHighlight } = props;
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
 
@@ -52,6 +53,7 @@ export function AxisHighlight(props: AxisHighlightProps) {
           style={{ pointerEvents: 'none' }}
         />
       )}
+
       {yAxisHighlight === 'line' && axis.y !== null && (
         <path
           d={`M ${xScale(xScale.domain()[0])} ${yScale(axis.y.value)} L ${xScale(
@@ -65,3 +67,14 @@ export function AxisHighlight(props: AxisHighlightProps) {
     </React.Fragment>
   );
 }
+
+AxisHighlight.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  x: PropTypes.oneOf(['band', 'line', 'none']),
+  y: PropTypes.oneOf(['line', 'none']),
+} as any;
+
+export { AxisHighlight };

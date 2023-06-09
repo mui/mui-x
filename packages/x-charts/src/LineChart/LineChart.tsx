@@ -86,6 +86,10 @@ LineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  axisHighlight: PropTypes.shape({
+    x: PropTypes.oneOf(['band', 'line', 'none']),
+    y: PropTypes.oneOf(['line', 'none']),
+  }),
   /**
    * Indicate which axis to display the the bottom of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
@@ -113,10 +117,6 @@ LineChart.propTypes = {
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
-  highlight: PropTypes.shape({
-    x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
-  }),
   /**
    * Indicate which axis to display the the left of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
