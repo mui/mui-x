@@ -2,12 +2,11 @@ import * as React from 'react';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { isBandScale } from '../hooks/useScale';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { BarElement } from './BarElement';
 
 export function BarPlot() {
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
-  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -49,15 +48,15 @@ export function BarPlot() {
             const baseline = Math.min(...values);
             const value = Math.max(...values);
             return (
-              <rect
+              <BarElement
                 key={`${seriesId}-${dataIndex}`}
+                id={seriesId}
+                dataIndex={dataIndex}
                 x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * barWidth + offset}
                 y={yScale(value)}
                 height={yScale(baseline) - yScale(value)}
                 width={barWidth}
-                fill={color}
-                shapeRendering="crispEdges"
-                {...getInteractionItemProps({ type: 'bar', seriesId, dataIndex })}
+                color={color}
               />
             );
           });

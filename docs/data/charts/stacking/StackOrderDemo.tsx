@@ -112,10 +112,9 @@ export default function StackOrderDemo() {
         sx={{
           '.MuiAxis-bottom': {
             '.MuiAxis-tickLabel': {
-              transform: 'translate(0, 23px) rotate(45deg)',
-            },
-            '.MuiAxis-label': {
-              transform: 'translate(400px, 50px)',
+              transform: 'rotate(45deg)',
+              alignmentBaseline: 'hanging',
+              textAnchor: 'start',
             },
           },
         }}

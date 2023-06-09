@@ -34,11 +34,11 @@ export interface DateRangePickerDayProps<TDate>
    */
   isPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the start of a previewing date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isEndOfPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the end of a previewing date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isStartOfPreviewing: boolean;
   /**
@@ -431,7 +431,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isEndOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the start of a previewing date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isEndOfPreviewing: PropTypes.bool.isRequired,
   /**
@@ -457,7 +457,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isStartOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the end of a previewing date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
   /**

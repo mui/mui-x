@@ -55,30 +55,34 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
-  normalDateWithWeekday: 'ddd, MMM D',
-  normalDate: 'D MMMM',
-  shortDate: 'MMM D',
-  monthAndDate: 'MMMM D',
-  dayOfMonth: 'D',
   year: 'YYYY',
   month: 'MMMM',
   monthShort: 'MMM',
-  monthAndYear: 'MMMM YYYY',
+  dayOfMonth: 'D',
   weekday: 'dddd',
   weekdayShort: 'ddd',
-  minutes: 'mm',
-  hours12h: 'hh',
   hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'A',
+  minutes: 'mm',
   seconds: 'ss',
+
+  fullDate: 'll',
+  fullDateWithWeekday: 'dddd, LL',
+  keyboardDate: 'L',
+  shortDate: 'MMM D',
+  normalDate: 'D MMMM',
+  normalDateWithWeekday: 'ddd, MMM D',
+  monthAndYear: 'MMMM YYYY',
+  monthAndDate: 'MMMM D',
+
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
-  fullDate: 'll',
-  fullDateWithWeekday: 'dddd, LL',
+
   fullDateTime: 'lll',
   fullDateTime12h: 'll hh:mm A',
   fullDateTime24h: 'll HH:mm',
-  keyboardDate: 'L',
   keyboardDateTime: 'L LT',
   keyboardDateTime12h: 'L hh:mm A',
   keyboardDateTime24h: 'L HH:mm',
@@ -137,6 +141,15 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
+
+  private setLocaleToValue = (value: Moment) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale()) {
+      return value;
+    }
+
+    return value.locale(expectedLocale);
+  };
 
   private hasTimezonePlugin = () => typeof this.moment.tz !== 'undefined';
 
@@ -549,8 +562,9 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const start = value.clone().startOf('month').startOf('week');
-    const end = value.clone().endOf('month').endOf('week');
+    const cleanLocale = this.setLocaleToValue(value);
+    const start = cleanLocale.clone().startOf('month').startOf('week');
+    const end = cleanLocale.clone().endOf('month').endOf('week');
 
     let count = 0;
     let current = start;

@@ -7,12 +7,14 @@ import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers/dateViewRenderers';
 import { renderDesktopDateTimeView } from '../dateTimeViewRenderers';
-import { useLocaleText, validateDateTime } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
-import { Calendar } from '../internals/components/icons';
+import { CalendarIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDateTimePickerComponent = (<TDate>(
@@ -24,6 +26,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
@@ -66,6 +69,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: resolveDateTimeFormat(utils, defaultizedProps),
     views: (defaultizedProps.ampm
       ? [...defaultizedProps.views, 'meridiem']
       : defaultizedProps.views) as DateOrTimeViewWithMeridiem[],
@@ -74,7 +78,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     timeSteps,
     slots: {
       field: DateTimeField,
-      openPickerIcon: Calendar,
+      openPickerIcon: CalendarIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {

@@ -140,7 +140,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   });
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
-  const rowStyleCache = React.useRef<Record<GridRowId, any>>({});
+  const rowStyleCache = React.useRef<Record<GridRowId, any>>(Object.create(null));
   const prevGetRowProps = React.useRef<UseGridVirtualScrollerProps['getRowProps']>();
   const prevRootRowStyle = React.useRef<GridRowProps['style']>();
 
@@ -536,7 +536,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       prevGetRowProps.current !== getRowProps || prevRootRowStyle.current !== rootRowStyle;
 
     if (invalidatesCachedRowStyle) {
-      rowStyleCache.current = {};
+      rowStyleCache.current = Object.create(null);
     }
 
     const rows: JSX.Element[] = [];

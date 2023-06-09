@@ -10,7 +10,6 @@ export const SUBMIT_FILTER_STROKE_TIME = 500;
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'text' | 'number' | 'date' | 'datetime-local';
-    headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -28,7 +27,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     focusElementRef,
     tabIndex,
     disabled,
-    headerFilterMenu,
     isFilterActive,
     clearButton,
     InputProps,
@@ -85,7 +83,6 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
               ),
             }
           : {}),
-        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
         disabled,
         ...InputProps,
         inputProps: {
@@ -117,7 +114,6 @@ GridFilterInputValue.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)
