@@ -29,7 +29,7 @@ By default, those highlights are lines, but it can also be a vertical band if yo
 On the chart, to customize this behavior, you can use:
 
 ```jsx
-highlight={{
+axisHighlight={{
   x: 'line', // Or 'none', or 'band'
   y: 'line', // Or 'none'
 }}
