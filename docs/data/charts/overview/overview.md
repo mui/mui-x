@@ -9,17 +9,18 @@ title: Charts - Overview
 
 > ⚠️ This library is in alpha phase. Which means we allow ourself to do some breaking changes if needed to improve the library.
 
-:::info
-💡 If you do not see the charts you want in the menu, we may have forget it.
-Please open an issue to ask for it, explaining which need it solves.
-:::
-
 ## Overview
 
 The `@mui-x/chars` is an MIT library to render charts.
 It relies on D3 for data manipulation and SVG for rendering.
 
-It provides both single components with configuration props, and atomic components for composition.
+Like other MUI components, charts are built to be production-ready components with nice integration into your application for common use cases.
+And provide a high level of customization.
+
+To achieve this goal, the `@mui-x/chars` relies on three levels of customization:
+_single components_ with nice default, extensive _configuration props_, and sub components for _composition_.
+
+To modify the styling of charts you can rely on all the MUI styling tools, such as the theme override, or the `sx` props.
 
 ## Getting started
 
@@ -40,8 +41,7 @@ With a single component or by composing sub components.
 
 For common use cases, the single component is the recommended way.
 
-Those components' name ends with "Chart".
-They only require `series` prop, describing the data to render.
+Those components' name ends with "Chart" and only require the `series` prop, describing the data to render.
 
 They also have plenty of other props to customize the chart behavior.
 
