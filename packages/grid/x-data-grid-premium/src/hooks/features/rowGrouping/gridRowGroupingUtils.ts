@@ -87,16 +87,16 @@ export const filterRowTreeFromGroupingColumns = (
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
 
-  const filterResults: GridAggregatedFilterItemApplierResult = {
-    passingFilterItems: null,
-    passingQuickFilterValues: null,
-  };
-
   const filterTreeNode = (
     node: GridTreeNode,
     areAncestorsExpanded: boolean,
     ancestorsResults: GridAggregatedFilterItemApplierResult[],
   ): number => {
+    const filterResults: GridAggregatedFilterItemApplierResult = {
+      passingFilterItems: null,
+      passingQuickFilterValues: null,
+    };
+
     let isPassingFiltering = false;
 
     if (isRowMatchingFilters && node.type !== 'footer') {
@@ -117,9 +117,8 @@ export const filterRowTreeFromGroupingColumns = (
         const childNode = rowTree[childId];
         const childSubTreeSize = filterTreeNode(
           childNode,
-
           areAncestorsExpanded && !!node.childrenExpanded,
-          [...ancestorsResults, { ...filterResults }],
+          [...ancestorsResults, filterResults],
         );
         filteredDescendantCount += childSubTreeSize;
       });
@@ -130,7 +129,7 @@ export const filterRowTreeFromGroupingColumns = (
         // If node has children - it's passing if at least one child passes filters
         isPassingFiltering = filteredDescendantCount > 0;
       } else {
-        const allResults = [...ancestorsResults, { ...filterResults }];
+        const allResults = [...ancestorsResults, filterResults];
         isPassingFiltering = passFilterLogic(
           allResults.map((result) => result.passingFilterItems),
           allResults.map((result) => result.passingQuickFilterValues),
