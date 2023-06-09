@@ -1,5 +1,5 @@
 import {
-  createSelectorUnmemoized as createSelector,
+  createSelector,
   createSelectorMemoized,
 } from '../../../utils/createSelector';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';

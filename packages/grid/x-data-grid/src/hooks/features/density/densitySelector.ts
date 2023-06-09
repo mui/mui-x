@@ -1,4 +1,4 @@
-import { createSelectorUnmemoized as createSelector } from '../../../utils/createSelector';
+import { createSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 export const gridDensitySelector = (state: GridStateCommunity) => state.density;

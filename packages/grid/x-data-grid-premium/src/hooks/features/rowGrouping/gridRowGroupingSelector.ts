@@ -1,6 +1,6 @@
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
-  createSelectorUnmemoized as createSelector,
+  createSelector,
   createSelectorMemoized,
 } from '@mui/x-data-grid/utils/createSelector';
 import { GridStatePremium } from '../../../models/gridStatePremium';

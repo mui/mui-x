@@ -52,7 +52,7 @@ function isAPIRef(value: any) {
   return ('current' in value) && ('instanceId' in value.current)
 }
 
-export const createSelectorUnmemoized = ((
+export const createSelector = ((
   a: Function,
   b?: Function,
   c?: Function,
@@ -163,8 +163,6 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
 
   return selector;
 };
-
-export const createSelector = createSelectorMemoized;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const unstable_resetCreateSelectorCache = () => {
