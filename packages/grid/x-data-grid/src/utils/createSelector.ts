@@ -52,6 +52,8 @@ function isAPIRef(value: any) {
   return 'current' in value && 'instanceId' in value.current;
 }
 
+const DEFAULT_INSTANCE_ID = { id: 'default' };
+
 export const createSelector = ((
   a: Function,
   b?: Function,
@@ -71,7 +73,7 @@ export const createSelector = ((
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
       const instanceId =
-        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
       const va = a(state, instanceId);
       const vb = b(state, instanceId);
@@ -84,7 +86,7 @@ export const createSelector = ((
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
       const instanceId =
-        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
       const va = a(state, instanceId);
       const vb = b(state, instanceId);
@@ -96,7 +98,7 @@ export const createSelector = ((
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
       const instanceId =
-        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
       const va = a(state, instanceId);
       const vb = b(state, instanceId);
@@ -107,7 +109,7 @@ export const createSelector = ((
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
       const instanceId =
-        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
       const va = a(state, instanceId);
       const vb = b(state, instanceId);
@@ -117,7 +119,7 @@ export const createSelector = ((
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
       const instanceId =
-        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
       const va = a(state, instanceId);
       return b(va);
@@ -137,7 +139,7 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
     const isAPI = isAPIRef(stateOrApiRef);
-    const cacheKey = isAPI ? stateOrApiRef.current.instanceId : instanceId ?? { id: 'default' };
+    const cacheKey = isAPI ? stateOrApiRef.current.instanceId : instanceId ?? DEFAULT_INSTANCE_ID;
     const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
