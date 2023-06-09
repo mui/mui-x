@@ -1,5 +1,10 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, StackableSeriesType } from './common';
+import {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  StackableSeriesType,
+} from './common';
 
 export type CurveType =
   | 'catmullRom'
