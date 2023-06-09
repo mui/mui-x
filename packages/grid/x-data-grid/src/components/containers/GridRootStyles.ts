@@ -188,10 +188,6 @@ export const GridRootStyles = styled('div', {
           duration: theme.transitions.duration.shorter,
         }),
       },
-    [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
-      {
-        opacity: 0.5,
-      },
     [`& .${gridClasses.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -263,6 +259,10 @@ export const GridRootStyles = styled('div', {
     '@media (hover: hover)': {
       [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
       [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
+      [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
+        {
+          opacity: 0.5,
+        },
     },
     '@media (hover: none)': {
       [`& .${gridClasses.columnHeaders}`]: columnHeadersStyles,
