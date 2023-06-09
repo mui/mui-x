@@ -23,7 +23,7 @@ export default function BandHighlight() {
   return (
     <Box>
       <Stack direction={{ xs: 'column', md: 'row' }}>
-        <BarChart {...barChartsParams} highlight={{ x: 'band' }} />
+        <BarChart {...barChartsParams} bandHighlight={{ x: 'band' }} />
       </Stack>
     </Box>
   );

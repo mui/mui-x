@@ -7,6 +7,12 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { getSymbol } from '../internals/utils';
 import { InteractionContext } from '../context/InteractionProvider';
+import { HighlightScope } from '../context/HighlightProvider';
+import {
+  getIsFaded,
+  getIsHighlighted,
+  useInteractionItemProps,
+} from '../hooks/useInteractionItemProps';
 
 export interface MarkElementClasses {
   /** Styles applied to the root element. */
@@ -19,7 +25,7 @@ export interface MarkElementClasses {
 export interface MarkElementOwnerState {
   id: string;
   color: string;
-  isNotHighlighted: boolean;
+  isFaded: boolean;
   isHighlighted: boolean;
   x: number;
   y: number;
@@ -37,9 +43,9 @@ export const markElementClasses: MarkElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: MarkElementOwnerState) => {
-  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getMarkElementUtilityClass, classes);
@@ -70,8 +76,8 @@ MarkElementPath.propTypes = {
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
-    isNotHighlighted: PropTypes.bool.isRequired,
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
   }).isRequired,
@@ -82,7 +88,7 @@ MarkElementPath.propTypes = {
   ]),
 } as any;
 
-export type MarkElementProps = Omit<MarkElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
+export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     /**
      * The shape of the marker.
@@ -92,18 +98,37 @@ export type MarkElementProps = Omit<MarkElementOwnerState, 'isNotHighlighted' | 
      * The index to the element in the series' data array.
      */
     dataIndex: number;
+    highlightScope?: Partial<HighlightScope>;
   };
 
 function MarkElement(props: MarkElementProps) {
-  const { x, y, id, classes: innerClasses, color, shape, dataIndex, ...other } = props;
-  const { axis } = React.useContext(InteractionContext);
-  const isHighlighted = axis.x?.index === dataIndex;
-  const someSeriesIsHighlighted = axis.x !== null;
+  const {
+    x,
+    y,
+    id,
+    classes: innerClasses,
+    color,
+    shape,
+    dataIndex,
+    highlightScope,
+    ...other
+  } = props;
+
+  const getInteractionItemProps = useInteractionItemProps(highlightScope);
+
+  const { item, axis } = React.useContext(InteractionContext);
+
+  const isHighlighted =
+    axis.x?.index === dataIndex ||
+    getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
+  const isFaded =
+    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
+
   const ownerState = {
     id,
     classes: innerClasses,
     isHighlighted,
-    isNotHighlighted: someSeriesIsHighlighted && !isHighlighted,
+    isFaded,
     color,
     x,
     y,
@@ -116,6 +141,7 @@ function MarkElement(props: MarkElementProps) {
       ownerState={ownerState}
       className={classes.root}
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
+      {...getInteractionItemProps({ type: 'line', seriesId: id, dataIndex })}
     />
   );
 }
@@ -130,6 +156,10 @@ MarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
   /**
    * The shape of the marker.
    */
