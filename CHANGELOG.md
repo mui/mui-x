@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jun 9, 2023_
 
-We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Improve the default `format` prop value on the pickers.
 
@@ -41,6 +41,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGrid] Allow overflowing grid root element (#9179) @cherniavskii
 - [DataGrid] Fix module augmentation error when using `@mui/lab` (#9235) @cherniavskii
 - [DataGrid] Fix row with ids matching `Object` prototype (#9265) @romgrk
+- [DataGrid] Fix `sortModel` and `filterModel` resetting when columns change (#9239) @alexgonch
 - [DataGrid] Improve grouping performance for large datasets (#9200) @romgrk
 - [DataGrid] Increase threshold to trigger memory leak warning (#9263) @m4theushw
 - [DataGrid] Update data grid migration guide to include updated type (#9272) @MBilalShafi
