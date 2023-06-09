@@ -144,6 +144,7 @@ ScatterChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(
     PropTypes.shape({
+      color: PropTypes.string,
       data: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -159,6 +160,7 @@ ScatterChart.propTypes = {
       label: PropTypes.string,
       markerSize: PropTypes.number,
       type: PropTypes.oneOf(['scatter']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),

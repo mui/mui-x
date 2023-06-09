@@ -164,6 +164,7 @@ BarChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(
     PropTypes.shape({
+      color: PropTypes.string,
       data: PropTypes.arrayOf(PropTypes.number).isRequired,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
@@ -182,6 +183,7 @@ BarChart.propTypes = {
         'reverse',
       ]),
       type: PropTypes.oneOf(['bar']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),
