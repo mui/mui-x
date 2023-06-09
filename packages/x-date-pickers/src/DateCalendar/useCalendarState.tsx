@@ -113,7 +113,7 @@ interface UseCalendarStateParams<TDate>
 export const useCalendarState = <TDate extends unknown>(params: UseCalendarStateParams<TDate>) => {
   const {
     value,
-    referenceDate,
+    referenceDate: referenceDateProp,
     defaultCalendarMonth,
     disableFuture,
     disablePast,
@@ -136,23 +136,31 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
     ),
   ).current;
 
-  const initialMonth = React.useMemo(
-    () =>
-      singleItemValueManager.getInitialReferenceValue({
+  const referenceDate = React.useMemo(
+    () => {
+      let externalReferenceDate: TDate | null = null;
+      if (referenceDateProp) {
+        externalReferenceDate = referenceDateProp;
+      } else if (defaultCalendarMonth) {
+        // For `defaultCalendarMonth`, we just want to keep the month and the year to avoid a behavior change.
+        externalReferenceDate = utils.startOfMonth(defaultCalendarMonth);
+      }
+
+      return singleItemValueManager.getInitialReferenceValue({
         value,
         utils,
         props: params,
-        referenceDate: referenceDate ?? defaultCalendarMonth,
-        // We are rounding manually after so there is no need to round here.
-        granularity: SECTION_TYPE_GRANULARITY.milliseconds,
-      }),
+        referenceDate: externalReferenceDate,
+        granularity: SECTION_TYPE_GRANULARITY.day,
+      });
+    },
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
     focusedDay: value || now,
-    currentMonth: utils.startOfMonth(initialMonth),
+    currentMonth: utils.startOfMonth(referenceDate),
     slideDirection: 'left',
   });
 
@@ -212,7 +220,7 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
   );
 
   return {
-    initialMonth,
+    referenceDate,
     calendarState,
     changeMonth,
     changeFocusedDay,

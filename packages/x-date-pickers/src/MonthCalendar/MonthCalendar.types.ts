@@ -40,7 +40,7 @@ export interface MonthCalendarProps<TDate>
    */
   defaultValue?: TDate | null;
   /**
-   * The date used to decide the month to display when `value` and `defaultValue` are empty.
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid month using the validation props, except callbacks such as `shouldDisableDate`.
    */
   referenceDate?: TDate;

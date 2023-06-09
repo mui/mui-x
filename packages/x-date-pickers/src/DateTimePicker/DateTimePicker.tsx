@@ -81,7 +81,6 @@ DateTimePicker.propTypes = {
   dayOfWeekFormatter: PropTypes.func,
   /**
    * Default calendar month displayed when `value` and `defaultValue` are empty.
-   * @deprecated Use `referenceDate` instead, which will also be used for the other views.
    */
   defaultCalendarMonth: PropTypes.any,
   /**

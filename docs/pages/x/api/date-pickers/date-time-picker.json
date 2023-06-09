@@ -24,11 +24,7 @@
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
-    "defaultCalendarMonth": {
-      "type": { "name": "any" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>referenceDate</code> instead, which will also be used for the other views."
-    },
+    "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultValue": { "type": { "name": "any" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
