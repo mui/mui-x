@@ -15,6 +15,24 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
+const columnHeadersStyles = {
+  [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
+    visibility: 'visible',
+    width: 'auto',
+  },
+};
+
+const columnHeaderStyles = {
+  [`& .${gridClasses.iconButtonContainer}`]: {
+    visibility: 'visible',
+    width: 'auto',
+  },
+  [`& .${gridClasses.menuIcon}`]: {
+    width: 'auto',
+    visibility: 'visible',
+  },
+};
+
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
@@ -97,24 +115,6 @@ export const GridRootStyles = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme }) => {
   const borderColor = getBorderColor(theme);
   const radius = theme.shape.borderRadius;
-
-  const columnHeadersStyles = {
-    [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
-      visibility: 'visible',
-      width: 'auto',
-    },
-  };
-
-  const columnHeaderStyles = {
-    [`& .${gridClasses.iconButtonContainer}`]: {
-      visibility: 'visible',
-      width: 'auto',
-    },
-    [`& .${gridClasses.menuIcon}`]: {
-      width: 'auto',
-      visibility: 'visible',
-    },
-  };
 
   const gridStyle: CSSInterpolation = {
     '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
