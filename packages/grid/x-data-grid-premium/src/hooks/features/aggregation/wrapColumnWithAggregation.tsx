@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
+import { GridCellParams, GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
 import { GridBaseColDef, v7 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -153,7 +153,7 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
           if (!filterFn) {
             return null;
           }
-          return (params: any) => {
+          return (params: GridCellParams) => {
             if (getCellAggregationResult(params.id, params.field) != null) {
               return true;
             }
