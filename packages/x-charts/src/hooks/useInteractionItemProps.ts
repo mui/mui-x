@@ -3,7 +3,7 @@ import { InteractionContext } from '../context/InteractionProvider';
 import { HighlighContext, HighlightScope } from '../context/HighlightProvider';
 import { SeriesItemIdentifier } from '../models';
 
-export const useInteractionItemProps = (scope) => {
+export const useInteractionItemProps = (scope?: Partial<HighlightScope>) => {
   const { dispatch: dispatchInteraction } = React.useContext(InteractionContext);
   const { dispatch: dispatchHighlight } = React.useContext(HighlighContext);
 
