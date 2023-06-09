@@ -39,7 +39,7 @@ export type GridApplyQuickFilterV7<R extends GridValidRowModel = GridValidRowMod
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ) => boolean;
 
-interface GetApplyQuickFilterFnLegacy<
+export interface GetApplyQuickFilterFnLegacy<
   R extends GridValidRowModel = GridValidRowModel,
   V = any,
   F = V,
@@ -50,7 +50,7 @@ interface GetApplyQuickFilterFnLegacy<
   v7?: false;
 }
 
-interface GetApplyQuickFilterFnV7<R extends GridValidRowModel = GridValidRowModel, V = any> {
+export interface GetApplyQuickFilterFnV7<R extends GridValidRowModel = GridValidRowModel, V = any> {
   (
     value: any,
     colDef: GridStateColDef,
