@@ -84,6 +84,7 @@ export interface PickersCalendarHeaderProps<TDate>
   onViewChange?: (view: DateView) => void;
   labelId?: string;
   classes?: Partial<PickersCalendarHeaderClasses>;
+  displayWeekNumber?: boolean;
 }
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
@@ -106,15 +107,12 @@ const PickersCalendarHeaderRoot = styled('div', {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
-}>({
+}>(({ ownerState }) => ({
   display: 'flex',
   alignItems: 'center',
-  margin: CALENDAR_MARGIN,
-  marginBottom: CALENDAR_MARGIN / 2,
-  // prevent jumping in safari
-  maxHeight: 34,
-  minHeight: 34,
-});
+  margin: `8px ${CALENDAR_MARGIN}px`,
+  marginLeft: ownerState.displayWeekNumber ? 0 : undefined,
+}));
 
 const PickersCalendarHeaderArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiPickersCalendarHeader',

@@ -15,7 +15,8 @@ import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
-import { CALENDAR_MARGIN, DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
+import { CALENDAR_MARGIN, DIALOG_WIDTH } from '../internals';
+import { DAY_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -60,8 +61,8 @@ const YearCalendarRoot = styled('div', {
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  width: ownerState.width ?? DIALOG_WIDTH + WEEK_NUMBER_SIZE,
-  maxHeight: 304,
+  width: ownerState.width ?? DIALOG_WIDTH,
+  maxHeight: DAY_CALENDAR_HEIGHT,
   padding: `0 ${CALENDAR_MARGIN}px`,
 }));
 

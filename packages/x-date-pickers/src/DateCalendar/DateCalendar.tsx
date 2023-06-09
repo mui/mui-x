@@ -28,7 +28,7 @@ import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimati
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
-import { DAY_MARGIN, DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
+import { DAY_MARGIN, DIALOG_WIDTH } from '../internals';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -70,10 +70,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DateCalendarProps<any> & { disableDayMargin?: boolean } }>(({ ownerState }) => ({
-  width:
-    DIALOG_WIDTH +
-    (ownerState.displayWeekNumber ? WEEK_NUMBER_SIZE : 0) -
-    (ownerState.disableDayMargin ? 7 * 2 * DAY_MARGIN : 0),
+  width: DIALOG_WIDTH + (ownerState.disableDayMargin ? 7 * 2 * DAY_MARGIN : 0),
 }));
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
@@ -322,6 +319,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         labelId={gridLabelId}
         slots={slots}
         slotProps={slotProps}
+        displayWeekNumber={displayWeekNumber}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}

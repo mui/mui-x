@@ -12,10 +12,11 @@ import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../Pickers
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import {
-  DAY_SIZE,
-  DAY_MARGIN,
   CALENDAR_MARGIN,
-  WEEK_NUMBER_SIZE,
+  DAY_MARGIN,
+  DAY_SIZE,
+  WEEK_ELEMENT_SIZE,
+  WEEK_NUMBER_WIDTH,
   WEEKS_CONTAINER_HEIGHT,
 } from '../internals/constants/dimensions';
 import {
@@ -115,7 +116,7 @@ const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
   const slots = {
     root: ['root'],
     header: ['header'],
-    weekDayLabel: ['weekDayLabel'],
+    weekDayLabel: ['weekDayLabel', ownerState.displayWeekNumber && 'withWeekNumber'],
     loadingContainer: ['loadingContainer'],
     slideTransition: ['slideTransition'],
     monthContainer: ['monthContainer'],
@@ -137,7 +138,6 @@ const PickersCalendarDayRoot = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   margin: `0 ${CALENDAR_MARGIN}px`,
-  gap: CALENDAR_MARGIN / 2,
 });
 
 const PickersCalendarDayHeader = styled('div', {
@@ -146,7 +146,7 @@ const PickersCalendarDayHeader = styled('div', {
   overridesResolver: (_, styles) => styles.header,
 })({
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
   alignItems: 'center',
 });
 
@@ -157,11 +157,15 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
 })(({ theme }) => ({
   width: DAY_SIZE,
   height: DAY_SIZE,
+  margin: DAY_MARGIN,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   color: (theme.vars || theme).palette.text.secondary,
+  '&.MuiDayCalendar-withWeekNumber': {
+    margin: `${DAY_MARGIN}px ${DAY_MARGIN / 2}px`,
+  },
 }));
 
 const PickersCalendarWeekNumberLabel = styled(Typography, {
@@ -169,8 +173,8 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
   slot: 'WeekNumberLabel',
   overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
-  width: WEEK_NUMBER_SIZE,
-  height: DAY_SIZE,
+  width: WEEK_NUMBER_WIDTH,
+  height: WEEK_ELEMENT_SIZE,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -184,8 +188,8 @@ const PickersCalendarWeekNumber = styled(Typography, {
   overridesResolver: (_, styles) => styles.weekNumber,
 })(({ theme }) => ({
   ...theme.typography.caption,
-  width: WEEK_NUMBER_SIZE,
-  height: DAY_SIZE,
+  width: WEEK_NUMBER_WIDTH,
+  height: WEEK_ELEMENT_SIZE,
   padding: 0,
   color: theme.palette.text.disabled,
   fontSize: '0.75rem',
@@ -224,7 +228,7 @@ const PickersCalendarWeek = styled('div', {
   slot: 'WeekContainer',
   overridesResolver: (_, styles) => styles.weekContainer,
 })({
-  margin: `${DAY_MARGIN}px 0`,
+  // margin: `${DAY_MARGIN}px 0`,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -239,7 +243,10 @@ function WrappedDay<TDate extends unknown>({
   currentMonthNumber,
   isViewFocused,
   ...other
-}: Pick<PickersDayProps<TDate>, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
+}: Pick<
+  PickersDayProps<TDate>,
+  'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect' | 'reduceHorizontalMargin'
+> & {
   parentProps: DayCalendarProps<TDate>;
   day: TDate;
   focusableDay: TDate | null;
@@ -617,6 +624,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     isViewFocused={internalHasFocus}
                     // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
                     aria-colindex={dayIndex + 1}
+                    reduceHorizontalMargin={displayWeekNumber}
                   />
                 ))}
               </PickersCalendarWeek>

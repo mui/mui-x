@@ -53,9 +53,9 @@ export {
   DAY_MARGIN,
   DIALOG_WIDTH,
   DAY_SIZE,
-  RANGE_CALENDAR_WIDTH,
   CALENDAR_MARGIN,
-  WEEK_NUMBER_SIZE,
+  WEEK_ELEMENT_SIZE,
+  WEEK_NUMBER_WIDTH,
 } from './constants/dimensions';
 
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';

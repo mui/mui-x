@@ -106,7 +106,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     elementType: PreviousIconButton,
     externalSlotProps: slotProps?.previousIconButton,
     additionalProps: {
-      size: 'small',
+      size: 'large',
       title: leftProps.label,
       'aria-label': leftProps.label,
       disabled: leftProps.isDisabled,
@@ -122,7 +122,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     elementType: NextIconButton,
     externalSlotProps: slotProps?.nextIconButton,
     additionalProps: {
-      size: 'small',
+      size: 'large',
       title: rightProps.label,
       'aria-label': rightProps.label,
       disabled: rightProps.isDisabled,
