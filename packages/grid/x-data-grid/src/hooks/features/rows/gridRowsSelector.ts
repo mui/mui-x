@@ -1,4 +1,7 @@
-import { createSelector } from '../../../utils/createSelector';
+import {
+  createSelectorUnmemoized as createSelector,
+  createSelectorMemoized,
+} from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 const gridRowsStateSelector = (state: GridStateCommunity) => state.rows;
@@ -72,7 +75,7 @@ export const gridAdditionalRowGroupsSelector = createSelector(
 /**
  * @ignore - do not document.
  */
-export const gridPinnedRowsSelector = createSelector(
+export const gridPinnedRowsSelector = createSelectorMemoized(
   gridAdditionalRowGroupsSelector,
   (additionalRowGroups) => {
     const rawPinnedRows = additionalRowGroups?.pinnedRows;
