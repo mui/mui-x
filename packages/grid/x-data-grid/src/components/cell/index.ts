@@ -1,5 +1,5 @@
 export { GridCell } from './GridCell';
-export type {  GridCellProps } from './GridCell';
+export type { GridCellProps } from './GridCell';
 export * from './GridBooleanCell';
 export * from './GridEditBooleanCell';
 export * from './GridEditDateCell';
