@@ -94,10 +94,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   // headerFilterOperatorIsAnyOf: 'Is any of',
   // 'headerFilterOperator=': 'Equals',
   // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Is greater than',
-  // 'headerFilterOperator>=': 'Is greater than or equal to',
-  // 'headerFilterOperator<': 'Is less than',
-  // 'headerFilterOperator<=': 'Is less than or equal to',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'أي',

@@ -251,7 +251,7 @@ function AppWrapper(props) {
                 }
               : {
                   text: `v6`,
-                  href: `https://next.mui.com${languagePrefix}/components/data-grid/`,
+                  href: `https://mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
                 }),
           },
           {
@@ -262,7 +262,7 @@ function AppWrapper(props) {
                 }
               : {
                   text: `v5`,
-                  href: `https://v5.mui.com${languagePrefix}/components/data-grid/`,
+                  href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
                 }),
           },
         ],

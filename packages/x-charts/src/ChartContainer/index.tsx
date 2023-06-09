@@ -10,6 +10,7 @@ import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
+import { HighlightProvider } from '../context/HighlightProvider';
 
 export type ChartContainerProps = Omit<
   SurfaceProps &
@@ -17,7 +18,9 @@ export type ChartContainerProps = Omit<
     Omit<DrawingProviderProps, 'svgRef'> &
     CartesianContextProviderProps,
   'children'
-> & { children?: React.ReactNode };
+> & {
+  children?: React.ReactNode;
+};
 
 export function ChartContainer(props: ChartContainerProps) {
   const {
@@ -41,17 +44,19 @@ export function ChartContainer(props: ChartContainerProps) {
       <SeriesContextProvider series={series} colors={colors}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <InteractionProvider>
-            <Surface
-              width={width}
-              height={height}
-              ref={ref}
-              sx={sx}
-              title={title}
-              desc={desc}
-              disableAxisListener={disableAxisListener}
-            >
-              {children}
-            </Surface>
+            <HighlightProvider>
+              <Surface
+                width={width}
+                height={height}
+                ref={ref}
+                sx={sx}
+                title={title}
+                desc={desc}
+                disableAxisListener={disableAxisListener}
+              >
+                {children}
+              </Surface>
+            </HighlightProvider>
           </InteractionProvider>
         </CartesianContextProvider>
       </SeriesContextProvider>

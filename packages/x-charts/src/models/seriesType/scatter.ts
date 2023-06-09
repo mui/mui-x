@@ -1,5 +1,5 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonSeriesType, CommonDefaultizedProps } from './common';
+import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType } from './common';
 
 type ScatterValueType = { x: number; y: number; id: string | number };
 

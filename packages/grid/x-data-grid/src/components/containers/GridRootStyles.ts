@@ -63,6 +63,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
     { [`& .${gridClasses['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
     { [`& .${gridClasses.columnHeader}`]: styles.columnHeader },
+    { [`& .${gridClasses.headerFilterRow}`]: styles.headerFilterRow },
     { [`& .${gridClasses.columnHeaderCheckbox}`]: styles.columnHeaderCheckbox },
     { [`& .${gridClasses.columnHeaderDraggableContainer}`]: styles.columnHeaderDraggableContainer },
     { [`& .${gridClasses.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
@@ -203,6 +204,9 @@ export const GridRootStyles = styled('div', {
         borderBottomStyle: 'solid',
         boxSizing: 'border-box',
       },
+    [`& .${gridClasses.headerFilterRow}`]: {
+      borderTop: `1px solid ${borderColor}`,
+    },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
     },
