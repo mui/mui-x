@@ -26,7 +26,7 @@ To modify the styling of charts you can rely on all the MUI styling tools, such 
 
 To install this library, run
 
-```bash
+```sh
 npm install @mui/x-charts
 // or
 yarn add @mui/x-charts
