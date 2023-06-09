@@ -13,13 +13,13 @@ import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Highlight, HighlightProps } from '../Highlight';
+import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 import { ClipPath } from '../ClipPath/ClipPath';
 
 export interface LineChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
-  highlight?: HighlightProps;
+  axisHighlight?: AxisHighlightProps;
 }
 function LineChart(props: LineChartProps) {
   const {
@@ -32,7 +32,7 @@ function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
-    highlight,
+    axisHighlight,
     topAxis,
     leftAxis,
     rightAxis,
@@ -64,7 +64,7 @@ function LineChart(props: LineChartProps) {
       colors={colors}
       sx={sx}
       disableAxisListener={
-        tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
+        tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
@@ -73,7 +73,7 @@ function LineChart(props: LineChartProps) {
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <MarkPlot />
-      <Highlight {...highlight} />
+      <AxisHighlight {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
       {children}

@@ -11,13 +11,13 @@ import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Highlight, HighlightProps } from '../Highlight';
+import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 import { ClipPath } from '../ClipPath/ClipPath';
 
 export interface BarChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: TooltipProps;
-  highlight?: HighlightProps;
+  axisHighlight?: AxisHighlightProps;
 }
 
 function BarChart(props: BarChartProps) {
@@ -31,7 +31,7 @@ function BarChart(props: BarChartProps) {
     colors,
     sx,
     tooltip,
-    highlight,
+    axisHighlight,
     topAxis,
     leftAxis,
     rightAxis,
@@ -63,14 +63,14 @@ function BarChart(props: BarChartProps) {
       colors={colors}
       sx={sx}
       disableAxisListener={
-        tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
+        tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
         <BarPlot />
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-      <Highlight {...highlight} />
+      <AxisHighlight {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
       {children}

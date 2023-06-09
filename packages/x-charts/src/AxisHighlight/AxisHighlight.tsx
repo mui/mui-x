@@ -3,13 +3,13 @@ import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { getValueToPositionMapper, isBandScale } from '../hooks/useScale';
 
-export type HighlightProps = {
+export type AxisHighlightProps = {
   x?: 'none' | 'line' | 'band';
   y?: 'none' | 'line';
 };
 
-export function Highlight(props: HighlightProps) {
-  const { x: xHighlight, y: yHighlight } = props;
+export function AxisHighlight(props: AxisHighlightProps) {
+  const { x: xAxisHighlight, y: yAxisHighlight } = props;
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
 
   const USED_X_AXIS_ID = xAxisIds[0];
@@ -20,7 +20,7 @@ export function Highlight(props: HighlightProps) {
 
   const { axis } = React.useContext(InteractionContext);
 
-  if (xHighlight === 'band' && isBandScale(xScale)) {
+  if (xAxisHighlight === 'band' && isBandScale(xScale)) {
     if (axis.x === null) {
       return null;
     }
@@ -42,7 +42,7 @@ export function Highlight(props: HighlightProps) {
   const getXPosition = getValueToPositionMapper(xScale);
   return (
     <React.Fragment>
-      {xHighlight === 'line' && axis.x !== null && (
+      {xAxisHighlight === 'line' && axis.x !== null && (
         <path
           d={`M ${getXPosition(axis.x.value)} ${yScale(yScale.domain()[0])} L ${getXPosition(
             axis.x.value,
@@ -52,7 +52,7 @@ export function Highlight(props: HighlightProps) {
           style={{ pointerEvents: 'none' }}
         />
       )}
-      {yHighlight === 'line' && axis.y !== null && (
+      {yAxisHighlight === 'line' && axis.y !== null && (
         <path
           d={`M ${xScale(xScale.domain()[0])} ${yScale(axis.y.value)} L ${xScale(
             xScale.domain().at(-1)!,

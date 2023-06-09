@@ -9,14 +9,14 @@ import { Axis, AxisProps } from '../Axis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Highlight, HighlightProps } from '../Highlight';
+import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     AxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: TooltipProps;
-  highlight?: HighlightProps;
+  axisHighlight?: AxisHighlightProps;
 }
 
 function ScatterChart(props: ScatterChartProps) {
@@ -25,7 +25,7 @@ function ScatterChart(props: ScatterChartProps) {
     yAxis,
     series,
     tooltip,
-    highlight,
+    axisHighlight,
     width,
     height,
     margin,
@@ -51,7 +51,7 @@ function ScatterChart(props: ScatterChartProps) {
     >
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <ScatterPlot />
-      <Highlight x="none" y="none" {...highlight} />
+      <AxisHighlight x="none" y="none" {...axisHighlight} />
       <Tooltip trigger="item" {...tooltip} />
       {children}
     </ResponsiveChartContainer>
