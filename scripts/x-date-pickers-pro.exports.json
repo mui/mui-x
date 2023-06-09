@@ -258,6 +258,7 @@
   { "name": "renderDigitalClockTimeView", "kind": "Variable" },
   { "name": "renderMultiSectionDigitalClockTimeView", "kind": "Variable" },
   { "name": "renderTimeViewClock", "kind": "Variable" },
+  { "name": "roRO", "kind": "Variable" },
   { "name": "ruRU", "kind": "Variable" },
   { "name": "SingleInputDateRangeField", "kind": "Variable" },
   { "name": "SingleInputDateRangeFieldProps", "kind": "TypeAlias" },
