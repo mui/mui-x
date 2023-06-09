@@ -11,7 +11,6 @@ import { Watermark } from '@mui/x-license-pro';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
-  DAY_MARGIN,
   DayCalendar,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
@@ -31,12 +30,9 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
   CALENDAR_MARGIN,
-  RANGE_CALENDAR_WIDTH,
-  WEEK_NUMBER_SIZE,
-  DAY_SIZE,
 } from '@mui/x-date-pickers/internals';
 import Typography from '@mui/material/Typography';
-import { dayPickerClasses } from '@mui/x-date-pickers';
+import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -67,20 +63,11 @@ const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateRangeCalendarOwnerState<any> }>(({ ownerState }) => ({
+})<{ ownerState: DateRangeCalendarOwnerState<any> }>({
   display: 'flex',
   flexDirection: 'row',
-  [`& .${dayPickerClasses.root}`]: {
-    margin: '0 auto',
-  },
-  [`& .${dayPickerClasses.header}`]: {
-    alignSelf: 'center',
-    width: Math.min(
-      RANGE_CALENDAR_WIDTH + (ownerState.displayWeekNumber ? WEEK_NUMBER_SIZE : 0),
-      326,
-    ),
-  },
-}));
+  minHeight: VIEW_HEIGHT,
+});
 
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
@@ -99,26 +86,12 @@ const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
   justifyContent: 'space-between',
 });
 
-const weeksContainerHeight =
-  (DAY_SIZE +
-    DAY_MARGIN * 2 +
-    // add the margin between week containers
-    DAY_MARGIN * 2) *
-    6 +
-  1 +
-  CALENDAR_MARGIN;
-
 const warnInvalidCurrentMonthCalendarPosition = buildWarning([
   'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
   'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
 ]);
 
-const DayCalendarForRange = styled(DayCalendar)(({ theme, displayWeekNumber }) => ({
-  minWidth: Math.min(
-    RANGE_CALENDAR_WIDTH + (displayWeekNumber ? WEEK_NUMBER_SIZE : 0) + 2 * CALENDAR_MARGIN,
-    326,
-  ),
-  minHeight: weeksContainerHeight,
+const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.day}`]: {
       cursor: 'grabbing',

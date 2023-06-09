@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { DAY_SIZE, useUtils } from '@mui/x-date-pickers/internals';
+import { DAY_MARGIN, DAY_SIZE, useUtils } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -157,6 +157,7 @@ const DateRangePickerDayRoot = styled('div', {
   ownerState.isHiddenDayFiller
     ? {}
     : {
+        position: 'relative',
         [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
           ...startBorderStyle,
           borderLeftColor: (theme.vars || theme).palette.divider,
@@ -165,22 +166,35 @@ const DateRangePickerDayRoot = styled('div', {
           ...endBorderStyle,
           borderRightColor: (theme.vars || theme).palette.divider,
         },
+        border: `${DAY_MARGIN}px solid transparent`,
         ...(ownerState.isHighlighting && {
-          borderRadius: 0,
-          color: (theme.vars || theme).palette.primary.contrastText,
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
-            : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-          '&:first-of-type': startBorderStyle,
-          '&:last-of-type': endBorderStyle,
-        }),
-        ...((ownerState.isStartOfHighlighting || ownerState.isFirstVisibleCell) && {
-          ...startBorderStyle,
-          paddingLeft: 0,
-        }),
-        ...((ownerState.isEndOfHighlighting || ownerState.isLastVisibleCell) && {
-          ...endBorderStyle,
-          paddingRight: 0,
+          '&:before': {
+            pointerEvents: 'none',
+            position: 'absolute',
+            content: '""',
+            width: `calc(100% + ${2 * DAY_MARGIN}px)`,
+            height: DAY_SIZE,
+            borderRadius: 0,
+            color: (theme.vars || theme).palette.primary.contrastText,
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+              : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
+            ...((ownerState.isStartOfHighlighting || ownerState.isFirstVisibleCell) && {
+              ...startBorderStyle,
+              paddingLeft: 0,
+            }),
+            ...((ownerState.isEndOfHighlighting || ownerState.isLastVisibleCell) && {
+              ...endBorderStyle,
+              paddingRight: 0,
+              width: `100%`,
+              right: 0,
+            }),
+          },
+          '&:first-of-type:before': startBorderStyle,
+          '&:last-of-type:before': {
+            ...endBorderStyle,
+            width: `calc(100% + ${DAY_MARGIN}px)`,
+          },
         }),
       },
 );
@@ -211,6 +225,9 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
+  ...(ownerState.isHiddenDayFiller && {
+    margin: DAY_MARGIN,
+  }),
   ...(ownerState.isPreviewing &&
     !ownerState.isHiddenDayFiller && {
       borderRadius: 0,
@@ -249,13 +266,10 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ownerState: OwnerState;
 }>(({ ownerState }) => ({
   // account for difference in expected margin and the preview border
-  width: DAY_SIZE - 1,
-  height: DAY_SIZE - 1,
+  width: DAY_SIZE - DAY_MARGIN,
+  height: DAY_SIZE - DAY_MARGIN,
   // Required to overlap preview border
-  transform: 'scale(1.1)',
-  '& > *': {
-    transform: 'scale(0.9)',
-  },
+  transform: 'scale(1.111)',
   ...(ownerState.draggable && {
     cursor: 'grab',
   }),
