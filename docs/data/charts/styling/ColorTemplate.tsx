@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { ScatterValueType } from '@mui/x-charts';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -44,8 +45,7 @@ const series = [
   { label: 'series 13', data: getGaussianSeriesData([7, 0]) },
 ].map((s) => ({
   ...s,
-  valueFormatter: (v: { x: number; y: number; id: number }) =>
-    `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
+  valueFormatter: (v: ScatterValueType) => `(${v.x.toFixed(1)}, ${v.y.toFixed(1)})`,
 }));
 
 const categories: { [key: string]: string[] } = {

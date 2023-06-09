@@ -1,5 +1,6 @@
 export * from './constants';
 export * from './context';
+export * from './models';
 export * from './Axis';
 export * from './XAxis';
 export * from './YAxis';
