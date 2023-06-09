@@ -1,7 +1,4 @@
-import {
-  createSelector,
-  createSelectorMemoized,
-} from '../../../utils/createSelector';
+import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';

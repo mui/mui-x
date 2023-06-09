@@ -1,7 +1,4 @@
-import {
-  createSelector,
-  createSelectorMemoized,
-} from '../../../utils/createSelector';
+import { createSelector, createSelectorMemoized } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**

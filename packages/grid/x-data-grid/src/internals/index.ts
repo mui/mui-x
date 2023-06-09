@@ -127,7 +127,7 @@ export {
   createSelector,
   createSelectorMemoized,
   createSelectorUnmemoized,
-  unstable_resetCreateSelectorCache
+  unstable_resetCreateSelectorCache,
 } from '../utils/createSelector';
 export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';

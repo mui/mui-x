@@ -49,7 +49,7 @@ const missingInstanceIdWarning = buildWarning([
 ]);
 
 function isAPIRef(value: any) {
-  return ('current' in value) && ('instanceId' in value.current)
+  return 'current' in value && 'instanceId' in value.current;
 }
 
 export const createSelector = ((
@@ -61,56 +61,63 @@ export const createSelector = ((
   f?: Function,
   ...rest: any[]
 ) => {
-  if (rest.length > 0) throw new Error('Unsupported number of selectors');
+  if (rest.length > 0) {
+    throw new Error('Unsupported number of selectors');
+  }
 
   let selector: any;
 
   if (a && b && c && d && e && f) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
-      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const instanceId =
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, instanceId)
-      const vb = b(state, instanceId)
-      const vc = c(state, instanceId)
-      const vd = d(state, instanceId)
-      const ve = e(state, instanceId)
-      return f(va, vb, vc, vd, ve)
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      const vc = c(state, instanceId);
+      const vd = d(state, instanceId);
+      const ve = e(state, instanceId);
+      return f(va, vb, vc, vd, ve);
     };
   } else if (a && b && c && d && e) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
-      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const instanceId =
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, instanceId)
-      const vb = b(state, instanceId)
-      const vc = c(state, instanceId)
-      const vd = d(state, instanceId)
-      return e(va, vb, vc, vd)
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      const vc = c(state, instanceId);
+      const vd = d(state, instanceId);
+      return e(va, vb, vc, vd);
     };
   } else if (a && b && c && d) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
-      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const instanceId =
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, instanceId)
-      const vb = b(state, instanceId)
-      const vc = c(state, instanceId)
-      return d(va, vb, vc)
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      const vc = c(state, instanceId);
+      return d(va, vb, vc);
     };
   } else if (a && b && c) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
-      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const instanceId =
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
-      const va = a(state, instanceId)
-      const vb = b(state, instanceId)
-      return c(va, vb)
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      return c(va, vb);
     };
   } else if (a && b) {
     selector = (stateOrApiRef: any, instanceIdParam: any) => {
       const isAPI = isAPIRef(stateOrApiRef);
-      const instanceId = instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
+      const instanceId =
+        instanceIdParam ?? (isAPI ? stateOrApiRef.current.instanceId : { id: 'default' });
       const state = isAPI ? stateOrApiRef.current.state : stateOrApiRef;
       const va = a(state, instanceId);
       return b(va);
