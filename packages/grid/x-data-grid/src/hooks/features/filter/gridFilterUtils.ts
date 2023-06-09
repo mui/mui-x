@@ -255,7 +255,7 @@ export const buildAggregatedQuickFilterApplier = (
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridFilterItemApplierNotAggregated | null => {
-  const { quickFilterValues = [] } = filterModel;
+  const quickFilterValues = filterModel.quickFilterValues?.filter(Boolean) ?? [];
   if (quickFilterValues.length === 0) {
     return null;
   }
