@@ -9,13 +9,7 @@ _Jun 9, 2023_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Add Romanian (ro-RO) locale on the pickers
-- 🌍 Improve German (de-DE) locale on the pickers
-- 🌍 Improve Czech (cs-CZ), German (de-DE) and Turkish (tr-TR) locales on the data grid
-- 🚀 Performance improvements
-- 🐞 Bugfixes
-- 📚 Documentation improvements
-- Improve the default `format` prop value on the pickers.
+- 🎁 Improve the default `format` prop value on the pickers.
 
   Here are a few examples:
 
@@ -33,6 +27,13 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   // Format after v6.7.0: `DD hh:mm aa`
   ```
 
+- 🌍 Add Romanian (ro-RO) locale on the pickers
+- 🌍 Improve German (de-DE) locale on the pickers
+- 🌍 Improve Czech (cs-CZ), German (de-DE) and Turkish (tr-TR) locales on the data grid
+- 🚀 Performance improvements
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
 ### `@mui/x-data-grid@v6.7.0` / `@mui/x-data-grid-pro@v6.7.0` / `@mui/x-data-grid-premium@v6.7.0`
 
 #### Changes
@@ -43,8 +44,8 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGrid] Improve grouping performance for large datasets (#9200) @romgrk
 - [DataGrid] Increase threshold to trigger memory leak warning (#9263) @m4theushw
 - [DataGrid] Update data grid migration guide to include updated type (#9272) @MBilalShafi
-- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
 - [DataGridPro] Improve header filter menu visuals (#9181) @MBilalShafi
+- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
 - [l10n] Improve Czech (cs-CZ) locale (#9266) @MartinSkarpa
 - [l10n] Improve German (de-DE) locale (#9259) @ximex
 - [l10n] Improve Turkish (tr-TR) locale (#9237) @MCErtan
