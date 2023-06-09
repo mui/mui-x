@@ -112,7 +112,7 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
   const slots = {
     root: [
       'root',
-      selected && 'selected',
+      selected && (!outsideCurrentMonth || showDaysOutsideCurrentMonth) && 'selected',
       disabled && 'disabled',
       !disableMargin && 'dayWithMargin',
       !disableHighlightToday && today && 'today',
