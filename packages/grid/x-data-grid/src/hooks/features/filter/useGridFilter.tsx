@@ -432,7 +432,7 @@ export const useGridFilter = (
         filteredDescendantCountLookup: {},
       };
     },
-    [apiRef, props.filterMode, props.rows],
+    [apiRef, props.filterMode],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);

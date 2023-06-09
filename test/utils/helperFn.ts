@@ -61,7 +61,7 @@ export function sleep(duration: number) {
 }
 
 export function microtasks() {
-  return act(() => Promise.resolve())
+  return act(() => Promise.resolve());
 }
 
 export function getColumnValues(colIndex: number) {

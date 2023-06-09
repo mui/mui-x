@@ -131,35 +131,34 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
   getCellAggregationResult,
 }) =>
   filterOperators!.map((operator) => {
-
     const baseGetApplyFilterFn = operator.getApplyFilterFn;
 
     const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
-      baseGetApplyFilterFn.v7 ?
-        v7((filterItem, column) => {
-          const filterFn = baseGetApplyFilterFn(filterItem, column);
-          if (!filterFn) {
-            return null;
-          }
-          return (value, row, column, api) => {
-            if (getCellAggregationResult(row.id, column.field) != null) {
-              return true;
+      baseGetApplyFilterFn.v7
+        ? v7((filterItem, colDef) => {
+            const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+            if (!filterFn) {
+              return null;
             }
-            return filterFn(value, row, column, api);
-          };
-        }) :
-        (filterItem, column) => {
-          const filterFn = baseGetApplyFilterFn(filterItem, column);
-          if (!filterFn) {
-            return null;
-          }
-          return (params: GridCellParams) => {
-            if (getCellAggregationResult(params.id, params.field) != null) {
-              return true;
+            return (value, row, column, api) => {
+              if (getCellAggregationResult(row.id, column.field) != null) {
+                return true;
+              }
+              return filterFn(value, row, column, api);
+            };
+          })
+        : (filterItem, colDef) => {
+            const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+            if (!filterFn) {
+              return null;
             }
-            return filterFn(params);
+            return (params: GridCellParams) => {
+              if (getCellAggregationResult(params.id, params.field) != null) {
+                return true;
+              }
+              return filterFn(params);
+            };
           };
-        }
 
     return {
       ...operator,
