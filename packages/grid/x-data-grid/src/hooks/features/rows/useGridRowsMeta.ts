@@ -79,7 +79,7 @@ export const useGridRowsMeta = (
       autoHeight: boolean; // Determines if the row has dynamic height
       needsFirstMeasurement: boolean; // Determines if the row was never measured. If true, use the estimated height as row height.
     };
-  }>({});
+  }>(Object.create(null));
 
   // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   const lastMeasuredRowIndex = React.useRef(-1);

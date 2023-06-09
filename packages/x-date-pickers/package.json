@@ -101,7 +101,7 @@
     "@types/moment-jalaali": "^0.7.6",
     "date-fns": "^2.30.0",
     "date-fns-jalali": "^2.13.0-0",
-    "dayjs": "^1.11.7",
+    "dayjs": "^1.11.8",
     "luxon": "^3.3.0",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
