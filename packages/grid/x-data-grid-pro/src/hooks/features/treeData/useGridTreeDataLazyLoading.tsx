@@ -8,6 +8,7 @@ import {
   useGridApiEventHandler,
   GridFilterModel,
   GridEventListener,
+  GridSortModel,
 } from '@mui/x-data-grid';
 import { GridTreeDataLazyLoadingApi } from './gridTreeDataLazyLoadingApi';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -22,6 +23,7 @@ export interface GridFetchRowChildrenParams {
   row?: GridRowModel | undefined;
   helpers: GridTreeDataLazyLoadHelpers;
   filterModel?: GridFilterModel;
+  sortModel?: GridSortModel;
 }
 
 export const getLazyLoadingHelpers = (
@@ -63,7 +65,7 @@ export const useGridTreeDataLazyLoading = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'treeData' | 'rowsLoadingMode' | 'onFetchRowChildren' | 'filterMode'
+    'treeData' | 'rowsLoadingMode' | 'onFetchRowChildren' | 'filterMode' | 'sortingMode'
   >,
 ) => {
   const setRowLoadingStatus = React.useCallback<GridTreeDataLazyLoadingApi['setRowLoadingStatus']>(
@@ -96,10 +98,34 @@ export const useGridTreeDataLazyLoading = (
           apiRef.current.getRowNode(GRID_ROOT_GROUP_ID) as GridServerSideGroupNode,
           'full',
         );
+        if (props.sortingMode === 'server') {
+          const sortModel = apiRef.current.state.sorting.sortModel;
+          apiRef.current.publishEvent('fetchRowChildren', { filterModel, sortModel, helpers });
+          return;
+        }
         apiRef.current.publishEvent('fetchRowChildren', { filterModel, helpers });
       }
     },
-    [apiRef, props.filterMode, props.rowsLoadingMode, props.treeData],
+    [apiRef, props.filterMode, props.rowsLoadingMode, props.sortingMode, props.treeData],
+  );
+
+  const onSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
+    (sortModel: GridSortModel) => {
+      if (props.treeData && props.rowsLoadingMode === 'server' && props.sortingMode === 'server') {
+        const helpers = getLazyLoadingHelpers(
+          apiRef,
+          apiRef.current.getRowNode(GRID_ROOT_GROUP_ID) as GridServerSideGroupNode,
+          'full', // refetch root nodes
+        );
+        if (props.filterMode === 'server') {
+          const filterModel = apiRef.current.state.filter?.filterModel;
+          apiRef.current.publishEvent('fetchRowChildren', { filterModel, sortModel, helpers });
+          return;
+        }
+        apiRef.current.publishEvent('fetchRowChildren', { sortModel, helpers });
+      }
+    },
+    [apiRef, props.filterMode, props.rowsLoadingMode, props.sortingMode, props.treeData],
   );
 
   const treeDataLazyLoadingApi: GridTreeDataLazyLoadingApi = {
@@ -109,6 +135,7 @@ export const useGridTreeDataLazyLoading = (
   useGridApiMethod(apiRef, treeDataLazyLoadingApi, 'public');
   useGridApiOptionHandler(apiRef, 'fetchRowChildren', props.onFetchRowChildren);
   useGridApiEventHandler(apiRef, 'filterModelChange', onFilterModelChange);
+  useGridApiEventHandler(apiRef, 'sortModelChange', onSortModelChange);
 
   /**
    * EFFECTS
@@ -122,5 +149,5 @@ export const useGridTreeDataLazyLoading = (
       );
       apiRef.current.publishEvent('fetchRowChildren', { helpers, filterModel });
     }
-  }, [apiRef, props.treeData, props.rowsLoadingMode]);
+  }, [apiRef, props.treeData, props.rowsLoadingMode, props.onFetchRowChildren]);
 };

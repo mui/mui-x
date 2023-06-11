@@ -5,45 +5,58 @@ import {
   GridFetchRowChildrenParams,
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import {
+  createFakeServer,
+  loadTreeDataServerRows,
+  UseDemoDataOptions,
+} from '@mui/x-data-grid-generator';
 
 const initRows: GridValidRowModel[] = [];
 
+const DATASET_OPTION: UseDemoDataOptions = {
+  dataSet: 'Employee',
+  rowLength: 1000,
+  treeData: { maxDepth: 2, groupingField: 'name', averageChildren: 20 },
+};
+
+const { columnsWithDefaultColDef, useQuery, ...data } =
+  createFakeServer(DATASET_OPTION);
+
+const emptyObject = {};
+
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
-  const { loading, data, lazyLoadTreeRows } = useDemoData({
-    dataSet: 'Employee',
-    rowLength: 1000,
-    treeData: { maxDepth: 2, groupingField: 'name', averageChildren: 10 },
-  });
+  const { rows: rowsServerSide } = useQuery(emptyObject);
 
   const onFetchRowChildren = React.useCallback(
-    async ({ row, helpers, filterModel }: GridFetchRowChildrenParams) => {
-      try {
-        const path = row ? data.getTreeDataPath!(row) : [];
-        const rows = (await lazyLoadTreeRows({
-          request: { path, filterModel },
-        })) as GridValidRowModel[];
-        helpers.success(rows);
-      } catch (error) {
-        // simulate network error
-        helpers.error();
-        console.error(error);
-      }
+    async ({ row, helpers, filterModel, sortModel }: GridFetchRowChildrenParams) => {
+      const serverRows = await loadTreeDataServerRows(
+        rowsServerSide,
+        {
+          filterModel,
+          sortModel,
+          path: row?.path ?? [],
+        },
+        {
+          minDelay: 300,
+          maxDelay: 800,
+        },
+        columnsWithDefaultColDef,
+      );
+      helpers.success(serverRows);
     },
-    [data.getTreeDataPath, lazyLoadTreeRows],
+    [rowsServerSide],
   );
-
-  if (loading) {
-    return null;
-  }
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={rowsServerSide.length === 0}
         apiRef={apiRef}
         rows={initRows}
+        getTreeDataPath={(row) => row.path}
+        treeData
         unstable_headerFilters
         onFetchRowChildren={onFetchRowChildren}
         initialState={{
@@ -51,22 +64,21 @@ export default function TreeDataLazyLoading() {
           columns: {
             ...data.initialState?.columns,
             columnVisibilityModel: {
-              ...data.initialState?.columns?.columnVisibilityModel,
               avatar: false,
+              id: false,
             },
           },
           filter: {
             filterModel: {
-              items: [
-                { field: 'website', operator: 'contains', value: 'ab' },
-              ]
-            }
-          }
+              items: [{ field: 'website', operator: 'contains', value: 'ab' }],
+            },
+          },
         }}
         isServerSideRow={(row) => row.hasChildren}
         getDescendantCount={(row) => row.descendantCount}
         rowsLoadingMode="server"
         filterMode="server"
+        sortingMode="server"
       />
     </div>
   );

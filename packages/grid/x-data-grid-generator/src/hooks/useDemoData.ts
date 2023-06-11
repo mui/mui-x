@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GridColumnVisibilityModel, GridRowModel, GridFilterModel } from '@mui/x-data-grid-premium';
+import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
 import { GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
@@ -11,40 +11,17 @@ import {
   DemoTreeDataValue,
   addTreeDataOptionsToDemoData,
 } from '../services/tree-data-generator';
-import { filterServerSide } from './filterUtils';
 
 const dataCache = new LRUCache<string, DemoTreeDataValue>({
   max: 10,
   ttl: 60 * 5 * 1e3, // 5 minutes
 });
 
-type ServerOptions = {
-  minDelay?: number;
-  maxDelay?: number;
-};
-
-const DEFAULT_SERVER_OPTIONS = {
-  minDelay: 300,
-  maxDelay: 1000,
-};
-
-interface LazyLoadTreeRowsRequest {
-  path: string[];
-  // TODO: Support server side filtering and sorting
-  filterModel?: GridFilterModel;
-  sortModel?: any;
-}
-interface LazyLoadTreeRowsParams {
-  request: LazyLoadTreeRowsRequest;
-  serverOptions?: ServerOptions;
-}
-
 export type DemoDataReturnType = {
   data: DemoTreeDataValue;
   loading: boolean;
   setRowLength: (count: number) => void;
   loadNewData: () => void;
-  lazyLoadTreeRows: (params: LazyLoadTreeRowsParams) => Promise<GridRowModel[]>;
 };
 
 type DataSet = 'Commodity' | 'Employee';
@@ -145,27 +122,6 @@ export const getInitialState = (options: UseDemoDataOptions, columns: GridColDef
   return { columns: { columnVisibilityModel } };
 };
 
-const findTreeDataRowChildren = (
-  allRows: GridRowModel[],
-  parentPath: string[],
-  getTreeDataPath: (row: GridRowModel) => string[],
-  depth: number = 1, // the depth of the children to find relative to parentDepth, `-1` to find all
-) => {
-  const parentDepth = parentPath.length;
-  const children = [];
-  for (let i = 0; i < allRows.length; i += 1) {
-    const row = allRows[i];
-    const rowPath = getTreeDataPath(row);
-    if (
-      ((depth < 0 && rowPath.length > parentDepth) || rowPath.length === parentDepth + depth) &&
-      parentPath.every((value, index) => value === rowPath[index])
-    ) {
-      children.push(row);
-    }
-  }
-  return children;
-};
-
 export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => {
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
@@ -250,51 +206,6 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     columns,
   ]);
 
-  const lazyLoadTreeRows = React.useCallback(
-    ({
-      request: { path, filterModel },
-      serverOptions = DEFAULT_SERVER_OPTIONS,
-    }: LazyLoadTreeRowsParams) => {
-      return new Promise<GridRowModel[]>((resolve, reject) => {
-        setTimeout(() => {
-          if (!options.treeData) {
-            reject(new Error('MUI: Please enable tree data in demo data options.'));
-          }
-
-          const { maxDepth = 1, groupingField } = options.treeData!;
-
-          const hasTreeData = maxDepth > 1 && groupingField != null;
-          if (!hasTreeData) {
-            reject(
-              new Error(
-                'MUI: For tree data, maximum depth should be > 1 and grouping field should be set.',
-              ),
-            );
-          }
-
-          const filteredRows =
-            (filterModel?.items?.length ?? 0) > 0
-              ? filterServerSide(columns, data.rows, filterModel!)
-              : data.rows;
-          const childRows = findTreeDataRowChildren(filteredRows, path, data.getTreeDataPath!);
-
-          const childRowsWithDescendantCounts = childRows.map((row) => {
-            const descendants = findTreeDataRowChildren(
-              filteredRows,
-              data.getTreeDataPath!(row),
-              data.getTreeDataPath!,
-              -1,
-            );
-            const descendantCount = descendants.length;
-            return { ...row, descendantCount, hasChildren: descendantCount > 0 };
-          });
-          resolve(childRowsWithDescendantCounts);
-        }, Math.random() * (serverOptions.maxDelay! - serverOptions.minDelay!) + serverOptions.minDelay!);
-      });
-    },
-    [columns, data.getTreeDataPath, data.rows, options.treeData],
-  );
-
   return {
     data,
     loading,
@@ -302,6 +213,5 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },
-    lazyLoadTreeRows,
   };
 };

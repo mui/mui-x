@@ -1,44 +1,57 @@
 import * as React from 'react';
 import { DataGridPro, useGridApiRef } from '@mui/x-data-grid-pro';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import {
+  createFakeServer,
+  loadTreeDataServerRows,
+} from '@mui/x-data-grid-generator';
 
 const initRows = [];
 
+const DATASET_OPTION = {
+  dataSet: 'Employee',
+  rowLength: 1000,
+  treeData: { maxDepth: 2, groupingField: 'name', averageChildren: 20 },
+};
+
+const { columnsWithDefaultColDef, useQuery, ...data } =
+  createFakeServer(DATASET_OPTION);
+
+const emptyObject = {};
+
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
-  const { loading, data, lazyLoadTreeRows } = useDemoData({
-    dataSet: 'Employee',
-    rowLength: 1000,
-    treeData: { maxDepth: 2, groupingField: 'name', averageChildren: 10 },
-  });
+  const { rows: rowsServerSide } = useQuery(emptyObject);
 
   const onFetchRowChildren = React.useCallback(
-    async ({ row, helpers, filterModel }) => {
-      try {
-        const path = row ? data.getTreeDataPath(row) : [];
-        const rows = await lazyLoadTreeRows({
-          request: { path, filterModel },
-        });
-        helpers.success(rows);
-      } catch (error) {
-        // simulate network error
-        helpers.error();
-        console.error(error);
-      }
-    },
-    [data.getTreeDataPath, lazyLoadTreeRows],
-  );
+    async ({ row, helpers, filterModel, sortModel }) => {
+      const serverRows = await loadTreeDataServerRows(
+        rowsServerSide,
+        {
+          filterModel,
+          sortModel,
+          path: row?.path ?? [],
+        },
+        {
+          minDelay: 300,
+          maxDelay: 800,
+        },
+        columnsWithDefaultColDef,
+      );
 
-  if (loading) {
-    return null;
-  }
+      helpers.success(serverRows);
+    },
+    [rowsServerSide],
+  );
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
+        loading={rowsServerSide.length === 0}
         apiRef={apiRef}
         rows={initRows}
+        getTreeDataPath={(row) => row.path}
+        treeData
         unstable_headerFilters
         onFetchRowChildren={onFetchRowChildren}
         initialState={{
@@ -46,8 +59,8 @@ export default function TreeDataLazyLoading() {
           columns: {
             ...data.initialState?.columns,
             columnVisibilityModel: {
-              ...data.initialState?.columns?.columnVisibilityModel,
               avatar: false,
+              id: false,
             },
           },
           filter: {
@@ -60,6 +73,7 @@ export default function TreeDataLazyLoading() {
         getDescendantCount={(row) => row.descendantCount}
         rowsLoadingMode="server"
         filterMode="server"
+        sortingMode="server"
       />
     </div>
   );

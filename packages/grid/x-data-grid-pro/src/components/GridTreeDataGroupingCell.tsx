@@ -10,6 +10,7 @@ import {
   GridGroupNode,
   GridServerSideGroupNode,
   gridFilterModelSelector,
+  gridSortModelSelector,
 } from '@mui/x-data-grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -50,6 +51,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const filterModel = gridFilterModelSelector(apiRef);
+  const sortModel = gridSortModelSelector(apiRef);
 
   const isServerSideNode = (rowNode as GridServerSideGroupNode).isServerSide;
   const isDataLoading = (rowNode as GridServerSideGroupNode).isLoading;
@@ -59,7 +61,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
     if (isServerSideNode && !rowNode.childrenExpanded && !areChildrenFetched) {
       const helpers = getLazyLoadingHelpers(apiRef, rowNode as GridServerSideGroupNode);
       apiRef.current.setRowLoadingStatus(rowNode.id, true);
-      apiRef.current.publishEvent('fetchRowChildren', { row, helpers, filterModel });
+      apiRef.current.publishEvent('fetchRowChildren', { row, helpers, filterModel, sortModel });
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     }

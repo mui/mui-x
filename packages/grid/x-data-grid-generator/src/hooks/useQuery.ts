@@ -5,8 +5,6 @@ import {
   GridFilterModel,
   GridSortModel,
   GridRowId,
-  GridLogicOperator,
-  GridFilterOperator,
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { isDeepEqual } from '@mui/x-data-grid/internals';
@@ -16,92 +14,56 @@ import {
   getColumnsFromOptions,
   getInitialState,
 } from './useDemoData';
+import {
+  findTreeDataRowChildren,
+  getFilteredRowsServerSide,
+  getRowComparator,
+  getFilteredRows,
+} from './fakeServerUtils';
 
-const simplifiedValueGetter = (field: string, colDef: GridColDef) => (row: GridRowModel) => {
-  const params = { id: row.id, row, field, rowNode: {} };
-  // @ts-ignore
-  return colDef.valueGetter?.(params) || row[field];
-};
-
-const getRowComparator = (
-  sortModel: GridSortModel | undefined,
-  columnsWithDefaultColDef: GridColDef[],
-) => {
-  if (!sortModel) {
-    const comparator = () => 0;
-    return comparator;
-  }
-  const sortOperators = sortModel.map((sortItem) => {
-    const columnField = sortItem.field;
-    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
-    return {
-      ...sortItem,
-      valueGetter: simplifiedValueGetter(columnField, colDef),
-      sortComparator: colDef.sortComparator,
-    };
-  });
-
-  const comparator = (row1: GridRowModel, row2: GridRowModel) =>
-    sortOperators.reduce((acc, { valueGetter, sort, sortComparator }) => {
-      if (acc !== 0) {
-        return acc;
-      }
-      const v1 = valueGetter(row1);
-      const v2 = valueGetter(row2);
-      return sort === 'desc' ? -1 * sortComparator(v1, v2) : sortComparator(v1, v2);
-    }, 0);
-
-  return comparator;
-};
-
-const getFilteredRows = (
+/**
+ * Simulates server data loading
+ */
+export const loadTreeDataServerRows = (
   rows: GridRowModel[],
-  filterModel: GridFilterModel | undefined,
+  queryOptions: TreeDataQueryOptions,
+  serverOptions: ServerOptions,
   columnsWithDefaultColDef: GridColDef[],
-) => {
-  if (filterModel === undefined || filterModel.items.length === 0) {
-    return rows;
+  pathKey: string = 'path',
+): Promise<FakeServerTreeDataResponse> => {
+  const { minDelay = 500, maxDelay = 800 } = serverOptions;
+
+  if (maxDelay < minDelay) {
+    throw new Error('serverOptions.minDelay is larger than serverOptions.maxDelay ');
   }
+  const delay = Math.random() * (maxDelay - minDelay) + minDelay;
 
-  const valueGetters = filterModel.items.map(({ field }) =>
-    simplifiedValueGetter(
-      field,
-      columnsWithDefaultColDef.find((column) => column.field === field) as any,
-    ),
+  const { path } = queryOptions;
+
+  // apply filtering
+  const filteredRows = getFilteredRowsServerSide(
+    rows,
+    queryOptions.filterModel,
+    columnsWithDefaultColDef,
   );
-  const filterFunctions = filterModel.items.map((filterItem) => {
-    const { field, operator } = filterItem;
-    const colDef = columnsWithDefaultColDef.find((column) => column.field === field) as any;
 
-    const filterOperator: any = colDef.filterOperators.find(
-      ({ value }: GridFilterOperator) => operator === value,
-    );
-
-    let parsedValue = filterItem.value;
-    if (colDef.valueParser) {
-      const parser = colDef.valueParser;
-      parsedValue = Array.isArray(filterItem.value)
-        ? filterItem.value?.map((x) => parser(x))
-        : parser(filterItem.value);
-    }
-
-    return filterOperator?.getApplyFilterFn({ filterItem, value: parsedValue }, colDef);
+  // find direct children referring to the `parentPath`
+  const childRows = findTreeDataRowChildren(filteredRows, path);
+  let childRowsWithDescendantCounts = childRows.map((row) => {
+    const descendants = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, -1);
+    const descendantCount = descendants.length;
+    return { ...row, descendantCount, hasChildren: descendantCount > 0 };
   });
 
-  if (filterModel.logicOperator === GridLogicOperator.Or) {
-    return rows.filter((row: GridRowModel) =>
-      filterModel.items.some((_, index) => {
-        const value = valueGetters[index](row);
-        return filterFunctions[index] === null ? true : filterFunctions[index]({ value });
-      }),
-    );
-  }
-  return rows.filter((row: GridRowModel) =>
-    filterModel.items.every((_, index) => {
-      const value = valueGetters[index](row);
-      return filterFunctions[index] === null ? true : filterFunctions[index]({ value });
-    }),
-  );
+  // apply sorting
+  const rowComparator = getRowComparator(queryOptions.sortModel, columnsWithDefaultColDef);
+  childRowsWithDescendantCounts = [...childRowsWithDescendantCounts].sort(rowComparator);
+
+  return new Promise<FakeServerTreeDataResponse>((resolve) => {
+    setTimeout(() => {
+      resolve(childRowsWithDescendantCounts);
+    }, delay); // simulate network latency
+  });
 };
 
 /**
@@ -164,6 +126,8 @@ interface FakeServerResponse {
   totalRowCount: number;
 }
 
+type FakeServerTreeDataResponse = GridRowModel[];
+
 interface PageInfo {
   totalRowCount?: number;
   nextCursor?: string;
@@ -187,6 +151,12 @@ export interface QueryOptions {
   sortModel?: GridSortModel;
   firstRowToRender?: number;
   lastRowToRender?: number;
+}
+
+export interface TreeDataQueryOptions {
+  path: string[];
+  filterModel?: GridFilterModel;
+  sortModel?: GridSortModel;
 }
 
 const DEFAULT_DATASET_OPTIONS: UseDemoDataOptions = {
