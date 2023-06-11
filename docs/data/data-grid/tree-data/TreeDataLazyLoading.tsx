@@ -14,14 +14,16 @@ export default function TreeDataLazyLoading() {
   const { loading, data, lazyLoadTreeRows } = useDemoData({
     dataSet: 'Employee',
     rowLength: 1000,
-    treeData: { maxDepth: 4, groupingField: 'name', averageChildren: 5 },
+    treeData: { maxDepth: 2, groupingField: 'name', averageChildren: 10 },
   });
 
   const onFetchRowChildren = React.useCallback(
-    async ({ row, helpers }: GridFetchRowChildrenParams) => {
+    async ({ row, helpers, filterModel }: GridFetchRowChildrenParams) => {
       try {
         const path = row ? data.getTreeDataPath!(row) : [];
-        const rows = (await lazyLoadTreeRows({ path })) as GridValidRowModel[];
+        const rows = (await lazyLoadTreeRows({
+          request: { path, filterModel },
+        })) as GridValidRowModel[];
         helpers.success(rows);
       } catch (error) {
         // simulate network error
@@ -42,10 +44,29 @@ export default function TreeDataLazyLoading() {
         {...data}
         apiRef={apiRef}
         rows={initRows}
+        unstable_headerFilters
         onFetchRowChildren={onFetchRowChildren}
+        initialState={{
+          ...data.initialState,
+          columns: {
+            ...data.initialState?.columns,
+            columnVisibilityModel: {
+              ...data.initialState?.columns?.columnVisibilityModel,
+              avatar: false,
+            },
+          },
+          filter: {
+            filterModel: {
+              items: [
+                { field: 'website', operator: 'contains', value: 'ab' },
+              ]
+            }
+          }
+        }}
         isServerSideRow={(row) => row.hasChildren}
         getDescendantCount={(row) => row.descendantCount}
         rowsLoadingMode="server"
+        filterMode="server"
       />
     </div>
   );

@@ -511,6 +511,7 @@
   { "name": "GridTranslationKeys", "kind": "TypeAlias" },
   { "name": "GridTreeBasicNode", "kind": "Interface" },
   { "name": "GridTreeDataGroupingCell", "kind": "Function" },
+  { "name": "GridTreeDataLazyLoadingApi", "kind": "Interface" },
   { "name": "GridTreeNode", "kind": "TypeAlias" },
   { "name": "GridTreeNodeWithRender", "kind": "TypeAlias" },
   { "name": "GridTripleDotsVerticalIcon", "kind": "Variable" },

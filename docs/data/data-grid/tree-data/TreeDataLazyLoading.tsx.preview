@@ -1,9 +1,0 @@
-<DataGridPro
-  {...data}
-  apiRef={apiRef}
-  rows={initRows}
-  onFetchRowChildren={onFetchRowChildren}
-  isServerSideRow={(row) => row.hasChildren}
-  getDescendantCount={(row) => row.descendantCount}
-  rowsLoadingMode="server"
-/>

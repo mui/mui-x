@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GridColumnVisibilityModel, GridRowModel } from '@mui/x-data-grid-premium';
+import { GridColumnVisibilityModel, GridRowModel, GridFilterModel } from '@mui/x-data-grid-premium';
 import { GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
@@ -11,6 +11,7 @@ import {
   DemoTreeDataValue,
   addTreeDataOptionsToDemoData,
 } from '../services/tree-data-generator';
+import { filterServerSide } from './filterUtils';
 
 const dataCache = new LRUCache<string, DemoTreeDataValue>({
   max: 10,
@@ -27,15 +28,23 @@ const DEFAULT_SERVER_OPTIONS = {
   maxDelay: 1000,
 };
 
+interface LazyLoadTreeRowsRequest {
+  path: string[];
+  // TODO: Support server side filtering and sorting
+  filterModel?: GridFilterModel;
+  sortModel?: any;
+}
+interface LazyLoadTreeRowsParams {
+  request: LazyLoadTreeRowsRequest;
+  serverOptions?: ServerOptions;
+}
+
 export type DemoDataReturnType = {
   data: DemoTreeDataValue;
   loading: boolean;
   setRowLength: (count: number) => void;
   loadNewData: () => void;
-  lazyLoadTreeRows: (params: {
-    path: string[];
-    serverOptions?: ServerOptions;
-  }) => Promise<GridRowModel[]>;
+  lazyLoadTreeRows: (params: LazyLoadTreeRowsParams) => Promise<GridRowModel[]>;
 };
 
 type DataSet = 'Commodity' | 'Employee';
@@ -243,15 +252,9 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
 
   const lazyLoadTreeRows = React.useCallback(
     ({
-      path,
+      request: { path, filterModel },
       serverOptions = DEFAULT_SERVER_OPTIONS,
-    }: {
-      path: string[];
-      serverOptions?: ServerOptions;
-      // TODO: Support server side filtering and sorting
-      filterModel?: any;
-      sortModel?: any;
-    }) => {
+    }: LazyLoadTreeRowsParams) => {
       return new Promise<GridRowModel[]>((resolve, reject) => {
         setTimeout(() => {
           if (!options.treeData) {
@@ -268,10 +271,16 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
               ),
             );
           }
-          const childRows = findTreeDataRowChildren(data.rows, path, data.getTreeDataPath!);
+
+          const filteredRows =
+            (filterModel?.items?.length ?? 0) > 0
+              ? filterServerSide(columns, data.rows, filterModel!)
+              : data.rows;
+          const childRows = findTreeDataRowChildren(filteredRows, path, data.getTreeDataPath!);
+
           const childRowsWithDescendantCounts = childRows.map((row) => {
             const descendants = findTreeDataRowChildren(
-              data.rows,
+              filteredRows,
               data.getTreeDataPath!(row),
               data.getTreeDataPath!,
               -1,
@@ -283,7 +292,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
         }, Math.random() * (serverOptions.maxDelay! - serverOptions.minDelay!) + serverOptions.minDelay!);
       });
     },
-    [data, options.treeData],
+    [columns, data.getTreeDataPath, data.rows, options.treeData],
   );
 
   return {
