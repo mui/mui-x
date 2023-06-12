@@ -296,11 +296,6 @@ export const buildAggregatedFilterApplier = (
   });
 };
 
-const filterModelItems = defaultMemoize(
-  (apiRef: React.MutableRefObject<GridApiCommunity>, items: GridFilterItem[]) =>
-    items.filter((item) => getFilterCallbackFromItem(item, apiRef) !== null),
-);
-
 const isValidFilterItemResult = (
   result: null | GridFilterItemResult,
 ): result is GridFilterItemResult => result != null;
@@ -308,13 +303,26 @@ const isValidQuickFilterResult = (
   result: null | GridQuickFilterValueResult,
 ): result is GridQuickFilterValueResult => result != null;
 
+type FilterCache = {
+  cleanedFilterItems?: GridFilterItem[],
+}
+
+const filterModelItems = (cache: FilterCache, apiRef: React.MutableRefObject<GridApiCommunity>, items: GridFilterItem[]) => {
+  if (!cache.cleanedFilterItems) {
+    cache.cleanedFilterItems =
+      items.filter((item) => getFilterCallbackFromItem(item, apiRef) !== null)
+  }
+  return cache.cleanedFilterItems;
+};
+
 export const passFilterLogic = (
   allFilterItemResults: (null | GridFilterItemResult)[],
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  cache: FilterCache,
 ): boolean => {
-  const cleanedFilterItems = filterModelItems(apiRef, filterModel.items);
+  const cleanedFilterItems = filterModelItems(cache, apiRef, filterModel.items);
   const cleanedFilterItemResults = allFilterItemResults.filter(isValidFilterItemResult);
   const cleanedQuickFilterResults = allQuickFilterResults.filter(isValidQuickFilterResult);
 
