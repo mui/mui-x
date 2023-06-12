@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { defaultMemoize } from 'reselect';
 import {
   GridCellParams,
   GridFilterItem,
