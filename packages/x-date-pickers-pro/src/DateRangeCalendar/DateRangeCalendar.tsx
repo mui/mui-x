@@ -96,8 +96,11 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
-  margin: CALENDAR_MARGIN,
-  marginBottom: CALENDAR_MARGIN / 2,
+  margin: `${CALENDAR_MARGIN}px 12px 8px 6px`,
+  '.MuiDateRangeCalendar-withoutWeekNumber &': {
+    marginLeft: 24,
+    marginRight: 24,
+  },
   alignItems: 'center',
   justifyContent: 'space-between',
 });
@@ -155,10 +158,10 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
 }
 
 const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
-  const { classes, isDragging } = ownerState;
+  const { classes, isDragging, displayWeekNumber } = ownerState;
   const slots = {
     root: ['root'],
-    monthContainer: ['monthContainer'],
+    monthContainer: ['monthContainer', !displayWeekNumber && 'withoutWeekNumber'],
     dayCalendar: [isDragging && 'dayDragging'],
   };
 
