@@ -23,7 +23,20 @@ export type ChartContainerProps = Omit<
 };
 
 export function ChartContainer(props: ChartContainerProps) {
-  const { width, height, series, margin, xAxis, yAxis, colors, sx, title, desc, children } = props;
+  const {
+    width,
+    height,
+    series,
+    margin,
+    xAxis,
+    yAxis,
+    colors,
+    sx,
+    title,
+    desc,
+    disableAxisListener,
+    children,
+  } = props;
   const ref = React.useRef<SVGSVGElement>(null);
 
   return (
@@ -32,7 +45,15 @@ export function ChartContainer(props: ChartContainerProps) {
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <InteractionProvider>
             <HighlightProvider>
-              <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
+              <Surface
+                width={width}
+                height={height}
+                ref={ref}
+                sx={sx}
+                title={title}
+                desc={desc}
+                disableAxisListener={disableAxisListener}
+              >
                 {children}
               </Surface>
             </HighlightProvider>

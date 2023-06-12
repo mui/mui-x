@@ -66,6 +66,10 @@ function XAxis(inProps: XAxisProps) {
   const xTicks = useTicks({ scale: xScale, ticksNumber });
   const positionSigne = position === 'bottom' ? 1 : -1;
 
+  const labelRefPoint = {
+    x: left + width / 2,
+    y: positionSigne * (tickFontSize + tickSize + 10),
+  };
   return (
     <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
@@ -75,28 +79,35 @@ function XAxis(inProps: XAxisProps) {
         <Line x1={xScale.range()[0]} x2={xScale.range()[1]} className={classes.line} />
       )}
 
-      {xTicks.map(({ value, offset }, index) => (
-        <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-          {!disableTicks && <Tick y2={positionSigne * tickSize} className={classes.tick} />}
-          <TickLabel
-            y={positionSigne * (tickSize + 3)}
-            sx={{
-              fontSize: tickFontSize,
-            }}
-            className={classes.tickLabel}
-          >
-            {value.toLocaleString()}
-          </TickLabel>
-        </g>
-      ))}
+      {xTicks.map(({ value, offset, labelOffset }, index) => {
+        const xTickLabel = labelOffset ?? 0;
+        const yTickLabel = positionSigne * (tickSize + 3);
+        return (
+          <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
+            {!disableTicks && <Tick y2={positionSigne * tickSize} className={classes.tick} />}
+            {value !== undefined && (
+              <TickLabel
+                x={xTickLabel}
+                y={yTickLabel}
+                transform-origin={`${xTickLabel}px ${yTickLabel}px`}
+                sx={{
+                  fontSize: tickFontSize,
+                }}
+                className={classes.tickLabel}
+              >
+                {value.toLocaleString()}
+              </TickLabel>
+            )}
+          </g>
+        );
+      })}
 
       {label && (
         <Label
-          transform={`translate(${left + width / 2}, ${
-            positionSigne * (tickFontSize + tickSize + 10)
-          })`}
+          {...labelRefPoint}
           sx={{
             fontSize: labelFontSize,
+            transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
           }}
           className={classes.label}
         >

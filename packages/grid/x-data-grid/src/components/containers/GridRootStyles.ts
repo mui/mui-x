@@ -50,6 +50,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
     { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
+    { [`& .${gridClasses['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
@@ -62,6 +63,10 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
     { [`& .${gridClasses['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
     { [`& .${gridClasses['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
+    {
+      [`& .${gridClasses['columnHeader--withRightBorder']}`]:
+        styles['columnHeader--withRightBorder'],
+    },
     { [`& .${gridClasses.columnHeader}`]: styles.columnHeader },
     { [`& .${gridClasses.headerFilterRow}`]: styles.headerFilterRow },
     { [`& .${gridClasses.columnHeaderCheckbox}`]: styles.columnHeaderCheckbox },
