@@ -41,7 +41,7 @@ export const gridRowTreeDepthsSelector = createSelector(
   (rows) => rows.treeDepths,
 );
 
-export const gridRowMaximumTreeDepthSelector = createSelector(gridRowsStateSelector, (rows) => {
+export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(gridRowsStateSelector, (rows) => {
   const entries = Object.entries(rows.treeDepths);
 
   if (entries.length === 0) {
