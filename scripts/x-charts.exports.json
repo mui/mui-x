@@ -48,6 +48,5 @@
   { "name": "Tooltip", "kind": "Function" },
   { "name": "TooltipProps", "kind": "TypeAlias" },
   { "name": "XAxis", "kind": "Function" },
-  { "name": "XAxisClassKey", "kind": "TypeAlias" },
   { "name": "YAxis", "kind": "Function" }
 ]
