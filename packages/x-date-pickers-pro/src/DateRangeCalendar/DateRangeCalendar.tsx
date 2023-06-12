@@ -67,9 +67,6 @@ const DateRangeCalendarRoot = styled('div', {
 })<{ ownerState: DateRangeCalendarOwnerState<any> }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'row',
-  [`& .${dayPickerClasses.root}`]: {
-    margin: '0 auto',
-  },
   ...(ownerState.displayWeekNumber && {
     [`& .${pickersCalendarHeaderClasses.root}`]: {
       marginLeft: 6,

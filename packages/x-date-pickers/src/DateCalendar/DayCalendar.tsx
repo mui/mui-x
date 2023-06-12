@@ -14,10 +14,8 @@ import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import {
   DAY_SIZE,
   DAY_MARGIN,
-  CALENDAR_MARGIN,
   WEEK_NUMBER_SIZE,
   WEEKS_CONTAINER_HEIGHT,
-  NARROW_CALENDAR_MARGIN,
 } from '../internals/constants/dimensions';
 import {
   PickersSlideTransition,
@@ -137,11 +135,7 @@ const PickersCalendarDayRoot = styled('div', {
 })({
   display: 'flex',
   flexDirection: 'column',
-  margin: `0 ${CALENDAR_MARGIN}px`,
-  gap: 6,
-  '&.MuiDayCalendar-withWeekNumber': {
-    margin: `0 ${NARROW_CALENDAR_MARGIN}px`,
-  },
+  gap: 8,
 });
 
 const PickersCalendarDayHeader = styled('div', {
