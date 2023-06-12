@@ -18,7 +18,7 @@ import {
   GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
-import { gridFilterableColumnLookupSelector, gridColumnLookupSelector } from '../columns';
+import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
 
 type GridFilterItemApplier =
   | {
@@ -260,7 +260,7 @@ export const buildAggregatedQuickFilterApplier = (
     return null;
   }
 
-  const columnsByField = gridFilterableColumnLookupSelector(apiRef);
+  const columnFields = gridColumnFieldsSelector(apiRef);
 
   const appliersPerField = [] as {
     column: GridColDef;
@@ -270,7 +270,8 @@ export const buildAggregatedQuickFilterApplier = (
     }[];
   }[];
 
-  Object.values(columnsByField).forEach((column) => {
+  columnFields.forEach((field) => {
+    const column = apiRef.current.getColumn(field);
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
 
     if (getApplyQuickFilterFn?.v7) {
