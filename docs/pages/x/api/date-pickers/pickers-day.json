@@ -20,6 +20,7 @@
     "focusRipple": { "type": { "name": "bool" } },
     "focusVisibleClassName": { "type": { "name": "string" } },
     "onFocusVisible": { "type": { "name": "func" } },
+    "reduceHorizontalMargin": { "type": { "name": "bool" } },
     "selected": { "type": { "name": "bool" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "sx": {

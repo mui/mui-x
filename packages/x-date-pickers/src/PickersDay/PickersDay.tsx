@@ -446,6 +446,11 @@ PickersDayRaw.propTypes = {
    */
   outsideCurrentMonth: PropTypes.bool.isRequired,
   /**
+   * If `true`, days horizontal margin is reduced in half. Useful when trying to fit more information in same width (i.e. adding week numbers).
+   * @default false
+   */
+  reduceHorizontalMargin: PropTypes.bool,
+  /**
    * If `true`, renders as selected.
    * @default false
    */

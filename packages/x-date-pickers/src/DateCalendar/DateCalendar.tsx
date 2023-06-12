@@ -252,7 +252,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     }
   }, [value]); // eslint-disable-line
 
-  // we only need one prop resolved correctly, passing empty object shouldn't be a problem
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
