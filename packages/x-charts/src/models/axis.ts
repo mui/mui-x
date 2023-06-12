@@ -1,4 +1,11 @@
-import type { ScaleBand, ScaleLogarithmic, ScalePower, ScaleTime, ScaleLinear } from 'd3-scale';
+import type {
+  ScaleBand,
+  ScaleLogarithmic,
+  ScalePower,
+  ScaleTime,
+  ScaleLinear,
+  ScalePoint,
+} from 'd3-scale';
 import { AxisClasses } from '../Axis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 
@@ -66,13 +73,18 @@ export interface XAxisProps extends AxisProps {
   position?: 'top' | 'bottom';
 }
 
-export type ScaleName = 'linear' | 'band' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
 interface AxisScaleConfig {
   band: {
     scaleType: 'band';
     scale: ScaleBand<any>;
+    ticksNumber: number;
+  };
+  point: {
+    scaleType: 'point';
+    scale: ScalePoint<any>;
     ticksNumber: number;
   };
   log: {

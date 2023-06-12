@@ -5,7 +5,7 @@ export const TooltipPaper = styled(Paper, {
   name: 'MuiChartsTooltip',
   slot: 'Table',
 })(({ theme }) => ({
-  padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
+  padding: `${theme.spacing(1)} ${theme.spacing(1)}`,
 }));
 
 export const TooltipTable = styled('table', {
@@ -17,7 +17,8 @@ export const TooltipCell = styled('td', {
   name: 'MuiChartsTooltip',
   slot: 'Cell',
 })(({ theme }) => ({
-  padding: `${theme.spacing(0.5)} ${theme.spacing(1)}`,
+  padding: `${theme.spacing(0.25)} ${theme.spacing(0.5)}`,
+  verticalAlign: 'baseline',
 }));
 
 export const TooltipMark = styled('div', {

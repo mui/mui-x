@@ -83,7 +83,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 New date time picking UI on [`DesktopDateTimePicker`](https://mui.com/x/react-date-pickers/date-time-picker/)
 
-  <img src="https://user-images.githubusercontent.com/4941090/242533399-2b106390-8158-4aba-9ca4-b621c6310977.gif" width="628" />
+  <img src="https://github.com/mui/mui-x/assets/3165635/4e1fe9f9-03eb-4f23-99dd-80212b21fb23" width="840" height="506" />
 
 - 🚀 Performance improvements
 - 🐞 Bugfixes
@@ -151,7 +151,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [charts] Manage series stacking (#8888) @alexfauquette
 - [license] List side effects in the license package (#9092) @cherniavskii
 
-## v6.5.0
+## 6.5.0
 
 _May 19, 2023_
 
@@ -159,9 +159,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
 
-  https://github.com/mui/mui-x/assets/12609561/c4c2bfec-59cf-4cab-932d-dc1983081de9
+  <img src="https://github.com/mui/mui-x/releases/download/v6.5.0/recording.gif" width="840" height="506" />
 
-  See [the documentation](https://mui.com/x/react-data-grid/filtering/#header-filters) for more information
+  See [the documentation](https://mui.com/x/react-data-grid/filtering/header-filters/) for more information
 
 - 🌍 Improve Hebrew (he-IL) and Czech (cs-CZ) locales
 - 📝 Support for editing on pinned rows
@@ -207,7 +207,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Memoize root props for better performance (#8942) @romgrk
 - [test] Skip flaky unit tests in JSDOM (#8994) @cherniavskii
 
-## v6.4.0
+## 6.4.0
 
 _May 12, 2023_
 
@@ -4240,7 +4240,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [docs] Revise and split up "Overview" page into "Introduction" (#4692) @samuelsycamore
 - [docs] Use `useKeepGroupedColumnsHiddren` from the grid package on remaining demo (#5382) @flaviendelangle
 
-## v5.12.3
+## 5.12.3
 
 _Jun 23, 2022_
 
@@ -4291,7 +4291,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [test] Throw if date adapter is not found (#5289) @cherniavskii
 - [test] Use mock for `ResizeObserver` (#5215) @m4theushw
 
-## v5.12.2
+## 5.12.2
 
 _Jun 16, 2022_
 
@@ -4334,7 +4334,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Fix `GridColTypeDef` usage in demo (#5197) @cherniavskii
 - [test] Add `waitFor` before asserting height (#5203) @m4theushw
 
-## v5.12.1
+## 5.12.1
 
 _Jun 9, 2022_
 
@@ -4391,7 +4391,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [test] Fix dynamic row height test failing on Chrome (#5147) @m4theushw
 - [test] Remove delay on server demo for regression tests (#5131) @alexfauquette
 
-## v5.12.0
+## 5.12.0
 
 _May 31, 2022_
 
@@ -4472,7 +4472,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [test] Skip Safari and Firefox on broken tests (#4994) @alexfauquette
 - [test] Make argos screenshots stable (#5061) @m4theushw
 
-## v5.11.1
+## 5.11.1
 
 _May 20, 2022_
 
@@ -4564,7 +4564,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [core] Simplify rows cache management (#4933) @flaviendelangle
 - [core] Use internal icons for quick filter (#4912) @alexfauquette
 
-## v5.11.0
+## 5.11.0
 
 _May 13, 2022_
 
@@ -4708,7 +4708,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [test] Reset cleanup tracking on Karma tests (#4679) @m4theushw
 - [test] Restore `sinon` sandbox after each `karma` test (#4689) @m4theushw
 
-## v5.10.0
+## 5.10.0
 
 _Apr 25, 2022_
 
@@ -4744,7 +4744,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [core] Fix the README of the X packages (#4590) @flaviendelangle
 - [test] Fix test to not depend on screen resolution (#4587) @m4theushw
 
-## v5.9.0
+## 5.9.0
 
 _Apr 14, 2022_
 

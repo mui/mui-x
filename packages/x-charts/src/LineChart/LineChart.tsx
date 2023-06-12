@@ -32,7 +32,7 @@ function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
-    axisHighlight,
+    axisHighlight = { x: 'line' },
     topAxis,
     leftAxis,
     rightAxis,
@@ -53,7 +53,7 @@ function LineChart(props: LineChartProps) {
         xAxis ?? [
           {
             id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'band',
+            scaleType: 'point',
             data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
               (_, index) => index,
             ),
@@ -257,7 +257,7 @@ LineChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -281,7 +281,7 @@ LineChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

@@ -2,6 +2,7 @@ export * from './beBY';
 export * from './caES';
 export * from './csCZ';
 export * from './deDE';
+export * from './elGR';
 export * from './enUS';
 export * from './esES';
 export * from './faIR';
