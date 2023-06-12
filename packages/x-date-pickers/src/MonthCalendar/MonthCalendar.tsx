@@ -14,7 +14,7 @@ import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
 import { applyDefaultDate, getMonthsInYear } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
-import { DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
+import { DIALOG_WIDTH } from '../internals';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -53,13 +53,13 @@ const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: MonthCalendarProps<any> }>(({ ownerState }) => ({
+})<{ ownerState: MonthCalendarProps<any> }>({
   display: 'flex',
   flexWrap: 'wrap',
   alignContent: 'stretch',
-  width: ownerState.width ?? DIALOG_WIDTH + WEEK_NUMBER_SIZE,
   margin: '0 auto',
-}));
+  width: DIALOG_WIDTH,
+});
 
 type MonthCalendarComponent = (<TDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,

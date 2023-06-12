@@ -55,5 +55,4 @@ export interface MonthCalendarProps<TDate>
   onMonthFocus?: (month: number) => void;
   hasFocus?: boolean;
   onFocusedViewChange?: (hasFocus: boolean) => void;
-  width?: number | 'inherit';
 }

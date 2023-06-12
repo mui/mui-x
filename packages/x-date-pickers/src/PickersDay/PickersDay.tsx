@@ -63,6 +63,11 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   disableMargin?: boolean;
+  /**
+   * If `true`, days horizontal margin is reduced in half. Useful when trying to fit more information in same width (i.e. adding week numbers).
+   * @default false
+   */
+  reduceHorizontalMargin?: boolean;
   isAnimating?: boolean;
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
@@ -169,7 +174,7 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     opacity: 0.6,
   },
   ...(!ownerState.disableMargin && {
-    margin: `0 ${DAY_MARGIN}px`,
+    margin: `0 ${ownerState.reduceHorizontalMargin ? DAY_MARGIN / 2 : DAY_MARGIN}px`,
   }),
   ...(ownerState.outsideCurrentMonth &&
     ownerState.showDaysOutsideCurrentMonth && {
@@ -256,6 +261,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     today: isToday = false,
     isFirstVisibleCell,
     isLastVisibleCell,
+    reduceHorizontalMargin,
     ...other
   } = props;
   const ownerState = {
@@ -267,6 +273,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     selected,
     showDaysOutsideCurrentMonth,
     today: isToday,
+    reduceHorizontalMargin,
   };
 
   const classes = useUtilityClasses(ownerState);

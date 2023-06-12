@@ -28,7 +28,6 @@ import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimati
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
-import { DAY_MARGIN, DIALOG_WIDTH, WEEK_NUMBER_SIZE } from '../internals';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -69,12 +68,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateCalendarProps<any> & { disableDayMargin?: boolean } }>(({ ownerState }) => ({
-  width:
-    DIALOG_WIDTH +
-    (ownerState.displayWeekNumber ? WEEK_NUMBER_SIZE : 0) -
-    (ownerState.disableDayMargin ? 7 * 2 * DAY_MARGIN : 0),
-}));
+})<{ ownerState: DateCalendarProps<any> }>({});
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
@@ -322,6 +316,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         labelId={gridLabelId}
         slots={slots}
         slotProps={slotProps}
+        displayWeekNumber={displayWeekNumber}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -340,7 +335,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
               yearsPerRow={yearsPerRow}
-              width="inherit"
             />
           )}
 
@@ -355,7 +349,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
-              width="inherit"
             />
           )}
 

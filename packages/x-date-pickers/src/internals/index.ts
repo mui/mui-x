@@ -56,6 +56,7 @@ export {
   RANGE_CALENDAR_WIDTH,
   CALENDAR_MARGIN,
   WEEK_NUMBER_SIZE,
+  NARROW_CALENDAR_MARGIN,
 } from './constants/dimensions';
 
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
