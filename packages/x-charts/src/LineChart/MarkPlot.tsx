@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { MarkElement } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 
 export function MarkPlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
-
-  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -33,13 +30,17 @@ export function MarkPlot() {
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
 
-          const xDomain = xAxis[xAxisKey].scale.domain();
-          const yDomain = yScale.domain();
+          const xRange = xAxis[xAxisKey].scale.range();
+          const yRange = yScale.range();
+
           const isInRange = ({ x, y }: { x: number; y: number }) => {
-            if (x < xDomain[0] || x > xDomain[1]) {
+            if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
               return false;
             }
-            return !(y < yDomain[0] || y > yDomain[1]);
+            if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
+              return false;
+            }
+            return true;
           };
 
           if (xData === undefined) {
@@ -51,7 +52,11 @@ export function MarkPlot() {
           return xData
             ?.map((x, index) => {
               const y = stackedData[index][1];
-              return { x, y, index };
+              return {
+                x: xScale(x),
+                y: yScale(y),
+                index,
+              };
             })
             .filter(isInRange)
             .map(({ x, y, index }) => (
@@ -61,9 +66,9 @@ export function MarkPlot() {
                 dataIndex={index}
                 shape="circle"
                 color={series[seriesId].color}
-                x={xScale(x)}
-                y={yScale(y)}
-                {...getInteractionItemProps({ type: 'line', seriesId, dataIndex: index })}
+                x={x}
+                y={y}
+                highlightScope={series[seriesId].highlightScope}
               />
             ));
         });

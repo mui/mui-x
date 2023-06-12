@@ -24,14 +24,29 @@ function useTicks(options: { scale: D3Scale; ticksNumber?: number }) {
   return React.useMemo(() => {
     // band scale
     if (isBandScale(scale)) {
-      return scale
-        .domain()
-        .map((d) => ({ value: d, offset: (scale(d) ?? 0) + scale.bandwidth() / 2 }));
+      const domain = scale.domain();
+      return [
+        ...domain.map((d) => ({
+          value: d,
+          offset: scale(d) ?? 0,
+          labelOffset: scale.bandwidth() / 2,
+        })),
+        ...(scale.bandwidth() > 0
+          ? [
+              {
+                value: undefined,
+                offset: scale.range()[1],
+                labelOffset: 0,
+              },
+            ]
+          : []),
+      ];
     }
 
     return scale.ticks(ticksNumber).map((value: any) => ({
       value: scale.tickFormat(ticksNumber)(value),
       offset: scale(value),
+      labelOffset: 0,
     }));
   }, [ticksNumber, scale]);
 }

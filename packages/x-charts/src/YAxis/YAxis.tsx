@@ -81,20 +81,28 @@ function YAxis(inProps: YAxisProps) {
         <Line y1={yScale.range()[0]} y2={yScale.range()[1]} className={classes.line} />
       )}
 
-      {yTicks.map(({ value, offset }, index) => (
-        <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
-          {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
-          <TickLabel
-            x={`${positionSigne * (tickSize + 2)}`}
-            sx={{
-              fontSize: tickFontSize,
-            }}
-            className={classes.tickLabel}
-          >
-            {value}
-          </TickLabel>
-        </g>
-      ))}
+      {yTicks.map(({ value, offset, labelOffset }, index) => {
+        const xTickLabel = positionSigne * (tickSize + 2);
+        const yTickLabel = labelOffset;
+        return (
+          <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
+            {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
+            {value !== undefined && (
+              <TickLabel
+                x={xTickLabel}
+                y={yTickLabel}
+                transform-origin={`${xTickLabel}px ${yTickLabel}px`}
+                sx={{
+                  fontSize: tickFontSize,
+                }}
+                className={classes.tickLabel}
+              >
+                {value.toLocaleString()}
+              </TickLabel>
+            )}
+          </g>
+        );
+      })}
 
       {label && (
         <Label

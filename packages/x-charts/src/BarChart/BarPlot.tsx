@@ -57,6 +57,7 @@ export function BarPlot() {
                 height={yScale(baseline) - yScale(value)}
                 width={barWidth}
                 color={color}
+                highlightScope={series[seriesId].highlightScope}
               />
             );
           });

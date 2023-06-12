@@ -30,8 +30,6 @@ export interface AxisClasses {
   right: string;
 }
 
-export type XAxisClassKey = keyof AxisClasses;
-
 export function getAxisUtilityClass(slot: string) {
   return generateUtilityClass('MuiAxis', slot);
 }

@@ -72,6 +72,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/deDE.ts"
   },
   {
+    "languageTag": "el-GR",
+    "importName": "elGR",
+    "localeName": "Greek",
+    "missingKeysCount": 0,
+    "totalKeysCount": 36,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/elGR.ts"
+  },
+  {
     "languageTag": "he-IL",
     "importName": "heIL",
     "localeName": "Hebrew",
