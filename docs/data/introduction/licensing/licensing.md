@@ -4,7 +4,8 @@
 
 ## MIT vs. commercial licenses
 
-MUI has been building MIT-licensed React components since 2014, and we are committed to the continued advancement of the open-source libraries.
+The MUI team has been building MIT-licensed React components since 2014 with Material UI.
+We are committed to the continued advancement of the open-source libraries.
 Anything we release under an MIT license will remain MIT-licensed forever.
 You can learn more about our stewardship ethos in [this document from our company handbook](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
 
@@ -13,7 +14,7 @@ Commercial licenses enable us to support a full-time staff of engineers, which i
 
 Rest assured that when we release features commercially, it's only because we believe that you will not find a better MIT-licensed alternative anywhere else.
 
-See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparison.
+See the [Pricing](https://mui.com/r/x-get-license/) page for a detailed feature comparison.
 
 ## Plans
 
@@ -27,11 +28,11 @@ MIT licensed npm packages:
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
 
-### Pro Plan<span class="plan-pro"></span>
+### Pro Plan <span class="plan-pro"></span>
 
 The Pro version of MUI X expands on the features of the community version with more advanced capabilities such as multi-filtering, multi-sorting, column resizing and column pinning for the data grid; as well as the date range picker component.
 
-The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
+The Pro version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
 
 Pro npm packages:
 
@@ -42,11 +43,11 @@ Pro npm packages:
 The features exclusive to the Pro version are marked with the <span class="plan-pro"></span> icon throughout the documentation.
 :::
 
-### Premium Plan<span class="plan-premium"></span>
+### Premium Plan <span class="plan-premium"></span>
 
 The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro Plan.
 
-The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/pricing/) for details.
+The Premium version is available under a commercial license—visit [the Pricing page](https://mui.com/r/x-get-license/) for details.
 
 Premium npm package:
 
@@ -73,7 +74,7 @@ For example, when you want to upgrade the Data Grid:
   ```
 
   :::warning
-  ⚠️ However, there is an exception to the superset rule. The default value of the `pagination` prop changes, [see the docs of the pagination](https://mui.com/x/react-data-grid/pagination/).
+  However, there is an exception to the superset rule. The default value of the `pagination` prop changes, [see the docs of the pagination](/x/react-data-grid/pagination/).
   :::
 
 - **Upgrading from Pro to Premium.**
@@ -94,7 +95,7 @@ For more details on how to install the packages, please check out our [package i
 
 ## Evaluation (trial) licenses
 
-In accordance with the [End User License Agreement](https://mui.com/legal/mui-x-eula/#evaluation-trial-licenses), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
+In accordance with the [End User License Agreement](https://mui.com/r/x-license-trial/), you can use the Pro and Premium components without a commercial license for 30 days for non-production environments.
 You can also use it for the development of code not intended for production (for example the reproduction of an issue, doing a benchmark).
 
 You don't need to contact us to use these components for the above cases.
@@ -142,6 +143,7 @@ They include a dependency called `@mui/x-license-pro`, used to validate the lice
 If you're upgrading from community, you may want to check the [upgrading](#upgrading-from-community) section.
 
 With a commercial packaged installed, use `LicenseInfo` to set your licence key as in the code snippet below.
+Calling `setLicenseKey()` "install" the key.
 
 ```jsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -149,13 +151,62 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-### Where to install the key
-
-You need to call `setLicenseKey` before React renders the first component.
 You only need to install the key once in your application.
 
-:::info
-When using Next.js, you should call `setLicenseKey` in [`_app.js`](https://nextjs.org/docs/advanced-features/custom-app):
+### Where to install the key
+
+You need to call `setLicenseKey()` before React renders the first component.
+
+The bundle size of `setLicenseKey()` is relatively small, it should be small enough for you to be able to call it in all your bundles, regardless of whether a commercial MUI X component is rendered or not.
+
+#### Next.js app
+
+When using Next.js app, if have multiple options to install the license key.
+
+1. If your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) is already using `'use client'`, you can do:
+
+```tsx
+'use client';
+
+import { LicenseInfo } from '@mui/x-license-pro';
+
+LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+```
+
+2. Otherwise (recommended), you can create a dummy component called `MuiXLicense.tsx`:
+
+```tsx
+'use client';
+
+import { LicenseInfo } from '@mui/x-license-pro';
+
+LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
+
+export default function MuiXLicense() {
+  return null;
+}
+```
+
+And render `<MuiXLicense>` in your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout):
+
+```tsx
+import MuiXLicense from './MuiXLicense';
+
+export default function RootLayout(props: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {props.children}
+        <MuiXLicense />
+      </body>
+    </html>
+  );
+}
+```
+
+#### Next.js pages
+
+When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
 
 ```tsx
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -167,8 +218,6 @@ export default function MyApp(props) {
   return <Component {...pageProps} />;
 }
 ```
-
-:::
 
 ### What is the key for?
 

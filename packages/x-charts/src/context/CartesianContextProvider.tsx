@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { scaleBand } from 'd3-scale';
+import { scaleBand, scalePoint } from 'd3-scale';
+import PropTypes from 'prop-types';
 import {
   getExtremumX as getBarExtremumX,
   getExtremumY as getBarExtremumY,
@@ -64,11 +65,7 @@ export const CartesianContext = React.createContext<{
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {}, xAxisIds: [], yAxisIds: [] });
 
-export function CartesianContextProvider({
-  xAxis,
-  yAxis,
-  children,
-}: CartesianContextProviderProps) {
+function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextProviderProps) {
   const formattedSeries = React.useContext(SeriesContext);
   const drawingArea = React.useContext(DrawingContext);
 
@@ -140,6 +137,15 @@ export function CartesianContextProvider({
         };
         return;
       }
+      if (scaleType === 'point') {
+        completedXAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scalePoint(axis.data!, range),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
@@ -178,6 +184,15 @@ export function CartesianContextProvider({
         };
         return;
       }
+      if (scaleType === 'point') {
+        completedYAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scalePoint(axis.data!, range),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
@@ -212,3 +227,61 @@ export function CartesianContextProvider({
   // @ts-ignore
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }
+
+CartesianContextProvider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  xAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.string,
+      classes: PropTypes.object,
+      data: PropTypes.array,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      id: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      max: PropTypes.number,
+      maxTicks: PropTypes.number,
+      min: PropTypes.number,
+      minTicks: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
+      valueFormatter: PropTypes.func,
+    }),
+  ),
+  yAxis: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.string,
+      classes: PropTypes.object,
+      data: PropTypes.array,
+      disableLine: PropTypes.bool,
+      disableTicks: PropTypes.bool,
+      fill: PropTypes.string,
+      id: PropTypes.string,
+      label: PropTypes.string,
+      labelFontSize: PropTypes.number,
+      max: PropTypes.number,
+      maxTicks: PropTypes.number,
+      min: PropTypes.number,
+      minTicks: PropTypes.number,
+      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      stroke: PropTypes.string,
+      tickFontSize: PropTypes.number,
+      tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
+      valueFormatter: PropTypes.func,
+    }),
+  ),
+} as any;
+
+export { CartesianContextProvider };

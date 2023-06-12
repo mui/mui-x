@@ -3,15 +3,12 @@ import { line as d3Line } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { LineElement } from './LineElement';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
 export function LinePlot() {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
-
-  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -57,7 +54,7 @@ export function LinePlot() {
               id={seriesId}
               d={linePath.curve(curve)(d3Data) || undefined}
               color={series[seriesId].color}
-              {...getInteractionItemProps({ type: 'line', seriesId })}
+              highlightScope={series[seriesId].highlightScope}
             />
           );
         });
