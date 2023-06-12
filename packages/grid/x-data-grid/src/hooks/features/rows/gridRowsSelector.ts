@@ -41,20 +41,23 @@ export const gridRowTreeDepthsSelector = createSelector(
   (rows) => rows.treeDepths,
 );
 
-export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(gridRowsStateSelector, (rows) => {
-  const entries = Object.entries(rows.treeDepths);
+export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(
+  gridRowsStateSelector,
+  (rows) => {
+    const entries = Object.entries(rows.treeDepths);
 
-  if (entries.length === 0) {
-    return 1;
-  }
+    if (entries.length === 0) {
+      return 1;
+    }
 
-  return (
-    entries
-      .filter(([, nodeCount]) => nodeCount > 0)
-      .map(([depth]) => Number(depth))
-      .sort((a, b) => b - a)[0] + 1
-  );
-});
+    return (
+      entries
+        .filter(([, nodeCount]) => nodeCount > 0)
+        .map(([depth]) => Number(depth))
+        .sort((a, b) => b - a)[0] + 1
+    );
+  },
+);
 
 export const gridDataRowIdsSelector = createSelector(
   gridRowsStateSelector,
