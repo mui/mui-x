@@ -199,7 +199,7 @@ export const useGridCellEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
         } else {
-          const initialValue = colDef.type === 'number' ? Number(key) : key;
+          const initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
           startCellEditModeParams.initialValue = initialValue;
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
