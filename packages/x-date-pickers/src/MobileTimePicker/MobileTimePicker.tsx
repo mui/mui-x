@@ -5,11 +5,14 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { MobileTimePickerProps } from './MobileTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { PickerViewRendererLookup, useLocaleText, validateTime } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { TimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderTimeViewClock } from '../timeViewRenderers';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -20,6 +23,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
@@ -41,6 +45,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     ...defaultizedProps,
     ampmInClock,
     viewRenderers,
+    format: resolveTimeFormat(utils, defaultizedProps),
     slots: {
       field: TimeField,
       ...defaultizedProps.slots,

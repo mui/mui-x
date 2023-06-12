@@ -36,8 +36,8 @@ export default function InterpolationDemo() {
       <LineChart
         xAxis={[{ data: [1, 3, 5, 6, 7, 9], min: 0, max: 10 }]}
         series={[
-          { curve: curveType, data: [0, 5, 2, 6, 3, 9] },
-          { curve: curveType, data: [6, 3, 7, 9, 4, 2] },
+          { curve: curveType, data: [0, 5, 2, 6, 3, 9.3] },
+          { curve: curveType, data: [6, 3, 7, 9.5, 4, 2] },
         ]}
         width={600}
         height={500}

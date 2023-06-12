@@ -91,7 +91,7 @@
     }
   },
   "slots": {
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "SingleInputDateRangeField",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSingleInputDateRangeField" },

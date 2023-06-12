@@ -86,6 +86,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
   | `headerHeight`             | `columnHeaderHeight`          |
 
+- The corresponding type for `rowSelectionModel` (previously `selectionModel`) was renamed from `GridSelectionModel` to `GridRowSelectionModel`.
+
 ### Removed props
 
 - The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.

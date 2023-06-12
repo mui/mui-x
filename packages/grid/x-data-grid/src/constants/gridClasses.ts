@@ -309,6 +309,10 @@ export interface GridClasses {
    */
   iconSeparator: string;
   /**
+   * Styles applied to the column header filter row.
+   */
+  headerFilterRow: string;
+  /**
    * Styles applied to the main container element.
    */
   main: string;
@@ -604,6 +608,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormValueInput',
   'filterIcon',
   'footerContainer',
+  'headerFilterRow',
   'iconButtonContainer',
   'iconSeparator',
   'main',

@@ -5,8 +5,13 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { color as d3Color } from 'd3-color';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import {
+  getIsFaded,
+  getIsHighlighted,
+  useInteractionItemProps,
+} from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
+import { HighlightScope } from '../context/HighlightProvider';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -19,7 +24,7 @@ export interface AreaElementClasses {
 export interface AreaElementOwnerState {
   id: string;
   color: string;
-  isNotHighlighted: boolean;
+  isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<AreaElementClasses>;
 }
@@ -35,9 +40,9 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
-  const { classes, id, isNotHighlighted, isHighlighted } = ownerState;
+  const { classes, id, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isNotHighlighted && 'faded'],
+    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getAreaElementUtilityClass, classes);
@@ -50,7 +55,7 @@ const AreaElementPath = styled('path', {
 })<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
   fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
-  opacity: ownerState.isNotHighlighted ? 0.3 : 1,
+  opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
 AreaElementPath.propTypes = {
@@ -63,8 +68,8 @@ AreaElementPath.propTypes = {
     classes: PropTypes.object,
     color: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
+    isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
-    isNotHighlighted: PropTypes.bool.isRequired,
   }).isRequired,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
@@ -73,23 +78,26 @@ AreaElementPath.propTypes = {
   ]),
 } as any;
 
-export type AreaElementProps = Omit<AreaElementOwnerState, 'isNotHighlighted' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'>;
+export type AreaElementProps = Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'> &
+  React.ComponentPropsWithoutRef<'path'> & {
+    highlightScope?: Partial<HighlightScope>;
+  };
 
 function AreaElement(props: AreaElementProps) {
-  const { id, classes: innerClasses, color, ...other } = props;
+  const { id, classes: innerClasses, color, highlightScope, ...other } = props;
 
-  const getInteractionItemProps = useInteractionItemProps();
+  const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
-  const someSeriesIsHighlighted = item !== null;
-  const isHighlighted = item !== null && item.type === 'line' && item.seriesId === id;
+  const isHighlighted = getIsHighlighted(item, { type: 'line', seriesId: id }, highlightScope);
+  const isFaded =
+    !isHighlighted && getIsFaded(item, { type: 'line', seriesId: id }, highlightScope);
 
   const ownerState = {
     id,
     classes: innerClasses,
     color,
-    isNotHighlighted: someSeriesIsHighlighted && !isHighlighted,
+    isFaded,
     isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);
@@ -110,6 +118,10 @@ AreaElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  highlightScope: PropTypes.shape({
+    faded: PropTypes.oneOf(['global', 'none', 'series']),
+    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+  }),
 } as any;
 
 export { AreaElement };

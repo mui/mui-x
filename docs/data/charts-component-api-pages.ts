@@ -3,8 +3,11 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 export default [
   { pathname: '/x/api/charts/area-element', title: 'AreaElement' },
   { pathname: '/x/api/charts/axis', title: 'Axis' },
+  { pathname: '/x/api/charts/axis-highlight', title: 'AxisHighlight' },
   { pathname: '/x/api/charts/bar-chart', title: 'BarChart' },
   { pathname: '/x/api/charts/bar-plot', title: 'BarPlot' },
+  { pathname: '/x/api/charts/cartesian-context-provider', title: 'CartesianContextProvider' },
+  { pathname: '/x/api/charts/drawing-provider', title: 'DrawingProvider' },
   { pathname: '/x/api/charts/line-chart', title: 'LineChart' },
   { pathname: '/x/api/charts/line-element', title: 'LineElement' },
   { pathname: '/x/api/charts/line-plot', title: 'LinePlot' },
