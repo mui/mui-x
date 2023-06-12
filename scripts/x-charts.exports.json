@@ -4,7 +4,10 @@
   { "name": "AreaElementClasses", "kind": "Interface" },
   { "name": "AreaElementOwnerState", "kind": "Interface" },
   { "name": "AreaElementProps", "kind": "TypeAlias" },
+  { "name": "AreaPlot", "kind": "Function" },
   { "name": "Axis", "kind": "Function" },
+  { "name": "axisClasses", "kind": "Variable" },
+  { "name": "AxisClasses", "kind": "Interface" },
   { "name": "AxisHighlight", "kind": "Function" },
   { "name": "AxisHighlightProps", "kind": "TypeAlias" },
   { "name": "AxisProps", "kind": "Interface" },
@@ -19,6 +22,7 @@
   { "name": "DrawingProvider", "kind": "Function" },
   { "name": "FadeOptions", "kind": "TypeAlias" },
   { "name": "getAreaElementUtilityClass", "kind": "Function" },
+  { "name": "getAxisUtilityClass", "kind": "Function" },
   { "name": "getLineElementUtilityClass", "kind": "Function" },
   { "name": "getMarkElementUtilityClass", "kind": "Function" },
   { "name": "HighlightOptions", "kind": "TypeAlias" },
@@ -35,6 +39,7 @@
   { "name": "MarkElementClasses", "kind": "Interface" },
   { "name": "MarkElementOwnerState", "kind": "Interface" },
   { "name": "MarkElementProps", "kind": "TypeAlias" },
+  { "name": "MarkPlot", "kind": "Function" },
   { "name": "ResponsiveChartContainer", "kind": "Function" },
   { "name": "ResponsiveChartContainerProps", "kind": "TypeAlias" },
   { "name": "Scatter", "kind": "Function" },
@@ -43,5 +48,6 @@
   { "name": "Tooltip", "kind": "Function" },
   { "name": "TooltipProps", "kind": "TypeAlias" },
   { "name": "XAxis", "kind": "Function" },
+  { "name": "XAxisClassKey", "kind": "TypeAlias" },
   { "name": "YAxis", "kind": "Function" }
 ]

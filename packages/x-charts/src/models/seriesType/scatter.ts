@@ -1,9 +1,9 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
+import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType } from './common';
 
 type ScatterValueType = { x: number; y: number; id: string | number };
 
-export interface ScatterSeriesType extends CommonSeriesType, CartesianSeriesType {
+export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
   type: 'scatter';
   data: ScatterValueType[];
   markerSize?: number;
@@ -21,5 +21,4 @@ export type ScatterItemIdentifier = {
 };
 
 export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, 'id'>,
-    DefaultizedCommonSeriesType<ScatterValueType> {}
+  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps> {}

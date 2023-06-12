@@ -75,7 +75,11 @@ export const useAxisEvents = (disableAxisListener: boolean) => {
           index: closestIndex,
         };
       }
-      const dataIndex = Math.floor((x - xScale.range()[0]) / xScale.step());
+
+      const dataIndex =
+        xScale.bandwidth() === 0
+          ? Math.floor((x - xScale.range()[0] + xScale.step() / 2) / xScale.step())
+          : Math.floor((x - xScale.range()[0]) / xScale.step());
       if (dataIndex < 0 || dataIndex >= xAxisData!.length) {
         return null;
       }
