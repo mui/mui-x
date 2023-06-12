@@ -6,6 +6,7 @@ import MuiPopper, {
   PopperProps as MuiPopperProps,
   PopperPlacementType,
 } from '@mui/material/Popper';
+import { Instance } from '@popperjs/core';
 import MuiTrapFocus, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
@@ -363,8 +364,18 @@ export function PickersPopper(inProps: PickerPopperProps) {
     ownerState: props,
   });
 
+  const popperRef = React.useRef<Instance>(null);
+  React.useEffect(() => {
+    const callback = () => {
+      popperRef.current.update();
+    };
+    document.addEventListener('exitedView', callback);
+    return () => {
+      document.removeEventListener('exitedView', callback);
+    };
+  }, []);
   return (
-    <Popper {...popperProps}>
+    <Popper {...popperProps} popperRef={popperRef}>
       {({ TransitionProps, placement: popperPlacement }) => (
         <TrapFocus
           open={open}

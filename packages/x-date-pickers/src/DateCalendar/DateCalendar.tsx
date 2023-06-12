@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
+  unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_useEventCallback as useEventCallback,
@@ -294,9 +295,11 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
 
   const selectedDays = React.useMemo(() => [value], [value]);
 
+  const internalRef = React.useRef(null);
+  const handleRef = useForkRef(ref, internalRef);
   return (
     <DateCalendarRoot
-      ref={ref}
+      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
@@ -322,6 +325,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         className={classes.viewTransitionContainer}
         transKey={view}
         ownerState={ownerState}
+        onExited={() => {
+          const event = new CustomEvent('exitedView', { bubbles: true });
+          internalRef.current.dispatchEvent(event);
+        }}
       >
         <div>
           {view === 'year' && (

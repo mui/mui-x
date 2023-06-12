@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import Fade from '@mui/material/Fade';
+import Fade, { FadeProps } from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionGroup } from 'react-transition-group';
@@ -15,6 +15,7 @@ export interface PickersFadeTransitionGroupProps {
   reduceAnimations: boolean;
   transKey: React.Key;
   classes?: Partial<PickersFadeTransitionGroupClasses>;
+  onExited?: FadeProps['onExited'];
 }
 
 const useUtilityClasses = (ownerState: PickersFadeTransitionGroupProps) => {
@@ -42,7 +43,7 @@ const PickersFadeTransitionGroupRoot = styled(TransitionGroup, {
  */
 export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersFadeTransitionGroup' });
-  const { children, className, reduceAnimations, transKey } = props;
+  const { children, className, reduceAnimations, transKey, onExited } = props;
   const classes = useUtilityClasses(props);
   if (reduceAnimations) {
     return children;
@@ -56,6 +57,7 @@ export function PickersFadeTransitionGroup(inProps: PickersFadeTransitionGroupPr
         unmountOnExit
         key={transKey}
         timeout={{ appear: animationDuration, enter: animationDuration / 2, exit: 0 }}
+        onExited={onExited}
       >
         {children}
       </Fade>
