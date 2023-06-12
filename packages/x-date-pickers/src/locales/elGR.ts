@@ -50,7 +50,7 @@ const elGRPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} δευτερόλεπτα`,
 
   // Digital clock labels
-  selectViewText: (view) => `Επιλέξτε ${view}`,
+  selectViewText: (view) => `Επιλέξτε ${views[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Αριθμός εβδομάδας',
