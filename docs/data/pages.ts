@@ -67,7 +67,22 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-data-grid/editing' },
       { pathname: '/x/react-data-grid/sorting' },
-      { pathname: '/x/react-data-grid/filtering' },
+      {
+        pathname: '/x/react-data-grid/filtering-group',
+        title: 'Filtering',
+        children: [
+          { pathname: '/x/react-data-grid/filtering', title: 'Overview' },
+          { pathname: '/x/react-data-grid/filtering/customization' },
+          { pathname: '/x/react-data-grid/filtering/quick-filter' },
+          { pathname: '/x/react-data-grid/filtering/server-side', title: 'Server-side filter' },
+          { pathname: '/x/react-data-grid/filtering/multi-filters', plan: 'pro' },
+          {
+            pathname: '/x/react-data-grid/filtering/header-filters',
+            plan: 'pro',
+            newFeature: true,
+          },
+        ],
+      },
       { pathname: '/x/react-data-grid/pagination' },
       {
         pathname: '/x/react-data-grid/selection',
@@ -337,20 +352,47 @@ const pages: MuiPage[] = [
           icon: ChartIcon,
           children: [
             { pathname: '/x/react-charts', title: 'Overview' },
-            { pathname: '/x/react-charts/bars', title: 'Bars' },
-            { pathname: '/x/react-charts/lines', title: 'Lines' },
-            { pathname: '/x/react-charts/scatter', title: 'Scatter' },
             {
-              pathname: '',
+              pathname: '/x/react-charts-bars',
+              title: 'Bars',
+              children: [
+                { pathname: '/x/react-charts/bars', title: 'Bars' },
+                { pathname: '/x/react-charts/bar-demo', title: 'Demo' },
+              ],
+            },
+            {
+              pathname: '/x/react-charts-lines',
+              title: 'Lines',
+              children: [
+                { pathname: '/x/react-charts/lines', title: 'Lines' },
+                { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
+                { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
+              ],
+            },
+            {
+              pathname: '/x/react-charts-scatter',
+              title: 'Scatter',
+              children: [
+                { pathname: '/x/react-charts/scatter', title: 'Scatter' },
+                { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
+              ],
+            },
+            {
+              pathname: '/x/react-charts-common-components',
               title: 'Common components',
               children: [
                 { pathname: '/x/react-charts/axis', title: 'Axis' },
                 { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
                 { pathname: '/x/react-charts/legend', title: 'Legend' },
                 { pathname: '/x/react-charts/styling', title: 'Styling' },
+                { pathname: '/x/react-charts/stacking', title: 'Stacking' },
               ],
             },
-            { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
+            {
+              pathname: '/x/react-charts-demos',
+              title: 'Demos',
+              children: [],
+            },
             { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
             { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
             { pathname: '/x/react-charts/gantt', title: '🚧 Gantt' },

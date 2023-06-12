@@ -50,6 +50,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
     { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
+    { [`& .${gridClasses['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
@@ -62,7 +63,12 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
     { [`& .${gridClasses['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
     { [`& .${gridClasses['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
+    {
+      [`& .${gridClasses['columnHeader--withRightBorder']}`]:
+        styles['columnHeader--withRightBorder'],
+    },
     { [`& .${gridClasses.columnHeader}`]: styles.columnHeader },
+    { [`& .${gridClasses.headerFilterRow}`]: styles.headerFilterRow },
     { [`& .${gridClasses.columnHeaderCheckbox}`]: styles.columnHeaderCheckbox },
     { [`& .${gridClasses.columnHeaderDraggableContainer}`]: styles.columnHeaderDraggableContainer },
     { [`& .${gridClasses.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
@@ -115,7 +121,8 @@ export const GridRootStyles = styled('div', {
     outline: 'none',
     height: '100%',
     display: 'flex',
-    overflow: 'hidden',
+    minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
+    minHeight: 0,
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
     [`&.${gridClasses.autoHeight}`]: {
@@ -202,6 +209,9 @@ export const GridRootStyles = styled('div', {
         borderBottomStyle: 'solid',
         boxSizing: 'border-box',
       },
+    [`& .${gridClasses.headerFilterRow}`]: {
+      borderTop: `1px solid ${borderColor}`,
+    },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
     },

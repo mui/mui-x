@@ -1,9 +1,20 @@
-import { MuiPickersAdapter } from '@mui/x-date-pickers/models';
+import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
 
-export interface DescribeGregorianAdapterParams {
+export interface DescribeGregorianAdapterParams<TDate, TLocale> {
+  prepareAdapter?: (adapter: MuiPickersAdapter<TDate, TLocale>) => void;
   formatDateTime: string;
+  dateLibInstanceWithTimezoneSupport?: any;
+  setDefaultTimezone: (timezone: PickersTimezone | undefined) => void;
+  frenchLocale: TLocale;
 }
 
-export type DescribeGregorianAdapterTestSuite = <TDate>(params: {
-  adapter: MuiPickersAdapter<TDate>;
-}) => void;
+export interface DescribeGregorianAdapterTestSuiteParams<TDate, TLocale>
+  extends Omit<DescribeGregorianAdapterParams<TDate, TLocale>, 'frenchLocale'> {
+  adapter: MuiPickersAdapter<TDate, TLocale>;
+  adapterTZ: MuiPickersAdapter<TDate, TLocale>;
+  adapterFr: MuiPickersAdapter<TDate, TLocale>;
+}
+
+export type DescribeGregorianAdapterTestSuite = <TDate, TLocale>(
+  params: DescribeGregorianAdapterTestSuiteParams<TDate, TLocale>,
+) => void;

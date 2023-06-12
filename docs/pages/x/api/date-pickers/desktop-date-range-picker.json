@@ -93,31 +93,31 @@
     "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
   "slots": {
-    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
-    "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
-    "DesktopTransition": {
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
+    "desktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
+    "desktopTransition": {
       "default": "Grow from @mui/material",
       "type": { "name": "elementType" }
     },
-    "DesktopTrapFocus": {
+    "desktopTrapFocus": {
       "default": "TrapFocus from @mui/material",
       "type": { "name": "elementType" }
     },
-    "Field": { "type": { "name": "elementType" } },
-    "FieldRoot": { "type": { "name": "elementType" } },
-    "FieldSeparator": { "type": { "name": "elementType" } },
-    "Layout": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
-    "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
+    "field": { "type": { "name": "elementType" } },
+    "fieldRoot": { "type": { "name": "elementType" } },
+    "fieldSeparator": { "type": { "name": "elementType" } },
+    "layout": { "type": { "name": "elementType" } },
+    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
+    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
+    "switchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "switchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
+    "toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopDateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker" },

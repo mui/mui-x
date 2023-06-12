@@ -1,18 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ScatterPlot } from './ScatterPlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
 import { Axis, AxisProps } from '../Axis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Highlight, HighlightProps } from '../Highlight';
 import { Legend, LegendProps } from '../Legend';
+import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 
-export interface ScatterChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface ScatterChartProps
+  extends Omit<ResponsiveChartContainerProps, 'series'>,
+    AxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: TooltipProps;
-  highlight?: HighlightProps;
+  axisHighlight?: AxisHighlightProps;
   legend?: LegendProps;
 }
 
@@ -22,7 +27,7 @@ function ScatterChart(props: ScatterChartProps) {
     yAxis,
     series,
     tooltip,
-    highlight,
+    axisHighlight,
     legend,
     width,
     height,
@@ -37,7 +42,7 @@ function ScatterChart(props: ScatterChartProps) {
   } = props;
 
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'scatter', ...s }))}
       width={width}
       height={height}
@@ -50,10 +55,10 @@ function ScatterChart(props: ScatterChartProps) {
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <ScatterPlot />
       <Legend {...legend} />
-      <Highlight x="none" y="none" {...highlight} />
+      <AxisHighlight x="none" y="none" {...axisHighlight} />
       <Tooltip trigger="item" {...tooltip} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
 }
 
@@ -62,6 +67,10 @@ ScatterChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  axisHighlight: PropTypes.shape({
+    x: PropTypes.oneOf(['band', 'line', 'none']),
+    y: PropTypes.oneOf(['line', 'none']),
+  }),
   /**
    * Indicate which axis to display the the bottom of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
@@ -88,11 +97,7 @@ ScatterChart.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
-  height: PropTypes.number.isRequired,
-  highlight: PropTypes.shape({
-    x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
-  }),
+  height: PropTypes.number,
   /**
    * Indicate which axis to display the the left of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
@@ -158,17 +163,23 @@ ScatterChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(
     PropTypes.shape({
+      color: PropTypes.string,
       data: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-          x: PropTypes.any.isRequired,
-          y: PropTypes.any.isRequired,
+          x: PropTypes.number.isRequired,
+          y: PropTypes.number.isRequired,
         }),
       ).isRequired,
+      highlightScope: PropTypes.shape({
+        faded: PropTypes.oneOf(['global', 'none', 'series']),
+        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+      }),
       id: PropTypes.string,
       label: PropTypes.string,
       markerSize: PropTypes.number,
       type: PropTypes.oneOf(['scatter']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),
@@ -211,7 +222,7 @@ ScatterChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -228,7 +239,7 @@ ScatterChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -252,7 +263,7 @@ ScatterChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

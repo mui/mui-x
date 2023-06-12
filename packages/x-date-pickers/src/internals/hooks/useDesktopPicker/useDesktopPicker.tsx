@@ -95,6 +95,7 @@ export const useDesktopPicker = <
   const Field = slots.field;
   const fieldProps: BaseSingleInputFieldProps<
     TDate | null,
+    TDate,
     FieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
@@ -131,7 +132,12 @@ export const useDesktopPicker = <
     };
   }
 
-  const slotsForField: BaseSingleInputFieldProps<TDate | null, FieldSection, unknown>['slots'] = {
+  const slotsForField: BaseSingleInputFieldProps<
+    TDate | null,
+    TDate,
+    FieldSection,
+    unknown
+  >['slots'] = {
     textField: slots.textField,
     ...fieldProps.slots,
   };
