@@ -56,6 +56,7 @@ export function AreaPlot() {
                 id={seriesId}
                 d={areaPath.curve(curve)(d3Data) || undefined}
                 color={series[seriesId].color}
+                highlightScope={series[seriesId].highlightScope}
               />
             )
           );

@@ -100,17 +100,17 @@
     }
   },
   "slots": {
-    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
-    "Layout": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "day": { "default": "PickersDay", "type": { "name": "elementType" } },
+    "layout": { "type": { "name": "elementType" } },
+    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
+    "switchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "switchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "StaticDatePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDatePicker" },

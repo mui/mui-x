@@ -5,7 +5,7 @@
 ## Overriding components
 
 As part of the customization API, the Data Grid allows you to override internal components with the `slots` prop.
-The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
+The prop accepts an object of type [`UncapitalizedGridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `slotProps` prop.
 This prop is of type `GridSlotsComponentsProps`.

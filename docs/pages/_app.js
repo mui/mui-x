@@ -198,8 +198,13 @@ function AppWrapper(props) {
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
 
     let productIdentifier = {
-      name: 'Advanced components',
-      metadata: 'MUI X',
+      metadata: '',
+      name: 'MUI X',
+      versions: [
+        { text: `v${process.env.LIB_VERSION}`, current: true },
+        { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
+        { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+      ],
     };
 
     if (
@@ -207,31 +212,11 @@ function AppWrapper(props) {
       canonicalAs.startsWith('/x/api/data-grid/')
     ) {
       productIdentifier = {
-        name: 'Data Grid',
         metadata: 'MUI X',
+        name: 'Data Grid',
         versions: [
-          {
-            text: 'v6',
-            ...(process.env.DATA_GRID_VERSION.startsWith('6')
-              ? {
-                  text: `v${process.env.DATA_GRID_VERSION}`,
-                  current: true,
-                }
-              : {
-                  href: `https://mui.com${languagePrefix}/components/data-grid/`,
-                }),
-          },
-          {
-            text: 'v5',
-            ...(process.env.DATA_GRID_VERSION.startsWith('5')
-              ? {
-                  text: `v${process.env.DATA_GRID_VERSION}`,
-                  current: true,
-                }
-              : {
-                  href: `https://v5.mui.com${languagePrefix}/components/data-grid/`,
-                }),
-          },
+          { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
+          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -240,30 +225,13 @@ function AppWrapper(props) {
       canonicalAs.startsWith('/x/api/date-pickers/')
     ) {
       productIdentifier = {
-        name: 'Date pickers',
         metadata: 'MUI X',
+        name: 'Date Pickers',
         versions: [
+          { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
           {
-            ...(process.env.DATE_PICKERS_VERSION.startsWith('6')
-              ? {
-                  text: `v${process.env.DATE_PICKERS_VERSION}`,
-                  current: true,
-                }
-              : {
-                  text: `v6`,
-                  href: `https://mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
-                }),
-          },
-          {
-            ...(process.env.DATE_PICKERS_VERSION.startsWith('5')
-              ? {
-                  text: `v${process.env.DATE_PICKERS_VERSION}`,
-                  current: true,
-                }
-              : {
-                  text: `v5`,
-                  href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
-                }),
+            text: 'v5',
+            href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
           },
         ],
       };
