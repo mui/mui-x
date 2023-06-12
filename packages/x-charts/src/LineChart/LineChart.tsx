@@ -13,6 +13,7 @@ import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
+import { Legend, LegendProps } from '../Legend';
 import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 import { ClipPath } from '../ClipPath/ClipPath';
 
@@ -20,6 +21,7 @@ export interface LineChartProps extends Omit<ResponsiveChartContainerProps, 'ser
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   axisHighlight?: AxisHighlightProps;
+  legend?: LegendProps;
 }
 function LineChart(props: LineChartProps) {
   const {
@@ -33,6 +35,7 @@ function LineChart(props: LineChartProps) {
     sx,
     tooltip,
     axisHighlight = { x: 'line' },
+    legend,
     topAxis,
     leftAxis,
     rightAxis,
@@ -73,6 +76,7 @@ function LineChart(props: LineChartProps) {
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <MarkPlot />
+      <Legend {...legend} />
       <AxisHighlight {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
@@ -138,6 +142,21 @@ LineChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  legend: PropTypes.shape({
+    classes: PropTypes.object,
+    direction: PropTypes.oneOf(['column', 'row']),
+    itemWidth: PropTypes.number,
+    markSize: PropTypes.number,
+    offset: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+    position: PropTypes.shape({
+      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+    }),
+    spacing: PropTypes.number,
+  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,

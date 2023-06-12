@@ -9,6 +9,7 @@ import { Axis, AxisProps } from '../Axis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
+import { Legend, LegendProps } from '../Legend';
 import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 
 export interface ScatterChartProps
@@ -17,6 +18,7 @@ export interface ScatterChartProps
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   axisHighlight?: AxisHighlightProps;
+  legend?: LegendProps;
 }
 
 function ScatterChart(props: ScatterChartProps) {
@@ -26,6 +28,7 @@ function ScatterChart(props: ScatterChartProps) {
     series,
     tooltip,
     axisHighlight,
+    legend,
     width,
     height,
     margin,
@@ -51,6 +54,7 @@ function ScatterChart(props: ScatterChartProps) {
     >
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <ScatterPlot />
+      <Legend {...legend} />
       <AxisHighlight x="none" y="none" {...axisHighlight} />
       <Tooltip trigger="item" {...tooltip} />
       {children}
@@ -115,6 +119,21 @@ ScatterChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  legend: PropTypes.shape({
+    classes: PropTypes.object,
+    direction: PropTypes.oneOf(['column', 'row']),
+    itemWidth: PropTypes.number,
+    markSize: PropTypes.number,
+    offset: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+    position: PropTypes.shape({
+      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+    }),
+    spacing: PropTypes.number,
+  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,

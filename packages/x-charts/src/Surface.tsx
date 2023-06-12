@@ -21,7 +21,7 @@ export interface SurfaceProps {
 }
 
 const ChartSurfaceStyles = styled('svg', {
-  name: 'MuiChartsSurface',
+  name: 'MuiSurface',
   slot: 'Root',
 })(() => ({}));
 
@@ -36,6 +36,7 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
     viewBox,
     disableAxisListener = false,
     className,
+    sx,
     ...other
   } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
@@ -48,6 +49,16 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       ref={ref}
+      sx={[
+        {
+          '--Legend-itemWidth': '100px',
+          '--Legend-itemMarkSize': '20px',
+          '--Legend-rootSpacing': '5px',
+          '--Legend-labelSpacing': '5px',
+          '--Legend-rootOffsetY': '-20px',
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       {...other}
     >
       <title>{props.title}</title>

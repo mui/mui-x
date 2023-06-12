@@ -11,6 +11,7 @@ import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
+import { Legend, LegendProps } from '../Legend';
 import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 import { ClipPath } from '../ClipPath/ClipPath';
 
@@ -18,6 +19,7 @@ export interface BarChartProps extends Omit<ResponsiveChartContainerProps, 'seri
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   axisHighlight?: AxisHighlightProps;
+  legend?: LegendProps;
 }
 
 function BarChart(props: BarChartProps) {
@@ -32,6 +34,7 @@ function BarChart(props: BarChartProps) {
     sx,
     tooltip,
     axisHighlight,
+    legend,
     topAxis,
     leftAxis,
     rightAxis,
@@ -70,6 +73,7 @@ function BarChart(props: BarChartProps) {
         <BarPlot />
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <Legend {...legend} />
       <AxisHighlight x="band" {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
@@ -135,6 +139,21 @@ BarChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  legend: PropTypes.shape({
+    classes: PropTypes.object,
+    direction: PropTypes.oneOf(['column', 'row']),
+    itemWidth: PropTypes.number,
+    markSize: PropTypes.number,
+    offset: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+    position: PropTypes.shape({
+      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+    }),
+    spacing: PropTypes.number,
+  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
