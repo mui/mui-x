@@ -347,11 +347,6 @@
       "nodeName": "the column headers's inner element",
       "conditions": "there is a horizontal scrollbar"
     },
-    "columnSeparator--resizable": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "the column header separator",
-      "conditions": "the column is resizable"
-    },
     "columnSeparator--resizing": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the column header separator",

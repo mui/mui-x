@@ -135,7 +135,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);
     expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
 
-    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+    const separator = document.querySelector(`.${gridClasses.columnSeparator}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);

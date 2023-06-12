@@ -14,7 +14,6 @@ enum GridColumnHeaderSeparatorSides {
 }
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
-  resizable: boolean;
   resizing: boolean;
   height: number;
   side?: GridColumnHeaderSeparatorSides;
@@ -25,12 +24,11 @@ type OwnerState = GridColumnHeaderSeparatorProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { resizable, resizing, classes, side } = ownerState;
+  const { resizing, classes, side } = ownerState;
 
   const slots = {
     root: [
       'columnSeparator',
-      resizable && 'columnSeparator--resizable',
       resizing && 'columnSeparator--resizing',
       side && `columnSeparator--side${capitalize(side)}`,
     ],
@@ -41,13 +39,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
-  const {
-    resizable,
-    resizing,
-    height,
-    side = GridColumnHeaderSeparatorSides.Right,
-    ...other
-  } = props;
+  const { resizing, height, side = GridColumnHeaderSeparatorSides.Right, ...other } = props;
   const rootProps = useGridRootProps();
   const ownerState = { ...props, side, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -78,7 +70,6 @@ GridColumnHeaderSeparatorRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   height: PropTypes.number.isRequired,
-  resizable: PropTypes.bool.isRequired,
   resizing: PropTypes.bool.isRequired,
   side: PropTypes.oneOf(['left', 'right']),
 } as any;

@@ -172,7 +172,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
     expect(getColumnHeaderCell(1).offsetWidth).to.equal(100);
     expect(getCell(0, 0).offsetWidth).to.equal(200);
 
-    const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
+    const separator = document.querySelector(`.${gridClasses.columnSeparator}`)!;
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 200, buttons: 1 });
     fireEvent.mouseUp(separator);
