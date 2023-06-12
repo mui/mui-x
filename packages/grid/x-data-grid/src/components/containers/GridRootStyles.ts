@@ -15,6 +15,24 @@ function getBorderColor(theme: Theme) {
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
 
+const columnHeadersStyles = {
+  [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
+    visibility: 'visible',
+    width: 'auto',
+  },
+};
+
+const columnHeaderStyles = {
+  [`& .${gridClasses.iconButtonContainer}`]: {
+    visibility: 'visible',
+    width: 'auto',
+  },
+  [`& .${gridClasses.menuIcon}`]: {
+    width: 'auto',
+    visibility: 'visible',
+  },
+};
+
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Root',
@@ -175,10 +193,6 @@ export const GridRootStyles = styled('div', {
           duration: theme.transitions.duration.shorter,
         }),
       },
-    [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
-      {
-        opacity: 0.5,
-      },
     [`& .${gridClasses.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -247,11 +261,18 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
-    [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
-      {
-        visibility: 'visible',
-        width: 'auto',
-      },
+    '@media (hover: hover)': {
+      [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
+      [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
+      [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
+        {
+          opacity: 0.5,
+        },
+    },
+    '@media (hover: none)': {
+      [`& .${gridClasses.columnHeaders}`]: columnHeadersStyles,
+      [`& .${gridClasses.columnHeader}`]: columnHeaderStyles,
+    },
     [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
       left: -12,
     },
@@ -285,16 +306,6 @@ export const GridRootStyles = styled('div', {
       marginRight: -10,
       display: 'flex',
       alignItems: 'center',
-    },
-    [`& .${gridClasses.columnHeader}:hover`]: {
-      [`& .${gridClasses.iconButtonContainer}`]: {
-        visibility: 'visible',
-        width: 'auto',
-      },
-      [`& .${gridClasses.menuIcon}`]: {
-        width: 'auto',
-        visibility: 'visible',
-      },
     },
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
