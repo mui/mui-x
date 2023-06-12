@@ -56,7 +56,7 @@ const DEFAULT_INSTANCE_ID = { id: 'default' };
 
 export const createSelector = ((
   a: Function,
-  b?: Function,
+  b: Function,
   c?: Function,
   d?: Function,
   e?: Function,
