@@ -304,13 +304,18 @@ const isValidQuickFilterResult = (
 ): result is GridQuickFilterValueResult => result != null;
 
 type FilterCache = {
-  cleanedFilterItems?: GridFilterItem[],
-}
+  cleanedFilterItems?: GridFilterItem[];
+};
 
-const filterModelItems = (cache: FilterCache, apiRef: React.MutableRefObject<GridApiCommunity>, items: GridFilterItem[]) => {
+const filterModelItems = (
+  cache: FilterCache,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  items: GridFilterItem[],
+) => {
   if (!cache.cleanedFilterItems) {
-    cache.cleanedFilterItems =
-      items.filter((item) => getFilterCallbackFromItem(item, apiRef) !== null)
+    cache.cleanedFilterItems = items.filter(
+      (item) => getFilterCallbackFromItem(item, apiRef) !== null,
+    );
   }
   return cache.cleanedFilterItems;
 };
