@@ -17,7 +17,23 @@ const blacklist = [
   'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
   'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
+  'docs-data-grid-getting-started/Codesandbox.png', // codesandbox is a white rectagle
   // 'docs-system-typography',
+  /**
+   * Excluse docs pages about interaction.
+   * Those features do not demonstrate rendering features. They highlight some interaction
+   * So they have nearly no interest in argos.
+   * The `(?<!Snap)` part ensure that those demo does not end with Snap.png since those demos are build on the purpose of snapshot
+   */
+  /^docs-data-grid-accessibility(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-api-object(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-clipboard(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-column-menu(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-editing(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-events(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-export(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-row-selection(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-state(.*)(?<!Snap)\.png$/,
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);
