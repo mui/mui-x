@@ -8,7 +8,6 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_useControlled as useControlled,
 } from '@mui/utils';
-import { resolveComponentProps } from '@mui/base/utils';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -254,8 +253,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   }, [value]); // eslint-disable-line
 
   // we only need one prop resolved correctly, passing empty object shouldn't be a problem
-  const disableDayMargin = resolveComponentProps(slotProps?.day, {} as any)?.disableMargin;
-  const ownerState = { ...props, disableDayMargin };
+  const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
   const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
