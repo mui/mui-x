@@ -390,7 +390,7 @@ export const useGridFilter = (
         const tree = gridRowTreeSelector(apiRef);
         const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
         const filteredRowsLookup: Record<GridRowId, boolean> = {};
-        const cache = {};
+        const filterCache = {};
 
         for (let i = 0; i < rowIds.length; i += 1) {
           const rowId = rowIds[i];
@@ -405,7 +405,7 @@ export const useGridFilter = (
               [passingQuickFilterValues],
               params.filterModel,
               apiRef,
-              cache,
+              filterCache,
             );
           }
           filteredRowsLookup[rowId] = isRowPassing;

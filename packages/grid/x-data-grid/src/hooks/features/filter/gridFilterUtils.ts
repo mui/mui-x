@@ -295,12 +295,7 @@ export const buildAggregatedFilterApplier = (
   });
 };
 
-const isValidFilterItemResult = (
-  result: null | GridFilterItemResult,
-): result is GridFilterItemResult => result != null;
-const isValidQuickFilterResult = (
-  result: null | GridQuickFilterValueResult,
-): result is GridQuickFilterValueResult => result != null;
+const isNotNull = <T>(result: null | T): result is T => result != null;
 
 type FilterCache = {
   cleanedFilterItems?: GridFilterItem[];
@@ -327,8 +322,8 @@ export const passFilterLogic = (
   cache: FilterCache,
 ): boolean => {
   const cleanedFilterItems = filterModelItems(cache, apiRef, filterModel.items);
-  const cleanedFilterItemResults = allFilterItemResults.filter(isValidFilterItemResult);
-  const cleanedQuickFilterResults = allQuickFilterResults.filter(isValidQuickFilterResult);
+  const cleanedFilterItemResults = allFilterItemResults.filter(isNotNull);
+  const cleanedQuickFilterResults = allQuickFilterResults.filter(isNotNull);
 
   // get result for filter items model
   if (cleanedFilterItemResults.length > 0) {

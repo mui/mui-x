@@ -32,7 +32,7 @@ export const filterRowTreeFromTreeData = (
   const { rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
-  const cache = {};
+  const filterCache = {};
 
   const filterTreeNode = (
     node: GridTreeNode,
@@ -53,7 +53,7 @@ export const filterRowTreeFromTreeData = (
         [passingQuickFilterValues],
         params.filterModel,
         params.apiRef,
-        cache,
+        filterCache,
       );
     }
 
