@@ -25,6 +25,7 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
+import type { GridDataSource } from './gridDataSource';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -157,6 +158,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
+  /**
+   * DataSource object to allow server-side data fetching
+   * @ignore - do not document.
+   */
+  unstable_dataSource?: GridDataSource;
   /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.

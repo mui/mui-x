@@ -2,8 +2,8 @@ import * as React from 'react';
 import {
   DataGridPro,
   useGridApiRef,
-  GridFetchRowChildrenParams,
   GridValidRowModel,
+  GetRowsParams,
 } from '@mui/x-data-grid-pro';
 import {
   createFakeServer,
@@ -28,23 +28,25 @@ export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
   const { rows: rowsServerSide } = useQuery(emptyObject);
 
-  const onFetchRowChildren = React.useCallback(
-    async ({ row, helpers, filterModel, sortModel }: GridFetchRowChildrenParams) => {
-      const serverRows = await loadTreeDataServerRows(
-        rowsServerSide,
-        {
-          filterModel,
-          sortModel,
-          path: row?.path ?? [],
-        },
-        {
-          minDelay: 300,
-          maxDelay: 800,
-        },
-        columnsWithDefaultColDef,
-      );
-      helpers.success(serverRows);
-    },
+  const dataSource = React.useMemo(
+    () => ({
+      getRows: async ({ filterModel, sortModel, groupKeys }: GetRowsParams) => {
+        const serverRows = await loadTreeDataServerRows(
+          rowsServerSide,
+          {
+            filterModel,
+            sortModel,
+            path: groupKeys ?? [],
+          },
+          {
+            minDelay: 300,
+            maxDelay: 800,
+          },
+          columnsWithDefaultColDef,
+        );
+        return serverRows;
+      },
+    }),
     [rowsServerSide],
   );
 
@@ -58,7 +60,7 @@ export default function TreeDataLazyLoading() {
         getTreeDataPath={(row) => row.path}
         treeData
         unstable_headerFilters
-        onFetchRowChildren={onFetchRowChildren}
+        unstable_dataSource={dataSource}
         initialState={{
           ...data.initialState,
           columns: {

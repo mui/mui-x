@@ -10,4 +10,5 @@ export interface GridTreeDataLazyLoadingApi {
    * @param {boolean} value The boolean value that's needs to be set.
    */
   setRowLoadingStatus: (nodeId: GridTreeNode['id'], value: boolean) => void;
+  fetchNodeChildren: (nodeId: GridTreeNode['id']) => void;
 }

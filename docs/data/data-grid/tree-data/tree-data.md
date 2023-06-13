@@ -115,44 +115,24 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 
 ## Children lazy-loading
 
-To lazy-load tree data children, set the `rowsLoadingMode` prop to `server` and listen to the `fetchRowChildren` event or pass a handler to `onFetchRowChildren` prop. It is fired when user tries to expand a row, it recieves the parent row object and a `helpers` object as parameters which has the following signature.
+To lazy-load tree data children, define a data source and pass it as the `unstable_dataSource` prop.
 
 ```tsx
-interface GridTreeDataLazyLoadHelpers {
-  success: (rows: GridRowModel[]) => void;
-  error: () => void;
-}
-
-interface GridFetchRowChildrenParams {
-  row: GridRowModel | undefined;
-  helpers: GridTreeDataLazyLoadHelpers;
-}
-```
-
-The `onFetchRowChildren` handler is fired when the data for a specific row is requested, use it to fetch the data and call `helpers.success(newRows)` and `helpers.error()` respectively in case of success or error to let the grid update the related internal states.
-
-To enable lazy-loading for a given row, you also need to set the `isServerSideRow` prop to a function that returns `true` for the rows that have children and `false` for the rows that don't have children. If you have the information on server, you can provide an optional `getDescendantCount` prop which returns the number of descendants for a parent row.
-
-```tsx
-async function onFetchRowChildren({ row, helpers }: GridFetchRowChildrenParams) {
-  try {
-    const childRows = await fetchRows(row);
-    helpers.success(childRows);
-  } catch (error) {
-    helpers.error();
-  }
+const dataSource = {
+  getRows: async ({ filterModel, sortModel, groupKeys }: GetRowsParams) => {
+    const rows = await fetchRows({ filterModel, sortModel, groupKeys });
+    return rows;
+  },
 }
 
 <DataGridPro
   {...otherProps}
   treeData
-  getTreeDataPath={getTreeDataPath}
-  onFetchRowChildren={onFetchRowChildren}
-  isServerSideRow={(row) => row.hasChildren}
-  getDescendantCount={(row) => row.descendantCount}
-  rowsLoadingMode="server"
-/>;
+  unstable_dataSource={unstable_dataSource}
+/>
 ```
+
+To enable lazy-loading for a given row, you also need to set the `isServerSideRow` prop to a function that returns `true` for the rows that have children and `false` for the rows that don't have children. If you have the information on server, you can provide an optional `getDescendantCount` prop which returns the number of descendants for a parent row.
 
 Following demo implements a simple lazy-loading tree data grid using mock server.
 

@@ -47,11 +47,9 @@ interface GridTreeDataGroupingCellIconProps
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const { rowNode, row, id, field, descendantCount } = props;
+  const { rowNode, id, field, descendantCount } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const filterModel = gridFilterModelSelector(apiRef);
-  const sortModel = gridSortModelSelector(apiRef);
 
   const isServerSideNode = (rowNode as GridServerSideGroupNode).isServerSide;
   const isDataLoading = (rowNode as GridServerSideGroupNode).isLoading;
@@ -59,9 +57,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (isServerSideNode && !rowNode.childrenExpanded && !areChildrenFetched) {
-      const helpers = getLazyLoadingHelpers(apiRef, rowNode as GridServerSideGroupNode);
-      apiRef.current.setRowLoadingStatus(rowNode.id, true);
-      apiRef.current.publishEvent('fetchRowChildren', { row, helpers, filterModel, sortModel });
+      apiRef.current.fetchNodeChildren(id);
     } else {
       apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     }

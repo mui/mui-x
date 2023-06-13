@@ -51,7 +51,7 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'rowsLoadingMode'
+    | 'unstable_dataSource'
     | 'isServerSideRow'
   >,
 ) => {
@@ -59,9 +59,9 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
     privateApiRef.current.setStrategyAvailability(
       'rowTree',
       TREE_DATA_LAZY_LOADING_STRATEGY,
-      props.treeData && props.rowsLoadingMode === 'server' ? () => true : () => false,
+      props.treeData && props.unstable_dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData, props.rowsLoadingMode]);
+  }, [privateApiRef, props.treeData, props.unstable_dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;
@@ -220,7 +220,7 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
         return params;
       }
 
-      if (props.rowsLoadingMode !== 'server' || !props.isServerSideRow || !props.treeData) {
+      if (!props.unstable_dataSource || !props.isServerSideRow || !props.treeData) {
         return params;
       }
 
@@ -233,7 +233,7 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
 
       return params;
     },
-    [props.isServerSideRow, props.treeData, props.rowsLoadingMode],
+    [props.isServerSideRow, props.treeData, props.unstable_dataSource],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);

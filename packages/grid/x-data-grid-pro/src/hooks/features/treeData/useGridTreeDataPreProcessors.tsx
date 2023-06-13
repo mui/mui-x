@@ -45,16 +45,16 @@ export const useGridTreeDataPreProcessors = (
     | 'disableChildrenFiltering'
     | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
-    | 'rowsLoadingMode'
+    | 'unstable_dataSource'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       'rowTree',
       TREE_DATA_STRATEGY,
-      props.treeData && props.rowsLoadingMode === 'client' ? () => true : () => false,
+      props.treeData && props.unstable_dataSource ? () => false : () => true,
     );
-  }, [privateApiRef, props.treeData, props.rowsLoadingMode]);
+  }, [privateApiRef, props.treeData, props.unstable_dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
     const groupingColDefProp = props.groupingColDef;

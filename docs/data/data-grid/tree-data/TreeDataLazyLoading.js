@@ -22,24 +22,26 @@ export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
   const { rows: rowsServerSide } = useQuery(emptyObject);
 
-  const onFetchRowChildren = React.useCallback(
-    async ({ row, helpers, filterModel, sortModel }) => {
-      const serverRows = await loadTreeDataServerRows(
-        rowsServerSide,
-        {
-          filterModel,
-          sortModel,
-          path: row?.path ?? [],
-        },
-        {
-          minDelay: 300,
-          maxDelay: 800,
-        },
-        columnsWithDefaultColDef,
-      );
+  const dataSource = React.useMemo(
+    () => ({
+      getRows: async ({ filterModel, sortModel, groupKeys }) => {
+        const serverRows = await loadTreeDataServerRows(
+          rowsServerSide,
+          {
+            filterModel,
+            sortModel,
+            path: groupKeys ?? [],
+          },
+          {
+            minDelay: 300,
+            maxDelay: 800,
+          },
+          columnsWithDefaultColDef,
+        );
 
-      helpers.success(serverRows);
-    },
+        return serverRows;
+      },
+    }),
     [rowsServerSide],
   );
 
@@ -53,7 +55,7 @@ export default function TreeDataLazyLoading() {
         getTreeDataPath={(row) => row.path}
         treeData
         unstable_headerFilters
-        onFetchRowChildren={onFetchRowChildren}
+        unstable_dataSource={dataSource}
         initialState={{
           ...data.initialState,
           columns: {
