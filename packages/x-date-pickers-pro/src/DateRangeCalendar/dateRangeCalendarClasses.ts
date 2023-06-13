@@ -8,6 +8,8 @@ export interface DateRangeCalendarClasses {
   root: string;
   /** Styles applied to the container of a month. */
   monthContainer: string;
+  /** Styles applied to the container of a month if `displayWeekNumber=false`. */
+  monthContainerWithoutWeekNumber: string;
   /** Styles applied to the day calendar container when dragging */
   dayDragging: string;
 }
@@ -19,5 +21,5 @@ export const getDateRangeCalendarUtilityClass = (slot: string) =>
 
 export const dateRangeCalendarClasses: DateRangeCalendarClasses = generateUtilityClasses(
   'MuiDateRangeCalendar',
-  ['root', 'monthContainer', 'dayDragging'],
+  ['root', 'monthContainer', 'monthContainerWithoutWeekNumber', 'dayDragging'],
 );

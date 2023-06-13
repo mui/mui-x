@@ -94,7 +94,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
   margin: `${CALENDAR_MARGIN}px 12px 8px 6px`,
-  '.MuiDateRangeCalendar-withoutWeekNumber &': {
+  [`.${dateRangeCalendarClasses.monthContainerWithoutWeekNumber} &`]: {
     marginLeft: 24,
     marginRight: 24,
   },
@@ -158,7 +158,7 @@ const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
   const { classes, isDragging, displayWeekNumber } = ownerState;
   const slots = {
     root: ['root'],
-    monthContainer: ['monthContainer', !displayWeekNumber && 'withoutWeekNumber'],
+    monthContainer: ['monthContainer', !displayWeekNumber && 'monthContainerWithoutWeekNumber'],
     dayCalendar: [isDragging && 'dayDragging'],
   };
 
