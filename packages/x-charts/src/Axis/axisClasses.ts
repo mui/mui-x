@@ -31,10 +31,10 @@ export interface AxisClasses {
 }
 
 export function getAxisUtilityClass(slot: string) {
-  return generateUtilityClass('MuiAxis', slot);
+  return generateUtilityClass('MuiChartsAxis', slot);
 }
 
-export const axisClasses: AxisClasses = generateUtilityClasses('MuiAxis', [
+export const axisClasses: AxisClasses = generateUtilityClasses('MuiChartsAxis', [
   'root',
   'line',
   'tickContainer',

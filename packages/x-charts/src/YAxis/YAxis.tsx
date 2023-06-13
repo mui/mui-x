@@ -5,7 +5,7 @@ import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
-import { YAxisProps } from '../models/axis';
+import { ChartsYAxisProps } from '../models/axis';
 import {
   Line,
   Tick,
@@ -15,7 +15,7 @@ import {
 } from '../internals/components/AxisSharedComponents';
 import { getAxisUtilityClass } from '../Axis/axisClasses';
 
-const useUtilityClasses = (ownerState: YAxisProps & { theme: Theme }) => {
+const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
   const slots = {
     root: ['root', 'directionY', position],
@@ -38,8 +38,8 @@ const defaultProps = {
   tickSize: 6,
 } as const;
 
-function YAxis(inProps: YAxisProps) {
-  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiYAxis' });
+function ChartsYAxis(inProps: ChartsYAxisProps) {
+  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsYAxis' });
   const {
     yAxis: {
       [props.axisId]: { scale: yScale, ticksNumber, ...settings },
@@ -121,7 +121,7 @@ function YAxis(inProps: YAxisProps) {
   );
 }
 
-YAxis.propTypes = {
+ChartsYAxis.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -179,4 +179,4 @@ YAxis.propTypes = {
   tickSize: PropTypes.number,
 } as any;
 
-export { YAxis };
+export { ChartsYAxis };

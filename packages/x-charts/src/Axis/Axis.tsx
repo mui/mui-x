@@ -2,39 +2,39 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { XAxis } from '../XAxis';
-import { YAxis } from '../YAxis';
-import { XAxisProps, YAxisProps } from '../models/axis';
+import { ChartsXAxis } from '../XAxis';
+import { ChartsYAxis } from '../YAxis';
+import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 
-export interface AxisProps {
+export interface ChartsAxisProps {
   /**
    * Indicate which axis to display the the top of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default null
    */
-  topAxis?: null | string | XAxisProps;
+  topAxis?: null | string | ChartsXAxisProps;
   /**
    * Indicate which axis to display the the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
-  bottomAxis?: null | string | XAxisProps;
+  bottomAxis?: null | string | ChartsXAxisProps;
   /**
    * Indicate which axis to display the the left of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
-  leftAxis?: null | string | YAxisProps;
+  leftAxis?: null | string | ChartsYAxisProps;
   /**
    * Indicate which axis to display the the right of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default null
    */
-  rightAxis?: null | string | YAxisProps;
+  rightAxis?: null | string | ChartsYAxisProps;
 }
 
 const getAxisId = (
-  propsValue: undefined | null | string | XAxisProps | YAxisProps,
+  propsValue: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
 ): string | null => {
   if (propsValue == null) {
     return null;
@@ -45,7 +45,7 @@ const getAxisId = (
   return propsValue;
 };
 
-function Axis(props: AxisProps) {
+function ChartsAxis(props: ChartsAxisProps) {
   const { topAxis, leftAxis, rightAxis, bottomAxis } = props;
   const { xAxis, xAxisIds, yAxis, yAxisIds } = React.useContext(CartesianContext);
 
@@ -73,11 +73,15 @@ function Axis(props: AxisProps) {
   return (
     <React.Fragment>
       {topId && (
-        <XAxis position="top" axisId={topId} {...(typeof topAxis === 'object' ? topAxis : {})} />
+        <ChartsXAxis
+          position="top"
+          axisId={topId}
+          {...(typeof topAxis === 'object' ? topAxis : {})}
+        />
       )}
 
       {bottomId && (
-        <XAxis
+        <ChartsXAxis
           position="bottom"
           axisId={bottomId}
           {...(typeof bottomAxis === 'object' ? bottomAxis : {})}
@@ -85,7 +89,7 @@ function Axis(props: AxisProps) {
       )}
 
       {leftId && (
-        <YAxis
+        <ChartsYAxis
           position="left"
           axisId={leftId}
           {...(typeof leftAxis === 'object' ? leftAxis : {})}
@@ -93,7 +97,7 @@ function Axis(props: AxisProps) {
       )}
 
       {rightId && (
-        <YAxis
+        <ChartsYAxis
           position="right"
           axisId={rightId}
           {...(typeof rightAxis === 'object' ? rightAxis : {})}
@@ -103,7 +107,7 @@ function Axis(props: AxisProps) {
   );
 }
 
-Axis.propTypes = {
+ChartsAxis.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -194,4 +198,4 @@ Axis.propTypes = {
   ]),
 } as any;
 
-export { Axis };
+export { ChartsAxis };

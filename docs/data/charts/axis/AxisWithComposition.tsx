@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { ChartContainer, BarPlot, LinePlot, XAxis, YAxis } from '@mui/x-charts';
+import {
+  ChartContainer,
+  BarPlot,
+  LinePlot,
+  ChartsXAxis,
+  ChartsYAxis,
+} from '@mui/x-charts';
 
 export default function AxisWithComposition() {
   return (
@@ -47,9 +53,9 @@ export default function AxisWithComposition() {
     >
       <BarPlot />
       <LinePlot />
-      <XAxis axisId="quarters" label="2021 quarters" labelFontSize={18} />
-      <YAxis axisId="quantities" label="# units sold" />
-      <YAxis axisId="money" position="right" label="revenu" />
+      <ChartsXAxis axisId="quarters" label="2021 quarters" labelFontSize={18} />
+      <ChartsYAxis axisId="quantities" label="# units sold" />
+      <ChartsYAxis axisId="money" position="right" label="revenu" />
     </ChartContainer>
   );
 }
