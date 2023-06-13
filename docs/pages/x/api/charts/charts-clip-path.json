@@ -1,0 +1,9 @@
+{
+  "props": {},
+  "slots": {},
+  "name": "ChartsClipPath",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsClipPath" },
+  "filename": "/packages/x-charts/src/ClipPath/ChartsClipPath.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsClipPath" }]
+}

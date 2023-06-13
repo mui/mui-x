@@ -13,7 +13,7 @@ import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Legend, LegendProps } from '../Legend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
-import { ClipPath } from '../ClipPath/ClipPath';
+import { ChartsClipPath } from '../ClipPath';
 
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
@@ -83,7 +83,7 @@ function BarChart(props: BarChartProps) {
       <Legend {...legend} />
       <ChartsAxisHighlight x="band" {...axisHighlight} />
       <Tooltip {...tooltip} />
-      <ClipPath id={clipPathId} />
+      <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
   );

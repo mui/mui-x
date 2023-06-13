@@ -16,6 +16,8 @@
   { "name": "ChartsAxisHighlight", "kind": "Function" },
   { "name": "ChartsAxisHighlightProps", "kind": "TypeAlias" },
   { "name": "ChartsAxisProps", "kind": "Interface" },
+  { "name": "ChartsClipPath", "kind": "Function" },
+  { "name": "ChartsClipPathProps", "kind": "TypeAlias" },
   { "name": "ChartsXAxis", "kind": "Function" },
   { "name": "ChartsYAxis", "kind": "Function" },
   { "name": "DEFAULT_MARGINS", "kind": "Variable" },
