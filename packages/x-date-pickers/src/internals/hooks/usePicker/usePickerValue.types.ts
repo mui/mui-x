@@ -34,14 +34,14 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * Method returning the value to set when clicking the "Today" button
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
-   * @param {FieldValueType} valueType The type of the value being edited.
    * @param {PickersTimezone} timezone The current timezone.
+   * @param {FieldValueType} valueType The type of the value being edited.
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (
     utils: MuiPickersAdapter<TDate>,
-    valueType: FieldValueType,
     timezone: PickersTimezone,
+    valueType: FieldValueType,
   ) => TValue;
   /**
    * @template TDate, TValue
@@ -51,7 +51,6 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @param {TValue} params.value The value provided by the user.
    * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute the reference value.
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
-   * @param {FieldValueType} params.valueType The type of the value being edited.
    * @param {number} params.granularity The granularity of the selection possible on this component.
    * @param {PickersTimezone} params.timezone The current timezone.
    * @returns {TValue} The reference value to use for non-provided dates.
@@ -61,7 +60,6 @@ export interface PickerValueManager<TValue, TDate, TError> {
     value: TValue;
     props: GetDefaultReferenceDateProps<TDate>;
     utils: MuiPickersAdapter<TDate>;
-    valueType: FieldValueType;
     granularity: number;
     timezone: PickersTimezone;
   }) => TValue;

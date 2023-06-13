@@ -11,6 +11,10 @@
     "minDate": { "type": { "name": "any" } },
     "onChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid year using the validation props, except callbacks such as `shouldDisableDate`."
+    },
     "shouldDisableYear": { "type": { "name": "func" } },
     "sx": {
       "type": {

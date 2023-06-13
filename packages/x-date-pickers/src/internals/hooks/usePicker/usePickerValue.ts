@@ -336,7 +336,7 @@ export const usePickerValue = <
 
   const handleSetToday = useEventCallback(() => {
     updateDate({
-      value: valueManager.getTodayValue(utils, valueType, timezone),
+      value: valueManager.getTodayValue(utils, timezone, valueType),
       name: 'setValueFromAction',
       pickerAction: 'today',
     });

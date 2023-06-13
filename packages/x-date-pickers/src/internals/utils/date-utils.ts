@@ -74,21 +74,6 @@ export const findClosestEnabledDate = <TDate>({
   return null;
 };
 
-export const clamp = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  value: TDate,
-  minDate: TDate,
-  maxDate: TDate,
-): TDate => {
-  if (utils.isBefore(value, minDate)) {
-    return minDate;
-  }
-  if (utils.isAfter(value, maxDate)) {
-    return maxDate;
-  }
-  return value;
-};
-
 export const replaceInvalidDateByNull = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null,
@@ -141,8 +126,8 @@ export const mergeDateAndTime = <TDate>(
 
 export const getTodayDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  valueType: FieldValueType,
   timezone: PickersTimezone,
+  valueType?: FieldValueType,
 ) =>
   valueType === 'date'
     ? utils.startOfDay(utils.dateWithTimezone(undefined, timezone)!)

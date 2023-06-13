@@ -28,9 +28,9 @@ export type RangePickerValueManager<
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
-  getTodayValue: (utils, valueType, timezone) => [
-    getTodayDate(utils, valueType, timezone),
-    getTodayDate(utils, valueType, timezone),
+  getTodayValue: (utils, timezone, valueType) => [
+    getTodayDate(utils, timezone, valueType),
+    getTodayDate(utils, timezone, valueType),
   ],
   getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
     const shouldKeepStartDate = value[0] != null && params.utils.isValid(value[0]);
