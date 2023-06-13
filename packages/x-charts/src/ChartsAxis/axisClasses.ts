@@ -3,7 +3,7 @@ import {
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
 
-export interface AxisClasses {
+export interface ChartsAxisClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the main line element. */
@@ -30,11 +30,12 @@ export interface AxisClasses {
   right: string;
 }
 
+export type ChartsAxisClassKey = keyof ChartsAxisClasses;
+
 export function getAxisUtilityClass(slot: string) {
   return generateUtilityClass('MuiChartsAxis', slot);
 }
-
-export const axisClasses: AxisClasses = generateUtilityClasses('MuiChartsAxis', [
+export const axisClasses: ChartsAxisClasses = generateUtilityClasses('MuiChartsAxis', [
   'root',
   'line',
   'tickContainer',

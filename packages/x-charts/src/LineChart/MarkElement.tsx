@@ -22,6 +22,9 @@ export interface MarkElementClasses {
   /** Styles applied to the root element when faded. */
   faded: string;
 }
+
+export type MarkElementClassKey = keyof MarkElementClasses;
+
 export interface MarkElementOwnerState {
   id: string;
   color: string;
