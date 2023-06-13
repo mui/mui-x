@@ -103,6 +103,7 @@ export const useDesktopRangePicker = <
 
   const fieldProps: BaseFieldProps<
     DateRange<TDate>,
+    TDate,
     RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({

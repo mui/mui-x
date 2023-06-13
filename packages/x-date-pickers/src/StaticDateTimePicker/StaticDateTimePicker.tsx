@@ -20,6 +20,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
 ) {
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
+    DateOrTimeView,
     StaticDateTimePickerProps<TDate>
   >(inProps, 'MuiStaticDateTimePicker');
 

@@ -157,8 +157,14 @@ export const useGridCellEditing = (
       } else if (params.isEditable) {
         let reason: GridCellEditStartReasons | undefined;
 
-        if (event.key === ' ') {
-          return; // Space scrolls to the last row
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'cell' },
+        );
+
+        if (!canStartEditing) {
+          return;
         }
 
         if (isPrintableKey(event)) {
@@ -183,7 +189,7 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason, key } = params;
+      const { id, field, reason, key, colDef } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
@@ -193,7 +199,8 @@ export const useGridCellEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
         } else {
-          startCellEditModeParams.initialValue = key;
+          const initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
+          startCellEditModeParams.initialValue = initialValue;
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
         startCellEditModeParams.deleteValue = true;

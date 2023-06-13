@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -537,5 +538,72 @@ describe('<DataGrid /> - Sorting', () => {
     act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
     act(() => apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]));
     expect(getColumnValues(0)).to.deep.equal(['Fila', 'Patagonia', 'Puma']);
+  });
+
+  it('should update the sorting model on columns change', async () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const onSortModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            sortModel={[{ field: 'brand', sort: 'asc' }]}
+            onSortModelChange={onSortModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+
+    setProps({ columns: [{ field: 'id' }] });
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+      expect(onSortModelChange.callCount).to.equal(1);
+      expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
+    });
+  });
+
+  // See https://github.com/mui/mui-x/issues/9204
+  it('should not clear the sorting model when both columns and sortModel change', async () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+
+    const onSortModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            sortModel={[{ field: 'brand', sort: 'asc' }]}
+            onSortModelChange={onSortModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+
+    setProps({ columns: [{ field: 'id' }], sortModel: [{ field: 'id', sort: 'desc' }] });
+    await waitFor(() => {
+      expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
+      expect(onSortModelChange.callCount).to.equal(0);
+    });
   });
 });

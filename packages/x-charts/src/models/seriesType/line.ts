@@ -1,12 +1,29 @@
-import { CurveType } from '../../internals/getCurve';
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
+import {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  StackableSeriesType,
+} from './common';
 
-export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
+export type CurveType =
+  | 'catmullRom'
+  | 'linear'
+  | 'monotoneX'
+  | 'monotoneY'
+  | 'natural'
+  | 'step'
+  | 'stepBefore'
+  | 'stepAfter';
+
+export interface LineSeriesType
+  extends CommonSeriesType<number>,
+    CartesianSeriesType,
+    StackableSeriesType {
   type: 'line';
   data: number[];
   stack?: string;
-  area?: any;
+  area?: boolean;
   label?: string;
   curve?: CurveType;
 }
@@ -25,5 +42,4 @@ export type LineItemIdentifier = {
 };
 
 export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, 'id'>,
-    DefaultizedCommonSeriesType<number> {}
+  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps> {}

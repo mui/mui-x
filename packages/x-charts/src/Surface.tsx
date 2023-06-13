@@ -1,5 +1,6 @@
 import { styled, SxProps, Theme } from '@mui/system';
 import * as React from 'react';
+import { useAxisEvents } from './hooks/useAxisEvents';
 
 type ViewBox = {
   x?: number;
@@ -16,10 +17,11 @@ export interface SurfaceProps {
   desc?: string;
   sx?: SxProps<Theme>;
   children?: React.ReactNode;
+  disableAxisListener?: boolean;
 }
 
 const ChartSurfaceStyles = styled('svg', {
-  name: 'MuiChartsSurface',
+  name: 'MuiSurface',
   slot: 'Root',
 })(() => ({}));
 
@@ -27,8 +29,19 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
   props: SurfaceProps,
   ref,
 ) {
-  const { children, width, height, viewBox, className, ...other } = props;
+  const {
+    children,
+    width,
+    height,
+    viewBox,
+    disableAxisListener = false,
+    className,
+    sx,
+    ...other
+  } = props;
   const svgView = { width, height, x: 0, y: 0, ...viewBox };
+
+  useAxisEvents(disableAxisListener);
 
   return (
     <ChartSurfaceStyles
@@ -36,6 +49,16 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
       ref={ref}
+      sx={[
+        {
+          '--Legend-itemWidth': '100px',
+          '--Legend-itemMarkSize': '20px',
+          '--Legend-rootSpacing': '5px',
+          '--Legend-labelSpacing': '5px',
+          '--Legend-rootOffsetY': '-20px',
+        },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       {...other}
     >
       <title>{props.title}</title>

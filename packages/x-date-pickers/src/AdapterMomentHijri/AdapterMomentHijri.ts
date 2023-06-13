@@ -1,12 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultHMoment, { Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';
-import { AdapterFormats, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
-
-interface AdapterMomentHijriOptions {
-  instance?: typeof defaultHMoment;
-  formats?: Partial<AdapterFormats>;
-}
+import { AdapterFormats, AdapterOptions, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -45,33 +40,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'iYYYY',
+  month: 'iMMMM',
+  monthShort: 'iMMM',
   dayOfMonth: 'iD',
+  weekday: 'dddd',
+  weekdayShort: 'ddd',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'A',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'iYYYY, iMMMM Do',
   fullDateWithWeekday: 'iYYYY, iMMMM Do, dddd',
-  fullDateTime: 'iYYYY, iMMMM Do, hh:mm A',
-  fullDateTime12h: 'iD iMMMM hh:mm A',
-  fullDateTime24h: 'iD iMMMM HH:mm',
+  keyboardDateTime: 'iYYYY/iMM/iDD LT',
+  shortDate: 'iD iMMM',
+  normalDate: 'dddd, iD iMMM',
+  normalDateWithWeekday: 'DD iMMMM',
+  monthAndYear: 'iMMMM iYYYY',
+  monthAndDate: 'iD iMMMM',
+
   fullTime: 'LT',
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
+
+  fullDateTime: 'iYYYY, iMMMM Do, hh:mm A',
+  fullDateTime12h: 'iD iMMMM hh:mm A',
+  fullDateTime24h: 'iD iMMMM HH:mm',
   keyboardDate: 'iYYYY/iMM/iDD',
-  keyboardDateTime: 'iYYYY/iMM/iDD LT',
   keyboardDateTime12h: 'iYYYY/iMM/iDD hh:mm A',
   keyboardDateTime24h: 'iYYYY/iMM/iDD HH:mm',
-  minutes: 'mm',
-  month: 'iMMMM',
-  monthAndDate: 'iD iMMMM',
-  monthAndYear: 'iMMMM iYYYY',
-  monthShort: 'iMMM',
-  weekday: 'dddd',
-  weekdayShort: 'ddd',
-  normalDate: 'dddd, iD iMMM',
-  normalDateWithWeekday: 'DD iMMMM',
-  seconds: 'ss',
-  shortDate: 'iD iMMM',
-  year: 'iYYYY',
 };
 
 const NUMBER_SYMBOL_MAP = {
@@ -112,14 +111,16 @@ const NUMBER_SYMBOL_MAP = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<Moment> {
-  public isMUIAdapter = true;
+export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapter<Moment, string> {
+  public lib = 'moment-hijri';
+
+  public moment: typeof defaultHMoment;
+
+  public isTimezoneCompatible = false;
 
   public formatTokenMap = formatTokenMap;
 
-  public escapedCharacters = { start: '[', end: ']' };
-
-  constructor({ formats, instance }: AdapterMomentHijriOptions = {}) {
+  constructor({ formats, instance }: AdapterOptions<string, typeof defaultHMoment> = {}) {
     super({ locale: 'ar-SA', instance });
 
     this.moment = instance || defaultHMoment;
@@ -127,16 +128,24 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
     this.formats = { ...defaultFormats, ...formats };
   }
 
-  private toIMoment = (value?: Moment | undefined) => {
-    return this.moment(value ? value.clone() : undefined).locale('ar-SA');
-  };
-
   public date = (value?: any) => {
     if (value === null) {
       return null;
     }
 
     return this.moment(value).locale('ar-SA');
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Moment): Moment => {
+    return value;
   };
 
   public parse = (value: string, format: string) => {
@@ -232,7 +241,7 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
 
   public getWeekdays = () => {
     return [0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => {
-      return this.toIMoment().weekday(dayOfWeek).format('dd');
+      return this.date()!.weekday(dayOfWeek).format('dd');
     });
   };
 
@@ -285,8 +294,6 @@ export class AdapterMomentHijri extends AdapterMoment implements MuiPickersAdapt
   };
 
   public getMeridiemText = (ampm: 'am' | 'pm') => {
-    return ampm === 'am'
-      ? this.toIMoment().hours(2).format('A')
-      : this.toIMoment().hours(14).format('A');
+    return ampm === 'am' ? this.date()!.hours(2).format('A') : this.date()!.hours(14).format('A');
   };
 }

@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
-import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { PickerViewRendererLookup, useLocaleText, useUtils, validateDate } from '../internals';
 import { DateView } from '../models';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
+import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -39,7 +40,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: getDatePickerFieldFormat(utils, defaultizedProps),
+    format: resolveDateFormat(utils, defaultizedProps, false),
     slots: {
       field: DateField,
       ...defaultizedProps.slots,

@@ -214,9 +214,8 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
-          const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStopParams = {
-            ...rowParams,
+            ...apiRef.current.getRowParams(params.id),
             reason,
             field: params.field,
           };
@@ -225,8 +224,14 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
-        if (event.key === ' ') {
-          return; // Space scrolls to the last row
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'row' },
+        );
+
+        if (!canStartEditing) {
+          return;
         }
 
         if (isPrintableKey(event)) {

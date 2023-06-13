@@ -23,11 +23,11 @@ import dateFnsFormat from 'date-fns-jalali/format';
 import formatISO from 'date-fns-jalali/formatISO';
 import getHours from 'date-fns-jalali/getHours';
 import getSeconds from 'date-fns-jalali/getSeconds';
+import getMilliseconds from 'date-fns-jalali/getMilliseconds';
 import getWeek from 'date-fns-jalali/getWeek';
 import getYear from 'date-fns-jalali/getYear';
 import getMonth from 'date-fns-jalali/getMonth';
 import getDate from 'date-fns-jalali/getDate';
-import getDay from 'date-fns-jalali/getDay';
 import getDaysInMonth from 'date-fns-jalali/getDaysInMonth';
 import getMinutes from 'date-fns-jalali/getMinutes';
 import isAfter from 'date-fns-jalali/isAfter';
@@ -45,6 +45,7 @@ import setHours from 'date-fns-jalali/setHours';
 import setMinutes from 'date-fns-jalali/setMinutes';
 import setMonth from 'date-fns-jalali/setMonth';
 import setSeconds from 'date-fns-jalali/setSeconds';
+import setMilliseconds from 'date-fns-jalali/setMilliseconds';
 import setYear from 'date-fns-jalali/setYear';
 import startOfDay from 'date-fns-jalali/startOfDay';
 import startOfMonth from 'date-fns-jalali/startOfMonth';
@@ -55,14 +56,15 @@ import isWithinInterval from 'date-fns-jalali/isWithinInterval';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import { AdapterFormats, AdapterUnits, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  AdapterUnits,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 type DateFnsLocale = typeof defaultLocale;
-
-interface AdapterDateFnsJalaliOptions {
-  locale?: DateFnsLocale;
-  formats?: Partial<AdapterFormats>;
-}
 
 const formatTokenMap: FieldFormatTokenMap = {
   // Year
@@ -130,33 +132,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'yyyy',
+  month: 'LLLL',
+  monthShort: 'MMM',
   dayOfMonth: 'd',
+  weekday: 'EEEE',
+  weekdayShort: 'EEE',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'aa',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'PPP',
   fullDateWithWeekday: 'PPPP',
+  keyboardDate: 'P',
+  shortDate: 'd MMM',
+  normalDate: 'd MMMM',
+  normalDateWithWeekday: 'EEE, d MMMM',
+  monthAndYear: 'LLLL yyyy',
+  monthAndDate: 'd MMMM',
+
   fullDateTime: 'PPP p',
   fullDateTime12h: 'PPP hh:mm aa',
   fullDateTime24h: 'PPP HH:mm',
+
   fullTime: 'p',
   fullTime12h: 'hh:mm aaa',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
-  keyboardDate: 'P',
   keyboardDateTime: 'P p',
   keyboardDateTime12h: 'P hh:mm aa',
   keyboardDateTime24h: 'P HH:mm',
-  minutes: 'mm',
-  month: 'LLLL',
-  monthAndDate: 'd MMMM',
-  monthAndYear: 'LLLL yyyy',
-  monthShort: 'MMM',
-  weekday: 'EEEE',
-  weekdayShort: 'EEE',
-  normalDate: 'd MMMM',
-  normalDateWithWeekday: 'EEE, d MMMM',
-  seconds: 'ss',
-  shortDate: 'd MMM',
-  year: 'yyyy',
 };
 
 const NUMBER_SYMBOL_MAP = {
@@ -197,8 +203,10 @@ const NUMBER_SYMBOL_MAP = {
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
+export class AdapterDateFnsJalali implements MuiPickersAdapter<Date, DateFnsLocale> {
   public isMUIAdapter = true;
+
+  public isTimezoneCompatible = false;
 
   public lib = 'date-fns-jalali';
 
@@ -210,7 +218,7 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
 
   public escapedCharacters = { start: "'", end: "'" };
 
-  constructor({ locale, formats }: AdapterDateFnsJalaliOptions = {}) {
+  constructor({ locale, formats }: AdapterOptions<DateFnsLocale, never> = {}) {
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
   }
@@ -225,6 +233,18 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
     }
 
     return new Date(value);
+  };
+
+  public dateWithTimezone = (value: string | null | undefined): Date | null => {
+    return this.date(value);
+  };
+
+  public getTimezone = (): string => {
+    return 'default';
+  };
+
+  public setTimezone = (value: Date): Date => {
+    return value;
   };
 
   public toJsDate = (value: Date) => {
@@ -467,6 +487,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
     return getSeconds(value);
   };
 
+  public getMilliseconds = (value: Date) => {
+    return getMilliseconds(value);
+  };
+
   public setYear = (value: Date, year: number) => {
     return setYear(value, year);
   };
@@ -489,6 +513,10 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
 
   public setSeconds = (value: Date, seconds: number) => {
     return setSeconds(value, seconds);
+  };
+
+  public setMilliseconds = (value: Date, milliseconds: number) => {
+    return setMilliseconds(value, milliseconds);
   };
 
   public getDaysInMonth = (value: Date) => {
@@ -540,18 +568,16 @@ export class AdapterDateFnsJalali implements MuiPickersAdapter<Date> {
     let count = 0;
     let current = start;
     const nestedWeeks: Date[][] = [];
-    let lastDay: number | null = null;
+
     while (isBefore(current, end)) {
       const weekNumber = Math.floor(count / 7);
       nestedWeeks[weekNumber] = nestedWeeks[weekNumber] || [];
-      const day = getDay(current);
-      if (lastDay !== day) {
-        lastDay = day;
-        nestedWeeks[weekNumber].push(current);
-        count += 1;
-      }
+      nestedWeeks[weekNumber].push(current);
+
       current = addDays(current, 1);
+      count += 1;
     }
+
     return nestedWeeks;
   };
 

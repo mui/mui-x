@@ -22,7 +22,7 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
     return null;
   }
 
-  const displayedLabel = series.label ?? series.id;
+  const displayedLabel = series.label ?? null;
   const color = series.color;
   // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
   // @ts-ignore
@@ -30,15 +30,17 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
   return (
     <TooltipPaper>
       <TooltipTable>
-        <tr>
-          <TooltipCell>
-            <TooltipMark ownerState={{ color }} />
-          </TooltipCell>
+        <tbody>
+          <tr>
+            <TooltipCell>
+              <TooltipMark ownerState={{ color }} />
+            </TooltipCell>
 
-          <TooltipCell>{displayedLabel}</TooltipCell>
+            <TooltipCell>{displayedLabel}</TooltipCell>
 
-          <TooltipCell>{formattedValue}</TooltipCell>
-        </tr>
+            <TooltipCell>{formattedValue}</TooltipCell>
+          </tr>
+        </tbody>
       </TooltipTable>
     </TooltipPaper>
   );

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "6.3.1",
+  "version": "6.7.0",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -42,9 +42,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.21.0",
-    "@mui/utils": "^5.12.3",
-    "@mui/x-date-pickers": "6.3.1",
-    "@mui/x-license-pro": "6.0.4",
+    "@mui/utils": "^5.13.1",
+    "@mui/x-date-pickers": "6.7.0",
+    "@mui/x-license-pro": "6.6.0",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
@@ -62,8 +62,8 @@
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
     "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0",
-    "react": "^17.0.2 || ^18.0.0",
-    "react-dom": "^17.0.2 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "peerDependenciesMeta": {
     "@emotion/react": {
@@ -97,7 +97,7 @@
   "devDependencies": {
     "@types/luxon": "^3.3.0",
     "date-fns": "^2.30.0",
-    "dayjs": "^1.11.7",
+    "dayjs": "^1.11.8",
     "luxon": "^3.3.0",
     "moment": "^2.29.4"
   },

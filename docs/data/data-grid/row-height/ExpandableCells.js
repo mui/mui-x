@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -45,14 +44,6 @@ function ExpandableCell({ value }) {
     </Box>
   );
 }
-
-ExpandableCell.propTypes = {
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.any,
-};
 
 const columns = [
   { field: 'id' },

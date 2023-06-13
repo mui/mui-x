@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Popper from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import {
@@ -6,8 +7,7 @@ import {
   InteractionContext,
   ItemInteractionData,
 } from '../context/InteractionProvider';
-import { Highlight, HighlightProps } from '../Highlight';
-import { generateVirtualElement, useAxisEvents, useMouseTracker, getTootipHasData } from './utils';
+import { generateVirtualElement, useMouseTracker, getTootipHasData } from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ItemContentProps, ItemTooltipContent } from './ItemTooltipContent';
 import { AxisContentProps, AxisTooltipContent } from './AxisTooltipContent';
@@ -22,10 +22,6 @@ export type TooltipProps = {
    */
   trigger?: 'item' | 'axis' | 'none';
   /**
-   * Props propagate to the highlight
-   */
-  highlightProps?: Partial<HighlightProps>;
-  /**
    * Component to override the tooltip content when triger is set to 'item'.
    */
   itemContent?: React.ElementType<ItemContentProps<any>>;
@@ -35,15 +31,12 @@ export type TooltipProps = {
   axisContent?: React.ElementType<AxisContentProps>;
 };
 
-export function Tooltip(props: TooltipProps) {
-  const { trigger = 'axis', highlightProps, itemContent, axisContent } = props;
+function Tooltip(props: TooltipProps) {
+  const { trigger = 'axis', itemContent, axisContent } = props;
 
-  useAxisEvents(trigger);
   const mousePosition = useMouseTracker();
 
   const { item, axis } = React.useContext(InteractionContext);
-
-  const highlightRef = React.useRef<SVGPathElement>(null);
 
   const displayedData = trigger === 'item' ? item : axis;
 
@@ -75,7 +68,31 @@ export function Tooltip(props: TooltipProps) {
           )}
         </Popper>
       )}
-      <Highlight ref={highlightRef} highlight={{ x: true, y: false }} {...highlightProps} />
     </NoSsr>
   );
 }
+
+Tooltip.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * Component to override the tooltip content when triger is set to 'axis'.
+   */
+  axisContent: PropTypes.elementType,
+  /**
+   * Component to override the tooltip content when triger is set to 'item'.
+   */
+  itemContent: PropTypes.elementType,
+  /**
+   * Select the kind of tooltip to display
+   * - 'item': Shows data about the item below the mouse.
+   * - 'axis': Shows values associated with the hovered x value
+   * - 'none': Does not display tooltip
+   * @default 'item'
+   */
+  trigger: PropTypes.oneOf(['axis', 'item', 'none']),
+} as any;
+
+export { Tooltip };

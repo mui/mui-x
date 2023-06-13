@@ -235,13 +235,14 @@ describe('<DataGrid /> - Rows', () => {
       });
     });
 
-    it('should not select the row when clicking in an action', () => {
+    it('should not select the row when clicking in an action', async () => {
       render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
-      expect(getRow(0)).not.to.have.class('Mui-selected');
+
+      await waitFor(() => expect(getRow(0)).not.to.have.class('Mui-selected'));
     });
 
     it('should not select the row when clicking in a menu action', async () => {

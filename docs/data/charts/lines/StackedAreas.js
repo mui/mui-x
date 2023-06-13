@@ -71,23 +71,26 @@ export default function StackedAreas() {
           label: 'French GDP per capita',
           data: FranceGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
           id: 'Germany',
           label: 'German GDP per capita',
           data: GermanyGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
           id: 'United Kingdom',
           label: 'UK GDP per capita',
           data: UKGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
       ]}
+      sx={{
+        '--Legend-itemWidth': '200px',
+      }}
       width={600}
       height={500}
     />

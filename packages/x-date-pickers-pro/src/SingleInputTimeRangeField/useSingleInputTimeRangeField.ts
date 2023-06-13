@@ -1,4 +1,8 @@
-import { useUtils, useField } from '@mui/x-date-pickers/internals';
+import {
+  useUtils,
+  useField,
+  splitFieldInternalAndForwardedProps,
+} from '@mui/x-date-pickers/internals';
 import {
   UseSingleInputTimeRangeFieldDefaultizedProps,
   UseSingleInputTimeRangeFieldParams,
@@ -24,52 +28,20 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
 };
 
 export const useSingleInputTimeRangeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseSingleInputTimeRangeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    formatDensity,
-    shouldRespectLeadingZeros,
-    onChange,
-    readOnly,
-    onError,
-    minTime,
-    maxTime,
-    minutesStep,
-    shouldDisableTime,
-    disableFuture,
-    disablePast,
-    selectedSections,
-    onSelectedSectionsChange,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(props);
+  const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
+    typeof props,
+    keyof UseSingleInputTimeRangeFieldProps<any>
+  >(props, 'time');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseSingleInputTimeRangeFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      formatDensity,
-      shouldRespectLeadingZeros,
-      onChange,
-      readOnly,
-      onError,
-      minTime,
-      maxTime,
-      minutesStep,
-      shouldDisableTime,
-      disableFuture,
-      disablePast,
-      selectedSections,
-      onSelectedSectionsChange,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
     validator: validateTimeRange,
