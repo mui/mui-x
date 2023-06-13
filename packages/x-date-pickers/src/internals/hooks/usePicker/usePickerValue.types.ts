@@ -35,7 +35,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
    * @param {FieldValueType} valueType The type of the value being edited.
-   * @param {PickersTimezone} timezone The current timezone
+   * @param {PickersTimezone} timezone The current timezone.
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
   getTodayValue: (
@@ -53,7 +53,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
    * @param {FieldValueType} params.valueType The type of the value being edited.
    * @param {number} params.granularity The granularity of the selection possible on this component.
-   * @param {PickersTimezone} params.timezone The current timezone
+   * @param {PickersTimezone} params.timezone The current timezone.
    * @returns {TValue} The reference value to use for non-provided dates.
    */
   getInitialReferenceValue: (params: {
@@ -118,7 +118,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * Change the timezone of the dates inside a value.
    @template TValue, TDate
    @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   @param {PickersTimezone} timezone The current timezone
+   @param {PickersTimezone} timezone The current timezone.
    @param {TValue} value The value to convert.
    @returns {TValue} The value with the new dates in the new timezone.
    */

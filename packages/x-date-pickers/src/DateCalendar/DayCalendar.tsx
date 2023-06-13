@@ -519,9 +519,9 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   ]);
 
   const weeksToDisplay = React.useMemo(() => {
-    const a = utils.setTimezone(currentMonth, timezone);
-    const toDisplay = utils.getWeekArray(a);
-    let nextMonth = utils.addMonths(a, 1);
+    const currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
+    const toDisplay = utils.getWeekArray(currentMonthWithTimezone);
+    let nextMonth = utils.addMonths(currentMonthWithTimezone, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
       const additionalWeeks = utils.getWeekArray(nextMonth);
       const hasCommonWeek = utils.isSameDay(

@@ -104,7 +104,7 @@ You can check out the documentation of the [dayjs timezone plugin](https://day.j
 ### Luxon and UTC
 
 :::info
-**How to create an UTC date with Luxon?**
+**How to create a UTC date with Luxon?**
 
 If your whole application is using UTC dates, set the `defaultZone` to `"UTC"`:
 
@@ -262,12 +262,12 @@ please refer to the sections above to know how to pass a UTC date or a date in a
 
 ### Store UTC dates but display in system's timezone
 
-The demo belows shows how to store dates in UTC while displaying using the system timezone.
+The demo below shows how to store dates in UTC while displaying using the system timezone.
 
 {{"demo": "StoreUTCButDisplaySystemTimezone.js",  "defaultCodeOpen": false}}
 
 ### Store UTC dates but display in another timezone
 
-The demo belows shows how to store dates in UTC while displaying them using the system timezone.
+The demo below shows how to store dates in UTC while displaying using the `America/New_York` timezone.
 
 {{"demo": "StoreUTCButDisplayOtherTimezone.js",  "defaultCodeOpen": false}}

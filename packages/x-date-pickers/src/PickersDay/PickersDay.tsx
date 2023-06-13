@@ -324,6 +324,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       centerRipple
       data-mui-test="day"
       disabled={disabled}
+      tabIndex={selected ? 0 : -1}
       onKeyDown={(event) => onKeyDown(event, day)}
       onFocus={(event) => onFocus(event, day)}
       onBlur={(event) => onBlur(event, day)}

@@ -358,9 +358,9 @@ MobileDateRangePicker.propTypes = {
   /**
    * Choose which timezone to use for the value.
    * Example: "default", "system", "UTC", "America/New_York".
-   * If you pass values from other timezones to some props, they will be converted to the adequate timezone before being used.
-   * More information on how to use timezones with this component on https://mui.com/x/react-date-pickers/timezone/
-   * @default 'default'
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
    */
   timezone: PropTypes.string,
   /**
