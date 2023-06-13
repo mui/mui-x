@@ -5,8 +5,6 @@ import {
   loadTreeDataServerRows,
 } from '@mui/x-data-grid-generator';
 
-const initRows = [];
-
 const DATASET_OPTION = {
   dataSet: 'Employee',
   rowLength: 1000,
@@ -17,6 +15,7 @@ const { columnsWithDefaultColDef, useQuery, ...data } =
   createFakeServer(DATASET_OPTION);
 
 const emptyObject = {};
+const initRows = [];
 
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
@@ -73,9 +72,6 @@ export default function TreeDataLazyLoading() {
         }}
         isServerSideRow={(row) => row.hasChildren}
         getDescendantCount={(row) => row.descendantCount}
-        rowsLoadingMode="server"
-        filterMode="server"
-        sortingMode="server"
       />
     </div>
   );

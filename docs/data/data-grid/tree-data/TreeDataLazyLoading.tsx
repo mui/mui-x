@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   useGridApiRef,
-  GridValidRowModel,
+  GridRowsProp,
   GetRowsParams,
 } from '@mui/x-data-grid-pro';
 import {
@@ -10,8 +10,6 @@ import {
   loadTreeDataServerRows,
   UseDemoDataOptions,
 } from '@mui/x-data-grid-generator';
-
-const initRows: GridValidRowModel[] = [];
 
 const DATASET_OPTION: UseDemoDataOptions = {
   dataSet: 'Employee',
@@ -23,6 +21,7 @@ const { columnsWithDefaultColDef, useQuery, ...data } =
   createFakeServer(DATASET_OPTION);
 
 const emptyObject = {};
+const initRows: GridRowsProp = [];
 
 export default function TreeDataLazyLoading() {
   const apiRef = useGridApiRef();
@@ -78,9 +77,6 @@ export default function TreeDataLazyLoading() {
         }}
         isServerSideRow={(row) => row.hasChildren}
         getDescendantCount={(row) => row.descendantCount}
-        rowsLoadingMode="server"
-        filterMode="server"
-        sortingMode="server"
       />
     </div>
   );

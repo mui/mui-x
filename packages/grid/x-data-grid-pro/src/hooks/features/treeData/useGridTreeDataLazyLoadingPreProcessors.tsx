@@ -39,6 +39,7 @@ import {
 } from '../../../utils/tree/models';
 import { sortRowTree } from '../../../utils/tree/sortRowTree';
 import { updateRowTree } from '../../../utils/tree/updateRowTree';
+import { getVisibleRowsLookup } from '../../../utils/tree/utils';
 
 export const useGridTreeDataLazyLoadingPreProcessors = (
   privateApiRef: React.MutableRefObject<GridPrivateApiPro>,
@@ -213,13 +214,7 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
 
   const setServerSideGroups = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (params) => {
-      // To investigate: Avoid dual processing, make this part of `rowTreeCreation` strategy processor
-      if (Object.keys(params.tree).length === 1) {
-        // TODO: Fix this hack
-        (params.tree[GRID_ROOT_GROUP_ID] as GridServerSideGroupNode).isLoading = true;
-        return params;
-      }
-
+      // TODO: Avoid dual processing, make this part of `rowTreeCreation` strategy processor
       if (!props.unstable_dataSource || !props.isServerSideRow || !props.treeData) {
         return params;
       }
@@ -256,6 +251,12 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
     TREE_DATA_LAZY_LOADING_STRATEGY,
     'sorting',
     sortRows,
+  );
+  useGridRegisterStrategyProcessor(
+    privateApiRef,
+    TREE_DATA_LAZY_LOADING_STRATEGY,
+    'visibleRowsLookupCreation',
+    getVisibleRowsLookup,
   );
 
   /**

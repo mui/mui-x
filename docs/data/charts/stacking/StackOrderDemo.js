@@ -113,13 +113,16 @@ export default function StackOrderDemo() {
         xAxis={[xAxis]}
         yAxis={[{ min: 0, max: 100 }]}
         series={modifiedSeries}
+        margin={{ bottom: 60 }}
         sx={{
           '.MuiAxis-bottom': {
             '.MuiAxis-tickLabel': {
-              transform: 'translate(0, 23px) rotate(45deg)',
+              transform: 'rotate(45deg)',
+              alignmentBaseline: 'hanging',
+              textAnchor: 'start',
             },
             '.MuiAxis-label': {
-              transform: 'translate(400px, 50px)',
+              transform: 'translateY(15px)',
             },
           },
         }}

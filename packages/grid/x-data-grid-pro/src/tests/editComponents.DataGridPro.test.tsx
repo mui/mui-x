@@ -589,6 +589,24 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
 
+    it('should call onCellEditStop', async () => {
+      const onCellEditStop = spy();
+
+      render(
+        <div>
+          <TestCase onCellEditStop={onCellEditStop} />
+          <div id="outside-grid" />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      fireEvent.doubleClick(cell);
+      userEvent.mousePress(document.getElementById('outside-grid')!);
+      await act(() => Promise.resolve());
+
+      expect(onCellEditStop.callCount).to.equal(1);
+    });
+
     it('should not open the suggestions when Enter is pressed', async () => {
       let resolveCallback: () => void;
       const processRowUpdate = (newRow: any) =>

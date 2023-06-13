@@ -20,12 +20,14 @@ import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState
 import type { GridEditingState } from './gridEditRowModel';
 import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
+import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
 
 /**
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
   rows: GridRowsState;
+  visibleRowsLookup: GridVisibleRowsLookupState;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditingState;
   headerFiltering: GridHeaderFilteringState;
