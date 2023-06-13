@@ -5,9 +5,9 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
-import { TooltipCell, TooltipPaper, TooltipTable, TooltipMark } from './TooltipTable';
+import { ChartsTooltipCell, ChartsTooltipPaper, ChartsTooltipTable, ChartsTooltipMark } from './ChartsTooltipTable';
 
-export type AxisContentProps = {
+export type ChartsAxisContentProps = {
   /**
    * Data identifying the triggered axis.
    */
@@ -30,7 +30,7 @@ export type AxisContentProps = {
    */
   axisValue: any;
 };
-export function DefaultAxisContent(props: AxisContentProps) {
+export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
   const { series, axis, dataIndex, axisValue } = props;
 
   if (dataIndex == null) {
@@ -38,42 +38,42 @@ export function DefaultAxisContent(props: AxisContentProps) {
   }
   const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
-    <TooltipPaper>
-      <TooltipTable>
+    <ChartsTooltipPaper>
+      <ChartsTooltipTable>
         {axisValue != null && (
           <thead>
             <tr>
-              <TooltipCell colSpan={3}>
+              <ChartsTooltipCell colSpan={3}>
                 <Typography variant="caption">{axisFormatter(axisValue)}</Typography>
-              </TooltipCell>
+              </ChartsTooltipCell>
             </tr>
           </thead>
         )}
         <tbody>
           {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
             <tr key={id}>
-              <TooltipCell>
-                <TooltipMark ownerState={{ color }} />
-              </TooltipCell>
+              <ChartsTooltipCell>
+                <ChartsTooltipMark ownerState={{ color }} />
+              </ChartsTooltipCell>
 
-              <TooltipCell>
+              <ChartsTooltipCell>
                 {label ? <Typography variant="caption">{label}</Typography> : null}
-              </TooltipCell>
+              </ChartsTooltipCell>
 
-              <TooltipCell>
+              <ChartsTooltipCell>
                 <Typography variant="caption">{valueFormatter(data[dataIndex])}</Typography>
-              </TooltipCell>
+              </ChartsTooltipCell>
             </tr>
           ))}
         </tbody>
-      </TooltipTable>
-    </TooltipPaper>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
   );
 }
 
-export function AxisTooltipContent(props: {
+export function ChartsAxisTooltipContent(props: {
   axisData: AxisInteractionData;
-  content?: React.ElementType<AxisContentProps>;
+  content?: React.ElementType<ChartsAxisContentProps>;
 }) {
   const { content, axisData } = props;
   const dataIndex = axisData.x && axisData.x.index;
@@ -101,7 +101,7 @@ export function AxisTooltipContent(props: {
     return xAxis[USED_X_AXIS_ID];
   }, [USED_X_AXIS_ID, xAxis]);
 
-  const Content = content ?? DefaultAxisContent;
+  const Content = content ?? DefaultChartsAxisContent;
   return (
     <Content
       axisData={axisData}

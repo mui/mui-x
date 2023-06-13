@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AxisInteractionData, ItemInteractionData } from '../context/InteractionProvider';
 import { SVGContext } from '../context/DrawingProvider';
-import type { TooltipProps } from './Tooltip';
 import { ChartSeriesType } from '../models/seriesType/config';
 
 export function generateVirtualElement(mousePosition: { x: number; y: number } | null) {
@@ -71,8 +70,10 @@ export function useMouseTracker() {
   return mousePosition;
 }
 
+export type TriggerOptions = 'item' | 'axis' | 'none';
+
 export function getTootipHasData(
-  trigger: TooltipProps['trigger'],
+  trigger: TriggerOptions,
   displayedData: null | AxisInteractionData | ItemInteractionData<ChartSeriesType>,
 ): boolean {
   if (trigger === 'item') {

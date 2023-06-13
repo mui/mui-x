@@ -8,7 +8,7 @@ import {
 import { ChartsAxis, ChartsAxisProps } from '../Axis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
-import { Tooltip, TooltipProps } from '../Tooltip';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsLegend, ChartsLegendProps } from '../Legend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
 
@@ -16,7 +16,7 @@ export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     ChartsAxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
-  tooltip?: TooltipProps;
+  tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
 }
@@ -61,7 +61,7 @@ function ScatterChart(props: ScatterChartProps) {
       <ScatterPlot />
       <ChartsLegend {...legend} />
       <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
-      <Tooltip trigger="item" {...tooltip} />
+      <ChartsTooltip trigger="item" {...tooltip} />
       {children}
     </ResponsiveChartContainer>
   );
@@ -195,11 +195,7 @@ ScatterChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    itemContent: PropTypes.elementType,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
+  tooltip: PropTypes.any,
   /**
    * Indicate which axis to display the the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`

@@ -4,7 +4,7 @@ export * from './ClipPath';
 export * from './Axis';
 export * from './XAxis';
 export * from './YAxis';
-export * from './Tooltip';
+export * from './ChartsTooltip';
 export * from './AxisHighlight';
 export * from './BarChart';
 export * from './LineChart';

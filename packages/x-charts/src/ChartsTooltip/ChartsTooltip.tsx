@@ -7,12 +7,12 @@ import {
   InteractionContext,
   ItemInteractionData,
 } from '../context/InteractionProvider';
-import { generateVirtualElement, useMouseTracker, getTootipHasData } from './utils';
+import { generateVirtualElement, useMouseTracker, getTootipHasData, TriggerOptions } from './utils';
 import { ChartSeriesType } from '../models/seriesType/config';
-import { ItemContentProps, ItemTooltipContent } from './ItemTooltipContent';
-import { AxisContentProps, AxisTooltipContent } from './AxisTooltipContent';
+import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
+import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
 
-export type TooltipProps = {
+export type ChartsTooltipProps = {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.
@@ -20,18 +20,18 @@ export type TooltipProps = {
    * - 'none': Does not display tooltip
    * @default 'item'
    */
-  trigger?: 'item' | 'axis' | 'none';
+  trigger?: TriggerOptions;
   /**
    * Component to override the tooltip content when triger is set to 'item'.
    */
-  itemContent?: React.ElementType<ItemContentProps<any>>;
+  itemContent?: React.ElementType<ChartsItemContentProps<any>>;
   /**
    * Component to override the tooltip content when triger is set to 'axis'.
    */
-  axisContent?: React.ElementType<AxisContentProps>;
+  axisContent?: React.ElementType<ChartsAxisContentProps>;
 };
 
-function Tooltip(props: TooltipProps) {
+function ChartsTooltip(props: ChartsTooltipProps) {
   const { trigger = 'axis', itemContent, axisContent } = props;
 
   const mousePosition = useMouseTracker();
@@ -56,12 +56,12 @@ function Tooltip(props: TooltipProps) {
           style={{ pointerEvents: 'none' }}
         >
           {trigger === 'item' ? (
-            <ItemTooltipContent
+            <ChartsItemTooltipContent
               itemData={displayedData as ItemInteractionData<ChartSeriesType>}
               content={itemContent}
             />
           ) : (
-            <AxisTooltipContent
+            <ChartsAxisTooltipContent
               axisData={displayedData as AxisInteractionData}
               content={axisContent}
             />
@@ -72,7 +72,7 @@ function Tooltip(props: TooltipProps) {
   );
 }
 
-Tooltip.propTypes = {
+ChartsTooltip.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -95,4 +95,4 @@ Tooltip.propTypes = {
   trigger: PropTypes.oneOf(['axis', 'item', 'none']),
 } as any;
 
-export { Tooltip };
+export { ChartsTooltip };

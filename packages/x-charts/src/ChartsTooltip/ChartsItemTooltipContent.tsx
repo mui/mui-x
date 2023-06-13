@@ -2,9 +2,14 @@ import * as React from 'react';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
-import { TooltipTable, TooltipCell, TooltipMark, TooltipPaper } from './TooltipTable';
+import {
+  ChartsTooltipTable,
+  ChartsTooltipCell,
+  ChartsTooltipMark,
+  ChartsTooltipPaper,
+} from './ChartsTooltipTable';
 
-export type ItemContentProps<T extends ChartSeriesType> = {
+export type ChartsItemContentProps<T extends ChartSeriesType> = {
   /**
    * The data used to identify the triggered item.
    */
@@ -15,7 +20,9 @@ export type ItemContentProps<T extends ChartSeriesType> = {
   series: ChartSeriesDefaultized<T>;
 };
 
-export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContentProps<T>) {
+export function DefaultChartsItemContent<T extends ChartSeriesType>(
+  props: ChartsItemContentProps<T>,
+) {
   const { series, itemData } = props;
 
   if (itemData.dataIndex === undefined) {
@@ -28,27 +35,27 @@ export function DefaultItemContent<T extends ChartSeriesType>(props: ItemContent
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
-    <TooltipPaper>
-      <TooltipTable>
+    <ChartsTooltipPaper>
+      <ChartsTooltipTable>
         <tbody>
           <tr>
-            <TooltipCell>
-              <TooltipMark ownerState={{ color }} />
-            </TooltipCell>
+            <ChartsTooltipCell>
+              <ChartsTooltipMark ownerState={{ color }} />
+            </ChartsTooltipCell>
 
-            <TooltipCell>{displayedLabel}</TooltipCell>
+            <ChartsTooltipCell>{displayedLabel}</ChartsTooltipCell>
 
-            <TooltipCell>{formattedValue}</TooltipCell>
+            <ChartsTooltipCell>{formattedValue}</ChartsTooltipCell>
           </tr>
         </tbody>
-      </TooltipTable>
-    </TooltipPaper>
+      </ChartsTooltipTable>
+    </ChartsTooltipPaper>
   );
 }
 
-export function ItemTooltipContent<T extends ChartSeriesType>(props: {
+export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   itemData: ItemInteractionData<T>;
-  content?: React.ElementType<ItemContentProps<T>>;
+  content?: React.ElementType<ChartsItemContentProps<T>>;
 }) {
   const { content, itemData } = props;
 
@@ -56,7 +63,7 @@ export function ItemTooltipContent<T extends ChartSeriesType>(props: {
     itemData.seriesId
   ] as ChartSeriesDefaultized<T>;
 
-  const Content = content ?? DefaultItemContent<T>;
+  const Content = content ?? DefaultChartsItemContent<T>;
 
   return <Content itemData={itemData} series={series} />;
 }

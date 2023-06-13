@@ -12,7 +12,7 @@ import { ChartsAxis, ChartsAxisProps } from '../Axis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { Tooltip, TooltipProps } from '../Tooltip';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsLegend, ChartsLegendProps } from '../Legend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
 import { ChartsClipPath } from '../ClipPath';
@@ -21,7 +21,7 @@ export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     ChartsAxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
-  tooltip?: TooltipProps;
+  tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
 }
@@ -85,7 +85,7 @@ function LineChart(props: LineChartProps) {
       <MarkPlot />
       <ChartsLegend {...legend} />
       <ChartsAxisHighlight {...axisHighlight} />
-      <Tooltip {...tooltip} />
+      <ChartsTooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
@@ -234,11 +234,7 @@ LineChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  tooltip: PropTypes.shape({
-    axisContent: PropTypes.elementType,
-    itemContent: PropTypes.elementType,
-    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
-  }),
+  tooltip: PropTypes.any,
   /**
    * Indicate which axis to display the the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
