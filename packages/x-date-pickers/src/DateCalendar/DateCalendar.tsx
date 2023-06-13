@@ -8,6 +8,7 @@ import {
   unstable_useEventCallback as useEventCallback,
   unstable_useControlled as useControlled,
 } from '@mui/utils';
+import { resolveComponentProps } from '@mui/base/utils';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
@@ -27,6 +28,7 @@ import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimati
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
+import { DAY_MARGIN, DIALOG_WIDTH } from '../internals';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -67,10 +69,9 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateCalendarProps<any> }>({
-  display: 'flex',
-  flexDirection: 'column',
-});
+})<{ ownerState: DateCalendarProps<any> & { disableDayMargin?: boolean } }>(({ ownerState }) => ({
+  width: DIALOG_WIDTH + (ownerState.disableDayMargin ? 7 * 2 * DAY_MARGIN : 0),
+}));
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',
@@ -255,7 +256,9 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     }
   }, [value]); // eslint-disable-line
 
-  const ownerState = props;
+  // we only need one prop resolved correctly, passing empty object shouldn't be a problem
+  const disableDayMargin = resolveComponentProps(slotProps?.day, {} as any)?.disableMargin;
+  const ownerState = { ...props, disableDayMargin };
   const classes = useUtilityClasses(ownerState);
 
   const baseDateValidationProps: Required<BaseDateValidationProps<TDate>> = {
@@ -316,6 +319,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         labelId={gridLabelId}
         slots={slots}
         slotProps={slotProps}
+        displayWeekNumber={displayWeekNumber}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -334,6 +338,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
               yearsPerRow={yearsPerRow}
+              width="inherit"
             />
           )}
 
@@ -348,6 +353,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
+              width="inherit"
             />
           )}
 

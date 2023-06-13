@@ -4,7 +4,6 @@ import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -52,8 +51,8 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: DateTimePickerToolbarProps<any> }>(({ theme, ownerState }) => ({
-  paddingLeft: ownerState.toolbarVariant === 'desktop' && !ownerState.isLandscape ? 24 : 16,
-  paddingRight: ownerState.toolbarVariant === 'desktop' && !ownerState.isLandscape ? 0 : 16,
+  paddingLeft: !ownerState.isLandscape ? 24 : 16,
+  paddingRight: !ownerState.isLandscape ? 0 : 16,
   borderBottom:
     ownerState.toolbarVariant === 'desktop'
       ? `1px solid ${(theme.vars || theme).palette.divider}`
@@ -64,11 +63,6 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
       : undefined,
   justifyContent: 'space-around',
   position: 'relative',
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'absolute',
-    top: 8,
-    ...(theme.direction === 'rtl' ? { left: 8 } : { right: 8 }),
-  },
 }));
 
 DateTimePickerToolbarRoot.propTypes = {
@@ -113,6 +107,7 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   return {
     display: 'flex',
     flexDirection: direction,
+    alignItems: 'center',
     ...(ownerState.toolbarVariant === 'desktop' && {
       ...(!ownerState.isLandscape && {
         gap: 9,

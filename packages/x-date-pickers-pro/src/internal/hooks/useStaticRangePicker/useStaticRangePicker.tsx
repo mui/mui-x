@@ -6,7 +6,7 @@ import {
   PickersLayout,
   PickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { usePicker, DIALOG_WIDTH, ExportedBaseToolbarProps } from '@mui/x-date-pickers/internals';
+import { usePicker, ExportedBaseToolbarProps } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import {
   UseStaticRangePickerParams,
@@ -18,7 +18,6 @@ import { RangeFieldSection } from '../../models/fields';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
-  minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
 })) as unknown as typeof PickersLayout;
 

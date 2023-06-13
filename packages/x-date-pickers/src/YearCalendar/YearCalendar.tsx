@@ -15,6 +15,8 @@ import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
+import { CALENDAR_MARGIN, DIALOG_WIDTH } from '../internals';
+import { DAY_CALENDAR_HEIGHT } from '../internals/constants/dimensions';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -53,16 +55,16 @@ const YearCalendarRoot = styled('div', {
   name: 'MuiYearCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: YearCalendarProps<any> }>({
+})<{ ownerState: YearCalendarProps<any> }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  padding: '0 4px',
-  width: 320,
-  maxHeight: 304,
-});
+  width: ownerState.width ?? DIALOG_WIDTH,
+  maxHeight: DAY_CALENDAR_HEIGHT,
+  padding: `0 ${CALENDAR_MARGIN}px`,
+}));
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
   propTypes?: any;
@@ -363,6 +365,7 @@ YearCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  width: PropTypes.oneOfType([PropTypes.oneOf(['inherit']), PropTypes.number]),
   /**
    * Years rendered per row.
    * @default 3

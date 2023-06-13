@@ -1,10 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import Typography from '@mui/material/Typography';
 import { useTheme, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
+import Fade from '@mui/material/Fade';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import {
   PickersArrowSwitcherOwnerState,
@@ -29,7 +29,7 @@ const PickersArrowSwitcherSpacer = styled('div', {
 })<{
   ownerState: PickersArrowSwitcherProps;
 }>(({ theme }) => ({
-  width: theme.spacing(3),
+  width: theme.spacing(2),
 }));
 
 const PickersArrowSwitcherButton = styled(IconButton, {
@@ -77,6 +77,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     isPreviousHidden,
     onGoToPrevious,
     previousLabel,
+    hideControls,
     ...other
   } = props;
 
@@ -105,7 +106,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     elementType: PreviousIconButton,
     externalSlotProps: slotProps?.previousIconButton,
     additionalProps: {
-      size: 'medium',
+      size: 'large',
       title: leftProps.label,
       'aria-label': leftProps.label,
       disabled: leftProps.isDisabled,
@@ -121,7 +122,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     elementType: NextIconButton,
     externalSlotProps: slotProps?.nextIconButton,
     additionalProps: {
-      size: 'medium',
+      size: 'large',
       title: rightProps.label,
       'aria-label': rightProps.label,
       disabled: rightProps.isDisabled,
@@ -137,9 +138,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
     externalSlotProps: slotProps?.leftArrowIcon,
-    additionalProps: {
-      fontSize: 'inherit',
-    },
     ownerState: undefined,
   });
 
@@ -148,9 +146,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
     externalSlotProps: slotProps?.rightArrowIcon,
-    additionalProps: {
-      fontSize: 'inherit',
-    },
     ownerState: undefined,
   });
 
@@ -161,27 +156,27 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      <PreviousIconButton {...previousIconButtonProps}>
-        {isRTL ? (
-          <RightArrowIcon {...rightArrowIconProps} />
-        ) : (
-          <LeftArrowIcon {...leftArrowIconProps} />
-        )}
-      </PreviousIconButton>
-      {children ? (
-        <Typography variant="subtitle1" component="span">
-          {children}
-        </Typography>
-      ) : (
+      <Fade in={!hideControls} appear={false}>
+        <PreviousIconButton {...previousIconButtonProps}>
+          {isRTL ? (
+            <RightArrowIcon {...rightArrowIconProps} />
+          ) : (
+            <LeftArrowIcon {...leftArrowIconProps} />
+          )}
+        </PreviousIconButton>
+      </Fade>
+      {children || (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      <NextIconButton {...nextIconButtonProps}>
-        {isRTL ? (
-          <LeftArrowIcon {...leftArrowIconProps} />
-        ) : (
-          <RightArrowIcon {...rightArrowIconProps} />
-        )}
-      </NextIconButton>
+      <Fade in={!hideControls} appear={false}>
+        <NextIconButton {...nextIconButtonProps}>
+          {isRTL ? (
+            <LeftArrowIcon {...leftArrowIconProps} />
+          ) : (
+            <RightArrowIcon {...rightArrowIconProps} />
+          )}
+        </NextIconButton>
+      </Fade>
     </PickersArrowSwitcherRoot>
   );
 });

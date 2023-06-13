@@ -14,11 +14,7 @@ import {
 } from '../TimeClock';
 import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
-import {
-  pickersArrowSwitcherClasses,
-  pickersPopperClasses,
-  pickersToolbarClasses,
-} from '../internals';
+import { pickersArrowSwitcherClasses, pickersPopperClasses } from '../internals';
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
 import { pickersMonthClasses } from '../MonthCalendar';
@@ -410,9 +406,6 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
-          [`.${pickersToolbarClasses.penIconButton}`]: {
-            backgroundColor: 'green',
-          },
         },
         // @ts-expect-error invalid MuiPickersToolbar class key
         contentWrapper: {

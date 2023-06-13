@@ -9,6 +9,7 @@ import {
   pickersMonthClasses,
   PickersMonthClasses,
 } from './pickersMonthClasses';
+import { DAY_SIZE } from '../internals';
 
 export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;
@@ -70,7 +71,7 @@ const PickersMonthButton = styled('button', {
   outline: 0,
   ...theme.typography.subtitle1,
   margin: '8px 0',
-  height: 36,
+  height: DAY_SIZE,
   width: 72,
   borderRadius: 18,
   cursor: 'pointer',

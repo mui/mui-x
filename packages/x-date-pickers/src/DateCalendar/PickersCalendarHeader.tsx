@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Fade from '@mui/material/Fade';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -27,6 +26,7 @@ import {
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { CALENDAR_MARGIN } from '../internals/constants/dimensions';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
@@ -84,12 +84,14 @@ export interface PickersCalendarHeaderProps<TDate>
   onViewChange?: (view: DateView) => void;
   labelId?: string;
   classes?: Partial<PickersCalendarHeaderClasses>;
+  displayWeekNumber?: boolean;
 }
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
+    arrowSwitcher: ['arrowSwitcher'],
     labelContainer: ['labelContainer'],
     label: ['label'],
     switchViewButton: ['switchViewButton'],
@@ -105,16 +107,21 @@ const PickersCalendarHeaderRoot = styled('div', {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
-}>({
+}>(({ ownerState }) => ({
   display: 'flex',
   alignItems: 'center',
-  marginTop: 16,
-  marginBottom: 8,
-  paddingLeft: 24,
-  paddingRight: 12,
-  // prevent jumping in safari
-  maxHeight: 30,
-  minHeight: 30,
+  margin: `8px ${CALENDAR_MARGIN}px`,
+  marginLeft: ownerState.displayWeekNumber ? 0 : undefined,
+}));
+
+const PickersCalendarHeaderArrowSwitcher = styled(PickersArrowSwitcher, {
+  name: 'MuiPickersCalendarHeader',
+  slot: 'ArrowSwitcher',
+  overridesResolver: (_, styles) => styles.arrowSwitcher,
+})({
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexGrow: '1',
 });
 
 const PickersCalendarHeaderLabelContainer = styled('div', {
@@ -131,6 +138,7 @@ const PickersCalendarHeaderLabelContainer = styled('div', {
   marginRight: 'auto',
   ...theme.typography.body1,
   fontWeight: theme.typography.fontWeightMedium,
+  margin: '0 auto',
 }));
 
 const PickersCalendarHeaderLabel = styled('div', {
@@ -140,7 +148,7 @@ const PickersCalendarHeaderLabel = styled('div', {
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
 }>({
-  marginRight: 6,
+  marginRight: 4,
 });
 
 const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
@@ -252,45 +260,46 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   return (
     <PickersCalendarHeaderRoot ownerState={ownerState} className={classes.root}>
-      <PickersCalendarHeaderLabelContainer
-        role="presentation"
-        onClick={handleToggleView}
-        ownerState={ownerState}
-        // putting this on the label item element below breaks when using transition
-        aria-live="polite"
-        className={classes.labelContainer}
+      <PickersCalendarHeaderArrowSwitcher
+        slots={slots}
+        slotProps={slotProps}
+        onGoToPrevious={selectPreviousMonth}
+        isPreviousDisabled={isPreviousMonthDisabled}
+        previousLabel={localeText.previousMonth}
+        onGoToNext={selectNextMonth}
+        isNextDisabled={isNextMonthDisabled}
+        nextLabel={localeText.nextMonth}
+        className={classes.arrowSwitcher}
+        hideControls={view !== 'day'}
       >
-        <PickersFadeTransitionGroup
-          reduceAnimations={reduceAnimations}
-          transKey={utils.format(month, 'monthAndYear')}
+        <PickersCalendarHeaderLabelContainer
+          role="presentation"
+          onClick={handleToggleView}
+          ownerState={ownerState}
+          // putting this on the label item element below breaks when using transition
+          aria-live="polite"
+          className={classes.labelContainer}
         >
-          <PickersCalendarHeaderLabel
-            id={labelId}
-            data-mui-test="calendar-month-and-year-text"
-            ownerState={ownerState}
-            className={classes.label}
+          <PickersFadeTransitionGroup
+            reduceAnimations={reduceAnimations}
+            transKey={utils.format(month, 'monthAndYear')}
           >
-            {utils.format(month, 'monthAndYear')}
-          </PickersCalendarHeaderLabel>
-        </PickersFadeTransitionGroup>
-        {views.length > 1 && !disabled && (
-          <SwitchViewButton {...switchViewButtonProps}>
-            <SwitchViewIcon {...switchViewIconProps} />
-          </SwitchViewButton>
-        )}
-      </PickersCalendarHeaderLabelContainer>
-      <Fade in={view === 'day'}>
-        <PickersArrowSwitcher
-          slots={slots}
-          slotProps={slotProps}
-          onGoToPrevious={selectPreviousMonth}
-          isPreviousDisabled={isPreviousMonthDisabled}
-          previousLabel={localeText.previousMonth}
-          onGoToNext={selectNextMonth}
-          isNextDisabled={isNextMonthDisabled}
-          nextLabel={localeText.nextMonth}
-        />
-      </Fade>
+            <PickersCalendarHeaderLabel
+              id={labelId}
+              data-mui-test="calendar-month-and-year-text"
+              ownerState={ownerState}
+              className={classes.label}
+            >
+              {utils.format(month, 'monthAndYear')}
+            </PickersCalendarHeaderLabel>
+          </PickersFadeTransitionGroup>
+          {views.length > 1 && !disabled && (
+            <SwitchViewButton {...switchViewButtonProps}>
+              <SwitchViewIcon {...switchViewIconProps} />
+            </SwitchViewButton>
+          )}
+        </PickersCalendarHeaderLabelContainer>
+      </PickersCalendarHeaderArrowSwitcher>
     </PickersCalendarHeaderRoot>
   );
 }

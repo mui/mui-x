@@ -63,6 +63,11 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   disableMargin?: boolean;
+  /**
+   * If `true`, days horizontal margin is reduced in half. Useful when trying to fit more information in same width (i.e. adding week numbers).
+   * @default false
+   */
+  reduceHorizontalMargin?: boolean;
   isAnimating?: boolean;
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
@@ -150,18 +155,20 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
-  [`&.${pickersDayClasses.selected}`]: {
-    color: (theme.vars || theme).palette.primary.contrastText,
-    backgroundColor: (theme.vars || theme).palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
-    transition: theme.transitions.create('background-color', {
-      duration: theme.transitions.duration.short,
-    }),
-    '&:hover': {
-      willChange: 'background-color',
-      backgroundColor: (theme.vars || theme).palette.primary.dark,
+  ...(!ownerState.outsideCurrentMonth && {
+    [`&.${pickersDayClasses.selected}`]: {
+      color: (theme.vars || theme).palette.primary.contrastText,
+      backgroundColor: (theme.vars || theme).palette.primary.main,
+      fontWeight: theme.typography.fontWeightMedium,
+      transition: theme.transitions.create('background-color', {
+        duration: theme.transitions.duration.short,
+      }),
+      '&:hover': {
+        willChange: 'background-color',
+        backgroundColor: (theme.vars || theme).palette.primary.dark,
+      },
     },
-  },
+  }),
   [`&.${pickersDayClasses.disabled}:not(.${pickersDayClasses.selected})`]: {
     color: (theme.vars || theme).palette.text.disabled,
   },
@@ -169,7 +176,7 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     opacity: 0.6,
   },
   ...(!ownerState.disableMargin && {
-    margin: `0 ${DAY_MARGIN}px`,
+    margin: ownerState.reduceHorizontalMargin ? `${DAY_MARGIN}px ${DAY_MARGIN / 2}px` : DAY_MARGIN,
   }),
   ...(ownerState.outsideCurrentMonth &&
     ownerState.showDaysOutsideCurrentMonth && {
@@ -256,6 +263,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     today: isToday = false,
     isFirstVisibleCell,
     isLastVisibleCell,
+    reduceHorizontalMargin,
     ...other
   } = props;
   const ownerState = {
@@ -267,6 +275,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     selected,
     showDaysOutsideCurrentMonth,
     today: isToday,
+    reduceHorizontalMargin,
   };
 
   const classes = useUtilityClasses(ownerState);

@@ -49,7 +49,7 @@ function Day(props) {
     <CustomPickersDay
       {...other}
       day={day}
-      sx={dayIsBetween ? { px: 2.5, mx: 0 } : {}}
+      disableMargin
       dayIsBetween={dayIsBetween}
       isFirstDay={isFirstDay}
       isLastDay={isLastDay}

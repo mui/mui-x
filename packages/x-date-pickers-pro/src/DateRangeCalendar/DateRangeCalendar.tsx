@@ -11,7 +11,6 @@ import { Watermark } from '@mui/x-license-pro';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
-  DAY_MARGIN,
   DayCalendar,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
@@ -30,7 +29,10 @@ import {
   UncapitalizeObjectKeys,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
+  CALENDAR_MARGIN,
 } from '@mui/x-date-pickers/internals';
+import Typography from '@mui/material/Typography';
+import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -64,11 +66,12 @@ const DateRangeCalendarRoot = styled('div', {
 })<{ ownerState: DateRangeCalendarOwnerState<any> }>({
   display: 'flex',
   flexDirection: 'row',
+  minHeight: VIEW_HEIGHT,
 });
 
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
-  slot: 'Container',
+  slot: 'MonthContainer',
   overridesResolver: (_, styles) => styles.monthContainer,
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
@@ -77,14 +80,11 @@ const DateRangeCalendarMonthContainer = styled('div', {
 }));
 
 const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
-  padding: '16px 16px 8px 16px',
-  display: 'flex',
+  margin: CALENDAR_MARGIN,
+  marginBottom: CALENDAR_MARGIN / 2,
   alignItems: 'center',
   justifyContent: 'space-between',
 });
-
-const DAY_RANGE_SIZE = 40;
-const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const warnInvalidCurrentMonthCalendarPosition = buildWarning([
   'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
@@ -92,8 +92,6 @@ const warnInvalidCurrentMonthCalendarPosition = buildWarning([
 ]);
 
 const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
-  minWidth: 312,
-  minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.day}`]: {
       cursor: 'grabbing',
@@ -545,7 +543,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               slots={slots}
               slotProps={slotProps}
             >
-              {utils.format(visibleMonths[month], 'monthAndYear')}
+              <Typography variant="body1" fontWeight="medium" component="span">
+                {utils.format(visibleMonths[month], 'monthAndYear')}
+              </Typography>
             </DateRangeCalendarArrowSwitcher>
           )}
 
