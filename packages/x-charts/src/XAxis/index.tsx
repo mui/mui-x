@@ -1,1 +1,1 @@
-export * from './XAxis';
+export * from './ChartsXAxis';

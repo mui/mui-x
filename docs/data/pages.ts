@@ -388,11 +388,6 @@ const pages: MuiPage[] = [
                 { pathname: '/x/react-charts/stacking', title: 'Stacking' },
               ],
             },
-            {
-              pathname: '/x/react-charts-demos',
-              title: 'Demos',
-              children: [],
-            },
             { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
             { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
             { pathname: '/x/react-charts/gantt', title: '🚧 Gantt' },

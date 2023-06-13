@@ -5,6 +5,7 @@ import {
   LinePlot,
   ChartsXAxis,
   ChartsYAxis,
+  axisClasses,
 } from '@mui/x-charts';
 
 export default function AxisWithComposition() {
@@ -43,10 +44,10 @@ export default function AxisWithComposition() {
       height={500}
       margin={{ left: 70, right: 70 }}
       sx={{
-        [`.MuiAxis-left .MuiAxis-label`]: {
+        [`.${axisClasses.left} .${axisClasses.label}`]: {
           transform: 'rotate(-90deg) translate(0px, -20px)',
         },
-        [`.MuiAxis-right .MuiAxis-label`]: {
+        [`.${axisClasses.right} .${axisClasses.label}`]: {
           transform: 'rotate(90deg) translate(0px, -20px)',
         },
       }}

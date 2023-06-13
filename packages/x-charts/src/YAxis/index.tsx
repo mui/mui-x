@@ -1,1 +1,1 @@
-export * from './YAxis';
+export * from './ChartsYAxis';

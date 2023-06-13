@@ -1,2 +1,2 @@
-export * from './Axis';
+export * from './ChartsAxis';
 export * from './axisClasses';

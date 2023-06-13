@@ -8,7 +8,7 @@ import {
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
 import { MarkPlot } from './MarkPlot';
-import { ChartsAxis, ChartsAxisProps } from '../Axis/Axis';
+import { ChartsAxis, ChartsAxisProps } from '../Axis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
