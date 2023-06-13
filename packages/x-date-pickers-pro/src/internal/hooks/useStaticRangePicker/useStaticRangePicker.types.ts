@@ -1,47 +1,58 @@
 import * as React from 'react';
 import {
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-  DateOrTimeView,
-  BaseNextPickerProps,
+  BasePickerProps,
   UsePickerParams,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
+import {
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { DateRange } from '../../models/range';
+import { UseRangePositionProps } from '../useRangePosition';
+import { RangeFieldSection } from '../../models/fields';
 
-export interface UseStaticRangePickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent {}
+export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
+  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
 
-export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+export interface UseStaticRangePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps {}
+export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRangePositionProps {}
 
-export interface UseStaticRangePickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError>,
+export interface UseStaticRangePickerProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+  TError,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
+> extends BasePickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
     StaticRangeOnlyPickerProps {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    */
-  components?: UseStaticRangePickerSlotsComponent;
+  slots?: UncapitalizeObjectKeys<UseStaticRangePickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticRangePickerParams<
   TDate,
-  TView extends DateOrTimeView,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any>,
+  TView extends DateOrTimeViewWithMeridiem,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<DateRange<TDate>, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup' | 'validator'
+    UsePickerParams<DateRange<TDate>, TDate, TView, RangeFieldSection, TExternalProps, {}>,
+    'valueManager' | 'valueType' | 'validator'
   > {
   props: TExternalProps;
   /**

@@ -148,6 +148,49 @@ function ColumnPropTest() {
   );
 }
 
+function SingleSelectColDef() {
+  return (
+    <div>
+      <DataGrid<{ country: string }>
+        rows={[]}
+        columns={[
+          {
+            field: 'country',
+            type: 'string',
+            // @ts-expect-error
+            valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            valueOptions: [
+              { value: 'UK', label: 'United Kingdom' },
+              { value: 'ES', label: 'Spain' },
+              { value: 'BR', label: 'Brazil' },
+            ],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            getOptionValue: (value: any) => value.code,
+            getOptionLabel: (value: any) => value.label,
+            valueOptions: [
+              { code: 'UK', name: 'United Kingdom' },
+              { code: 'ES', name: 'Spain' },
+              { code: 'BR', name: 'Brazil' },
+            ],
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
 function ApiRefPrivateMethods() {
   const apiRef = useGridApiRef();
 
@@ -208,6 +251,14 @@ function ApiRefPrivateMethods() {
     apiRef.current.setColumnGroupHeaderFocus;
     // @ts-expect-error Property 'getColumnGroupHeaderFocus' does not exist on type 'GridApiCommunity'
     apiRef.current.getColumnGroupHeaderFocus;
+    // @ts-expect-error Property 'setColumnIndex' does not exist on type 'GridApiCommunity'
+    apiRef.current.setColumnIndex;
+    // @ts-expect-error Property 'setRowIndex' does not exist on type 'GridApiCommunity'
+    apiRef.current.setRowIndex;
+    // @ts-expect-error Property 'setRowChildrenExpansion' does not exist on type 'GridApiCommunity'
+    apiRef.current.setRowChildrenExpansion;
+    // @ts-expect-error Property 'getRowGroupChildren' does not exist on type 'GridApiCommunity'
+    apiRef.current.getRowGroupChildren;
   });
 
   return null;

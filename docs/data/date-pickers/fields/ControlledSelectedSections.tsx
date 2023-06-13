@@ -3,42 +3,31 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { MuiDateSectionName, FieldSelectedSections } from '@mui/x-date-pickers';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { FieldSectionType, FieldSelectedSections } from '@mui/x-date-pickers/models';
+import { DateField } from '@mui/x-date-pickers/DateField';
 
 export default function ControlledSelectedSections() {
   const [selectedSections, setSelectedSections] =
     React.useState<FieldSelectedSections>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const setSelectedDateSectionName = (
-    selectedDateSectionName: MuiDateSectionName,
-  ) => {
+  const setSelectedSectionType = (selectedSectionType: FieldSectionType) => {
     inputRef.current?.focus();
-    setSelectedSections(selectedDateSectionName);
+    setSelectedSections(selectedSectionType);
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedDateSectionName('month')}
-          >
-            Pick month
+          <Button variant="outlined" onClick={() => setSelectedSectionType('month')}>
+            Month
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedDateSectionName('day')}
-          >
-            Pick day
+          <Button variant="outlined" onClick={() => setSelectedSectionType('day')}>
+            Day
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedDateSectionName('year')}
-          >
-            Pick year
+          <Button variant="outlined" onClick={() => setSelectedSectionType('year')}>
+            Year
           </Button>
         </Stack>
         <DateField

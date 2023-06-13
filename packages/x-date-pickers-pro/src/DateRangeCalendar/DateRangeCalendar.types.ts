@@ -14,10 +14,13 @@ import {
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
+  ExportedUseViewsOptions,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
+import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+import { UseRangePositionProps } from '../internal/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
@@ -44,45 +47,12 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
   >;
 }
 
-export interface DateRangeCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+export interface ExportedDateRangeCalendarProps<TDate>
+  extends ExportedDayCalendarProps,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
-    Partial<RangePositionProps> {
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: DateRange<TDate>;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: DateRange<TDate>;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {DateRange<TDate>} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
-   */
-  onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
-  autoFocus?: boolean;
-  className?: string;
-  classes?: Partial<DateRangeCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DateRangeCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+    // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
+    Pick<ExportedUseViewsOptions<'day'>, 'autoFocus'> {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -108,22 +78,76 @@ export interface DateRangeCalendarProps<TDate>
    */
   reduceAnimations?: boolean;
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
+  onMonthChange?: (month: TDate) => void;
   /**
    * The number of calendars to render.
    * @default 2
    */
   calendars?: 1 | 2 | 3;
   /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition?: 1 | 2 | 3;
+  /**
    * If `true`, editing dates by dragging is disabled.
    * @default false
    */
   disableDragEditing?: boolean;
+}
+
+export interface DateRangeCalendarProps<TDate>
+  extends ExportedDateRangeCalendarProps<TDate>,
+    UseRangePositionProps {
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
+  value?: DateRange<TDate>;
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue?: DateRange<TDate>;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {DateRange<TDate>} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   */
+  onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
+  className?: string;
+  classes?: Partial<DateRangeCalendarClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+  /**
+   * Overridable components.
+   * @default {}
+   * @deprecated Please use `slots`.
+   */
+  components?: DateRangeCalendarSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotProps`.
+   */
+  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {
@@ -133,20 +157,4 @@ export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarPro
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
   'reduceAnimations' | 'calendars' | 'disableDragEditing' | keyof BaseDateValidationProps<TDate>
->;
-
-export type ExportedDateRangeCalendarProps<TDate> = Omit<
-  DateRangeCalendarProps<TDate>,
-  | 'defaultValue'
-  | 'value'
-  | 'onChange'
-  | 'changeView'
-  | 'slideDirection'
-  | 'currentMonth'
-  | 'className'
-  | 'classes'
-  | 'components'
-  | 'componentsProps'
-  | 'rangePosition'
-  | 'onRangePositionChange'
 >;

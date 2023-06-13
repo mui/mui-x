@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, useTheme } from '@mui/system';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/system';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -11,11 +11,10 @@ import {
 } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
-import { YearCalendarClasses, getYearCalendarUtilityClass } from './yearCalendarClasses';
-import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
+import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
+import { YearCalendarProps } from './YearCalendar.types';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -61,54 +60,9 @@ const YearCalendarRoot = styled('div', {
   overflowY: 'auto',
   height: '100%',
   padding: '0 4px',
-  maxHeight: '304px',
+  width: 320,
+  maxHeight: 304,
 });
-
-export interface YearCalendarProps<TDate>
-  extends YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
-  autoFocus?: boolean;
-  /**
-   * className applied to the root element.
-   */
-  className?: string;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<YearCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   */
-  onChange?: (value: TDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
-  /**
-   * If `true`, today's date is rendering without highlighting with circle.
-   * @default false
-   */
-  disableHighlightToday?: boolean;
-  onYearFocus?: (year: number) => void;
-  hasFocus?: boolean;
-  onFocusedViewChange?: (newHasFocus: boolean) => void;
-}
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
   propTypes?: any;
@@ -121,7 +75,6 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   const now = useNow<TDate>();
   const theme = useTheme();
   const utils = useUtils<TDate>();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const props = useYearCalendarDefaultizedProps(inProps, 'MuiYearCalendar');
   const {
@@ -141,6 +94,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
+    yearsPerRow = 3,
     ...other
   } = props;
 
@@ -173,11 +127,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   }, [now, value, utils, disableHighlightToday]);
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
-  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'YearCalendar',
     state: 'hasFocus',
     controlled: hasFocus,
-    default: autoFocus,
+    default: autoFocus ?? false,
   });
 
   const changeHasFocus = useEventCallback((newHasFocus: boolean) => {
@@ -188,24 +142,27 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     }
   });
 
-  const isYearDisabled = useEventCallback((dateToValidate: TDate) => {
-    if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
-      return true;
-    }
-    if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
-      return true;
-    }
-    if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
-      return true;
-    }
-    if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
-      return true;
-    }
-    if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
-      return true;
-    }
-    return false;
-  });
+  const isYearDisabled = React.useCallback(
+    (dateToValidate: TDate) => {
+      if (disablePast && utils.isBeforeYear(dateToValidate, now)) {
+        return true;
+      }
+      if (disableFuture && utils.isAfterYear(dateToValidate, now)) {
+        return true;
+      }
+      if (minDate && utils.isBeforeYear(dateToValidate, minDate)) {
+        return true;
+      }
+      if (maxDate && utils.isAfterYear(dateToValidate, maxDate)) {
+        return true;
+      }
+      if (shouldDisableYear && shouldDisableYear(dateToValidate)) {
+        return true;
+      }
+      return false;
+    },
+    [disableFuture, disablePast, maxDate, minDate, now, shouldDisableYear, utils],
+  );
 
   const handleYearSelection = useEventCallback((event: React.MouseEvent, year: number) => {
     if (readOnly) {
@@ -232,15 +189,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   }, [selectedYear]);
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
-    const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
-
     switch (event.key) {
       case 'ArrowUp':
-        focusYear(year - yearsInRow);
+        focusYear(year - yearsPerRow);
         event.preventDefault();
         break;
       case 'ArrowDown':
-        focusYear(year + yearsInRow);
+        focusYear(year + yearsPerRow);
         event.preventDefault();
         break;
       case 'ArrowLeft':
@@ -319,6 +274,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
+            yearsPerRow={yearsPerRow}
           >
             {utils.format(year, 'year')}
           </PickersYear>
@@ -352,7 +308,7 @@ YearCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -362,7 +318,7 @@ YearCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -391,7 +347,7 @@ YearCalendar.propTypes = {
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -407,4 +363,9 @@ YearCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

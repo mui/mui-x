@@ -43,7 +43,7 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 
 ### Single grouping column
 
-By default, the grid will display a single column holding all grouping columns.
+By default, the data grid will display a single column holding all grouping columns.
 If you have multiple grouping criteria, this column name will be set to "Group."
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -125,7 +125,7 @@ You can manage column visibility with `columnVisibilityModel`, `initialState`, o
 To do so, pass them to the hook parameters.
 :::
 
-Bellow are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
+Below are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
 You can mix the two examples to support both at the same time.
 
 ```tsx
@@ -197,7 +197,7 @@ The grouping value has to be either a `string`, a `number`, `null`, or `undefine
 If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
 
 ```ts
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'composer',
     groupingValueGetter: (params) => params.value.name,
@@ -214,7 +214,7 @@ If your column also has a `valueGetter` property, the value passed to the `group
 
 ## Rows with missing groups
 
-If the grouping key of a grouping criteria is `null` or `undefined` for a row, the grid will consider that this row does not have a value for this group. and will inline it for those groups.
+If the grouping key of a grouping criteria is `null` or `undefined` for a row, the data grid will consider that this row does not have a value for this group. and will inline it for those groups.
 
 {{"demo": "RowGroupingRowsWithMissingGroups.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -334,7 +334,9 @@ With this panel, your users will be able to control which columns are used for g
 
 See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
+
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

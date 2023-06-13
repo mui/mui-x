@@ -1,16 +1,17 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
-import { SlotComponentProps } from '@mui/base';
-import { useSlotProps } from '@mui/base/utils';
+import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useControlled as useControlled,
+} from '@mui/utils';
 import clsx from 'clsx';
-import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
+import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersSlideTransition,
   SlideDirection,
@@ -21,10 +22,11 @@ import {
   DayValidationProps,
   MonthValidationProps,
   YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
+} from '../internals/models/validation';
+import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface DayCalendarSlotsComponent<TDate> {
   /**
@@ -43,10 +45,9 @@ export interface DayCalendarSlotsComponentsProps<TDate> {
   >;
 }
 
-export interface ExportedDayCalendarProps<TDate>
-  extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
+export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -77,11 +78,12 @@ export interface ExportedDayCalendarProps<TDate>
 }
 
 export interface DayCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>> {
+    Required<BaseDateValidationProps<TDate>>,
+    SlotsAndSlotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
@@ -100,8 +102,6 @@ export interface DayCalendarProps<TDate>
   onFocusedViewChange?: (newHasFocus: boolean) => void;
   gridLabelId?: string;
   classes?: Partial<DayCalendarClasses>;
-  components?: DayCalendarSlotsComponent<TDate>;
-  componentsProps?: DayCalendarSlotsComponentsProps<TDate>;
 }
 
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
@@ -221,12 +221,10 @@ function WrappedDay<TDate extends unknown>({
   day,
   focusableDay,
   selectedDays,
-  onFocus,
-  onBlur,
-  onKeyDown,
-  onDaySelect,
   isDateDisabled,
   currentMonthNumber,
+  isViewFocused,
+  ...other
 }: Pick<PickersDayProps<TDate>, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
   parentProps: DayCalendarProps<TDate>;
   day: TDate;
@@ -234,6 +232,7 @@ function WrappedDay<TDate extends unknown>({
   selectedDays: TDate[];
   isDateDisabled: (date: TDate | null) => boolean;
   currentMonthNumber: number;
+  isViewFocused: boolean;
 }) {
   const utils = useUtils<TDate>();
   const now = useNow<TDate>();
@@ -243,31 +242,29 @@ function WrappedDay<TDate extends unknown>({
     disableHighlightToday,
     isMonthSwitchingAnimating,
     showDaysOutsideCurrentMonth,
-    hasFocus,
     components,
     componentsProps,
+    slots,
+    slotProps,
   } = parentProps;
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
   const isToday = utils.isSameDay(day, now);
 
-  const Day = components?.Day ?? PickersDay;
+  const Day = slots?.day ?? components?.Day ?? PickersDay;
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
-    externalSlotProps: componentsProps?.day,
+    externalSlotProps: slotProps?.day ?? componentsProps?.day,
     additionalProps: {
       disableHighlightToday,
-      onKeyDown,
-      onFocus,
-      onBlur,
-      onDaySelect,
       showDaysOutsideCurrentMonth,
       role: 'gridcell',
       isAnimating: isMonthSwitchingAnimating,
       // it is used in date range dragging logic by accessing `dataset.timestamp`
       'data-timestamp': utils.toJsDate(day).valueOf(),
+      ...other,
     },
     ownerState: { ...parentProps, day, selected: isSelected },
   });
@@ -277,14 +274,37 @@ function WrappedDay<TDate extends unknown>({
     [disabled, isDateDisabled, day],
   );
 
+  const outsideCurrentMonth = React.useMemo(
+    () => utils.getMonth(day) !== currentMonthNumber,
+    [utils, day, currentMonthNumber],
+  );
+
+  const isFirstVisibleCell = React.useMemo(() => {
+    const startOfMonth = utils.startOfMonth(utils.setMonth(day, currentMonthNumber));
+    if (!showDaysOutsideCurrentMonth) {
+      return utils.isSameDay(day, startOfMonth);
+    }
+    return utils.isSameDay(day, utils.startOfWeek(startOfMonth));
+  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, utils]);
+
+  const isLastVisibleCell = React.useMemo(() => {
+    const endOfMonth = utils.endOfMonth(utils.setMonth(day, currentMonthNumber));
+    if (!showDaysOutsideCurrentMonth) {
+      return utils.isSameDay(day, endOfMonth);
+    }
+    return utils.isSameDay(day, utils.endOfWeek(endOfMonth));
+  }, [currentMonthNumber, day, showDaysOutsideCurrentMonth, utils]);
+
   return (
     <Day
       {...dayProps}
       day={day}
       disabled={isDisabled}
-      autoFocus={hasFocus && isFocusableDay}
+      autoFocus={isViewFocused && isFocusableDay}
       today={isToday}
-      outsideCurrentMonth={utils.getMonth(day) !== currentMonthNumber}
+      outsideCurrentMonth={outsideCurrentMonth}
+      isFirstVisibleCell={isFirstVisibleCell}
+      isLastVisibleCell={isLastVisibleCell}
       selected={isSelected}
       tabIndex={isFocusableDay ? 0 : -1}
       aria-selected={isSelected}
@@ -302,6 +322,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDayCalendar' });
   const classes = useUtilityClasses(props);
   const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const {
     onFocusedDayChange,
@@ -330,6 +351,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     gridLabelId,
     displayWeekNumber,
     fixedWeekNumber,
+    autoFocus,
   } = props;
 
   const isDateDisabled = useIsDateDisabled({
@@ -344,25 +366,32 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
 
   const localeText = useLocaleText<TDate>();
 
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
+    name: 'DayCalendar',
+    state: 'hasFocus',
+    controlled: hasFocus,
+    default: autoFocus ?? false,
+  });
+
   const [internalFocusedDay, setInternalFocusedDay] = React.useState<TDate>(
     () => focusedDay || now,
   );
 
-  const handleDaySelect = useEventCallback(
-    (day: TDate, isFinish: PickerSelectionState = 'finish') => {
-      if (readOnly) {
-        return;
-      }
+  const handleDaySelect = useEventCallback((day: TDate) => {
+    if (readOnly) {
+      return;
+    }
 
-      onSelectedDaysChange(day, isFinish);
-    },
-  );
+    onSelectedDaysChange(day);
+  });
 
   const focusDay = (day: TDate) => {
     if (!isDateDisabled(day)) {
       onFocusedDayChange(day);
       setInternalFocusedDay(day);
+
       onFocusedViewChange?.(true);
+      setInternalHasFocus(true);
     }
   };
 
@@ -378,21 +407,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           event.preventDefault();
           break;
         case 'ArrowLeft': {
-          const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? -1 : 1);
-          const nextAvailableMonth =
-            theme.direction === 'ltr' ? utils.getPreviousMonth(day) : utils.getNextMonth(day);
+          const newFocusedDayDefault = utils.addDays(day, isRTL ? 1 : -1);
+          const nextAvailableMonth = utils.addMonths(day, isRTL ? 1 : -1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate:
-              theme.direction === 'ltr'
-                ? utils.startOfMonth(nextAvailableMonth)
-                : newFocusedDayDefault,
-            maxDate:
-              theme.direction === 'ltr'
-                ? newFocusedDayDefault
-                : utils.endOfMonth(nextAvailableMonth),
+            minDate: isRTL ? newFocusedDayDefault : utils.startOfMonth(nextAvailableMonth),
+            maxDate: isRTL ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
             isDateDisabled,
           });
           focusDay(closestDayToFocus || newFocusedDayDefault);
@@ -400,21 +422,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           break;
         }
         case 'ArrowRight': {
-          const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? 1 : -1);
-          const nextAvailableMonth =
-            theme.direction === 'ltr' ? utils.getNextMonth(day) : utils.getPreviousMonth(day);
+          const newFocusedDayDefault = utils.addDays(day, isRTL ? -1 : 1);
+          const nextAvailableMonth = utils.addMonths(day, isRTL ? -1 : 1);
 
           const closestDayToFocus = findClosestEnabledDate({
             utils,
             date: newFocusedDayDefault,
-            minDate:
-              theme.direction === 'ltr'
-                ? newFocusedDayDefault
-                : utils.startOfMonth(nextAvailableMonth),
-            maxDate:
-              theme.direction === 'ltr'
-                ? utils.endOfMonth(nextAvailableMonth)
-                : newFocusedDayDefault,
+            minDate: isRTL ? utils.startOfMonth(nextAvailableMonth) : newFocusedDayDefault,
+            maxDate: isRTL ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
             isDateDisabled,
           });
           focusDay(closestDayToFocus || newFocusedDayDefault);
@@ -430,11 +445,11 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           event.preventDefault();
           break;
         case 'PageUp':
-          focusDay(utils.getNextMonth(day));
+          focusDay(utils.addMonths(day, 1));
           event.preventDefault();
           break;
         case 'PageDown':
-          focusDay(utils.getPreviousMonth(day));
+          focusDay(utils.addMonths(day, -1));
           event.preventDefault();
           break;
         default:
@@ -447,7 +462,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     focusDay(day),
   );
   const handleBlur = useEventCallback((event: React.FocusEvent<HTMLButtonElement>, day: TDate) => {
-    if (hasFocus && utils.isSameDay(internalFocusedDay, day)) {
+    if (internalHasFocus && utils.isSameDay(internalFocusedDay, day)) {
       onFocusedViewChange?.(false);
     }
   });
@@ -552,11 +567,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             role="rowgroup"
             className={classes.monthContainer}
           >
-            {weeksToDisplay.map((week) => (
+            {weeksToDisplay.map((week, index) => (
               <PickersCalendarWeek
                 role="row"
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
+                // fix issue of announcing row 1 as row 2
+                // caused by week day labels row
+                aria-rowindex={index + 1}
               >
                 {displayWeekNumber && (
                   <PickersCalendarWeekNumber
@@ -569,7 +587,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     {localeText.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
                   </PickersCalendarWeekNumber>
                 )}
-                {week.map((day) => (
+                {week.map((day, dayIndex) => (
                   <WrappedDay
                     key={(day as any).toString()}
                     parentProps={props}
@@ -582,6 +600,9 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     onDaySelect={handleDaySelect}
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
+                    isViewFocused={internalHasFocus}
+                    // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
+                    aria-colindex={dayIndex + 1}
                   />
                 ))}
               </PickersCalendarWeek>

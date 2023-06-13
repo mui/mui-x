@@ -5,7 +5,7 @@ import { useTheme, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
-import { ArrowLeft, ArrowRight } from '../icons';
+import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import {
   PickersArrowSwitcherOwnerState,
   PickersArrowSwitcherProps,
@@ -67,8 +67,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const {
     children,
     className,
-    components = {},
-    componentsProps = {},
+    slots,
+    slotProps,
     isNextDisabled,
     isNextHidden,
     onGoToNext,
@@ -100,12 +100,12 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
 
   const [leftProps, rightProps] = isRTL ? [nextProps, previousProps] : [previousProps, nextProps];
 
-  const PreviousIconButton = components.PreviousIconButton ?? PickersArrowSwitcherButton;
+  const PreviousIconButton = slots?.previousIconButton ?? PickersArrowSwitcherButton;
   const previousIconButtonProps = useSlotProps({
     elementType: PreviousIconButton,
-    externalSlotProps: componentsProps.previousIconButton,
+    externalSlotProps: slotProps?.previousIconButton,
     additionalProps: {
-      size: 'small',
+      size: 'medium',
       title: leftProps.label,
       'aria-label': leftProps.label,
       disabled: leftProps.isDisabled,
@@ -116,12 +116,12 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     className: classes.button,
   });
 
-  const NextIconButton = components.NextIconButton ?? PickersArrowSwitcherButton;
+  const NextIconButton = slots?.nextIconButton ?? PickersArrowSwitcherButton;
   const nextIconButtonProps = useSlotProps({
     elementType: NextIconButton,
-    externalSlotProps: componentsProps.nextIconButton,
+    externalSlotProps: slotProps?.nextIconButton,
     additionalProps: {
-      size: 'small',
+      size: 'medium',
       title: rightProps.label,
       'aria-label': rightProps.label,
       disabled: rightProps.isDisabled,
@@ -132,19 +132,25 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     className: classes.button,
   });
 
-  const LeftArrowIcon = components?.LeftArrowIcon ?? ArrowLeft;
+  const LeftArrowIcon = slots?.leftArrowIcon ?? ArrowLeftIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
-    externalSlotProps: componentsProps.leftArrowIcon,
+    externalSlotProps: slotProps?.leftArrowIcon,
+    additionalProps: {
+      fontSize: 'inherit',
+    },
     ownerState: undefined,
   });
 
-  const RightArrowIcon = components?.RightArrowIcon ?? ArrowRight;
+  const RightArrowIcon = slots?.rightArrowIcon ?? ArrowRightIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
-    externalSlotProps: componentsProps.rightArrowIcon,
+    externalSlotProps: slotProps?.rightArrowIcon,
+    additionalProps: {
+      fontSize: 'inherit',
+    },
     ownerState: undefined,
   });
 

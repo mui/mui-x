@@ -6,22 +6,22 @@ const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const { findPages } = require('./src/modules/utils/find');
-const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
+const { LANGUAGES, LANGUAGES_SSR } = require('./config');
 
 const workspaceRoot = path.join(__dirname, '../');
 
 module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-  assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
+  assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
     ENABLE_AD: process.env.ENABLE_AD,
     LIB_VERSION: pkg.version,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
-    SLACK_FEEDBACKS_TOKEN: process.env.SLACK_FEEDBACKS_TOKEN,
+    CONTEXT: process.env.CONTEXT,
     // #default-branch-switch
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/next',
+    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
@@ -63,7 +63,18 @@ module.exports = withDocsInfra({
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve('@mui/monorepo/docs/packages/markdown/loader'),
+                use: [
+                  options.defaultLoaders.babel,
+                  {
+                    loader: require.resolve('@mui/monorepo/packages/markdown/loader'),
+                    options: {
+                      env: {
+                        SOURCE_CODE_REPO: options.config.env.SOURCE_CODE_REPO,
+                        LIB_VERSION: options.config.env.LIB_VERSION,
+                      },
+                    },
+                  },
+                ],
               },
             ],
           },
@@ -100,6 +111,11 @@ module.exports = withDocsInfra({
       const prefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
 
       pages2.forEach((page) => {
+        // The experiments pages are only meant for experiments, they shouldn't leak to production.
+        if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
+          return;
+        }
+
         if (!page.children) {
           map[`${prefix}${page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')}`] = {
             page: page.pathname,

@@ -61,6 +61,22 @@ export interface GridClasses {
    */
   'cell--withRenderer': string;
   /**
+   * Styles applied to the cell element if it is at the top edge of a cell selection range.
+   */
+  'cell--rangeTop': string;
+  /**
+   * Styles applied to the cell element if it is at the bottom edge of a cell selection range.
+   */
+  'cell--rangeBottom': string;
+  /**
+   * Styles applied to the cell element if it is at the left edge of a cell selection range.
+   */
+  'cell--rangeLeft': string;
+  /**
+   * Styles applied to the cell element if it is at the right edge of a cell selection range.
+   */
+  'cell--rangeRight': string;
+  /**
    * Styles applied to the cell element.
    */
   cell: string;
@@ -261,9 +277,9 @@ export interface GridClasses {
    */
   filterFormDeleteIcon: string;
   /**
-   * Styles applied to the link operator inout of the filter form component.
+   * Styles applied to the link operator input of the filter form component.
    */
-  filterFormLinkOperatorInput: string;
+  filterFormLogicOperatorInput: string;
   /**
    * Styles applied to the column input of the filter form component.
    */
@@ -296,6 +312,10 @@ export interface GridClasses {
    * Styles applied to the column header separator icon element.
    */
   iconSeparator: string;
+  /**
+   * Styles applied to the column header filter row.
+   */
+  headerFilterRow: string;
   /**
    * Styles applied to the main container element.
    */
@@ -389,6 +409,10 @@ export interface GridClasses {
    */
   'root--densityCompact': string;
   /**
+   * Styles applied to the root element when user selection is disabled.
+   */
+  'root--disableUserSelection': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -462,11 +486,20 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
-   * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
+   * Styles applied to cells, column header and other elements that have border.
+   * Sets border color only.
    */
-  withBorder: string;
+  withBorderColor: string;
   /**
-   * Styles applied to the root of the grouping cell of the tree data.
+   * Styles applied the cell if `showColumnVerticalBorder={true}`.
+   */
+  'cell--withRightBorder': string;
+  /**
+   * Styles applied the column header if `showColumnVerticalBorder={true}`.
+   */
+  'columnHeader--withRightBorder': string;
+  /**
+   * Styles applied to the root of the grouping column of the tree data.
    */
   treeDataGroupingCell: string;
   /**
@@ -511,6 +544,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignLeft',
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
+  'aggregationColumnHeaderLabel',
   'autoHeight',
   'booleanCell',
   'cell--editable',
@@ -519,6 +553,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--textLeft',
   'cell--textRight',
   'cell--withRenderer',
+  'cell--rangeTop',
+  'cell--rangeBottom',
+  'cell--rangeLeft',
+  'cell--rangeRight',
   'cell',
   'cellContent',
   'cellCheckbox',
@@ -569,12 +607,13 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editInputCell',
   'filterForm',
   'filterFormDeleteIcon',
-  'filterFormLinkOperatorInput',
+  'filterFormLogicOperatorInput',
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',
   'filterIcon',
   'footerContainer',
+  'headerFilterRow',
   'iconButtonContainer',
   'iconSeparator',
   'main',
@@ -584,10 +623,13 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'menuOpen',
   'menuList',
   'overlay',
+  'overlayWrapper',
+  'overlayWrapperInner',
   'root',
   'root--densityStandard',
   'root--densityComfortable',
   'root--densityCompact',
+  'root--disableUserSelection',
   'row',
   'row--editable',
   'row--editing',
@@ -617,7 +659,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedColumnHeaders',
   'pinnedColumnHeaders--left',
   'pinnedColumnHeaders--right',
-  'withBorder',
+  'withBorderColor',
+  'cell--withRightBorder',
+  'columnHeader--withRightBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',

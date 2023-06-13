@@ -3,7 +3,7 @@ import {
   DataGridPremium,
   GridToolbarContainer,
   GridToolbarExport,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
 } from '@mui/x-data-grid-premium';
 
@@ -100,7 +100,7 @@ const rows: GridRowsProp = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',
@@ -131,8 +131,8 @@ export default function ExcelExport() {
       <DataGridPremium
         rows={rows}
         columns={columns}
-        components={{
-          Toolbar: CustomToolbar,
+        slots={{
+          toolbar: CustomToolbar,
         }}
       />
     </div>

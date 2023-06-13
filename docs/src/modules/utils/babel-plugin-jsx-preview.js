@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const pluginName = 'babel-plugin-jsx-preview';
 
-const wrapperTypes = ['div', 'Box', 'Stack', 'LocalizationProvider', 'PickersGrid'];
+const wrapperTypes = ['div', 'Box', 'Stack', 'LocalizationProvider', 'DemoContainer', 'DemoItem'];
 
 /**
  * @returns {import('@babel/core').PluginObj}
@@ -84,13 +84,13 @@ module.exports = function babelPluginJsxPreview() {
 
         const previewLines = preview.split(/\n/);
         // The first line is already trimmed either due to trimmed blank JSXText or because it's a single node which babel already trims.
-        // The last line is therefore the meassure for indendation
-        const indendation = previewLines.slice(-1)[0].match(/^\s*/)[0].length;
+        // The last line is therefore the meassure for indentation
+        const indentation = previewLines.slice(-1)[0].match(/^\s*/)[0].length;
         const deindentedPreviewLines = preview.split(/\n/).map((line, index) => {
           if (index === 0) {
             return line;
           }
-          return line.slice(indendation);
+          return line.slice(indentation);
         });
 
         if (deindentedPreviewLines.length <= maxLines) {

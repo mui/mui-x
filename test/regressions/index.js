@@ -1,14 +1,14 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { LicenseInfo } from '@mui/x-data-grid-pro';
+import { LicenseInfo } from '@mui/x-license-pro';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 
 // This license key is only valid for use with Material UI SAS's projects
 // See the terms: https://mui.com/r/x-license-eula
 LicenseInfo.setLicenseKey(
-  '61628ce74db2c1b62783a6d438593bc5Tz1NVUktRG9jLEU9MTY4MzQ0NzgyMTI4NCxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
+  'd483a722e0dc68f4d483487da0ccac45Tz1NVUktRG9jLEU9MTcxNTE2MzgwOTMwNyxTPXByZW1pdW0sTE09c3Vic2NyaXB0aW9uLEtWPTI=',
 );
 
 const blacklist = [
@@ -16,15 +16,7 @@ const blacklist = [
   'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
-  'docs-date-pickers-date-picker/CustomInput.png', // Redundant
-  'docs-date-pickers-date-picker/ResponsiveDatePickers.png', // Redundant
-  'docs-date-pickers-date-picker/ServerRequestDatePicker.png', // Redundant
-  'docs-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
-  'docs-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
-  'docs-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
-  'docs-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
-  'docs-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
-  'docs-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
+  'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
   // 'docs-system-typography',
 ];
 
@@ -176,4 +168,6 @@ function App() {
   );
 }
 
-ReactDOM.render(<App />, document.getElementById('react-root'));
+const container = document.getElementById('react-root');
+const root = ReactDOM.createRoot(container);
+root.render(<App />);

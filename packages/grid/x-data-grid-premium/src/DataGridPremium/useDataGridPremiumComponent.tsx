@@ -60,6 +60,8 @@ import {
   columnGroupsStateInitializer,
   useGridLazyLoader,
   useGridLazyLoaderPreProcessors,
+  headerFilteringStateInitializer,
+  useGridHeaderFiltering,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -75,6 +77,11 @@ import {
 } from '../hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
 import { useGridExcelExport } from '../hooks/features/export/useGridExcelExport';
+import {
+  cellSelectionStateInitializer,
+  useGridCellSelection,
+} from '../hooks/features/cellSelection/useGridCellSelection';
+import { useGridClipboardImport } from '../hooks/features/clipboard/useGridClipboardImport';
 
 export const useDataGridPremiumComponent = (
   inputApiRef: React.MutableRefObject<GridApiPremium> | undefined,
@@ -104,9 +111,11 @@ export const useDataGridPremiumComponent = (
   /**
    * Register all state initializers here.
    */
+  useGridInitializeState(headerFilteringStateInitializer, privateApiRef, props);
   useGridInitializeState(rowGroupingStateInitializer, privateApiRef, props);
   useGridInitializeState(aggregationStateInitializer, privateApiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
+  useGridInitializeState(cellSelectionStateInitializer, privateApiRef, props);
   useGridInitializeState(detailPanelStateInitializer, privateApiRef, props);
   useGridInitializeState(columnPinningStateInitializer, privateApiRef, props);
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
@@ -126,10 +135,12 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(columnGroupsStateInitializer, privateApiRef, props);
 
   useGridRowGrouping(privateApiRef, props);
+  useGridHeaderFiltering(privateApiRef, props);
   useGridTreeData(privateApiRef);
   useGridAggregation(privateApiRef, props);
   useGridKeyboardNavigation(privateApiRef, props);
   useGridRowSelection(privateApiRef, props);
+  useGridCellSelection(privateApiRef, props);
   useGridColumnPinning(privateApiRef, props);
   useGridRowPinning(privateApiRef, props);
   useGridColumns(privateApiRef, props);
@@ -138,6 +149,7 @@ export const useDataGridPremiumComponent = (
   useGridDetailPanel(privateApiRef, props);
   useGridColumnSpanning(privateApiRef);
   useGridColumnGrouping(privateApiRef, props);
+  useGridClipboardImport(privateApiRef, props);
   useGridEditing(privateApiRef, props);
   useGridFocus(privateApiRef, props);
   useGridPreferencesPanel(privateApiRef, props);
@@ -153,10 +165,10 @@ export const useDataGridPremiumComponent = (
   useGridInfiniteLoader(privateApiRef, props);
   useGridLazyLoader(privateApiRef, props);
   useGridColumnMenu(privateApiRef);
-  useGridCsvExport(privateApiRef);
+  useGridCsvExport(privateApiRef, props);
   useGridPrintExport(privateApiRef, props);
-  useGridExcelExport(privateApiRef);
-  useGridClipboard(privateApiRef);
+  useGridExcelExport(privateApiRef, props);
+  useGridClipboard(privateApiRef, props);
   useGridDimensions(privateApiRef, props);
   useGridEvents(privateApiRef, props);
   useGridStatePersistence(privateApiRef);

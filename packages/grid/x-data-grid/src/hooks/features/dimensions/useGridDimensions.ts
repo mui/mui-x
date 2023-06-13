@@ -3,6 +3,7 @@ import {
   unstable_debounce as debounce,
   unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
+  unstable_ownerWindow as ownerWindow,
 } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
@@ -16,12 +17,12 @@ import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
-import { gridDensityRowHeightSelector } from '../density';
+import { gridDensityFactorSelector } from '../density';
 import { useGridSelector } from '../../utils';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
-import { gridTotalHeaderHeightSelector } from '../columnGrouping/gridColumnGroupsSelector';
+import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -56,7 +57,14 @@ export function useGridDimensions(
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight' | 'getRowHeight'
+    | 'onResize'
+    | 'scrollbarSize'
+    | 'pagination'
+    | 'paginationMode'
+    | 'autoHeight'
+    | 'getRowHeight'
+    | 'rowHeight'
+    | 'columnHeaderHeight'
   >,
 ) {
   const logger = useGridLogger(apiRef, 'useResizeContainer');
@@ -64,7 +72,9 @@ export function useGridDimensions(
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
+  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const rowHeight = Math.floor(props.rowHeight * densityFactor);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -150,14 +160,25 @@ export function useGridDimensions(
     apiRef,
     props.scrollbarSize,
     props.autoHeight,
-    totalHeaderHeight,
     rowsMeta.currentPageTotalHeight,
+    totalHeaderHeight,
   ]);
 
+  const [savedSize, setSavedSize] = React.useState<ElementSize>();
+  const debouncedSetSavedSize = React.useMemo(() => debounce(setSavedSize, 60), []);
+  const previousSize = React.useRef<ElementSize>();
+
+  useEnhancedEffect(() => {
+    if (savedSize) {
+      updateGridDimensionsRef();
+      apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
+    }
+  }, [apiRef, savedSize, updateGridDimensionsRef]);
+
+  // This is the function called by apiRef.current.resize()
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
-    updateGridDimensionsRef();
-    apiRef.current.publishEvent('debouncedResize', rootDimensionsRef.current!);
-  }, [apiRef, updateGridDimensionsRef]);
+    apiRef.current.computeSizeAndPublishResizeEvent();
+  }, [apiRef]);
 
   const getRootDimensions = React.useCallback<GridDimensionsApi['getRootDimensions']>(
     () => fullDimensionsRef.current,
@@ -186,11 +207,42 @@ export function useGridDimensions(
     }
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / gridDensityRowHeightSelector(apiRef),
+      dimensions.viewportInnerSize.height / rowHeight,
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight]);
+  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
+
+  const computeSizeAndPublishResizeEvent = React.useCallback(() => {
+    const mainEl = apiRef.current.mainElementRef?.current;
+
+    if (!mainEl) {
+      return;
+    }
+
+    const height = mainEl.clientHeight || 0;
+    const width = mainEl.clientWidth || 0;
+
+    const win = ownerWindow(mainEl);
+
+    const computedStyle = win.getComputedStyle(mainEl);
+    const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
+    const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
+    const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
+    const paddingBottom = parseInt(computedStyle.paddingBottom, 10) || 0;
+
+    const newHeight = height - paddingTop - paddingBottom;
+    const newWidth = width - paddingLeft - paddingRight;
+
+    const hasHeightChanged = newHeight !== previousSize.current?.height;
+    const hasWidthChanged = newWidth !== previousSize.current?.width;
+
+    if (!previousSize.current || hasHeightChanged || hasWidthChanged) {
+      const size = { width: newWidth, height: newHeight };
+      apiRef.current.publishEvent('resize', size);
+      previousSize.current = size;
+    }
+  }, [apiRef]);
 
   const dimensionsApi: GridDimensionsApi = {
     resize,
@@ -200,12 +252,11 @@ export function useGridDimensions(
   const dimensionsPrivateApi: GridDimensionsPrivateApi = {
     getViewportPageSize,
     updateGridDimensionsRef,
+    computeSizeAndPublishResizeEvent,
   };
 
   useGridApiMethod(apiRef, dimensionsApi, 'public');
   useGridApiMethod(apiRef, dimensionsPrivateApi, 'private');
-
-  const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 
   const isFirstSizing = React.useRef(true);
 
@@ -243,28 +294,27 @@ export function useGridDimensions(
 
       if (isTestEnvironment) {
         // We don't need to debounce the resize for tests.
-        resize();
+        setSavedSize(size);
         isFirstSizing.current = false;
         return;
       }
 
       if (isFirstSizing.current) {
         // We want to initialize the grid dimensions as soon as possible to avoid flickering
-        resize();
+        setSavedSize(size);
         isFirstSizing.current = false;
         return;
       }
 
-      debounceResize();
+      debouncedSetSavedSize(size);
     },
-    [props.autoHeight, debounceResize, logger, resize],
+    [props.autoHeight, debouncedSetSavedSize, logger],
   );
 
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, 'pageChange', updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, 'pageSizeChange', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'paginationModelChange', updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, 'columnsChange', updateGridDimensionsRef);
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);

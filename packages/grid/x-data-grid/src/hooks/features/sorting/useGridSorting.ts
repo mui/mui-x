@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -116,6 +117,23 @@ export const useGridSorting = (
     [apiRef, props.sortingOrder],
   );
 
+  const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems, colDef) => {
+      if (colDef == null || colDef.sortable === false) {
+        return columnMenuItems;
+      }
+
+      const sortingOrder = colDef.sortingOrder || props.sortingOrder;
+
+      if (sortingOrder.some((item) => !!item)) {
+        return [...columnMenuItems, 'columnMenuSortItem'];
+      }
+
+      return columnMenuItems;
+    },
+    [props.sortingOrder],
+  );
+
   /**
    * API METHODS
    */
@@ -223,7 +241,7 @@ export const useGridSorting = (
       const sortModelToExport = gridSortModelSelector(apiRef);
 
       const shouldExportSortModel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.sortModel != null ||
@@ -331,6 +349,8 @@ export const useGridSorting = (
     [apiRef],
   );
 
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
+
   useGridApiEventHandler(apiRef, 'columnHeaderClick', handleColumnHeaderClick);
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'rowsSet', apiRef.current.applySorting);
@@ -347,7 +367,7 @@ export const useGridSorting = (
   /**
    * EFFECTS
    */
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (props.sortModel !== undefined) {
       apiRef.current.setSortModel(props.sortModel);
     }

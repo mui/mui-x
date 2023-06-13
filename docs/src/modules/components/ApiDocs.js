@@ -104,13 +104,14 @@ ApiProperty.propTypes = {
 };
 
 function ApiDocs(props) {
-  const { api, proApi = null, premiumApi = null } = props;
+  const { api = null, proApi = null, premiumApi = null } = props;
 
   return (
     <Box sx={{ width: '100%' }}>
-      {api.properties.map((property, index) => (
-        <ApiProperty key={index} property={property} index={index} />
-      ))}
+      {api &&
+        api.properties.map((property, index) => (
+          <ApiProperty key={index} property={property} index={index} />
+        ))}
       {proApi &&
         proApi.properties.map((property, index) => (
           <ApiProperty key={index} property={property} index={index} plan="pro" />
@@ -124,7 +125,7 @@ function ApiDocs(props) {
 }
 
 ApiDocs.propTypes = {
-  api: PropTypes.object.isRequired,
+  api: PropTypes.object,
   premiumApi: PropTypes.object,
   proApi: PropTypes.object,
 };

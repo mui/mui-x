@@ -5,7 +5,7 @@ import {
   GridFilterModel,
   GridSortModel,
   GridRowId,
-  GridLinkOperator,
+  GridLogicOperator,
   GridFilterOperator,
   GridColDef,
 } from '@mui/x-data-grid-pro';
@@ -88,7 +88,7 @@ const getFilteredRows = (
     return filterOperator?.getApplyFilterFn({ filterItem, value: parsedValue }, colDef);
   });
 
-  if (filterModel.linkOperator === GridLinkOperator.Or) {
+  if (filterModel.logicOperator === GridLogicOperator.Or) {
     return rows.filter((row: GridRowModel) =>
       filterModel.items.some((_, index) => {
         const value = valueGetters[index](row);

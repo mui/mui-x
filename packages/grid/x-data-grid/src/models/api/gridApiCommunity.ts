@@ -1,5 +1,7 @@
 import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 import type { GridApiCommon, GridPrivateOnlyApiCommon } from './gridApiCommon';
+import type { GridColumnReorderApi } from './gridColumnApi';
+import { GridRowProApi } from './gridRowApi';
 import { GridRowMultiSelectionApi } from './gridRowSelectionApi';
 
 /**
@@ -11,5 +13,7 @@ export interface GridApiCommunity
 export interface GridPrivateApiCommunity
   extends GridApiCommunity,
     GridPrivateOnlyApiCommon<GridApiCommunity, GridPrivateApiCommunity>,
-    // it's private in Community plan, but public in Pro and Premium plans
-    GridRowMultiSelectionApi {}
+    // APIs that are private in Community plan, but public in Pro and Premium plans
+    GridRowMultiSelectionApi,
+    GridColumnReorderApi,
+    GridRowProApi {}

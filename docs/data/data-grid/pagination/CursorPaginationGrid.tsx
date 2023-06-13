@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridRowId } from '@mui/x-data-grid';
+import { DataGrid, GridRowId, GridPaginationModel } from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
 const PAGE_SIZE = 5;
@@ -13,30 +13,36 @@ const { useQuery, ...data } = createFakeServer({}, SERVER_OPTIONS);
 export default function CursorPaginationGrid() {
   const mapPageToNextCursor = React.useRef<{ [page: number]: GridRowId }>({});
 
-  const [page, setPage] = React.useState(0);
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: PAGE_SIZE,
+  });
 
   const queryOptions = React.useMemo(
     () => ({
-      cursor: mapPageToNextCursor.current[page - 1],
-      pageSize: PAGE_SIZE,
+      cursor: mapPageToNextCursor.current[paginationModel.page - 1],
+      pageSize: paginationModel.pageSize,
     }),
-    [page],
+    [paginationModel],
   );
   const { isLoading, rows, pageInfo } = useQuery(queryOptions);
 
-  const handlePageChange = (newPage: number) => {
+  const handlePaginationModelChange = (newPaginationModel: GridPaginationModel) => {
     // We have the cursor, we can allow the page transition.
-    if (newPage === 0 || mapPageToNextCursor.current[newPage - 1]) {
-      setPage(newPage);
+    if (
+      newPaginationModel.page === 0 ||
+      mapPageToNextCursor.current[newPaginationModel.page - 1]
+    ) {
+      setPaginationModel(newPaginationModel);
     }
   };
 
   React.useEffect(() => {
     if (!isLoading && pageInfo?.nextCursor) {
       // We add nextCursor when available
-      mapPageToNextCursor.current[page] = pageInfo?.nextCursor;
+      mapPageToNextCursor.current[paginationModel.page] = pageInfo?.nextCursor;
     }
-  }, [page, isLoading, pageInfo?.nextCursor]);
+  }, [paginationModel.page, isLoading, pageInfo?.nextCursor]);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
@@ -56,13 +62,11 @@ export default function CursorPaginationGrid() {
       <DataGrid
         rows={rows}
         {...data}
-        pagination
-        pageSize={PAGE_SIZE}
-        rowsPerPageOptions={[PAGE_SIZE]}
+        pageSizeOptions={[PAGE_SIZE]}
         rowCount={rowCountState}
         paginationMode="server"
-        onPageChange={handlePageChange}
-        page={page}
+        onPaginationModelChange={handlePaginationModelChange}
+        paginationModel={paginationModel}
         loading={isLoading}
       />
     </div>

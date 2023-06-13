@@ -1,17 +1,20 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
+import { DateTimeValidationError, FieldSection } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
-import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
+  DateTimeValidationProps,
   DayValidationProps,
   MonthValidationProps,
   TimeValidationProps,
   YearValidationProps,
-} from '../internals/hooks/validation/models';
+} from '../internals/models/validation';
+import { FieldsTextFieldProps } from '../internals/models/fields';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
@@ -19,31 +22,27 @@ export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
 }
 
 export interface UseDateTimeFieldProps<TDate>
-  extends MakeOptional<UseFieldInternalProps<TDate | null, DateTimeValidationError>, 'format'>,
+  extends MakeOptional<
+      UseFieldInternalProps<TDate | null, TDate, FieldSection, DateTimeValidationError>,
+      'format'
+    >,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
     TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
+    BaseTimeValidationProps,
+    DateTimeValidationProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
-  /**
-   * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
-   */
-  minDateTime?: TDate;
-  /**
-   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
-   */
-  maxDateTime?: TDate;
 }
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeFieldProps<TDate>,
-  keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps | 'format'
+  keyof BaseDateValidationProps<any> | keyof BaseTimeValidationProps | 'format'
 >;
 
 export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
@@ -53,29 +52,42 @@ export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit
   UseDateTimeFieldProps<TDate>;
 
 export interface DateTimeFieldProps<TDate>
-  extends UseDateTimeFieldComponentProps<TDate, TextFieldProps> {
+  extends UseDateTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: DateTimeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<DateTimeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DateTimeFieldSlotsComponentsProps<TDate>;
 }
 
 export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;
 
 export interface DateTimeFieldSlotsComponent {
   /**
-   * Input rendered.
-   * @default TextField
+   * Form control with an input to render the value.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
 }
 
 export interface DateTimeFieldSlotsComponentsProps<TDate> {
-  input?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
+  textField?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
 }

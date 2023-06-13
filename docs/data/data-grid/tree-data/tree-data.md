@@ -16,7 +16,7 @@ The `getTreeDataPath` function returns an array of strings which represents the 
 //         - Robert
 //         - Karen
 
-const columns: GridColumns = [{ field: 'jobTitle', width: 250 }];
+const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
 
 // Without transformation
 const rows: GridRowsProp = [
@@ -122,7 +122,7 @@ This feature isn't implemented yet. It's coming.
 :::
 
 Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.
-This implementation does not support every feature of the grid but can be a good starting point for large datasets.
+This implementation does not support every feature of the data grid but can be a good starting point for large datasets.
 
 The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
 To do so, you need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.

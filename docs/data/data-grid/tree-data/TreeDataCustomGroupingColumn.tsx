@@ -3,12 +3,11 @@ import {
   DataGridPro,
   GridRenderCellParams,
   useGridApiContext,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   DataGridProProps,
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
-  GridColDef,
 } from '@mui/x-data-grid-pro';
 import Box from '@mui/material/Box';
 import Button, { ButtonProps } from '@mui/material/Button';
@@ -154,7 +153,7 @@ const rows: GridRowsProp<Row> = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Name',

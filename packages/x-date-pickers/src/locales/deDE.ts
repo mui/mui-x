@@ -1,18 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'Stunden',
   minutes: 'Minuten',
   seconds: 'Sekunden',
-};
-
-// maps PickersToolbar["viewType"] to its translation
-const pickerViews = {
-  date: 'Kalenderansicht',
-  time: 'Uhransicht',
+  meridiem: 'Meridiem',
 };
 
 const deDEPickers: Partial<PickersLocaleText<any>> = {
@@ -23,14 +18,10 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Letzte Ansicht öffnen',
   openNextView: 'Nächste Ansicht öffnen',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `Texteingabeansicht ist geöffnet, zur ${pickerViews[viewType]} wechseln`
-      : `${pickerViews[viewType]} ist geöffnet, zur Texteingabeansicht wechseln`,
 
   // DateRange placeholders
   start: 'Beginn',
@@ -59,11 +50,14 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
 
+  // Digital clock labels
+  selectViewText: (view) => `${timeViews[view]} auswählen`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Kalenderwoche',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Woche ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -80,13 +74,14 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'Datum auswählen',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'J'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'TT',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const deDE = getPickersLocalization(deDEPickers);

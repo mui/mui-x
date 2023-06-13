@@ -57,12 +57,18 @@ export const useGridPreferencesPanel = (
   }, [hidePreferences]);
 
   const showPreferences = React.useCallback<GridPreferencesPanelApi['showPreferences']>(
-    (newValue) => {
+    (newValue, panelId, labelId) => {
       logger.debug('Opening Preferences Panel');
       doNotHidePanel();
       apiRef.current.setState((state) => ({
         ...state,
-        preferencePanel: { ...state.preferencePanel, open: true, openedPanelValue: newValue },
+        preferencePanel: {
+          ...state.preferencePanel,
+          open: true,
+          openedPanelValue: newValue,
+          panelId,
+          labelId,
+        },
       }));
       apiRef.current.publishEvent('preferencePanelOpen', {
         openedPanelValue: newValue,
@@ -89,7 +95,7 @@ export const useGridPreferencesPanel = (
       const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
 
       const shouldExportPreferencePanel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the panel was initialized
         props.initialState?.preferencePanel != null ||

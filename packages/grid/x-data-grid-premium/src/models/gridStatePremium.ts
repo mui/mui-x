@@ -7,6 +7,7 @@ import type {
   GridRowGroupingInitialState,
   GridAggregationState,
   GridAggregationInitialState,
+  GridCellSelectionModel,
 } from '../hooks';
 
 /**
@@ -15,6 +16,7 @@ import type {
 export interface GridStatePremium extends GridStatePro {
   rowGrouping: GridRowGroupingState;
   aggregation: GridAggregationState;
+  cellSelection: GridCellSelectionModel;
 }
 
 /**
@@ -23,4 +25,5 @@ export interface GridStatePremium extends GridStatePro {
 export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;
   aggregation?: GridAggregationInitialState;
+  cellSelection?: GridCellSelectionModel;
 }

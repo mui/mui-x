@@ -8,8 +8,8 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DateComponentValidationProps } from '../internals/hooks/validation/useDateValidation';
-import { ArrowDropDown } from '../internals/components/icons';
+import { DateComponentValidationProps } from '../internals/utils/validation/validateDate';
+import { ArrowDropDownIcon } from '../icons';
 import {
   PickersArrowSwitcher,
   ExportedPickersArrowSwitcherProps,
@@ -20,12 +20,13 @@ import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
 } from '../internals/hooks/date-helpers-hooks';
-import { DateView } from '../internals/models';
+import { DateView } from '../models';
 import {
   getPickersCalendarHeaderUtilityClass,
   pickersCalendarHeaderClasses,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
@@ -65,20 +66,20 @@ export interface PickersCalendarHeaderProps<TDate>
   extends ExportedPickersArrowSwitcherProps,
     DateComponentValidationProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable component slots.
    * @default {}
    */
-  components?: PickersCalendarHeaderSlotsComponent;
+  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
+  slotProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
-  openView: DateView;
+  view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
   labelId?: string;
@@ -150,14 +151,14 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   ownerState: PickersCalendarHeaderOwnerState<any>;
 }>(({ ownerState }) => ({
   marginRight: 'auto',
-  ...(ownerState.openView === 'year' && {
+  ...(ownerState.view === 'year' && {
     [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
       transform: 'rotate(180deg)',
     },
   }),
 }));
 
-const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
+const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
@@ -177,8 +178,8 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
 
   const {
-    components = {},
-    componentsProps = {},
+    slots,
+    slotProps,
     currentMonth: month,
     disabled,
     disableFuture,
@@ -187,7 +188,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     minDate,
     onMonthChange,
     onViewChange,
-    openView: currentView,
+    view,
     reduceAnimations,
     views,
     labelId,
@@ -197,29 +198,29 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton = components.SwitchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
-    externalSlotProps: componentsProps.switchViewButton,
+    externalSlotProps: slotProps?.switchViewButton,
     additionalProps: {
       size: 'small',
-      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(currentView),
+      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
     },
     ownerState,
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon = components.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
-    externalSlotProps: componentsProps.switchViewIcon,
+    externalSlotProps: slotProps?.switchViewIcon,
     ownerState: undefined,
     className: classes.switchViewIcon,
   });
 
-  const selectNextMonth = () => onMonthChange(utils.getNextMonth(month), 'left');
-  const selectPreviousMonth = () => onMonthChange(utils.getPreviousMonth(month), 'right');
+  const selectNextMonth = () => onMonthChange(utils.addMonths(month, 1), 'left');
+  const selectPreviousMonth = () => onMonthChange(utils.addMonths(month, -1), 'right');
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
@@ -236,10 +237,10 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     }
 
     if (views.length === 2) {
-      onViewChange(views.find((view) => view !== currentView) || views[0]);
+      onViewChange(views.find((el) => el !== view) || views[0]);
     } else {
       // switching only between first 2
-      const nextIndexToOpen = views.indexOf(currentView) !== 0 ? 0 : 1;
+      const nextIndexToOpen = views.indexOf(view) !== 0 ? 0 : 1;
       onViewChange(views[nextIndexToOpen]);
     }
   };
@@ -278,10 +279,10 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           </SwitchViewButton>
         )}
       </PickersCalendarHeaderLabelContainer>
-      <Fade in={currentView === 'day'}>
+      <Fade in={view === 'day'}>
         <PickersArrowSwitcher
-          components={components}
-          componentsProps={componentsProps}
+          slots={slots}
+          slotProps={slotProps}
           onGoToPrevious={selectPreviousMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
           previousLabel={localeText.previousMonth}

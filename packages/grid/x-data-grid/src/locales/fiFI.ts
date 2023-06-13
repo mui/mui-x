@@ -6,7 +6,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
-  errorOverlayDefaultLabel: 'Tapahtui virhe.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tiiveys',
@@ -48,8 +47,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Poista',
-  filterPanelLinkOperator: 'Logiikkaoperaattori',
+  filterPanelLogicOperator: 'Logiikkaoperaattori',
   filterPanelOperator: 'Operaattorit',
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
@@ -71,6 +71,33 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'on tyhjä',
   filterOperatorIsNotEmpty: 'ei ole tyhjä',
   filterOperatorIsAnyOf: 'mikä tahansa seuraavista',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',
@@ -80,6 +107,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Valikko',
   columnMenuShowColumns: 'Näytä sarakkeet',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
   columnMenuUnsort: 'Poista järjestys',

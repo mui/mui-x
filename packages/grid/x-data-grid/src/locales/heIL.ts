@@ -6,7 +6,6 @@ const heILGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'אין שורות',
   noResultsOverlayLabel: 'לא נמצאו תוצאות.',
-  errorOverlayDefaultLabel: 'אירעה שגיאה.',
 
   // Density selector toolbar button text
   toolbarDensity: 'צפיפות',
@@ -48,8 +47,9 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
+  filterPanelRemoveAll: 'מחק הכל',
   filterPanelDeleteIconLabel: 'מחק',
-  filterPanelLinkOperator: 'אופרטור לוגי',
+  filterPanelLogicOperator: 'אופרטור לוגי',
   filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
@@ -71,6 +71,33 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
   filterOperatorIsAnyOf: 'הוא אחד מ-',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'כל ערך',
@@ -80,6 +107,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'תפריט',
   columnMenuShowColumns: 'הצג עמודות',
+  columnMenuManageColumns: 'נהל עמודות',
   columnMenuFilter: 'סנן',
   columnMenuHideColumn: 'הסתר',
   columnMenuUnsort: 'בטל מיון',
@@ -120,7 +148,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'נעץ משמאל',
   pinToRight: 'נעץ מימין',
-  unpin: 'בטל נעיצה',
+  // unpin: 'Unpin',
 
   // Tree Data
   treeDataGroupingHeaderName: 'קבוצה',

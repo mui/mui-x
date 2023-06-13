@@ -1,17 +1,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/system';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { GridDimensions } from '../../hooks/features/dimensions/gridDimensionsApi';
 
-type OwnerState = {
-  classes?: DataGridProcessedProps['classes'];
-  isDragging: boolean;
-  hasScrollX: boolean;
-};
+type OwnerState = DataGridProcessedProps &
+  Pick<GridColumnHeadersInnerProps, 'isDragging'> & { hasScrollX: GridDimensions['hasScrollX'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { isDragging, hasScrollX, classes } = ownerState;
@@ -34,7 +32,7 @@ const GridColumnHeadersInnerRoot = styled('div', {
     { [`&.${gridClasses.columnHeaderDropZone}`]: styles.columnHeaderDropZone },
     styles.columnHeadersInner,
   ],
-})(() => ({
+})<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
   alignItems: 'flex-start',
   flexDirection: 'column',
@@ -58,14 +56,19 @@ export const GridColumnHeadersInner = React.forwardRef<HTMLDivElement, GridColum
     const rootProps = useGridRootProps();
 
     const ownerState = {
+      ...rootProps,
       isDragging,
       hasScrollX: apiRef.current.getRootDimensions()?.hasScrollX ?? false,
-      classes: rootProps.classes,
     };
     const classes = useUtilityClasses(ownerState);
 
     return (
-      <GridColumnHeadersInnerRoot ref={ref} className={clsx(className, classes.root)} {...other} />
+      <GridColumnHeadersInnerRoot
+        ref={ref}
+        className={clsx(className, classes.root)}
+        ownerState={ownerState}
+        {...other}
+      />
     );
   },
 );

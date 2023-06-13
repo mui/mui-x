@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-// @ts-expect-error Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   DataGrid,
@@ -9,6 +8,9 @@ import {
   GridInputRowSelectionModel,
   GridRowId,
   GridEditModes,
+  useGridApiRef,
+  GridApi,
+  GridRow,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -189,7 +191,7 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getColumnHeaderCell(0).querySelectorAll('input')).to.have.length(1);
     });
 
-    it('should check and uncheck when double clicking the row', () => {
+    it('should check then uncheck when clicking twice the row', () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
@@ -208,11 +210,11 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
 
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', true);
 
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
     });
@@ -230,8 +232,14 @@ describe('<DataGrid /> - Row Selection', () => {
     });
 
     it('should select all visible rows regardless of pagination', () => {
-      render(<TestDataGridSelection checkboxSelection pageSize={1} rowsPerPageOptions={[1]} />);
-      const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+          pageSizeOptions={[1]}
+        />,
+      );
+      const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
       fireEvent.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -264,70 +272,58 @@ describe('<DataGrid /> - Row Selection', () => {
 
     it('should select a range with shift pressed when clicking the checkbox', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
+      fireEvent.click(getCell(2, 0).querySelector('input')!, { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
     it('should unselect from last clicked cell to cell after clicked cell if clicking inside a selected range', () => {
       render(<TestDataGridSelection checkboxSelection disableVirtualization />);
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireEvent.click(getCell(3, 0).querySelector('input'), { shiftKey: true });
+      fireEvent.click(getCell(3, 0).querySelector('input')!, { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
-      fireEvent.click(getCell(1, 0).querySelector('input'), { shiftKey: true });
+      fireEvent.click(getCell(1, 0).querySelector('input')!, { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
     });
 
     it('should not change the selection with shift pressed when clicking on the last row of the selection', () => {
       render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
+      fireEvent.click(getCell(2, 0).querySelector('input')!, { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
-      fireEvent.click(getCell(2, 0).querySelector('input'), { shiftKey: true });
+      fireEvent.click(getCell(2, 0).querySelector('input')!, { shiftKey: true });
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
     });
 
-    it('should keep only one selected row when turning off checkboxSelection', () => {
+    it('should reset selected rows when turning off checkboxSelection', () => {
       const { setProps } = render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0).querySelector('input'));
-      fireEvent.click(getCell(1, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
       setProps({ checkboxSelection: false });
-      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getSelectedRowIds()).to.deep.equal([]);
     });
 
-    it('should keep only one selectable row as selected when turning off checkboxSelection', () => {
-      const { setProps } = render(<TestDataGridSelection checkboxSelection />);
-      fireEvent.click(getCell(0, 0).querySelector('input'));
-      fireEvent.click(getCell(1, 0).querySelector('input'));
-      expect(getSelectedRowIds()).to.deep.equal([0, 1]);
-      setProps({
-        checkboxSelection: false,
-        isRowSelectable: ({ id }: { id: GridRowId }) => id > 0,
-      });
-      expect(getSelectedRowIds()).to.deep.equal([1]);
-    });
-
-    it('should keep only the first row in the current page as selected when turning off checkboxSelection', () => {
+    it('should reset row selection in the current page as selected when turning off checkboxSelection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
           pagination
-          pageSize={2}
-          rowsPerPageOptions={[2]}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
+          pageSizeOptions={[2]}
         />,
       );
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(getSelectedRowIds()).to.deep.equal([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      fireEvent.click(getCell(2, 0).querySelector('input'));
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
       expect(screen.getByText('2 rows selected')).not.to.equal(null);
       setProps({ checkboxSelection: false });
-      expect(getSelectedRowIds()).to.deep.equal([2]);
-      expect(screen.getByText('1 row selected')).not.to.equal(null);
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(screen.queryByText('2 row selected')).to.equal(null);
     });
 
     it('should set the correct aria-label on the column header checkbox', () => {
@@ -486,7 +482,7 @@ describe('<DataGrid /> - Row Selection', () => {
         const cell = getCell(1, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'ArrowLeft' });
-        fireEvent.keyDown(getCell(1, 0).querySelector('input'), { key: 'ArrowUp' });
+        fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
         clock.runToLast(); // Wait for transition
         expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
       });
@@ -499,8 +495,8 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection isRowSelectable={() => true} checkboxSelection />,
       );
 
-      fireEvent.click(getCell(0, 0).querySelector('input'));
-      fireEvent.click(getCell(1, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
 
       expect(getSelectedRowIds()).to.deep.equal([0, 1]);
 
@@ -526,7 +522,7 @@ describe('<DataGrid /> - Row Selection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           rowSelectionModel={[1]}
-          isRowSelectable={(params) => params.id > 0}
+          isRowSelectable={(params) => Number(params.id) > 0}
           checkboxSelection
         />,
       );
@@ -551,7 +547,7 @@ describe('<DataGrid /> - Row Selection', () => {
             paginationMode="server"
             rowCount={4}
             rowSelectionModel={[1, 4]}
-            isRowSelectable={(params) => params.id > 0}
+            isRowSelectable={(params) => Number(params.id) > 0}
             checkboxSelection
           />,
         );
@@ -638,15 +634,15 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           pagination
-          pageSize={2}
-          rowsPerPageOptions={[2]}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
+          pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
-      fireEvent.click(getCell(0, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      fireEvent.click(getCell(2, 0).querySelector('input'));
+      fireEvent.click(getCell(2, 0).querySelector('input')!);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0, 2]);
       setProps({ checkboxSelection: false, isRowSelectable: () => false });
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([]);
@@ -657,14 +653,13 @@ describe('<DataGrid /> - Row Selection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
-          pagination
-          pageSize={2}
-          rowsPerPageOptions={[2]}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
+          pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
-      fireEvent.click(getCell(0, 0).querySelector('input'));
-      fireEvent.click(getCell(1, 0).querySelector('input'));
+      fireEvent.click(getCell(0, 0).querySelector('input')!);
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0, 1]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       setProps({ checkboxSelection: false });
@@ -731,6 +726,30 @@ describe('<DataGrid /> - Row Selection', () => {
       fireEvent.click(getCell(1, 1));
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
+
+    it('should throw if rowSelectionModel contains more than 1 row', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function ControlCase() {
+        apiRef = useGridApiRef();
+        return <TestDataGridSelection apiRef={apiRef} />;
+      }
+
+      render(<ControlCase />);
+      expect(() => apiRef.current.setRowSelectionModel([0, 1])).to.throw(
+        /`rowSelectionModel` can only contain 1 item in DataGrid/,
+      );
+    });
+
+    it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function ControlCase() {
+        apiRef = useGridApiRef();
+        return <TestDataGridSelection apiRef={apiRef} checkboxSelection />;
+      }
+
+      render(<ControlCase />);
+      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).to.not.throw();
+    });
   });
 
   describe('prop: rowSelection = false', () => {
@@ -757,29 +776,53 @@ describe('<DataGrid /> - Row Selection', () => {
     });
   });
 
-  describe('console error', () => {
-    it('should throw console error when rowSelectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
-      const onRowSelectionModelChange = spy();
-      expect(() => {
-        render(
-          <TestDataGridSelection
-            rowSelectionModel={[0, 1]}
-            onRowSelectionModelChange={onRowSelectionModelChange}
-          />,
-        );
-      }).toErrorDev('rowSelectionModel can only be of 1 item in DataGrid');
+  describe('performance', () => {
+    it('should not rerender unrelated rows', () => {
+      // TODO: remove this requirement, find ways to scope down react tree rerenders.
+      const MemoizedRow = React.memo(GridRow);
 
-      // We also assert that onRowSelectionModelChange was called here because each
-      // error coming from PropTypes is only sent once. We can't have two tests
-      // checking if a given error occured.
-      // See https://github.com/facebook/react/issues/18251
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0]);
-    });
+      // Couldn't use <RenderCounter> because we need to track multiple components
+      let commits: any[] = [];
+      function CustomCell(props: any) {
+        React.useEffect(() => {
+          commits.push({
+            rowId: props.id,
+          });
+        });
+        return <div>Hello</div>;
+      }
 
-    it('should not throw console error when rowSelectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
-      expect(() => {
-        render(<TestDataGridSelection rowSelectionModel={[0, 1]} checkboxSelection />);
-      }).not.toErrorDev();
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[
+              { field: 'id', headerName: 'id', type: 'number' },
+              {
+                field: 'currencyPair',
+                headerName: 'Currency Pair',
+                renderCell: (params) => <CustomCell {...params} />,
+              },
+            ]}
+            slots={{
+              row: MemoizedRow,
+            }}
+            rows={[
+              { id: 0, currencyPair: 'USDGBP' },
+              { id: 1, currencyPair: 'USDEUR' },
+            ]}
+            autoHeight={isJSDOM}
+            checkboxSelection
+          />
+        </div>,
+      );
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+      commits = [];
+      fireEvent.click(getCell(0, 1));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', true);
+      // It shouldn't rerender rowId 1
+      expect(commits).to.deep.equal([{ rowId: 0 }]);
     });
   });
 });

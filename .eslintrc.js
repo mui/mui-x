@@ -81,6 +81,21 @@ module.exports = {
     'jsdoc/require-returns': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-returns-type': ['error', { contexts: ['TSFunctionType'] }],
     'jsdoc/require-returns-description': ['error', { contexts: ['TSFunctionType'] }],
+    'jsdoc/no-bad-blocks': [
+      'error',
+      {
+        ignore: [
+          'ts-check',
+          'ts-expect-error',
+          'ts-ignore',
+          'ts-nocheck',
+          'typescript-to-proptypes-ignore',
+        ],
+      },
+    ],
+    // Fixes false positive when using both `inputProps` and `InputProps` on the same example
+    // See https://stackoverflow.com/questions/42367236/why-am-i-getting-this-warning-no-duplicate-props-allowed-react-jsx-no-duplicate
+    'react/jsx-no-duplicate-props': [1, { ignoreCase: false }],
     'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
   },
   overrides: [
@@ -144,10 +159,6 @@ module.exports = {
               'useMonthCalendarDefaultizedProps',
               'useYearCalendarDefaultizedProps',
               'useDateRangeCalendarDefaultizedProps',
-              'useNextDatePickerDefaultizedProps',
-              'useNextTimePickerDefaultizedProps',
-              'useNextDateTimePickerDefaultizedProps',
-              'useNextDateRangePickerDefaultizedProps',
             ],
           },
         ],

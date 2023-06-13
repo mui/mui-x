@@ -2,13 +2,12 @@ import * as React from 'react';
 import {
   GRID_STRING_COL_DEF,
   GridColDef,
-  GridStateColDef,
   GridComparatorFn,
   GridRenderCellParams,
   GridGroupingColDefOverride,
   GridGroupNode,
 } from '@mui/x-data-grid-pro';
-import { GridColumnRawLookup } from '@mui/x-data-grid-pro/internals';
+import { GridColumnRawLookup, isSingleSelectColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -67,7 +66,7 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   headerName: leafColDef.headerName ?? leafColDef.field,
   sortable: leafColDef.sortable,
   filterable: leafColDef.filterable,
-  valueOptions: leafColDef.valueOptions,
+  valueOptions: isSingleSelectColDef(leafColDef) ? leafColDef.valueOptions : undefined,
   filterOperators: leafColDef.filterOperators?.map((operator) => ({
     ...operator,
     getApplyFilterFn: (filterItem, column) => {
@@ -91,14 +90,11 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   },
 });
 
-const getGroupingCriteriaProperties = (
-  groupedByColDef: GridColDef | GridStateColDef,
-  applyHeaderName: boolean,
-) => {
+const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderName: boolean) => {
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
-    valueOptions: groupedByColDef.valueOptions,
+    valueOptions: isSingleSelectColDef(groupedByColDef) ? groupedByColDef.valueOptions : undefined,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
       if (
@@ -143,7 +139,7 @@ interface CreateGroupingColDefMonoCriteriaParams {
   /**
    * The col def from which we are grouping the rows.
    */
-  groupedByColDef: GridColDef | GridStateColDef;
+  groupedByColDef: GridColDef;
   /**
    * The col def properties the user wants to override.
    * This value comes `prop.groupingColDef`.
@@ -182,6 +178,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
             api: params.api,
+            hasFocus: params.hasFocus,
           };
           if (leafColDef.renderCell) {
             return leafColDef.renderCell(leafParams);
@@ -312,6 +309,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
             api: params.api,
+            hasFocus: params.hasFocus,
           };
           if (leafColDef.renderCell) {
             return leafColDef.renderCell(leafParams);

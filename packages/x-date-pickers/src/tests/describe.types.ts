@@ -1,13 +1,8 @@
 export type PickerComponentFamily =
-  | 'legacy-picker'
-  | 'new-picker'
+  | 'picker'
   | 'field'
   | 'calendar'
   | 'clock'
-  | 'new-static-picker'
-  | 'legacy-static-picker';
-
-export type PickerV6ComponentFamily = Exclude<
-  PickerComponentFamily,
-  'legacy-picker' | 'legacy-static-picker'
->;
+  | 'digital-clock'
+  | 'multi-section-digital-clock'
+  | 'static-picker';

@@ -1,13 +1,12 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
   GridColumnMenuContainer,
-  GridFilterMenuItem,
-  SortGridMenuItems,
+  GridColumnMenuFilterItem,
+  GridColumnMenuSortItem,
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
@@ -16,36 +15,34 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
   ({ theme, ownerState }) => ({
     background: theme.palette[ownerState.color].main,
-    color: theme.palette[ownerState.color].contrastText,
   }),
 );
 
 const StyledGridColumnMenu = styled(GridColumnMenu)(({ theme, ownerState }) => ({
   background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
 }));
 
-function CustomColumnMenuComponent(props) {
-  const { hideMenu, currentColumn, color, ...other } = props;
+export function CustomColumnMenuComponent(props) {
+  const { hideMenu, colDef, color, ...other } = props;
 
-  if (currentColumn.field === 'name') {
+  if (colDef.field === 'name') {
     return (
       <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
-        currentColumn={currentColumn}
+        colDef={colDef}
         ownerState={{ color }}
         {...other}
       >
-        <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
-        <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
+        <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef} />
+        <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef} />
       </StyledGridColumnMenuContainer>
     );
   }
-  if (currentColumn.field === 'stars') {
+  if (colDef.field === 'stars') {
     return (
       <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
-        currentColumn={currentColumn}
+        colDef={colDef}
         ownerState={{ color }}
         {...other}
       >
@@ -67,20 +64,12 @@ function CustomColumnMenuComponent(props) {
   return (
     <StyledGridColumnMenu
       hideMenu={hideMenu}
-      currentColumn={currentColumn}
+      colDef={colDef}
       ownerState={{ color }}
       {...other}
     />
   );
 }
-
-CustomColumnMenuComponent.propTypes = {
-  color: PropTypes.oneOf(['primary', 'secondary']).isRequired,
-  currentColumn: PropTypes.object.isRequired,
-  hideMenu: PropTypes.func.isRequired,
-};
-
-export { CustomColumnMenuComponent };
 
 export default function CustomColumnMenu() {
   const [color, setColor] = React.useState('primary');
@@ -121,10 +110,10 @@ export default function CustomColumnMenu() {
               default: 'Enterprise',
             },
           ]}
-          components={{
-            ColumnMenu: CustomColumnMenuComponent,
+          slots={{
+            columnMenu: CustomColumnMenuComponent,
           }}
-          componentsProps={{
+          slotProps={{
             columnMenu: { color },
           }}
         />

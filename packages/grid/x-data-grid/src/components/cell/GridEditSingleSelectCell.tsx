@@ -2,35 +2,22 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import {
-  GridRenderEditCellParams,
-  GridValueFormatterParams,
-} from '../../models/params/gridCellParams';
+import { GridCellEditStopReasons } from '../../models/params/gridEditCellParams';
+import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { ValueOptions } from '../../models/colDef/gridColDef';
-import { getValueFromValueOptions } from '../panel/filterPanel/filterPanelUtils';
+import { GridSingleSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import {
+  getValueFromValueOptions,
+  isSingleSelectColDef,
+} from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-
-const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
-  const isOptionTypeObject = typeof option === 'object';
-
-  const key = isOptionTypeObject ? option.value : option;
-  const value = isOptionTypeObject ? option.value : option;
-  const content = isOptionTypeObject ? option.label : option;
-
-  return (
-    <OptionComponent key={key} value={value}>
-      {content}
-    </OptionComponent>
-  );
-};
 
 export interface GridEditSingleSelectCellProps
   extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
+    Omit<SelectProps, 'id' | 'tabIndex' | 'value'>,
+    Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> {
   /**
    * Callback called when the value is changed by the user.
    * @param {SelectChangeEvent<any>} event The event source of the callback.
@@ -52,7 +39,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const rootProps = useGridRootProps();
   const {
     id,
-    value,
+    value: valueProp,
     formattedValue,
     api,
     field,
@@ -69,6 +56,8 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     error,
     onValueChange,
     initialOpen = rootProps.editMode === GridEditModes.Cell,
+    getOptionLabel: getOptionLabelProp,
+    getOptionValue: getOptionValueProp,
     ...other
   } = props;
 
@@ -77,35 +66,47 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const inputRef = React.useRef<any>();
   const [open, setOpen] = React.useState(initialOpen);
 
-  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
+  const { MenuProps, ...otherBaseSelectProps } = rootProps.slotProps?.baseSelect || {};
 
-  let valueOptionsFormatted: Array<ValueOptions>;
-  if (typeof colDef.valueOptions === 'function') {
-    valueOptionsFormatted = colDef.valueOptions!({ id, row, field });
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current?.focus();
+    }
+  }, [hasFocus]);
+
+  if (!isSingleSelectColDef(colDef)) {
+    return null;
+  }
+
+  let valueOptions: Array<ValueOptions> | undefined;
+  if (typeof colDef?.valueOptions === 'function') {
+    valueOptions = colDef?.valueOptions({ id, row, field });
   } else {
-    valueOptionsFormatted = colDef.valueOptions!;
+    valueOptions = colDef?.valueOptions;
   }
 
-  if (colDef.valueFormatter) {
-    valueOptionsFormatted = valueOptionsFormatted.map((option) => {
-      if (typeof option === 'object') {
-        return option;
-      }
-
-      const params: GridValueFormatterParams = { field, api, value: option };
-      return {
-        value: option,
-        label: String(colDef.valueFormatter!(params)),
-      };
-    });
+  if (!valueOptions) {
+    return null;
   }
+
+  const getOptionValue = getOptionValueProp || colDef.getOptionValue!;
+  const getOptionLabel = getOptionLabelProp || colDef.getOptionLabel!;
 
   const handleChange: SelectProps['onChange'] = async (event) => {
+    if (!isSingleSelectColDef(colDef) || !valueOptions) {
+      return;
+    }
+
     setOpen(false);
     const target = event.target as HTMLInputElement;
     // NativeSelect casts the value to a string.
-    const formattedTargetValue = getValueFromValueOptions(target.value, valueOptionsFormatted);
+    const formattedTargetValue = getValueFromValueOptions(
+      target.value,
+      valueOptions,
+      getOptionValue,
+    );
 
     if (onValueChange) {
       await onValueChange(event, formattedTargetValue);
@@ -120,7 +121,13 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       return;
     }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
-      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
+      const params = apiRef.current.getCellParams(id, field);
+      apiRef.current.publishEvent('cellEditStop', {
+        ...params,
+        reason: isEscapeKey(event.key)
+          ? GridCellEditStopReasons.escapeKeyDown
+          : GridCellEditStopReasons.cellFocusOut,
+      });
     }
   };
 
@@ -131,33 +138,43 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     setOpen(true);
   };
 
-  useEnhancedEffect(() => {
-    if (hasFocus) {
-      inputRef.current.focus();
-    }
-  }, [hasFocus]);
+  if (!valueOptions || !colDef) {
+    return null;
+  }
 
   return (
-    <rootProps.components.BaseSelect
+    <rootProps.slots.baseSelect
       ref={ref}
       inputRef={inputRef}
-      value={value}
+      value={valueProp}
       onChange={handleChange}
       open={open}
       onOpen={handleOpen}
       MenuProps={{
         onClose: handleClose,
+        ...MenuProps,
       }}
       error={error}
       native={isSelectNative}
       fullWidth
       {...other}
-      {...rootProps.componentsProps?.baseSelect}
+      {...otherBaseSelectProps}
     >
-      {valueOptionsFormatted.map((valueOptions) =>
-        renderSingleSelectOptions(valueOptions, isSelectNative ? 'option' : MenuItem),
-      )}
-    </rootProps.components.BaseSelect>
+      {valueOptions.map((valueOption) => {
+        const value = getOptionValue(valueOption);
+
+        return (
+          <rootProps.slots.baseSelectOption
+            {...(rootProps.slotProps?.baseSelectOption || {})}
+            native={isSelectNative}
+            key={value}
+            value={value}
+          >
+            {getOptionLabel(valueOption)}
+          </rootProps.slots.baseSelectOption>
+        );
+      })}
+    </rootProps.slots.baseSelect>
   );
 }
 
@@ -187,6 +204,18 @@ GridEditSingleSelectCell.propTypes = {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any,
+  /**
+   * Used to determine the label displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   */
+  getOptionLabel: PropTypes.func,
+  /**
+   * Used to determine the value used for a value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The value to be used.
+   */
+  getOptionValue: PropTypes.func,
   /**
    * If true, the cell is the active element.
    */

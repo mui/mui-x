@@ -8,8 +8,9 @@ import {
   UseTimeFieldDefaultizedProps,
   UseTimeFieldParams,
 } from './TimeField.types';
-import { validateTime } from '../internals/hooks/validation/useTimeValidation';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { useUtils } from '../internals/hooks/useUtils';
+import { splitFieldInternalAndForwardedProps } from '../internals/utils/fields';
 
 const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
   props: UseTimeFieldProps<TDate>,
@@ -28,53 +29,23 @@ const useDefaultizedTimeField = <TDate, AdditionalProps extends {}>(
 };
 
 export const useTimeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseTimeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    onChange,
-    readOnly,
-    onError,
-    disableFuture,
-    disablePast,
-    minTime,
-    maxTime,
-    minutesStep,
-    shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation,
-    selectedSections,
-    onSelectedSectionsChange,
-    ampm,
-    ...other
-  } = useDefaultizedTimeField<TDate, TChildProps>(props);
+  const props = useDefaultizedTimeField<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
+    typeof props,
+    keyof UseTimeFieldProps<any>
+  >(props, 'time');
 
   return useField({
     inputRef,
-    forwardedProps: other as unknown as TChildProps,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      onChange,
-      readOnly,
-      onError,
-      disableFuture,
-      disablePast,
-      minTime,
-      maxTime,
-      minutesStep,
-      shouldDisableTime,
-      disableIgnoringDatePartForTimeValidation,
-      selectedSections,
-      onSelectedSectionsChange,
-      ampm,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateTime,
-    supportedDateSections: ['hours', 'minutes', 'seconds', 'meridiem'],
+    valueType: 'time',
   });
 };

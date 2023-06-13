@@ -2,27 +2,28 @@ import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
-import parseStyles, { Styles } from '@mui/monorepo/docs/src/modules/utils/parseStyles';
+import parseStyles, { Styles } from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
 import createDescribeableProp, {
   DescribeablePropDescriptor,
-} from '@mui/monorepo/docs/src/modules/utils/createDescribeableProp';
-import generatePropDescription from '@mui/monorepo/docs/src/modules/utils/generatePropDescription';
+} from '@mui/monorepo/packages/api-docs-builder/utils/createDescribeableProp';
+import generatePropDescription from '@mui/monorepo/packages/api-docs-builder/utils/generatePropDescription';
 import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
-} from '@mui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
-import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
+} from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
+import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
-import { LANGUAGES } from 'docs/src/modules/constants';
-import { findPagesMarkdownNew } from '@mui/monorepo/docs/src/modules/utils/find';
+import camelCase from 'lodash/camelCase';
+import { LANGUAGES } from 'docs/config';
+import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
   getHeaders,
   getTitle,
-} from '@mui/monorepo/docs/packages/markdown';
-import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
+} from '@mui/monorepo/packages/markdown';
+import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import {
   DocumentedInterfaces,
@@ -32,8 +33,9 @@ import {
   writePrettifiedFile,
 } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
+import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
-interface ReactApi extends ReactDocgenApi {
+export interface ReactApi extends ReactDocgenApi {
   /**
    * list of page pathnames
    * @example ['/components/Accordion']
@@ -121,7 +123,10 @@ function extractSlots(options: {
     throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
   }
 
-  const types = (propInterface as ttp.InterfaceType).types;
+  const types = [...(propInterface as ttp.InterfaceType).types].sort((a, b) =>
+    a[0] > b[0] ? 1 : -1,
+  );
+
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
     const description = renderMarkdownInline(parsed.description);
@@ -142,7 +147,12 @@ function extractSlots(options: {
       return;
     }
 
-    slots[name] = {
+    // Workaround to generate correct (camelCase) keys for slots in v6 `API Reference` documentation
+    // TODO v7: Remove camelCase once `Grid(Pro|Premium)SlotsComponent` type is refactored to have `camelCase` names
+    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedGridSlotsComponent`
+    const slotName = camelCase(name);
+
+    slots[slotName] = {
       type,
       description,
       default: defaultValue,
@@ -208,7 +218,7 @@ function findXDemos(
 
       return {
         name,
-        demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}`,
+        demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}/`,
       };
     });
 }
@@ -246,7 +256,7 @@ const buildComponentDocumentation = async (options: {
 
   reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
 
-  reactApi.styles = await parseStyles(reactApi, project.program as any);
+  reactApi.styles = await parseStyles({ project, componentName: reactApi.name });
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
     : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
@@ -327,6 +337,14 @@ const buildComponentDocumentation = async (options: {
       } else if (propName === 'sx') {
         description +=
           ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
+      }
+      // Parse and generate `@see` doc with a {@link}
+      const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
+      if (seeTag && seeTag.description) {
+        description += ` ${seeTag.description.replace(
+          /{@link ([^|| ]*)[|| ]([^}]*)}/,
+          '<a href="$1">$2</a>',
+        )}`;
       }
       componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 
@@ -513,7 +531,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/${project.documentationFolderName}',
     false,
-    /\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
+    /\\.\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
@@ -528,6 +546,12 @@ Page.getInitialProps = () => {
 
   // eslint-disable-next-line no-console
   console.log('Built API docs for', reactApi.name);
+
+  return {
+    name: reactApi.name,
+    packages: reactApi.packages,
+    folder: project.documentationFolderName,
+  };
 };
 
 interface BuildComponentsDocumentationOptions {
@@ -559,9 +583,10 @@ export default async function buildComponentsDocumentation(
     }
 
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
-    return componentsWithApiDoc.map<Promise<void>>(async (filename) => {
+    return componentsWithApiDoc.map<Promise<ApiPageType>>(async (filename) => {
       try {
-        return await buildComponentDocumentation({
+        // Create the api files, and data to create it's link
+        const { name, packages, folder } = await buildComponentDocumentation({
           filename,
           project,
           projects,
@@ -569,6 +594,13 @@ export default async function buildComponentsDocumentation(
           pagesMarkdown,
           documentedInterfaces,
         });
+
+        return {
+          folderName: folder,
+          pathname: `/x/api/${folder}/${kebabCase(name)}`,
+          title: name,
+          plan: getPlan(packages),
+        };
       } catch (error: any) {
         error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
         throw error;
@@ -588,6 +620,19 @@ export default async function buildComponentsDocumentation(
   if (fails.length > 0) {
     process.exit(1);
   }
+
+  // Build charts API page indexes
+  const createdPages = builds
+    .filter(
+      (promise): promise is PromiseFulfilledResult<ApiPageType> => promise.status === 'fulfilled',
+    )
+    .map((build) => build.value);
+
+  return saveApiDocPages(createdPages, {
+    dataFolder,
+    identifier: 'component-api',
+    project: projects.get(projects.keys().next().value)!, // Use any project since it's only for pretifier
+  });
 }
 
 interface PageMarkdown {

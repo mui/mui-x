@@ -3,4 +3,4 @@ export type {
   DesktopDatePickerProps,
   DesktopDatePickerSlotsComponent,
   DesktopDatePickerSlotsComponentsProps,
-} from './DesktopDatePicker';
+} from './DesktopDatePicker.types';

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
-import { DateOrTimeView } from '../models';
+import { DateOrTimeViewWithMeridiem } from '../models';
 
 type Orientation = 'portrait' | 'landscape';
 
@@ -23,7 +23,7 @@ function getOrientation(): Orientation {
 }
 
 export const useIsLandscape = (
-  views: readonly DateOrTimeView[],
+  views: readonly DateOrTimeViewWithMeridiem[],
   customOrientation: Orientation | undefined,
 ): boolean => {
   const [orientation, setOrientation] = React.useState(getOrientation);

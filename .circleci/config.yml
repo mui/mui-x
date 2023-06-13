@@ -189,7 +189,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.27.1-focal
+      - image: mcr.microsoft.com/playwright:v1.33.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -217,10 +217,12 @@ jobs:
       - run:
           name: Tests TypeScript definitions
           command: yarn typescript:ci
+          environment:
+            NODE_OPTIONS: --max-old-space-size=3072
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.27.1-focal
+      - image: mcr.microsoft.com/playwright:v1.33.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -233,7 +235,7 @@ jobs:
   test_e2e_website:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.27.1-focal
+      - image: mcr.microsoft.com/playwright:v1.33.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -248,7 +250,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.27.1-focal
+      - image: mcr.microsoft.com/playwright:v1.33.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -264,7 +266,7 @@ jobs:
   test_performance:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.27.1-focal
+      - image: mcr.microsoft.com/playwright:v1.33.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:

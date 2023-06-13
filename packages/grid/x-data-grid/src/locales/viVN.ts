@@ -6,7 +6,6 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Không có dữ liệu',
   noResultsOverlayLabel: 'Không tìm thấy kết quả.',
-  errorOverlayDefaultLabel: 'Có lỗi xảy ra.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',
@@ -28,16 +27,16 @@ const viVNGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} bộ lọc hoạt động` : `${count} bộ lọc hoạt động`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Tìm kiếm…',
+  toolbarQuickFilterLabel: 'Tìm kiếm',
+  toolbarQuickFilterDeleteIconLabel: 'Xóa tìm kiếm',
 
   // Export selector toolbar button text
   toolbarExport: 'Xuất',
   toolbarExportLabel: 'Xuất',
   toolbarExportCSV: 'Xuất CSV',
   toolbarExportPrint: 'In',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Xuất Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Tìm kiếm',
@@ -48,8 +47,9 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Xóa',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Toán tử logic',
   filterPanelOperator: 'Toán tử',
   filterPanelOperatorAnd: 'Và',
   filterPanelOperatorOr: 'Hoặc',
@@ -71,6 +71,33 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
   // filterOperatorIsAnyOf: 'is any of',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',
@@ -80,6 +107,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Danh mục',
   columnMenuShowColumns: 'Danh sách cột',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Bộ lọc',
   columnMenuHideColumn: 'Ẩn cột',
   columnMenuUnsort: 'Bỏ sắp xếp',
@@ -105,10 +133,10 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Tích vào ô trống',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Chọn tất cả hàng',
+  checkboxSelectionUnselectAllRows: 'Bỏ chọn tất cả hàng',
+  checkboxSelectionSelectRow: 'Chọn hàng',
+  checkboxSelectionUnselectRow: 'Bỏ chọn hàng',
 
   // Boolean cell text
   booleanCellTrueLabel: 'Có',
@@ -128,17 +156,17 @@ const viVNGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'ẩn đi',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Nhóm',
+  groupColumn: (name) => `Nhóm theo ${name}`,
+  unGroupColumn: (name) => `Hủy nhóm theo ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Ẩn/hiện chi tiết',
+  expandDetailPanel: 'Mở rộng',
+  collapseDetailPanel: 'Thu nhỏ',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Sắp xếp hàng',
 
   // Aggregation
   // aggregationMenuItemHeader: 'Aggregation',

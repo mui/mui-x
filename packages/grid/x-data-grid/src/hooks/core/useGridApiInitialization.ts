@@ -9,7 +9,6 @@ import type {
   GridPrivateOnlyApiCommon,
 } from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
-import { unstable_resetCreateSelectorCache } from '../../utils/createSelector';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -28,10 +27,8 @@ const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extend
   privateOnlyApi.register = (visibility, methods) => {
     Object.keys(methods).forEach((methodName) => {
       if (visibility === 'public') {
-        if (!publicApi.hasOwnProperty(methodName)) {
-          publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
-        }
-      } else if (!privateOnlyApi.hasOwnProperty(methodName)) {
+        publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
+      } else {
         privateOnlyApi[methodName as keyof PrivateOnlyApi] = (methods as any)[methodName];
       }
     });
@@ -65,7 +62,7 @@ export function useGridApiInitialization<
   if (!publicApiRef.current) {
     publicApiRef.current = {
       state: {} as Api['state'],
-      instanceId: globalId,
+      instanceId: { id: globalId },
     } as Api;
 
     globalId += 1;
@@ -75,8 +72,10 @@ export function useGridApiInitialization<
   if (!privateApiRef.current) {
     privateApiRef.current = wrapPublicApi<PrivateApi, Api>(publicApiRef.current);
 
-    privateApiRef.current.register('private', { caches: {} as PrivateApi['caches'] });
-    privateApiRef.current.register('private', { eventManager: new EventManager() });
+    privateApiRef.current.register('private', {
+      caches: {} as PrivateApi['caches'],
+      eventManager: new EventManager(),
+    });
   }
 
   React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
@@ -110,20 +109,12 @@ export function useGridApiInitialization<
     [privateApiRef],
   );
 
-  const showError = React.useCallback<GridCoreApi['showError']>(
-    (args) => {
-      privateApiRef.current.publishEvent('componentError', args);
-    },
-    [privateApiRef],
-  );
-
-  useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent, showError } as any, 'public');
+  useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent } as any, 'public');
 
   React.useEffect(() => {
     const api = privateApiRef.current;
 
     return () => {
-      unstable_resetCreateSelectorCache(api.instanceId);
       api.publishEvent('unmount');
     };
   }, [privateApiRef]);

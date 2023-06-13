@@ -152,7 +152,7 @@ describe('<DateCalendar />', () => {
 
       expect(screen.getByText('January 2019')).toBeVisible();
       expect(screen.getAllByMuiTest('day')).to.have.length(31);
-      // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+      // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
       expect(
         document.querySelector(
           '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
@@ -242,14 +242,9 @@ describe('<DateCalendar />', () => {
         <DateCalendar
           value={adapterToUse.date(new Date(2019, 0, 1))}
           onChange={onChange}
-          shouldDisableDate={(date) => {
-            // Missing `getDate` in adapters
-            // The following disable from Apr 1st to Apr 5th
-            return (
-              adapterToUse.getMonth(date) === 3 &&
-              adapterToUse.getDiff(date, adapterToUse.startOfMonth(date), 'days') < 5
-            );
-          }}
+          shouldDisableDate={(date) =>
+            adapterToUse.getMonth(date) === 3 && adapterToUse.getDate(date) < 6
+          }
           views={['month', 'day']}
           openTo="month"
         />,
@@ -446,8 +441,8 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
@@ -463,8 +458,8 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );

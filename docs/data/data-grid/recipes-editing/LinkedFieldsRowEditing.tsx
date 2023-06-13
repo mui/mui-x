@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   GridEditSingleSelectCell,
   GridEditSingleSelectCellProps,
@@ -49,7 +49,7 @@ function CustomTypeEditComponent(props: GridEditSingleSelectCellProps) {
 }
 
 export default function LinkedFieldsRowEditing() {
-  const columns: GridColumns = [
+  const columns: GridColDef[] = [
     { field: 'description', headerName: 'Description', width: 160, editable: true },
     {
       field: 'value',

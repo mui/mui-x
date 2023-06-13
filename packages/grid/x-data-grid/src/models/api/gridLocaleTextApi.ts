@@ -8,7 +8,6 @@ export interface GridLocaleText {
   // Root
   noRowsLabel: string;
   noResultsOverlayLabel: string;
-  errorOverlayDefaultLabel: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
@@ -49,8 +48,9 @@ export interface GridLocaleText {
 
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;
+  filterPanelRemoveAll: React.ReactNode;
   filterPanelDeleteIconLabel: string;
-  filterPanelLinkOperator: string;
+  filterPanelLogicOperator: string;
   filterPanelOperator: React.ReactNode;
   filterPanelOperatorAnd: React.ReactNode;
   filterPanelOperatorOr: React.ReactNode;
@@ -72,6 +72,33 @@ export interface GridLocaleText {
   filterOperatorIsEmpty: string;
   filterOperatorIsNotEmpty: string;
   filterOperatorIsAnyOf: string;
+  'filterOperator=': string;
+  'filterOperator!=': string;
+  'filterOperator>': string;
+  'filterOperator>=': string;
+  'filterOperator<': string;
+  'filterOperator<=': string;
+
+  // Header filter operators text
+  headerFilterOperatorContains: string;
+  headerFilterOperatorEquals: string;
+  headerFilterOperatorStartsWith: string;
+  headerFilterOperatorEndsWith: string;
+  headerFilterOperatorIs: string;
+  headerFilterOperatorNot: string;
+  headerFilterOperatorAfter: string;
+  headerFilterOperatorOnOrAfter: string;
+  headerFilterOperatorBefore: string;
+  headerFilterOperatorOnOrBefore: string;
+  headerFilterOperatorIsEmpty: string;
+  headerFilterOperatorIsNotEmpty: string;
+  headerFilterOperatorIsAnyOf: string;
+  'headerFilterOperator=': string;
+  'headerFilterOperator!=': string;
+  'headerFilterOperator>': string;
+  'headerFilterOperator>=': string;
+  'headerFilterOperator<': string;
+  'headerFilterOperator<=': string;
 
   // Filter values text
   filterValueAny: string;
@@ -81,6 +108,7 @@ export interface GridLocaleText {
   // Column menu text
   columnMenuLabel: string;
   columnMenuShowColumns: React.ReactNode;
+  columnMenuManageColumns: React.ReactNode;
   columnMenuFilter: React.ReactNode;
   columnMenuHideColumn: React.ReactNode;
   columnMenuUnsort: React.ReactNode;

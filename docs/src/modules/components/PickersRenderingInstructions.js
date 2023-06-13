@@ -60,13 +60,15 @@ export default function PickersRenderingInstructions() {
         </ToggleButtonGroup>
         <TextField
           size="small"
-          label="date-library"
+          label="Date library"
           value={libraryUsed}
           onChange={handleLibraryUsedChange}
           select
         >
           {Object.keys(libraries).map((lib) => (
-            <MenuItem value={lib}>{lib}</MenuItem>
+            <MenuItem key={lib} value={lib}>
+              {lib}
+            </MenuItem>
           ))}
         </TextField>
       </Stack>

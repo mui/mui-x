@@ -23,7 +23,7 @@ The `GridColDef` type has properties to apply class names and custom CSS on the 
 - `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
 
 ```tsx
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',
@@ -56,7 +56,7 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * All grid columns.
    */
-  columns: GridColumns;
+  columns: GridColDef[];
 }
 ```
 
@@ -72,7 +72,7 @@ This property allows to set a CSS class that is applied on every cell of the col
 It can also be a function, which is called with a `GridCellParams` object.
 
 ```tsx
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
@@ -94,7 +94,7 @@ const columns: GridColumns = [
 2. Using the `getCellClassName` prop:
 
 This prop is called for every cell in every column.
-Different from the first option, this prop is defined at the grid level, not column level.
+Different from the first option, this prop is defined at the data grid level, not column level.
 It is also called with a `GridCellParams` object.
 
 {{"demo": "StylingAllCells.js", "bg": "inline"}}

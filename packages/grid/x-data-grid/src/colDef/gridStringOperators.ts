@@ -10,7 +10,7 @@ export const getGridStringQuickFilterFn = (value: any) => {
     return null;
   }
   const filterRegex = new RegExp(escapeRegExp(value), 'i');
-  return ({ value: columnValue }: GridCellParams): boolean => {
+  return ({ formattedValue: columnValue }: GridCellParams): boolean => {
     return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
   };
 };

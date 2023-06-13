@@ -43,9 +43,12 @@ import {
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
 
-export const useDataGridComponent = (props: DataGridProcessedProps) => {
+export const useDataGridComponent = (
+  inputApiRef: React.MutableRefObject<GridApiCommunity> | undefined,
+  props: DataGridProcessedProps,
+) => {
   const privateApiRef = useGridInitialization<GridPrivateApiCommunity, GridApiCommunity>(
-    undefined,
+    inputApiRef,
     props,
   );
 
@@ -89,9 +92,9 @@ export const useDataGridComponent = (props: DataGridProcessedProps) => {
   useGridRowsMeta(privateApiRef, props);
   useGridScroll(privateApiRef, props);
   useGridColumnMenu(privateApiRef);
-  useGridCsvExport(privateApiRef);
+  useGridCsvExport(privateApiRef, props);
   useGridPrintExport(privateApiRef, props);
-  useGridClipboard(privateApiRef);
+  useGridClipboard(privateApiRef, props);
   useGridDimensions(privateApiRef, props);
   useGridEvents(privateApiRef, props);
   useGridStatePersistence(privateApiRef);

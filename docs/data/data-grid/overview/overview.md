@@ -72,11 +72,12 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- [Filtering](/x/react-data-grid/filtering/) and [multi-filtering](/x/react-data-grid/filtering/#multi-filtering) <span class="plan-pro"></span>
+- [Filtering](/x/react-data-grid/filtering/), [multi-filters](/x/react-data-grid/filtering/multi-filters/) <span class="plan-pro"></span>, and [header filters](/x/react-data-grid/filtering/header-filters/) <span class="plan-premium"></span>
 - [Pagination](/x/react-data-grid/pagination/)
 - [Row & Cell editing](/x/react-data-grid/editing/)
 - [Sorting](/x/react-data-grid/sorting/) and [multi-sorting](/x/react-data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
-- [Selection](/x/react-data-grid/selection/)
+- [Row selection](/x/react-data-grid/row-selection/)
+- [Cell selection](/x/react-data-grid/cell-selection/) <span class="plan-premium"></span>
 - [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
 - [Row grouping](/x/react-data-grid/row-grouping/) <span class="plan-premium"></span>
 - [Aggregation](/x/react-data-grid/aggregation/) <span class="plan-premium"></span>
@@ -97,18 +98,17 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
-- [Range selection](/x/react-data-grid/selection/#range-selection) <span class="plan-premium"></span>
 - [Pivoting](/x/react-data-grid/pivoting/) <span class="plan-premium"></span>
 
 You can find more details on, the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui/mui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui/mui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
 
 ## Resources
 
-Here are some resources you might be interested in to learn more about the grid:
+Here are some resources you might be interested in to learn more about the data grid:
 
 <!-- #default-branch-switch -->
 
-- The [source on GitHub](https://github.com/mui/mui-x/tree/next/packages/)
+- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
 - The [Material Design specification](https://m2.material.io/components/data-tables) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
 - The Figma, Adobe XD, and Sketch [design kits](https://mui.com/design-kits/).

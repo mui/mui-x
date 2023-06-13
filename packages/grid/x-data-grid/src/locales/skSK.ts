@@ -6,7 +6,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
-  errorOverlayDefaultLabel: 'Stala sa nepredvídaná chyba.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -55,8 +54,9 @@ const skSKGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Odstrániť',
-  filterPanelLinkOperator: 'Logický operátor',
+  filterPanelLogicOperator: 'Logický operátor',
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',
@@ -78,6 +78,33 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'je prázdny',
   filterOperatorIsNotEmpty: 'nie je prázdny',
   filterOperatorIsAnyOf: 'je jeden z',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',
@@ -87,6 +114,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Zobraziť stĺpce',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skryť',
   columnMenuUnsort: 'Zrušiť filtre',
@@ -169,12 +197,12 @@ const skSKGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agregácia',
+  aggregationFunctionLabelSum: 'suma',
+  aggregationFunctionLabelAvg: 'priemer',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'počet',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

@@ -8,7 +8,7 @@ import {
 } from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridStateColDef } from '../../../models/colDef';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 /**
  * @requires useGridColumns (method, event)

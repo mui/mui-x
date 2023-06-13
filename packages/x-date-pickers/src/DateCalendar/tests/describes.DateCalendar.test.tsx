@@ -25,15 +25,7 @@ describe('<DateCalendar /> - Describes', () => {
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
     // cannot test reactTestRenderer because of required context
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'propsSpread',
-      'reactTestRenderer',
-      // TODO: Fix DateCalendar is not spreading props on root
-      'themeDefaultProps',
-      'themeVariants',
-    ],
+    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
   }));
 
   describeValue(DateCalendar, () => ({
@@ -41,6 +33,7 @@ describe('<DateCalendar /> - Describes', () => {
     componentFamily: 'calendar',
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
     emptyValue: null,
+    clock,
     assertRenderedValue: (expectedValue: any) => {
       const selectedCells = document.querySelectorAll(`.${pickersDayClasses.selected}`);
       if (expectedValue == null) {
@@ -52,7 +45,9 @@ describe('<DateCalendar /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);
-      userEvent.mousePress(screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }));
+      userEvent.mousePress(
+        screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
+      );
 
       return newValue;
     },

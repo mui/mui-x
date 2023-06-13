@@ -36,15 +36,15 @@ export const getAggregationFooterRowIdFromGroupId = (groupId: GridRowId | null) 
 };
 
 export const canColumnHaveAggregationFunction = ({
-  column,
+  colDef,
   aggregationFunctionName,
   aggregationFunction,
 }: {
-  column: GridColDef | undefined;
+  colDef: GridColDef | undefined;
   aggregationFunctionName: string;
   aggregationFunction: GridAggregationFunction | undefined;
 }): boolean => {
-  if (!column || !column.aggregable) {
+  if (!colDef || !colDef.aggregable) {
     return false;
   }
 
@@ -52,27 +52,27 @@ export const canColumnHaveAggregationFunction = ({
     return false;
   }
 
-  if (column.availableAggregationFunctions != null) {
-    return column.availableAggregationFunctions.includes(aggregationFunctionName);
+  if (colDef.availableAggregationFunctions != null) {
+    return colDef.availableAggregationFunctions.includes(aggregationFunctionName);
   }
 
   if (!aggregationFunction.columnTypes) {
     return true;
   }
 
-  return aggregationFunction.columnTypes.includes(column.type!);
+  return aggregationFunction.columnTypes.includes(colDef.type!);
 };
 
 export const getAvailableAggregationFunctions = ({
   aggregationFunctions,
-  column,
+  colDef,
 }: {
   aggregationFunctions: Record<string, GridAggregationFunction>;
-  column: GridColDef;
+  colDef: GridColDef;
 }) =>
   Object.keys(aggregationFunctions).filter((aggregationFunctionName) =>
     canColumnHaveAggregationFunction({
-      column,
+      colDef,
       aggregationFunctionName,
       aggregationFunction: aggregationFunctions[aggregationFunctionName],
     }),
@@ -100,7 +100,7 @@ export const getAggregationRules = ({
     if (
       columnsLookup[field] &&
       canColumnHaveAggregationFunction({
-        column: columnsLookup[field],
+        colDef: columnsLookup[field],
         aggregationFunctionName: columnItem,
         aggregationFunction: aggregationFunctions[columnItem],
       })
@@ -161,11 +161,7 @@ export const addFooterRows = ({
           type: 'footer',
         };
 
-        insertNodeInTree({
-          node: footerNode,
-          tree: newGroupingParams.tree,
-          treeDepths: newGroupingParams.treeDepths,
-        });
+        insertNodeInTree(footerNode, newGroupingParams.tree, newGroupingParams.treeDepths, null);
       }
     } else if (groupNode.footerId != null) {
       removeNodeFromTree({

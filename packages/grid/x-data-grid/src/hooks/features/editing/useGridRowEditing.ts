@@ -176,7 +176,7 @@ export const useGridRowEditing = (
     (params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
         // Wait until IME is settled for Asian languages like Japanese and Chinese
-        // TODO: `event.which` is depricated but this is a temporary workaround
+        // TODO: `event.which` is deprecated but this is a temporary workaround
         if (event.which === 229) {
           return;
         }
@@ -202,15 +202,20 @@ export const useGridRowEditing = (
             reason = GridRowEditStopReasons.tabKeyDown;
           }
 
-          if (reason) {
-            event.preventDefault(); // Prevent going to the next element in the tab sequence
+          // Always prevent going to the next element in the tab sequence because the focus is
+          // handled manually to support edit components rendered inside Portals
+          event.preventDefault();
+
+          if (!reason) {
+            const index = columnFields.findIndex((field) => field === params.field);
+            const nextFieldToFocus = columnFields[event.shiftKey ? index - 1 : index + 1];
+            apiRef.current.setCellFocus(params.id, nextFieldToFocus);
           }
         }
 
         if (reason) {
-          const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStopParams = {
-            ...rowParams,
+            ...apiRef.current.getRowParams(params.id),
             reason,
             field: params.field,
           };
@@ -219,8 +224,14 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
-        if (event.key === ' ' && event.shiftKey) {
-          return; // Shift + Space is used to select the row
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'row' },
+        );
+
+        if (!canStartEditing) {
+          return;
         }
 
         if (isPrintableKey(event)) {
@@ -411,14 +422,18 @@ export const useGridRowEditing = (
         }
 
         let newValue = apiRef.current.getCellValue(id, field);
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        let unstable_updateValueOnRender = false;
         if (fieldToFocus === field && (deleteValue || initialValue)) {
           newValue = deleteValue ? '' : initialValue;
+          unstable_updateValueOnRender = true;
         }
 
         acc[field] = {
           value: newValue,
           error: false,
           isProcessingProps: false,
+          unstable_updateValueOnRender,
         };
 
         return acc;
@@ -643,6 +658,11 @@ export const useGridRowEditing = (
     (id) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
       const row = apiRef.current.getRow(id);
+
+      if (!editingState[id]) {
+        return apiRef.current.getRow(id)!;
+      }
+
       let rowUpdate = { ...row };
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {

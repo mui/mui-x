@@ -1,30 +1,26 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
   unstable_useId as useId,
 } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { SxProps } from '@mui/system';
-import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
-import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import {
-  PickersArrowSwitcher,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
-} from '../internals/components/PickersArrowSwitcher';
+import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { TimeView } from '../internals/models';
-import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
+import { TimeView } from '../models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
+import { getTimeClockUtilityClass } from './timeClockClasses';
+import { Clock, ClockProps } from './Clock';
+import { TimeClockProps } from './TimeClock.types';
+import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -36,98 +32,6 @@ const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   return composeClasses(slots, getTimeClockUtilityClass, classes);
 };
 
-export interface ExportedTimeClockProps<TDate>
-  extends TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default false
-   */
-  ampm?: boolean;
-  /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
-   */
-  ampmInClock?: boolean;
-}
-
-export interface TimeClockSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
-
-export interface TimeClockSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
-
-export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
-  className?: string;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * Set to `true` if focus should be moved to clock picker.
-   */
-  autoFocus?: boolean;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<TimeClockClasses>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: TimeClockSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: TimeClockSlotsComponentsProps;
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
-   */
-  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
-  showViewSwitcher?: boolean;
-  /**
-   * Controlled open view.
-   */
-  view?: TimeView;
-  /**
-   * Views for calendar picker.
-   * @default ['hours', 'minutes']
-   */
-  views?: readonly TimeView[];
-  /**
-   * Callback fired on view change.
-   * @param {TimeView} view The new view.
-   */
-  onViewChange?: (view: TimeView) => void;
-  /**
-   * Initially open view.
-   * @default 'hours'
-   */
-  openTo?: TimeView;
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
-}
-
 const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',
   slot: 'Root',
@@ -135,9 +39,10 @@ const TimeClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: TimeClockProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative',
 });
 
-const TimeCLockArrowSwitcher = styled(PickersArrowSwitcher, {
+const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
   overridesResolver: (props, styles) => styles.arrowSwitcher,
@@ -151,7 +56,6 @@ type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-// TODO v6: Drop the `showViewSwitcher` prop with the legacy pickers
 /**
  *
  * API:
@@ -163,6 +67,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const now = useNow<TDate>();
+  const utils = useUtils<TDate>();
 
   const props = useThemeProps({
     props: inProps,
@@ -170,11 +76,13 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   });
 
   const {
-    ampm = false,
+    ampm = utils.is12HourCycleInCurrentLocale(),
     ampmInClock = false,
     autoFocus,
     components,
     componentsProps,
+    slots: innerSlots,
+    slotProps: innerSlotProps,
     value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
@@ -182,19 +90,25 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     disableFuture,
     disablePast,
     minutesStep = 1,
+    shouldDisableClock,
     shouldDisableTime,
     showViewSwitcher,
     onChange,
     defaultValue,
-    view,
+    view: inView,
     views = ['hours', 'minutes'],
     openTo,
     onViewChange,
+    focusedView,
+    onFocusedViewChange,
     className,
-    sx,
     disabled,
     readOnly,
+    ...other
   } = props;
+
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const [value, setValue] = useControlled({
     name: 'DateCalendar',
@@ -210,16 +124,15 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     },
   );
 
-  const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
-    view,
+  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
+    view: inView,
     views,
     openTo,
     onViewChange,
     onChange: handleValueChange,
+    focusedView,
+    onFocusedViewChange,
   });
-
-  const now = useNow<TDate>();
-  const utils = useUtils<TDate>();
 
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
@@ -229,7 +142,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
     selectedTimeOrMidnight,
     ampm,
-    handleChangeAndOpenNext,
+    setValueAndGoToNextView,
   );
 
   const isTimeDisabled = React.useCallback(
@@ -263,8 +176,29 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           return false;
         }
 
+        if (shouldDisableClock?.(timeValue, viewType)) {
+          return false;
+        }
+
         if (shouldDisableTime) {
-          return !shouldDisableTime(timeValue, viewType);
+          switch (viewType) {
+            case 'hours':
+              return !shouldDisableTime(utils.setHours(selectedTimeOrMidnight, timeValue), 'hours');
+            case 'minutes':
+              return !shouldDisableTime(
+                utils.setMinutes(selectedTimeOrMidnight, timeValue),
+                'minutes',
+              );
+
+            case 'seconds':
+              return !shouldDisableTime(
+                utils.setSeconds(selectedTimeOrMidnight, timeValue),
+                'seconds',
+              );
+
+            default:
+              return false;
+          }
         }
 
         return true;
@@ -308,6 +242,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       meridiemMode,
       minTime,
       minutesStep,
+      shouldDisableClock,
       shouldDisableTime,
       utils,
       disableFuture,
@@ -322,11 +257,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   const viewProps = React.useMemo<
     Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
   >(() => {
-    switch (openView) {
+    switch (view) {
       case 'hours': {
         const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
           const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
-          handleChangeAndOpenNext(
+          setValueAndGoToNextView(
             utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
             isFinish,
           );
@@ -350,7 +285,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'minutes': {
         const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
         const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
+          setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
         };
 
         return {
@@ -370,7 +305,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'seconds': {
         const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
         const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
+          setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
         };
 
         return {
@@ -391,7 +326,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         throw new Error('You must provide the type for ClockView');
     }
   }, [
-    openView,
+    view,
     utils,
     value,
     ampm,
@@ -399,7 +334,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     localeText.minutesClockNumberText,
     localeText.secondsClockNumberText,
     meridiemMode,
-    handleChangeAndOpenNext,
+    setValueAndGoToNextView,
     selectedTimeOrMidnight,
     isTimeDisabled,
     selectedId,
@@ -414,28 +349,13 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
-      {showViewSwitcher && (
-        <TimeCLockArrowSwitcher
-          className={classes.arrowSwitcher}
-          components={components}
-          componentsProps={componentsProps}
-          onGoToPrevious={() => setOpenView(previousView)}
-          isPreviousDisabled={!previousView}
-          previousLabel={localeText.openPreviousView}
-          onGoToNext={() => setOpenView(nextView)}
-          isNextDisabled={!nextView}
-          nextLabel={localeText.openNextView}
-          ownerState={ownerState}
-        />
-      )}
-
       <Clock<TDate>
-        autoFocus={autoFocus}
-        ampmInClock={ampmInClock}
+        autoFocus={autoFocus ?? !!focusedView}
+        ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
-        type={openView}
+        type={view}
         ampm={ampm}
         minutesStep={minutesStep}
         isTimeDisabled={isTimeDisabled}
@@ -446,6 +366,20 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         readOnly={readOnly}
         {...viewProps}
       />
+      {showViewSwitcher && (
+        <TimeClockArrowSwitcher
+          className={classes.arrowSwitcher}
+          slots={slots}
+          slotProps={slotProps}
+          onGoToPrevious={() => setView(previousView!)}
+          isPreviousDisabled={!previousView}
+          previousLabel={localeText.openPreviousView}
+          onGoToNext={() => setView(nextView!)}
+          isNextDisabled={!nextView}
+          nextLabel={localeText.openNextView}
+          ownerState={ownerState}
+        />
+      )}
     </TimeClockRoot>
   );
 }) as TimeClockComponent;
@@ -457,7 +391,7 @@ TimeClock.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**
@@ -466,7 +400,10 @@ TimeClock.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   /**
-   * Set to `true` if focus should be moved to clock picker.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
   /**
@@ -475,13 +412,15 @@ TimeClock.propTypes = {
   classes: PropTypes.object,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -490,12 +429,12 @@ TimeClock.propTypes = {
    */
   defaultValue: PropTypes.any,
   /**
-   * If `true`, the picker and text field are disabled.
+   * If `true`, the picker views and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -505,10 +444,14 @@ TimeClock.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Controlled focused view.
+   */
+  focusedView: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -529,31 +472,60 @@ TimeClock.propTypes = {
    * @template TDate
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired on focused view change.
+   * @template TView
+   * @param {TView} view The new view to focus or not.
+   * @param {boolean} hasFocus `true` if the view should be focused.
+   */
+  onFocusedViewChange: PropTypes.func,
+  /**
    * Callback fired on view change.
-   * @param {TimeView} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
-   * Initially open view.
-   * @default 'hours'
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * Make picker read only.
+   * If `true`, the picker views and text field are read-only.
    * @default false
    */
   readOnly: PropTypes.bool,
   /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @template TDate
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   showViewSwitcher: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -568,12 +540,13 @@ TimeClock.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Controlled open view.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
    */
   view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
-   * Views for calendar picker.
-   * @default ['hours', 'minutes']
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

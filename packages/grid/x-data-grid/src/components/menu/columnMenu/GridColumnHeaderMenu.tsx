@@ -26,15 +26,18 @@ function GridColumnHeaderMenu({
   onExited,
 }: GridColumnHeaderMenuProps) {
   const apiRef = useGridApiContext();
-  const currentColumn = apiRef.current.getColumn(field);
+  const colDef = apiRef.current.getColumn(field);
 
   const hideMenu = React.useCallback(
     (event: MouseEvent | TouchEvent) => {
       // Prevent triggering the sorting
       event.stopPropagation();
-      apiRef.current.hideColumnMenu();
+
+      if (!target?.contains(event.target as HTMLElement)) {
+        apiRef.current.hideColumnMenu();
+      }
     },
-    [apiRef],
+    [apiRef, target],
   );
 
   if (!target) {
@@ -43,14 +46,14 @@ function GridColumnHeaderMenu({
 
   return (
     <GridMenu
-      placement={`bottom-${currentColumn!.align === 'right' ? 'start' : 'end'}` as any}
+      placement={`bottom-${colDef!.align === 'right' ? 'start' : 'end'}` as any}
       open={open}
       target={target}
       onClickAway={hideMenu}
       onExited={onExited}
     >
       <ContentComponent
-        currentColumn={currentColumn}
+        colDef={colDef}
         hideMenu={hideMenu}
         open={open}
         id={columnMenuId}

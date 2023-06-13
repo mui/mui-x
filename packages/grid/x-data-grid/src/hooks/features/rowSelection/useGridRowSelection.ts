@@ -18,11 +18,11 @@ import {
 } from './gridRowSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
-import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
+import { gridExpandedSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
-import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
@@ -110,8 +110,6 @@ export const useGridRowSelection = (
     checkboxSelection,
     disableMultipleRowSelection,
     disableRowSelectionOnClick,
-    pagination,
-    paginationMode,
     isRowSelectable: propIsRowSelectable,
   } = props;
 
@@ -124,7 +122,7 @@ export const useGridRowSelection = (
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
       if (isSelected) {
-        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
+        const visibleRowIds = gridExpandedSortedRowIdsSelector(apiRef);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
         if (startIndex === endIndex) {
@@ -149,6 +147,19 @@ export const useGridRowSelection = (
    */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
     (model) => {
+      if (
+        props.signature === GridSignature.DataGrid &&
+        !props.checkboxSelection &&
+        Array.isArray(model) &&
+        model.length > 1
+      ) {
+        throw new Error(
+          [
+            'MUI: `rowSelectionModel` can only contain 1 item in DataGrid.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
+          ].join('\n'),
+        );
+      }
       const currentModel = gridRowSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
@@ -159,7 +170,7 @@ export const useGridRowSelection = (
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef, logger, props.rowSelection],
+    [apiRef, logger, props.rowSelection, props.signature, props.checkboxSelection],
   );
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
@@ -272,7 +283,7 @@ export const useGridRowSelection = (
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
       // Using rows from all pages allow to select a range across several pages
-      const allPagesRowIds = gridVisibleSortedRowIdsSelector(apiRef);
+      const allPagesRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const startIndex = allPagesRowIds.indexOf(startId);
       const endIndex = allPagesRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
@@ -432,7 +443,7 @@ export const useGridRowSelection = (
 
       const rowsToBeSelected = shouldLimitSelectionToCurrentPage
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
-        : gridVisibleSortedRowIdsSelector(apiRef);
+        : gridExpandedSortedRowIdsSelector(apiRef);
 
       apiRef.current.selectRows(rowsToBeSelected, params.value);
     },
@@ -572,46 +583,14 @@ export const useGridRowSelection = (
   }, [apiRef, isRowSelectable, isStateControlled, props.rowSelection]);
 
   React.useEffect(() => {
-    if (!props.rowSelection) {
+    if (!props.rowSelection || isStateControlled) {
       return;
     }
 
     const currentSelection = gridRowSelectionStateSelector(apiRef.current.state);
-
     if (!canHaveMultipleSelection && currentSelection.length > 1) {
-      const { rows: currentPageRows } = getVisibleRows(apiRef, {
-        pagination,
-        paginationMode,
-      });
-
-      const currentPageRowsLookup = currentPageRows.reduce<Record<GridRowId, true>>(
-        (acc, { id }) => {
-          acc[id] = true;
-          return acc;
-        },
-        {},
-      );
-
-      const firstSelectableRow = currentSelection.find((id) => {
-        let isSelectable = true;
-        if (isRowSelectable) {
-          isSelectable = isRowSelectable(id);
-        }
-        return isSelectable && currentPageRowsLookup[id]; // Check if the row is in the current page
-      });
-
-      apiRef.current.setRowSelectionModel(
-        firstSelectableRow !== undefined ? [firstSelectableRow] : [],
-      );
+      // See https://github.com/mui/mui-x/issues/8455
+      apiRef.current.setRowSelectionModel([]);
     }
-  }, [
-    apiRef,
-    canHaveMultipleSelection,
-    checkboxSelection,
-    disableMultipleRowSelection,
-    isRowSelectable,
-    pagination,
-    paginationMode,
-    props.rowSelection,
-  ]);
+  }, [apiRef, canHaveMultipleSelection, checkboxSelection, isStateControlled, props.rowSelection]);
 };

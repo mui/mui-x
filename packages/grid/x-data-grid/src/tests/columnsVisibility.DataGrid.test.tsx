@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColumns, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowsProp, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { getColumnHeadersTextContent } from '../../../../../test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
-const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
@@ -144,6 +143,44 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(screen.getByText('Hide all'));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
+
+    // Fixes (1) in in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
+    it('should not show hidden non hideable columns when "Show all" is clicked', () => {
+      render(
+        <TestDataGrid
+          components={{ Toolbar: GridToolbar }}
+          columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: { idBis: false },
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByText('Show all'));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    });
+
+    // Fixes (2) in in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
+    it('should not show non-hideable columns when "Hide all" is clicked', () => {
+      render(
+        <TestDataGrid
+          components={{ Toolbar: GridToolbar }}
+          columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: { idBis: false },
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByText('Hide all'));
+      expect(getColumnHeadersTextContent()).to.deep.equal([]);
+    });
   });
 
   describe('prop: initialState.columns.columnVisibilityModel', () => {
@@ -236,5 +273,88 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
 
     expect(screen.getByRole('checkbox', { name: columns[0].field })).toHaveFocus();
+  });
+
+  it('should hide `Hide all` in columns panel when `disableHideAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableHideAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('button', { name: 'Hide all' })).to.equal(null);
+  });
+
+  it('should hide `Show all` in columns panel when `disableShowAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableShowAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('button', { name: 'Show all' })).to.equal(null);
+  });
+
+  describe('prop: `getTogglableColumns`', () => {
+    it('should control columns shown in columns panel using `getTogglableColumns` prop', () => {
+      const getTogglableColumns = (cols: GridColDef[]) =>
+        cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
+      render(
+        <TestDataGrid
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          slotProps={{
+            columnsPanel: {
+              getTogglableColumns,
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      expect(screen.queryByRole('checkbox', { name: 'id' })).not.to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'idBis' })).to.equal(null);
+    });
+
+    it('should avoid toggling columns provided by `getTogglableColumns` prop on `Show all` or `Hide all`', () => {
+      const getTogglableColumns = (cols: GridColDef[]) =>
+        cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
+      render(
+        <TestDataGrid
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          slotProps={{
+            columnsPanel: {
+              getTogglableColumns,
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Hide all' }));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Show all' }));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    });
   });
 });

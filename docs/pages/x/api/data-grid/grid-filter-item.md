@@ -2,6 +2,15 @@
 
 <p class="description">Filter item definition interface.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
+
+:::
+
 ## Import
 
 ```js

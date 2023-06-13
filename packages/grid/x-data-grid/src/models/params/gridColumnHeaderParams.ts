@@ -5,8 +5,8 @@ import { GridValidRowModel } from '../gridRows';
  * Object passed as parameter in the column [[GridColDef]] header renderer.
  */
 export interface GridColumnHeaderParams<
-  V = any,
   R extends GridValidRowModel = GridValidRowModel,
+  V = any,
   F = V,
 > {
   /**

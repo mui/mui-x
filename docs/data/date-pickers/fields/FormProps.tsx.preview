@@ -1,2 +1,0 @@
-<DateField label="Disabled" defaultValue={defaultValue} disabled />
-<DateField label="Read only" defaultValue={defaultValue} readOnly />

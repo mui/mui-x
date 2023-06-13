@@ -10,7 +10,6 @@ interface EventListenerCollection {
    * They are run in the opposite order of the registration order
    */
   highPriority: Map<EventListener, true>;
-
   /**
    * List of events to run after the high priority listeners
    * They are run in the registration order
@@ -22,7 +21,7 @@ interface EventListenerCollection {
 // See https://github.com/browserify/events/blob/master/events.js for
 // the Node.js (https://nodejs.org/api/events.html) polyfill used by webpack.
 export class EventManager {
-  maxListeners = 10;
+  maxListeners = 20;
 
   warnOnce = false;
 
@@ -52,7 +51,6 @@ export class EventManager {
         console.warn(
           [
             `Possible EventEmitter memory leak detected. ${collectionSize} ${eventName} listeners added.`,
-            `Use emitter.setMaxListeners() to increase limit.`,
           ].join('\n'),
         );
       }

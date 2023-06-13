@@ -1,0 +1,9 @@
+<DemoItem label={'"hours", "minutes" and "seconds"'}>
+  <TimeClock views={['hours', 'minutes', 'seconds']} />
+</DemoItem>
+<DemoItem label={'"hours"'}>
+  <TimeClock views={['hours']} />
+</DemoItem>
+<DemoItem label={'"minutes" and "seconds"'}>
+  <TimeClock views={['minutes', 'seconds']} />
+</DemoItem>

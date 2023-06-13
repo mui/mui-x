@@ -6,7 +6,6 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
   noResultsOverlayLabel: 'Данные не найдены.',
-  errorOverlayDefaultLabel: 'Обнаружена ошибка.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',
@@ -56,8 +55,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Удалить',
-  // filterPanelLinkOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Логические операторы',
   filterPanelOperator: 'Операторы',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
@@ -79,6 +79,33 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'пустой',
   filterOperatorIsNotEmpty: 'не пустой',
   filterOperatorIsAnyOf: 'любой из',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -88,6 +115,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
+  columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
   columnMenuUnsort: 'Отменить сортировку',
@@ -129,10 +157,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Выбор флажка',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Выбрать все строки',
+  checkboxSelectionUnselectAllRows: 'Отменить выбор всех строк',
+  checkboxSelectionSelectRow: 'Выбрать строку',
+  checkboxSelectionUnselectRow: 'Отменить выбор строки',
 
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
@@ -157,20 +185,20 @@ const ruRUGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Разгруппировать по ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Детали',
   expandDetailPanel: 'Развернуть',
   collapseDetailPanel: 'Свернуть',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Изменение порядка строк',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Объединение данных',
+  aggregationFunctionLabelSum: 'сумм',
+  aggregationFunctionLabelAvg: 'срзнач',
+  aggregationFunctionLabelMin: 'мин',
+  aggregationFunctionLabelMax: 'макс',
+  aggregationFunctionLabelSize: 'счет',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

@@ -61,11 +61,11 @@ function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
       className={classes.root}
-      style={{ minHeight: height, opacity: rootProps.showColumnRightBorder ? 0 : 1 }}
+      style={{ minHeight: height, opacity: rootProps.showColumnVerticalBorder ? 0 : 1 }}
       {...other}
       onClick={stopClick}
     >
-      <rootProps.components.ColumnResizeIcon className={classes.icon} />
+      <rootProps.slots.columnResizeIcon className={classes.icon} />
     </div>
   );
 }

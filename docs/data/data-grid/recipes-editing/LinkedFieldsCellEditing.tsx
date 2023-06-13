@@ -4,7 +4,7 @@ import {
   DataGrid,
   DataGridProps,
   GridRowModel,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   GridEditSingleSelectCell,
   GridEditSingleSelectCellProps,
@@ -59,7 +59,7 @@ export default function LinkedFieldsCellEditing() {
   const editingRow = React.useRef<GridRowModel | null>(null);
   const [rows, setRows] = React.useState(initialRows);
 
-  const columns: GridColumns = [
+  const columns: GridColDef[] = [
     { field: 'description', headerName: 'Description', width: 160, editable: true },
     {
       field: 'value',

@@ -1,56 +1,32 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateRange } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
 
-function GridItem({
-  label,
-  children,
-  spacing = 1,
-}: {
-  label: string;
-  children: React.ReactNode;
-  spacing?: number;
-}) {
-  return (
-    <Grid xs={12} item>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="body2" sx={{ mb: spacing }}>
-          {label}
-        </Typography>
-        {children}
-      </Box>
-    </Grid>
-  );
-}
-
-// TODO: Use the same structure as on the other `XXXFieldValue` demos when using the single input version.
 export default function TimeRangeFieldValue() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>(() => [
-    dayjs('2022-04-07T15:30'),
-    dayjs('2022-04-07T18:30'),
+    dayjs('2022-04-17T15:30'),
+    dayjs('2022-04-17T18:30'),
   ]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Grid container spacing={4} width={550}>
-        <GridItem label="Uncontrolled field">
-          <MultiInputTimeRangeField
-            defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
-          />
-        </GridItem>
-        <GridItem label="Controlled field">
-          <MultiInputTimeRangeField
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
-        </GridItem>
-      </Grid>
+      <DemoContainer
+        components={['SingleInputTimeRangeField', 'SingleInputTimeRangeField']}
+      >
+        <SingleInputTimeRangeField
+          label="Uncontrolled field"
+          defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-17T18:30')]}
+        />
+        <SingleInputTimeRangeField
+          label="Controlled field"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+        />
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -27,7 +26,6 @@ export default function OpenDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
-        onChange={() => {}}
         open
         components={{
           DesktopTransition: NoTransition,
@@ -38,7 +36,6 @@ export default function OpenDatePicker() {
             'data-testid': 'screenshot-target',
           },
         }}
-        renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date('2019-01-01T00:00:00.000')}
       />
     </LocalizationProvider>

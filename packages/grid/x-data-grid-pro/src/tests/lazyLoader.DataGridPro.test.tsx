@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
 import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
@@ -8,7 +7,7 @@ import {
   DataGridProProps,
   GRID_ROOT_GROUP_ID,
   GridApi,
-  GridColumns,
+  GridColDef,
   GridGroupNode,
   GridRowModel,
   GridRowsProp,
@@ -21,7 +20,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Lazy loader', () => {
   const { render } = createRenderer();
 
-  const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
+  const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
     rows: [
       {
         id: 1,

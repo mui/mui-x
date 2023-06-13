@@ -1,7 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,7 +12,7 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { useLocaleText } from '@mui/x-date-pickers/internals';
 
 function CustomActionBar(props) {
-  const { onAccept, onClear, onCancel, onSetToday, actions } = props;
+  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
   const localeText = useLocaleText();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -86,7 +84,7 @@ function CustomActionBar(props) {
   });
 
   return (
-    <DialogActions>
+    <DialogActions className={className}>
       <Button
         id={`picker-actions-${id}`}
         aria-controls={open ? 'basic-menu' : undefined}
@@ -111,34 +109,15 @@ function CustomActionBar(props) {
   );
 }
 
-CustomActionBar.propTypes = {
-  /**
-   * Ordered array of actions to display.
-   * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
-   */
-  actions: PropTypes.arrayOf(
-    PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']),
-  ),
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-};
-
 export default function ActionBarComponent() {
-  const [value, setValue] = React.useState(() => dayjs('2022-02-01T00:00'));
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
-        onChange={(newValue) => setValue(newValue)}
-        value={value}
-        renderInput={(params) => <TextField {...params} />}
-        components={{
-          ActionBar: CustomActionBar,
+        defaultValue={dayjs('2022-04-17')}
+        slots={{
+          actionBar: CustomActionBar,
         }}
-        componentsProps={{
+        slotProps={{
           actionBar: {
             actions: ['today'],
           },

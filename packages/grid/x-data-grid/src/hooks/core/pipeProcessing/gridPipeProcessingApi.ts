@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { GridCellIndexCoordinates, GridScrollParams, GridColDef } from '../../../models';
+import {
+  GridCellIndexCoordinates,
+  GridScrollParams,
+  GridColDef,
+  GridCellCoordinates,
+  GridCellParams,
+  GridEditMode,
+} from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridExportStateParams,
@@ -14,7 +21,10 @@ import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
-  columnMenu: { value: React.ReactNode[]; context: GridColDef };
+  columnMenu: {
+    value: Array<string>;
+    context: GridColDef;
+  };
   exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
@@ -36,6 +46,17 @@ export interface GridPipeProcessingLookup {
   rowClassName: {
     value: string[];
     context: GridRowId;
+  };
+  cellClassName: { value: string[]; context: GridCellCoordinates };
+  isCellSelected: { value: boolean; context: GridCellCoordinates };
+  canUpdateFocus: {
+    value: boolean;
+    context: { event: MouseEvent | React.KeyboardEvent; cell: GridCellParams | null };
+  };
+  clipboardCopy: { value: string };
+  canStartEditing: {
+    value: boolean;
+    context: { event: React.KeyboardEvent; cellParams: GridCellParams; editMode: GridEditMode };
   };
 }
 

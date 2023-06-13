@@ -38,6 +38,7 @@ describe('<YearCalendar /> - Describes', () => {
     componentFamily: 'calendar',
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2019, 0, 1))],
     emptyValue: null,
+    clock,
     assertRenderedValue: (expectedValue: any) => {
       const selectedCells = document.querySelectorAll(`.${pickersYearClasses.selected}`);
       if (expectedValue == null) {
@@ -50,7 +51,9 @@ describe('<YearCalendar /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addYears(value, 1);
-      userEvent.mousePress(screen.getByRole('button', { name: adapterToUse.getYear(newValue) }));
+      userEvent.mousePress(
+        screen.getByRole('button', { name: adapterToUse.getYear(newValue).toString() }),
+      );
 
       return newValue;
     },

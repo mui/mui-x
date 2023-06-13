@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -21,7 +21,7 @@ export default function ColumnPinningDynamicRowHeight() {
   const apiRef = useGridApiRef();
   const [showEditDelete, setShowEditDelete] = React.useState(true);
 
-  const columns: GridColumns = React.useMemo(
+  const columns: GridColDef[] = React.useMemo(
     () => [
       { field: 'name', headerName: 'Name', width: 160, editable: true },
       { field: 'email', headerName: 'Email', width: 200, editable: true },

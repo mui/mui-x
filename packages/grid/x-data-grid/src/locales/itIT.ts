@@ -6,7 +6,6 @@ const itITGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nessun record',
   noResultsOverlayLabel: 'Nessun record trovato.',
-  errorOverlayDefaultLabel: 'Si è verificato un errore.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densità',
@@ -48,8 +47,9 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Rimuovi',
-  filterPanelLinkOperator: 'Operatore logico',
+  filterPanelLogicOperator: 'Operatore logico',
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
@@ -71,6 +71,33 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
   filterOperatorIsAnyOf: 'è uno tra',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'qualunque',
@@ -80,6 +107,7 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Mostra le colonne',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtra',
   columnMenuHideColumn: 'Nascondi',
   columnMenuUnsort: "Annulla l'ordinamento",

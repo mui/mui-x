@@ -1,25 +1,28 @@
 import * as React from 'react';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import Stack, { StackProps } from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internal/models/dateTimeRange';
 import { RangePosition } from '../internal/models/range';
+import { RangeFieldSection } from '../internal/models/fields';
+import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 
-export interface UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate>> &
-    UseMultiInputDateTimeRangeFieldProps<TDate>;
-  startInputProps: TChildProps;
-  endInputProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
-}
+export type UseMultiInputDateTimeRangeFieldParams<
+  TDate,
+  TTextFieldSlotProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
 export interface UseMultiInputDateTimeRangeFieldProps<TDate>
-  extends UseDateTimeRangeFieldProps<TDate> {}
+  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef'> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+}
 
 export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -28,17 +31,30 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps ext
   UseMultiInputDateTimeRangeFieldProps<TDate>;
 
 export interface MultiInputDateTimeRangeFieldProps<TDate>
-  extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, TextFieldProps> {
+  extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+  autoFocus?: boolean;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: MultiInputDateTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<MultiInputDateTimeRangeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type MultiInputDateTimeRangeFieldOwnerState<TDate> =
@@ -51,10 +67,12 @@ export interface MultiInputDateTimeRangeFieldSlotsComponent {
    */
   Root?: React.ElementType;
   /**
-   * Input rendered for the start or end date.
-   * @default TextField
+   * Form control with an input to render a date and time.
+   * It is rendered twice: once for the start date time and once for the end date time.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
   /**
    * Element rendered between the two inputs.
    * @default MultiInputDateTimeRangeFieldSeparator
@@ -64,7 +82,7 @@ export interface MultiInputDateTimeRangeFieldSlotsComponent {
 
 export interface MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputDateTimeRangeFieldOwnerState<TDate>>;
-  input?: SlotComponentProps<
+  textField?: SlotComponentProps<
     typeof TextField,
     {},
     MultiInputDateTimeRangeFieldOwnerState<TDate> & { position: RangePosition }

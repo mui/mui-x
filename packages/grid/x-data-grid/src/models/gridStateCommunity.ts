@@ -17,16 +17,20 @@ import type {
   GridTabIndexState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
-import type { GridEditRowsModel } from './gridEditRowModel';
+import type { GridEditingState } from './gridEditRowModel';
+import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
+import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
 
 /**
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
   rows: GridRowsState;
+  visibleRowsLookup: GridVisibleRowsLookupState;
   rowsMeta: GridRowsMetaState;
-  editRows: GridEditRowsModel;
+  editRows: GridEditingState;
+  headerFiltering: GridHeaderFilteringState;
   pagination: GridPaginationState;
   columns: GridColumnsState;
   columnGrouping: GridColumnsGroupingState;
@@ -38,7 +42,6 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  error?: any;
 }
 
 /**

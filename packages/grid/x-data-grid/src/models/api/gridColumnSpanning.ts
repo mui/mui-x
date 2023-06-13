@@ -1,4 +1,4 @@
-import { GridStateColDef } from '../colDef';
+import { GridStateColDef } from '../colDef/gridColDef';
 import { GridColumnIndex, GridCellColSpanInfo } from '../gridColumnSpanning';
 import { GridRowId } from '../gridRows';
 

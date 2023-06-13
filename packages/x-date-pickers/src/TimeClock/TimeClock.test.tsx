@@ -2,39 +2,17 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
-  describeConformance,
   fireEvent,
   fireTouchChangedEvent,
   screen,
   within,
   getAllByRole,
 } from '@mui/monorepo/test/utils';
-import { TimeClock, timeClockClasses as classes } from '@mui/x-date-pickers/TimeClock';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { TimeClock } from '@mui/x-date-pickers/TimeClock';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
-
-  describeConformance(
-    <TimeClock value={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
-    () => ({
-      classes,
-      inheritComponent: 'div',
-      wrapMount: wrapPickerMount,
-      render,
-      refInstanceof: window.HTMLDivElement,
-      muiName: 'MuiTimeClock',
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'propsSpread',
-        'reactTestRenderer',
-        // TODO: fix TimeClock to spread props to root
-        'themeDefaultProps',
-        'themeVariants',
-      ],
-    }),
-  );
 
   it('renders a listbox with a name', () => {
     render(<TimeClock value={null} onChange={() => {}} />);
@@ -128,7 +106,7 @@ describe('<TimeClock />', () => {
 
     expect(handleChange.callCount).to.equal(1);
     const [newDate, reason] = handleChange.firstCall.args;
-    expect(adapterToUse.getHours(newDate)).to.equal(23);
+    expect(adapterToUse.getHours(newDate)).to.equal(11);
     expect(adapterToUse.getMinutes(newDate)).to.equal(20);
     expect(reason).to.equal('partial');
   });
@@ -173,20 +151,20 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should call `shouldDisableTime` with the hours with meridiem', () => {
-    const shouldDisableTime = spy(() => false);
+  it('should call `shouldDisableClock` with the hours with meridiem', () => {
+    const shouldDisableClock = spy(() => false);
 
     render(
       <TimeClock
         autoFocus
         value={adapterToUse.date(new Date(2019, 0, 1, 18, 20))}
         onChange={() => {}}
-        shouldDisableTime={shouldDisableTime}
+        shouldDisableClock={shouldDisableClock}
         ampm
       />,
     );
 
-    const hours = shouldDisableTime
+    const hours = shouldDisableClock
       .getCalls()
       .filter((el) => el.lastArg === 'hours')
       .map((el) => el.firstArg);
@@ -226,7 +204,7 @@ describe('<TimeClock />', () => {
     const hours = getAllByRole(hoursContainer, 'option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
-    expect(hours.length).to.equal(24);
+    expect(hours.length).to.equal(12);
     expect(disabledHours.length).to.equal(0);
   });
 
@@ -260,8 +238,8 @@ describe('<TimeClock />', () => {
     const hours = getAllByRole(hoursContainer, 'option');
     const disabledHours = hours.filter((hour) => hour.getAttribute('aria-disabled') === 'true');
 
-    expect(hours.length).to.equal(24);
-    expect(disabledHours.length).to.equal(24);
+    expect(hours.length).to.equal(12);
+    expect(disabledHours.length).to.equal(12);
   });
 
   describe('Time validation on touch ', () => {
@@ -451,7 +429,7 @@ describe('<TimeClock />', () => {
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
           onViewChange={handleViewChange}
-          view="seconds"
+          views={['seconds']}
         />,
       );
 
@@ -473,7 +451,7 @@ describe('<TimeClock />', () => {
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
-          view="seconds"
+          views={['seconds']}
         />,
       );
 
@@ -491,7 +469,7 @@ describe('<TimeClock />', () => {
           minTime={adapterToUse.date(new Date(2018, 0, 1, 12, 15))}
           maxTime={adapterToUse.date(new Date(2018, 0, 1, 15, 45, 30))}
           onChange={handleChange}
-          view="seconds"
+          views={['seconds']}
         />,
       );
 

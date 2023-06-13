@@ -32,17 +32,20 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
 }
 
-type OwnerState = {
+type OwnerState = DataGridProcessedProps & {
   density: GridDensity;
-  autoHeight: DataGridProcessedProps['autoHeight'];
-  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, density, classes } = ownerState;
 
   const slots = {
-    root: ['root', autoHeight && 'autoHeight', `root--density${capitalize(density)}`],
+    root: [
+      'root',
+      autoHeight && 'autoHeight',
+      `root--density${capitalize(density)}`,
+      'withBorderColor',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -61,26 +64,19 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
   const ownerState = {
+    ...rootProps,
     density: densityValue,
-    classes: rootProps.classes,
-    autoHeight: rootProps.autoHeight,
   };
 
   const classes = useUtilityClasses(ownerState);
 
-  apiRef.current.rootElementRef = rootContainerRef;
+  apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);
   useEnhancedEffect(() => {
     setMountedState(true);
   }, []);
-
-  useEnhancedEffect(() => {
-    if (mountedState) {
-      apiRef.current.updateGridDimensionsRef();
-    }
-  }, [apiRef, mountedState]);
 
   if (!mountedState) {
     return null;
@@ -90,12 +86,11 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
     <GridRootStyles
       ref={handleRef}
       className={clsx(className, classes.root)}
+      ownerState={ownerState}
       role="grid"
       aria-colcount={visibleColumns.length}
       aria-rowcount={headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount}
       aria-multiselectable={!rootProps.disableMultipleRowSelection}
-      aria-label={rootProps['aria-label']}
-      aria-labelledby={rootProps['aria-labelledby']}
       {...other}
     >
       {children}

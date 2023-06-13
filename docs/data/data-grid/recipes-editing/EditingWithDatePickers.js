@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGrid,
   useGridApiContext,
@@ -11,13 +10,10 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import {
-  DatePicker,
-  DateTimePicker,
-  LocalizationProvider,
-} from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import TextField from '@mui/material/TextField';
 import InputBase from '@mui/material/InputBase';
 import locale from 'date-fns/locale/en-US';
 import { styled } from '@mui/material/styles';
@@ -27,7 +23,11 @@ function buildApplyDateFilterFn(filterItem, compareFn, showTime = false) {
     return null;
   }
 
-  const filterValueMs = filterItem.value.getTime();
+  // Make a copy of the date to not reset the hours in the original object
+  const filterValueCopy = new Date(filterItem.value);
+  filterValueCopy.setHours(0, 0, 0, 0);
+
+  const filterValueMs = filterValueCopy.getTime();
 
   return ({ value }) => {
     if (!value) {
@@ -173,6 +173,11 @@ const GridEditDateInput = styled(InputBase)({
   padding: '0 9px',
 });
 
+function WrappedGridEditDateInput(props) {
+  const { InputProps, ...other } = props;
+  return <GridEditDateInput fullWidth {...InputProps} {...other} />;
+}
+
 function GridEditDateCell({ id, field, value, colDef }) {
   const apiRef = useGridApiContext();
 
@@ -185,41 +190,12 @@ function GridEditDateCell({ id, field, value, colDef }) {
   return (
     <Component
       value={value}
-      renderInput={({ inputRef, inputProps, InputProps, disabled, error }) => (
-        <GridEditDateInput
-          fullWidth
-          autoFocus
-          ref={inputRef}
-          {...InputProps}
-          disabled={disabled}
-          error={error}
-          inputProps={inputProps}
-        />
-      )}
+      autoFocus
       onChange={handleChange}
+      slots={{ textField: WrappedGridEditDateInput }}
     />
   );
 }
-
-GridEditDateCell.propTypes = {
-  /**
-   * The column of the row that the current cell belongs to.
-   */
-  colDef: PropTypes.object.isRequired,
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
-};
 
 function GridFilterDateInput(props) {
   const { item, showTime, applyValue, apiRef } = props;
@@ -233,17 +209,17 @@ function GridFilterDateInput(props) {
   return (
     <Component
       value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      InputAdornmentProps={{
-        sx: {
-          '& .MuiButtonBase-root': {
-            marginRight: -1,
+      autoFocus
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      slotProps={{
+        textField: {
+          variant: 'standard',
+        },
+        inputAdornment: {
+          sx: {
+            '& .MuiButtonBase-root': {
+              marginRight: -1,
+            },
           },
         },
       }}
@@ -255,34 +231,6 @@ function GridFilterDateInput(props) {
 /**
  * `dateTime` column
  */
-
-GridFilterDateInput.propTypes = {
-  apiRef: PropTypes.shape({
-    current: PropTypes.object.isRequired,
-  }).isRequired,
-  applyValue: PropTypes.func.isRequired,
-  item: PropTypes.shape({
-    /**
-     * The column from which we want to filter the rows.
-     */
-    field: PropTypes.string.isRequired,
-    /**
-     * Must be unique.
-     * Only useful when the model contains several items.
-     */
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    /**
-     * The name of the operator we want to apply.
-     */
-    operator: PropTypes.string.isRequired,
-    /**
-     * The filtering value.
-     * The operator filtering function will decide for each row if the row values is correct compared to this value.
-     */
-    value: PropTypes.any,
-  }).isRequired,
-  showTime: PropTypes.bool,
-};
 
 const dateTimeColumnType = {
   ...GRID_DATETIME_COL_DEF,

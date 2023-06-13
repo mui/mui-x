@@ -2,10 +2,10 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {
-  DataGridPro,
+  DataGrid,
   useGridApiRef,
   gridPaginatedVisibleSortedGridRowIdsSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function DirectSelector() {
@@ -35,7 +35,19 @@ export default function DirectSelector() {
         Toggle the selection of the 1st row of the page
       </Button>
       <Box sx={{ height: 400, mt: 1 }}>
-        <DataGridPro apiRef={apiRef} pagination pageSize={10} {...data} />
+        <DataGrid
+          {...data}
+          apiRef={apiRef}
+          pageSizeOptions={[10]}
+          initialState={{
+            ...data.initialState,
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+              },
+            },
+          }}
+        />
       </Box>
     </Box>
   );

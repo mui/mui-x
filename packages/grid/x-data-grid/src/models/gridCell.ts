@@ -1,3 +1,6 @@
+import type { GridColDef } from './colDef';
+import { GridRowId } from './gridRows';
+
 /**
  * The mode of the cell.
  */
@@ -14,6 +17,14 @@ export type GridRowMode = 'edit' | 'view';
 export interface GridCellIndexCoordinates {
   colIndex: number;
   rowIndex: number;
+}
+
+/**
+ * The coordinates of a cell represented by their row ID and column field.
+ */
+export interface GridCellCoordinates {
+  id: GridRowId;
+  field: GridColDef['field'];
 }
 
 /**

@@ -1,6 +1,1 @@
-<StaticNextTimePicker
-  ampm
-  orientation="landscape"
-  openTo="minutes"
-  defaultValue={dayjs('2022-04-07')}
-/>
+<StaticTimePicker orientation="landscape" />

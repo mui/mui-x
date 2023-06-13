@@ -3,10 +3,8 @@ import {
   DataGrid,
   GridRowSelectionModel,
   GridFilterModel,
-  GridFilterItem,
   GridRowId,
   GridFilterOperator,
-  GridStateColDef,
   GridCellParams,
   getGridDefaultColumnTypes,
   DEFAULT_GRID_COL_TYPE_KEY,
@@ -62,9 +60,9 @@ export default function CustomSelectionOperator() {
      * Function that takes an operator and wrap it to skip filtering for selected rows.
      */
     const wrapOperator = (operator: GridFilterOperator) => {
-      const getApplyFilterFn = (
-        filterItem: GridFilterItem,
-        column: GridStateColDef,
+      const getApplyFilterFn: GridFilterOperator['getApplyFilterFn'] = (
+        filterItem,
+        column,
       ) => {
         const innerFilterFn = operator.getApplyFilterFn(filterItem, column);
         if (!innerFilterFn) {

@@ -1,6 +1,12 @@
 import * as path from 'path';
 import * as ts from 'typescript';
-import { formatType, getSymbolDescription, getSymbolJSDocTags, writePrettifiedFile } from './utils';
+import {
+  formatType,
+  getSymbolDescription,
+  getSymbolJSDocTags,
+  resolveExportSpecifier,
+  writePrettifiedFile,
+} from './utils';
 import { Project } from '../getTypeScriptProjects';
 
 interface BuildSelectorsDocumentationOptions {
@@ -27,6 +33,8 @@ export default function buildGridSelectorsDocumentation(
       if (!symbol.name.endsWith('Selector')) {
         return null;
       }
+
+      symbol = resolveExportSpecifier(symbol, project);
 
       const tags = getSymbolJSDocTags(symbol);
       if (tags.ignore) {

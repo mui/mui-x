@@ -1,8 +1,10 @@
 import { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
-import type { GridColumns } from '../colDef/gridColDef';
+import type { GridColDef } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the row callbacks.
+ * @demos
+ *   - [Master detail](/x/react-data-grid/master-detail/)
  */
 export interface GridRowParams<R extends GridValidRowModel = any> {
   /**
@@ -16,7 +18,7 @@ export interface GridRowParams<R extends GridValidRowModel = any> {
   /**
    * All grid columns.
    */
-  columns: GridColumns;
+  columns: GridColDef[];
 }
 
 interface GridRowVisibilityParams {
@@ -37,6 +39,8 @@ interface GridRowVisibilityParams {
 
 /**
  * Object passed as parameter in the row `getRowClassName` callback prop.
+ * @demos
+ *   - [Styling rows](/x/react-data-grid/style/#styling-rows)
  */
 export interface GridRowClassNameParams<R extends GridValidRowModel = any>
   extends GridRowParams<R>,
@@ -104,6 +108,8 @@ export interface GridRowEditStopParams<R extends GridValidRowModel = any> extend
 
 /**
  * Object passed as parameter in the row `getRowSpacing` callback prop.
+ * @demos
+ *   - [Row spacing](/x/react-data-grid/row-height/#row-spacing)
  */
 export interface GridRowSpacingParams extends GridRowEntry, GridRowVisibilityParams {}
 
