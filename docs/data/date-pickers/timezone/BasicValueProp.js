@@ -18,7 +18,11 @@ export default function BasicValueProp() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
-        <TimePicker value={value} onChange={setValue} />
+        <TimePicker
+          label={'Value timezone: "America/New_York"'}
+          value={value}
+          onChange={setValue}
+        />
         <Typography>
           Stored value: {value == null ? 'null' : value.format()}
         </Typography>
