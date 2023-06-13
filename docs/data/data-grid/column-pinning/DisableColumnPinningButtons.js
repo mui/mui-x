@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPro,
   GridColumnMenuContainer,
@@ -15,7 +14,7 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 
-function CustomColumnMenu(props) {
+export function CustomColumnMenu(props) {
   const { hideMenu, colDef, color, ...other } = props;
 
   return (
@@ -27,14 +26,6 @@ function CustomColumnMenu(props) {
     </GridColumnMenuContainer>
   );
 }
-
-CustomColumnMenu.propTypes = {
-  colDef: PropTypes.object.isRequired,
-  color: PropTypes.string,
-  hideMenu: PropTypes.func.isRequired,
-};
-
-export { CustomColumnMenu };
 
 export default function DisableColumnPinningButtons() {
   return (

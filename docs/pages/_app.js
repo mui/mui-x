@@ -14,6 +14,7 @@ import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
 import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
+import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
 import { LicenseInfo } from '@mui/x-license-pro';
@@ -127,7 +128,7 @@ async function registerServiceWorker() {
     window.location.host.indexOf('mui.com') !== -1
   ) {
     // register() automatically attempts to refresh the sw.js.
-    const registration = await navigator.serviceWorker.register('/sw.js');
+    const registration = await navigator.serviceWorker.register('/x/sw.js');
     // Force the page reload for users.
     forcePageReload(registration);
   }
@@ -189,11 +190,55 @@ function AppWrapper(props) {
     ];
   }
 
+  const { canonicalAs } = pathnameToLanguage(router.asPath);
+
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
 
-    return { activePage, activePageParents, pages };
-  }, [router.pathname]);
+    const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
+
+    let productIdentifier = {
+      metadata: '',
+      name: 'MUI X',
+      versions: [
+        { text: `v${process.env.LIB_VERSION}`, current: true },
+        { text: 'v5', href: `https://v5.mui.com${languagePrefix}/x/introduction/` },
+        { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+      ],
+    };
+
+    if (
+      canonicalAs.startsWith('/x/react-data-grid/') ||
+      canonicalAs.startsWith('/x/api/data-grid/')
+    ) {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Data Grid',
+        versions: [
+          { text: `v${process.env.DATA_GRID_VERSION}`, current: true },
+          { text: 'v5', href: `https://v5.mui.com${languagePrefix}/components/data-grid/` },
+          { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
+        ],
+      };
+    } else if (
+      canonicalAs.startsWith('/x/react-date-pickers/') ||
+      canonicalAs.startsWith('/x/api/date-pickers/')
+    ) {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Date Pickers',
+        versions: [
+          { text: `v${process.env.DATE_PICKERS_VERSION}`, current: true },
+          {
+            text: 'v5',
+            href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
+          },
+        ],
+      };
+    }
+
+    return { activePage, activePageParents, pages, productIdentifier };
+  }, [canonicalAs, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.

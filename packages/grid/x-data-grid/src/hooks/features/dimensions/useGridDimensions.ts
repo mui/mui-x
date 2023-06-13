@@ -220,8 +220,8 @@ export function useGridDimensions(
       return;
     }
 
-    const height = mainEl.offsetHeight || 0;
-    const width = mainEl.offsetWidth || 0;
+    const height = mainEl.clientHeight || 0;
+    const width = mainEl.clientWidth || 0;
 
     const win = ownerWindow(mainEl);
 

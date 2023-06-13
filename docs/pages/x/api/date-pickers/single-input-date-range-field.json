@@ -56,6 +56,10 @@
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
+    },
     "required": { "type": { "name": "bool" } },
     "selectedSections": {
       "type": {
@@ -87,7 +91,7 @@
     }
   },
   "slots": {
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "SingleInputDateRangeField",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSingleInputDateRangeField" },

@@ -29,7 +29,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
       {...props}
       slots={{
         // Add new item
-        ColumnMenuUserItem: CustomUserItem,
+        columnMenuUserItem: CustomUserItem,
       }}
       slotProps={{
         columnMenuUserItem: {

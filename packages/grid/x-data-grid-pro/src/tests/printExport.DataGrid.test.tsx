@@ -57,7 +57,7 @@ describe('<DataGridPro /> - Print export', () => {
     clock.withFakeTimers();
 
     it('should display print button by default', () => {
-      render(<Test components={{ Toolbar: GridToolbar }} />);
+      render(<Test slots={{ toolbar: GridToolbar }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
@@ -66,8 +66,8 @@ describe('<DataGridPro /> - Print export', () => {
     it('should disable print export when passing `printOptions.disableToolbarButton`', () => {
       render(
         <Test
-          components={{ Toolbar: GridToolbar }}
-          componentsProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
+          slots={{ toolbar: GridToolbar }}
+          slotProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));

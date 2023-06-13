@@ -23,7 +23,7 @@ export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
 
 export interface UseDateTimeFieldProps<TDate>
   extends MakeOptional<
-      UseFieldInternalProps<TDate | null, FieldSection, DateTimeValidationError>,
+      UseFieldInternalProps<TDate | null, TDate, FieldSection, DateTimeValidationError>,
       'format'
     >,
     DayValidationProps<TDate>,

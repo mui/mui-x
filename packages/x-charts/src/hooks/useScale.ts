@@ -1,13 +1,4 @@
-import {
-  scaleBand,
-  scaleLog,
-  scalePoint,
-  scalePow,
-  scaleSqrt,
-  scaleTime,
-  scaleUtc,
-  scaleLinear,
-} from 'd3-scale';
+import { scaleLog, scalePow, scaleSqrt, scaleTime, scaleUtc, scaleLinear } from 'd3-scale';
 import type {
   ScaleBand,
   ScaleLogarithmic,
@@ -16,7 +7,7 @@ import type {
   ScaleTime,
   ScaleLinear,
 } from 'd3-scale';
-import { ScaleName } from '../models/axis';
+import { ContinuouseScaleName } from '../models/axis';
 
 export type D3Scale =
   | ScaleBand<any>
@@ -26,24 +17,30 @@ export type D3Scale =
   | ScaleTime<any, any>
   | ScaleLinear<any, any>;
 
-export function getScale(scaleType: ScaleName | undefined): D3Scale {
+export type D3ContinuouseScale =
+  | ScaleLogarithmic<any, any>
+  | ScalePower<any, any>
+  | ScaleTime<any, any>
+  | ScaleLinear<any, any>;
+
+export function getScale(
+  scaleType: ContinuouseScaleName,
+  domain: any[],
+  range: any[],
+): D3ContinuouseScale {
   switch (scaleType) {
-    case 'band':
-      return scaleBand();
     case 'log':
-      return scaleLog();
-    case 'point':
-      return scalePoint();
+      return scaleLog(domain, range);
     case 'pow':
-      return scalePow();
+      return scalePow(domain, range);
     case 'sqrt':
-      return scaleSqrt();
+      return scaleSqrt(domain, range);
     case 'time':
-      return scaleTime();
+      return scaleTime(domain, range);
     case 'utc':
-      return scaleUtc();
+      return scaleUtc(domain, range);
     default:
-      return scaleLinear();
+      return scaleLinear(domain, range);
   }
 }
 

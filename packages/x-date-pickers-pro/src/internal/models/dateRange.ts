@@ -35,7 +35,7 @@ export interface BaseRangeProps {
 
 export interface UseDateRangeFieldProps<TDate>
   extends MakeOptional<
-      UseFieldInternalProps<DateRange<TDate>, RangeFieldSection, DateRangeValidationError>,
+      UseFieldInternalProps<DateRange<TDate>, TDate, RangeFieldSection, DateRangeValidationError>,
       'format'
     >,
     DayRangeValidationProps<TDate>,

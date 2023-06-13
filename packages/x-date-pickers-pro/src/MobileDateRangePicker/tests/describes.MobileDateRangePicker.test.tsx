@@ -82,7 +82,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
         expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '');
       });
     },
-    setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false }) => {
       let newValue: any[];
       if (applySameValue) {
         newValue = value;
