@@ -1,1 +1,1 @@
-export * from './AxisHighlight';
+export * from './ChartsAxisHighlight';

@@ -10,14 +10,14 @@ import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Legend, LegendProps } from '../Legend';
-import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     ChartsAxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: TooltipProps;
-  axisHighlight?: AxisHighlightProps;
+  axisHighlight?: ChartsAxisHighlightProps;
   legend?: LegendProps;
 }
 
@@ -60,7 +60,7 @@ function ScatterChart(props: ScatterChartProps) {
       />
       <ScatterPlot />
       <Legend {...legend} />
-      <AxisHighlight x="none" y="none" {...axisHighlight} />
+      <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
       <Tooltip trigger="item" {...tooltip} />
       {children}
     </ResponsiveChartContainer>

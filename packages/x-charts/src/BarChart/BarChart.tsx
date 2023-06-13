@@ -12,7 +12,7 @@ import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
 import { Legend, LegendProps } from '../Legend';
-import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
 import { ClipPath } from '../ClipPath/ClipPath';
 
 export interface BarChartProps
@@ -20,7 +20,7 @@ export interface BarChartProps
     ChartsAxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: TooltipProps;
-  axisHighlight?: AxisHighlightProps;
+  axisHighlight?: ChartsAxisHighlightProps;
   legend?: LegendProps;
 }
 
@@ -81,7 +81,7 @@ function BarChart(props: BarChartProps) {
         bottomAxis={bottomAxis}
       />
       <Legend {...legend} />
-      <AxisHighlight x="band" {...axisHighlight} />
+      <ChartsAxisHighlight x="band" {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
       {children}

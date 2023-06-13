@@ -4,12 +4,12 @@ import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { getValueToPositionMapper, isBandScale } from '../hooks/useScale';
 
-export type AxisHighlightProps = {
+export type ChartsAxisHighlightProps = {
   x?: 'none' | 'line' | 'band';
   y?: 'none' | 'line';
 };
 
-function AxisHighlight(props: AxisHighlightProps) {
+function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
   const { x: xAxisHighlight, y: yAxisHighlight } = props;
   const { xAxisIds, xAxis, yAxisIds, yAxis } = React.useContext(CartesianContext);
 
@@ -68,7 +68,7 @@ function AxisHighlight(props: AxisHighlightProps) {
   );
 }
 
-AxisHighlight.propTypes = {
+ChartsAxisHighlight.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -77,4 +77,4 @@ AxisHighlight.propTypes = {
   y: PropTypes.oneOf(['line', 'none']),
 } as any;
 
-export { AxisHighlight };
+export { ChartsAxisHighlight };
