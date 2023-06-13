@@ -33,7 +33,7 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
   /**
    * Component used to enter the date with the keyboard.
    */
-  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, any>>;
+  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, any>>;
   /**
    * Form control with an input to render the value inside the default field.
    * Receives the same props as `@mui/material/TextField`.
@@ -68,7 +68,7 @@ export interface ExportedUseDesktopPickerSlotsComponentsProps<
 > extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
-    React.ElementType<BaseSingleInputFieldProps<TDate | null, FieldSection, unknown>>,
+    React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},
     UsePickerProps<TDate | null, any, FieldSection, any, any, any>
   >;

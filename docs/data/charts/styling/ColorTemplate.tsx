@@ -15,7 +15,7 @@ const series = [...Array(20)].map((_, seriesIndex) => {
       const t = seriesIndex * Dt + i;
       return {
         x: t / Dt,
-        y: Math.cos(t / 30) / Dt,
+        y: Math.cos(t / Dt),
         id: i,
       };
     }),
@@ -147,6 +147,7 @@ export default function ColorTemplate() {
         width={600}
         height={400}
         series={series}
+        yAxis={[{ min: -1.5, max: 1.5 }]}
         colors={categories[colorScheme]}
       />
       <TextField

@@ -5,7 +5,6 @@ import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-import { GridScrollArea } from './GridScrollArea';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
@@ -58,12 +57,10 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
 
     return (
       <GridBaseColumnHeaders ref={ref} {...getRootProps(other)}>
-        <GridScrollArea scrollDirection="left" />
         <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
           {getColumnGroupHeaders()}
           {getColumnHeaders()}
         </GridColumnHeadersInner>
-        <GridScrollArea scrollDirection="right" />
       </GridBaseColumnHeaders>
     );
   },

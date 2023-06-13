@@ -154,5 +154,20 @@ describe('<MonthCalendar />', () => {
       fireEvent.click(jun);
       expect(onChange.callCount).to.equal(1);
     });
+
+    it('should disable months after initial render when "disableFuture" prop changes', () => {
+      const { setProps } = render(<MonthCalendar />);
+
+      const january = screen.getByText('Jan', { selector: 'button' });
+      const february = screen.getByText('Feb', { selector: 'button' });
+
+      expect(january).not.to.have.attribute('disabled');
+      expect(february).not.to.have.attribute('disabled');
+
+      setProps({ disableFuture: true });
+
+      expect(january).not.to.have.attribute('disabled');
+      expect(february).to.have.attribute('disabled');
+    });
   });
 });

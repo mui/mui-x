@@ -1,18 +1,27 @@
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
+import { AreaPlot } from './AreaPlot';
 import { LinePlot } from './LinePlot';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import {
+  ResponsiveChartContainer,
+  ResponsiveChartContainerProps,
+} from '../ResponsiveChartContainer';
+import { MarkPlot } from './MarkPlot';
 import { Axis, AxisProps } from '../Axis/Axis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Highlight, HighlightProps } from '../Highlight';
+import { Legend, LegendProps } from '../Legend';
+import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
+import { ClipPath } from '../ClipPath/ClipPath';
 
-export interface LineChartProps extends Omit<ChartContainerProps, 'series'>, AxisProps {
+export interface LineChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
-  highlight?: HighlightProps;
+  axisHighlight?: AxisHighlightProps;
+  legend?: LegendProps;
 }
 function LineChart(props: LineChartProps) {
   const {
@@ -25,7 +34,8 @@ function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
-    highlight,
+    axisHighlight = { x: 'line' },
+    legend,
     topAxis,
     leftAxis,
     rightAxis,
@@ -33,8 +43,11 @@ function LineChart(props: LineChartProps) {
     children,
   } = props;
 
+  const id = useId();
+  const clipPathId = `${id}-clip-path`;
+
   return (
-    <ChartContainer
+    <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'line', ...s }))}
       width={width}
       height={height}
@@ -43,7 +56,7 @@ function LineChart(props: LineChartProps) {
         xAxis ?? [
           {
             id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'band',
+            scaleType: 'point',
             data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
               (_, index) => index,
             ),
@@ -54,15 +67,21 @@ function LineChart(props: LineChartProps) {
       colors={colors}
       sx={sx}
       disableAxisListener={
-        tooltip?.trigger !== 'axis' && highlight?.x === 'none' && highlight?.y === 'none'
+        tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
+      <g clipPath={`url(#${clipPathId})`}>
+        <AreaPlot />
+        <LinePlot />
+      </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-      <LinePlot />
-      <Highlight {...highlight} />
+      <MarkPlot />
+      <Legend {...legend} />
+      <AxisHighlight {...axisHighlight} />
       <Tooltip {...tooltip} />
+      <ClipPath id={clipPathId} />
       {children}
-    </ChartContainer>
+    </ResponsiveChartContainer>
   );
 }
 
@@ -71,6 +90,10 @@ LineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  axisHighlight: PropTypes.shape({
+    x: PropTypes.oneOf(['band', 'line', 'none']),
+    y: PropTypes.oneOf(['line', 'none']),
+  }),
   /**
    * Indicate which axis to display the the bottom of the charts.
    * Can be a string (the id of the axis) or an object `XAxisProps`
@@ -97,11 +120,7 @@ LineChart.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
-  height: PropTypes.number.isRequired,
-  highlight: PropTypes.shape({
-    x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
-  }),
+  height: PropTypes.number,
   /**
    * Indicate which axis to display the the left of the charts.
    * Can be a string (the id of the axis) or an object `YAxisProps`
@@ -123,6 +142,21 @@ LineChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  legend: PropTypes.shape({
+    classes: PropTypes.object,
+    direction: PropTypes.oneOf(['column', 'row']),
+    itemWidth: PropTypes.number,
+    markSize: PropTypes.number,
+    offset: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+    position: PropTypes.shape({
+      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+    }),
+    spacing: PropTypes.number,
+  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -153,6 +187,7 @@ LineChart.propTypes = {
   series: PropTypes.arrayOf(
     PropTypes.shape({
       area: PropTypes.bool,
+      color: PropTypes.string,
       curve: PropTypes.oneOf([
         'catmullRom',
         'linear',
@@ -164,10 +199,24 @@ LineChart.propTypes = {
         'stepBefore',
       ]),
       data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      highlightScope: PropTypes.shape({
+        faded: PropTypes.oneOf(['global', 'none', 'series']),
+        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
+      }),
       id: PropTypes.string,
       label: PropTypes.string,
       stack: PropTypes.string,
+      stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
+      stackOrder: PropTypes.oneOf([
+        'appearance',
+        'ascending',
+        'descending',
+        'insideOut',
+        'none',
+        'reverse',
+      ]),
       type: PropTypes.oneOf(['line']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),
@@ -210,7 +259,7 @@ LineChart.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
   }),
-  width: PropTypes.number.isRequired,
+  width: PropTypes.number,
   xAxis: PropTypes.arrayOf(
     PropTypes.shape({
       axisId: PropTypes.string,
@@ -227,7 +276,7 @@ LineChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -251,7 +300,7 @@ LineChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

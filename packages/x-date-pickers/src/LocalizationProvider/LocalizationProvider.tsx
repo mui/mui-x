@@ -177,6 +177,7 @@ LocalizationProvider.propTypes = {
     keyboardDateTime: PropTypes.string,
     keyboardDateTime12h: PropTypes.string,
     keyboardDateTime24h: PropTypes.string,
+    meridiem: PropTypes.string,
     minutes: PropTypes.string,
     month: PropTypes.string,
     monthAndDate: PropTypes.string,
