@@ -186,7 +186,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               key={option.label}
               onClick={() => !readOnly && onChange(option.value)}
               selected={isSelected}
-              disabled={disabled ?? option.isDisabled?.(option.value)}
+              disabled={disabled || option.isDisabled?.(option.value)}
               disableRipple={readOnly}
               role="option"
               // aria-readonly is not supported here and does not have any effect

@@ -94,7 +94,7 @@
     }
   },
   "slots": {
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "DateField",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateField" },

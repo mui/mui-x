@@ -301,11 +301,7 @@ function defaultPasteResolver({
 }
 
 function isPasteShortcut(event: React.KeyboardEvent) {
-  const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-  if (event.code === 'KeyV' && isModifierKeyPressed) {
-    return true;
-  }
-  return false;
+  return (event.ctrlKey || event.metaKey) && event.key === 'v';
 }
 
 export const useGridClipboardImport = (

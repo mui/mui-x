@@ -93,6 +93,7 @@
   { "name": "DigitalClockProps", "kind": "Interface" },
   { "name": "DigitalClockSlotsComponent", "kind": "Interface" },
   { "name": "DigitalClockSlotsComponentsProps", "kind": "Interface" },
+  { "name": "elGR", "kind": "Variable" },
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
   { "name": "ExportedDigitalClockProps", "kind": "Interface" },
