@@ -5,7 +5,12 @@ import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
-import { ChartsTooltipCell, ChartsTooltipPaper, ChartsTooltipTable, ChartsTooltipMark } from './ChartsTooltipTable';
+import {
+  ChartsTooltipCell,
+  ChartsTooltipPaper,
+  ChartsTooltipTable,
+  ChartsTooltipMark,
+} from './ChartsTooltipTable';
 
 export type ChartsAxisContentProps = {
   /**

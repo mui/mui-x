@@ -195,7 +195,11 @@ ScatterChart.propTypes = {
     PropTypes.object,
   ]),
   title: PropTypes.string,
-  tooltip: PropTypes.any,
+  tooltip: PropTypes.shape({
+    axisContent: PropTypes.elementType,
+    itemContent: PropTypes.elementType,
+    trigger: PropTypes.oneOf(['axis', 'item', 'none']),
+  }),
   /**
    * Indicate which axis to display the the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`

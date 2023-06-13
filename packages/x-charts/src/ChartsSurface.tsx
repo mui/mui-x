@@ -25,45 +25,44 @@ const ChartChartsSurfaceStyles = styled('svg', {
   slot: 'Root',
 })(() => ({}));
 
-export const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
-  props: ChartsSurfaceProps,
-  ref,
-) {
-  const {
-    children,
-    width,
-    height,
-    viewBox,
-    disableAxisListener = false,
-    className,
-    sx,
-    ...other
-  } = props;
-  const svgView = { width, height, x: 0, y: 0, ...viewBox };
+export const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(
+  function ChartsSurface(props: ChartsSurfaceProps, ref) {
+    const {
+      children,
+      width,
+      height,
+      viewBox,
+      disableAxisListener = false,
+      className,
+      sx,
+      ...other
+    } = props;
+    const svgView = { width, height, x: 0, y: 0, ...viewBox };
 
-  useAxisEvents(disableAxisListener);
+    useAxisEvents(disableAxisListener);
 
-  return (
-    <ChartChartsSurfaceStyles
-      width={width}
-      height={height}
-      viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
-      ref={ref}
-      sx={[
-        {
-          '--ChartsLegend-itemWidth': '100px',
-          '--ChartsLegend-itemMarkSize': '20px',
-          '--ChartsLegend-rootSpacing': '5px',
-          '--ChartsLegend-labelSpacing': '5px',
-          '--ChartsLegend-rootOffsetY': '-20px',
-        },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-      {...other}
-    >
-      <title>{props.title}</title>
-      <desc>{props.desc}</desc>
-      {children}
-    </ChartChartsSurfaceStyles>
-  );
-});
+    return (
+      <ChartChartsSurfaceStyles
+        width={width}
+        height={height}
+        viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
+        ref={ref}
+        sx={[
+          {
+            '--ChartsLegend-itemWidth': '100px',
+            '--ChartsLegend-itemMarkSize': '20px',
+            '--ChartsLegend-rootSpacing': '5px',
+            '--ChartsLegend-labelSpacing': '5px',
+            '--ChartsLegend-rootOffsetY': '-20px',
+          },
+          ...(Array.isArray(sx) ? sx : [sx]),
+        ]}
+        {...other}
+      >
+        <title>{props.title}</title>
+        <desc>{props.desc}</desc>
+        {children}
+      </ChartChartsSurfaceStyles>
+    );
+  },
+);

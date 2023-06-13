@@ -11,9 +11,9 @@
     }
   },
   "slots": {},
-  "name": "Tooltip",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTooltip" },
-  "filename": "/packages/x-charts/src/Tooltip/Tooltip.tsx",
+  "name": "ChartsTooltip",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsTooltip" },
+  "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltip.tsx",
   "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "Tooltip" }]
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsTooltip" }]
 }

@@ -9,6 +9,7 @@ export default [
   { pathname: '/x/api/charts/charts-axis', title: 'ChartsAxis' },
   { pathname: '/x/api/charts/charts-axis-highlight', title: 'ChartsAxisHighlight' },
   { pathname: '/x/api/charts/charts-clip-path', title: 'ChartsClipPath' },
+  { pathname: '/x/api/charts/charts-tooltip', title: 'ChartsTooltip' },
   { pathname: '/x/api/charts/charts-x-axis', title: 'ChartsXAxis' },
   { pathname: '/x/api/charts/charts-y-axis', title: 'ChartsYAxis' },
   { pathname: '/x/api/charts/drawing-provider', title: 'DrawingProvider' },
@@ -20,5 +21,4 @@ export default [
   { pathname: '/x/api/charts/scatter', title: 'Scatter' },
   { pathname: '/x/api/charts/scatter-chart', title: 'ScatterChart' },
   { pathname: '/x/api/charts/scatter-plot', title: 'ScatterPlot' },
-  { pathname: '/x/api/charts/tooltip', title: 'Tooltip' },
 ] as MuiPage[];

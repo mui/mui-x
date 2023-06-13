@@ -18,6 +18,8 @@
   { "name": "ChartsAxisProps", "kind": "Interface" },
   { "name": "ChartsClipPath", "kind": "Function" },
   { "name": "ChartsClipPathProps", "kind": "TypeAlias" },
+  { "name": "ChartsTooltip", "kind": "Function" },
+  { "name": "ChartsTooltipProps", "kind": "TypeAlias" },
   { "name": "ChartsXAxis", "kind": "Function" },
   { "name": "ChartsYAxis", "kind": "Function" },
   { "name": "DEFAULT_MARGINS", "kind": "Variable" },
@@ -48,7 +50,5 @@
   { "name": "ResponsiveChartContainerProps", "kind": "TypeAlias" },
   { "name": "Scatter", "kind": "Function" },
   { "name": "ScatterChart", "kind": "Function" },
-  { "name": "ScatterPlot", "kind": "Function" },
-  { "name": "Tooltip", "kind": "Function" },
-  { "name": "TooltipProps", "kind": "TypeAlias" }
+  { "name": "ScatterPlot", "kind": "Function" }
 ]
