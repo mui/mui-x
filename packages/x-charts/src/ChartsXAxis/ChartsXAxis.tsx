@@ -6,7 +6,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
-import { getAxisUtilityClass } from '../Axis/axisClasses';
+import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import {
   Line,
   Tick,

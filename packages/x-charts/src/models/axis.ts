@@ -6,7 +6,7 @@ import type {
   ScaleLinear,
   ScalePoint,
 } from 'd3-scale';
-import { AxisClasses } from '../Axis/axisClasses';
+import { AxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 
 export interface ChartsAxisProps {

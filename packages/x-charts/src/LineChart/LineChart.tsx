@@ -8,14 +8,14 @@ import {
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
 import { MarkPlot } from './MarkPlot';
-import { ChartsAxis, ChartsAxisProps } from '../Axis/ChartsAxis';
+import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendProps } from '../Legend';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
-import { ChartsClipPath } from '../ClipPath';
+import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsClipPath } from '../ChartsClipPath';
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,

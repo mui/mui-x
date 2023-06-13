@@ -32,7 +32,7 @@
   "slots": {},
   "name": "ChartsAxis",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxis" },
-  "filename": "/packages/x-charts/src/Axis/ChartsAxis.tsx",
+  "filename": "/packages/x-charts/src/ChartsAxis/ChartsAxis.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsAxis" }]
 }

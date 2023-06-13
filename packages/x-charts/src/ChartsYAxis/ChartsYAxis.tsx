@@ -13,7 +13,7 @@ import {
   Label,
   AxisRoot,
 } from '../internals/components/AxisSharedComponents';
-import { getAxisUtilityClass } from '../Axis/axisClasses';
+import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 
 const useUtilityClasses = (ownerState: ChartsYAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;

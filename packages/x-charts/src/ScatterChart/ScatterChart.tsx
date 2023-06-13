@@ -5,12 +5,12 @@ import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { ChartsAxis, ChartsAxisProps } from '../Axis';
+import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendProps } from '../Legend';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
+import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,

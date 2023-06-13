@@ -32,7 +32,7 @@
     "globalClasses": {},
     "name": "MuiChartsXAxis"
   },
-  "filename": "/packages/x-charts/src/XAxis/ChartsXAxis.tsx",
+  "filename": "/packages/x-charts/src/ChartsXAxis/ChartsXAxis.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsXAxis" }]
 }

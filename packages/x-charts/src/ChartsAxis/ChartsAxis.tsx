@@ -2,8 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { ChartsXAxis } from '../XAxis';
-import { ChartsYAxis } from '../YAxis';
+import { ChartsXAxis } from '../ChartsXAxis';
+import { ChartsYAxis } from '../ChartsYAxis';
 import { ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 
 export interface ChartsAxisProps {

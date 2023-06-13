@@ -32,7 +32,7 @@
     "globalClasses": {},
     "name": "MuiChartsYAxis"
   },
-  "filename": "/packages/x-charts/src/YAxis/ChartsYAxis.tsx",
+  "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsYAxis" }]
 }
