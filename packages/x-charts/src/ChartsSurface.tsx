@@ -8,7 +8,7 @@ type ViewBox = {
   width?: number;
   height?: number;
 };
-export interface SurfaceProps {
+export interface ChartsSurfaceProps {
   width: number;
   height: number;
   viewBox?: ViewBox;
@@ -20,13 +20,13 @@ export interface SurfaceProps {
   disableAxisListener?: boolean;
 }
 
-const ChartSurfaceStyles = styled('svg', {
-  name: 'MuiSurface',
+const ChartChartsSurfaceStyles = styled('svg', {
+  name: 'MuiChartsSurface',
   slot: 'Root',
 })(() => ({}));
 
-export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Surface(
-  props: SurfaceProps,
+export const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
+  props: ChartsSurfaceProps,
   ref,
 ) {
   const {
@@ -44,7 +44,7 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
   useAxisEvents(disableAxisListener);
 
   return (
-    <ChartSurfaceStyles
+    <ChartChartsSurfaceStyles
       width={width}
       height={height}
       viewBox={`${svgView.x} ${svgView.y} ${svgView.width} ${svgView.height}`}
@@ -64,6 +64,6 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
       <title>{props.title}</title>
       <desc>{props.desc}</desc>
       {children}
-    </ChartSurfaceStyles>
+    </ChartChartsSurfaceStyles>
   );
 });
