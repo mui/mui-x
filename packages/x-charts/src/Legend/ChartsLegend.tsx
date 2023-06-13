@@ -4,25 +4,25 @@ import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
 import { AnchorPosition, SizingParams, getSeriesToDisplay } from './utils';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import { LegendClasses, getLegendUtilityClass } from './legendClasses';
+import { ChartsLegendClasses, getChartsLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
 import { ChartSeriesDefaultized } from '../models/seriesType/config';
 
-export type LegendProps = {
+export type ChartsLegendProps = {
   position?: AnchorPosition;
   offset?: Partial<{ x: number; y: number }>;
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<LegendClasses>;
+  classes?: Partial<ChartsLegendClasses>;
 } & SizingParams;
 
-type DefaultizedLegendProps = DefaultizedProps<LegendProps, 'direction' | 'position'>;
+type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;
 
 type SeriesLegendOwnerState = ChartSeriesDefaultized<any> &
-  Pick<DefaultizedLegendProps, 'direction'> & { seriesIndex: number };
+  Pick<DefaultizedChartsLegendProps, 'direction'> & { seriesIndex: number };
 
-const useUtilityClasses = (ownerState: DefaultizedLegendProps & { theme: Theme }) => {
+const useUtilityClasses = (ownerState: DefaultizedChartsLegendProps & { theme: Theme }) => {
   const { classes, direction } = ownerState;
   const slots = {
     root: ['root', direction],
@@ -31,10 +31,10 @@ const useUtilityClasses = (ownerState: DefaultizedLegendProps & { theme: Theme }
     series: ['series'],
   };
 
-  return composeClasses(slots, getLegendUtilityClass, classes);
+  return composeClasses(slots, getChartsLegendUtilityClass, classes);
 };
 
-type LegendRootOwnerState = {
+export type ChartsLegendRootOwnerState = {
   position: AnchorPosition;
   direction: 'row' | 'column';
   drawingArea: DrawingArea;
@@ -46,102 +46,106 @@ type LegendRootOwnerState = {
 function getTranslePosition({
   position,
   drawingArea,
-}: Omit<LegendRootOwnerState, 'direction' | 'seriesNumber'>) {
+}: Omit<ChartsLegendRootOwnerState, 'direction' | 'seriesNumber'>) {
   let xValue: string;
   switch (position.horizontal) {
     case 'left':
-      xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${drawingArea.left}px - var(--Legend-rootWidth))`;
+      xValue = `calc(var(--ChartsLegend-rootOffsetX, 0px) + ${drawingArea.left}px - var(--ChartsLegend-rootWidth))`;
       break;
     case 'middle':
-      xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${
+      xValue = `calc(var(--ChartsLegend-rootOffsetX, 0px) + ${
         drawingArea.left + drawingArea.width / 2
-      }px - 0.5 * var(--Legend-rootWidth))`;
+      }px - 0.5 * var(--ChartsLegend-rootWidth))`;
       break;
     default:
-      xValue = `calc(var(--Legend-rootOffsetX, 0px) + ${drawingArea.left + drawingArea.width}px)`;
+      xValue = `calc(var(--ChartsLegend-rootOffsetX, 0px) + ${
+        drawingArea.left + drawingArea.width
+      }px)`;
       break;
   }
   let yValue: string;
   switch (position.vertical) {
     case 'top':
-      yValue = `calc(var(--Legend-rootOffsetY, 0px) + ${drawingArea.top}px - var(--Legend-rootHeight))`;
+      yValue = `calc(var(--ChartsLegend-rootOffsetY, 0px) + ${drawingArea.top}px - var(--ChartsLegend-rootHeight))`;
       break;
     case 'middle':
-      yValue = `calc(var(--Legend-rootOffsetY, 0px) + ${
+      yValue = `calc(var(--ChartsLegend-rootOffsetY, 0px) + ${
         drawingArea.top + drawingArea.height / 2
-      }px - 0.5 * var(--Legend-rootHeight))`;
+      }px - 0.5 * var(--ChartsLegend-rootHeight))`;
       break;
     default:
-      yValue = `calc(var(--Legend-rootOffsetY, 0px) + ${drawingArea.top + drawingArea.height}px)`;
+      yValue = `calc(var(--ChartsLegend-rootOffsetY, 0px) + ${
+        drawingArea.top + drawingArea.height
+      }px)`;
       break;
   }
   return { transform: `translate(${xValue}, ${yValue})` };
 }
 
-export const LegendRoot = styled('g', {
-  name: 'MuiLegend',
+export const ChartsLegendRoot = styled('g', {
+  name: 'MuiChartsLegend',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: LegendRootOwnerState }>(({ ownerState }) => {
+})<{ ownerState: ChartsLegendRootOwnerState }>(({ ownerState }) => {
   const { direction, drawingArea, offsetX, offsetY, seriesNumber, position } = ownerState;
 
   return {
-    '--Legend-rootOffsetX': typeof offsetX === 'number' ? `${offsetX}px` : undefined,
-    '--Legend-rootOffsetY': typeof offsetY === 'number' ? `${offsetY}px` : undefined,
-    '--Legend-rootWidth':
+    '--ChartsLegend-rootOffsetX': typeof offsetX === 'number' ? `${offsetX}px` : undefined,
+    '--ChartsLegend-rootOffsetY': typeof offsetY === 'number' ? `${offsetY}px` : undefined,
+    '--ChartsLegend-rootWidth':
       direction === 'row'
-        ? `calc(var(--Legend-itemWidth) * ${seriesNumber} + var(--Legend-rootSpacing) * ${
+        ? `calc(var(--ChartsLegend-itemWidth) * ${seriesNumber} + var(--ChartsLegend-rootSpacing) * ${
             seriesNumber - 1
           } )`
-        : 'var(--Legend-itemWidth)',
-    '--Legend-rootHeight':
+        : 'var(--ChartsLegend-itemWidth)',
+    '--ChartsLegend-rootHeight':
       direction === 'row'
-        ? 'var(--Legend-itemMarkSize)'
-        : `calc(var(--Legend-itemMarkSize) * ${seriesNumber} + var(--Legend-rootSpacing) * ${
+        ? 'var(--ChartsLegend-itemMarkSize)'
+        : `calc(var(--ChartsLegend-itemMarkSize) * ${seriesNumber} + var(--ChartsLegend-rootSpacing) * ${
             seriesNumber - 1
           } )`,
     ...getTranslePosition({ position, drawingArea, offsetX, offsetY }),
   };
 });
 
-export const SeriesLegendGroup = styled('g', {
-  name: 'MuiLegend',
-  slot: 'SeriesLegendGroup',
+export const ChartsSeriesLegendGroup = styled('g', {
+  name: 'MuiChartsLegend',
+  slot: 'ChartsSeriesLegendGroup',
   overridesResolver: (props, styles) => styles.series,
 })<{ ownerState: SeriesLegendOwnerState }>(({ ownerState }) => {
   const { direction, seriesIndex } = ownerState;
 
   if (direction === 'row') {
     return {
-      transform: `translate(calc(${seriesIndex} * (var(--Legend-itemWidth) + var(--Legend-rootSpacing))), 0)`,
+      transform: `translate(calc(${seriesIndex} * (var(--ChartsLegend-itemWidth) + var(--ChartsLegend-rootSpacing))), 0)`,
     };
   }
   return {
-    transform: `translate(0, calc(${seriesIndex} * (var(--Legend-itemMarkSize) + var(--Legend-rootSpacing))))`,
+    transform: `translate(0, calc(${seriesIndex} * (var(--ChartsLegend-itemMarkSize) + var(--ChartsLegend-rootSpacing))))`,
   };
 });
 
-export const LegendMark = styled('rect', {
-  name: 'MuiLegend',
+export const ChartsLegendMark = styled('rect', {
+  name: 'MuiChartsLegend',
   slot: 'Mark',
   overridesResolver: (props, styles) => styles.mark,
 })<{ ownerState: { color: string } }>(({ ownerState }) => ({
   x: 0,
   y: 0,
-  width: 'var(--Legend-itemMarkSize)',
-  height: 'var(--Legend-itemMarkSize)',
+  width: 'var(--ChartsLegend-itemMarkSize)',
+  height: 'var(--ChartsLegend-itemMarkSize)',
   fill: ownerState.color,
 }));
-export const LegendLabel = styled('text', {
-  name: 'MuiLegend',
+export const ChartsLegendLabel = styled('text', {
+  name: 'MuiChartsLegend',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
   ...theme.typography.body1,
   color: 'inherit',
   transform: `translate(
-      calc(var(--Legend-itemMarkSize) + var(--Legend-labelSpacing)),
-      calc(0.5 * var(--Legend-itemMarkSize))
+      calc(var(--ChartsLegend-itemMarkSize) + var(--ChartsLegend-labelSpacing)),
+      calc(0.5 * var(--ChartsLegend-itemMarkSize))
       )`,
   fill: theme.palette.text.primary,
   alignmentBaseline: 'central',
@@ -155,10 +159,10 @@ const defaultProps = {
   spacing: 2,
 } as const;
 
-export function Legend(inProps: LegendProps) {
-  const props: DefaultizedLegendProps = useThemeProps({
+export function ChartsLegend(inProps: ChartsLegendProps) {
+  const props: DefaultizedChartsLegendProps = useThemeProps({
     props: { ...defaultProps, ...inProps },
-    name: 'MuiLegend',
+    name: 'MuiChartsLegend',
   });
 
   const { position, direction, offset } = props;
@@ -171,7 +175,7 @@ export function Legend(inProps: LegendProps) {
   const seriesToDisplay = getSeriesToDisplay(series);
 
   return (
-    <LegendRoot
+    <ChartsLegendRoot
       ownerState={{
         direction,
         offsetX: offset?.x,
@@ -183,15 +187,15 @@ export function Legend(inProps: LegendProps) {
       className={classes.root}
     >
       {seriesToDisplay.map(({ id, label, color }, seriesIndex) => (
-        <SeriesLegendGroup
+        <ChartsSeriesLegendGroup
           key={id}
           ownerState={{ direction, seriesIndex, ...series }}
           className={classes.series}
         >
-          <LegendMark ownerState={{ color }} className={classes.mark} />
-          <LegendLabel className={classes.label}>{label}</LegendLabel>
-        </SeriesLegendGroup>
+          <ChartsLegendMark ownerState={{ color }} className={classes.mark} />
+          <ChartsLegendLabel className={classes.label}>{label}</ChartsLegendLabel>
+        </ChartsSeriesLegendGroup>
       ))}
-    </LegendRoot>
+    </ChartsLegendRoot>
   );
 }

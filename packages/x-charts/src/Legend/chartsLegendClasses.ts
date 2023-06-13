@@ -3,7 +3,7 @@ import {
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
 
-export interface LegendClasses {
+export interface ChartsLegendClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to a series element. */
@@ -18,11 +18,11 @@ export interface LegendClasses {
   row: string;
 }
 
-export function getLegendUtilityClass(slot: string) {
-  return generateUtilityClass('MuiLegend', slot);
+export function getChartsLegendUtilityClass(slot: string) {
+  return generateUtilityClass('MuiChartsLegend', slot);
 }
 
-export const legendClasses: LegendClasses = generateUtilityClasses('MuiLegend', [
+export const legendClasses: ChartsLegendClasses = generateUtilityClasses('MuiChartsLegend', [
   'root',
   'series',
   'mark',

@@ -11,7 +11,7 @@ import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Legend, LegendProps } from '../Legend';
+import { ChartsLegend, ChartsLegendProps } from '../Legend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
 import { ChartsClipPath } from '../ClipPath';
 
@@ -21,7 +21,7 @@ export interface BarChartProps
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
-  legend?: LegendProps;
+  legend?: ChartsLegendProps;
 }
 
 function BarChart(props: BarChartProps) {
@@ -80,7 +80,7 @@ function BarChart(props: BarChartProps) {
         rightAxis={rightAxis}
         bottomAxis={bottomAxis}
       />
-      <Legend {...legend} />
+      <ChartsLegend {...legend} />
       <ChartsAxisHighlight x="band" {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />

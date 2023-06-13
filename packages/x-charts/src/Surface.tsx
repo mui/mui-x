@@ -51,11 +51,11 @@ export const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Su
       ref={ref}
       sx={[
         {
-          '--Legend-itemWidth': '100px',
-          '--Legend-itemMarkSize': '20px',
-          '--Legend-rootSpacing': '5px',
-          '--Legend-labelSpacing': '5px',
-          '--Legend-rootOffsetY': '-20px',
+          '--ChartsLegend-itemWidth': '100px',
+          '--ChartsLegend-itemMarkSize': '20px',
+          '--ChartsLegend-rootSpacing': '5px',
+          '--ChartsLegend-labelSpacing': '5px',
+          '--ChartsLegend-rootOffsetY': '-20px',
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}

@@ -13,7 +13,7 @@ import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
-import { Legend, LegendProps } from '../Legend';
+import { ChartsLegend, ChartsLegendProps } from '../Legend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../AxisHighlight';
 import { ChartsClipPath } from '../ClipPath';
 
@@ -23,7 +23,7 @@ export interface LineChartProps
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
-  legend?: LegendProps;
+  legend?: ChartsLegendProps;
 }
 function LineChart(props: LineChartProps) {
   const {
@@ -83,7 +83,7 @@ function LineChart(props: LineChartProps) {
         bottomAxis={bottomAxis}
       />
       <MarkPlot />
-      <Legend {...legend} />
+      <ChartsLegend {...legend} />
       <ChartsAxisHighlight {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />

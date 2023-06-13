@@ -1,2 +1,2 @@
-export * from './Legend';
-export * from './legendClasses';
+export * from './ChartsLegend';
+export * from './chartsLegendClasses';
