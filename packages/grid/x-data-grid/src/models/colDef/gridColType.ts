@@ -1,4 +1,4 @@
-export type LiteralUnion<LiteralType, BaseType> = LiteralType | (BaseType & Record<never, never>);
+type LiteralUnion<LiteralType, BaseType> = LiteralType | (BaseType & Record<never, never>);
 
 export type GridNativeColTypes =
   | 'string'
