@@ -6,7 +6,7 @@ import lineSeriesFormatter from '../LineChart/formatter';
 import { AllSeriesType } from '../models/seriesType';
 import { defaultizeColor } from '../internals/defaultizeColor';
 import { ChartSeriesType, FormatterParams, FormatterResult } from '../models/seriesType/config';
-import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
+import { ChartsColorPalette, mangoFusionPalette } from '../colorPalettes';
 
 export type SeriesContextProviderProps = {
   series: AllSeriesType[];
@@ -56,7 +56,7 @@ const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
 
 export function SeriesContextProvider({
   series,
-  colors = blueberryTwilightPalette,
+  colors = mangoFusionPalette,
   children,
 }: SeriesContextProviderProps) {
   const theme = useTheme();
