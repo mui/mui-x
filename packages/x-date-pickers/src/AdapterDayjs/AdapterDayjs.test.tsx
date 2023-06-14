@@ -52,7 +52,7 @@ describe('<AdapterDayjs />', () => {
 
   describe('Adapter localization', () => {
     describe('English', () => {
-      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'en' });
+      const adapter = new AdapterDayjs({ locale: 'en' });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('getWeekdays: should start on Sunday', () => {
@@ -71,7 +71,7 @@ describe('<AdapterDayjs />', () => {
     });
 
     describe('Russian', () => {
-      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'ru' });
+      const adapter = new AdapterDayjs({ locale: 'ru' });
 
       it('getWeekDays: should start on Monday', () => {
         const result = adapter.getWeekdays();

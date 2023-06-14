@@ -189,6 +189,11 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.format(comparisonTemplate) === comparingInValueTimezone.format(comparisonTemplate);
   };
 
+  /**
+   * Replace "default" by undefined before passing it to `dayjs
+   */
+  private cleanTimezone = (timezone: string) => timezone === 'default' ? undefined : timezone
+
   private createSystemDate = (value: string | undefined): Dayjs => {
     // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)
     /* istanbul ignore next */
@@ -198,13 +203,14 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
     if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
       const timezone = defaultDayjs.tz.guess();
-      if (timezone === 'UTC') {
-        return defaultDayjs(value);
-      }
 
       // We can't change the system timezone in the tests
       /* istanbul ignore next */
-      return defaultDayjs.tz(value, timezone);
+      if (timezone !== 'UTC') {
+        return defaultDayjs.tz(value, timezone);
+      }
+
+      return defaultDayjs(value);
     }
 
     return defaultDayjs(value);
@@ -230,10 +236,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
 
-    const cleanTimezone = timezone === 'default' ? undefined : timezone;
     const keepLocalTime = value !== undefined && !value.endsWith('Z');
-
-    return defaultDayjs(value).tz(cleanTimezone, keepLocalTime);
+    return defaultDayjs(value).tz(this.cleanTimezone(timezone), keepLocalTime);
   };
 
   private getLocaleFormats = () => {
@@ -328,9 +332,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
 
-    const cleanZone = timezone === 'default' ? undefined : timezone;
-
-    return defaultDayjs.tz(value, cleanZone);
+    return defaultDayjs.tz(value, this.cleanTimezone(timezone));
   };
 
   public toJsDate = (value: Dayjs) => {
@@ -653,8 +655,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       // We have to parse again the value to make sure the `fixOffset` method is applied
       // See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
       if (this.hasTimezonePlugin() && timezone !== 'UTC' && timezone !== 'system') {
-        const cleanTimezone = timezone === 'default' ? undefined : timezone;
-        current = current.tz(cleanTimezone, true);
+        current = current.tz(this.cleanTimezone(timezone), true);
       }
 
       count += 1;
