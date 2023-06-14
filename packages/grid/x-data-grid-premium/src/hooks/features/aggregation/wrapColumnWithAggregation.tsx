@@ -135,34 +135,36 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
     const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
 
     const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
-      baseGetApplyFilterFn === undefined ? undefined :
-      (filterItem, colDef) => {
-        const filterFn = baseGetApplyFilterFn(filterItem, colDef);
-        if (!filterFn) {
-          return null;
-        }
-        return (params, apiRef) => {
-          if (getCellAggregationResult(params.id, params.field) != null) {
-            return true;
-          }
-          return filterFn(params, apiRef);
-        };
-      };
+      baseGetApplyFilterFn === undefined
+        ? undefined
+        : (filterItem, colDef) => {
+            const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+            if (!filterFn) {
+              return null;
+            }
+            return (params, apiRef) => {
+              if (getCellAggregationResult(params.id, params.field) != null) {
+                return true;
+              }
+              return filterFn(params, apiRef);
+            };
+          };
 
     const getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'] =
-      baseGetApplyFilterFnV7 === undefined ? undefined :
-      (filterItem, colDef) => {
-        const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
-        if (!filterFn) {
-          return null;
-        }
-        return (value, row, column, api) => {
-          if (getCellAggregationResult(row.id, column.field) != null) {
-            return true;
-          }
-          return filterFn(value, row, column, api);
-        };
-      }
+      baseGetApplyFilterFnV7 === undefined
+        ? undefined
+        : (filterItem, colDef) => {
+            const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
+            if (!filterFn) {
+              return null;
+            }
+            return (value, row, column, api) => {
+              if (getCellAggregationResult(row.id, column.field) != null) {
+                return true;
+              }
+              return filterFn(value, row, column, api);
+            };
+          };
 
     return {
       ...operator,
