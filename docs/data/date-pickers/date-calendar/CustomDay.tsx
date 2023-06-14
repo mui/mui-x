@@ -55,7 +55,7 @@ function Day(props: PickersDayProps<Dayjs> & { selectedDay?: Dayjs | null }) {
     <CustomPickersDay
       {...other}
       day={day}
-      sx={dayIsBetween ? { px: 2.5, mx: 0 } : {}}
+      sx={dayIsBetween ? { px: '21px', mx: 0 } : {}}
       dayIsBetween={dayIsBetween}
       isFirstDay={isFirstDay}
       isLastDay={isLastDay}
