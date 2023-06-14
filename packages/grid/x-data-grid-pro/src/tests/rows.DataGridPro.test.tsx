@@ -300,15 +300,12 @@ describe('<DataGridPro /> - Rows', () => {
         );
       }
 
-      // For some reason the number of renders in test env is 2x the number of renders in the browser
-      const renrederMultiplier = 2;
-
       render(<Test />);
       const initialRendersCount = 2;
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount * renrederMultiplier);
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
 
       act(() => apiRef.current.updateRows([{ id: 1, name: 'John' }]));
-      expect(renderCellSpy.callCount).to.equal((initialRendersCount + 2) * renrederMultiplier);
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
     });
   });
 

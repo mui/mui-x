@@ -36,16 +36,15 @@ const GridVirtualScroller = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScroller(props, ref) {
-  const { className, ...other } = props;
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
   return (
     <VirtualScrollerRoot
       ref={ref}
-      className={clsx(classes.root, className)}
+      {...props}
+      className={clsx(classes.root, props.className)}
       ownerState={rootProps}
-      {...other}
     />
   );
 });

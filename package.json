@@ -22,6 +22,7 @@
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
     "jsonlint": "node ./scripts/jsonlint.mjs",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
+    "eslint:fix": "yarn eslint --fix",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
     "postinstall": "patch-package",
