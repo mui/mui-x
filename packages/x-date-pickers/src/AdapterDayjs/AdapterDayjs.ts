@@ -192,7 +192,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   /**
    * Replace "default" by undefined before passing it to `dayjs
    */
-  private cleanTimezone = (timezone: string) => timezone === 'default' ? undefined : timezone
+  private cleanTimezone = (timezone: string) => (timezone === 'default' ? undefined : timezone);
 
   private createSystemDate = (value: string | undefined): Dayjs => {
     // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)

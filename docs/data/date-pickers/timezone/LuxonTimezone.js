@@ -6,10 +6,10 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-Settings.defaultZone = 'America/New_York';
-
 export default function LuxonTimezone() {
-  const [value, setValue] = React.useState(DateTime.fromISO('2022-04-17T15:30'));
+  const [value, setValue] = React.useState(
+    DateTime.fromISO('2022-04-17T15:30', { zone: 'America/New_York' }),
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
