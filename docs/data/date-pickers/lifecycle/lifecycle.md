@@ -132,7 +132,7 @@ You can find more information [on the dedicated doc section](/x/react-date-picke
 #### When the field used calls `onChange`
 
 When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` event.
-Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#when-is-onchange-called-on-fields) for more information.
+Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#fields-lifecycle) for more information.
 
 #### When the user interacts with the view
 

@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateField } from '@mui/x-date-pickers/DateField';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function LifeCycleIgnoreInvalidValue() {
   const [value, setValue] = React.useState(null);
@@ -12,7 +12,7 @@ export default function LifeCycleIgnoreInvalidValue() {
   return (
     <Stack spacing={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateField
+        <DatePicker
           value={value}
           onChange={(newValue, context) => {
             if (context.validationError == null) {
