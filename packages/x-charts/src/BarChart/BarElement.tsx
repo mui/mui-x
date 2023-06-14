@@ -15,6 +15,9 @@ export interface BarElementClasses {
   /** Styles applied to the root element. */
   root: string;
 }
+
+export type BarElementClassKey = keyof BarElementClasses;
+
 export interface BarElementOwnerState {
   id: string;
   dataIndex: number;

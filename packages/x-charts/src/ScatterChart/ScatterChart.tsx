@@ -5,20 +5,20 @@ import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { Axis, AxisProps } from '../Axis';
+import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
-import { Tooltip, TooltipProps } from '../Tooltip';
-import { Legend, LegendProps } from '../Legend';
-import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    AxisProps {
+    ChartsAxisProps {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
-  tooltip?: TooltipProps;
-  axisHighlight?: AxisHighlightProps;
-  legend?: LegendProps;
+  tooltip?: ChartsTooltipProps;
+  axisHighlight?: ChartsAxisHighlightProps;
+  legend?: ChartsLegendProps;
 }
 
 function ScatterChart(props: ScatterChartProps) {
@@ -52,11 +52,16 @@ function ScatterChart(props: ScatterChartProps) {
       yAxis={yAxis}
       sx={sx}
     >
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <ChartsAxis
+        topAxis={topAxis}
+        leftAxis={leftAxis}
+        rightAxis={rightAxis}
+        bottomAxis={bottomAxis}
+      />
       <ScatterPlot />
-      <Legend {...legend} />
-      <AxisHighlight x="none" y="none" {...axisHighlight} />
-      <Tooltip trigger="item" {...tooltip} />
+      <ChartsLegend {...legend} />
+      <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
+      <ChartsTooltip trigger="item" {...tooltip} />
       {children}
     </ResponsiveChartContainer>
   );
@@ -73,7 +78,7 @@ ScatterChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -100,7 +105,7 @@ ScatterChart.propTypes = {
   height: PropTypes.number,
   /**
    * Indicate which axis to display the the left of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -142,7 +147,7 @@ ScatterChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the right of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -197,7 +202,7 @@ ScatterChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the top of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default null
    */
   topAxis: PropTypes.oneOfType([
