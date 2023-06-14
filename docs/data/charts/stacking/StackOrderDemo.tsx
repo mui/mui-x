@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { StackOrderType } from '@mui/x-charts/models';
-import { axisClasses } from '@mui/x-charts/Axis';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 // Data comming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [
