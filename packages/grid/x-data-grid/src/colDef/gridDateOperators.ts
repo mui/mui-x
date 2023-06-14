@@ -1,7 +1,7 @@
 import { GridFilterInputDate } from '../components/panel/filterPanel/GridFilterInputDate';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator, GetApplyFilterFnV7 } from '../models/gridFilterOperator';
-import { v7 } from './utils';
+import { convertLegacyOperators } from './utils';
 
 const dateRegex = /(\d+)-(\d+)-(\d+)/;
 const dateTimeRegex = /(\d+)-(\d+)-(\d+)T(\d+):(\d+)/;
@@ -44,76 +44,77 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] => [
-  {
-    value: 'is',
-    getApplyFilterFn: v7((filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 === value2, showTime);
-    }),
-    InputComponent: GridFilterInputDate,
-    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
-  },
-  {
-    value: 'not',
-    getApplyFilterFn: v7((filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 !== value2, showTime);
-    }),
-    InputComponent: GridFilterInputDate,
-    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
-  },
-  {
-    value: 'after',
-    getApplyFilterFn: v7((filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 > value2, showTime);
-    }),
-    InputComponent: GridFilterInputDate,
-    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
-  },
-  {
-    value: 'onOrAfter',
-    getApplyFilterFn: v7((filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 >= value2, showTime);
-    }),
-    InputComponent: GridFilterInputDate,
-    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
-  },
-  {
-    value: 'before',
-    getApplyFilterFn: v7((filterItem) => {
-      return buildApplyFilterFn(
-        filterItem,
-        (value1, value2) => value1 < value2,
-        showTime,
-        !showTime,
-      );
-    }),
-    InputComponent: GridFilterInputDate,
-    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
-  },
-  {
-    value: 'onOrBefore',
-    getApplyFilterFn: v7((filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 <= value2, showTime);
-    }),
-    InputComponent: GridFilterInputDate,
-    InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
-  },
-  {
-    value: 'isEmpty',
-    getApplyFilterFn: v7(() => {
-      return (value, _, __, ___): boolean => {
-        return value == null;
-      };
-    }),
-    requiresFilterValue: false,
-  },
-  {
-    value: 'isNotEmpty',
-    getApplyFilterFn: v7(() => {
-      return (value, _, __, ___): boolean => {
-        return value != null;
-      };
-    }),
-    requiresFilterValue: false,
-  },
-];
+export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] =>
+  convertLegacyOperators([
+    {
+      value: 'is',
+      getApplyFilterFnV7: (filterItem) => {
+        return buildApplyFilterFn(filterItem, (value1, value2) => value1 === value2, showTime);
+      },
+      InputComponent: GridFilterInputDate,
+      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    },
+    {
+      value: 'not',
+      getApplyFilterFnV7: (filterItem) => {
+        return buildApplyFilterFn(filterItem, (value1, value2) => value1 !== value2, showTime);
+      },
+      InputComponent: GridFilterInputDate,
+      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    },
+    {
+      value: 'after',
+      getApplyFilterFnV7: (filterItem) => {
+        return buildApplyFilterFn(filterItem, (value1, value2) => value1 > value2, showTime);
+      },
+      InputComponent: GridFilterInputDate,
+      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    },
+    {
+      value: 'onOrAfter',
+      getApplyFilterFnV7: (filterItem) => {
+        return buildApplyFilterFn(filterItem, (value1, value2) => value1 >= value2, showTime);
+      },
+      InputComponent: GridFilterInputDate,
+      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    },
+    {
+      value: 'before',
+      getApplyFilterFnV7: (filterItem) => {
+        return buildApplyFilterFn(
+          filterItem,
+          (value1, value2) => value1 < value2,
+          showTime,
+          !showTime,
+        );
+      },
+      InputComponent: GridFilterInputDate,
+      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    },
+    {
+      value: 'onOrBefore',
+      getApplyFilterFnV7: (filterItem) => {
+        return buildApplyFilterFn(filterItem, (value1, value2) => value1 <= value2, showTime);
+      },
+      InputComponent: GridFilterInputDate,
+      InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
+    },
+    {
+      value: 'isEmpty',
+      getApplyFilterFnV7: () => {
+        return (value, _, __, ___): boolean => {
+          return value == null;
+        };
+      },
+      requiresFilterValue: false,
+    },
+    {
+      value: 'isNotEmpty',
+      getApplyFilterFnV7: () => {
+        return (value, _, __, ___): boolean => {
+          return value != null;
+        };
+      },
+      requiresFilterValue: false,
+    },
+  ]);

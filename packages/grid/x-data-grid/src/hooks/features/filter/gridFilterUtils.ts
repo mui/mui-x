@@ -175,8 +175,8 @@ const getFilterCallbackFromItem = (
     );
   }
 
-  if (filterOperator.getApplyFilterFn.v7) {
-    const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
+  if (filterOperator.getApplyFilterFnV7) {
+    const applyFilterOnRow = filterOperator.getApplyFilterFnV7(newFilterItem, column)!;
     if (typeof applyFilterOnRow !== 'function') {
       return null;
     }
@@ -200,7 +200,7 @@ const getFilterCallbackFromItem = (
     item: newFilterItem,
     fn: (rowId: GridRowId) => {
       const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
-      return applyFilterOnRow(params);
+      return applyFilterOnRow(params, apiRef);
     },
   };
 };
@@ -273,13 +273,14 @@ export const buildAggregatedQuickFilterApplier = (
   columnFields.forEach((field) => {
     const column = apiRef.current.getColumn(field);
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
+    const getApplyQuickFilterFnV7 = column?.getApplyQuickFilterFnV7;
 
-    if (getApplyQuickFilterFn?.v7) {
+    if (getApplyQuickFilterFnV7) {
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((value) => ({
           v7: true,
-          fn: getApplyQuickFilterFn(value, column, apiRef),
+          fn: getApplyQuickFilterFnV7(value, column, apiRef),
         })),
       });
     } else if (getApplyQuickFilterFn) {
