@@ -22,7 +22,7 @@ import {
 } from './gridTreeDataGroupColDef';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import {
-  filterRowTreeFromTreeData,
+  getFilteredRowsLookup,
   iterateTreeNodes,
   TREE_DATA_LAZY_LOADING_STRATEGY,
 } from './gridTreeDataUtils';
@@ -54,6 +54,7 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
     | 'isGroupExpandedByDefault'
     | 'unstable_dataSource'
     | 'isServerSideRow'
+    | 'getDescendantCount'
   >,
 ) => {
   const setStrategyAvailability = React.useCallback(() => {
@@ -183,20 +184,11 @@ export const useGridTreeDataLazyLoadingPreProcessors = (
     [props.getTreeDataPath, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
-  const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(
-    (params) => {
-      const rowTree = gridRowTreeSelector(privateApiRef);
+  const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(() => {
+    const rowTree = gridRowTreeSelector(privateApiRef);
 
-      return filterRowTreeFromTreeData({
-        rowTree,
-        isRowMatchingFilters: params.isRowMatchingFilters,
-        disableChildrenFiltering: props.disableChildrenFiltering,
-        filterModel: params.filterModel,
-        apiRef: privateApiRef,
-      });
-    },
-    [privateApiRef, props.disableChildrenFiltering],
-  );
+    return getFilteredRowsLookup(privateApiRef, rowTree, props.getDescendantCount);
+  }, [privateApiRef, props.getDescendantCount]);
 
   const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
     (params) => {

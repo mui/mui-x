@@ -121,9 +121,11 @@ export const useGridTreeDataLazyLoading = (
       try {
         const rows = await props.unstable_dataSource!.getRows(getRowsParams);
 
-        // TODO: Handle this (path generation) internally in `createRowTreeForTreeData`
-        apiRef.current.updateRows(
-          rows.map((row: GridRowModel) => ({ ...row, path: [...groupKeys, getGroupKey(row)] })),
+        // TODO: Remove this hack. Handle this (node updation) internally in `updateRows`
+        setTimeout(() =>
+          apiRef.current.updateRows(
+            rows.map((row: GridRowModel) => ({ ...row, path: [...groupKeys, getGroupKey(row)] })),
+          ),
         );
         const newNode: GridServerSideGroupNode = {
           ...node,
