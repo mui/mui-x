@@ -190,7 +190,7 @@ export const useGridColumnResize = (
     });
   };
 
-  const handleResizeMouseUp = useEventCallback((nativeEvent: MouseEvent) => {
+  const finishResize = (nativeEvent: MouseEvent) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
@@ -215,7 +215,9 @@ export const useGridColumnResize = (
     logger.debug(
       `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
     );
-  });
+  };
+
+  const handleResizeMouseUp = useEventCallback(finishResize);
 
   const handleResizeMouseMove = useEventCallback((nativeEvent: MouseEvent) => {
     // Cancel move in case some other element consumed a mouseup event and it was not fired.
@@ -297,6 +299,9 @@ export const useGridColumnResize = (
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
       doc.addEventListener('mouseup', handleResizeMouseUp);
+
+      // Fixes https://github.com/mui/mui-x/issues/4777
+      colElementRef.current.style.pointerEvents = 'none';
     });
 
   const handleTouchEnd = useEventCallback((nativeEvent: any) => {
@@ -306,30 +311,7 @@ export const useGridColumnResize = (
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    stopListening();
-
-    apiRef.current.updateColumns([colDefRef.current!]);
-
-    clearTimeout(stopResizeEventTimeout.current);
-    stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
-      if (colDefRef.current) {
-        apiRef.current.publishEvent(
-          'columnWidthChange',
-          {
-            element: colElementRef.current,
-            colDef: colDefRef.current,
-            width: colDefRef.current?.computedWidth,
-          },
-          nativeEvent,
-        );
-      }
-    });
-
-    logger.debug(
-      `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
-    );
+    finishResize(nativeEvent);
   });
 
   const handleTouchMove = useEventCallback((nativeEvent: any) => {
@@ -423,7 +405,17 @@ export const useGridColumnResize = (
     doc.removeEventListener('mouseup', handleResizeMouseUp);
     doc.removeEventListener('touchmove', handleTouchMove);
     doc.removeEventListener('touchend', handleTouchEnd);
-  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
+    if (colElementRef.current) {
+      colElementRef.current!.style.pointerEvents = 'unset';
+    }
+  }, [
+    apiRef,
+    colElementRef,
+    handleResizeMouseMove,
+    handleResizeMouseUp,
+    handleTouchMove,
+    handleTouchEnd,
+  ]);
 
   const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {

@@ -1,7 +1,7 @@
 enum LicenseStatus {
   NotFound = 'NotFound',
   Invalid = 'Invalid',
-  Expired = 'Expired',
+  ExpiredAnnual = 'ExpiredAnnual',
   ExpiredVersion = 'ExpiredVersion',
   Valid = 'Valid',
   OutOfScope = 'OutOfScope',

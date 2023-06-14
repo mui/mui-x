@@ -83,9 +83,9 @@ export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
   const { rowTree, isRowMatchingFilters, filterModel } = params;
-  const visibleRowsLookup: Record<GridRowId, boolean> = {};
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+  const filterCache = {};
 
   const filterTreeNode = (
     node: GridTreeNode,
@@ -134,18 +134,12 @@ export const filterRowTreeFromGroupingColumns = (
           allResults.map((result) => result.passingQuickFilterValues),
           filterModel,
           params.apiRef,
+          filterCache,
         );
       }
     }
 
-    visibleRowsLookup[node.id] = isPassingFiltering && areAncestorsExpanded;
     filteredRowsLookup[node.id] = isPassingFiltering;
-
-    // TODO rows v6: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
-    if (node.type === 'group' && node.footerId != null) {
-      visibleRowsLookup[node.footerId] =
-        isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded;
-    }
 
     if (!isPassingFiltering) {
       return 0;
@@ -169,7 +163,6 @@ export const filterRowTreeFromGroupingColumns = (
   }
 
   return {
-    visibleRowsLookup,
     filteredRowsLookup,
     filteredDescendantCountLookup,
   };

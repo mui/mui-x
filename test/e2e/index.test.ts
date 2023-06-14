@@ -221,6 +221,31 @@ describe('e2e', () => {
       expect(await page.locator('[role="row"]').first().textContent()).to.equal('yearbrand');
     });
 
+    // https://github.com/mui/mui-x/pull/9117
+    it('should not trigger sorting after resizing', async () => {
+      await renderFixture('DataGridPro/NotResize');
+
+      const separator = await page.$('.MuiDataGrid-columnSeparator--resizable');
+      const boundingBox = (await separator?.boundingBox())!;
+
+      const x = boundingBox.x + boundingBox.width / 2;
+      const y = boundingBox.y + boundingBox.height / 2;
+
+      await page.mouse.move(x, y, { steps: 5 });
+      await page.mouse.down();
+      await page.mouse.move(x - 20, y, { steps: 5 });
+      await page.mouse.up();
+
+      expect(
+        await page.evaluate(
+          () =>
+            document
+              .querySelector('.MuiDataGrid-columnHeader--sorted')!
+              .getAttribute('data-field')!,
+        ),
+      ).to.equal('brand');
+    });
+
     it('should select one row', async () => {
       await renderFixture('DataGrid/CheckboxSelection');
       await page.click('[role="row"][data-rowindex="0"] [role="cell"] input');

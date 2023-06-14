@@ -42,7 +42,7 @@ export interface ExportedDateCalendarProps<TDate>
     YearValidationProps<TDate>,
     MonthValidationProps<TDate> {
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth?: TDate;
   /**
@@ -94,6 +94,11 @@ export interface DateCalendarProps<TDate>
    * Used when the component is not controlled.
    */
   defaultValue?: TDate | null;
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
   /**
    * Callback fired when the value changes.
    * @template TDate
