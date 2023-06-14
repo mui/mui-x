@@ -26,7 +26,6 @@ import {
 } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
-import { GridEditCellProps } from '../../models/gridEditRowModel';
 import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

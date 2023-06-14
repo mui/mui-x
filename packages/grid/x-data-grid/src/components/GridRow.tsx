@@ -266,9 +266,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
-
-  const CellComponent = slots.cell;
-
   const getCell = (
     column: GridStateColDef,
     cellProps: Pick<
@@ -284,16 +281,16 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         Object.keys(editRowsState).length > 0);
 
     const editCellState = editRowsState[rowId]?.[column.field] ?? null;
-     let cellIsNotVisible = false;
+    let cellIsNotVisible = false;
 
-      if (
-        indexOfColumnWithFocusedCellNotInRange &&
-        visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field
-      ) {
-        cellIsNotVisible = true;
-      } else {
-        cellIsNotVisible = false;
-      }
+    if (
+      indexOfColumnWithFocusedCellNotInRange &&
+      visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field
+    ) {
+      cellIsNotVisible = true;
+    } else {
+      cellIsNotVisible = false;
+    }
 
     return (
       <CellComponent
