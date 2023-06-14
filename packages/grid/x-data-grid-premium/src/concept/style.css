@@ -1,0 +1,95 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #efefef;
+  background: #1f2227;
+  padding: 20px;
+  color-scheme: dark;
+
+  --row-height: 22px;
+  --header-height: var(--row-height);
+}
+
+.grid {
+  position: relative;
+  font-size: 14px;
+  width: 700px;
+}
+
+.container {
+  contain: strict;
+  position: relative;
+  border: 2px solid #599eff;
+  border-radius: 8px;
+  height: 300px;
+  overflow: scroll;
+}
+.container {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.container::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.column {
+  display: inline-flex;
+  align-items: center;
+  width: 120px;
+  height: var(--row-height);
+  padding: 5px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  display: flex;
+  flex: row;
+  flex-wrap: nowrap;
+}
+.header > .column {
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: black;
+}
+
+.fake-scroll-vertical {
+  contain: strict;
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--row-height) + 2px);
+  right: 2px;
+  display: inline-block;
+  width: 14px;
+  height: calc(100% - var(--row-height) - 4px);
+  /* border: 1px solid red; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.fake-scroll-vertical-content {
+  display: inline-block;
+}
+
+.content {
+  position: relative;
+  background-position: 0 var(--header-height);
+}
+
+.block {
+  /* contain: strict; */
+  position: absolute;
+  top: 0;
+}
+
+.row {
+  display: flex;
+}
+.row > .column {
+}

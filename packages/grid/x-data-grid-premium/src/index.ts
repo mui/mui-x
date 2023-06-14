@@ -19,6 +19,9 @@ export * from './hooks';
 export * from './models';
 export * from './components';
 
+export { DataGrid as DataGridConcept } from './concept/DataGrid';
+export { Example as ExampleConcept } from './concept/Example';
+
 export { GridColumnHeaders } from '@mui/x-data-grid-pro';
 
 export type {
