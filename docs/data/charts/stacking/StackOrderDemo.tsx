@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { StackOrderType } from '@mui/x-charts/models';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 // Data comming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [
@@ -111,13 +112,13 @@ export default function StackOrderDemo() {
         series={modifiedSeries}
         margin={{ bottom: 60 }}
         sx={{
-          '.MuiAxis-bottom': {
-            '.MuiAxis-tickLabel': {
+          [`.${axisClasses.bottom}`]: {
+            [`.${axisClasses.tickLabel}`]: {
               transform: 'rotate(45deg)',
               alignmentBaseline: 'hanging',
               textAnchor: 'start',
             },
-            '.MuiAxis-label': {
+            [`.${axisClasses.label}`]: {
               transform: 'translateY(15px)',
             },
           },

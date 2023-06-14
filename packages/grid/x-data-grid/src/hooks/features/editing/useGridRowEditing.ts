@@ -39,6 +39,7 @@ import {
   GridRowEditStopReasons,
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
+import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
@@ -188,9 +189,13 @@ export const useGridRowEditing = (
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
         } else if (event.key === 'Tab') {
-          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) =>
-            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
-          );
+          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) => {
+            const column = apiRef.current.getColumn(field);
+            if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+              return true;
+            }
+            return apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field));
+          });
 
           if (event.shiftKey) {
             if (params.field === columnFields[0]) {

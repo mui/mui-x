@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { legendClasses } from '@mui/x-charts/Legend';
+import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
 const barChartsParams = {
   xAxis: [

@@ -1,30 +1,37 @@
 import { styled } from '@mui/material/styles';
+import { axisClasses } from '../../ChartsAxis/axisClasses';
 
 export const AxisRoot = styled('g', {
   name: 'MuiChartsAxis',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })({
-  '&.MuiAxis-directionY': {
-    '.MuiAxis-tickLabel': { alignmentBaseline: 'middle' },
-    '.MuiAxis-label': { alignmentBaseline: 'baseline', textAnchor: 'middle' },
+  [`&.${axisClasses.directionY}`]: {
+    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'middle' },
+    [`.${axisClasses.label}`]: { alignmentBaseline: 'baseline', textAnchor: 'middle' },
   },
-  '&.MuiAxis-left': {
-    '.MuiAxis-tickLabel': { alignmentBaseline: 'central', textAnchor: 'end' },
+  [`&.${axisClasses.left}`]: {
+    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'end' },
   },
-  '&.MuiAxis-right': {
-    '.MuiAxis-tickLabel': { alignmentBaseline: 'central', textAnchor: 'start' },
+  [`&.${axisClasses.right}`]: {
+    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'start' },
   },
-  '&.MuiAxis-bottom': {
-    '.MuiAxis-tickLabel, .MuiAxis-label': { alignmentBaseline: 'hanging', textAnchor: 'middle' },
+  [`&.${axisClasses.bottom}`]: {
+    [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
+      alignmentBaseline: 'hanging',
+      textAnchor: 'middle',
+    },
   },
-  '&.MuiAxis-top': {
-    '.MuiAxis-tickLabel, .MuiAxis-label': { alignmentBaseline: 'baseline', textAnchor: 'middle' },
+  [`&.${axisClasses.top}`]: {
+    [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
+      alignmentBaseline: 'baseline',
+      textAnchor: 'middle',
+    },
   },
 });
 
 export const Line = styled('line', {
-  name: 'MuiAxis',
+  name: 'MuiChartsAxis',
   slot: 'Line',
   overridesResolver: (props, styles) => styles.line,
 })(({ theme }) => ({
@@ -34,7 +41,7 @@ export const Line = styled('line', {
 }));
 
 export const Tick = styled('line', {
-  name: 'MuiAxis',
+  name: 'MuiChartsAxis',
   slot: 'Tick',
   overridesResolver: (props, styles) => styles.tick,
 })(({ theme }) => ({
@@ -43,7 +50,7 @@ export const Tick = styled('line', {
 }));
 
 export const TickLabel = styled('text', {
-  name: 'MuiAxis',
+  name: 'MuiChartsAxis',
   slot: 'TickLabel',
   overridesResolver: (props, styles) => styles.tickLabel,
 })(({ theme }) => ({
@@ -52,7 +59,7 @@ export const TickLabel = styled('text', {
 }));
 
 export const Label = styled('text', {
-  name: 'MuiAxis',
+  name: 'MuiChartsAxis',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({

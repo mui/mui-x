@@ -8,20 +8,22 @@ import {
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
 import { MarkPlot } from './MarkPlot';
-import { Axis, AxisProps } from '../Axis/Axis';
+import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { Tooltip, TooltipProps } from '../Tooltip';
-import { Legend, LegendProps } from '../Legend';
-import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
-import { ClipPath } from '../ClipPath/ClipPath';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsClipPath } from '../ChartsClipPath';
 
-export interface LineChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
+export interface LineChartProps
+  extends Omit<ResponsiveChartContainerProps, 'series'>,
+    ChartsAxisProps {
   series: MakeOptional<LineSeriesType, 'type'>[];
-  tooltip?: TooltipProps;
-  axisHighlight?: AxisHighlightProps;
-  legend?: LegendProps;
+  tooltip?: ChartsTooltipProps;
+  axisHighlight?: ChartsAxisHighlightProps;
+  legend?: ChartsLegendProps;
 }
 function LineChart(props: LineChartProps) {
   const {
@@ -74,12 +76,17 @@ function LineChart(props: LineChartProps) {
         <AreaPlot />
         <LinePlot />
       </g>
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
+      <ChartsAxis
+        topAxis={topAxis}
+        leftAxis={leftAxis}
+        rightAxis={rightAxis}
+        bottomAxis={bottomAxis}
+      />
       <MarkPlot />
-      <Legend {...legend} />
-      <AxisHighlight {...axisHighlight} />
-      <Tooltip {...tooltip} />
-      <ClipPath id={clipPathId} />
+      <ChartsLegend {...legend} />
+      <ChartsAxisHighlight {...axisHighlight} />
+      <ChartsTooltip {...tooltip} />
+      <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
   );
@@ -96,7 +103,7 @@ LineChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -123,7 +130,7 @@ LineChart.propTypes = {
   height: PropTypes.number,
   /**
    * Indicate which axis to display the the left of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -165,7 +172,7 @@ LineChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the right of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -234,7 +241,7 @@ LineChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the top of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default null
    */
   topAxis: PropTypes.oneOfType([

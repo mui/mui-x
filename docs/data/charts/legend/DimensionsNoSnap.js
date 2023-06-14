@@ -11,10 +11,10 @@ const data = Array.from({ length: 50 }, () => ({
 })).map((d, index) => ({ ...d, id: index }));
 
 const cssVarToKey = {
-  '--Legend-itemWidth': 'item width',
-  '--Legend-itemMarkSize': 'item mark size',
-  '--Legend-labelSpacing': 'label spacing',
-  '--Legend-rootSpacing': 'root spacing',
+  '--ChartsLegend-itemWidth': 'item width',
+  '--ChartsLegend-itemMarkSize': 'item mark size',
+  '--ChartsLegend-labelSpacing': 'label spacing',
+  '--ChartsLegend-rootSpacing': 'root spacing',
 };
 export default function DimensionsNoSnap() {
   return (
@@ -54,19 +54,19 @@ export default function DimensionsNoSnap() {
             bottom: 30,
           }}
           sx={{
-            '--Legend-itemWidth':
+            '--ChartsLegend-itemWidth':
               typeof props['item width'] === 'number'
                 ? `${props['item width']}px`
                 : undefined,
-            '--Legend-itemMarkSize':
+            '--ChartsLegend-itemMarkSize':
               typeof props['item mark size'] === 'number'
                 ? `${props['item mark size']}px`
                 : undefined,
-            '--Legend-labelSpacing':
+            '--ChartsLegend-labelSpacing':
               typeof props['label spacing'] === 'number'
                 ? `${props['label spacing']}px`
                 : undefined,
-            '--Legend-rootSpacing':
+            '--ChartsLegend-rootSpacing':
               typeof props['root spacing'] === 'number'
                 ? `${props['root spacing']}px`
                 : undefined,
@@ -86,10 +86,10 @@ export default function DimensionsNoSnap() {
           '  }}',
           '  sx={{',
           ...[
-            '--Legend-itemWidth',
-            '--Legend-itemMarkSize',
-            '--Legend-labelSpacing',
-            '--Legend-rootSpacing',
+            '--ChartsLegend-itemWidth',
+            '--ChartsLegend-itemMarkSize',
+            '--ChartsLegend-labelSpacing',
+            '--ChartsLegend-rootSpacing',
           ]
             .filter((cssVar) => typeof props[cssVarToKey[cssVar]] === 'number')
             .map((cssVar) => `    '${cssVar}': ${props[cssVarToKey[cssVar]]}px,`),

@@ -11,6 +11,7 @@ import {
   PickersTimezone,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
+import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -193,6 +194,11 @@ export type PickerValueUpdateAction<TValue, TError> =
       name: 'setValueFromAction';
       value: TValue;
       pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
+    }
+  | {
+      name: 'setValueFromShortcut';
+      value: TValue;
+      changeImportance: PickerShortcutChangeImportance;
     };
 
 /**
@@ -325,6 +331,7 @@ export interface UsePickerValueViewsResponse<TValue> {
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;
   onChange: (newValue: TValue) => void;
+  onSelectShortcut: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
   isValid: (value: TValue) => boolean;
 }
 
