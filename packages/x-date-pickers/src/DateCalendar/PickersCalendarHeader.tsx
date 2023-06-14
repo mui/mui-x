@@ -114,7 +114,7 @@ const PickersCalendarHeaderRoot = styled('div', {
   alignItems: 'center',
   margin: ownerState.displayWeekNumber
     ? `${CALENDAR_MARGIN}px 14px 8px 22px`
-    : `${CALENDAR_MARGIN}px 16px 8px 28px`,
+    : `${CALENDAR_MARGIN}px 16px 8px 26px`,
   // prevent jumping in safari
   maxHeight: 34,
   minHeight: 34,
