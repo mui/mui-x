@@ -18,7 +18,6 @@ export interface ChartsLegendClasses {
   row: string;
 }
 
-
 export type ChartsLegendClassKey = keyof ChartsLegendClasses;
 
 export function getChartsLegendUtilityClass(slot: string) {

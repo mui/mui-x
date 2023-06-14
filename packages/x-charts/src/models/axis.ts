@@ -6,7 +6,7 @@ import type {
   ScaleLinear,
   ScalePoint,
 } from 'd3-scale';
-import { AxisClasses } from '../ChartsAxis/axisClasses';
+import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 
 export interface ChartsAxisProps {
@@ -56,7 +56,7 @@ export interface ChartsAxisProps {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<AxisClasses>;
+  classes?: Partial<ChartsAxisClasses>;
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {
