@@ -102,6 +102,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     onViewChange,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     disableFuture,
     disablePast,
     defaultCalendarMonth,
@@ -165,6 +166,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     });
 
   const {
+    referenceDate,
     calendarState,
     changeFocusedDay,
     changeMonth,
@@ -174,6 +176,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   } = useCalendarState({
     value,
     defaultCalendarMonth,
+    referenceDate: referenceDateProp,
     reduceAnimations,
     onMonthChange,
     minDate,
@@ -238,9 +241,9 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   });
 
   const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
-    if (value && day) {
+    if (day) {
       // If there is a date already selected, then we want to keep its time
-      return handleValueChange(mergeDateAndTime(utils, day, value), 'finish');
+      return handleValueChange(mergeDateAndTime(utils, day, value ?? referenceDate), 'finish');
     }
 
     return handleValueChange(day, 'finish');
@@ -332,6 +335,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
               yearsPerRow={yearsPerRow}
+              referenceDate={referenceDate}
             />
           )}
 
@@ -346,6 +350,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
+              referenceDate={referenceDate}
             />
           )}
 
@@ -417,7 +422,7 @@ DateCalendar.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -526,6 +531,11 @@ DateCalendar.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.

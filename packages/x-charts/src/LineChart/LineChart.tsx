@@ -13,6 +13,7 @@ import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { Tooltip, TooltipProps } from '../Tooltip';
+import { Legend, LegendProps } from '../Legend';
 import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
 import { ClipPath } from '../ClipPath/ClipPath';
 
@@ -20,6 +21,7 @@ export interface LineChartProps extends Omit<ResponsiveChartContainerProps, 'ser
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: TooltipProps;
   axisHighlight?: AxisHighlightProps;
+  legend?: LegendProps;
 }
 function LineChart(props: LineChartProps) {
   const {
@@ -32,7 +34,8 @@ function LineChart(props: LineChartProps) {
     colors,
     sx,
     tooltip,
-    axisHighlight,
+    axisHighlight = { x: 'line' },
+    legend,
     topAxis,
     leftAxis,
     rightAxis,
@@ -53,7 +56,7 @@ function LineChart(props: LineChartProps) {
         xAxis ?? [
           {
             id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'band',
+            scaleType: 'point',
             data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
               (_, index) => index,
             ),
@@ -73,6 +76,7 @@ function LineChart(props: LineChartProps) {
       </g>
       <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
       <MarkPlot />
+      <Legend {...legend} />
       <AxisHighlight {...axisHighlight} />
       <Tooltip {...tooltip} />
       <ClipPath id={clipPathId} />
@@ -138,6 +142,21 @@ LineChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  legend: PropTypes.shape({
+    classes: PropTypes.object,
+    direction: PropTypes.oneOf(['column', 'row']),
+    itemWidth: PropTypes.number,
+    markSize: PropTypes.number,
+    offset: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+    position: PropTypes.shape({
+      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+    }),
+    spacing: PropTypes.number,
+  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -168,6 +187,7 @@ LineChart.propTypes = {
   series: PropTypes.arrayOf(
     PropTypes.shape({
       area: PropTypes.bool,
+      color: PropTypes.string,
       curve: PropTypes.oneOf([
         'catmullRom',
         'linear',
@@ -196,6 +216,7 @@ LineChart.propTypes = {
         'reverse',
       ]),
       type: PropTypes.oneOf(['line']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),
@@ -255,7 +276,7 @@ LineChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -279,7 +300,7 @@ LineChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

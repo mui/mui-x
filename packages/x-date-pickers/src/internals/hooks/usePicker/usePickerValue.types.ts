@@ -44,7 +44,6 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @param {TValue} params.value The value provided by the user.
    * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute the reference value.
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
-   * @param {FieldValueType} params.valueType The type of the value being edited.
    * @param {granularity} params.granularity The granularity of the selection possible on this component.
    * @returns {TValue} The reference value to use for non-provided dates.
    */
@@ -53,7 +52,6 @@ export interface PickerValueManager<TValue, TDate, TError> {
     value: TValue;
     props: GetDefaultReferenceDateProps<TDate>;
     utils: MuiPickersAdapter<TDate>;
-    valueType: FieldValueType;
     granularity: number;
   }) => TValue;
   /**

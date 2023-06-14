@@ -57,6 +57,7 @@ const MarkElementPath = styled('path', {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
   transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
+  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
