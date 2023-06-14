@@ -101,8 +101,12 @@ const warnInvalidCurrentMonthCalendarPosition = buildWarning([
   'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
 ]);
 
+const DAY_RANGE_SIZE = 39;
+const weeksContainerHeight = (DAY_RANGE_SIZE + 4) * 6;
+
 const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: DIALOG_WIDTH,
+  minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.day}`]: {
       cursor: 'grabbing',
