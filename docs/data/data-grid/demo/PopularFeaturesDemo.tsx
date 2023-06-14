@@ -36,6 +36,7 @@ import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
+import HeaderFiltering from '../filtering/HeaderFilteringDataGridPro';
 
 type Row = {
   id: number;
@@ -198,6 +199,16 @@ export const featuresSet: Row[] = [
     plan: 'Community',
     detailPage: '/column-menu/',
     demo: <AddNewColumnMenuGrid />,
+    newBadge: true,
+  },
+  {
+    id: 20,
+    name: 'Header filters',
+    description:
+      'Quickly accessible and customizable header filters to filter the data',
+    plan: 'Pro',
+    detailPage: '/filtering/#header-filters',
+    demo: <HeaderFiltering />,
     newBadge: true,
   },
 ];
