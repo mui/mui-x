@@ -804,12 +804,6 @@ GridCellV7.propTypes = {
   colSpan: PropTypes.number,
   column: PropTypes.object,
   disableDragEvents: PropTypes.bool,
-  editCellState: PropTypes.shape({
-    changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
-    isProcessingProps: PropTypes.bool,
-    isValidating: PropTypes.bool,
-    value: PropTypes.any,
-  }),
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
   isNotVisible: PropTypes.bool,
   onClick: PropTypes.func,
