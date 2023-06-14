@@ -10,6 +10,8 @@ export interface DayCalendarClasses {
   header: string;
   /** Styles applied to the week day label element. */
   weekDayLabel: string;
+  /** Styles applied to the week day label element, if `displayWeekNumber=true`. */
+  'weekDayLabel--withWeekNumber': string;
   /** Styles applied to the loading container element. */
   loadingContainer: string;
   /** Styles applied to the slide transition element. */
@@ -33,6 +35,7 @@ export const dayPickerClasses: DayCalendarClasses = generateUtilityClasses('MuiD
   'root',
   'header',
   'weekDayLabel',
+  'weekDayLabel--withWeekNumber',
   'loadingContainer',
   'slideTransition',
   'monthContainer',

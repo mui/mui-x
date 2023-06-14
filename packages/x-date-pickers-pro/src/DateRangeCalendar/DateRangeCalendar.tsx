@@ -33,7 +33,7 @@ import {
   DIALOG_WIDTH,
 } from '@mui/x-date-pickers/internals';
 import Typography from '@mui/material/Typography';
-import { dayPickerClasses, pickersCalendarHeaderClasses } from '@mui/x-date-pickers';
+import { dayPickerClasses } from '@mui/x-date-pickers';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -64,23 +64,17 @@ const DateRangeCalendarRoot = styled('div', {
   name: 'MuiDateRangeCalendar',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateRangeCalendarOwnerState<any> }>(({ ownerState }) => ({
+})<{ ownerState: DateRangeCalendarOwnerState<any> }>({
   display: 'flex',
   flexDirection: 'row',
-  ...(ownerState.displayWeekNumber && {
-    [`& .${pickersCalendarHeaderClasses.root}`]: {
-      marginLeft: 6,
-      marginRight: 12,
-    },
-  }),
-  [`& .${dayPickerClasses.weekDayLabel}`]: {
+  [`& .${dayPickerClasses.header} .${dayPickerClasses.weekDayLabel}`]: {
     width: 39,
     margin: 0,
   },
   [`& .${dayPickerClasses.weekNumberLabel}`]: {
     margin: 0,
   },
-}));
+});
 
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',

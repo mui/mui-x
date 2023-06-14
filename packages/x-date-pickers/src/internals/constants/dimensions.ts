@@ -1,6 +1,6 @@
 export const DAY_SIZE = 36;
 export const WEEK_NUMBER_SIZE = 28;
-export const DAY_MARGIN = 2;
+export const DAY_MARGIN = 3;
 export const DIALOG_WIDTH = 320;
 export const CALENDAR_MARGIN = 16;
 export const VIEW_HEIGHT = 370;

@@ -174,7 +174,7 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
     opacity: 0.6,
   },
   ...(!ownerState.disableMargin && {
-    margin: `0 ${ownerState.reduceHorizontalMargin ? DAY_MARGIN / 2 : DAY_MARGIN}px`,
+    margin: `0 ${ownerState.reduceHorizontalMargin ? 1 : DAY_MARGIN}px`,
   }),
   ...(ownerState.outsideCurrentMonth &&
     ownerState.showDaysOutsideCurrentMonth && {

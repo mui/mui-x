@@ -49,7 +49,7 @@ const DayCalendarSkeletonWeek = styled('div', {
   slot: 'Week',
   overridesResolver: (props, styles) => styles.week,
 })({
-  margin: `${DAY_MARGIN}px 0`,
+  margin: '2px 0',
   display: 'flex',
   justifyContent: 'center',
 });

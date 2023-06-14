@@ -30,7 +30,11 @@ import {
 } from '../internals/models/validation';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
-import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
+import {
+  DayCalendarClasses,
+  dayPickerClasses,
+  getDayCalendarUtilityClass,
+} from './dayCalendarClasses';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface DayCalendarSlotsComponent<TDate> {
@@ -112,9 +116,9 @@ export interface DayCalendarProps<TDate>
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
   const { classes } = ownerState;
   const slots = {
-    root: ['root', ownerState.displayWeekNumber && 'withWeekNumber'],
+    root: ['root'],
     header: ['header'],
-    weekDayLabel: ['weekDayLabel', ownerState.displayWeekNumber && 'withWeekNumber'],
+    weekDayLabel: ['weekDayLabel', ownerState.displayWeekNumber && 'weekDayLabel--withWeekNumber'],
     loadingContainer: ['loadingContainer'],
     slideTransition: ['slideTransition'],
     monthContainer: ['monthContainer'],
@@ -135,7 +139,6 @@ const PickersCalendarDayRoot = styled('div', {
 })({
   display: 'flex',
   flexDirection: 'column',
-  gap: 8,
 });
 
 const PickersCalendarDayHeader = styled('div', {
@@ -154,15 +157,15 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
   overridesResolver: (_, styles) => styles.weekDayLabel,
 })(({ theme }) => ({
   width: DAY_SIZE,
-  height: DAY_SIZE,
+  height: 40,
   margin: `0 ${DAY_MARGIN}px`,
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   color: (theme.vars || theme).palette.text.secondary,
-  '&.MuiDayCalendar-withWeekNumber': {
-    margin: `0 ${DAY_MARGIN / 2}px`,
+  [`&.${dayPickerClasses['weekDayLabel--withWeekNumber']}`]: {
+    margin: '0 1px',
   },
 }));
 
@@ -172,8 +175,8 @@ const PickersCalendarWeekNumberLabel = styled(Typography, {
   overridesResolver: (_, styles) => styles.weekNumberLabel,
 })(({ theme }) => ({
   width: WEEK_NUMBER_SIZE,
-  height: DAY_SIZE,
-  margin: `0 ${DAY_MARGIN / 2}px`,
+  height: 40,
+  margin: '0 1px',
   textAlign: 'center',
   display: 'flex',
   justifyContent: 'center',
@@ -227,7 +230,7 @@ const PickersCalendarWeek = styled('div', {
   slot: 'WeekContainer',
   overridesResolver: (_, styles) => styles.weekContainer,
 })({
-  margin: `${DAY_MARGIN}px 0`,
+  margin: '2px 0',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
