@@ -115,7 +115,7 @@ StaticDateTimePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**

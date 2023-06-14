@@ -33,6 +33,7 @@ export const filterRowTreeFromTreeData = (
   const { apiRef, rowTree, disableChildrenFiltering, isRowMatchingFilters } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+  const filterCache = {};
 
   const filterResults: GridAggregatedFilterItemApplierResult = {
     passingFilterItems: null,
@@ -59,6 +60,7 @@ export const filterRowTreeFromTreeData = (
         [filterResults.passingQuickFilterValues],
         params.filterModel,
         params.apiRef,
+        filterCache,
       );
     }
 

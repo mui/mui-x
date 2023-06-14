@@ -1,8 +1,15 @@
-import type { ScaleBand, ScaleLogarithmic, ScalePower, ScaleTime, ScaleLinear } from 'd3-scale';
-import { AxisClasses } from '../Axis/axisClasses';
+import type {
+  ScaleBand,
+  ScaleLogarithmic,
+  ScalePower,
+  ScaleTime,
+  ScaleLinear,
+  ScalePoint,
+} from 'd3-scale';
+import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 
-export interface AxisProps {
+export interface ChartsAxisProps {
   /**
    * Id of the axis to render.
    */
@@ -49,30 +56,35 @@ export interface AxisProps {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<AxisClasses>;
+  classes?: Partial<ChartsAxisClasses>;
 }
 
-export interface YAxisProps extends AxisProps {
+export interface ChartsYAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
    */
   position?: 'left' | 'right';
 }
 
-export interface XAxisProps extends AxisProps {
+export interface ChartsXAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
    */
   position?: 'top' | 'bottom';
 }
 
-export type ScaleName = 'linear' | 'band' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
+export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 
 interface AxisScaleConfig {
   band: {
     scaleType: 'band';
     scale: ScaleBand<any>;
+    ticksNumber: number;
+  };
+  point: {
+    scaleType: 'point';
+    scale: ScalePoint<any>;
     ticksNumber: number;
   };
   log: {
@@ -114,7 +126,7 @@ export type AxisConfig<S = ScaleName, V = any> = {
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
-} & Partial<XAxisProps | YAxisProps> &
+} & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   TickParams;
 
 export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<

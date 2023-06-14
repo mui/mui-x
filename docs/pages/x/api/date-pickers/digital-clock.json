@@ -50,7 +50,7 @@
     "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }
   },
   "slots": {
-    "DigitalClockItem": {
+    "digitalClockItem": {
       "default": "MenuItem from '@mui/material'",
       "type": { "name": "elementType" }
     }

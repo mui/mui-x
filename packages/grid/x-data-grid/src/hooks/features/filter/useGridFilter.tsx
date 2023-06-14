@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -400,6 +401,7 @@ export const useGridFilter = (
       const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup: Record<GridRowId, boolean> = {};
       const { isRowMatchingFilters } = params;
+      const filterCache = {};
 
       const result = {
         passingFilterItems: null,
@@ -416,6 +418,7 @@ export const useGridFilter = (
           [result.passingQuickFilterValues],
           params.filterModel,
           apiRef,
+          filterCache,
         );
 
         filteredRowsLookup[row.id] = isRowPassing;
@@ -500,7 +503,7 @@ export const useGridFilter = (
   /**
    * EFFECTS
    */
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (props.filterModel !== undefined) {
       apiRef.current.setFilterModel(props.filterModel);
     }

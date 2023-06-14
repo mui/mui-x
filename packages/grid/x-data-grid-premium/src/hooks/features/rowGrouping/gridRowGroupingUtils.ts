@@ -86,6 +86,7 @@ export const filterRowTreeFromGroupingColumns = (
   const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
   const filteredRowsLookup: Record<GridRowId, boolean> = {};
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
+  const filterCache = {};
 
   const filterTreeNode = (
     node: GridTreeNode,
@@ -135,6 +136,7 @@ export const filterRowTreeFromGroupingColumns = (
           allResults.map((result) => result.passingQuickFilterValues),
           filterModel,
           params.apiRef,
+          filterCache,
         );
       }
     }
