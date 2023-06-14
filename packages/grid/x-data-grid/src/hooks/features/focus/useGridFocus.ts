@@ -327,8 +327,8 @@ export const useGridFocus = (
   );
 
   const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(
-    (_, ev) => {
-      if (ev.relatedTarget?.className.includes(gridClasses.columnHeader)) {
+    (_, event) => {
+      if (event.relatedTarget?.className.includes(gridClasses.columnHeader)) {
         return;
       }
       logger.debug(`Clearing focus`);
