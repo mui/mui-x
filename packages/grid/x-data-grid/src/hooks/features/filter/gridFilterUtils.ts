@@ -190,7 +190,7 @@ const getFilterCallbackFromItem = (
     };
   }
 
-  const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
+  const applyFilterOnRow = filterOperator.getApplyFilterFn!(newFilterItem, column)!;
   if (typeof applyFilterOnRow !== 'function') {
     return null;
   }
