@@ -292,7 +292,6 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           onGoToNext={selectNextMonth}
           isNextDisabled={isNextMonthDisabled}
           nextLabel={localeText.nextMonth}
-          className={classes.arrowSwitcher}
         />
       </Fade>
     </PickersCalendarHeaderRoot>

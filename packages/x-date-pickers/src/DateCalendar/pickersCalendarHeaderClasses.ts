@@ -6,8 +6,6 @@ import {
 export interface PickersCalendarHeaderClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the arrow switcher element. */
-  arrowSwitcher: string;
   /** Styles applied to the label container element. */
   labelContainer: string;
   /** Styles applied to the label element. */
@@ -25,5 +23,5 @@ export const getPickersCalendarHeaderUtilityClass = (slot: string) =>
 
 export const pickersCalendarHeaderClasses: PickersCalendarHeaderClasses = generateUtilityClasses(
   'MuiPickersCalendarHeader',
-  ['root', 'arrowSwitcher', 'labelContainer', 'label', 'switchViewButton', 'switchViewIcon'],
+  ['root', 'labelContainer', 'label', 'switchViewButton', 'switchViewIcon'],
 );
