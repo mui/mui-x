@@ -4,7 +4,6 @@ import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { PickerChangeImportance } from '../models';
 
 interface PickersShortcutsItemGetValueParams<TValue> {
   isValid: (value: TValue) => boolean;
@@ -15,6 +14,8 @@ export interface PickersShortcutsItem<TValue> {
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
 }
 
+export type PickerShortcutChangeImportance = 'set' | 'accept';
+
 export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
   /**
    * Ordered array of shortcuts to display.
@@ -24,22 +25,21 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
   items?: PickersShortcutsItem<TValue>[];
   /**
    * Importance of the change when picking a shortcut:
-   * - "finish": fires `onChange`, on desktop also fires `onAccept` and closes the picker.
-   * - "draft": fires `onChange`.
-   * - "shallow": just selects the value visually.
-   * @default "finish"
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
    */
-  changeImportance?: PickerChangeImportance;
+  changeImportance?: PickerShortcutChangeImportance;
 }
 
 export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (newValue: TValue, changeImportance?: PickerChangeImportance) => void;
+  onChange: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
   isValid: (value: TValue) => boolean;
 }
 
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, changeImportance = 'finish', isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance, isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -86,6 +86,13 @@ PickersShortcuts.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Importance of the change when picking a shortcut:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance: PropTypes.oneOf(['accept', 'set']),
   className: PropTypes.string,
   /**
    * If `true`, compact vertical padding designed for keyboard and mouse input is used for
@@ -99,7 +106,6 @@ PickersShortcuts.propTypes = {
    * @default false
    */
   disablePadding: PropTypes.bool,
-  changeImportance: PropTypes.oneOf(['finish', 'partial', 'shallow']),
   isLandscape: PropTypes.bool.isRequired,
   isValid: PropTypes.func.isRequired,
   /**

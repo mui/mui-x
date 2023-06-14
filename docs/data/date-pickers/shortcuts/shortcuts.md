@@ -62,17 +62,12 @@ In the following demonstration, it is used to get the next available week and we
 
 ## Behavior when selecting a shortcut
 
-By default, the selection of a shortcut triggers the same behavior as the selection of a value in the last view of a picker.
-On desktop, it will fire `onChange`, `onAccept` and close the picker.
-On mobile, it will fire `onChange`, but the user will have to press "OK" or click outside the modal to fire `onAccept` and close the picker.
+You can change the behavior when selecting a shortcut using the `changeImportance` property:
 
-You can change this behavior using the `changeImportance` property:
+- `"accept"` (_default value_): fires `onChange`, fires `onAccept` and closes the picker.
+- `"set"`: fires `onChange` but do not fire `onAccept` and does not close the picker.
 
-- `finish` (_default value_): fires `onChange`, on desktop also fires `onAccept` and closes the picker
-- `draft`: fires `onChange`
-- `shallow`: just selects the value visually
-
-{{"demo": "EventImportance.js", "bg": "inline"}}
+{{"demo": "ChangeImportance.js", "bg": "inline"}}
 
 ## Customization
 

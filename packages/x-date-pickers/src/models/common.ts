@@ -3,5 +3,3 @@ export interface TimeStepOptions {
   minutes?: number;
   seconds?: number;
 }
-
-export type PickerChangeImportance = 'shallow' | 'partial' | 'finish';

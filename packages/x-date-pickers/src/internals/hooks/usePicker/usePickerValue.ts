@@ -6,6 +6,7 @@ import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
+import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -60,6 +61,16 @@ const shouldPublishValue = <TValue, TError>(
     return hasChanged(dateState.lastPublishedValue);
   }
 
+  if (action.name === 'setValueFromShortcut' && action.changeImportance === 'accept') {
+    // On the first view,
+    // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+    if (isCurrentValueTheDefaultValue) {
+      return true;
+    }
+
+    return hasChanged(dateState.lastPublishedValue);
+  }
+
   return false;
 };
 
@@ -98,6 +109,10 @@ const shouldCommitValue = <TValue, TError>(
     return hasChanged(dateState.lastCommittedValue);
   }
 
+  if (action.name === 'setValueFromShortcut') {
+    return action.changeImportance === 'accept' && hasChanged(dateState.lastCommittedValue);
+  }
+
   return false;
 };
 
@@ -115,6 +130,10 @@ const shouldClosePicker = <TValue, TError>(
 
   if (action.name === 'setValueFromView') {
     return action.selectionState === 'finish' && closeOnSelect;
+  }
+
+  if (action.name === 'setValueFromShortcut') {
+    return action.changeImportance === 'accept';
   }
 
   return false;
@@ -340,7 +359,16 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
-  const handleChangeField = useEventCallback(
+  const handleSelectShortcut = useEventCallback(
+    (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) =>
+      updateDate({
+        name: 'setValueFromShortcut',
+        value: newValue,
+        changeImportance: changeImportance ?? 'accept',
+      }),
+  );
+
+  const handleChangeFromField = useEventCallback(
     (newValue: TValue, context: FieldChangeHandlerContext<TError>) =>
       updateDate({ name: 'setValueFromField', value: newValue, context }),
   );
@@ -364,7 +392,7 @@ export const usePickerValue = <
 
   const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
     value: dateState.draft,
-    onChange: handleChangeField,
+    onChange: handleChangeFromField,
     selectedSections,
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
@@ -396,6 +424,7 @@ export const usePickerValue = <
     ...actions,
     value: viewValue,
     onChange: handleChange,
+    onSelectShortcut: handleSelectShortcut,
     isValid,
   };
 

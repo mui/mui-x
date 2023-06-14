@@ -2,7 +2,6 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
@@ -75,7 +74,7 @@ const shortcutsItems = [
 ];
 
 export default function ChangeImportance() {
-  const [changeImportance, setChangeImportance] = React.useState('finish');
+  const [changeImportance, setChangeImportance] = React.useState('accept');
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -88,9 +87,8 @@ export default function ChangeImportance() {
             setChangeImportance(newEventImportance)
           }
         >
-          <ToggleButton value="finish">finish</ToggleButton>
-          <ToggleButton value="draft">draft</ToggleButton>
-          <ToggleButton value="shallow">shallow</ToggleButton>
+          <ToggleButton value="accept">accept</ToggleButton>
+          <ToggleButton value="set">set</ToggleButton>
         </ToggleButtonGroup>
         <DatePicker
           slotProps={{
