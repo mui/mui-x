@@ -293,7 +293,6 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           isNextDisabled={isNextMonthDisabled}
           nextLabel={localeText.nextMonth}
           className={classes.arrowSwitcher}
-          hideControls={view !== 'day'}
         />
       </Fade>
     </PickersCalendarHeaderRoot>

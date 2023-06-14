@@ -4,7 +4,6 @@ import { useTheme, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
-import Fade from '@mui/material/Fade';
 import { ArrowLeftIcon, ArrowRightIcon } from '../../../icons';
 import {
   PickersArrowSwitcherOwnerState,
@@ -77,7 +76,6 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     isPreviousHidden,
     onGoToPrevious,
     previousLabel,
-    hideControls,
     ...other
   } = props;
 
@@ -156,27 +154,23 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
       ownerState={ownerState}
       {...other}
     >
-      <Fade in={!hideControls} appear={false}>
-        <PreviousIconButton {...previousIconButtonProps}>
-          {isRTL ? (
-            <RightArrowIcon {...rightArrowIconProps} />
-          ) : (
-            <LeftArrowIcon {...leftArrowIconProps} />
-          )}
-        </PreviousIconButton>
-      </Fade>
+      <PreviousIconButton {...previousIconButtonProps}>
+        {isRTL ? (
+          <RightArrowIcon {...rightArrowIconProps} />
+        ) : (
+          <LeftArrowIcon {...leftArrowIconProps} />
+        )}
+      </PreviousIconButton>
       {children || (
         <PickersArrowSwitcherSpacer className={classes.spacer} ownerState={ownerState} />
       )}
-      <Fade in={!hideControls} appear={false}>
-        <NextIconButton {...nextIconButtonProps}>
-          {isRTL ? (
-            <LeftArrowIcon {...leftArrowIconProps} />
-          ) : (
-            <RightArrowIcon {...rightArrowIconProps} />
-          )}
-        </NextIconButton>
-      </Fade>
+      <NextIconButton {...nextIconButtonProps}>
+        {isRTL ? (
+          <LeftArrowIcon {...leftArrowIconProps} />
+        ) : (
+          <RightArrowIcon {...rightArrowIconProps} />
+        )}
+      </NextIconButton>
     </PickersArrowSwitcherRoot>
   );
 });
