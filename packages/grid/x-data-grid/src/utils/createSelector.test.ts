@@ -16,7 +16,10 @@ describe('createSelector', () => {
     });
 
     it('should fallback to the default behavior when no cache key is provided', () => {
-      const selector = createSelectorMemoized([], () => []) as OutputSelector<GridStateCommunity, any>;
+      const selector = createSelectorMemoized([], () => []) as OutputSelector<
+        GridStateCommunity,
+        any
+      >;
       const state = {} as GridStateCommunity;
       const instanceId = { id: 0 };
       expect(selector(state, instanceId)).to.equal(selector(state, instanceId));
@@ -42,7 +45,10 @@ describe('createSelector', () => {
 
   describe('apiRef as argument', () => {
     it('should return different selectors for different cache keys', () => {
-      const selector = createSelectorMemoized([], () => []) as OutputSelector<GridStateCommunity, any>;
+      const selector = createSelectorMemoized([], () => []) as OutputSelector<
+        GridStateCommunity,
+        any
+      >;
       const apiRef1 = {
         current: { state: {}, instanceId: { id: 0 } },
       } as React.MutableRefObject<GridApiCommunity>;
@@ -53,7 +59,10 @@ describe('createSelector', () => {
     });
 
     it('should not clear the cache of one selector when another key is passed', () => {
-      const selector = createSelectorMemoized([], () => []) as OutputSelector<GridStateCommunity, any>;
+      const selector = createSelectorMemoized([], () => []) as OutputSelector<
+        GridStateCommunity,
+        any
+      >;
       const apiRef1 = {
         current: { state: {}, instanceId: { id: 0 } },
       } as React.MutableRefObject<GridApiCommunity>;

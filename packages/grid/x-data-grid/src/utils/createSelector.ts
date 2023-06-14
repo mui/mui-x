@@ -139,7 +139,9 @@ export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => 
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
     const isAPIRef = checkIsAPIRef(stateOrApiRef);
-    const cacheKey = isAPIRef ? stateOrApiRef.current.instanceId : instanceId ?? DEFAULT_INSTANCE_ID;
+    const cacheKey = isAPIRef
+      ? stateOrApiRef.current.instanceId
+      : instanceId ?? DEFAULT_INSTANCE_ID;
     const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
