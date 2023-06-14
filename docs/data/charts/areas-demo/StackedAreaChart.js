@@ -20,14 +20,13 @@ export default function StackedAreaChart() {
       width={500}
       height={300}
       series={[
-        { data: uData, label: 'uv', area: true, stack: 'total', color: '#8884d8' },
-        { data: pData, label: 'pv', area: true, stack: 'total', color: '#82ca9d' },
+        { data: uData, label: 'uv', area: true, stack: 'total' },
+        { data: pData, label: 'pv', area: true, stack: 'total' },
         {
           data: amtData,
           label: 'amt',
           area: true,
           stack: 'total',
-          color: '#ffc658',
         },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
