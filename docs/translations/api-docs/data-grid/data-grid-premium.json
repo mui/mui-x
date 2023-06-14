@@ -484,6 +484,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator icon element"
     },
+    "headerFilterRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column header filter row"
+    },
     "main": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the main container element"
@@ -748,7 +752,6 @@
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "headerFilterCell": "Component responsible for showing menu adornment in Header filter row",
-    "headerFilterClearIcon": "Component responsible for clear icon in header filter",
     "headerFilterMenu": "Component responsible for showing menu in Header filter row",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",

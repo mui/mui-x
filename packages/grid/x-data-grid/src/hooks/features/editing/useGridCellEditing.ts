@@ -189,7 +189,7 @@ export const useGridCellEditing = (
 
   const handleCellEditStart = React.useCallback<GridEventListener<'cellEditStart'>>(
     (params) => {
-      const { id, field, reason, key } = params;
+      const { id, field, reason, key, colDef } = params;
 
       const startCellEditModeParams: GridStartCellEditModeParams = { id, field };
 
@@ -199,7 +199,8 @@ export const useGridCellEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startCellEditModeParams.deleteValue = true;
         } else {
-          startCellEditModeParams.initialValue = key;
+          const initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
+          startCellEditModeParams.initialValue = initialValue;
         }
       } else if (reason === GridCellEditStartReasons.deleteKeyDown) {
         startCellEditModeParams.deleteValue = true;

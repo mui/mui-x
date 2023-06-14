@@ -5,7 +5,8 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { useLocaleText, validateTime } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateTime } from '../internals/utils/validation/validateTime';
 import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
@@ -16,6 +17,7 @@ import {
 } from '../timeViewRenderers';
 import { PickersActionBarAction } from '../PickersActionBar';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -26,6 +28,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all time pickers
   const defaultizedProps = useTimePickerDefaultizedProps<
@@ -70,6 +73,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ampmInClock,
     timeSteps,
     viewRenderers,
+    format: resolveTimeFormat(utils, defaultizedProps),
     // Setting only `hours` time view in case of single column time picker
     // Allows for easy view lifecycle management
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,

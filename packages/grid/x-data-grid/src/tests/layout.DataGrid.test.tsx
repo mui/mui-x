@@ -1058,7 +1058,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(NoRowsOverlay.callCount).not.to.equal(0);
   });
 
-  describe('sould not overflow parent', () => {
+  describe('should not overflow parent', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         this.skip(); // Doesn't work with mocked window.getComputedStyle
