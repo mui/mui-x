@@ -95,7 +95,7 @@ ScatterChart.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   /**
-   * Colors used to defaultize series color
+   * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,

@@ -11,7 +11,7 @@ import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
 export type SeriesContextProviderProps = {
   series: AllSeriesType[];
   /**
-   * Colors used to defaultize series color
+   * Color palette used to colorize multiple series.
    */
   colors?: ChartsColorPalette;
   children: React.ReactNode;
