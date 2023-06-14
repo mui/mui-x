@@ -1,4 +1,5 @@
-export type ChartsColorPalette = string[] | ((mode: 'light' | 'dark') => string[]);
+export type ChartsColorPaletteCallback = (mode: 'light' | 'dark') => string[];
+export type ChartsColorPalette = string[] | ChartsColorPaletteCallback;
 
 export const blueberryTwilightPaletteLight = [
   '#02B2AF',
@@ -17,31 +18,33 @@ export const blueberryTwilightPaletteDark = [
   '#CB2CE7',
 ];
 
-export const blueberryTwilightPalette: ChartsColorPalette = (mode) =>
+export const blueberryTwilightPalette: ChartsColorPaletteCallback = (mode) =>
   mode === 'dark' ? blueberryTwilightPaletteDark : blueberryTwilightPaletteLight;
 
 export const mangoFusionPaletteLight = [
   '#173A5E',
   '#02B2AF',
   '#F00780',
-  '#03008D',
-  '#2E96FF',
-  '#313DD3',
-  '#B800D8',
   '#F44336',
   '#FF5C00',
+  '#B800D8',
+  '#7C00C5',
+  '#2E96FF',
+  '#313DD3',
+  '#03008D',
 ];
 export const mangoFusionPaletteDark = [
-  '#007FFF',
-  '#02B2AF',
-  '#18E9DC',
-  '#4052EC',
-  '#7E8AF5',
-  '#CB2CE7',
   '#D7FDFC',
+  '#18E9DC',
+  '#02B2AF',
   '#EF287B',
   '#EF5350',
+  '#FFC24D',
+  '#CB2CE7',
+  '#7E8AF5',
+  '#007FFF',
+  '#4052EC',
 ];
 
-export const mangoFusionPalette: ChartsColorPalette = (mode) =>
+export const mangoFusionPalette: ChartsColorPaletteCallback = (mode) =>
   mode === 'dark' ? mangoFusionPaletteDark : mangoFusionPaletteLight;

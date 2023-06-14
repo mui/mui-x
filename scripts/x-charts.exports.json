@@ -24,6 +24,7 @@
   { "name": "ChartContainer", "kind": "Function" },
   { "name": "ChartContainerProps", "kind": "TypeAlias" },
   { "name": "ChartsColorPalette", "kind": "TypeAlias" },
+  { "name": "ChartsColorPaletteCallback", "kind": "TypeAlias" },
   { "name": "CurveType", "kind": "TypeAlias" },
   { "name": "DEFAULT_MARGINS", "kind": "Variable" },
   { "name": "DEFAULT_X_AXIS_KEY", "kind": "Variable" },
