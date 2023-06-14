@@ -41,6 +41,11 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the container of a month"
     },
+    "monthContainerWithoutWeekNumber": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the container of a month",
+      "conditions": "<code>displayWeekNumber=false</code>"
+    },
     "dayDragging": { "description": "Styles applied to the day calendar container when dragging" }
   },
   "slotDescriptions": {
