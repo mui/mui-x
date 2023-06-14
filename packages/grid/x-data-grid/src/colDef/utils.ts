@@ -1,12 +1,6 @@
 import { GetApplyFilterFnV7, GetApplyFilterFnLegacy, GridFilterOperator } from '../models';
 import { GetApplyQuickFilterFnV7, GetApplyQuickFilterFnLegacy } from '../models/colDef/gridColDef';
 
-export function v7<T extends Function>(fn: T): T & { v7: true } {
-  const result = fn as unknown as T & { v7: true };
-  result.v7 = true;
-  return result;
-}
-
 export function convertFilterV7ToLegacy(fn: GetApplyFilterFnV7): GetApplyFilterFnLegacy {
   return (filterItem, column) => {
     const filterFn = fn(filterItem, column);
