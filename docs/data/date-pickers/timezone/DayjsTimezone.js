@@ -10,10 +10,11 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.tz.setDefault('America/New_York');
 
 export default function DayjsTimezone() {
-  const [value, setValue] = React.useState(dayjs.tz('2022-04-17T15:30'));
+  const [value, setValue] = React.useState(
+    dayjs.tz('2022-04-17T15:30', 'America/New_York'),
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

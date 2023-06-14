@@ -6,10 +6,10 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-moment.tz.setDefault('America/New_York');
-
 export default function MomentTimezone() {
-  const [value, setValue] = React.useState(moment('2022-04-17T15:30'));
+  const [value, setValue] = React.useState(
+    moment.tz('2022-04-17T15:30', 'America/New_York'),
+  );
 
   return (
     <LocalizationProvider dateAdapter={AdapterMoment} dateLibInstance={moment}>

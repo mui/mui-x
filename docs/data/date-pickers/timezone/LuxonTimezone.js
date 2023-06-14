@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateTime, Settings } from 'luxon';
+import { DateTime } from 'luxon';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';

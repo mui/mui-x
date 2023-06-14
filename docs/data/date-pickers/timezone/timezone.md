@@ -44,7 +44,28 @@ This will be needed if the component has no `value` or `defaultValue` to deduct 
 
 ### Day.js and UTC
 
-To be able to use UTC, you have to enable the `utc` plugin:
+Before using the UTC dates with Day.js, you have to enable the `utc` plugin:
+
+```tsx
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+```
+
+:::info
+**How to create a UTC date with Day.js?**
+
+To create a UTC date, use the `dayjs.utc` method
+
+```tsx
+const date = dayjs.utc('2022-04-17T15:30');
+```
+
+You can check out the documentation of the [UTC on Day.js](https://day.js.org/docs/en/plugin/utc) for more details.
+:::
+
+You can then pass your UTC date to your picker:
 
 ```tsx
 import dayjs from 'dayjs';
@@ -69,7 +90,42 @@ function App() {
 
 ### Day.js and timezones
 
-To use the pickers with timezones, enable both the `utc` and `timezone` plugins:
+Before using the timezone with Day.js, you have to enable both the `utc` and `timezone` plugins:
+
+```tsx
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+```
+
+:::info
+**How to create a date in a specific timezone with Day.js?**
+
+If your whole application is using dates from the same timezone, set the default zone to your timezone name:
+
+```tsx
+import { dayjs } from 'dayjs';
+
+dayjs.tz.setDefault('America/New_York');
+
+const date = dayjs.tz('2022-04-17T15:30');
+```
+
+If you only want to use dates with this timezone on some parts of your application, pass the timezone as the 2nd parameter of the `dayjs.tz` method:
+
+```tsx
+import { dayjs } from 'dayjs';
+
+const date = dayjs.tz('2022-04-17T15:30', 'America/New_York');
+```
+
+You can check out the documentation of the [timezone on Day.js](https://day.js.org/docs/en/timezone/timezone) for more details.
+:::
+
+You can then pass your date in the wanted timezone to your picker:
 
 ```tsx
 import dayjs from 'dayjs';
@@ -82,12 +138,13 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-dayjs.tz.setDefault('America/New_York');
 
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateTimePicker defaultValue={dayjs.tz('2022-04-17T15:30')} />
+      <DateTimePicker
+        defaultValue={dayjs.tz('2022-04-17T15:30', 'America/New_York')}
+      />
     </LocalizationProvider>
   );
 }
@@ -106,10 +163,10 @@ You can check out the documentation of the [dayjs timezone plugin](https://day.j
 :::info
 **How to create a UTC date with Luxon?**
 
-If your whole application is using UTC dates, set the `defaultZone` to `"UTC"`:
+If your whole application is using UTC dates, set the default zone to `"UTC"`:
 
 ```tsx
-import { Settings } from 'luxon';
+import { DateTime, Settings } from 'luxon';
 
 Settings.defaultZone = 'UTC';
 
@@ -120,6 +177,8 @@ const date2 = DateTime.fromSQL('2022-04-17 15:30:00');
 If you only want to use UTC dates on some parts of your application, create a UTC date using `DateTime.utc` or with the `zone` parameter of Luxon methods:
 
 ```tsx
+import { DateTime } from 'luxon';
+
 const date1 = DateTime.utc(2022, 4, 17, 15, 30);
 const date2 = DateTime.fromISO('2022-04-17T15:30', { zone: 'UTC' });
 const date3 = DateTime.fromSQL('2022-04-17 15:30:00', { zone: 'UTC' });
@@ -137,12 +196,12 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-Settings.defaultZone = 'UTC';
-
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
-      <DateTimePicker defaultValue={DateTime.fromISO('2022-04-17T15:30')} />
+      <DateTimePicker
+        defaultValue={DateTime.fromISO('2022-04-17T15:30', { zone: 'UTC' })}
+      />
     </LocalizationProvider>
   );
 }
@@ -155,10 +214,10 @@ function App() {
 :::info
 **How to create a date in a specific timezone with Luxon?**
 
-If your whole application is using dates from the same timezone, set the `defaultZone` to your timezone name:
+If your whole application is using dates from the same timezone, set the default zone to your timezone name:
 
 ```tsx
-import { Settings } from 'luxon';
+import { DateTime, Settings } from 'luxon';
 
 Settings.defaultZone = 'America/New_York';
 
@@ -169,6 +228,8 @@ const date2 = DateTime.fromSQL('2022-04-17 15:30:00');
 If you only want to use dates with this timezone on some parts of your application, create a date in this timezone using the `zone` parameter of Luxon methods:
 
 ```tsx
+import { DateTime } from 'luxon';
+
 const date1 = DateTime.fromISO('2022-04-17T15:30', { zone: 'America/New_York' });
 const date2 = DateTime.fromSQL('2022-04-17 15:30:00', { zone: 'America/New_York' });
 ```
@@ -185,12 +246,14 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-Settings.defaultZone = 'America/New_York';
-
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
-      <DateTimePicker defaultValue={DateTime.fromISO('2022-04-17T15:30')} />
+      <DateTimePicker
+        defaultValue={DateTime.fromISO('2022-04-17T15:30', {
+          zone: 'America/New_York',
+        })}
+      />
     </LocalizationProvider>
   );
 }
@@ -205,6 +268,20 @@ You can check out the documentation of the [UTC and timezone on Luxon](https://m
 ## Usage with Moment
 
 ### Moment and UTC
+
+:::info
+**How to create a UTC date with Moment?**
+
+To create a UTC date, use the `dayjs.utc` method
+
+```tsx
+const date = moment.utc('2022-04-17T15:30');
+```
+
+You can check out the documentation of the [UTC on Moment](https://momentjs.com/docs/#/parsing/utc/) for more details.
+:::
+
+You can then pass your UTC date to your picker:
 
 ```tsx
 import moment from 'moment';
@@ -226,7 +303,44 @@ function App() {
 
 ### Moment and timezone
 
-To use the pickers with timezones, pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`
+Before using the timezone with Day.js, you have to pass the default export from `moment-timezone` to the `dateLibInstance` prop of `LocalizationProvider`:
+
+```tsx
+import moment from 'moment-timezone';
+
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
+<LocalizationProvider dateAdapter={AdapterMoment} dateLibInstance={moment}>
+  {children}
+</LocalizationProvider>;
+```
+
+:::info
+**How to create a date in a specific timezone with Moment?**
+
+If your whole application is using dates from the same timezone, set the default zone to your timezone name:
+
+```tsx
+import moment from 'moment-timezone';
+
+moment.tz.setDefault('America/New_York');
+
+const date = moment('2022-04-17T15:30');
+```
+
+If you only want to use dates with this timezone on some parts of your application, create a date using the `moment.tz` method:
+
+```tsx
+import moment from 'moment-timezone';
+
+const date = moment.tz('2022-04-17T15:30', 'America/New_York');
+```
+
+You can check out the documentation of the [timezone on Day.js](https://day.js.org/docs/en/timezone/timezone) for more details.
+:::
+
+You can then pass your date in the wanted timezone to your picker:
 
 ```tsx
 import moment from 'moment-timezone';
@@ -235,12 +349,12 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
-moment.tz.setDefault('America/New_York');
-
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment} dateLibInstance={moment}>
-      <DateTimePicker defaultValue={moment('2022-04-17T15:30')} />
+      <DateTimePicker
+        defaultValue={moment.tz('2022-04-17T15:30', 'America/New_York')}
+      />
     </LocalizationProvider>
   );
 }
