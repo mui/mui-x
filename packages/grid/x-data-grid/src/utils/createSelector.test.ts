@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createSelector as createSelectorMemoized, OutputSelector } from './createSelector';
+import { createSelectorMemoized, OutputSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
