@@ -13,7 +13,7 @@ export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | nul
         }
 
         const valueAsBoolean = filterItem.value === 'true';
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return Boolean(value) === valueAsBoolean;
         };
       },

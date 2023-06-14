@@ -23,7 +23,7 @@ function buildApplyFilterFn(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return (value, _, __, ___): boolean => {
+  return (value): boolean => {
     if (!value) {
       return false;
     }
@@ -102,7 +102,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any
     {
       value: 'isEmpty',
       getApplyFilterFnV7: () => {
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return value == null;
         };
       },
@@ -111,7 +111,7 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any
     {
       value: 'isNotEmpty',
       getApplyFilterFnV7: () => {
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return value != null;
         };
       },

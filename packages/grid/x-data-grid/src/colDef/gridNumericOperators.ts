@@ -17,7 +17,7 @@ export const getGridNumericQuickFilterFn = (value: any): GridApplyQuickFilterV7 
     return null;
   }
 
-  return (columnValue, _, __, ___): boolean => {
+  return (columnValue): boolean => {
     return parseNumericValue(columnValue) === parseNumericValue(value);
   };
 };
@@ -31,7 +31,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
           return null;
         }
 
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return parseNumericValue(value) === filterItem.value;
         };
       },
@@ -45,7 +45,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
           return null;
         }
 
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return parseNumericValue(value) !== filterItem.value;
         };
       },
@@ -59,7 +59,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
           return null;
         }
 
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           if (value == null) {
             return false;
           }
@@ -77,7 +77,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
           return null;
         }
 
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           if (value == null) {
             return false;
           }
@@ -95,7 +95,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
           return null;
         }
 
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           if (value == null) {
             return false;
           }
@@ -113,7 +113,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
           return null;
         }
 
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           if (value == null) {
             return false;
           }
@@ -127,7 +127,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
     {
       value: 'isEmpty',
       getApplyFilterFnV7: () => {
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return value == null;
         };
       },
@@ -136,7 +136,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
     {
       value: 'isNotEmpty',
       getApplyFilterFnV7: () => {
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return value != null;
         };
       },
@@ -149,7 +149,7 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
           return null;
         }
 
-        return (value, _, __, ___): boolean => {
+        return (value): boolean => {
           return value != null && filterItem.value.includes(Number(value));
         };
       },

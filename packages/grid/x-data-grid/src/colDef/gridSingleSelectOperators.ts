@@ -19,8 +19,7 @@ export const getGridSingleSelectOperators = (): GridFilterOperator[] =>
         if (filterItem.value == null || filterItem.value === '') {
           return null;
         }
-        return (value, _, __, ___): boolean =>
-          parseObjectValue(value) === parseObjectValue(filterItem.value);
+        return (value): boolean => parseObjectValue(value) === parseObjectValue(filterItem.value);
       },
       InputComponent: GridFilterInputSingleSelect,
     },
@@ -30,8 +29,7 @@ export const getGridSingleSelectOperators = (): GridFilterOperator[] =>
         if (filterItem.value == null || filterItem.value === '') {
           return null;
         }
-        return (value, _, __, ___): boolean =>
-          parseObjectValue(value) !== parseObjectValue(filterItem.value);
+        return (value): boolean => parseObjectValue(value) !== parseObjectValue(filterItem.value);
       },
       InputComponent: GridFilterInputSingleSelect,
     },
@@ -42,7 +40,7 @@ export const getGridSingleSelectOperators = (): GridFilterOperator[] =>
           return null;
         }
         const filterItemValues = filterItem.value.map(parseObjectValue);
-        return (value, _, __, ___): boolean => filterItemValues.includes(parseObjectValue(value));
+        return (value): boolean => filterItemValues.includes(parseObjectValue(value));
       },
       InputComponent: GridFilterInputMultipleSingleSelect,
     },
