@@ -101,7 +101,7 @@ export const useGridTreeDataLazyLoading = (
   props: Pick<DataGridProProcessedProps, 'treeData' | 'unstable_dataSource'>,
 ) => {
   const fetchNodeChildren = React.useCallback(
-    (nodeId: string | number) => {
+    async (nodeId: string | number) => {
       if (props.unstable_dataSource?.getRows == null) {
         return;
       }
@@ -118,33 +118,32 @@ export const useGridTreeDataLazyLoading = (
         sortModel: apiRef.current.state.sorting.sortModel,
         groupKeys,
       };
-      props
-        .unstable_dataSource!.getRows(getRowsParams)
-        .then((rows) => {
-          // TODO: Handle this (path generation) internally in `createRowTreeForTreeData`
-          apiRef.current.updateRows(
-            rows.map((row: GridRowModel) => ({ ...row, path: [...groupKeys, getGroupKey(row)] })),
-          );
-          const newNode: GridServerSideGroupNode = {
-            ...node,
-            isLoading: false,
-            childrenFetched: true,
+      try {
+        const rows = await props.unstable_dataSource!.getRows(getRowsParams);
+
+        // TODO: Handle this (path generation) internally in `createRowTreeForTreeData`
+        apiRef.current.updateRows(
+          rows.map((row: GridRowModel) => ({ ...row, path: [...groupKeys, getGroupKey(row)] })),
+        );
+        const newNode: GridServerSideGroupNode = {
+          ...node,
+          isLoading: false,
+          childrenFetched: true,
+        };
+        apiRef.current.setState((state) => {
+          return {
+            ...state,
+            rows: {
+              ...state.rows,
+              tree: { ...state.rows.tree, [nodeId]: newNode },
+            },
           };
-          apiRef.current.setState((state) => {
-            return {
-              ...state,
-              rows: {
-                ...state.rows,
-                tree: { ...state.rows.tree, [nodeId]: newNode },
-              },
-            };
-          });
-          apiRef.current.setRowChildrenExpansion(nodeId, !node.childrenExpanded);
-        })
-        .catch((error) => {
-          apiRef.current.setRowLoadingStatus(nodeId, false);
-          throw error;
         });
+        apiRef.current.setRowChildrenExpansion(nodeId, true);
+      } catch (error) {
+        apiRef.current.setRowLoadingStatus(nodeId, false);
+        throw error;
+      }
     },
     [apiRef, props.unstable_dataSource],
   );
