@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -28,15 +28,18 @@ import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
 
 describe('<AdapterDayjs />', () => {
-  describeGregorianAdapter(AdapterDayjs, {
+  const commonParams = {
     formatDateTime: 'YYYY-MM-DD HH:mm:ss',
     setDefaultTimezone: dayjs.tz.setDefault,
+    getLocaleFromDate: (value: Dayjs) => value.locale(),
     frenchLocale: 'fr',
-  });
+  };
+
+  describeGregorianAdapter(AdapterDayjs, commonParams);
 
   // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
   describeGregorianAdapter(AdapterDayjs, {
-    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
+    ...commonParams,
     prepareAdapter: (adapter) => {
       // @ts-ignore
       adapter.hasUTCPlugin = () => false;
@@ -45,8 +48,6 @@ describe('<AdapterDayjs />', () => {
       // Makes sure that we don't run timezone related tests, that would not work.
       adapter.isTimezoneCompatible = false;
     },
-    setDefaultTimezone: dayjs.tz.setDefault,
-    frenchLocale: 'fr',
   });
 
   describe('Adapter localization', () => {

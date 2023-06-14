@@ -191,6 +191,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   private createSystemDate = (value: string | undefined): Dayjs => {
     // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)
+    /* istanbul ignore next */
     if (this.rawDayJsInstance) {
       return this.rawDayJsInstance(value);
     }
@@ -201,6 +202,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
         return defaultDayjs(value);
       }
 
+      // We can't change the system timezone in the tests
+      /* istanbul ignore next */
       return defaultDayjs.tz(value, timezone);
     }
 
@@ -309,12 +312,11 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       return value.utc();
     }
 
+    // We know that we have the UTC plugin.
+    // Otherwise, the value timezone would always equal "system".
+    // And it would be caught by the first "if" of this method.
     if (timezone === 'system') {
-      if (this.hasUTCPlugin()) {
-        return value.local();
-      }
-
-      return value;
+      return value.local();
     }
 
     if (!this.hasTimezonePlugin()) {

@@ -233,6 +233,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public setTimezone = (value: Moment, timezone: PickersTimezone): Moment => {
+    if (this.getTimezone(value) === timezone) {
+      return value;
+    }
+
     if (timezone === 'UTC') {
       return value.clone().utc();
     }
@@ -242,12 +246,12 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     }
 
     if (!this.hasTimezonePlugin()) {
-      if (timezone === 'default') {
-        return value;
+      /* istanbul ignore next */
+      if (timezone !== 'default') {
+        throw new Error(MISSING_TIMEZONE_PLUGIN);
       }
 
-      /* istanbul ignore next */
-      throw new Error(MISSING_TIMEZONE_PLUGIN);
+      return value;
     }
 
     const cleanZone =
