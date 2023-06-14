@@ -6,10 +6,10 @@ import type {
   ScaleLinear,
   ScalePoint,
 } from 'd3-scale';
-import { AxisClasses } from '../Axis/axisClasses';
+import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 
-export interface AxisProps {
+export interface ChartsAxisProps {
   /**
    * Id of the axis to render.
    */
@@ -56,17 +56,17 @@ export interface AxisProps {
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<AxisClasses>;
+  classes?: Partial<ChartsAxisClasses>;
 }
 
-export interface YAxisProps extends AxisProps {
+export interface ChartsYAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
    */
   position?: 'left' | 'right';
 }
 
-export interface XAxisProps extends AxisProps {
+export interface ChartsXAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
    */
@@ -126,7 +126,7 @@ export type AxisConfig<S = ScaleName, V = any> = {
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
-} & Partial<XAxisProps | YAxisProps> &
+} & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   TickParams;
 
 export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
