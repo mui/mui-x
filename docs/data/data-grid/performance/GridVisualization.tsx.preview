@@ -3,8 +3,5 @@
   rowHeight={38}
   checkboxSelection
   disableRowSelectionOnClick
-  slots={{
-    row: MemoizedRow,
-    columnHeaders: MemoizedColumnHeaders,
-  }}
+  slots={slots}
 />
