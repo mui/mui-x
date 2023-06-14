@@ -135,6 +135,7 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
     const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
 
     const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
+      baseGetApplyFilterFn === undefined ? undefined :
       (filterItem, colDef) => {
         const filterFn = baseGetApplyFilterFn(filterItem, colDef);
         if (!filterFn) {
@@ -167,7 +168,7 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
       ...operator,
       getApplyFilterFn,
       getApplyFilterFnV7,
-    };
+    } as GridFilterOperator;
   });
 
 /**

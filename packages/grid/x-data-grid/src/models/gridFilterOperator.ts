@@ -32,7 +32,7 @@ export type GetApplyFilterFnLegacy<R extends GridValidRowModel = any, V = any, F
  * @demos
  *   - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
  */
-export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> {
+export type GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> = {
   /**
    * The label of the filter operator.
    */
@@ -46,23 +46,46 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    * It will be matched with the `operator` property of the filter items.
    */
   value: string;
-  /**
-   * The callback that generates a filtering function for a given filter item and column.
-   * This function can return `null` to skip filtering for this item and column.
-   * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
-   * @param {GridColDef} column The column from which we want to filter the rows.
-   * @returns {null | ApplyFilterFnLegacy} The function to call to check if a row pass this filter item or not.
-   */
-  getApplyFilterFn: GetApplyFilterFnLegacy<R, V, F>;
-  /**
-   * The callback that generates a filtering function for a given filter item and column.
-   * This function can return `null` to skip filtering for this item and column.
-   * This function uses the more performant V7 API.
-   * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
-   * @param {GridColDef} column The column from which we want to filter the rows.
-   * @returns {null | ApplyFilterFnV7} The function to call to check if a row pass this filter item or not.
-   */
-  getApplyFilterFnV7?: GetApplyFilterFnV7<R, V, F>;
+} & (
+  | {
+    /**
+     * The callback that generates a filtering function for a given filter item and column.
+     * This function can return `null` to skip filtering for this item and column.
+     * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
+     * @param {GridColDef} column The column from which we want to filter the rows.
+     * @returns {null | ApplyFilterFnLegacy} The function to call to check if a row pass this filter item or not.
+     */
+    getApplyFilterFn: GetApplyFilterFnLegacy<R, V, F>;
+    /**
+     * The callback that generates a filtering function for a given filter item and column.
+     * This function can return `null` to skip filtering for this item and column.
+     * This function uses the more performant V7 API.
+     * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
+     * @param {GridColDef} column The column from which we want to filter the rows.
+     * @returns {null | ApplyFilterFnV7} The function to call to check if a row pass this filter item or not.
+     */
+    getApplyFilterFnV7?: GetApplyFilterFnV7<R, V, F>;
+  }
+  | {
+    /**
+     * The callback that generates a filtering function for a given filter item and column.
+     * This function can return `null` to skip filtering for this item and column.
+     * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
+     * @param {GridColDef} column The column from which we want to filter the rows.
+     * @returns {null | ApplyFilterFnLegacy} The function to call to check if a row pass this filter item or not.
+     */
+    getApplyFilterFn?: GetApplyFilterFnLegacy<R, V, F>;
+    /**
+     * The callback that generates a filtering function for a given filter item and column.
+     * This function can return `null` to skip filtering for this item and column.
+     * This function uses the more performant V7 API.
+     * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
+     * @param {GridColDef} column The column from which we want to filter the rows.
+     * @returns {null | ApplyFilterFnV7} The function to call to check if a row pass this filter item or not.
+     */
+    getApplyFilterFnV7: GetApplyFilterFnV7<R, V, F>;
+  }
+) & {
   /**
    * The input component to render in the filter panel for this filter operator.
    */
