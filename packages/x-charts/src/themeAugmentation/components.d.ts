@@ -1,6 +1,6 @@
 import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
 
-export interface ChartsComponents<Theme = unknown> {
+export interface ChartsComponents {
   MuiChartsAxis?: {
     defaultProps?: ComponentsProps['MuiChartsAxis'];
     styleOverrides?: ComponentsOverrides['MuiChartsAxis'];
@@ -68,5 +68,5 @@ export interface ChartsComponents<Theme = unknown> {
 }
 
 declare module '@mui/material/styles' {
-  interface Components<Theme = unknown> extends ChartsComponents<Theme> {}
+  interface Components extends ChartsComponents {}
 }
