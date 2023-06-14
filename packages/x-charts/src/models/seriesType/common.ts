@@ -4,6 +4,11 @@ import type { StackOffset, StackOrder } from '../../internals/stackSeries';
 export type CommonSeriesType<TValue> = {
   id?: string;
   color?: string;
+  /**
+   * Formatter used to render values in tooltip or other data display.
+   * @param {TValue} value The series' value to render.
+   * @returns {string} The string to dispaly.
+   */
   valueFormatter?: (value: TValue) => string;
   highlightScope?: Partial<HighlightScope>;
 };

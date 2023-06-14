@@ -120,7 +120,6 @@ export const useFieldState = <
     const referenceValue = valueManager.getInitialReferenceValue({
       referenceDate: referenceDateProp,
       value: valueFromTheOutside,
-      valueType,
       utils,
       props: internalProps as GetDefaultReferenceDateProps<TDate>,
       granularity,

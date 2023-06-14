@@ -1,6 +1,7 @@
 export * from './constants';
 export * from './context';
 export * from './ChartsClipPath';
+export * from './models';
 export * from './ChartsAxis';
 export * from './ChartsXAxis';
 export * from './ChartsYAxis';
