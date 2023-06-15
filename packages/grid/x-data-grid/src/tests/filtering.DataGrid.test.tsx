@@ -11,6 +11,7 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -1247,5 +1248,77 @@ describe('<DataGrid /> - Filter', () => {
         </div>
       );
     }).not.to.throw();
+  });
+
+  it('should update the filter model on columns change', () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({ columns: [{ field: 'id' }] });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
+  });
+
+  // See https://github.com/mui/mui-x/issues/9204
+  it('should not clear the filter model when both columns and filterModel change', async () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({
+      columns: [{ field: 'id' }],
+      filterModel: {
+        items: [{ field: 'id', operator: 'equals', value: '1' }],
+      },
+    });
+    expect(getColumnValues(0)).to.deep.equal(['1']);
+    expect(onFilterModelChange.callCount).to.equal(0);
   });
 });

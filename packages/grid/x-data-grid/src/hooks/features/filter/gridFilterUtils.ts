@@ -295,36 +295,44 @@ export const buildAggregatedFilterApplier = (
   });
 };
 
+const isNotNull = <T>(result: null | T): result is T => result != null;
+
+type FilterCache = {
+  cleanedFilterItems?: GridFilterItem[];
+};
+
+const filterModelItems = (
+  cache: FilterCache,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  items: GridFilterItem[],
+) => {
+  if (!cache.cleanedFilterItems) {
+    cache.cleanedFilterItems = items.filter(
+      (item) => getFilterCallbackFromItem(item, apiRef) !== null,
+    );
+  }
+  return cache.cleanedFilterItems;
+};
+
 export const passFilterLogic = (
   allFilterItemResults: (null | GridFilterItemResult)[],
   allQuickFilterResults: (null | GridQuickFilterValueResult)[],
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  cache: FilterCache,
 ): boolean => {
-  const cleanedFilterItems = filterModel.items.filter(
-    (item) => getFilterCallbackFromItem(item, apiRef) !== null,
-  );
-
-  const cleanedAllFilterItemResults = allFilterItemResults.filter(
-    (result): result is GridFilterItemResult => result != null,
-  );
-
-  const cleanedAllQuickFilterResults = allQuickFilterResults.filter(
-    (result): result is GridQuickFilterValueResult => result != null,
-  );
-
-  // Defaultize operators
-  const quickFilterLogicOperator =
-    filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
-  const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
+  const cleanedFilterItems = filterModelItems(cache, apiRef, filterModel.items);
+  const cleanedFilterItemResults = allFilterItemResults.filter(isNotNull);
+  const cleanedQuickFilterResults = allQuickFilterResults.filter(isNotNull);
 
   // get result for filter items model
-  if (cleanedAllFilterItemResults.length > 0) {
+  if (cleanedFilterItemResults.length > 0) {
     // Return true if the item pass with one of the rows
     const filterItemPredicate = (item: GridFilterItem) => {
-      return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
+      return cleanedFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
     };
 
+    const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
     if (logicOperator === GridLogicOperator.And) {
       const passesAllFilters = cleanedFilterItems.every(filterItemPredicate);
       if (!passesAllFilters) {
@@ -339,14 +347,16 @@ export const passFilterLogic = (
   }
 
   // get result for quick filter model
-  if (cleanedAllQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
+  if (cleanedQuickFilterResults.length > 0 && filterModel.quickFilterValues != null) {
     // Return true if the item pass with one of the rows
     const quickFilterValuePredicate = (value: string) => {
-      return cleanedAllQuickFilterResults.some(
+      return cleanedQuickFilterResults.some(
         (quickFilterValueResult) => quickFilterValueResult[value],
       );
     };
 
+    const quickFilterLogicOperator =
+      filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
     if (quickFilterLogicOperator === GridLogicOperator.And) {
       const passesAllQuickFilterValues =
         filterModel.quickFilterValues.every(quickFilterValuePredicate);

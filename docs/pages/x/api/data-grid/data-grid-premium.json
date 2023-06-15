@@ -369,10 +369,6 @@
       "type": { "name": "elementType" }
     },
     "headerFilterCell": { "default": "GridHeaderFilterCell", "type": { "name": "elementType" } },
-    "headerFilterClearIcon": {
-      "default": "GridHighlightOffIcon",
-      "type": { "name": "elementType" }
-    },
     "headerFilterMenu": {
       "default": "GridHeaderFilterMenu",
       "type": { "name": "elementType | null" }
@@ -475,6 +471,7 @@
       "footerContainer",
       "iconButtonContainer",
       "iconSeparator",
+      "headerFilterRow",
       "main",
       "menu",
       "menuIcon",

@@ -147,17 +147,6 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
   const previousView: TView | null = views[viewIndex - 1] ?? null;
   const nextView: TView | null = views[viewIndex + 1] ?? null;
 
-  const handleChangeView = useEventCallback((newView: TView) => {
-    if (newView === view) {
-      return;
-    }
-    setView(newView);
-
-    if (onViewChange) {
-      onViewChange(newView);
-    }
-  });
-
   const handleFocusedViewChange = useEventCallback((viewToFocus: TView, hasFocus: boolean) => {
     if (hasFocus) {
       // Focus event
@@ -172,6 +161,17 @@ export function useViews<TValue, TView extends DateOrTimeViewWithMeridiem>({
     onFocusedViewChange?.(viewToFocus, hasFocus);
   });
 
+  const handleChangeView = useEventCallback((newView: TView) => {
+    if (newView === view) {
+      return;
+    }
+    setView(newView);
+    handleFocusedViewChange(newView, true);
+
+    if (onViewChange) {
+      onViewChange(newView);
+    }
+  });
   const goToNextView = useEventCallback(() => {
     if (nextView) {
       handleChangeView(nextView);

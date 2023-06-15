@@ -3,8 +3,8 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { AllSeriesType } from '@mui/x-charts/models';
-import { XAxis } from '@mui/x-charts/XAxis';
-import { YAxis } from '@mui/x-charts/YAxis';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
 const series = [
   {
@@ -54,9 +54,9 @@ export default function Combining() {
     >
       <BarPlot />
       <LinePlot />
-      <XAxis label="Years" position="bottom" axisId="years" />
-      <YAxis label="Results" position="left" axisId="eco" />
-      <YAxis label="PIB" position="right" axisId="pib" />
+      <ChartsXAxis label="Years" position="bottom" axisId="years" />
+      <ChartsYAxis label="Results" position="left" axisId="eco" />
+      <ChartsYAxis label="PIB" position="right" axisId="pib" />
     </ChartContainer>
   );
 }

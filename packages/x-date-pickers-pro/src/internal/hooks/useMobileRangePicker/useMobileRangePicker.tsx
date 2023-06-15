@@ -86,6 +86,7 @@ export const useMobileRangePicker = <
 
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
+    TDate,
     RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({

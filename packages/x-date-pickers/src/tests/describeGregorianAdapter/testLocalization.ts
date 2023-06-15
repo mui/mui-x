@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
+import { stub } from 'sinon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { cleanText } from 'test/utils/pickers-utils';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
@@ -18,10 +18,10 @@ export const testLocalization: DescribeGregorianAdapterTestSuite = ({ adapter })
 
     // Moment only translates for 12-hour cycle.
     if (adapter.lib === 'moment') {
-      const stub = sinon.stub(adapter, 'is12HourCycleInCurrentLocale').returns(false);
+      const sinonStub = stub(adapter, 'is12HourCycleInCurrentLocale').returns(false);
       expect(adapter.getMeridiemText('am')).to.equal('AM');
       expect(adapter.getMeridiemText('pm')).to.equal('PM');
-      stub.restore();
+      sinonStub.restore();
     }
   });
 
