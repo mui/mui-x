@@ -86,7 +86,11 @@ const DateRangeCalendarMonthContainer = styled('div', {
   },
 }));
 
-const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
+const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher, {
+  name: 'MuiDateRangeCalendar',
+  slot: 'ArrowSwitcher',
+  overridesResolver: (_, styles) => styles.arrowSwitcher,
+})({
   padding: `${CALENDAR_MARGIN}px 12px 8px 6px`,
   [`.${dateRangeCalendarClasses.monthContainerWithoutWeekNumber} &`]: {
     paddingLeft: 24,
@@ -157,6 +161,7 @@ const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
   const slots = {
     root: ['root'],
     monthContainer: ['monthContainer', !displayWeekNumber && 'monthContainerWithoutWeekNumber'],
+    arrowSwitcher: ['arrowSwitcher'],
     dayCalendar: [isDragging && 'dayDragging'],
   };
 
@@ -558,6 +563,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               nextLabel={localeText.nextMonth}
               slots={slots}
               slotProps={slotProps}
+              className={classes.arrowSwitcher}
             >
               <Typography variant="body1" fontWeight="medium" component="span">
                 {utils.format(visibleMonths[month], 'monthAndYear')}

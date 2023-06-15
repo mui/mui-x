@@ -46,6 +46,10 @@
       "nodeName": "the container of a month",
       "conditions": "<code>displayWeekNumber=false</code>"
     },
+    "arrowSwitcher": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the arrow switcher element"
+    },
     "dayDragging": { "description": "Styles applied to the day calendar container when dragging" }
   },
   "slotDescriptions": {

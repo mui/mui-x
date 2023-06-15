@@ -75,7 +75,13 @@
   },
   "name": "DateRangeCalendar",
   "styles": {
-    "classes": ["root", "monthContainer", "monthContainerWithoutWeekNumber", "dayDragging"],
+    "classes": [
+      "root",
+      "monthContainer",
+      "monthContainerWithoutWeekNumber",
+      "arrowSwitcher",
+      "dayDragging"
+    ],
     "globalClasses": {},
     "name": "MuiDateRangeCalendar"
   },
