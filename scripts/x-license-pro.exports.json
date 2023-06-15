@@ -7,7 +7,7 @@
   { "name": "LicenseStatus", "kind": "Enum" },
   { "name": "LicensingModel", "kind": "TypeAlias" },
   { "name": "MuiCommercialPackageName", "kind": "TypeAlias" },
-  { "name": "showExpiredLicenseKeyError", "kind": "Function" },
+  { "name": "showExpiredAnnualLicenseKeyError", "kind": "Function" },
   { "name": "showExpiredPackageVersionError", "kind": "Function" },
   { "name": "showInvalidLicenseKeyError", "kind": "Function" },
   { "name": "showLicenseKeyPlanMismatchError", "kind": "Function" },

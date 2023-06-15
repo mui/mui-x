@@ -35,6 +35,10 @@
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
+    },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -62,12 +66,12 @@
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {
-    "Root": { "default": "MultiInputDateRangeFieldRoot", "type": { "name": "elementType" } },
-    "Separator": {
+    "root": { "default": "MultiInputDateRangeFieldRoot", "type": { "name": "elementType" } },
+    "separator": {
       "default": "MultiInputDateRangeFieldSeparator",
       "type": { "name": "elementType" }
     },
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "MultiInputDateRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateRangeField" },

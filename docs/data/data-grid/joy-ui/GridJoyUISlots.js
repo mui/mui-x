@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { unstable_joySlots } from '@mui/x-data-grid/joy';
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -9,32 +8,111 @@ import {
   THEME_ID as MATERIAL_THEME_ID,
 } from '@mui/material/styles';
 import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const materialTheme = materialExtendTheme();
+import {
+  randomCompanyName,
+  randomRating,
+  randomCreatedDate,
+  randomBoolean,
+  randomArrayItem,
+} from '@mui/x-data-grid-generator';
+
+const materialTheme = materialExtendTheme({
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: ({ ownerState }) => {
+          return {
+            color: 'var(--Icon-color)',
+            margin: 'var(--Icon-margin)',
+            ...(ownerState.fontSize &&
+              ownerState.fontSize !== 'inherit' && {
+                fontSize: `var(--Icon-fontSize, 1.5rem)`,
+              }),
+          };
+        },
+      },
+    },
+  },
+});
+
+const singleSelectValueOptions = ['Item1', 'Item2', 'Item3'];
+
+const columns = [
+  { field: 'name', editable: true, type: 'string', minWidth: 140 },
+  { field: 'number', editable: true, type: 'number', flex: 1 },
+  { field: 'date', editable: true, type: 'date', minWidth: 100 },
+  { field: 'dateTime', editable: true, type: 'dateTime', minWidth: 160 },
+  { field: 'boolean', editable: true, type: 'boolean', flex: 1 },
+  {
+    field: 'singleSelect',
+    editable: true,
+    type: 'singleSelect',
+    valueOptions: singleSelectValueOptions,
+    minWidth: 100,
+    flex: 1,
+  },
+  {
+    field: 'actions',
+    type: 'actions',
+    getActions: () => [
+      <GridActionsCellItem
+        icon={<DeleteIcon />}
+        onClick={() => {}}
+        label="Delete"
+      />,
+      <GridActionsCellItem onClick={() => {}} label="Print" showInMenu />,
+      <GridActionsCellItem label="Duplicate User" showInMenu />,
+    ],
+    minWidth: 80,
+    flex: 1,
+  },
+];
+
+const rows = [];
+for (let i = 0; i < 20; i += 1) {
+  rows.push({
+    id: i,
+    name: randomCompanyName(),
+    number: randomRating(),
+    date: randomCreatedDate(),
+    dateTime: randomCreatedDate(),
+    boolean: randomBoolean(),
+    singleSelect: randomArrayItem(singleSelectValueOptions),
+  });
+}
 
 export default function GridJoyUISlots() {
-  const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 100,
-    maxColumns: 20,
-    editable: true,
-  });
-
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
-        <Box sx={{ height: 400, width: '100%' }}>
+        <Box sx={{ height: 420, width: '100%' }}>
           <DataGrid
             pagination
-            slots={unstable_joySlots}
-            {...data}
+            slots={{
+              ...unstable_joySlots,
+              toolbar: GridToolbar,
+            }}
+            columns={columns}
+            rows={rows}
             checkboxSelection
             disableRowSelectionOnClick
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5, page: 0 },
+              },
+            }}
+            pageSizeOptions={[5, 10, 20]}
             slotProps={{
               filterPanel: {
                 sx: {
                   '& .MuiDataGrid-filterForm': {
                     alignItems: 'flex-end',
+                  },
+                  '& .MuiDataGrid-panelContent': {
+                    // To prevent the Select popup being hidden by the panel
+                    overflow: 'visible',
                   },
                 },
               },

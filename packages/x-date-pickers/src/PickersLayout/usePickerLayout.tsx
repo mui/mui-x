@@ -4,12 +4,12 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
-import { DateOrTimeView } from '../models';
 import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
-function toolbarHasView<TValue, TView extends DateOrTimeView>(
+function toolbarHasView<TValue, TView extends DateOrTimeViewWithMeridiem>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
 ): toolbarProps is BaseToolbarProps<TValue, TView> {
   return toolbarProps.view !== null;
@@ -30,13 +30,16 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface PickersLayoutPropsWithValueRequired<TValue, TDate, TView extends DateOrTimeView>
-  extends PickersLayoutProps<TValue, TDate, TView> {
+interface PickersLayoutPropsWithValueRequired<
+  TValue,
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends PickersLayoutProps<TValue, TDate, TView> {
   value: TValue;
 }
 interface UsePickerLayoutResponse extends SubComponents {}
 
-const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
+const usePickerLayout = <TValue, TDate, TView extends DateOrTimeViewWithMeridiem>(
   props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse => {
   const {
@@ -50,6 +53,7 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
     onViewChange,
     value,
     onChange,
+    onSelectShortcut,
     isValid,
     isLandscape,
     disabled,
@@ -62,7 +66,7 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
     // - For pickers value: TDate | null
-    // - For rangepickers value: [TDate | null, TDate | null]
+    // - For range pickers value: [TDate | null, TDate | null]
   } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
 
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
@@ -129,13 +133,13 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
     additionalProps: {
       isValid,
       isLandscape,
-      onChange,
+      onChange: onSelectShortcut,
       className: classes.shortcuts,
     },
     ownerState: {
       isValid,
       isLandscape,
-      onChange,
+      onChange: onSelectShortcut,
       className: classes.shortcuts,
       wrapperVariant,
     },

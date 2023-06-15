@@ -12,7 +12,7 @@ import {
   UncapitalizeObjectKeys,
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRangeValidationError } from '../models';
 import { DateRange } from '../internal/models';
 import {
   DateRangeCalendarSlotsComponent,

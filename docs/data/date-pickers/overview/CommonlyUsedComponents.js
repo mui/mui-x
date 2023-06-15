@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Tooltip from '@mui/material/Tooltip';
 import Stack from '@mui/material/Stack';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -32,12 +31,6 @@ function Label({ componentName, valueType, isProOnly }) {
 
   return content;
 }
-
-Label.propTypes = {
-  componentName: PropTypes.string.isRequired,
-  isProOnly: PropTypes.bool,
-  valueType: PropTypes.string.isRequired,
-};
 
 export default function CommonlyUsedComponents() {
   return (

@@ -5,12 +5,19 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { TimeField } from '../TimeField';
 import { DesktopTimePickerProps } from './DesktopTimePicker.types';
 import { useTimePickerDefaultizedProps } from '../TimePicker/shared';
-import { useLocaleText, validateTime } from '../internals';
-import { TimeView } from '../models';
-import { Clock } from '../internals/components/icons';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateTime } from '../internals/utils/validation/validateTime';
+import { ClockIcon } from '../icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import {
+  renderDigitalClockTimeView,
+  renderMultiSectionDigitalClockTimeView,
+} from '../timeViewRenderers';
+import { PickersActionBarAction } from '../PickersActionBar';
+import { TimeViewWithMeridiem } from '../internals/models';
+import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -21,30 +28,58 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all time pickers
-  const defaultizedProps = useTimePickerDefaultizedProps<TDate, DesktopTimePickerProps<TDate>>(
-    inProps,
-    'MuiDesktopTimePicker',
-  );
+  const defaultizedProps = useTimePickerDefaultizedProps<
+    TDate,
+    TimeViewWithMeridiem,
+    DesktopTimePickerProps<TDate>
+  >(inProps, 'MuiDesktopTimePicker');
 
-  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
-    hours: null,
-    minutes: null,
-    seconds: null,
+  const thresholdToRenderTimeInASingleColumn =
+    defaultizedProps.thresholdToRenderTimeInASingleColumn ?? 24;
+  const timeSteps = { hours: 1, minutes: 5, seconds: 5, ...defaultizedProps.timeSteps };
+  const shouldRenderTimeInASingleColumn =
+    (24 * 60) / (timeSteps.hours * timeSteps.minutes) <= thresholdToRenderTimeInASingleColumn;
+
+  const renderTimeView = shouldRenderTimeInASingleColumn
+    ? renderDigitalClockTimeView
+    : renderMultiSectionDigitalClockTimeView;
+
+  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeViewWithMeridiem, any, {}> = {
+    hours: renderTimeView,
+    minutes: renderTimeView,
+    seconds: renderTimeView,
+    meridiem: renderTimeView,
     ...defaultizedProps.viewRenderers,
   };
 
   const ampmInClock = defaultizedProps.ampmInClock ?? true;
+  const actionBarActions: PickersActionBarAction[] = shouldRenderTimeInASingleColumn
+    ? []
+    : ['accept'];
+  // Need to avoid adding the `meridiem` view when unexpected renderer is specified
+  const shouldHoursRendererContainMeridiemView =
+    viewRenderers.hours?.name === renderMultiSectionDigitalClockTimeView.name;
+  const views: readonly TimeViewWithMeridiem[] =
+    defaultizedProps.ampm && shouldHoursRendererContainMeridiemView
+      ? [...defaultizedProps.views, 'meridiem']
+      : defaultizedProps.views;
 
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     ampmInClock,
+    timeSteps,
     viewRenderers,
+    format: resolveTimeFormat(utils, defaultizedProps),
+    // Setting only `hours` time view in case of single column time picker
+    // Allows for easy view lifecycle management
+    views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
     slots: {
       field: TimeField,
-      openPickerIcon: Clock,
+      openPickerIcon: ClockIcon,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -53,17 +88,20 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        ampm: defaultizedProps.ampm,
       }),
       toolbar: {
         hidden: true,
         ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
+      actionBar: {
+        actions: actionBarActions,
+        ...defaultizedProps.slotProps?.actionBar,
+      },
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, TimeView, typeof props>({
+  const { renderPicker } = useDesktopPicker<TDate, TimeViewWithMeridiem, typeof props>({
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
@@ -246,7 +284,7 @@ DesktopTimePicker.propTypes = {
    * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
-  openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  openTo: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Force rendering in particular orientation.
    */
@@ -289,11 +327,17 @@ DesktopTimePicker.propTypes = {
   shouldDisableClock: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * If `true`, disabled digital clock items will not be rendered.
+   * @default false
+   */
+  skipDisabled: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
@@ -313,6 +357,22 @@ DesktopTimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * Amount of time options below or at which the single column time renderer is used.
+   * @default 24
+   */
+  thresholdToRenderTimeInASingleColumn: PropTypes.number,
+  /**
+   * The time steps between two time unit options.
+   * For example, if `timeStep.minutes = 8`, then the available minute options will be `[0, 8, 16, 24, 32, 40, 48, 56]`.
+   * When single column time renderer is used, only `timeStep.minutes` will be used.
+   * @default{ hours: 1, minutes: 5, seconds: 5 }
+   */
+  timeSteps: PropTypes.shape({
+    hours: PropTypes.number,
+    minutes: PropTypes.number,
+    seconds: PropTypes.number,
+  }),
+  /**
    * The selected value.
    * Used when the component is controlled.
    */
@@ -322,7 +382,7 @@ DesktopTimePicker.propTypes = {
    * Used when the component view is controlled.
    * Must be a valid option from `views` list.
    */
-  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  view: PropTypes.oneOf(['hours', 'meridiem', 'minutes', 'seconds']),
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -330,6 +390,7 @@ DesktopTimePicker.propTypes = {
    */
   viewRenderers: PropTypes.shape({
     hours: PropTypes.func,
+    meridiem: PropTypes.func,
     minutes: PropTypes.func,
     seconds: PropTypes.func,
   }),

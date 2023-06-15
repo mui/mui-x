@@ -8,7 +8,7 @@ import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internal/hooks/useMobileRangePicker';
-import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { validateDateRange } from '../internal/utils/validation/validateDateRange';
 import { DateRange } from '../internal/models';
 
 type MobileDateRangePickerComponent = (<TDate>(
@@ -102,6 +102,11 @@ MobileDateRangePicker.propTypes = {
    * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
+  /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.

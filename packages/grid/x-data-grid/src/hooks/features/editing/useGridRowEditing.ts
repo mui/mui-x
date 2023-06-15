@@ -42,6 +42,7 @@ import {
   GridRowEditStopReasons,
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
+import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
@@ -191,10 +192,13 @@ export const useGridRowEditing = (
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
         } else if (event.key === 'Tab') {
-          const columnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) =>
-            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
-          );
-
+          const columnFields = gridVisibleColumnFieldsSelector(apiRef).filter((field) => {
+            const column = apiRef.current.getColumn(field);
+            if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+              return true;
+            }
+            return apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field));
+          });
           if (event.shiftKey) {
             if (params.field === columnFields[0]) {
               // Exit if user pressed Shift+Tab on the first field
@@ -217,9 +221,8 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
-          const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStopParams = {
-            ...rowParams,
+            ...apiRef.current.getRowParams(params.id),
             reason,
             field: params.field,
           };
@@ -228,8 +231,14 @@ export const useGridRowEditing = (
       } else if (params.isEditable) {
         let reason: GridRowEditStartReasons | undefined;
 
-        if (event.key === ' ') {
-          return; // Space scrolls to the last row
+        const canStartEditing = apiRef.current.unstable_applyPipeProcessors(
+          'canStartEditing',
+          true,
+          { event, cellParams: params, editMode: 'row' },
+        );
+
+        if (!canStartEditing) {
+          return;
         }
 
         if (isPrintableKey(event)) {

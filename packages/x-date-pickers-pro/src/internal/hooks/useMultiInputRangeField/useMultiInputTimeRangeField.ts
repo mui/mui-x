@@ -4,6 +4,7 @@ import {
   unstable_useTimeField as useTimeField,
   UseTimeFieldComponentProps,
   UseTimeFieldProps,
+  UseTimeFieldDefaultizedProps,
 } from '@mui/x-date-pickers/TimeField';
 import {
   useLocalizationContext,
@@ -17,10 +18,10 @@ import { TimeValidationError } from '@mui/x-date-pickers/models';
 import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import {
-  TimeRangeValidationError,
-  TimeRangeComponentValidationProps,
   validateTimeRange,
-} from '../validation/useTimeRangeValidation';
+  TimeRangeComponentValidationProps,
+} from '../../utils/validation/validateTimeRange';
+import { TimeRangeValidationError } from '../../../models';
 import type {
   UseMultiInputTimeRangeFieldDefaultizedProps,
   UseMultiInputTimeRangeFieldParams,
@@ -118,7 +119,10 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const startFieldProps: UseTimeFieldComponentProps<
+    TDate,
+    UseTimeFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[0],
     ...startTextFieldProps,
     format,
@@ -131,7 +135,10 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     onChange: handleStartDateChange,
   };
 
-  const endFieldProps: UseTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const endFieldProps: UseTimeFieldComponentProps<
+    TDate,
+    UseTimeFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,

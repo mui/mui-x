@@ -60,36 +60,41 @@ export default function CSSCustomization() {
       sx={{
         '& .MuiLineElement-root': {
           strokeDasharray: '10 5',
+          strokeWidth: 4,
+        },
+        '& .MuiMarkElement-root': {
+          display: 'none',
         },
         '& .MuiAreaElement-series-Germany': {
           fill: "url('#myGradient')",
         },
       }}
-      xAxis={[{ id: 'Years', data: years, scaleName: 'time' }]}
+      xAxis={[
+        {
+          id: 'Years',
+          data: years,
+          scaleType: 'time',
+          valueFormatter: (date) => date.getFullYear(),
+        },
+      ]}
       series={[
         {
-          type: 'line',
           id: 'France',
-          xAxisKey: 'Years',
           data: FranceGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
-          type: 'line',
           id: 'Germany',
-          xAxisKey: 'Years',
           data: GermanyGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
         {
-          type: 'line',
           id: 'United Kingdom',
-          xAxisKey: 'Years',
           data: UKGDPperCapita,
           stack: 'total',
-          area: {},
+          area: true,
         },
       ]}
       width={600}

@@ -6,7 +6,7 @@ import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<YearCalendar />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
@@ -153,5 +153,20 @@ describe('<YearCalendar />', () => {
     act(() => button2019.focus());
     fireEvent.keyDown(button2019, { key: 'ArrowRight' });
     expect(document.activeElement).to.have.text('2020');
+  });
+
+  it('should disable years after initial render when "disableFuture" prop changes', () => {
+    const { setProps } = render(<YearCalendar />);
+
+    const year2019 = screen.getByText('2019', { selector: 'button' });
+    const year2020 = screen.getByText('2020', { selector: 'button' });
+
+    expect(year2019).not.to.have.attribute('disabled');
+    expect(year2020).not.to.have.attribute('disabled');
+
+    setProps({ disableFuture: true });
+
+    expect(year2019).not.to.have.attribute('disabled');
+    expect(year2020).to.have.attribute('disabled');
   });
 });

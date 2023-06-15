@@ -7,6 +7,7 @@ export default function RowPinningWithPagination() {
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 20,
+    editable: true,
   });
 
   const rowsData = React.useMemo(() => {

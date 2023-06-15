@@ -963,7 +963,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         apiRef.current.subscribeEvent('cellEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         expect(listener.lastCall.args[0].reason).to.equal('cellFocusOut');
       });
 
@@ -971,7 +971,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -993,7 +993,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
               resolve();
             }),
         );
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });

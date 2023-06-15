@@ -3,8 +3,9 @@ import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
+import { BaseTimeValidationProps, TimeValidationProps } from '../internals/models/validation';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
@@ -14,7 +15,7 @@ export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
 
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<
-      UseFieldInternalProps<TDate | null, FieldSection, TimeValidationError>,
+      UseFieldInternalProps<TDate | null, TDate, FieldSection, TimeValidationError>,
       'format'
     >,
     TimeValidationProps<TDate>,

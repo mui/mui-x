@@ -18,6 +18,23 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
+enum Direction {
+  UP,
+  DOWN,
+}
+
+interface ReorderStateProps {
+  previousTargetId: GridRowId | null;
+  dragDirection: Direction | null;
+}
+
+let previousMousePosition: { x: number; y: number } | null = null;
+
+let previousReorderState: ReorderStateProps = {
+  previousTargetId: null,
+  dragDirection: null,
+};
+
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
@@ -103,10 +120,32 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
+      const mouseMovementDiff = previousMousePosition
+        ? previousMousePosition.y - event.clientY
+        : event.clientY;
+
       if (params.id !== dragRowId) {
         const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
-        apiRef.current.setRowIndex(dragRowId, targetRowIndex);
+
+        const dragDirection = mouseMovementDiff > 0 ? Direction.DOWN : Direction.UP;
+        const currentReorderState: ReorderStateProps = {
+          dragDirection,
+          previousTargetId: params.id,
+        };
+        const isStateChanged =
+          currentReorderState.dragDirection !== previousReorderState.dragDirection ||
+          currentReorderState.previousTargetId !== previousReorderState.previousTargetId;
+
+        if (
+          previousReorderState.dragDirection === null ||
+          (Math.abs(mouseMovementDiff) >= 1 && isStateChanged)
+        ) {
+          apiRef.current.setRowIndex(dragRowId, targetRowIndex);
+          previousReorderState = currentReorderState;
+        }
       }
+
+      previousMousePosition = { x: event.clientX, y: event.clientY };
     },
     [apiRef, logger, dragRowId],
   );
@@ -127,6 +166,7 @@ export const useGridRowReorder = (
 
       clearTimeout(removeDnDStylesTimeout.current);
       dragRowNode.current = null;
+      previousReorderState.dragDirection = null;
 
       // Check if the row was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {

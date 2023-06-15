@@ -1,0 +1,11 @@
+<LineChart
+  width={500}
+  height={300}
+  series={[
+    { data: pData, label: 'pv', yAxisKey: 'leftAxisId' },
+    { data: uData, label: 'uv', yAxisKey: 'rightAxisId' },
+  ]}
+  xAxis={[{ scaleType: 'point', data: xLabels }]}
+  yAxis={[{ id: 'leftAxisId' }, { id: 'rightAxisId' }]}
+  rightAxis="rightAxisId"
+/>

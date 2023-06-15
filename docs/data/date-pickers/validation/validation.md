@@ -18,7 +18,7 @@ The validation props are showcased for each type of picker component using the r
 
 But the same props are available on:
 
-- all the other variants of this picker
+- all the other variants of this picker;
 
   For example—the validation props showcased with `DatePicker` are also available on:
 
@@ -26,9 +26,13 @@ But the same props are available on:
   - `MobileDatePicker`
   - `StaticDatePicker`
 
-- the field used by this picker
+- the field used by this picker;
 
   For example—the validation props showcased with `DatePicker` are also available on `DateField`.
+
+- the view components;
+
+  For example—the validation props showcased with `TimePicker` are also available on `TimeClock` and `DigitalClock`.
   :::
 
 ## Invalid values feedback
@@ -183,7 +187,7 @@ In the example below—the last quarter of each hour is not selectable.
 
 ### Minimum and maximum date time
 
-The `minDateTime` prop prevents the selection of all values after `props.minDateTime`.
+The `minDateTime` prop prevents the selection of all values before `props.minDateTime`.
 
 {{"demo": "DateTimeValidationMinDateTime.js", "defaultCodeOpen": false}}
 

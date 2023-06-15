@@ -1,10 +1,7 @@
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { MonthCalendarClasses } from './monthCalendarClasses';
-import {
-  BaseDateValidationProps,
-  MonthValidationProps,
-} from '../internals/hooks/validation/models';
+import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
 
 export interface ExportedMonthCalendarProps {
   /**
@@ -42,6 +39,11 @@ export interface MonthCalendarProps<TDate>
    * Used when the component is not controlled.
    */
   defaultValue?: TDate | null;
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
   /**
    * Callback fired when the value changes.
    * @template TDate
