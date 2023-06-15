@@ -130,11 +130,7 @@ GridFilterInputDate.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (e.g. `isEmpty`)
-   */
-  isFilterActive: PropTypes.bool,
+  gridDensity: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

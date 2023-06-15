@@ -126,6 +126,7 @@ GridFilterInputValue.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  gridDensity: PropTypes.oneOf(['comfortable', 'compact', 'standard']),
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

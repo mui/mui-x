@@ -97,6 +97,7 @@ GridHeaderFilterMenuContainer.propTypes = {
     }),
   ]),
   field: PropTypes.string.isRequired,
+  gridDensity: PropTypes.oneOf(['comfortable', 'compact', 'standard']).isRequired,
   headerFilterMenuRef: PropTypes.shape({
     current: PropTypes.object,
   }).isRequired,
