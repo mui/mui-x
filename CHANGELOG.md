@@ -17,11 +17,11 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   <TimePicker views={['hours', 'minutes', 'seconds']} ampm />
   // Format before v6.7.0: `hh:mm aa`
   // Format after v6.7.0: `hh:mm:ss aa`
- 
+
   <DatePicker views={['year']} />
   // Format before v6.7.0: `MM/DD/YYYY`
   // Format after v6.7.0: `YYYY`
-  
+
   <DateTimePicker views={['day', 'hours', 'minutes']} ampm />
   // Format before v6.7.0: `MM/DD/YYYY hh:mm aa`
   // Format after v6.7.0: `DD hh:mm aa`
@@ -2381,7 +2381,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Breaking changes
 
 - The `ToolbarComponent` has been replaced by a `Toolbar` component slot.
-  You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props):
+  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props):
 
   ```diff
    // Same on all other pickers
@@ -2532,7 +2532,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Breaking changes
 
-- All the props used by the mobile and desktop wrappers to override components or components' props have been replaced by component slots. You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+- All the props used by the mobile and desktop wrappers to override components or components' props have been replaced by component slots. You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
   Some of the names have also been prefixed by `desktop` when it was unclear that the behavior was only applied on the desktop version of the pickers (or the responsive version when used on a desktop).
 
@@ -2721,7 +2721,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 #### Breaking changes
 
 - The `renderDay` prop has been replaced by a `Day` component slot.
-  You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+  You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
   ```diff
    // Same for any other date, date time or date range picker.
