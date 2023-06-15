@@ -39,7 +39,6 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [pickers] Close the calendar when a shortcut is selected (#9080) @flaviendelangle
 - [pickers] Fix disabling for digital clock (#9300) @alexfauquette
 
-
 ### Docs
 
 - [docs] Add header filters to the popular features demo (#9069) @MBilalShafi
