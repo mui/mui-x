@@ -15,6 +15,7 @@ import { gridEditRowsStateSelector } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
 
@@ -81,7 +82,7 @@ export const useGridRowReorder = (
       });
 
       originRowIndex.current = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
-      apiRef.current.setCellFocus(params.id, '__reorder__');
+      apiRef.current.setCellFocus(params.id, GRID_REORDER_COL_DEF.field);
     },
     [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
