@@ -7,8 +7,6 @@ body:
     attributes:
       value: |
         Please provide a searchable summary of the issue in the title above ⬆️.
-
-        ⚠️ **Don't use this form if the problem is [a bug](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=1.bug.yml) or a [feature request](https://github.com/mui/mui-x/issues/new?assignees=&labels=status%3A+needs+triage&template=2.feature.yml), use the dedicated form instead.**
   - type: checkboxes
     attributes:
       label: Duplicates
