@@ -205,9 +205,10 @@ export const featuresSet: Row[] = [
   {
     id: 19,
     name: 'Clipboard paste',
-    description: 'Copy and paste data using the clipboard',
+    description:
+      'Copy and paste the selected cells and rows using the copy/paste keyboard shortcuts.',
     plan: 'Premium',
-    detailPage: '/clipboard/',
+    detailPage: '/clipboard/#clipboard-paste',
     demo: <ClipboardPaste />,
     newBadge: true,
   },
