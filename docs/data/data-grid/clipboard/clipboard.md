@@ -20,9 +20,9 @@ The priority of the data copied to the clipboard is the following, from highest 
 :::info
 
 <details style="margin: 0">
-  <summary markdown="span">Video demo</summary>
+  <summary markdown="span">Video preview</summary>
   <video muted loop playsinline controls style="margin-top: 8px">
-    <source src="/static/x/clipboard-paste.mov" type="video/mp4" />
+    <source src="https://github-production-user-asset-6210df.s3.amazonaws.com/13808724/237996024-abfcb5c6-9db6-4677-9ba7-ae97de441080.mov" type="video/mp4" />
   </video>
 </details>
 :::
