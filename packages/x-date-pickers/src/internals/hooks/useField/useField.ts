@@ -17,13 +17,15 @@ import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 import { getActiveElement } from '../../utils/utils';
 import { FieldSection } from '../../../models';
+import { TimeValidationProps } from '../../models/validation';
 
 export const useField = <
   TValue,
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any> &
+    Partial<TimeValidationProps<TDate>>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -45,7 +47,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false, unstableFieldRef },
+    internalProps: { readOnly = false, unstableFieldRef, minutesStep },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -350,6 +352,7 @@ export const useField = <
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           activeDateManager.date,
+          { minutesStep },
         );
 
         updateSectionValue({

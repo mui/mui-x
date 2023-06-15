@@ -31,7 +31,8 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError> {
+export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
+   {
   /**
    * The selected value.
    * Used when the component is controlled.

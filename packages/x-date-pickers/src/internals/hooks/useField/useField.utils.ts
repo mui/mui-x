@@ -15,6 +15,7 @@ import {
 } from '../../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { getMonthsInYear } from '../../utils/date-utils';
+import { TimeValidationProps } from '../../models/validation';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -173,6 +174,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   keyCode: AvailableAdjustKeyCode,
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   activeDate: TDate | null,
+  validationAttribues?: Partial<TimeValidationProps<TDate>>,
 ): string => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
@@ -203,14 +205,32 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
     }
 
     const currentSectionValue = parseInt(section.value, 10);
-    const newSectionValueNumber = currentSectionValue + delta;
+
+    const step =
+      section.type === 'minutes' && validationAttribues?.minutesStep
+        ? validationAttribues.minutesStep
+        : 1;
+
+    let newSectionValueNumber = currentSectionValue + delta * step;
+    if (newSectionValueNumber % step !== 0) {
+      if (delta < 0) {
+        newSectionValueNumber += step - (currentSectionValue % step);
+      }
+      if (delta > 0) {
+        newSectionValueNumber -= currentSectionValue % step;
+      }
+    }
 
     if (newSectionValueNumber > sectionBoundaries.maximum) {
-      return getCleanValue(sectionBoundaries.minimum);
+      return getCleanValue(
+        sectionBoundaries.minimum + newSectionValueNumber - sectionBoundaries.maximum - 1,
+      );
     }
 
     if (newSectionValueNumber < sectionBoundaries.minimum) {
-      return getCleanValue(sectionBoundaries.maximum);
+      return getCleanValue(
+        sectionBoundaries.maximum - (sectionBoundaries.minimum - newSectionValueNumber - 1),
+      );
     }
 
     return getCleanValue(newSectionValueNumber);
