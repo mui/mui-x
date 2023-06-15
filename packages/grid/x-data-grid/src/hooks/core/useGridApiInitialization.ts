@@ -20,28 +20,9 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 let globalId = 0;
 
 const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extends GridApiCommon>(
-  publicApi: PublicApi,
+  publicApi: any,
 ) => {
 
-  const privateApi = {
-    ...publicApi,
-    [API_TYPE]: 'private',
-  } as unknown as PrivateApi;
-
-  privateApi.getPublicApi = () => publicApi;
-
-  privateApi.register = (visibility, methods) => {
-    Object.keys(methods).forEach((methodName) => {
-      if (visibility === 'public') {
-        publicApi[methodName as keyof PublicApi] = (methods as any)[methodName];
-        privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
-      } else {
-        privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
-      }
-    });
-  };
-
-  return privateApi;
 };
 
 export function useGridApiInitialization<
@@ -53,28 +34,54 @@ export function useGridApiInitialization<
 ): React.MutableRefObject<PrivateApi> {
 
   const publicApiRef = inputApiRef ?? React.useRef() as React.MutableRefObject<Api>;
-  if (!publicApiRef.current || !(publicApiRef.current as any)[API_TYPE]) {
-    const state = {} as Api['state'];
+  const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
 
-    publicApiRef.current = {
-      [API_TYPE]: 'public',
+  if (!privateApiRef.current) {
+    const state = {} as Api['state'];
+    const privateApi = {
       state,
       store: Store.create(state),
       instanceId: { id: globalId },
-    } as any as Api;
+      [API_TYPE]: 'private',
+    } as any as PrivateApi;
 
-    globalId += 1;
-  }
+    privateApi.getPublicApi = () => publicApiRef.current;
 
-  const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
-  if (!privateApiRef.current) {
-    privateApiRef.current = wrapPublicApi<PrivateApi, Api>(publicApiRef.current);
-    (publicApiRef.current as any)[PRIVATE_SYMBOL] = privateApiRef.current;
+    privateApi.register = (visibility, methods) => {
+      Object.keys(methods).forEach((methodName) => {
+        if (visibility === 'public') {
+          publicApiRef.current[methodName as keyof Api] = (methods as any)[methodName];
+          privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
+        } else {
+          privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
+        }
+      });
+    };
 
-    privateApiRef.current.register('private', {
+    privateApi.register('private', {
       caches: {} as PrivateApi['caches'],
       eventManager: new EventManager(),
     });
+
+    privateApiRef.current = privateApi;
+  }
+
+  if (!publicApiRef.current || !(publicApiRef.current as any)[API_TYPE]) {
+    publicApiRef.current = {
+      get state() {
+        return privateApiRef.current.state
+      },
+      set state(value) {
+        throw 42
+        // privateApiRef.current.state;
+      },
+      store: privateApiRef.current.store,
+      instanceId: privateApiRef.current.instanceId,
+      [API_TYPE]: 'public',
+      [PRIVATE_SYMBOL]: privateApiRef.current,
+    } as any as Api;
+
+    globalId += 1;
   }
 
   const publishEvent = React.useCallback<GridCoreApi['publishEvent']>(

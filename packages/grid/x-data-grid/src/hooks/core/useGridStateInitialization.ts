@@ -78,7 +78,6 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
       if (!ignoreSetState) {
         // We always assign it as we mutate rows for perf reason.
         apiRef.current.state = newState;
-        apiRef.current.getPublicApi().state = newState;
 
         if (apiRef.current.publishEvent) {
           apiRef.current.publishEvent('stateChange', newState);
