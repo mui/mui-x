@@ -33,12 +33,13 @@ export default function Combining() {
     <ChartContainer
       series={series}
       width={500}
-      height={500}
+      height={400}
       xAxis={[
         {
           id: 'years',
           data: [2010, 2011, 2012, 2013, 2014],
           scaleType: 'band',
+          valueFormatter: (value) => value.toString(),
         },
       ]}
       yAxis={[

@@ -17,8 +17,8 @@ export default function ScaleExample() {
       ]}
       leftAxis="linearAxis"
       rightAxis="logAxis"
-      width={600}
-      height={500}
+      width={500}
+      height={400}
     />
   );
 }

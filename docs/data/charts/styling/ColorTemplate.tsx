@@ -172,7 +172,7 @@ export default function ColorTemplate() {
     <Stack direction="column" spacing={2}>
       <ScatterChart
         width={600}
-        height={400}
+        height={300}
         series={series}
         yAxis={[{ min: -1.5, max: 1.5 }]}
         colors={categories[colorScheme]}

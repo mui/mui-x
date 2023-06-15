@@ -111,7 +111,7 @@ export default function StackOrderDemo() {
       </Stack>
       <BarChart
         width={700}
-        height={400}
+        height={300}
         xAxis={[xAxis]}
         yAxis={[{ min: 0, max: 100 }]}
         series={modifiedSeries}

@@ -36,6 +36,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
           style={{ pointerEvents: 'none' }}
         />
       )}
+
       {xAxisHighlight === 'line' && axis.x !== null && (
         <path
           d={`M ${getXPosition(axis.x.value)} ${yScale(yScale.domain()[0])} L ${getXPosition(
@@ -46,6 +47,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
           style={{ pointerEvents: 'none' }}
         />
       )}
+
       {yAxisHighlight === 'line' && axis.y !== null && (
         <path
           d={`M ${xScale.range()[0]} ${yScale(axis.y.value)} L ${xScale.range()[1]} ${yScale(
