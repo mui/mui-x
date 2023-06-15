@@ -31,7 +31,7 @@ const blacklist = [
   /^docs-data-grid-column-menu(.*)(?<!Snap)\.png$/,
   /^docs-data-grid-editing(.*)(?<!Snap)\.png$/,
   /^docs-data-grid-events(.*)(?<!Snap)\.png$/,
-  /^docs-data-grid-export(.*)(?<!Snap)\.png$/,
+  /^docs-data-grid-export(.*)(?<!(Snap|ExportDefaultToolbar))\.png$/,
   /^docs-data-grid-row-selection(.*)(?<!Snap)\.png$/,
   /^docs-data-grid-state(.*)(?<!Snap)\.png$/,
   /**
