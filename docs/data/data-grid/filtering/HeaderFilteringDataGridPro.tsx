@@ -22,6 +22,7 @@ export default function HeaderFilteringDataGridPro() {
           },
         }}
         unstable_headerFilters
+        density="compact"
       />
     </div>
   );

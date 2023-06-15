@@ -454,7 +454,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       columns.push(
         <GridColumnHeaderRow
           style={{
-            height: `${headerHeight}px`,
+            height: `${headerHeight - 1}px`,
             transform: `translateX(-${depthInfo.leftOverflow}px)`,
           }}
           key={depthIndex}

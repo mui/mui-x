@@ -5,6 +5,7 @@ import {
   GridFilterOperator,
   useGridApiContext,
   GridColDef,
+  GridDensity,
 } from '@mui/x-data-grid';
 import { unstable_useId as useId } from '@mui/utils';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
@@ -16,6 +17,12 @@ const sx = {
   margin: 'auto 0 10px 5px',
 };
 
+const compactSx = {
+  width: 18,
+  height: 18,
+  margin: 'auto 0 4px 5px',
+};
+
 function GridHeaderFilterMenuContainer(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
@@ -23,8 +30,9 @@ function GridHeaderFilterMenuContainer(props: {
   applyFilterChanges: (item: GridFilterItem) => void;
   headerFilterMenuRef: React.MutableRefObject<HTMLButtonElement | null>;
   buttonRef: React.Ref<HTMLButtonElement>;
+  gridDensity: GridDensity;
 }) {
-  const { operators, item, field, buttonRef, headerFilterMenuRef, ...others } = props;
+  const { operators, item, field, buttonRef, headerFilterMenuRef, gridDensity, ...others } = props;
 
   const buttonId = useId();
   const menuId = useId();
@@ -57,7 +65,7 @@ function GridHeaderFilterMenuContainer(props: {
         tabIndex={-1}
         size="small"
         onClick={handleClick}
-        sx={sx}
+        sx={gridDensity === 'compact' ? compactSx : sx}
         {...rootProps.slotProps?.baseIconButton}
       >
         <rootProps.slots.openFilterButtonIcon fontSize="small" />

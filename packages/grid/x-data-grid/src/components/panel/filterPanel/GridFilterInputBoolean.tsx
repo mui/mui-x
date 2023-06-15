@@ -5,25 +5,36 @@ import { unstable_useId as useId } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridDensity } from '../../../models/gridDensity';
 
 export type GridFilterInputBooleanProps = GridFilterInputValueProps &
   TextFieldProps & {
     clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
-     */
-    isFilterActive?: boolean;
+    gridDensity?: GridDensity;
   };
 
-const BooleanOperatorContainer = styled('div')({
+type OwnerState = { gridDensity: GridDensity };
+
+const BooleanOperatorContainer = styled('div')<{ ownerState: OwnerState }>(({ ownerState }) => ({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
   [`& button`]: {
-    margin: 'auto 0px 5px 5px',
+    margin: ownerState.gridDensity === 'compact' ? 'auto 0px 1px 5px' : 'auto 0px 5px 5px',
   },
-});
+  ...(ownerState.gridDensity === 'compact'
+    ? {
+        [`& .MuiInput-root`]: {
+          [`& select`]: {
+            fontSize: 14,
+            paddingTop: 0,
+            paddingBottom: 2,
+          },
+          marginTop: 14,
+        },
+      }
+    : {}),
+}));
 
 function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const {
@@ -31,7 +42,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
     applyValue,
     apiRef,
     focusElementRef,
-    isFilterActive,
+    gridDensity,
     clearButton,
     tabIndex,
     label: labelProp,
@@ -64,7 +75,7 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <BooleanOperatorContainer>
+    <BooleanOperatorContainer ownerState={{ gridDensity: gridDensity ?? 'standard' }}>
       <rootProps.slots.baseFormControl fullWidth>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}

@@ -13,6 +13,8 @@ import {
   GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
+  gridDensityValueSelector,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import {
   GridStateColDef,
@@ -64,6 +66,10 @@ const dateSx = {
   [`& input[value=""]:not(:focus)`]: { color: 'transparent' },
 };
 
+const textFieldOnlyProps = {
+  InputLabelProps: null,
+};
+
 const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCellProps>(
   (props, ref) => {
     const {
@@ -88,6 +94,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
     const handleRef = useForkRef(ref, cellRef);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const gridDensity = useGridSelector(apiRef, gridDensityValueSelector);
 
     const isEditing = unstable_gridHeaderFilteringEditFieldSelector(apiRef) === colDef.field;
     const isMenuOpen = unstable_gridHeaderFilteringMenuSelector(apiRef) === colDef.field;
@@ -266,8 +273,11 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               }
               disabled={isNoInputOperator}
               tabIndex={-1}
-              InputLabelProps={null}
+              gridDensity={gridDensity}
               sx={colDef.type === 'date' || colDef.type === 'dateTime' ? dateSx : undefined}
+              {...(colDef.type !== 'boolean' && colDef.type !== 'singleSelect'
+                ? textFieldOnlyProps
+                : {})}
               {...(isNoInputOperator ? { value: '' } : {})}
               {...currentOperator?.InputComponentProps}
               {...InputComponentProps}
@@ -279,6 +289,7 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               applyFilterChanges={applyFilterChanges}
               headerFilterMenuRef={headerFilterMenuRef}
               buttonRef={buttonRef}
+              gridDensity={gridDensity}
             />
           </React.Fragment>
         ) : null}

@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
+import { Theme } from '@mui/material/styles';
+import { GridDensity } from '../../../models/gridDensity';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -11,13 +13,20 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'text' | 'number' | 'date' | 'datetime-local';
     clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
-     */
-    isFilterActive?: boolean;
+    gridDensity?: GridDensity;
   };
 
+const compactDensitySx = (theme: Theme) => {
+  return {
+    [`& input`]: {
+      fontSize: theme.typography.fontSize,
+      padding: '0 0 2px',
+    },
+    [`& label`]: {
+      fontSize: theme.typography.fontSize,
+    },
+  };
+};
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
     item,
@@ -27,9 +36,10 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     focusElementRef,
     tabIndex,
     disabled,
-    isFilterActive,
     clearButton,
     InputProps,
+    gridDensity,
+    sx,
     ...others
   } = props;
   const filterTimeout = React.useRef<any>();
@@ -72,6 +82,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
       value={filterValueState}
       onChange={onFilterChange}
       variant="standard"
+      size={gridDensity === 'compact' ? 'small' : 'normal'}
       type={type || 'text'}
       InputProps={{
         ...(applying || clearButton
@@ -94,6 +105,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         shrink: true,
       }}
       inputRef={focusElementRef}
+      sx={gridDensity === 'compact' ? [compactDensitySx, sx] : sx}
       {...others}
       {...rootProps.slotProps?.baseTextField}
     />
@@ -114,11 +126,6 @@ GridFilterInputValue.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * It is `true` if the filter either has a value or an operator with no value
-   * required is selected (e.g. `isEmpty`)
-   */
-  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

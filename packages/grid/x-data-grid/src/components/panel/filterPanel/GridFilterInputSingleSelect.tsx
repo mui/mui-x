@@ -9,6 +9,7 @@ import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getValueFromValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
+import type { GridDensity } from '../../../models/gridDensity';
 
 const renderSingleSelectOptions = ({
   column: { valueOptions, field },
@@ -41,25 +42,36 @@ const renderSingleSelectOptions = ({
     );
   });
 };
+type OwnerState = { gridDensity: GridDensity };
 
-const SingleSelectOperatorContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'flex-end',
-  width: '100%',
-  [`& button`]: {
-    margin: 'auto 0px 5px 5px',
-  },
-});
+const SingleSelectOperatorContainer = styled('div')<{ ownerState: OwnerState }>(
+  ({ ownerState }) => ({
+    display: 'flex',
+    alignItems: 'flex-end',
+    width: '100%',
+    [`& button`]: {
+      margin: ownerState.gridDensity === 'compact' ? 'auto 0px 1px 5px' : 'auto 0px 5px 5px',
+    },
+    ...(ownerState.gridDensity === 'compact'
+      ? {
+          [`& .MuiInput-root`]: {
+            [`& select`]: {
+              fontSize: 14,
+              paddingTop: 0,
+              paddingBottom: 2,
+            },
+            marginTop: 14,
+          },
+        }
+      : {}),
+  }),
+);
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
   TextFieldProps &
   Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> & {
     clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
-     */
-    isFilterActive?: boolean;
+    gridDensity?: GridDensity;
     type?: 'singleSelect';
   };
 
@@ -75,7 +87,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     placeholder,
     tabIndex,
     label: labelProp,
-    isFilterActive,
+    gridDensity,
     clearButton,
     ...others
   } = props;
@@ -149,7 +161,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const label = labelProp ?? apiRef.current.getLocaleText('filterPanelInputLabel');
 
   return (
-    <SingleSelectOperatorContainer>
+    <SingleSelectOperatorContainer ownerState={{ gridDensity: gridDensity ?? 'standard' }}>
       <rootProps.slots.baseFormControl>
         <rootProps.slots.baseInputLabel
           {...rootProps.slotProps?.baseInputLabel}

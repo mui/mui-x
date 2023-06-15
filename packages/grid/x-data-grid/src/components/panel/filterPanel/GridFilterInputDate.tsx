@@ -1,20 +1,30 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
+import { Theme } from '@mui/material/styles';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridDensity } from '../../../models/gridDensity';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'date' | 'datetime-local';
     clearButton?: React.ReactNode | null;
-    /**
-     * It is `true` if the filter either has a value or an operator with no value
-     * required is selected (e.g. `isEmpty`)
-     */
-    isFilterActive?: boolean;
+    gridDensity?: GridDensity;
   };
+
+const compactDensitySx = (theme: Theme) => {
+  return {
+    [`& input`]: {
+      fontSize: theme.typography.fontSize,
+      padding: '0 0 2px',
+    },
+    [`& label`]: {
+      fontSize: theme.typography.fontSize,
+    },
+  };
+};
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
@@ -26,10 +36,11 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     apiRef,
     focusElementRef,
     InputProps,
-    isFilterActive,
     clearButton,
     tabIndex,
     disabled,
+    gridDensity,
+    sx,
     ...other
   } = props;
   const filterTimeout = React.useRef<any>();
@@ -73,6 +84,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
+      size={gridDensity === 'compact' ? 'small' : 'normal'}
       variant="standard"
       type={type || 'text'}
       InputLabelProps={{
@@ -97,6 +109,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
           ...InputProps?.inputProps,
         },
       }}
+      sx={gridDensity === 'compact' ? [compactDensitySx, sx] : sx}
       {...other}
       {...rootProps.slotProps?.baseTextField}
     />
