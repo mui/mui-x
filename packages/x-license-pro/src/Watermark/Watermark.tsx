@@ -27,13 +27,33 @@ interface WatermarkProps {
 export function Watermark(props: WatermarkProps) {
   const { packageName, releaseInfo } = props;
   const licenseStatus = useLicenseVerifier(packageName, releaseInfo);
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [key, setKey] = React.useState(2);
 
   if (licenseStatus === LicenseStatus.Valid) {
     return null;
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/rules-of-hooks
+  React.useEffect(() => {
+    if (
+      // The element was removed from the DOM, add it back
+      ref.current!.parentElement === null ||
+      // The element was hidden, add it back
+      (ref.current!.checkVisibility &&
+        !ref.current!.checkVisibility({
+          checkOpacity: true,
+          checkVisibilityCSS: true,
+        }))
+    ) {
+      setKey(Math.random());
+    }
+  });
+
   return (
     <div
+      ref={ref}
+      key={key}
       style={{
         position: 'absolute',
         pointerEvents: 'none',
