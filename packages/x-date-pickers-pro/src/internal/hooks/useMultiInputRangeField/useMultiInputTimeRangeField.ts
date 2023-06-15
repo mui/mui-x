@@ -12,7 +12,7 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   UseFieldResponse,
-  useValueWithDefaultizedTimezone,
+  useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
 import { TimeValidationError } from '@mui/x-date-pickers/models';
 import { DateRange } from '../../models/range';
@@ -73,7 +73,7 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     readOnly,
   } = sharedProps;
 
-  const { value, handleValueChange, timezone } = useValueWithDefaultizedTimezone({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'useMultiInputDateRangeField',
     timezone: timezoneProp,
     value: valueProp,

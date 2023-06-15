@@ -15,7 +15,7 @@ import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
 import { TimeView } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
-import { useValueWithDefaultizedTimezone } from '../internals/hooks/useDefaultizedTimezone';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
@@ -132,7 +132,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useValueWithDefaultizedTimezone({
+  } = useControlledValueWithTimezone({
     name: 'DigitalClock',
     timezone: timezoneProp,
     value: valueProp,

@@ -21,7 +21,7 @@ import {
   PickerValueUpdaterParams,
   PickerChangeHandlerContext,
 } from './usePickerValue.types';
-import { useExternalValueWithDefaultizedTimezone } from '../useDefaultizedTimezone';
+import { useValueWithTimezone } from '../useValueWithTimezone';
 
 /**
  * Decide if the new value should be published
@@ -238,7 +238,7 @@ export const usePickerValue = <
     };
   });
 
-  const { timezone, handleValueChange } = useExternalValueWithDefaultizedTimezone({
+  const { timezone, handleValueChange } = useValueWithTimezone({
     timezone: timezoneProp,
     value: inValue,
     defaultValue,

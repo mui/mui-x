@@ -21,7 +21,7 @@ import {
 } from './useField.utils';
 import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
-import { useExternalValueWithDefaultizedTimezone } from '../useDefaultizedTimezone';
+import { useValueWithTimezone } from '../useValueWithTimezone';
 import {
   GetDefaultReferenceDateProps,
   getSectionTypeGranularity,
@@ -77,14 +77,17 @@ export const useFieldState = <
     },
   } = params;
 
-  const { timezone, valueFromTheOutside, handleValueChange } =
-    useExternalValueWithDefaultizedTimezone({
-      timezone: timezoneProp,
-      value: valueProp,
-      defaultValue,
-      onChange,
-      valueManager,
-    });
+  const {
+    timezone,
+    value: valueFromTheOutside,
+    handleValueChange,
+  } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
 
   const sectionsValueBoundaries = React.useMemo(
     () => getSectionsBoundaries<TDate>(utils, timezone),

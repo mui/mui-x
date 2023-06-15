@@ -15,7 +15,7 @@ import { getTimeClockUtilityClass } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import { useValueWithDefaultizedTimezone } from '../internals/hooks/useDefaultizedTimezone';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
@@ -106,7 +106,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
   const slotProps = innerSlotProps ?? componentsProps;
 
-  const { value, handleValueChange, timezone } = useValueWithDefaultizedTimezone({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'TimeClock',
     timezone: timezoneProp,
     value: valueProp,

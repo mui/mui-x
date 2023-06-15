@@ -17,7 +17,7 @@ import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
-import { useValueWithDefaultizedTimezone } from '../internals/hooks/useDefaultizedTimezone';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -99,7 +99,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useValueWithDefaultizedTimezone({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'YearCalendar',
     timezone: timezoneProp,
     value: valueProp,

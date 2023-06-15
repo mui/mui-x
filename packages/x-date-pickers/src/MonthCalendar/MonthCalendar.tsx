@@ -16,7 +16,7 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
-import { useValueWithDefaultizedTimezone } from '../internals/hooks/useDefaultizedTimezone';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -95,7 +95,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useValueWithDefaultizedTimezone({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'MonthCalendar',
     timezone: timezoneProp,
     value: valueProp,

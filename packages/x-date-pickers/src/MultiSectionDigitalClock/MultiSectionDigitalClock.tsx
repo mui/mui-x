@@ -19,7 +19,7 @@ import {
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
 import { TimeStepOptions, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
-import { useValueWithDefaultizedTimezone } from '../internals/hooks/useDefaultizedTimezone';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
@@ -93,7 +93,7 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     value,
     handleValueChange: handleRawValueChange,
     timezone,
-  } = useValueWithDefaultizedTimezone({
+  } = useControlledValueWithTimezone({
     name: 'MultiSectionDigitalClock',
     timezone: timezoneProp,
     value: valueProp,

@@ -29,7 +29,7 @@ import {
   UncapitalizeObjectKeys,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
-  useValueWithDefaultizedTimezone,
+  useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -201,7 +201,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     ...other
   } = props;
 
-  const { value, handleValueChange, timezone } = useValueWithDefaultizedTimezone({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'DateRangeCalendar',
     timezone: timezoneProp,
     value: valueProp,
