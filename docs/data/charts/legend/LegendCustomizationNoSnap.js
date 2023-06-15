@@ -69,9 +69,9 @@ export default function LegendCustomizationNoSnap() {
             right: 100,
           }}
           sx={{
-            '--Legend-rootOffsetX':
+            '--ChartsLegend-rootOffsetX':
               typeof props.offsetX === 'number' ? `${props.offsetX}px` : undefined,
-            '--Legend-rootOffsetY':
+            '--ChartsLegend-rootOffsetY':
               typeof props.offsetY === 'number' ? `${props.offsetY}px` : undefined,
           }}
           width={400}
@@ -94,10 +94,10 @@ export default function LegendCustomizationNoSnap() {
           '  }}',
           '  sx={{',
           ...(typeof props.offsetX === 'number'
-            ? [`    "--Legend-rootOffsetX": "${props.offsetX}px",`]
+            ? [`    "--ChartsLegend-rootOffsetX": "${props.offsetX}px",`]
             : []),
           ...(typeof props.offsetY === 'number'
-            ? [`    "--Legend-rootOffsetY": "${props.offsetY}px",`]
+            ? [`    "--ChartsLegend-rootOffsetY": "${props.offsetY}px",`]
             : []),
           '  }}',
           '/>',

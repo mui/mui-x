@@ -6,20 +6,22 @@ import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { Axis, AxisProps } from '../Axis';
+import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { Tooltip, TooltipProps } from '../Tooltip';
-import { Legend, LegendProps } from '../Legend';
-import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
-import { ClipPath } from '../ClipPath/ClipPath';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsClipPath } from '../ChartsClipPath';
 
-export interface BarChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
+export interface BarChartProps
+  extends Omit<ResponsiveChartContainerProps, 'series'>,
+    ChartsAxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
-  tooltip?: TooltipProps;
-  axisHighlight?: AxisHighlightProps;
-  legend?: LegendProps;
+  tooltip?: ChartsTooltipProps;
+  axisHighlight?: ChartsAxisHighlightProps;
+  legend?: ChartsLegendProps;
 }
 
 function BarChart(props: BarChartProps) {
@@ -72,11 +74,16 @@ function BarChart(props: BarChartProps) {
       <g clipPath={`url(#${clipPathId})`}>
         <BarPlot />
       </g>
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-      <Legend {...legend} />
-      <AxisHighlight x="band" {...axisHighlight} />
-      <Tooltip {...tooltip} />
-      <ClipPath id={clipPathId} />
+      <ChartsAxis
+        topAxis={topAxis}
+        leftAxis={leftAxis}
+        rightAxis={rightAxis}
+        bottomAxis={bottomAxis}
+      />
+      <ChartsLegend {...legend} />
+      <ChartsAxisHighlight x="band" {...axisHighlight} />
+      <ChartsTooltip {...tooltip} />
+      <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
   );
@@ -93,7 +100,7 @@ BarChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -120,7 +127,7 @@ BarChart.propTypes = {
   height: PropTypes.number,
   /**
    * Indicate which axis to display the the left of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -162,7 +169,7 @@ BarChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the right of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -220,7 +227,7 @@ BarChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the top of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default null
    */
   topAxis: PropTypes.oneOfType([

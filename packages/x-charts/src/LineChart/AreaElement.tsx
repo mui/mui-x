@@ -21,6 +21,9 @@ export interface AreaElementClasses {
   /** Styles applied to the root element when faded. */
   faded: string;
 }
+
+export type AreaElementClassKey = keyof AreaElementClasses;
+
 export interface AreaElementOwnerState {
   id: string;
   color: string;

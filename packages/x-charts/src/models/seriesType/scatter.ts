@@ -1,7 +1,7 @@
 import { DefaultizedProps } from '../helpers';
 import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType } from './common';
 
-type ScatterValueType = { x: number; y: number; id: string | number };
+export type ScatterValueType = { x: number; y: number; id: string | number };
 
 export interface ScatterSeriesType extends CommonSeriesType<ScatterValueType>, CartesianSeriesType {
   type: 'scatter';

@@ -71,7 +71,7 @@ const lineChartsParams = {
   ],
 
   sx: {
-    '--Legend-itemWidth': '200px',
+    '--ChartsLegend-itemWidth': '200px',
   },
   width: 600,
   height: 400,

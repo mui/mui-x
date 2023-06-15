@@ -5,7 +5,7 @@ import {
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { Surface, SurfaceProps } from '../Surface';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
@@ -13,7 +13,7 @@ import {
 import { HighlightProvider } from '../context/HighlightProvider';
 
 export type ChartContainerProps = Omit<
-  SurfaceProps &
+  ChartsSurfaceProps &
     SeriesContextProviderProps &
     Omit<DrawingProviderProps, 'svgRef'> &
     CartesianContextProviderProps,
@@ -45,7 +45,7 @@ export function ChartContainer(props: ChartContainerProps) {
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <InteractionProvider>
             <HighlightProvider>
-              <Surface
+              <ChartsSurface
                 width={width}
                 height={height}
                 ref={ref}
@@ -55,7 +55,7 @@ export function ChartContainer(props: ChartContainerProps) {
                 disableAxisListener={disableAxisListener}
               >
                 {children}
-              </Surface>
+              </ChartsSurface>
             </HighlightProvider>
           </InteractionProvider>
         </CartesianContextProvider>
