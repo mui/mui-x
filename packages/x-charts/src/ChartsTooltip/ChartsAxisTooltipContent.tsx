@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
@@ -34,16 +35,17 @@ export type ChartsAxisContentProps = {
    * The value associated to the current mouse position.
    */
   axisValue: any;
+  sx?: SxProps<Theme>;
 };
 export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
-  const { series, axis, dataIndex, axisValue } = props;
+  const { series, axis, dataIndex, axisValue, sx } = props;
 
   if (dataIndex == null) {
     return null;
   }
   const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
-    <ChartsTooltipPaper>
+    <ChartsTooltipPaper sx={sx}>
       <ChartsTooltipTable>
         {axisValue != null && (
           <thead>
@@ -79,8 +81,9 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
 export function ChartsAxisTooltipContent(props: {
   axisData: AxisInteractionData;
   content?: React.ElementType<ChartsAxisContentProps>;
+  sx?: SxProps<Theme>;
 }) {
-  const { content, axisData } = props;
+  const { content, axisData, sx } = props;
   const dataIndex = axisData.x && axisData.x.index;
   const axisValue = axisData.x && axisData.x.value;
 
@@ -114,6 +117,7 @@ export function ChartsAxisTooltipContent(props: {
       axis={relevantAxis}
       dataIndex={dataIndex}
       axisValue={axisValue}
+      sx={sx}
     />
   );
 }

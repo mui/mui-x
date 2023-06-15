@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SxProps, Theme } from '@mui/material/styles';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
@@ -18,12 +19,13 @@ export type ChartsItemContentProps<T extends ChartSeriesType> = {
    * The series linked to the triggered axis.
    */
   series: ChartSeriesDefaultized<T>;
+  sx?: SxProps<Theme>;
 };
 
 export function DefaultChartsItemContent<T extends ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
-  const { series, itemData } = props;
+  const { series, itemData, sx } = props;
 
   if (itemData.dataIndex === undefined) {
     return null;
@@ -35,7 +37,7 @@ export function DefaultChartsItemContent<T extends ChartSeriesType>(
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
-    <ChartsTooltipPaper>
+    <ChartsTooltipPaper sx={sx}>
       <ChartsTooltipTable>
         <tbody>
           <tr>
@@ -56,8 +58,9 @@ export function DefaultChartsItemContent<T extends ChartSeriesType>(
 export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
+  sx?: SxProps<Theme>;
 }) {
-  const { content, itemData } = props;
+  const { content, itemData, sx } = props;
 
   const series = React.useContext(SeriesContext)[itemData.type]!.series[
     itemData.seriesId
@@ -65,5 +68,5 @@ export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
 
   const Content = content ?? DefaultChartsItemContent<T>;
 
-  return <Content itemData={itemData} series={series} />;
+  return <Content itemData={itemData} series={series} sx={sx} />;
 }

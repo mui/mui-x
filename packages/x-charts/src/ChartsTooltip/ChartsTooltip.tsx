@@ -59,11 +59,13 @@ function ChartsTooltip(props: ChartsTooltipProps) {
             <ChartsItemTooltipContent
               itemData={displayedData as ItemInteractionData<ChartSeriesType>}
               content={itemContent}
+              sx={{ mx: 2 }}
             />
           ) : (
             <ChartsAxisTooltipContent
               axisData={displayedData as AxisInteractionData}
               content={axisContent}
+              sx={{ mx: 2 }}
             />
           )}
         </Popper>
