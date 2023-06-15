@@ -5,9 +5,9 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import globalChance from 'chance';
+import { Chance } from 'chance';
 
-const chance = globalChance();
+const chance = new Chance(42);
 
 function getGaussianSeriesData(mean, stdev = [0.3, 0.4], N = 50) {
   return [...Array(N)].map((_, i) => {
