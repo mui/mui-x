@@ -235,8 +235,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         `headerFilterOperator${capitalize(item.operator)}` as 'headerFilterOperatorContains',
       );
 
-    const isFilterActive = isApplied || hasFocus;
-
     return (
       <div
         className={clsx(classes.root, headerClassName)}
@@ -265,7 +263,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
               onBlur={() => apiRef.current.stopHeaderFilterEditMode()}
               label={capitalize(label)}
               placeholder=""
-              isFilterActive={isFilterActive}
               clearButton={
                 showClearIcon && isApplied ? (
                   <GridHeaderFilterClearButton onClick={clearFilterItem} />

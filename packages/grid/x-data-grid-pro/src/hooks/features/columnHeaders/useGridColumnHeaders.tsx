@@ -113,7 +113,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
-          height={headerHeight - 2}  // offset to fix visual jump due to the border overflowing on chrome
+          height={headerHeight - 2} // offset to fix visual jump due to the border overflowing on chrome
           width={colDef.computedWidth}
           colDef={colDef}
           hasFocus={hasFocus}
