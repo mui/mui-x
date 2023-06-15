@@ -1127,4 +1127,30 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     // The width should not increase infinitely
     expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
   });
+
+  it('should set correct dimensions to overlay when the parent container has fractional size', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    const height = 300.4;
+    const columnHeaderHeight = 56;
+    const border = 1;
+
+    render(
+      <div style={{ height: 300.4, width: 400 }}>
+        <DataGrid
+          rows={[]}
+          columnHeaderHeight={columnHeaderHeight}
+          columns={[{ field: 'id', flex: 1 }]}
+          hideFooter
+        />
+      </div>,
+    );
+
+    const overlay = document.querySelector<HTMLElement>('.MuiDataGrid-overlayWrapperInner')!;
+    const expectedOverlayHeight = height - border * 2 - columnHeaderHeight;
+    expect(overlay.getBoundingClientRect().height).to.closeTo(expectedOverlayHeight, 0.01);
+  });
 });

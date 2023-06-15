@@ -220,37 +220,17 @@ export function useGridDimensions(
       return;
     }
 
-    const rect = mainEl.getBoundingClientRect();
-    const height = rect.height || 0;
-    const width = rect.width || 0;
-
     const win = ownerWindow(mainEl);
-
     const computedStyle = win.getComputedStyle(mainEl);
-    const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
-    const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
-    const paddingX = paddingLeft + paddingRight;
 
-    const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
-    const paddingBottom = parseInt(computedStyle.paddingBottom, 10) || 0;
-    const paddingY = paddingTop + paddingBottom;
+    const height = parseFloat(computedStyle.height) || 0;
+    const width = parseFloat(computedStyle.width) || 0;
 
-    const borderLeft = parseInt(computedStyle.borderLeftWidth, 10) || 0;
-    const borderRight = parseInt(computedStyle.borderRightWidth, 10) || 0;
-    const borderX = borderLeft + borderRight;
-
-    const borderTop = parseInt(computedStyle.borderTopWidth, 10) || 0;
-    const borderBottom = parseInt(computedStyle.borderBottomWidth, 10) || 0;
-    const borderY = borderTop + borderBottom;
-
-    const newHeight = height - paddingY - borderY;
-    const newWidth = width - paddingX - borderX;
-
-    const hasHeightChanged = newHeight !== previousSize.current?.height;
-    const hasWidthChanged = newWidth !== previousSize.current?.width;
+    const hasHeightChanged = height !== previousSize.current?.height;
+    const hasWidthChanged = width !== previousSize.current?.width;
 
     if (!previousSize.current || hasHeightChanged || hasWidthChanged) {
-      const size = { width: newWidth, height: newHeight };
+      const size = { width, height };
       apiRef.current.publishEvent('resize', size);
       previousSize.current = size;
     }
