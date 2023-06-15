@@ -15,7 +15,6 @@ import {
 } from '../../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { getMonthsInYear } from '../../utils/date-utils';
-import { TimeValidationProps } from '../../models/validation';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -174,7 +173,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   keyCode: AvailableAdjustKeyCode,
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   activeDate: TDate | null,
-  validationAttribues?: Partial<TimeValidationProps<TDate>>,
+  stepsAttribues?: { minutesStep?: number },
 ): string => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
@@ -207,9 +206,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
     const currentSectionValue = parseInt(section.value, 10);
 
     const step =
-      section.type === 'minutes' && validationAttribues?.minutesStep
-        ? validationAttribues.minutesStep
-        : 1;
+      section.type === 'minutes' && stepsAttribues?.minutesStep ? stepsAttribues.minutesStep : 1;
 
     let newSectionValueNumber = currentSectionValue + delta * step;
     if (newSectionValueNumber % step !== 0) {
