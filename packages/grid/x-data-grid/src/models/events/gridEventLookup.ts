@@ -217,6 +217,14 @@ export interface GridHeaderFilterEventLookup {
     params: GridColumnHeaderParams;
     event: React.KeyboardEvent<HTMLElement>;
   };
+  /**
+   * Fired when a column header filter is blurred.
+   * @ignore - do not document.
+   */
+  headerFilterBlur: {
+    params: GridColumnHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
 }
 
 export interface GridColumnGroupHeaderEventLookup {
@@ -525,11 +533,11 @@ export interface GridEventLookup
 
   // Selection
   /**
-   * Fired when the value of the selection checkbox of the header is changed
+   * Fired when the value of the selection checkbox of the header is changed.
    */
   headerSelectionCheckboxChange: { params: GridHeaderSelectionCheckboxParams };
   /**
-   * Fired when the value of the selection checkbox of a row is changed
+   * Fired when the value of the selection checkbox of a row is changed.
    */
   rowSelectionCheckboxChange: {
     params: GridRowSelectionCheckboxParams;
@@ -538,7 +546,7 @@ export interface GridEventLookup
 
   // Clipboard
   /**
-   * Fired when the data is copied to the clipboard
+   * Fired when the data is copied to the clipboard.
    */
   clipboardCopy: { params: string };
 

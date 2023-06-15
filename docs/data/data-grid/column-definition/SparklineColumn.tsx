@@ -17,17 +17,13 @@ interface SparklineProps {
 function Sparkline(props: SparklineProps) {
   const { data, width } = props;
 
-  const xAxisData = React.useMemo(
-    () => Array.from({ length: data.length }).map((_, index) => index),
-    [data],
-  );
-
   return (
     <LineChart
       margin={{ left: 6, right: 6, top: 4, bottom: 4 }}
-      yAxis={[{ hidden: true }]}
-      xAxis={[{ hidden: true, data: xAxisData }]}
+      leftAxis={null}
+      bottomAxis={null}
       tooltip={{ trigger: 'none' }}
+      axisHighlight={{ x: 'none', y: 'none' }}
       series={[
         {
           data,

@@ -110,8 +110,9 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   sortComparator?: GridComparatorFn<V>;
   /**
-   * Type allows to merge this object with a default definition [[GridColDef]].
+   * The type of the column.
    * @default 'string'
+   * @see See {@link https://mui.com/x/react-data-grid/column-definition/#column-types column types docs} for more details.
    */
   type?: GridColType;
   /**
@@ -246,7 +247,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
   extends GridBaseColDef<R, V, F> {
   /**
-   * Type allows to merge this object with a default definition [[GridColDef]].
+   * The type of the column.
    * @default 'actions'
    */
   type: 'actions';
@@ -266,7 +267,7 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
 export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
   extends GridBaseColDef<R, V, F> {
   /**
-   * Type allows to merge this object with a default definition [[GridColDef]].
+   * The type of the column.
    * @default 'singleSelect'
    */
   type: 'singleSelect';

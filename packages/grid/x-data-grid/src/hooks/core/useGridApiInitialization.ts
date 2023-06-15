@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Store } from '../../utils/Store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -60,8 +61,11 @@ export function useGridApiInitialization<
   const publicApiRef = React.useRef() as React.MutableRefObject<Api>;
 
   if (!publicApiRef.current) {
+    const state = {} as Api['state'];
+
     publicApiRef.current = {
-      state: {} as Api['state'],
+      state,
+      store: Store.create(state),
       instanceId: { id: globalId },
     } as Api;
 

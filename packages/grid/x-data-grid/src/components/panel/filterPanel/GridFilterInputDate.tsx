@@ -8,7 +8,6 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 export type GridFilterInputDateProps = GridFilterInputValueProps &
   TextFieldProps & {
     type?: 'date' | 'datetime-local';
-    headerFilterMenu?: React.ReactNode | null;
     clearButton?: React.ReactNode | null;
     /**
      * It is `true` if the filter either has a value or an operator with no value
@@ -27,7 +26,6 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
     apiRef,
     focusElementRef,
     InputProps,
-    headerFilterMenu,
     isFilterActive,
     clearButton,
     tabIndex,
@@ -91,7 +89,6 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
               ),
             }
           : {}),
-        ...(headerFilterMenu && isFilterActive ? { startAdornment: headerFilterMenu } : {}),
         disabled,
         ...InputProps,
         inputProps: {
@@ -120,7 +117,6 @@ GridFilterInputDate.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  headerFilterMenu: PropTypes.node,
   /**
    * It is `true` if the filter either has a value or an operator with no value
    * required is selected (e.g. `isEmpty`)
