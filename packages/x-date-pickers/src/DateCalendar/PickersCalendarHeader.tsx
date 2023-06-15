@@ -93,7 +93,6 @@ const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => 
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
-    arrowSwitcher: ['arrowSwitcher'],
     labelContainer: ['labelContainer'],
     label: ['label'],
     switchViewButton: ['switchViewButton'],
@@ -112,9 +111,10 @@ const PickersCalendarHeaderRoot = styled('div', {
 }>(({ ownerState }) => ({
   display: 'flex',
   alignItems: 'center',
-  margin: ownerState.displayWeekNumber
-    ? `${CALENDAR_MARGIN}px 14px 8px 22px`
-    : `${CALENDAR_MARGIN}px 16px 8px 26px`,
+  marginTop: CALENDAR_MARGIN,
+  marginBottom: 8,
+  paddingLeft: ownerState.displayWeekNumber ? 22 : 26,
+  paddingRight: ownerState.displayWeekNumber ? 14 : 16,
   // prevent jumping in safari
   maxHeight: 34,
   minHeight: 34,
