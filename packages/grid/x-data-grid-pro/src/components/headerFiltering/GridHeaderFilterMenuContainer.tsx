@@ -9,15 +9,14 @@ import {
 import { unstable_useId as useId } from '@mui/utils';
 import { unstable_gridHeaderFilteringMenuSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
 const sx = {
   width: 22,
   height: 22,
-  padding: '0px 0px 2px 2px',
+  margin: 'auto 0 10px 5px',
 };
 
-function GridHeaderFilterAdornment(props: {
+function GridHeaderFilterMenuContainer(props: {
   operators: GridFilterOperator<any, any, any>[];
   field: GridColDef['field'];
   item: GridFilterItem;
@@ -47,29 +46,27 @@ function GridHeaderFilterAdornment(props: {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseInputAdornment position="start">
-        <rootProps.slots.baseIconButton
-          id={buttonId}
-          ref={buttonRef}
-          aria-label={apiRef.current.getLocaleText('filterPanelOperator')}
-          title={apiRef.current.getLocaleText('filterPanelOperator')}
-          aria-controls={menuId}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
-          tabIndex={-1}
-          size="small"
-          onClick={handleClick}
-          sx={sx}
-          {...rootProps.slotProps?.baseIconButton}
-        >
-          {OPERATOR_SYMBOL_MAPPING[item?.operator] ?? '='}
-        </rootProps.slots.baseIconButton>
-      </rootProps.slots.baseInputAdornment>
+      <rootProps.slots.baseIconButton
+        id={buttonId}
+        ref={buttonRef}
+        aria-label={apiRef.current.getLocaleText('filterPanelOperator')}
+        title={apiRef.current.getLocaleText('filterPanelOperator')}
+        aria-controls={menuId}
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="true"
+        tabIndex={-1}
+        size="small"
+        onClick={handleClick}
+        sx={sx}
+        {...rootProps.slotProps?.baseIconButton}
+      >
+        <rootProps.slots.openFilterButtonIcon fontSize="small" />
+      </rootProps.slots.baseIconButton>
       <rootProps.slots.headerFilterMenu
         field={field}
         open={open}
         item={item}
-        targetRef={headerFilterMenuRef}
+        target={headerFilterMenuRef.current}
         operators={operators}
         labelledBy={buttonId!}
         id={menuId!}
@@ -79,7 +76,7 @@ function GridHeaderFilterAdornment(props: {
   );
 }
 
-GridHeaderFilterAdornment.propTypes = {
+GridHeaderFilterMenuContainer.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -115,4 +112,4 @@ GridHeaderFilterAdornment.propTypes = {
   ).isRequired,
 } as any;
 
-export { GridHeaderFilterAdornment };
+export { GridHeaderFilterMenuContainer };
