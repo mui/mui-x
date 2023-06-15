@@ -49,7 +49,7 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
           <thead>
             <tr>
               <ChartsTooltipCell colSpan={3}>
-                <Typography variant="caption">{axisFormatter(axisValue)}</Typography>
+                <Typography>{axisFormatter(axisValue)}</Typography>
               </ChartsTooltipCell>
             </tr>
           </thead>
@@ -62,11 +62,11 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
               </ChartsTooltipCell>
 
               <ChartsTooltipCell>
-                {label ? <Typography variant="caption">{label}</Typography> : null}
+                {label ? <Typography>{label}</Typography> : null}
               </ChartsTooltipCell>
 
               <ChartsTooltipCell>
-                <Typography variant="caption">{valueFormatter(data[dataIndex])}</Typography>
+                <Typography>{valueFormatter(data[dataIndex])}</Typography>
               </ChartsTooltipCell>
             </tr>
           ))}

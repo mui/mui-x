@@ -25,8 +25,8 @@ export const ChartsTooltipMark = styled('div', {
   name: 'MuiChartsTooltip',
   slot: 'Mark',
 })<{ ownerState: { color: string } }>(({ theme, ownerState }) => ({
-  width: theme.spacing(1),
-  height: theme.spacing(1),
+  width: theme.spacing(1.5),
+  height: theme.spacing(1.5),
   borderRadius: '50%',
   backgroundColor: ownerState.color,
 }));
