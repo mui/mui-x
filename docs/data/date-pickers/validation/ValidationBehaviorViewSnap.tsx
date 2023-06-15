@@ -10,7 +10,7 @@ const today = dayjs();
 const twoPM = dayjs().set('hour', 14).startOf('hour');
 const threePM = dayjs().set('hour', 15).startOf('hour');
 
-export default function ValidationBehaviorView() {
+export default function ValidationBehaviorViewSnap() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid

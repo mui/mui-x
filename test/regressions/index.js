@@ -34,6 +34,15 @@ const blacklist = [
   /^docs-data-grid-export(.*)(?<!Snap)\.png$/,
   /^docs-data-grid-row-selection(.*)(?<!Snap)\.png$/,
   /^docs-data-grid-state(.*)(?<!Snap)\.png$/,
+  /**
+   * Exclude basic date pickers demo since they most of the time only show the field components.
+   * Those pages have a Snap demo to show the different state of the field.
+   */
+  /^docs-date-pickers-(date|time|date-time)(-range){0,1}-(field|picker)\/(.*)(?<!Snap)\.png$/,
+  /^docs-date-pickers-validation\/(.*)(?<!Snap)\.png$/,
+  /^docs-date-pickers-base-concepts\/(.*)(?<!Snap)\.png$/,
+  /^docs-date-pickers-fields\/(.*)(?<!Snap)\.png$/,
+  /^docs-migration(.*)(?<!Snap)\.png$/,
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);

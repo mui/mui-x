@@ -12,7 +12,7 @@ import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInput
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 
-function ProLabel({ children }) {
+function ProLabel({ children }: { children: React.ReactNode }) {
   return (
     <Stack direction="row" spacing={0.5} component="span">
       <Tooltip title="Included in Pro package">
@@ -25,7 +25,7 @@ function ProLabel({ children }) {
   );
 }
 
-export default function ComponentFamilies() {
+export default function ComponentFamiliesSnap() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer

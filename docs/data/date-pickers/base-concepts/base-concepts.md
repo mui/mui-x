@@ -61,7 +61,7 @@ The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and
 The Date and Time Pickers are divided into six families of components.
 The demo below shows each one of them using their field component:
 
-{{"demo": "ComponentFamilies.js"}}
+{{"demo": "ComponentFamiliesSnap.js"}}
 
 ### Responsiveness
 
