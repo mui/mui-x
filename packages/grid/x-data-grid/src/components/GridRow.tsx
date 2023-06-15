@@ -284,7 +284,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     let cellIsNotVisible = false;
 
     if (
-      indexOfColumnWithFocusedCellNotInRange &&
+      indexOfColumnWithFocusedCellNotInRange !== undefined &&
       visibleColumns[indexOfColumnWithFocusedCellNotInRange].field === column.field
     ) {
       cellIsNotVisible = true;
