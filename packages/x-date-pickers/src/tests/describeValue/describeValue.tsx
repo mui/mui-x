@@ -24,20 +24,22 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
 
   function WrappedElementToTest(
     props: BasePickerInputProps<TValue, any, any, any> &
-      UsePickerValueNonStaticProps<TValue, FieldSection>,
+      UsePickerValueNonStaticProps<TValue, FieldSection> & { hook?: any },
   ) {
-    return <ElementToTest {...defaultProps} {...props} />;
+    const { hook, ...other } = props;
+    const hookResult = hook?.(props);
+    return <ElementToTest {...defaultProps} {...other} {...hookResult} />;
   }
 
   let renderWithProps: BuildFieldInteractionsResponse<any>['renderWithProps'];
   if (componentFamily === 'field' || componentFamily === 'picker') {
     const interactions = buildFieldInteractions({ clock, render, Component: ElementToTest });
 
-    renderWithProps = (props: any) =>
-      interactions.renderWithProps({ ...defaultProps, ...props }, componentFamily);
+    renderWithProps = (props: any, hook?: any) =>
+      interactions.renderWithProps({ ...defaultProps, ...props }, hook, componentFamily);
   } else {
-    renderWithProps = (props: any) => {
-      const response = render(<WrappedElementToTest {...props} />);
+    renderWithProps = (props: any, hook?: any) => {
+      const response = render(<WrappedElementToTest {...props} hook={hook} />);
 
       return {
         ...response,

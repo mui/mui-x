@@ -132,8 +132,8 @@ export type FieldSelectedSections =
  * Props the single input field can receive when used inside a picker.
  * Only contains what the MUI component are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
-export interface BaseSingleInputFieldProps<TValue, TSection extends FieldSection, TError>
-  extends BaseFieldProps<TValue, TSection, TError> {
+export interface BaseSingleInputFieldProps<TValue, TDate, TSection extends FieldSection, TError>
+  extends BaseFieldProps<TValue, TDate, TSection, TError> {
   label?: React.ReactNode;
   id?: string;
   inputRef?: React.Ref<HTMLInputElement>;

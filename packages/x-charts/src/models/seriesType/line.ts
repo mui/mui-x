@@ -1,5 +1,10 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
+import {
+  CartesianSeriesType,
+  CommonSeriesType,
+  DefaultizedCommonSeriesType,
+  StackableSeriesType,
+} from './common';
 
 export type CurveType =
   | 'catmullRom'
@@ -11,7 +16,7 @@ export type CurveType =
   | 'stepBefore'
   | 'stepAfter';
 
-export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
+export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType, StackableSeriesType {
   type: 'line';
   data: number[];
   stack?: string;

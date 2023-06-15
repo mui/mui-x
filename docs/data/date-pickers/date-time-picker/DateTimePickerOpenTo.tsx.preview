@@ -1,2 +1,2 @@
-<MobileDateTimePicker label={'"year"'} openTo="year" />
-<MobileDateTimePicker label={'"hours"'} openTo="hours" />
+<DateTimePicker label={'"year"'} openTo="year" />
+<MobileTimePicker label={'"hours"'} openTo="hours" />
