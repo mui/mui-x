@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.7.0
+
+_Jun 9, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Improve the default `format` prop value on the pickers.
+
+  Here are a few examples:
+
+  ```tsx
+  <TimePicker views={['hours', 'minutes', 'seconds']} ampm />
+  // Format before v6.7.0: `hh:mm aa`
+  // Format after v6.7.0: `hh:mm:ss aa`
+ 
+  <DatePicker views={['year']} />
+  // Format before v6.7.0: `MM/DD/YYYY`
+  // Format after v6.7.0: `YYYY`
+  
+  <DateTimePicker views={['day', 'hours', 'minutes']} ampm />
+  // Format before v6.7.0: `MM/DD/YYYY hh:mm aa`
+  // Format after v6.7.0: `DD hh:mm aa`
+  ```
+
+- 🌍 Add Romanian (ro-RO) locale on the pickers
+- 🌍 Improve German (de-DE) locale on the pickers
+- 🌍 Improve Czech (cs-CZ), German (de-DE) and Turkish (tr-TR) locales on the data grid
+- 🚀 Performance improvements
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.7.0` / `@mui/x-data-grid-pro@v6.7.0` / `@mui/x-data-grid-premium@v6.7.0`
+
+#### Changes
+
+- [DataGrid] Allow overflowing grid root element (#9179) @cherniavskii
+- [DataGrid] Fix module augmentation error when using `@mui/lab` (#9235) @cherniavskii
+- [DataGrid] Fix row with ids matching `Object` prototype (#9265) @romgrk
+- [DataGrid] Fix `sortModel` and `filterModel` resetting when columns change (#9239) @alexgonch
+- [DataGrid] Improve grouping performance for large datasets (#9200) @romgrk
+- [DataGrid] Increase threshold to trigger memory leak warning (#9263) @m4theushw
+- [DataGrid] Update data grid migration guide to include updated type (#9272) @MBilalShafi
+- [DataGridPro] Improve header filter menu visuals (#9181) @MBilalShafi
+- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
+- [l10n] Improve Czech (cs-CZ) locale (#9266) @MartinSkarpa
+- [l10n] Improve German (de-DE) locale (#9259) @ximex
+- [l10n] Improve Turkish (tr-TR) locale (#9237) @MCErtan
+
+### `@mui/x-date-pickers@v6.7.0` / `@mui/x-date-pickers-pro@v6.7.0`
+
+#### Changes
+
+- [l10n] Add Romanian (ro-RO) locale (#9257) @ximex
+- [l10n] Improve German (de-DE) locale (#9258) @ximex
+- [pickers] Apply dynamic default format depending on views for all desktop and mobile pickers (#9126) @flaviendelangle
+- [pickers] Update `DateRangePickerDay` props JSDoc (#9191) @stevus
+
+### Docs
+
+- [docs] Fix missing props on the `GridFilterPanel` API page (#9180) @cherniavskii
+- [docs] Fix overview page typo (#9230) @LukasTy
+- [docs] Fix version redirect (#9273) @alexfauquette
+
+### Core
+
+- [core] Temporarily remove the Argos upload on the regression testing (#9267) @flaviendelangle
+- [charts] Add clip-path to avoid charts overflow (#9012) @alexfauquette
+- [charts] Add style customization on bar (#8935) @alexfauquette
+- [charts] Enforce axis `min`/`max` over the `nice()` method (#9189) @alexfauquette
+- [charts] Improve axis label and ticks label alignements (#9190) @alexfauquette
+- [charts] Simplify the switch between responsive and fix dimensions (#9151) @alexfauquette
+
 ## 6.6.0
 
 _Jun 1, 2023_
@@ -11,7 +83,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 New date time picking UI on [`DesktopDateTimePicker`](https://mui.com/x/react-date-pickers/date-time-picker/)
 
-  <img src="https://user-images.githubusercontent.com/4941090/242533399-2b106390-8158-4aba-9ca4-b621c6310977.gif" width="628" />
+  <img src="https://github.com/mui/mui-x/assets/3165635/4e1fe9f9-03eb-4f23-99dd-80212b21fb23" width="840" height="506" />
 
 - 🚀 Performance improvements
 - 🐞 Bugfixes
@@ -79,7 +151,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [charts] Manage series stacking (#8888) @alexfauquette
 - [license] List side effects in the license package (#9092) @cherniavskii
 
-## v6.5.0
+## 6.5.0
 
 _May 19, 2023_
 
@@ -87,9 +159,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - 💫 Introduce filtering on column headers for `DataGridPro` and `DataGridPremium`:
 
-  https://github.com/mui/mui-x/assets/12609561/c4c2bfec-59cf-4cab-932d-dc1983081de9
+  <img src="https://github.com/mui/mui-x/releases/download/v6.5.0/recording.gif" width="840" height="506" />
 
-  See [the documentation](https://mui.com/x/react-data-grid/filtering/#header-filters) for more information
+  See [the documentation](https://mui.com/x/react-data-grid/filtering/header-filters/) for more information
 
 - 🌍 Improve Hebrew (he-IL) and Czech (cs-CZ) locales
 - 📝 Support for editing on pinned rows
@@ -135,7 +207,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Memoize root props for better performance (#8942) @romgrk
 - [test] Skip flaky unit tests in JSDOM (#8994) @cherniavskii
 
-## v6.4.0
+## 6.4.0
 
 _May 12, 2023_
 
@@ -3003,4 +3075,4 @@ You can find more information about the new api, including how to set those tran
 
 ## Older versions
 
-Changes before 6.x are listed in our [changelog for older versions](https://github.com/mui/mui-x/blob/HEAD/CHANGELOG.old.md).
+Changes before 6.x are listed in our [changelog for older versions](https://github.com/mui/mui-x/blob/HEAD/changelogOld/).

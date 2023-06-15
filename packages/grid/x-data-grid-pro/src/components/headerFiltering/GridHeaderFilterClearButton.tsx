@@ -18,7 +18,7 @@ function GridHeaderFilterClearButton({ onClick }: GridHeaderFilterClearIconProps
       sx={sx}
       {...rootProps.slotProps?.baseIconButton}
     >
-      <rootProps.slots.headerFilterClearIcon fontSize="inherit" />
+      <rootProps.slots.columnMenuClearIcon fontSize="inherit" />
     </rootProps.slots.baseIconButton>
   );
 }
