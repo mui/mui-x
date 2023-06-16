@@ -28,8 +28,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Polish shortcut logic (#9220) @oliviertassinari
 - [DataGrid] Row reordering fix for different row height  (#7006) @yaredtsy
 - [DataGrid] Scroll performance improvements (#9037) @romgrk
-- [l10n] Add Greek (el-GR) locale (#9293) @clytras
-- [l10n] Improve Greek (el-GR) locale for data grid (#9292) @clytras
+- [l10n] Improve Greek (el-GR) locale (#9292) @clytras
 
 ### `@mui/x-date-pickers@6.8.0` / `@mui/x-date-pickers-pro@6.8.0`
 
