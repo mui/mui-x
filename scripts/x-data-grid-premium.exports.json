@@ -128,7 +128,7 @@
   { "name": "GridCellModes", "kind": "Enum" },
   { "name": "GridCellModesModel", "kind": "TypeAlias" },
   { "name": "GridCellParams", "kind": "Interface" },
-  { "name": "GridCellProps", "kind": "Interface" },
+  { "name": "GridCellProps", "kind": "TypeAlias" },
   { "name": "GridCellSelectionApi", "kind": "Interface" },
   { "name": "GridCellSelectionModel", "kind": "TypeAlias" },
   { "name": "GridCheckCircleIcon", "kind": "Variable" },

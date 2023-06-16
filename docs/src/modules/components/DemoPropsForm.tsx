@@ -289,10 +289,10 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                 <Select
                   placeholder="Select a variant..."
                   value={(resolvedValue || 'none') as string}
-                  onChange={(event, val) =>
+                  onChange={(event) =>
                     setProps((latestProps) => ({
                       ...latestProps,
-                      [propName]: val,
+                      [propName]: event.target.value,
                     }))
                   }
                 >

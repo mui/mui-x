@@ -149,7 +149,7 @@ export function verifyLicense({
     }
   } else if (license.licensingModel === 'subscription') {
     if (license.expiryTimestamp < new Date().getTime()) {
-      return LicenseStatus.Expired;
+      return LicenseStatus.ExpiredAnnual;
     }
   }
 
