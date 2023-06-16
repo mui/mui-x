@@ -191,30 +191,30 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
     const getCleanValue = (value: number) =>
       cleanDigitSectionValue(utils, value, sectionBoundaries, section);
 
+    const step =
+      section.type === 'minutes' && stepsAttribues?.minutesStep ? stepsAttribues.minutesStep : 1;
+
+    const currentSectionValue = parseInt(section.value, 10);
+    let newSectionValueNumber = currentSectionValue + delta * step;
+
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
         return utils.formatByString(utils.date()!, section.format);
       }
 
       if (delta > 0 || isStart) {
-        return getCleanValue(sectionBoundaries.minimum);
+        newSectionValueNumber = sectionBoundaries.minimum;
       }
 
-      return getCleanValue(sectionBoundaries.maximum);
+      newSectionValueNumber = sectionBoundaries.maximum;
     }
 
-    const currentSectionValue = parseInt(section.value, 10);
-
-    const step =
-      section.type === 'minutes' && stepsAttribues?.minutesStep ? stepsAttribues.minutesStep : 1;
-
-    let newSectionValueNumber = currentSectionValue + delta * step;
     if (newSectionValueNumber % step !== 0) {
-      if (delta < 0) {
-        newSectionValueNumber += step - (currentSectionValue % step);
+      if (delta < 0 || isStart) {
+        newSectionValueNumber += step - (newSectionValueNumber % step);
       }
-      if (delta > 0) {
-        newSectionValueNumber -= currentSectionValue % step;
+      if (delta > 0 || isEnd) {
+        newSectionValueNumber -= newSectionValueNumber % step;
       }
     }
 
