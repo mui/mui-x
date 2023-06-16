@@ -40,7 +40,7 @@ function GridColumnHeaderMenu({
     [apiRef, target],
   );
 
-  if (!target) {
+  if (!target || !colDef) {
     return null;
   }
 

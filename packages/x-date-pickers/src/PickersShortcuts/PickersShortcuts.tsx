@@ -14,20 +14,32 @@ export interface PickersShortcutsItem<TValue> {
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
 }
 
-export interface PickersShortcutsProps<TValue> extends Omit<ListProps, 'onChange'> {
+export type PickerShortcutChangeImportance = 'set' | 'accept';
+
+export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
    * @default `[]`
    */
   items?: PickersShortcutsItem<TValue>[];
+  /**
+   * Importance of the change when picking a shortcut:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance?: PickerShortcutChangeImportance;
+}
+
+export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (newValue: TValue) => void;
+  onChange: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
   isValid: (value: TValue) => boolean;
 }
 
 function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { items, isLandscape, onChange, isValid, ...other } = props;
+  const { items, changeImportance, isLandscape, onChange, isValid, ...other } = props;
 
   if (items == null || items.length === 0) {
     return null;
@@ -39,7 +51,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue);
+        onChange(newValue, changeImportance);
       },
       disabled: !isValid(newValue),
     };
@@ -74,6 +86,13 @@ PickersShortcuts.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Importance of the change when picking a shortcut:
+   * - "accept": fires `onChange`, fires `onAccept` and closes the picker.
+   * - "set": fires `onChange` but do not fire `onAccept` and does not close the picker.
+   * @default "accept"
+   */
+  changeImportance: PropTypes.oneOf(['accept', 'set']),
   className: PropTypes.string,
   /**
    * If `true`, compact vertical padding designed for keyboard and mouse input is used for

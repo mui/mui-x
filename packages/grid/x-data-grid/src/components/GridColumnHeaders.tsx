@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { fastMemo } from '../utils/fastMemo';
 import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
@@ -113,4 +114,6 @@ GridColumnHeaders.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
-export { GridColumnHeaders };
+const MemoizedGridColumnHeaders = fastMemo(GridColumnHeaders);
+
+export { MemoizedGridColumnHeaders as GridColumnHeaders };
