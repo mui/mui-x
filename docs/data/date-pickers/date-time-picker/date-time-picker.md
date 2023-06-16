@@ -100,7 +100,7 @@ You can force a specific orientation using the `orientation` prop.
 ## Choose time view renderer
 
 You can use the `viewRenderers` prop to change the view that is used for rendering a view.
-You might be interested in using the Time Clock instead of the Digital Clock or removing the time view rendering altogether in favor of only using the field to input the time.
+You might be interested in using the [Time Clock](/x/react-date-pickers/time-clock/) instead of the [Digital Clock](/x/react-date-pickers/digital-clock/) or removing the time view rendering altogether in favor of only using the field to input the time.
 
 {{"demo": "DateTimePickerViewRenderers.js"}}
 
