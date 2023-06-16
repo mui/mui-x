@@ -290,6 +290,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
+      { pathname: '/x/react-date-pickers/playground', title: 'Playground' },
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',

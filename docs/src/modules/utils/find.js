@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const jsRegex = /\.js$|pickers\.tsx$/gm;
+const jsRegex = /\.js$/;
 const blackList = ['/.eslintrc', '/_document', '/_app'];
 
 // Returns the Next.js pages available in a nested format.
@@ -18,7 +18,6 @@ function findPages(
       .replace(new RegExp(`\\${path.sep}`, 'g'), '/')
       .replace(/^.*\/pages/, '')
       .replace('.js', '')
-      .replace('.tsx', '')
       .replace(/^\/index$/, '/') // Replace `index` by `/`.
       .replace(/\/index$/, '');
 
