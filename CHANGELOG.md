@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 #### Changes
 
 - [DataGrid] Add missing styles to `overridesResolver` (#9248) @mrmuhammadali
-- [DataGrid] Avoid column headers hover on touch devices (#9076) @cherniavskii
+- [DataGrid] Keep column header menu icon always visible on touch devices (#9076) @cherniavskii
 - [DataGrid] Correct the type for single digit edited number value (#9282) @MBilalShafi
 - [DataGrid] Filtering performance: cache values (#9284) @romgrk
 - [DataGrid] Fix tabbing between `actions` cells in edit mode (#9321) @md250721
