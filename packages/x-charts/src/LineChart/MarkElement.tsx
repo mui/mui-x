@@ -22,6 +22,9 @@ export interface MarkElementClasses {
   /** Styles applied to the root element when faded. */
   faded: string;
 }
+
+export type MarkElementClassKey = keyof MarkElementClasses;
+
 export interface MarkElementOwnerState {
   id: string;
   color: string;
@@ -57,6 +60,7 @@ const MarkElementPath = styled('path', {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
   transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
+  transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
   fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,

@@ -160,14 +160,14 @@ describe('<DateCalendar />', () => {
       ).to.have.text('1');
     });
 
-    it('should set time to be midnight when selecting a date without a previous date', () => {
+    // TODO v7: Remove
+    it('should use `defaultCalendarMonth` for the month and year when no value defined', () => {
       const onChange = spy();
 
       render(
         <DateCalendar
-          value={null}
           onChange={onChange}
-          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1))}
+          defaultCalendarMonth={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
           view="day"
         />,
       );
@@ -175,6 +175,56 @@ describe('<DateCalendar />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2));
+    });
+
+    it('should use `referenceDate` when no value defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          view="day"
+        />,
+      );
+
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 2, 12, 30));
+    });
+
+    it('should not use `referenceDate` when a value is defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          view="day"
+        />,
+      );
+
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
+    });
+
+    it('should not use `referenceDate` when a defaultValue is defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          view="day"
+        />,
+      );
+
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 0, 2, 12, 20));
     });
 
     it('should keep the time of the currently provided date', () => {
@@ -317,6 +367,65 @@ describe('<DateCalendar />', () => {
       expect(onChange.callCount).to.equal(0);
       expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('April 2019');
     });
+
+    it('should use `referenceDate` when no value defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      fireEvent.click(april);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 3, 1, 12, 30));
+    });
+
+    it('should not use `referenceDate` when a value is defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      fireEvent.click(april);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
+    });
+
+    it('should not use `referenceDate` when a defaultValue is defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          views={['month', 'day']}
+          openTo="month"
+        />,
+      );
+
+      const april = screen.getByText('Apr', { selector: 'button' });
+      fireEvent.click(april);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2019, 3, 1, 12, 20));
+    });
   });
 
   describe('view: year', () => {
@@ -432,6 +541,65 @@ describe('<DateCalendar />', () => {
 
       expect(parentBoundingBox.top).not.to.greaterThan(buttonBoundingBox.top);
       expect(parentBoundingBox.bottom).not.to.lessThan(buttonBoundingBox.bottom);
+    });
+
+    it('should use `referenceDate` when no value defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+          views={['year']}
+          openTo="year"
+        />,
+      );
+
+      const year2022 = screen.getByText('2022', { selector: 'button' });
+      fireEvent.click(year2022);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2022, 0, 1, 12, 30));
+    });
+
+    it('should not use `referenceDate` when a value is defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          views={['year']}
+          openTo="year"
+        />,
+      );
+
+      const year2022 = screen.getByText('2022', { selector: 'button' });
+      fireEvent.click(year2022);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
+    });
+
+    it('should not use `referenceDate` when a defaultValue is defined', () => {
+      const onChange = spy();
+
+      render(
+        <DateCalendar
+          onChange={onChange}
+          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+          views={['year']}
+          openTo="year"
+        />,
+      );
+
+      const year2022 = screen.getByText('2022', { selector: 'button' });
+      fireEvent.click(year2022);
+
+      expect(onChange.callCount).to.equal(1);
+      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2022, 0, 1, 12, 20));
     });
   });
 

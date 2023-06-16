@@ -44,8 +44,10 @@ export default function MinMaxExample() {
           },
         ]}
         series={[{ data }]}
-        width={600}
-        height={500}
+        width={500}
+        height={300}
+        margin={{ top: 10 }}
+        sx={{ mt: 2 }}
       />
       <Slider
         value={value}
@@ -53,6 +55,7 @@ export default function MinMaxExample() {
         valueLabelDisplay="auto"
         min={-40}
         max={40}
+        sx={{ mt: 2 }}
       />
     </div>
   );

@@ -11,8 +11,8 @@ export default function BasicArea() {
           area: true,
         },
       ]}
-      width={600}
-      height={500}
+      width={500}
+      height={300}
     />
   );
 }

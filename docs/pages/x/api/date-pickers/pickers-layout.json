@@ -19,11 +19,11 @@
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
   "slots": {
-    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "Layout": { "type": { "name": "elementType" } },
-    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "Tabs": { "type": { "name": "elementType" } },
-    "Toolbar": { "type": { "name": "elementType" } }
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "layout": { "type": { "name": "elementType" } },
+    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
+    "tabs": { "type": { "name": "elementType" } },
+    "toolbar": { "type": { "name": "elementType" } }
   },
   "name": "PickersLayout",
   "styles": {

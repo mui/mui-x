@@ -9,6 +9,7 @@ import {
   MuiPickersAdapter,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
+import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -44,7 +45,6 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @param {TValue} params.value The value provided by the user.
    * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute the reference value.
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
-   * @param {FieldValueType} params.valueType The type of the value being edited.
    * @param {granularity} params.granularity The granularity of the selection possible on this component.
    * @returns {TValue} The reference value to use for non-provided dates.
    */
@@ -53,7 +53,6 @@ export interface PickerValueManager<TValue, TDate, TError> {
     value: TValue;
     props: GetDefaultReferenceDateProps<TDate>;
     utils: MuiPickersAdapter<TDate>;
-    valueType: FieldValueType;
     granularity: number;
   }) => TValue;
   /**
@@ -173,6 +172,11 @@ export type PickerValueUpdateAction<TValue, TError> =
       name: 'setValueFromAction';
       value: TValue;
       pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
+    }
+  | {
+      name: 'setValueFromShortcut';
+      value: TValue;
+      changeImportance: PickerShortcutChangeImportance;
     };
 
 /**
@@ -304,6 +308,7 @@ export interface UsePickerValueViewsResponse<TValue> {
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;
   onChange: (newValue: TValue) => void;
+  onSelectShortcut: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
   isValid: (value: TValue) => boolean;
 }
 
