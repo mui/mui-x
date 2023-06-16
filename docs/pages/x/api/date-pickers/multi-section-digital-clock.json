@@ -76,7 +76,7 @@
     }
   },
   "slots": {
-    "DigitalClockSectionItem": {
+    "digitalClockSectionItem": {
       "default": "MenuItem from '@mui/material'",
       "type": { "name": "elementType" }
     }

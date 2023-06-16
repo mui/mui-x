@@ -927,7 +927,7 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.click(filterCell);
 
       fireEvent.click(within(filterCell).getByLabelText('Operator'));
-      fireEvent.click(screen.getByRole('menuitem', { name: '= Equals' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Equals' }));
 
       expect(onFilterModelChange.callCount).to.equal(1);
       expect(onFilterModelChange.lastCall.firstArg.items[0].operator).to.equal('equals');

@@ -43,6 +43,6 @@
     }
   },
   "slotDescriptions": {
-    "DigitalClockItem": "Component responsible for rendering a single digital clock item."
+    "digitalClockItem": "Component responsible for rendering a single digital clock item."
   }
 }

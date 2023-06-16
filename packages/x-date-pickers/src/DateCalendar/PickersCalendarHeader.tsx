@@ -9,7 +9,7 @@ import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DateComponentValidationProps } from '../internals/utils/validation/validateDate';
-import { ArrowDropDown } from '../internals/components/icons';
+import { ArrowDropDownIcon } from '../icons';
 import {
   PickersArrowSwitcher,
   ExportedPickersArrowSwitcherProps,
@@ -158,7 +158,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   }),
 }));
 
-const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
+const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,

@@ -1,10 +1,9 @@
-<MobileTimePicker
-  label={'"hours", "minutes" and "seconds"'}
-  views={['hours', 'minutes', 'seconds']}
-/>
-<MobileTimePicker label={'"hours"'} views={['hours']} />
-<MobileTimePicker
-  label={'"minutes" and "seconds"'}
-  views={['minutes', 'seconds']}
-  format="mm:ss"
-/>
+<DemoItem label={'"hours", "minutes" and "seconds"'}>
+  <TimePicker views={['hours', 'minutes', 'seconds']} />
+</DemoItem>
+<DemoItem label={'"hours"'}>
+  <TimePicker views={['hours']} />
+</DemoItem>
+<DemoItem label={'"minutes" and "seconds"'}>
+  <TimePicker views={['minutes', 'seconds']} format="mm:ss" />
+</DemoItem>

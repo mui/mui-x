@@ -54,7 +54,8 @@ const paginationModel = gridPaginationModelSelector(
 
 ### With useGridSelector
 
-If you only need to access the state value in the render of your components, use the `useGridSelector` hook:
+If you only need to access the state value in the render of your components, use the `useGridSelector` hook.
+This hook ensures there is a reactive binding such that when the state changes, the component in which this hook is used is re-rendered.
 
 ```tsx
 const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);

@@ -156,7 +156,7 @@ describe('License: verifyLicense', () => {
             acceptedScopes: ['pro', 'premium'],
             isProduction: false,
           }),
-        ).to.equal(LicenseStatus.Expired);
+        ).to.equal(LicenseStatus.ExpiredAnnual);
       });
 
       it('should validate perpetual license in dev if current date is after expiry date but release date is before expiry date', () => {

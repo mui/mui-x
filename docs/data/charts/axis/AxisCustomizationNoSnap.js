@@ -14,11 +14,9 @@ const data = Array.from({ length: 200 }, () => ({
 const defaultXAxis = {
   disableLine: false,
   disableTicks: false,
-  fill: 'currentColor',
   fontSize: 12,
   label: 'my axis',
   labelFontSize: 14,
-  stroke: 'currentColor',
   tickSize: 6,
 };
 export default function AxisCustomizationNoSnap() {
@@ -28,21 +26,9 @@ export default function AxisCustomizationNoSnap() {
       data={[
         { propName: 'disableLine', knob: 'switch', defaultValue: false },
         { propName: 'disableTicks', knob: 'switch', defaultValue: false },
-        {
-          propName: 'fill',
-          knob: 'color',
-          defaultValue: 'currentColor',
-          options: ['red', 'blue', 'currentColor'],
-        },
         { propName: 'fontSize', knom: 'number', defaultValue: 12 },
         { propName: 'label', knob: 'input', defaultValue: 'my axis' },
         { propName: 'labelFontSize', knom: 'number', defaultValue: 14 },
-        {
-          propName: 'stroke',
-          knob: 'color',
-          defaultValue: 'currentColor',
-          options: ['red', 'blue', 'currentColor'],
-        },
         { propName: 'tickSize', knob: 'number', defaultValue: 6 },
       ]}
       renderDemo={(props) => (
