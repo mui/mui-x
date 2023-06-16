@@ -647,7 +647,7 @@ describe('<DateField /> - Editing', () => {
   describeAdapters('Pasting', DateField, ({ adapter, render, renderWithProps, clickOnInput }) => {
     const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
       act(() => {
-        const clipboardEvent = new Event('paste', {
+        const clipboardEvent = new window.Event('paste', {
           bubbles: true,
           cancelable: true,
           composed: true,
