@@ -267,7 +267,7 @@ export const useGridRowEditing = (
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params) => {
-      const { id, field, reason, key } = params;
+      const { id, field, reason, key, columns } = params;
 
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
@@ -277,7 +277,8 @@ export const useGridRowEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startRowEditModeParams.deleteValue = !!field;
         } else {
-          startRowEditModeParams.initialValue = key;
+          const colDef = columns.find((col) => col.field === field)!;
+          startRowEditModeParams.initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
         }
       } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
         startRowEditModeParams.deleteValue = !!field;
