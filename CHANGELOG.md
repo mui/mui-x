@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.8.0
+
+_Jun 16, 2023_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Greek (el-GR) locale on Pickers and improve on Data Grid
+- 🚅 Performance improvements
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@6.8.0` / `@mui/x-data-grid-pro@6.8.0` / `@mui/x-data-grid-premium@6.8.0`
+
+#### Changes
+
+- [DataGrid] Add missing styles to `overridesResolver` (#9248) @mrmuhammadali
+- [DataGrid] Keep column header menu icon always visible on touch devices (#9076) @cherniavskii
+- [DataGrid] Correct the type for single digit edited number value (#9282) @MBilalShafi
+- [DataGrid] Correct the type for single digit edited number for row edit (#9348) @MBilalShafi
+- [DataGrid] Filtering performance: cache values (#9284) @romgrk
+- [DataGrid] Fix tabbing between `actions` cells in edit mode (#9321) @md250721
+- [DataGrid] Make autocompletion work for `GridColDef['type']` (#9320) @cherniavskii
+- [DataGrid] Polish shortcut logic (#9220) @oliviertassinari
+- [DataGrid] Row reordering fix for different row heights (#7006) @yaredtsy
+- [DataGrid] Scroll performance improvements (#9037) @romgrk
+- [l10n] Improve Greek (el-GR) locale (#9292) @clytras
+
+### `@mui/x-date-pickers@6.8.0` / `@mui/x-date-pickers-pro@6.8.0`
+
+#### Changes
+
+- [l10n] Add Greek (el-GR) locale (#9293) @clytras
+- [pickers] Add a `referenceDate` prop on `DateCalendar`, `MonthCalendar` and `YearCalendar` (#9260) @flaviendelangle
+- [pickers] Close the calendar when a shortcut is selected (#9080) @flaviendelangle
+- [pickers] Fix disabling for digital clock (#9300) @alexfauquette
+
+### Docs
+
+- [docs] Add header filters to the popular features demo (#9069) @MBilalShafi
+- [docs] Fix `Date Calendar` dynamic data demo (#9290) @benzler
+- [docs] Fix Data Grid header filter link (#9225) @oliviertassinari
+- [docs] Fix missing docs version warning (#9221) @oliviertassinari
+- [docs] Improve Chart overview (#9333) @oliviertassinari
+- [docs] Improve Next.js license installation guide (#8975) @oliviertassinari
+- [docs] Link pagination documentation to the migration guide (#9296) @MBilalShafi
+- [docs] One step toward components -> slots (#9251) @oliviertassinari
+- [docs] Improve and reorganize sections on editing page (#8431) @joserodolfofreitas
+- [docs] Add clipboard paste to popular features demo (#9029) @cherniavskii
+
+### Core
+
+- [core] Polish event name (#9336) @oliviertassinari
+- [core] Re-enable `Argos` CI step (#9301) @LukasTy
+- [core] Upgrade Node.js to v18 on CircleCI, CodeSandbox and Netlify (#9319) @ZeeshanTamboli
+- [core] Upgrade Node.js v18 for l10n GitHub CI (#9355) @ZeeshanTamboli
+- [charts] Add demonstration pages based on Recharts demo (#9175) @alexfauquette
+- [charts] Add legend (#9024) @alexfauquette
+- [charts] Complete the docs to introduce charts (#9153) @alexfauquette
+- [charts] Manage elements highlights (#9242) @alexfauquette
+- [charts] Prefix subcomponents with `Charts` (#9314) @alexfauquette
+- [license] Improve annual license expiration message (#9135) @oliviertassinari
+
 ## 6.7.0
 
 _Jun 9, 2023_
@@ -17,11 +79,11 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   <TimePicker views={['hours', 'minutes', 'seconds']} ampm />
   // Format before v6.7.0: `hh:mm aa`
   // Format after v6.7.0: `hh:mm:ss aa`
- 
+
   <DatePicker views={['year']} />
   // Format before v6.7.0: `MM/DD/YYYY`
   // Format after v6.7.0: `YYYY`
-  
+
   <DateTimePicker views={['day', 'hours', 'minutes']} ampm />
   // Format before v6.7.0: `MM/DD/YYYY hh:mm aa`
   // Format after v6.7.0: `DD hh:mm aa`
