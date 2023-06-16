@@ -484,12 +484,12 @@ GridRow.propTypes = {
    * If `null`, no cell in this row has focus.
    */
   focusedCell: PropTypes.string,
+  focusedCellColumnIndexNotInRange: PropTypes.number,
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
    */
   index: PropTypes.number,
-  focusedCellColumnIndexNotInRange: PropTypes.number,
   isLastVisible: PropTypes.bool,
   isNotVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number,
