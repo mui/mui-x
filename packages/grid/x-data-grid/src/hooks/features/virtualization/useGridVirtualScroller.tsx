@@ -659,7 +659,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       const focusedCell = cellFocus !== null && cellFocus.id === id ? cellFocus.field : null;
 
       const columnWithFocusedCellNotInRange =
-        indexOfColumnWithFocusedCellNotInRange &&
+        indexOfColumnWithFocusedCellNotInRange !== undefined &&
         visibleColumns[indexOfColumnWithFocusedCellNotInRange];
 
       const renderedColumnsWithFocusedCell =
