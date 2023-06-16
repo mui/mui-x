@@ -55,7 +55,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [core] Polish event name (#9336) @oliviertassinari
 - [core] Re-enable `Argos` CI step (#9301) @LukasTy
 - [core] Upgrade Node.js to v18 on CircleCI, CodeSandbox and Netlify (#9319) @ZeeshanTamboli
-- [Chart] Add demonstration pages base on Recharts demo (#9175) @alexfauquette
+- [charts] Add demonstration pages based on Recharts demo (#9175) @alexfauquette
 - [charts] Add legend (#9024) @alexfauquette
 - [charts] Complete the docs to introduce charts (#9153) @alexfauquette
 - [charts] Manage elements highlights (#9242) @alexfauquette
