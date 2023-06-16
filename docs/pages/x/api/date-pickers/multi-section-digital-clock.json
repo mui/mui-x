@@ -39,6 +39,10 @@
       }
     },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
+    },
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,

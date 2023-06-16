@@ -482,7 +482,7 @@ MultiSectionDigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TDate
+   * @template TDate, TView
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
@@ -512,6 +512,11 @@ MultiSectionDigitalClock.propTypes = {
    * @default false
    */
   readOnly: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
