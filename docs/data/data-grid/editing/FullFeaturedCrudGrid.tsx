@@ -23,12 +23,12 @@ import {
   randomCreatedDate,
   randomTraderName,
   randomId,
+  randomArrayItem,
 } from '@mui/x-data-grid-generator';
 
 const roles = ['Market', 'Finance', 'Development'];
 const randomRole = () => {
-  const randomIndex = Math.floor(Math.random() * roles.length);
-  return roles[randomIndex];
+  return randomArrayItem(roles);
 };
 
 const initialRows: GridRowsProp = [
