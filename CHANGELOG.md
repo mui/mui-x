@@ -59,7 +59,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [charts] Add legend (#9024) @alexfauquette
 - [charts] Complete the docs to introduce charts (#9153) @alexfauquette
 - [charts] Manage elements highlights (#9242) @alexfauquette
-- [charts] Prefix sub components with Charts (#9314) @alexfauquette
+- [charts] Prefix subcomponents with `Charts` (#9314) @alexfauquette
 - [license] Improve annual license expiration message (#9135) @oliviertassinari
 
 ## 6.7.0
