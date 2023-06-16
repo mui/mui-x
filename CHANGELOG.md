@@ -9,7 +9,6 @@ _Jun 16, 2023_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 Add a `referenceDate` prop on `DateCalendar`, `MonthCalendar` and `YearCalendar`.
 - 🌍 Add Greek (el-GR) locale on Pickers and improve on Data Grid
 - 🚅 Performance improvements
 - 🐞 Bugfixes
@@ -18,10 +17,11 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 ### `@mui/x-data-grid@6.8.0` / `@mui/x-data-grid-pro@6.8.0` / `@mui/x-data-grid-premium@6.8.0`
 
 #### Changes
-
+gi
 - [DataGrid] Add missing styles to `overridesResolver` (#9248) @mrmuhammadali
 - [DataGrid] Keep column header menu icon always visible on touch devices (#9076) @cherniavskii
 - [DataGrid] Correct the type for single digit edited number value (#9282) @MBilalShafi
+- [DataGrid] Correct the type for single digit edited number for row edit (#9348) @MBilalShafi
 - [DataGrid] Filtering performance: cache values (#9284) @romgrk
 - [DataGrid] Fix tabbing between `actions` cells in edit mode (#9321) @md250721
 - [DataGrid] Make autocompletion work for `GridColDef['type']` (#9320) @cherniavskii
@@ -49,12 +49,15 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [docs] Improve Next.js license installation guide (#8975) @oliviertassinari
 - [docs] Link pagination documentation to the migration guide (#9296) @MBilalShafi
 - [docs] One step toward components -> slots (#9251) @oliviertassinari
+- [docs] Improve and reorganize sections on editing page (#8431) @joserodolfofreitas
+- [docs] Add clipboard paste to popular features demo (#9029) @cherniavskii
 
 ### Core
 
 - [core] Polish event name (#9336) @oliviertassinari
 - [core] Re-enable `Argos` CI step (#9301) @LukasTy
 - [core] Upgrade Node.js to v18 on CircleCI, CodeSandbox and Netlify (#9319) @ZeeshanTamboli
+- [core] Upgrade Node.js v18 for l10n GitHub CI (#9355) @ZeeshanTamboli
 - [charts] Add demonstration pages based on Recharts demo (#9175) @alexfauquette
 - [charts] Add legend (#9024) @alexfauquette
 - [charts] Complete the docs to introduce charts (#9153) @alexfauquette
