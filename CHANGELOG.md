@@ -10,7 +10,7 @@ _Jun 15, 2023_
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 💫 Add a `referenceDate` prop on `DateCalendar`, `MonthCalendar` and `YearCalendar`.
-- 🌍 Add Greek (el-GR) locale
+- 🌍 Add Greek (el-GR) locale on Pickers and improve on Data Grid
 - 🚅 Performance improvements
 - 🐞 Bugfixes
 - 📚 Documentation improvements
