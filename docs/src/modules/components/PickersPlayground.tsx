@@ -353,13 +353,37 @@ export default function PickersPlayground() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mx: { xs: 2, sm: 0 } }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          width: '100%',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: '8px',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1.5,
+            bgcolor: 'action.hover',
+            padding: 2,
+            mx: {
+              xs: 2,
+              sm: 0,
+            },
+            width: {
+              xs: '100%',
+              sm: 335,
+            },
+          }}
+        >
           <BooleanRadioGroupControl
             label="Static desktop mode"
             value={isStaticDesktopMode}
             onChange={setIsStaticDesktopMode}
-            helperText="Only for Static pickers"
           />
           <RadioGroupControl
             label="Toolbar hidden"
@@ -432,7 +456,7 @@ export default function PickersPlayground() {
           {selectedPickers !== 'date-range' && (
             <FormControl component="fieldset" variant="standard">
               <FormLabel component="legend">Available views</FormLabel>
-              <FormGroup>
+              <FormGroup row>
                 {(selectedPickers === 'date' || selectedPickers === 'date-time') && (
                   <React.Fragment>
                     <FormControlLabel
@@ -490,8 +514,8 @@ export default function PickersPlayground() {
           )}
         </Box>
         <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
-        <Box display="flex" gap={2} flexDirection="column">
-          <FormControl>
+        <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column', margin: '16px auto' }}>
+          <FormControl fullWidth>
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
               labelId="selected-component-family-label"
