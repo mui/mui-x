@@ -220,13 +220,17 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
 
     if (newSectionValueNumber > sectionBoundaries.maximum) {
       return getCleanValue(
-        sectionBoundaries.minimum + newSectionValueNumber - sectionBoundaries.maximum - 1,
+        sectionBoundaries.minimum +
+          ((newSectionValueNumber - sectionBoundaries.maximum - 1) %
+            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
       );
     }
 
     if (newSectionValueNumber < sectionBoundaries.minimum) {
       return getCleanValue(
-        sectionBoundaries.maximum - (sectionBoundaries.minimum - newSectionValueNumber - 1),
+        sectionBoundaries.maximum -
+          ((sectionBoundaries.minimum - newSectionValueNumber - 1) %
+            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
       );
     }
 
