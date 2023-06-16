@@ -43,7 +43,7 @@ On the field—it enables its error state.
 
 On the calendar and clock views—the invalid values are displayed as disabled to prevent their selection.
 
-{{"demo": "ValidationBehaviorViewSnapSnap.js", "defaultCodeOpen": false}}
+{{"demo": "ValidationBehaviorViewSnap.js", "defaultCodeOpen": false}}
 
 ## Past and future validation
 
