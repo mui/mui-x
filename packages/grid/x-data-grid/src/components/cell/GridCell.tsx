@@ -403,6 +403,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   let children: React.ReactNode = childrenProp;
   if (children === undefined) {
     const valueString = valueToRender?.toString();
+
     children = (
       <div className={classes.content} title={valueString}>
         {valueString}
