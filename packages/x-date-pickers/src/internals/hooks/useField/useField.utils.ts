@@ -204,9 +204,9 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
 
       if (delta > 0 || isStart) {
         newSectionValueNumber = sectionBoundaries.minimum;
+      } else {
+        newSectionValueNumber = sectionBoundaries.maximum;
       }
-
-      newSectionValueNumber = sectionBoundaries.maximum;
     }
 
     if (newSectionValueNumber % step !== 0) {
