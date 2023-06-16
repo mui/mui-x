@@ -40,6 +40,11 @@ export interface MonthCalendarProps<TDate>
    */
   defaultValue?: TDate | null;
   /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
+  /**
    * Callback fired when the value changes.
    * @template TDate
    * @param {TDate | null} value The new value.

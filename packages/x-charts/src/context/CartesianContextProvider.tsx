@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { scaleBand, scalePoint } from 'd3-scale';
 import PropTypes from 'prop-types';
-import { scaleBand } from 'd3-scale';
 import {
   getExtremumX as getBarExtremumX,
   getExtremumY as getBarExtremumY,
@@ -137,6 +137,15 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
         };
         return;
       }
+      if (scaleType === 'point') {
+        completedXAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scalePoint(axis.data!, range),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
@@ -171,6 +180,15 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
           ...axis,
           scaleType,
           scale: scaleBand(axis.data!, range),
+          ticksNumber: axis.data!.length,
+        };
+        return;
+      }
+      if (scaleType === 'point') {
+        completedYAxis[axis.id] = {
+          ...axis,
+          scaleType,
+          scale: scalePoint(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
         return;
@@ -232,7 +250,7 @@ CartesianContextProvider.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -256,7 +274,7 @@ CartesianContextProvider.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

@@ -16,8 +16,8 @@ export default function SimpleCharts() {
           data: [2, 5, 3],
         },
       ]}
-      width={600}
-      height={500}
+      width={500}
+      height={300}
     />
   );
 }

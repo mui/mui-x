@@ -1,9 +1,0 @@
-{
-  "props": {},
-  "slots": {},
-  "name": "AxisHighlight",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiAxisHighlight" },
-  "filename": "/packages/x-charts/src/AxisHighlight/AxisHighlight.tsx",
-  "demos": "<ul></ul>",
-  "packages": [{ "packageName": "@mui/x-charts", "componentName": "AxisHighlight" }]
-}

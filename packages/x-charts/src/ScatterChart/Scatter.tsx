@@ -26,45 +26,56 @@ function Scatter(props: ScatterProps) {
   const getYPosition = getValueToPositionMapper(yScale);
   const getInteractionItemProps = useInteractionItemProps(series.highlightScope);
 
-  const xDomain = xScale.domain();
-  const yDomain = yScale.domain();
+  const xRange = xScale.range();
+  const yRange = yScale.range();
+
   const isInRange = ({ x, y }: { x: number; y: number }) => {
-    if (x < xDomain[0] || x > xDomain[1]) {
+    if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
       return false;
     }
-    return !(y < yDomain[0] || y > yDomain[1]);
+    if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
+      return false;
+    }
+    return true;
   };
-
   return (
     <g>
-      {series.data.filter(isInRange).map(({ x, y, id }, dataIndex) => {
-        const isHighlighted = getIsHighlighted(
-          item,
-          { type: 'scatter', seriesId: series.id, dataIndex },
-          series.highlightScope,
-        );
-
-        const isFaded =
-          !isHighlighted &&
-          getIsFaded(
+      {series.data
+        .map(({ x, y, id }, index) => ({
+          x: getXPosition(x),
+          y: getYPosition(y),
+          id,
+          dataIndex: index,
+        }))
+        .filter(isInRange)
+        .map(({ x, y, id, dataIndex }) => {
+          const isHighlighted = getIsHighlighted(
             item,
             { type: 'scatter', seriesId: series.id, dataIndex },
             series.highlightScope,
           );
 
-        return (
-          <circle
-            key={id}
-            cx={0}
-            cy={0}
-            r={markerSize}
-            transform={`translate(${getXPosition(x)}, ${getYPosition(y)})`}
-            fill={color}
-            opacity={(isHighlighted && 1) || (isFaded && 0.3) || 0.8}
-            {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
-          />
-        );
-      })}
+          const isFaded =
+            !isHighlighted &&
+            getIsFaded(
+              item,
+              { type: 'scatter', seriesId: series.id, dataIndex },
+              series.highlightScope,
+            );
+
+          return (
+            <circle
+              key={id}
+              cx={0}
+              cy={0}
+              r={markerSize}
+              transform={`translate(${x}, ${y})`}
+              fill={color}
+              opacity={(isHighlighted && 1) || (isFaded && 0.3) || 0.8}
+              {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
+            />
+          );
+        })}
     </g>
   );
 }
