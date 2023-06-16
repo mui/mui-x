@@ -43,7 +43,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 - [docs] Add header filters to the popular features demo (#9069) @MBilalShafi
 - [docs] Fix `Date Calendar` dynamic data demo (#9290) @benzler
-- [docs] Fix grid header filter link (#9225) @oliviertassinari
+- [docs] Fix Data Grid header filter link (#9225) @oliviertassinari
 - [docs] Fix missing docs version warning (#9221) @oliviertassinari
 - [docs] Improve Chart overview (#9333) @oliviertassinari
 - [docs] Improve Next.js license installation guide (#8975) @oliviertassinari
