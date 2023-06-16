@@ -34,6 +34,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 #### Changes
 
+- [l10n] Add Greek (el-GR) locale (#9293) @clytras
 - [pickers] Add a `referenceDate` prop on `DateCalendar`, `MonthCalendar` and `YearCalendar` (#9260) @flaviendelangle
 - [pickers] Close the calendar when a shortcut is selected (#9080) @flaviendelangle
 - [pickers] Fix disabling for digital clock (#9300) @alexfauquette
