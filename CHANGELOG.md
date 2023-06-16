@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 ### `@mui/x-data-grid@6.8.0` / `@mui/x-data-grid-pro@6.8.0` / `@mui/x-data-grid-premium@6.8.0`
 
 #### Changes
-gi
+
 - [DataGrid] Add missing styles to `overridesResolver` (#9248) @mrmuhammadali
 - [DataGrid] Keep column header menu icon always visible on touch devices (#9076) @cherniavskii
 - [DataGrid] Correct the type for single digit edited number value (#9282) @MBilalShafi
