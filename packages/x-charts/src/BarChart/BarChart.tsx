@@ -6,18 +6,22 @@ import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { Axis, AxisProps } from '../Axis';
+import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { Tooltip, TooltipProps } from '../Tooltip';
-import { AxisHighlight, AxisHighlightProps } from '../AxisHighlight';
-import { ClipPath } from '../ClipPath/ClipPath';
+import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
+import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsClipPath } from '../ChartsClipPath';
 
-export interface BarChartProps extends Omit<ResponsiveChartContainerProps, 'series'>, AxisProps {
+export interface BarChartProps
+  extends Omit<ResponsiveChartContainerProps, 'series'>,
+    ChartsAxisProps {
   series: MakeOptional<BarSeriesType, 'type'>[];
-  tooltip?: TooltipProps;
-  axisHighlight?: AxisHighlightProps;
+  tooltip?: ChartsTooltipProps;
+  axisHighlight?: ChartsAxisHighlightProps;
+  legend?: ChartsLegendProps;
 }
 
 function BarChart(props: BarChartProps) {
@@ -32,6 +36,7 @@ function BarChart(props: BarChartProps) {
     sx,
     tooltip,
     axisHighlight,
+    legend,
     topAxis,
     leftAxis,
     rightAxis,
@@ -69,10 +74,16 @@ function BarChart(props: BarChartProps) {
       <g clipPath={`url(#${clipPathId})`}>
         <BarPlot />
       </g>
-      <Axis topAxis={topAxis} leftAxis={leftAxis} rightAxis={rightAxis} bottomAxis={bottomAxis} />
-      <AxisHighlight {...axisHighlight} />
-      <Tooltip {...tooltip} />
-      <ClipPath id={clipPathId} />
+      <ChartsAxis
+        topAxis={topAxis}
+        leftAxis={leftAxis}
+        rightAxis={rightAxis}
+        bottomAxis={bottomAxis}
+      />
+      <ChartsLegend {...legend} />
+      <ChartsAxisHighlight x="band" {...axisHighlight} />
+      <ChartsTooltip {...tooltip} />
+      <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
   );
@@ -89,7 +100,7 @@ BarChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -116,7 +127,7 @@ BarChart.propTypes = {
   height: PropTypes.number,
   /**
    * Indicate which axis to display the the left of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -135,6 +146,21 @@ BarChart.propTypes = {
     }),
     PropTypes.string,
   ]),
+  legend: PropTypes.shape({
+    classes: PropTypes.object,
+    direction: PropTypes.oneOf(['column', 'row']),
+    itemWidth: PropTypes.number,
+    markSize: PropTypes.number,
+    offset: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+    }),
+    position: PropTypes.shape({
+      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
+      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
+    }),
+    spacing: PropTypes.number,
+  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -143,7 +169,7 @@ BarChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the the right of the charts.
-   * Can be a string (the id of the axis) or an object `YAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -164,6 +190,7 @@ BarChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(
     PropTypes.shape({
+      color: PropTypes.string,
       data: PropTypes.arrayOf(PropTypes.number).isRequired,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
@@ -182,6 +209,7 @@ BarChart.propTypes = {
         'reverse',
       ]),
       type: PropTypes.oneOf(['bar']),
+      valueFormatter: PropTypes.func,
       xAxisKey: PropTypes.string,
       yAxisKey: PropTypes.string,
     }),
@@ -194,12 +222,13 @@ BarChart.propTypes = {
   title: PropTypes.string,
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
+    classes: PropTypes.object,
     itemContent: PropTypes.elementType,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
    * Indicate which axis to display the the top of the charts.
-   * Can be a string (the id of the axis) or an object `XAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default null
    */
   topAxis: PropTypes.oneOfType([
@@ -241,7 +270,7 @@ BarChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -265,7 +294,7 @@ BarChart.propTypes = {
       min: PropTypes.number,
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'pow', 'sqrt', 'time', 'utc']),
+      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

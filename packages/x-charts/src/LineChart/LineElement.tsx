@@ -20,6 +20,9 @@ export interface LineElementClasses {
   /** Styles applied to the root element when faded. */
   faded: string;
 }
+
+export type LineElementClassKey = keyof LineElementClasses;
+
 export interface LineElementOwnerState {
   id: string;
   color: string;

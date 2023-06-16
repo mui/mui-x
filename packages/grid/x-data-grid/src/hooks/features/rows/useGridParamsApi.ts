@@ -12,16 +12,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
-let warnedOnceMissingColumn = false;
-function warnMissingColumn(field: string) {
-  console.warn(
-    [
-      `MUI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
-      `Instead, you can access the data from \`params.row.${field}\`.`,
-    ].join('\n'),
-  );
-  warnedOnceMissingColumn = true;
-}
+export class MissingRowIdError extends Error {}
 
 /**
  * @requires useGridColumns (method)
@@ -45,7 +36,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       const row = apiRef.current.getRow(id);
 
       if (!row) {
-        throw new Error(`No row with id #${id} found`);
+        throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
       const params: GridRowParams = {
@@ -64,7 +55,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       const rowNode = apiRef.current.getRowNode<GridTreeNodeWithRender>(id);
 
       if (!row || !rowNode) {
-        throw new Error(`No row with id #${id} found`);
+        throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
       const cellFocus = gridFocusCellSelector(apiRef);
@@ -96,7 +87,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
       const rowNode = apiRef.current.getRowNode(id);
 
       if (!row || !rowNode) {
-        throw new Error(`No row with id #${id} found`);
+        throw new MissingRowIdError(`No row with id #${id} found`);
       }
 
       const cellFocus = gridFocusCellSelector(apiRef);
@@ -113,6 +104,7 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
         value,
         formattedValue: value,
+        isEditable: false,
       };
       if (colDef && colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter({
@@ -133,17 +125,11 @@ export function useGridParamsApi(apiRef: React.MutableRefObject<GridPrivateApiCo
     (id, field) => {
       const colDef = apiRef.current.getColumn(field);
 
-      if (process.env.NODE_ENV !== 'production') {
-        if (!colDef && !warnedOnceMissingColumn) {
-          warnMissingColumn(field);
-        }
-      }
-
       if (!colDef || !colDef.valueGetter) {
         const rowModel = apiRef.current.getRow(id);
 
         if (!rowModel) {
-          throw new Error(`No row with id #${id} found`);
+          throw new MissingRowIdError(`No row with id #${id} found`);
         }
 
         return rowModel[field];
