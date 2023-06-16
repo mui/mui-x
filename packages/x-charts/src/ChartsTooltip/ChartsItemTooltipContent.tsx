@@ -8,7 +8,9 @@ import {
   ChartsTooltipCell,
   ChartsTooltipMark,
   ChartsTooltipPaper,
+  ChartsTooltipRow,
 } from './ChartsTooltipTable';
+import { ChartsTooltipClasses } from './tooltipClasses';
 
 export type ChartsItemContentProps<T extends ChartSeriesType> = {
   /**
@@ -19,13 +21,17 @@ export type ChartsItemContentProps<T extends ChartSeriesType> = {
    * The series linked to the triggered axis.
    */
   series: ChartSeriesDefaultized<T>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: ChartsTooltipClasses;
   sx?: SxProps<Theme>;
 };
 
 export function DefaultChartsItemContent<T extends ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
-  const { series, itemData, sx } = props;
+  const { series, itemData, sx, classes } = props;
 
   if (itemData.dataIndex === undefined) {
     return null;
@@ -37,18 +43,18 @@ export function DefaultChartsItemContent<T extends ChartSeriesType>(
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
-    <ChartsTooltipPaper sx={sx}>
+    <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
       <ChartsTooltipTable>
         <tbody>
-          <tr>
-            <ChartsTooltipCell>
+          <ChartsTooltipRow>
+            <ChartsTooltipCell className={classes.markCell}>
               <ChartsTooltipMark ownerState={{ color }} />
             </ChartsTooltipCell>
 
-            <ChartsTooltipCell>{displayedLabel}</ChartsTooltipCell>
+            <ChartsTooltipCell className={classes.labelCell}>{displayedLabel}</ChartsTooltipCell>
 
-            <ChartsTooltipCell>{formattedValue}</ChartsTooltipCell>
-          </tr>
+            <ChartsTooltipCell className={classes.valueCell}>{formattedValue}</ChartsTooltipCell>
+          </ChartsTooltipRow>
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
@@ -59,8 +65,9 @@ export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
   sx?: SxProps<Theme>;
+  classes: ChartsItemContentProps<T>['classes'];
 }) {
-  const { content, itemData, sx } = props;
+  const { content, itemData, sx, classes } = props;
 
   const series = React.useContext(SeriesContext)[itemData.type]!.series[
     itemData.seriesId
@@ -68,5 +75,5 @@ export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
 
   const Content = content ?? DefaultChartsItemContent<T>;
 
-  return <Content itemData={itemData} series={series} sx={sx} />;
+  return <Content itemData={itemData} series={series} sx={sx} classes={classes} />;
 }

@@ -11,7 +11,9 @@ import {
   ChartsTooltipPaper,
   ChartsTooltipTable,
   ChartsTooltipMark,
+  ChartsTooltipRow,
 } from './ChartsTooltipTable';
+import { ChartsTooltipClasses } from './tooltipClasses';
 
 export type ChartsAxisContentProps = {
   /**
@@ -35,42 +37,46 @@ export type ChartsAxisContentProps = {
    * The value associated to the current mouse position.
    */
   axisValue: any;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: ChartsTooltipClasses;
   sx?: SxProps<Theme>;
 };
 export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
-  const { series, axis, dataIndex, axisValue, sx } = props;
+  const { series, axis, dataIndex, axisValue, sx, classes } = props;
 
   if (dataIndex == null) {
     return null;
   }
   const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
-    <ChartsTooltipPaper sx={sx}>
+    <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
       <ChartsTooltipTable>
         {axisValue != null && (
           <thead>
-            <tr>
+            <ChartsTooltipRow>
               <ChartsTooltipCell colSpan={3}>
                 <Typography>{axisFormatter(axisValue)}</Typography>
               </ChartsTooltipCell>
-            </tr>
+            </ChartsTooltipRow>
           </thead>
         )}
         <tbody>
           {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
-            <tr key={id}>
-              <ChartsTooltipCell>
-                <ChartsTooltipMark ownerState={{ color }} />
+            <ChartsTooltipRow key={id}>
+              <ChartsTooltipCell className={classes.markCell}>
+                <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
               </ChartsTooltipCell>
 
-              <ChartsTooltipCell>
+              <ChartsTooltipCell className={classes.labelCell}>
                 {label ? <Typography>{label}</Typography> : null}
               </ChartsTooltipCell>
 
-              <ChartsTooltipCell>
+              <ChartsTooltipCell className={classes.valueCell}>
                 <Typography>{valueFormatter(data[dataIndex])}</Typography>
               </ChartsTooltipCell>
-            </tr>
+            </ChartsTooltipRow>
           ))}
         </tbody>
       </ChartsTooltipTable>
@@ -82,8 +88,9 @@ export function ChartsAxisTooltipContent(props: {
   axisData: AxisInteractionData;
   content?: React.ElementType<ChartsAxisContentProps>;
   sx?: SxProps<Theme>;
+  classes: ChartsAxisContentProps['classes'];
 }) {
-  const { content, axisData, sx } = props;
+  const { content, axisData, sx, classes } = props;
   const dataIndex = axisData.x && axisData.x.index;
   const axisValue = axisData.x && axisData.x.value;
 
@@ -118,6 +125,7 @@ export function ChartsAxisTooltipContent(props: {
       dataIndex={dataIndex}
       axisValue={axisValue}
       sx={sx}
+      classes={classes}
     />
   );
 }

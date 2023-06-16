@@ -2,9 +2,24 @@
   "componentDescription": "",
   "propDescriptions": {
     "axisContent": "Component to override the tooltip content when triger is set to &#39;axis&#39;.",
+    "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "itemContent": "Component to override the tooltip content when triger is set to &#39;item&#39;.",
     "trigger": "Select the kind of tooltip to display - &#39;item&#39;: Shows data about the item below the mouse. - &#39;axis&#39;: Shows values associated with the hovered x value - &#39;none&#39;: Does not display tooltip"
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "markCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the markCell element"
+    },
+    "labelCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the labelCell element"
+    },
+    "valueCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the valueCell element"
+    }
+  },
   "slotDescriptions": {}
 }
