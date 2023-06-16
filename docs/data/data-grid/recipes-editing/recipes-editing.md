@@ -101,7 +101,7 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 ## Single click editing
 
 By default, one of the ways to [enter the edit mode](/x/react-data-grid/editing/#start-editing) is by double-clicking a cell.
-Using the [controlled mode](/x/react-data-grid/editing/#controlled-mode) and listening to click events, you can also enter the edit mode with just a single click.
+Using the [controlled mode](/x/react-data-grid/editing/#controlled-model) and listening to click events, you can also enter the edit mode with just a single click.
 The following demo implements this behavior.
 
 {{"demo": "SingleClickEditing.js", "bg": "inline", "defaultCodeOpen": false}}
