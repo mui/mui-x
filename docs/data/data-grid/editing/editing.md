@@ -76,6 +76,10 @@ When a cell is in `view` mode, users can start editing a cell (or row if `editMo
   apiRef.current.startRowEditMode({ id: 1 });
   ```
 
+:::info
+You can also enter edit mode with a single click by following [this recipe](/x/react-data-grid/recipes-editing/#single-click-editing).
+:::
+
 ### Stop editing
 
 When a cell is in `edit` mode, the user can stop editing with any of the following interactions:
