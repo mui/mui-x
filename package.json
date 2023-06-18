@@ -83,7 +83,7 @@
     "@babel/traverse": "^7.21.4",
     "@babel/types": "^7.21.4",
     "@emotion/cache": "^11.11.0",
-    "@emotion/react": "^11.11.0",
+    "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mnajdova/enzyme-adapter-react-18": "^0.2.0",
     "@mui/icons-material": "^5.11.16",
