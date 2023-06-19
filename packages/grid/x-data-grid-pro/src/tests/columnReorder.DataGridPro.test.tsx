@@ -23,12 +23,15 @@ function createDragOverEvent(target: ChildNode) {
   return dragOverEvent;
 }
 
-function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false) {
+function createDragEndEvent(target: HTMLElement, isOutsideTheGrid: boolean = false) {
   const dragEndEvent = createEvent.dragEnd(target);
-  Object.defineProperty(dragEndEvent, 'dataTransfer', {
-    value: { dropEffect: isOutsideTheGrid ? 'none' : 'copy' },
+  const rect = target.getBoundingClientRect();
+  Object.defineProperty(dragEndEvent, 'clientX', {
+    value: isOutsideTheGrid ? Infinity : rect.x,
   });
-
+  Object.defineProperty(dragEndEvent, 'clientY', {
+    value: isOutsideTheGrid ? Infinity : rect.y,
+  });
   return dragEndEvent;
 }
 
@@ -112,7 +115,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const dragCol = getColumnHeaderCell(0).firstChild! as HTMLElement;
     const targetCell = getCell(0, 2)!;
 
     fireEvent.dragStart(dragCol);
@@ -143,7 +146,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const dragCol = getColumnHeaderCell(0).firstChild! as HTMLElement;
     const targetCell = getCell(0, 2);
 
     fireEvent.dragStart(dragCol);
@@ -197,7 +200,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(2).firstChild!;
+    const dragCol = getColumnHeaderCell(2).firstChild! as HTMLElement;
     const dragEndEvent = createDragEndEvent(dragCol, true);
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
@@ -219,7 +222,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
     render(<Test />);
 
-    const dragCol = getColumnHeaderCell(0).firstChild!;
+    const dragCol = getColumnHeaderCell(0).firstChild! as HTMLElement;
     const targetCell = getCell(0, 2)!;
 
     fireEvent.dragStart(dragCol);
@@ -259,7 +262,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild!;
+      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(0).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -298,7 +301,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild!;
+      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(0).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -333,7 +336,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild!;
+      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(2).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -365,7 +368,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(0).firstChild!;
+      const dragCol = getColumnHeaderCell(0).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(2).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -406,7 +409,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
     render(<Test />);
 
-    const dragCol = getColumnHeaderCell(1).firstChild!;
+    const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
     const targetCell = getCell(1, 2)!;
 
     fireEvent.dragStart(dragCol);
@@ -446,7 +449,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
-      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const dragCol = getColumnHeaderCell(0, 1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(2, 1).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -571,7 +574,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
-      const dragCol = getColumnHeaderCell(2, 1).firstChild!;
+      const dragCol = getColumnHeaderCell(2, 1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(1, 1).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -612,7 +615,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['col12', '', 'col1', 'col2', 'col3']);
-      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const dragCol = getColumnHeaderCell(0, 1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(2, 1).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -671,7 +674,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['', 'col23', 'col1', 'col2', 'col3']);
-      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const dragCol = getColumnHeaderCell(0, 1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(1, 1).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -739,7 +742,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         'col2',
         'col3',
       ]);
-      const dragCol = getColumnHeaderCell(0, 2).firstChild!;
+      const dragCol = getColumnHeaderCell(0, 2).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(1, 2).firstChild!;
 
       fireEvent.dragStart(dragCol);
@@ -811,7 +814,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
         'col2',
         'col3',
       ]);
-      const dragCol = getColumnHeaderCell(0, 1).firstChild!;
+      const dragCol = getColumnHeaderCell(0, 1).firstChild! as HTMLElement;
       const targetCol = getColumnHeaderCell(2, 1).firstChild!;
 
       fireEvent.dragStart(dragCol);
