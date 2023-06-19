@@ -73,6 +73,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/editing/persistence' },
           { pathname: '/x/react-data-grid/editing/custom-edit-component' },
           { pathname: '/x/react-data-grid/editing/editing-events' },
+          { pathname: '/x/react-data-grid/editing/recipes' },
         ],
       },
       { pathname: '/x/react-data-grid/sorting' },
@@ -131,10 +132,7 @@ const pages: MuiPage[] = [
       {
         title: 'Recipes',
         pathname: '/x/react-data-grid/recipes',
-        children: [
-          { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
-          { pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' },
-        ],
+        children: [{ pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' }],
       },
       {
         pathname: '/x/api/data-grid-group',

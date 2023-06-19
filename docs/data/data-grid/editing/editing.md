@@ -250,10 +250,6 @@ Updating the params of a cell or row, but keeping the same `mode`, makes the cel
 Also, removing one field or row ID from the object will not cause the missing cell or row to go to `"view"` mode.
 :::
 
-## Advanced use cases
-
-See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
-
 ## apiRef
 
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
