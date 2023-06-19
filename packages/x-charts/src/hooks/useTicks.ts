@@ -18,23 +18,27 @@ export function getTicksNumber(
   return Math.min(maxTicks, Math.max(minTicks, estimatedTickNumber));
 }
 
-function useTicks(options: { scale: D3Scale; ticksNumber?: number }) {
-  const { scale, ticksNumber } = options;
+function useTicks(options: {
+  scale: D3Scale;
+  ticksNumber?: number;
+  valueFormatter?: (value: any) => string;
+}) {
+  const { scale, ticksNumber, valueFormatter } = options;
 
   return React.useMemo(() => {
     // band scale
     if (isBandScale(scale)) {
       const domain = scale.domain();
       return [
-        ...domain.map((d) => ({
-          value: d,
-          offset: scale(d) ?? 0,
+        ...domain.map((value) => ({
+          formattedValue: valueFormatter?.(value) ?? value,
+          offset: scale(value) ?? 0,
           labelOffset: scale.bandwidth() / 2,
         })),
         ...(scale.bandwidth() > 0
           ? [
               {
-                value: undefined,
+                formattedValue: undefined,
                 offset: scale.range()[1],
                 labelOffset: 0,
               },
@@ -44,11 +48,11 @@ function useTicks(options: { scale: D3Scale; ticksNumber?: number }) {
     }
 
     return scale.ticks(ticksNumber).map((value: any) => ({
-      value: scale.tickFormat(ticksNumber)(value),
+      formattedValue: valueFormatter?.(value) ?? scale.tickFormat(ticksNumber)(value),
       offset: scale(value),
       labelOffset: 0,
     }));
-  }, [ticksNumber, scale]);
+  }, [ticksNumber, scale, valueFormatter]);
 }
 
 export default useTicks;

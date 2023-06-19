@@ -18,7 +18,7 @@ Like other MUI X components, charts are built to be production-ready components 
 They also provide a high level of customization.
 
 To achieve this goal, the `@mui-x/chars` relies on three levels of customization:
-_single components_ with nice default, extensive _configuration props_, and sub components for _composition_.
+_single components_ with nice default, extensive _configuration props_, and subcomponents for _composition_.
 
 To modify the styling of charts you can rely on all the MUI styling tools, such as the theme override, or the `sx` props.
 

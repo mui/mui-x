@@ -807,6 +807,26 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, '01/13/2018');
       expect(onChange.callCount).to.equal(0);
     });
+
+    it('should reset sections internal state when pasting', () => {
+      const onChange = spy();
+
+      const { input, selectSection } = renderWithProps({
+        defaultValue: adapter.date(new Date(2018, 11, 5)),
+        onChange,
+      });
+
+      selectSection('day');
+
+      fireEvent.change(input, { target: { value: '12/2/2018' } }); // Press 2
+      expectInputValue(input, '12/02/2018');
+
+      firePasteEvent(input, '09/16/2022');
+      expectInputValue(input, '09/16/2022');
+
+      fireEvent.change(input, { target: { value: '09/2/2022' } }); // Press 2
+      expectInputValue(input, '09/02/2022'); // If internal state is not reset it would be 22 instead of 02
+    });
   });
 
   describeAdapters(

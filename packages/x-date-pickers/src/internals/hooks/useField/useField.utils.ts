@@ -173,6 +173,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   keyCode: AvailableAdjustKeyCode,
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   activeDate: TDate | null,
+  stepsAttribues?: { minutesStep?: number },
 ): string => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
@@ -190,27 +191,47 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
     const getCleanValue = (value: number) =>
       cleanDigitSectionValue(utils, value, sectionBoundaries, section);
 
+    const step =
+      section.type === 'minutes' && stepsAttribues?.minutesStep ? stepsAttribues.minutesStep : 1;
+
+    const currentSectionValue = parseInt(section.value, 10);
+    let newSectionValueNumber = currentSectionValue + delta * step;
+
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
         return utils.formatByString(utils.date()!, section.format);
       }
 
       if (delta > 0 || isStart) {
-        return getCleanValue(sectionBoundaries.minimum);
+        newSectionValueNumber = sectionBoundaries.minimum;
+      } else {
+        newSectionValueNumber = sectionBoundaries.maximum;
       }
-
-      return getCleanValue(sectionBoundaries.maximum);
     }
 
-    const currentSectionValue = parseInt(section.value, 10);
-    const newSectionValueNumber = currentSectionValue + delta;
+    if (newSectionValueNumber % step !== 0) {
+      if (delta < 0 || isStart) {
+        newSectionValueNumber += step - ((step + newSectionValueNumber) % step); // for JS -3 % 5 = -3 (should be 2)
+      }
+      if (delta > 0 || isEnd) {
+        newSectionValueNumber -= newSectionValueNumber % step;
+      }
+    }
 
     if (newSectionValueNumber > sectionBoundaries.maximum) {
-      return getCleanValue(sectionBoundaries.minimum);
+      return getCleanValue(
+        sectionBoundaries.minimum +
+          ((newSectionValueNumber - sectionBoundaries.maximum - 1) %
+            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
+      );
     }
 
     if (newSectionValueNumber < sectionBoundaries.minimum) {
-      return getCleanValue(sectionBoundaries.maximum);
+      return getCleanValue(
+        sectionBoundaries.maximum -
+          ((sectionBoundaries.minimum - newSectionValueNumber - 1) %
+            (sectionBoundaries.maximum - sectionBoundaries.minimum + 1)),
+      );
     }
 
     return getCleanValue(newSectionValueNumber);
