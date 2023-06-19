@@ -21,28 +21,22 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
 
   const { axis } = React.useContext(InteractionContext);
 
-  if (xAxisHighlight === 'band' && isBandScale(xScale)) {
-    if (axis.x === null) {
-      return null;
-    }
-    const x0 = xScale(axis.x.value)!;
-    const w = xScale.bandwidth();
-    const y0 = yScale(yScale.domain()[0]);
-    const y1 = yScale(yScale.domain().at(-1));
-
-    return (
-      <path
-        d={`M ${x0} ${y0} L ${x0 + w} ${y0} L ${x0 + w} ${y1} L ${x0} ${y1} Z`}
-        fill="gray"
-        fillOpacity={0.1}
-        style={{ pointerEvents: 'none' }}
-      />
-    );
-  }
-
   const getXPosition = getValueToPositionMapper(xScale);
   return (
     <React.Fragment>
+      {xAxisHighlight === 'band' && axis.x !== null && isBandScale(xScale) && (
+        <path
+          d={`M ${xScale(axis.x.value)!} ${yScale.range()[0]} L ${
+            xScale(axis.x.value)! + xScale.bandwidth()
+          } ${yScale.range()[0]} L ${xScale(axis.x.value)! + xScale.bandwidth()} ${
+            yScale.range()[1]
+          } L ${xScale(axis.x.value)!} ${yScale.range()[1]} Z`}
+          fill="gray"
+          fillOpacity={0.1}
+          style={{ pointerEvents: 'none' }}
+        />
+      )}
+
       {xAxisHighlight === 'line' && axis.x !== null && (
         <path
           d={`M ${getXPosition(axis.x.value)} ${yScale(yScale.domain()[0])} L ${getXPosition(
@@ -56,9 +50,9 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
 
       {yAxisHighlight === 'line' && axis.y !== null && (
         <path
-          d={`M ${xScale(xScale.domain()[0])} ${yScale(axis.y.value)} L ${xScale(
-            xScale.domain().at(-1)!,
-          )} ${yScale(axis.y.value)}`}
+          d={`M ${xScale.range()[0]} ${yScale(axis.y.value)} L ${xScale.range()[1]} ${yScale(
+            axis.y.value,
+          )}`}
           stroke="black"
           strokeDasharray="5 2"
           style={{ pointerEvents: 'none' }}
