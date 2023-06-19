@@ -65,7 +65,14 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
         ],
       },
-      { pathname: '/x/react-data-grid/editing' },
+      {
+        pathname: '/x/react-data-grid/editing-group',
+        title: 'Editing',
+        children: [
+          { pathname: '/x/react-data-grid/editing', title: 'Overview' },
+          { pathname: '/x/react-data-grid/editing/persistence' },
+        ],
+      },
       { pathname: '/x/react-data-grid/sorting' },
       {
         pathname: '/x/react-data-grid/filtering-group',
