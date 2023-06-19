@@ -20,7 +20,7 @@ export default function StoreUTCButDisplayOtherTimezone() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
         <DateTimePicker
-          timezone="America/New_York"
+          timezone="Pacific/Honolulu"
           value={value}
           onChange={setValue}
         />

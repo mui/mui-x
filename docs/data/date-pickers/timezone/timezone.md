@@ -378,6 +378,6 @@ The demo below shows how to store dates in UTC while displaying using the system
 
 ### Store UTC dates but display in another timezone
 
-The demo below shows how to store dates in UTC while displaying using the `America/New_York` timezone.
+The demo below shows how to store dates in UTC while displaying using the `Pacific/Honolulu` timezone.
 
 {{"demo": "StoreUTCButDisplayOtherTimezone.js",  "defaultCodeOpen": false}}
