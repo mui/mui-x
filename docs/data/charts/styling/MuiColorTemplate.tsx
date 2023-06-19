@@ -15,6 +15,7 @@ import { ScatterValueType } from '@mui/x-charts';
 import {
   blueberryTwilightPalette,
   mangoFusionPalette,
+  cheerfulFiestaPalette,
 } from '@mui/x-charts/colorPalettes';
 
 const chance = globalChance();
@@ -75,6 +76,7 @@ const series = [
 const categories = {
   blueberryTwilight: blueberryTwilightPalette,
   mangoFusion: mangoFusionPalette,
+  cheerfulFiesta: cheerfulFiestaPalette,
 } as const;
 
 type PaletteKey = keyof typeof categories;

@@ -3,19 +3,19 @@ export type ChartsColorPalette = string[] | ChartsColorPaletteCallback;
 
 export const blueberryTwilightPaletteLight = [
   '#02B2AF',
-  '#03008D',
+  '#2E96FF',
   '#B800D8',
-  '#007FFF',
-  '#313DD3',
-  '#7C00C5',
+  '#60009B',
+  '#2731C8',
+  '#03008D',
 ];
 export const blueberryTwilightPaletteDark = [
-  '#18E9DC',
-  '#D7FDFC',
-  '#7E8AF5',
-  '#4052EC',
-  '#007FFF',
-  '#CB2CE7',
+  '#02B2AF',
+  '#72CCFF',
+  '#DA00FF',
+  '#9001CB',
+  '#2E96FF',
+  '#3B48E0',
 ];
 
 export const blueberryTwilightPalette: ChartsColorPaletteCallback = (mode) =>
@@ -23,28 +23,48 @@ export const blueberryTwilightPalette: ChartsColorPaletteCallback = (mode) =>
 
 export const mangoFusionPaletteLight = [
   '#173A5E',
-  '#02B2AF',
-  '#F00780',
-  '#F44336',
-  '#FF5C00',
+  '#00A3A0',
+  '#C91B63',
+  '#EF5350',
+  '#FFA726',
   '#B800D8',
-  '#7C00C5',
+  '#60009B',
   '#2E96FF',
-  '#313DD3',
+  '#2731C8',
   '#03008D',
 ];
 export const mangoFusionPaletteDark = [
-  '#D7FDFC',
-  '#18E9DC',
-  '#02B2AF',
-  '#EF287B',
-  '#EF5350',
-  '#FFC24D',
-  '#CB2CE7',
-  '#7E8AF5',
-  '#007FFF',
-  '#4052EC',
+  '#41698F',
+  '#19D0CD',
+  '#DE196B',
+  '#FC5F5C',
+  '#FFD771',
+  '#DA00FF',
+  '#9001CB',
+  '#72CCFF',
+  '#2E96FF',
+  '#3B48E0',
 ];
 
 export const mangoFusionPalette: ChartsColorPaletteCallback = (mode) =>
   mode === 'dark' ? mangoFusionPaletteDark : mangoFusionPaletteLight;
+
+export const cheerfulFiestaPaletteDark = [
+  '#0072E6',
+  '#66B2FF',
+  '#FFB017',
+  '#1F94AD',
+  '#FF3143',
+  '#FF6C63',
+];
+export const cheerfulFiestaPaletteLight = [
+  '#0059B2',
+  '#2E96FF',
+  '#EA8C00',
+  '#1F94AD',
+  '#C82634',
+  '#FF3143',
+];
+
+export const cheerfulFiestaPalette: ChartsColorPaletteCallback = (mode) =>
+  mode === 'dark' ? cheerfulFiestaPaletteDark : cheerfulFiestaPaletteLight;

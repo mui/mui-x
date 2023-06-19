@@ -29,7 +29,7 @@ This prop takes an array of colors, or callback whose input is the theme's mode 
 
 #### Provided palettes
 
-The library includes two palettes.
+The library includes three palettes.
 
 {{"demo": "MuiColorTemplate.js", "bg": "inline"}}
 

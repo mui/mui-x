@@ -15,6 +15,7 @@ import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import {
   blueberryTwilightPalette,
   mangoFusionPalette,
+  cheerfulFiestaPalette,
 } from '@mui/x-charts/colorPalettes';
 
 const chance = globalChance();
@@ -71,6 +72,7 @@ const series = [
 const categories = {
   blueberryTwilight: blueberryTwilightPalette,
   mangoFusion: mangoFusionPalette,
+  cheerfulFiesta: cheerfulFiestaPalette,
 };
 
 export default function MuiColorTemplate() {
