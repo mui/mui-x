@@ -211,7 +211,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
 
     if (newSectionValueNumber % step !== 0) {
       if (delta < 0 || isStart) {
-        newSectionValueNumber += step - (newSectionValueNumber % step);
+        newSectionValueNumber += step - ((step + newSectionValueNumber) % step); // for JS -3 % 5 = -3 (should be 2)
       }
       if (delta > 0 || isEnd) {
         newSectionValueNumber -= newSectionValueNumber % step;
