@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
 import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormGroup from '@mui/material/FormGroup';
@@ -167,6 +167,73 @@ const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   },
   { label: 'Reset', getValue: () => [null, null] },
 ];
+
+function ViewSwitcher({
+  showDateViews,
+  showTimeViews,
+  views,
+  handleViewsChange,
+}: {
+  showDateViews: boolean;
+  showTimeViews: boolean;
+  views: ViewsMap;
+  handleViewsChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+}) {
+  return (
+    <FormControl component="fieldset" variant="standard">
+      <FormLabel id="views-label" component="legend">
+        Available views
+      </FormLabel>
+      <FormGroup
+        row
+        aria-labelledby="views-label"
+        sx={{
+          columnGap: 1.5,
+          [`& .${formControlLabelClasses.root}`]: {
+            marginRight: 0,
+          },
+        }}
+      >
+        {showDateViews && (
+          <React.Fragment>
+            <FormControlLabel
+              control={<Checkbox name="year" checked={views.year} onChange={handleViewsChange} />}
+              label="year"
+            />
+            <FormControlLabel
+              control={<Checkbox name="month" checked={views.month} onChange={handleViewsChange} />}
+              label="month"
+            />
+            <FormControlLabel
+              control={<Checkbox name="day" checked={views.day} onChange={handleViewsChange} />}
+              label="day"
+            />
+          </React.Fragment>
+        )}
+        {showTimeViews && (
+          <React.Fragment>
+            <FormControlLabel
+              control={<Checkbox name="hours" checked={views.hours} onChange={handleViewsChange} />}
+              label="hours"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox name="minutes" checked={views.minutes} onChange={handleViewsChange} />
+              }
+              label="minutes"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox name="seconds" checked={views.seconds} onChange={handleViewsChange} />
+              }
+              label="seconds"
+            />
+          </React.Fragment>
+        )}
+      </FormGroup>
+    </FormControl>
+  );
+}
 
 export default function PickersPlayground() {
   const [isToolbarHidden, setIsToolbarHidden] = React.useState<boolean | undefined>();
@@ -376,7 +443,7 @@ export default function PickersPlayground() {
             },
             width: {
               xs: '100%',
-              sm: 335,
+              sm: 312,
             },
           }}
         >
@@ -454,63 +521,12 @@ export default function PickersPlayground() {
             onChange={setIsLandscape}
           />
           {selectedPickers !== 'date-range' && (
-            <FormControl component="fieldset" variant="standard">
-              <FormLabel component="legend">Available views</FormLabel>
-              <FormGroup row>
-                {(selectedPickers === 'date' || selectedPickers === 'date-time') && (
-                  <React.Fragment>
-                    <FormControlLabel
-                      control={
-                        <Checkbox name="year" checked={views.year} onChange={handleViewsChange} />
-                      }
-                      label="year"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox name="month" checked={views.month} onChange={handleViewsChange} />
-                      }
-                      label="month"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox name="day" checked={views.day} onChange={handleViewsChange} />
-                      }
-                      label="day"
-                    />
-                  </React.Fragment>
-                )}
-                {(selectedPickers === 'time' || selectedPickers === 'date-time') && (
-                  <React.Fragment>
-                    <FormControlLabel
-                      control={
-                        <Checkbox name="hours" checked={views.hours} onChange={handleViewsChange} />
-                      }
-                      label="hours"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="minutes"
-                          checked={views.minutes}
-                          onChange={handleViewsChange}
-                        />
-                      }
-                      label="minutes"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          name="seconds"
-                          checked={views.seconds}
-                          onChange={handleViewsChange}
-                        />
-                      }
-                      label="seconds"
-                    />
-                  </React.Fragment>
-                )}
-              </FormGroup>
-            </FormControl>
+            <ViewSwitcher
+              showDateViews={selectedPickers === 'date' || selectedPickers === 'date-time'}
+              showTimeViews={selectedPickers === 'time' || selectedPickers === 'date-time'}
+              views={views}
+              handleViewsChange={handleViewsChange}
+            />
           )}
         </Box>
         <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
