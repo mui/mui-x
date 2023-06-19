@@ -530,7 +530,16 @@ export default function PickersPlayground() {
           )}
         </Box>
         <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
-        <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column', margin: '16px auto' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            flexDirection: 'column',
+            margin: '0 auto',
+            padding: 2,
+            overflowX: 'auto',
+          }}
+        >
           <FormControl fullWidth>
             <InputLabel id="selected-component-family-label">Selected components</InputLabel>
             <Select
