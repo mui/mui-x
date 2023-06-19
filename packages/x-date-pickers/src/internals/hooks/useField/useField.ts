@@ -23,7 +23,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any> & { minutesStep?: number },
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -45,7 +45,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false, unstableFieldRef },
+    internalProps: { readOnly = false, unstableFieldRef, minutesStep },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -351,6 +351,7 @@ export const useField = <
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           activeDateManager.date,
+          { minutesStep },
         );
 
         updateSectionValue({
