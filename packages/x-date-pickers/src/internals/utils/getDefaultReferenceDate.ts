@@ -21,7 +21,12 @@ export const SECTION_TYPE_GRANULARITY = {
 };
 
 export const getSectionTypeGranularity = (sections: FieldSection[]) =>
-  Math.max(...sections.map((section) => SECTION_TYPE_GRANULARITY[section.type] ?? 1));
+  Math.max(
+    ...sections.map(
+      (section) =>
+        SECTION_TYPE_GRANULARITY[section.type as keyof typeof SECTION_TYPE_GRANULARITY] ?? 1,
+    ),
+  );
 
 export const getViewsGranularity = (views: readonly DateOrTimeView[]) =>
   Math.max(...views.map((view) => SECTION_TYPE_GRANULARITY[view] ?? 1));
