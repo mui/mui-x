@@ -54,5 +54,6 @@
 /x/api/date-pickers/next-date-picker/ /x/api/date-pickers/date-picker/ 301
 /x/react-date-pickers/calendar/ /x/react-date-pickers/date-calendar/ 301
 /x/react-date-pickers/legacy-date-time-picker/ /x/react-date-pickers/date-time-picker/ 301
+/x/react-data-grid/recipes-editing/ /x/react-data-grid/editing/recipes/ 301
 
 # Proxies
