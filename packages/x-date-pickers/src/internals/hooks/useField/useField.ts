@@ -181,6 +181,7 @@ export const useField = <
     }
 
     event.preventDefault();
+    resetCharacterQuery();
     updateValueFromValueStr(pastedValue);
   });
 
