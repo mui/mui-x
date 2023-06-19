@@ -71,6 +71,7 @@ const pages: MuiPage[] = [
         children: [
           { pathname: '/x/react-data-grid/editing', title: 'Overview' },
           { pathname: '/x/react-data-grid/editing/persistence' },
+          { pathname: '/x/react-data-grid/editing/custom-edit-component' },
         ],
       },
       { pathname: '/x/react-data-grid/sorting' },
