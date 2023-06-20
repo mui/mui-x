@@ -18,7 +18,6 @@ export default function DisableSortingGrid() {
       ),
     [data.columns],
   );
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid {...data} columns={columns} />

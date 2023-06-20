@@ -121,7 +121,10 @@ BarChart.propTypes = {
   ]),
   children: PropTypes.node,
   className: PropTypes.string,
-  colors: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * Color palette used to colorize multiple series.
+   */
+  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -222,6 +225,7 @@ BarChart.propTypes = {
   title: PropTypes.string,
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
+    classes: PropTypes.object,
     itemContent: PropTypes.elementType,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),

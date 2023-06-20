@@ -48,6 +48,7 @@ export default function AxisCustomizationNoSnap() {
           }}
           width={400}
           height={300}
+          margin={{ top: 10, left: 20, right: 20 }}
         />
       )}
       getCode={({ props }) =>

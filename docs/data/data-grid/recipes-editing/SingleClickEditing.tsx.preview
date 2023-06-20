@@ -1,0 +1,7 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  cellModesModel={cellModesModel}
+  onCellModesModelChange={handleCellModesModelChange}
+  onCellClick={handleCellClick}
+/>

@@ -88,12 +88,12 @@ const pages: MuiPage[] = [
         pathname: '/x/react-data-grid/selection',
         children: [
           { pathname: '/x/react-data-grid/row-selection' },
-          { pathname: '/x/react-data-grid/cell-selection', plan: 'premium' },
+          { pathname: '/x/react-data-grid/cell-selection', plan: 'premium', newFeature: true },
         ],
       },
       { pathname: '/x/react-data-grid/export' },
-      { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
-      { pathname: '/x/react-data-grid/components' },
+      { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste', newFeature: true },
+      { pathname: '/x/react-data-grid/components', title: 'Custom subcomponents' },
       { pathname: '/x/react-data-grid/style' },
       { pathname: '/x/react-data-grid/localization' },
       { pathname: '/x/react-data-grid/scrolling' },
@@ -286,6 +286,10 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-date-pickers/adapters-locale',
             title: 'Date localization',
+          },
+          {
+            pathname: '/x/react-date-pickers/timezone',
+            title: 'UTC and timezone',
           },
           {
             pathname: '/x/react-date-pickers/localization',
