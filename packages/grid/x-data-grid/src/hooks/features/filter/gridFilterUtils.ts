@@ -11,6 +11,7 @@ import {
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { GLOBAL_API_REF, isInternalFilter } from '../../../colDef/utils';
 import {
   getDefaultGridFilterModel,
   GridAggregatedFilterItemApplier,
@@ -175,7 +176,10 @@ const getFilterCallbackFromItem = (
     );
   }
 
-  if (filterOperator.getApplyFilterFnV7) {
+  const hasUserFunctionLegacy = !isInternalFilter(filterOperator.getApplyFilterFn);
+  const hasUserFunctionV7 = !isInternalFilter(filterOperator.getApplyFilterFnV7);
+
+  if (filterOperator.getApplyFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
     const applyFilterOnRow = filterOperator.getApplyFilterFnV7(newFilterItem, column)!;
     if (typeof applyFilterOnRow !== 'function') {
       return null;
@@ -200,7 +204,10 @@ const getFilterCallbackFromItem = (
     item: newFilterItem,
     fn: (rowId: GridRowId) => {
       const params = apiRef.current.getCellParams(rowId, newFilterItem.field!);
-      return applyFilterOnRow(params, apiRef);
+      GLOBAL_API_REF.current = apiRef;
+      const result = applyFilterOnRow(params);
+      GLOBAL_API_REF.current = null;
+      return result;
     },
   };
 };

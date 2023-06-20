@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
-import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
+import { GridBaseColDef, tagInternalFilter } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -135,25 +135,23 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
     const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
 
     const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
-      baseGetApplyFilterFn === undefined
-        ? undefined
-        : (filterItem, colDef) => {
-            const filterFn = baseGetApplyFilterFn(filterItem, colDef);
-            if (!filterFn) {
-              return null;
+        tagInternalFilter((filterItem, colDef) => {
+          const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+          if (!filterFn) {
+            return null;
+          }
+          return (params) => {
+            if (getCellAggregationResult(params.id, params.field) != null) {
+              return true;
             }
-            return (params, apiRef) => {
-              if (getCellAggregationResult(params.id, params.field) != null) {
-                return true;
-              }
-              return filterFn(params, apiRef);
-            };
+            return filterFn(params);
           };
+        });
 
     const getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'] =
       baseGetApplyFilterFnV7 === undefined
         ? undefined
-        : (filterItem, colDef) => {
+        : tagInternalFilter((filterItem, colDef) => {
             const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
             if (!filterFn) {
               return null;
@@ -164,7 +162,7 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
               }
               return filterFn(value, row, column, api);
             };
-          };
+          });
 
     return {
       ...operator,
