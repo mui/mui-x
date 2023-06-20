@@ -54,6 +54,7 @@ export const renderDateViewCalendar = <TDate extends unknown>({
   autoFocus,
   fixedWeekNumber,
   displayWeekNumber,
+  timezone,
 }: DateViewRendererProps<TDate, DateView>) => (
   <DateCalendar
     view={view}
@@ -94,5 +95,6 @@ export const renderDateViewCalendar = <TDate extends unknown>({
     autoFocus={autoFocus}
     fixedWeekNumber={fixedWeekNumber}
     displayWeekNumber={displayWeekNumber}
+    timezone={timezone}
   />
 );

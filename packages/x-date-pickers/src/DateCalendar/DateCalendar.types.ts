@@ -19,7 +19,7 @@ import {
 } from '../internals/models/validation';
 import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue.types';
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
-import { DateView } from '../models';
+import { DateView, TimezoneProps } from '../models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
@@ -40,7 +40,8 @@ export interface ExportedDateCalendarProps<TDate>
     BaseDateValidationProps<TDate>,
     DayValidationProps<TDate>,
     YearValidationProps<TDate>,
-    MonthValidationProps<TDate> {
+    MonthValidationProps<TDate>,
+    TimezoneProps {
   /**
    * Default calendar month displayed when `value` and `defaultValue` are empty.
    */

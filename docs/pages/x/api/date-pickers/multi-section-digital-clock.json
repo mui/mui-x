@@ -61,6 +61,10 @@
       },
       "default": "{ hours: 1, minutes: 5, seconds: 5 }"
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
     "value": { "type": { "name": "any" } },
     "view": {
       "type": {

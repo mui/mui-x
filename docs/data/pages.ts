@@ -288,6 +288,10 @@ const pages: MuiPage[] = [
             title: 'Date localization',
           },
           {
+            pathname: '/x/react-date-pickers/timezone',
+            title: 'UTC and timezone',
+          },
+          {
             pathname: '/x/react-date-pickers/localization',
             title: 'Component localization',
           },

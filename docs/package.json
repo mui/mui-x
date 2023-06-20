@@ -65,6 +65,7 @@
     "marked": "^4.3.0",
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
+    "moment-timezone": "^0.5.41",
     "next": "^13.3.1",
     "nprogress": "^0.2.0",
     "postcss": "^8.4.24",
