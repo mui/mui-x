@@ -88,7 +88,7 @@ Scatter.propTypes = {
   color: PropTypes.string.isRequired,
   markerSize: PropTypes.number.isRequired,
   series: PropTypes.shape({
-    color: PropTypes.string.isRequired,
+    color: PropTypes.string,
     data: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
