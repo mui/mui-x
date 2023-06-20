@@ -403,7 +403,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       focusedCell
     ) {
       indexRelativeToAllColumns = focusedCellColumnIndexNotInRange;
-    } else if (focusedCellColumnIndexNotInRange && focusedCell) {
+    } else if (focusedCellColumnIndexNotInRange !== undefined && focusedCell) {
       indexRelativeToAllColumns -= 1;
     }
 
