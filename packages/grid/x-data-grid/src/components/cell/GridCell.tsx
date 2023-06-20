@@ -18,6 +18,7 @@ import {
   GridCellModes,
   GridRowId,
   GridCellMode,
+  GridEditCellProps,
 } from '../../models';
 import {
   GridRenderEditCellParams,
@@ -45,6 +46,7 @@ type GridCellV7Props = {
   colSpan?: number;
   disableDragEvents?: boolean;
   isNotVisible?: boolean;
+  editCellState: GridEditCellProps<any> | null;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
