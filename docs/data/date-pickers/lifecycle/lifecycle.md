@@ -7,15 +7,15 @@ packageName: '@mui/x-date-pickers'
 
 # Components lifecycle
 
-<p class="description">This page explains when the callbacks onChange, onAccept and onClose are called.</p>
+<p class="description">This page explains when the callbacks onChange, onAccept, and onClose are called.</p>
 
 ## Fields lifecycle
 
 ### On simple fields
 
 :::info
-The information below are applicable on standalone fields (when rendering `<DateField />`),
-but also on pickers for the field editing (when rendering `<DatePicker />` and using the input to edit the value).
+The information below is applicable to standalone fields (when rendering `<DateField />`),
+as well as to pickers for field editing (when rendering `<DatePicker />` and using the input to edit the value).
 :::
 
 The field components have an internal state to update the visible value.
@@ -27,14 +27,14 @@ It will only call the `onChange` callback when:
 - the user cleans one section of a completed input. The value equals `Invalid date`.
 - the user cleans all sections of an input. The value equals `null`.
 
-In the example below, `onChange` will be called when any of the conditions are triggered:
+In the example below, `onChange` will be called when any of the conditions from above are triggered:
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
 ### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
-`onChange` will be called if the date you are modifying is matching one of the condition above,
+`onChange` is called if the date you are modifying is matching one of the conditions above,
 even if the other date does not.
 
 In the example below, changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
@@ -43,7 +43,7 @@ In the example below, changing the value of the start date section will call `on
 
 ## Pickers lifecycle
 
-### When is `onClose` called ?
+### When is `onClose` called?
 
 :::info
 If you are not controlling the `open` prop, then all the scenarios below also describe when the picker closes.
@@ -124,10 +124,10 @@ Clicking on any built-in button of the action bar will close the picker.
 
 #### When a shortcut is picked
 
-Clicking on a shortcut will close the picker, except if the `changeImportance` property has been set to `"set"` instead of `"accept"`.
+Clicking on a shortcut will close the picker, except if the `changeImportance` property has been set to `"set"` instead of the default value `"accept"`.
 You can find more information [on the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut)
 
-### When is `onChange` called ?
+### When is `onChange` called?
 
 #### When the field used calls `onChange`
 
@@ -144,7 +144,8 @@ If the component is not controlled, the behavior is the same, except if no value
 (e.g: clicking on the already selected day in the `day` view will call `onChange` if `onChange` has never been called before).
 
 Some views can decide not to call `onChange` for some value modifications.
-The most common example are the mobile time views (using the [`TimeClock`](/x/react-date-pickers/time-clock/) component) where `onChange` will only be fired once when stop dragging the hands of the clock even though the UI updates on each position change.
+The most common example is the mobile time views (using the [`TimeClock`](/x/react-date-pickers/time-clock/) component).
+The `onChange` is only fired once when stop dragging the hands of the clock even though the UI updates on each position change.
 
 #### When a value is selected using the action bar
 
@@ -158,7 +159,7 @@ If the component is not controlled, the behavior is the same, except for the _Cl
 Clicking on a shortcut will call `onChange`.
 You can find more information [on the dedicated doc section](/x/react-date-pickers/shortcuts/#behavior-when-selecting-a-shortcut)
 
-### When is `onAccept` called ?
+### When is `onAccept` called?
 
 #### When the last view is completed
 
@@ -168,7 +169,7 @@ By default `closeOnSelect`, it is set to `true` on desktop and `false` on mobile
 Here are a few examples:
 
 :::info
-The example below are using the desktop and mobile variant of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
+The examples below are using the desktop and mobile variant of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
 :::
 
 - ```tsx
@@ -221,7 +222,7 @@ The example below are using the desktop and mobile variant of the pickers, but t
 
 #### When the picker is manually closed
 
-When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, we call `onAccept` with:
+When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker, `onAccept` is called with:
 
 - the current value, if the last view has been completed
 - the last accepted value, if the last view has not been completed

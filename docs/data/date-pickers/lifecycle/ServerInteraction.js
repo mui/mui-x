@@ -81,7 +81,6 @@ function DateFieldWithAccept(props) {
 
 export default function ServerInteraction() {
   const [logsFromOnChange, setLogsFromOnChange] = React.useState([]);
-
   const [logsFromOnAccept, setLogsFromOnAccept] = React.useState([]);
 
   const onAccept = React.useCallback((newValue) => {
