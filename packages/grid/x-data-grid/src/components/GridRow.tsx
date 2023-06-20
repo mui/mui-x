@@ -439,8 +439,8 @@ GridRow.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  containerWidth: PropTypes.number,
-  firstColumnToRender: PropTypes.number,
+  containerWidth: PropTypes.number.isRequired,
+  firstColumnToRender: PropTypes.number.isRequired,
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
@@ -450,25 +450,25 @@ GridRow.propTypes = {
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
    */
-  index: PropTypes.number,
+  index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
-  lastColumnToRender: PropTypes.number,
+  lastColumnToRender: PropTypes.number.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
-  position: PropTypes.oneOf(['center', 'left', 'right']),
-  renderedColumns: PropTypes.arrayOf(PropTypes.object),
+  position: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
+  renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object,
-  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
-  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  selected: PropTypes.bool,
+  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  selected: PropTypes.bool.isRequired,
   /**
    * Determines which cell should be tabbable by having tabIndex=0.
    * If `null`, no cell in this row is in the tab sequence.
    */
   tabbableCell: PropTypes.string,
-  visibleColumns: PropTypes.arrayOf(PropTypes.object),
+  visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
 const MemoizedGridRow = fastMemo(GridRow);
