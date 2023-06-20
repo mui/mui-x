@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { unstable_joySlots } from '@mui/x-data-grid/joy';
 import {
@@ -80,9 +79,9 @@ type Row = {
   boolean: boolean;
   singleSelect: string;
 };
-const rows: Row[] = [];
+const initialRows: Row[] = [];
 for (let i = 0; i < 20; i += 1) {
-  rows.push({
+  initialRows.push({
     id: i,
     name: randomCompanyName(),
     number: randomRating(),
@@ -94,77 +93,54 @@ for (let i = 0; i < 20; i += 1) {
 }
 
 export default function GridJoyUISlots() {
+  const [rows, setRows] = React.useState<Row[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    setLoading(true);
+    const timeoutId = setTimeout(() => {
+      setRows(initialRows);
+      setLoading(false);
+    }, 800);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
-        <Stack spacing={2}>
-          <Box sx={{ height: 420, width: '100%' }}>
-            <DataGrid
-              pagination
-              slots={{
-                ...unstable_joySlots,
-                toolbar: GridToolbar,
-              }}
-              columns={columns}
-              rows={rows}
-              checkboxSelection
-              disableRowSelectionOnClick
-              initialState={{
-                pagination: {
-                  paginationModel: { pageSize: 5, page: 0 },
-                },
-              }}
-              pageSizeOptions={[5, 10, 20]}
-              slotProps={{
-                filterPanel: {
-                  sx: {
-                    '& .MuiDataGrid-filterForm': {
-                      alignItems: 'flex-end',
-                    },
-                    '& .MuiDataGrid-panelContent': {
-                      // To prevent the Select popup being hidden by the panel
-                      overflow: 'visible',
-                    },
+        <Box sx={{ height: 400, width: '100%' }}>
+          <DataGrid
+            pagination
+            slots={{
+              ...unstable_joySlots,
+              toolbar: GridToolbar,
+            }}
+            loading={loading}
+            columns={columns}
+            rows={rows}
+            checkboxSelection
+            disableRowSelectionOnClick
+            initialState={{
+              pagination: {
+                paginationModel: { pageSize: 5, page: 0 },
+              },
+            }}
+            pageSizeOptions={[5, 10, 20]}
+            slotProps={{
+              filterPanel: {
+                sx: {
+                  '& .MuiDataGrid-filterForm': {
+                    alignItems: 'flex-end',
+                  },
+                  '& .MuiDataGrid-panelContent': {
+                    // To prevent the Select popup being hidden by the panel
+                    overflow: 'visible',
                   },
                 },
-              }}
-            />
-          </Box>
-
-          <Box sx={{ height: 420, width: '100%', mt: 3 }}>
-            <DataGrid
-              loading
-              pagination
-              slots={{
-                ...unstable_joySlots,
-                toolbar: GridToolbar,
-              }}
-              columns={columns}
-              rows={rows}
-              checkboxSelection
-              disableRowSelectionOnClick
-              initialState={{
-                pagination: {
-                  paginationModel: { pageSize: 5, page: 0 },
-                },
-              }}
-              pageSizeOptions={[5, 10, 20]}
-              slotProps={{
-                filterPanel: {
-                  sx: {
-                    '& .MuiDataGrid-filterForm': {
-                      alignItems: 'flex-end',
-                    },
-                    '& .MuiDataGrid-panelContent': {
-                      // To prevent the Select popup being hidden by the panel
-                      overflow: 'visible',
-                    },
-                  },
-                },
-              }}
-            />
-          </Box>
-        </Stack>
+              },
+            }}
+          />
+        </Box>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
   );
