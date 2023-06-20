@@ -138,7 +138,6 @@ export const useFieldState = <
       value: valueFromTheOutside,
       referenceValue: valueManager.emptyValue,
       tempValueStrAndroid: null,
-      isHovered: false,
     };
 
     const granularity = getSectionTypeGranularity(sections);
@@ -171,13 +170,6 @@ export const useFieldState = <
     setState((prevState) => ({
       ...prevState,
       selectedSectionQuery: null,
-    }));
-  };
-
-  const setIsHovered = (isHovered: boolean) => {
-    setState((prevState) => ({
-      ...prevState,
-      isHovered,
     }));
   };
 

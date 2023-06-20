@@ -149,8 +149,6 @@ export interface UseFieldForwardedProps {
   error?: boolean;
   onClear?: React.MouseEventHandler;
   clearable?: boolean;
-  onMouseEnter?: React.MouseEventHandler;
-  onMouseLeave?: React.MouseEventHandler;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -332,7 +330,6 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * The property below allows us to set the first `onChange` value into state waiting for the second one.
    */
   tempValueStrAndroid: string | null;
-  isHovered: boolean;
 }
 
 export type UseFieldValidationProps<

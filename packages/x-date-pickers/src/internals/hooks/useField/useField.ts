@@ -57,8 +57,6 @@ export const useField = <
       error,
       clearable,
       onClear,
-      onMouseEnter,
-      onMouseLeave,
       ...otherForwardedProps
     },
     fieldValueManager,
@@ -514,16 +512,6 @@ export const useField = <
     inputRef?.current?.focus();
   });
 
-  const handleMouseEnter = useEventCallback((event: React.MouseEvent, ...args) => {
-    onMouseEnter?.(event, ...(args as []));
-    setIsHovered(true);
-  });
-
-  const handleMouseLeave = useEventCallback((event: React.MouseEvent, ...args) => {
-    onMouseLeave?.(event, ...(args as []));
-    setIsHovered(false);
-  });
-
   return {
     placeholder,
     autoComplete: 'off',
@@ -543,7 +531,5 @@ export const useField = <
     ref: handleRef,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly ),
     focused: inputHasFocus,
-    onMouseEnter: handleMouseEnter,
-    onMouseLeave: handleMouseLeave,
   };
 };
