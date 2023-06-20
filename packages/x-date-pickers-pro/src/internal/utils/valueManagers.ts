@@ -28,9 +28,9 @@ export type RangePickerValueManager<
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
-  getTodayValue: (utils, valueType) => [
-    getTodayDate(utils, valueType),
-    getTodayDate(utils, valueType),
+  getTodayValue: (utils, timezone, valueType) => [
+    getTodayDate(utils, timezone, valueType),
+    getTodayDate(utils, timezone, valueType),
   ],
   getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
     const shouldKeepStartDate = value[0] != null && params.utils.isValid(value[0]);
@@ -64,6 +64,10 @@ export const rangeValueManager: RangePickerValueManager = {
 
     return timezoneStart ?? timezoneEnd;
   },
+  setTimezone: (utils, timezone, value) => [
+    value[0] == null ? null : utils.setTimezone(value[0], timezone),
+    value[1] == null ? null : utils.setTimezone(value[1], timezone),
+  ],
 };
 
 export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, RangeFieldSection> = {

@@ -169,7 +169,7 @@ export default function BasicScatter() {
   return (
     <ScatterChart
       width={600}
-      height={400}
+      height={300}
       series={[
         {
           label: 'series A',

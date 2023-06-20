@@ -12,8 +12,8 @@ const data = Array.from({ length: 200 }, () => ({
 
 const params = {
   series: [{ data }],
-  width: 600,
-  height: 500,
+  width: 500,
+  height: 300,
 };
 export default function ModifyAxisPosition() {
   return (
@@ -23,6 +23,7 @@ export default function ModifyAxisPosition() {
       bottomAxis={null}
       topAxis={DEFAULT_X_AXIS_KEY}
       rightAxis={DEFAULT_Y_AXIS_KEY}
+      margin={{ top: 30, bottom: 10 }}
     />
   );
 }
