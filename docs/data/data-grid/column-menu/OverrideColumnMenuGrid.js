@@ -16,7 +16,6 @@ function CustomFilterItem(props) {
     },
     [apiRef, colDef.field, onClick],
   );
-
   return (
     <MenuItem onClick={handleClick}>
       <ListItemIcon>

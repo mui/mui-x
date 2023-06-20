@@ -205,12 +205,14 @@ export const usePickerViews = <
   }
 
   useEnhancedEffect(() => {
+    // Handle case of `DateTimePicker` without time renderers
     if (currentViewMode === 'field' && open) {
       onClose();
-      onSelectedSectionsChange('hours');
-
       setTimeout(() => {
+        // focusing the input before the range selection is done
+        // calling `onSelectedSectionsChange` outside of timeout results in an inconsistent behavior between Safari And Chrome
         inputRef?.current!.focus();
+        onSelectedSectionsChange(view);
       });
     }
   }, [view]); // eslint-disable-line react-hooks/exhaustive-deps

@@ -18,7 +18,6 @@ function RatingEditInputCell(props) {
   const handleRef = (element) => {
     if (element) {
       const input = element.querySelector(`input[value="${value}"]`);
-
       input?.focus();
     }
   };
