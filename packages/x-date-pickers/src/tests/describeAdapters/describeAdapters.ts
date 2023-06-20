@@ -1,5 +1,6 @@
 import * as React from 'react';
 import moment from 'moment';
+import momentTZ from 'moment-timezone';
 import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import {
   AdapterName,
@@ -30,6 +31,7 @@ function innerDescribeAdapters<P extends {}>(
         adapterName,
         clock: 'fake',
         clockConfig: new Date(2022, 5, 15),
+        instance: adapterName === 'moment' ? momentTZ : undefined,
       });
 
       const fieldInteractions = buildFieldInteractions<P>({

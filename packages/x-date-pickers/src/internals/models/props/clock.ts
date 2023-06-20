@@ -1,7 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../validation';
 import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue.types';
-import { TimeStepOptions } from '../../../models';
+import { TimeStepOptions, TimezoneProps } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectionDigitalClock/MultiSectionDigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
@@ -9,7 +9,8 @@ import { TimeViewWithMeridiem } from '../common';
 
 export interface ExportedBaseClockProps<TDate>
   extends TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
+    BaseTimeValidationProps,
+    TimezoneProps {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`

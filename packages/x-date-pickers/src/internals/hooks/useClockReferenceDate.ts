@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiPickersAdapter } from '../../models';
+import { MuiPickersAdapter, PickersTimezone } from '../../models';
 import { singleItemValueManager } from '../utils/valueManagers';
 import { getTodayDate } from '../utils/date-utils';
 import { SECTION_TYPE_GRANULARITY } from '../utils/getDefaultReferenceDate';
@@ -9,11 +9,13 @@ export const useClockReferenceDate = <TDate, TProps extends {}>({
   referenceDate: referenceDateProp,
   utils,
   props,
+  timezone,
 }: {
   value: TDate;
   referenceDate: TDate | undefined;
   utils: MuiPickersAdapter<TDate>;
   props: TProps;
+  timezone: PickersTimezone;
 }) => {
   const referenceDate = React.useMemo(
     () =>
@@ -23,6 +25,7 @@ export const useClockReferenceDate = <TDate, TProps extends {}>({
         props,
         referenceDate: referenceDateProp,
         granularity: SECTION_TYPE_GRANULARITY.day,
+        timezone,
         getTodayDate: () => getTodayDate(utils, 'date'),
       }),
     [], // eslint-disable-line react-hooks/exhaustive-deps

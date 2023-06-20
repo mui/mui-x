@@ -40,6 +40,7 @@ export const useField = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    timezone,
   } = useFieldState(params);
 
   const {
@@ -66,7 +67,9 @@ export const useField = <
     updateSectionValue,
     sectionsValueBoundaries,
     setTempAndroidValueStr,
+    timezone,
   });
+
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -347,6 +350,7 @@ export const useField = <
 
         const newSectionValue = adjustSectionValue(
           utils,
+          timezone,
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
@@ -403,7 +407,7 @@ export const useField = <
   });
 
   const validationError = useValidation(
-    { ...internalProps, value: state.value },
+    { ...internalProps, value: state.value, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,
