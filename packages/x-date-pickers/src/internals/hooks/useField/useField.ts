@@ -489,9 +489,6 @@ export const useField = <
   }));
 
   const handleClearValue = useEventCallback((event: React.MouseEvent, ...args) => {
-    if (readOnly) {
-      return;
-    }
     // the click event on the endAdornmnet would propagate to the input and trigger the `handleInputClick` handler.
     event.stopPropagation();
     event.preventDefault();
@@ -528,7 +525,7 @@ export const useField = <
     onClear: handleClearValue,
     error: inputError,
     ref: handleRef,
-    clearable: Boolean(clearable && !areAllSectionsEmpty),
+    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly ),
     focused: inputHasFocus,
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,

@@ -79,6 +79,11 @@ export interface UseMobilePickerProps<
    * @default {}
    */
   slotProps?: UseMobilePickerSlotsComponentsProps<TDate, TView>;
+  /**
+   * Props used only for the date input. Passed down to [TextField](https://mui.com/api/text-field/) component.
+   * @default {}
+   */
+  fieldProps?: {clearable?: boolean, onClear?: React.MouseEventHandler<HTMLButtonElement>};
 }
 
 export interface UseMobilePickerParams<

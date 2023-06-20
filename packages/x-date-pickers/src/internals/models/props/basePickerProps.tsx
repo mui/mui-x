@@ -44,7 +44,13 @@ export interface BasePickerInputProps<
 > extends Omit<
     MakeOptional<BasePickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
     'viewRenderers'
-  > {}
+  > {
+    /**
+     * Props used only for the date input. Passed down to [TextField](https://mui.com/api/text-field/) component.
+     * @default {}
+     */
+    fieldProps?: {clearable?: boolean, onClear?: React.MouseEventHandler<HTMLButtonElement>};
+  }
 
 /**
  * Props common to all non-static pickers.

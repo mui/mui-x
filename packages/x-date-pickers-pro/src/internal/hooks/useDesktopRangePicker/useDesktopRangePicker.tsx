@@ -53,6 +53,8 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
+    fieldProps: innerFieldProps,
+
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
@@ -119,6 +121,7 @@ export const useDesktopRangePicker = <
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
       ...(fieldType === 'single-input' && { inputRef }),
+      ...innerFieldProps
     },
     ownerState: props,
   });

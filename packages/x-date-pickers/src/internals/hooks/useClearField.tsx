@@ -65,11 +65,16 @@ export const useClearField = <
     ...forwardedFieldProps,
     sx: {
       '& .clearButton': {
-        visibility: forwardedFieldProps?.focused ? 'visible' : 'hidden',
-      },
-
-      '&:hover .clearButton': {
         visibility: 'visible',
+      },
+      '@media (pointer: fine)': {
+        '& .clearButton': {
+          visibility: forwardedFieldProps?.focused ? 'visible' : 'hidden',
+        },
+
+        '&:hover .clearButton': {
+          visibility: 'visible',
+        },
       },
       ...forwardedFieldProps?.sx,
     },

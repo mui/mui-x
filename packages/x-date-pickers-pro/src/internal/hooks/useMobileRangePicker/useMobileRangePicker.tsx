@@ -51,6 +51,7 @@ export const useMobileRangePicker = <
     disabled,
     disableOpenPicker,
     localeText,
+    fieldProps: innerFieldProps,
   } = props;
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
@@ -100,6 +101,7 @@ export const useMobileRangePicker = <
       format,
       formatDensity,
       ...(fieldType === 'single-input' && { inputRef }),
+      ...innerFieldProps
     },
     ownerState: props,
   });

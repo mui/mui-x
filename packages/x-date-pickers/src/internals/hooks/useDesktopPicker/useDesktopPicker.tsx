@@ -42,6 +42,7 @@ export const useDesktopPicker = <
     disabled,
     autoFocus,
     localeText,
+    fieldProps: innerFieldProps,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -112,6 +113,7 @@ export const useDesktopPicker = <
       label,
       autoFocus: autoFocus && !props.open,
       focused: open ? true : undefined,
+      ...innerFieldProps
     },
     ownerState: props,
   });
