@@ -11,25 +11,20 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 <p class="description">The Date Time Picker component lets the user select a date and time.</p>
 
-:::info
-The component by default currently does not ship with **time** picker view experience on **desktop**.
-It was a conscious decision and a first step towards having a more user friendly desktop experience [discussed in #4483](https://github.com/mui/mui-x/issues/4483).
-If a desktop view experience is essential, you can revert to it by following the suggestion [in the migration guide](/x/migration/migration-pickers-v5/#stop-rendering-a-clock-on-desktop).
-:::
-
 ## Basic usage
 
 {{"demo": "BasicDateTimePicker.js"}}
 
 ## Component composition
 
-The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing and the `TimeClock` for the time view editing.
-All the documented props of those three components can also be passed to the Date Time Picker component.
+The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile time view editing.
+All the documented props of those four components can also be passed to the Date Time Picker component.
 
 Check-out their documentation page for more information:
 
 - [Date Field](/x/react-date-pickers/date-field/)
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
+- [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
 
 The value of the component can be uncontrolled or controlled.

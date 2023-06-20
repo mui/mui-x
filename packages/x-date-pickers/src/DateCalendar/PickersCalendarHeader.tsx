@@ -9,7 +9,7 @@ import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DateComponentValidationProps } from '../internals/utils/validation/validateDate';
-import { ArrowDropDown } from '../internals/components/icons';
+import { ArrowDropDownIcon } from '../icons';
 import {
   PickersArrowSwitcher,
   ExportedPickersArrowSwitcherProps,
@@ -158,7 +158,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   }),
 }));
 
-const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
+const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
@@ -192,6 +192,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     reduceAnimations,
     views,
     labelId,
+    timezone,
   } = props;
 
   const ownerState = props;
@@ -225,10 +226,12 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
     maxDate,
+    timezone,
   });
   const isPreviousMonthDisabled = usePreviousMonthDisabled(month, {
     disablePast,
     minDate,
+    timezone,
   });
 
   const handleToggleView = () => {

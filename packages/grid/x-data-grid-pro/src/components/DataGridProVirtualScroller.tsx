@@ -236,15 +236,24 @@ const DataGridProVirtualScroller = React.forwardRef<
     [],
   );
 
+  // Create a lookup for faster check if the row is expanded
+  const expandedRowIdsLookup = React.useMemo(() => {
+    const lookup: Set<GridRowId> = new Set();
+    expandedRowIds.forEach((id: GridRowId) => {
+      lookup.add(id);
+    });
+    return lookup;
+  }, [expandedRowIds]);
+
   const getRowProps = React.useCallback(
     (id: GridRowId) => {
-      if (!expandedRowIds.includes(id)) {
+      if (!expandedRowIdsLookup.has(id)) {
         return null;
       }
       const height = detailPanelsHeights[id];
       return { style: { marginBottom: height } };
     },
-    [detailPanelsHeights, expandedRowIds],
+    [detailPanelsHeights, expandedRowIdsLookup],
   );
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -305,15 +314,6 @@ const DataGridProVirtualScroller = React.forwardRef<
         }
       : null;
 
-  // Create a lookup for faster check if the row is expanded
-  const expandedRowIdsLookup = React.useMemo(() => {
-    const lookup: { [key: GridRowId]: boolean } = {};
-    expandedRowIds.forEach((id: GridRowId) => {
-      lookup[id] = true;
-    });
-    return lookup;
-  }, [expandedRowIds]);
-
   const getDetailPanel = (rowId: GridRowId): React.ReactNode => {
     const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
     const content = detailPanelsContent[rowId];
@@ -359,7 +359,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       if (rootProps.getDetailPanelContent == null) {
         return;
       }
-      if (!expandedRowIdsLookup[rowId]) {
+      if (!expandedRowIdsLookup.has(rowId)) {
         return;
       }
 

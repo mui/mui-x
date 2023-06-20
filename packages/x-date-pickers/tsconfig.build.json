@@ -10,6 +10,12 @@
     "outDir": "build",
     "rootDir": "./src"
   },
-  "include": ["src/**/*.ts*", "../../node_modules/@mui/material/themeCssVarsAugmentation"],
+  "include": [
+    "src/**/*.ts*",
+    "../../node_modules/@mui/material/themeCssVarsAugmentation",
+    "../../node_modules/dayjs/plugin/utc.d.ts",
+    "../../node_modules/dayjs/plugin/timezone.d.ts",
+    "../../node_modules/moment-timezone/index.d.ts"
+  ],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

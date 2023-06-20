@@ -4,12 +4,22 @@ import type {
   GridRowOrderChangeParams,
   GridFetchRowsParams,
 } from '../models';
+import type { GridHeaderFilterCellProps } from '../components/headerFiltering/GridHeaderFilterCell';
 import type {
   GridColumnPinningInternalCache,
   GridPinnedColumns,
 } from '../hooks/features/columnPinning/gridColumnPinningInterface';
 import type { GridCanBeReorderedPreProcessingContext } from '../hooks/features/columnReorder/columnReorderInterfaces';
 import { GridRowPinningInternalCache } from '../hooks/features/rowPinning/gridRowPinningInterface';
+
+export interface GridColDefPro {
+  /**
+   * Allows to render a component in the column header filter cell.
+   * @param {GridHeaderFilterCellProps} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
+   */
+  renderHeaderFilter?: (params: GridHeaderFilterCellProps) => React.ReactNode;
+}
 
 export interface GridControlledStateEventLookupPro {
   /**
@@ -61,4 +71,6 @@ declare module '@mui/x-data-grid' {
 
 declare module '@mui/x-data-grid/internals' {
   interface GridApiCaches extends GridApiCachesPro {}
+
+  interface GridBaseColDef extends GridColDefPro {}
 }

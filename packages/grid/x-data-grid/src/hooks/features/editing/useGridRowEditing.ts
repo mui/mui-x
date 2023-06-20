@@ -39,12 +39,13 @@ import {
   GridRowEditStopReasons,
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
+import { GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 
 const missingOnProcessRowUpdateErrorWarning = buildWarning(
   [
     'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
     'To handle the error pass a callback to the `onProcessRowUpdateError` prop, e.g. `<DataGrid onProcessRowUpdateError={(error) => ...} />`.',
-    'For more detail, see http://mui.com/components/data-grid/editing/#persistence.',
+    'For more detail, see http://mui.com/components/data-grid/editing/#server-side-persistence.',
   ],
   'error',
 );
@@ -188,9 +189,13 @@ export const useGridRowEditing = (
         } else if (event.key === 'Enter') {
           reason = GridRowEditStopReasons.enterKeyDown;
         } else if (event.key === 'Tab') {
-          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) =>
-            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
-          );
+          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) => {
+            const column = apiRef.current.getColumn(field);
+            if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+              return true;
+            }
+            return apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field));
+          });
 
           if (event.shiftKey) {
             if (params.field === columnFields[0]) {
@@ -214,9 +219,8 @@ export const useGridRowEditing = (
         }
 
         if (reason) {
-          const rowParams = apiRef.current.getRowParams(params.id);
           const newParams: GridRowEditStopParams = {
-            ...rowParams,
+            ...apiRef.current.getRowParams(params.id),
             reason,
             field: params.field,
           };
@@ -263,7 +267,7 @@ export const useGridRowEditing = (
 
   const handleRowEditStart = React.useCallback<GridEventListener<'rowEditStart'>>(
     (params) => {
-      const { id, field, reason, key } = params;
+      const { id, field, reason, key, columns } = params;
 
       const startRowEditModeParams: GridStartRowEditModeParams = { id, fieldToFocus: field };
 
@@ -273,7 +277,8 @@ export const useGridRowEditing = (
           // The sequence of events makes the key pressed by the end-users update the textbox directly.
           startRowEditModeParams.deleteValue = !!field;
         } else {
-          startRowEditModeParams.initialValue = key;
+          const colDef = columns.find((col) => col.field === field)!;
+          startRowEditModeParams.initialValue = colDef.valueParser ? colDef.valueParser(key) : key;
         }
       } else if (reason === GridRowEditStartReasons.deleteKeyDown) {
         startRowEditModeParams.deleteValue = !!field;

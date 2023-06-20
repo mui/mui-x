@@ -17,6 +17,7 @@ export const GRID_STRATEGIES_PROCESSORS: {
   rowTreeCreation: 'rowTree',
   filtering: 'rowTree',
   sorting: 'rowTree',
+  visibleRowsLookupCreation: 'rowTree',
 };
 
 type UntypedStrategyProcessors = {

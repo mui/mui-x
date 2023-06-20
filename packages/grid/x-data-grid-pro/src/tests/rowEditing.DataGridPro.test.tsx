@@ -168,7 +168,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: ' usdgbp ' }),
         );
         await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 100 }));
-        expect(renderEditCell1.lastCall.args[0].row).to.deep.equal({
+        expect(renderEditCell2.lastCall.args[0].row).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'usdgbp',
           price1M: 100,
