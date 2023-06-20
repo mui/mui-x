@@ -189,7 +189,7 @@ You can use them right now to make your custom filters faster. Instead of receiv
 const noop = () => {};
 const operator: GridFilterOperator = {
   /* ...other operator properties */
-  getApplyFilterFn: noop, /* It is required to pass a noop function until V7 */
+  getApplyFilterFn: noop /* It is required to pass a noop function until V7 */,
   getApplyFilterFnV7: (filterItem: GridFilterItem) => {
     /* This example is our default string filter function for V7 */
 

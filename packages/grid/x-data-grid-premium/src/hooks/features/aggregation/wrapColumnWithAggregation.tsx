@@ -135,18 +135,18 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
     const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
 
     const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
-        tagInternalFilter((filterItem, colDef) => {
-          const filterFn = baseGetApplyFilterFn(filterItem, colDef);
-          if (!filterFn) {
-            return null;
+      tagInternalFilter((filterItem, colDef) => {
+        const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+        if (!filterFn) {
+          return null;
+        }
+        return (params) => {
+          if (getCellAggregationResult(params.id, params.field) != null) {
+            return true;
           }
-          return (params) => {
-            if (getCellAggregationResult(params.id, params.field) != null) {
-              return true;
-            }
-            return filterFn(params);
-          };
-        });
+          return filterFn(params);
+        };
+      });
 
     const getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'] =
       baseGetApplyFilterFnV7 === undefined
