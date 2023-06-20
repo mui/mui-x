@@ -186,8 +186,10 @@ There is a new set of APIs with a more efficient interface that are going to be 
 You can use them right now to make your custom filters faster. Instead of receiving a `GridCellParams` argument, they receive the parameters listed below.
 
 ```ts
+const noop = () => {};
 const operator: GridFilterOperator = {
   /* ...other operator properties */
+  getApplyFilterFn: noop, /* It is required to pass a noop function until V7 */
   getApplyFilterFnV7: (filterItem: GridFilterItem) => {
     /* This example is our default string filter function for V7 */
 
