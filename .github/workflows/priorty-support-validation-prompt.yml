@@ -43,4 +43,4 @@ jobs:
         with:
           comment-id: ${{ steps.findComment.outputs.comment-id }}
           body: |
-            Thank you for verifying your support key 🔑. We will now start the SLA countdown ⏰.
+            Thank you for verifying your support key 🔑, your SLA starts now.
