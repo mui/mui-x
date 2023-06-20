@@ -40,6 +40,7 @@ export function PiePlot() {
                 id={seriesId}
                 color={color}
                 dataIndex={index}
+                highlightScope={series[seriesId].highlightScope}
               />
             );
           })}
