@@ -54,6 +54,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     label,
     labelFontSize,
     tickSize: tickSizeProp,
+    valueFormatter,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -63,7 +64,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const xTicks = useTicks({ scale: xScale, ticksNumber });
+  const xTicks = useTicks({ scale: xScale, ticksNumber, valueFormatter });
   const positionSigne = position === 'bottom' ? 1 : -1;
 
   const labelRefPoint = {
@@ -79,13 +80,13 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
         <Line x1={xScale.range()[0]} x2={xScale.range()[1]} className={classes.line} />
       )}
 
-      {xTicks.map(({ value, offset, labelOffset }, index) => {
+      {xTicks.map(({ formattedValue, offset, labelOffset }, index) => {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSigne * (tickSize + 3);
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
             {!disableTicks && <Tick y2={positionSigne * tickSize} className={classes.tick} />}
-            {value !== undefined && (
+            {formattedValue !== undefined && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
@@ -95,7 +96,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                 }}
                 className={classes.tickLabel}
               >
-                {value.toLocaleString()}
+                {formattedValue}
               </TickLabel>
             )}
           </g>

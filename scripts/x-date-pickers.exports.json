@@ -250,6 +250,7 @@
   { "name": "TimeValidationError", "kind": "TypeAlias" },
   { "name": "TimeView", "kind": "TypeAlias" },
   { "name": "TimeViewRendererProps", "kind": "TypeAlias" },
+  { "name": "TimezoneProps", "kind": "Interface" },
   { "name": "trTR", "kind": "Variable" },
   { "name": "ukUA", "kind": "Variable" },
   { "name": "unstable_useDateField", "kind": "Variable" },

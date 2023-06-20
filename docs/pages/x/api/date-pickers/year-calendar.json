@@ -22,6 +22,10 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
     "value": { "type": { "name": "any" } },
     "yearsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },

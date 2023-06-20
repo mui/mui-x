@@ -2,9 +2,9 @@
   width={500}
   height={300}
   series={[
-    { data: pData, label: 'pv', color: '#8884d8', stack: 'stack1' },
-    { data: amtData, label: 'amt', color: '#ffc658' },
-    { data: uData, label: 'uv', color: '#82ca9d', stack: 'stack1' },
+    { data: pData, label: 'pv', stack: 'stack1' },
+    { data: amtData, label: 'amt' },
+    { data: uData, label: 'uv', stack: 'stack1' },
   ]}
   xAxis={[{ data: xLabels, scaleType: 'band' }]}
 />

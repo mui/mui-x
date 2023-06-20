@@ -38,6 +38,7 @@
     "slotProps": "The props used for each component slot.",
     "slots": "Overridable component slots.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
+    "timezone": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used. See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
     "viewRenderers": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
   },
