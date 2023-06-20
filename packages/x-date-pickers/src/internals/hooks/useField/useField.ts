@@ -23,7 +23,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any> & { minutesStep?: number },
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -40,12 +40,13 @@ export const useField = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    timezone,
   } = useFieldState(params);
 
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false, unstableFieldRef },
+    internalProps: { readOnly = false, unstableFieldRef, minutesStep },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -66,7 +67,9 @@ export const useField = <
     updateSectionValue,
     sectionsValueBoundaries,
     setTempAndroidValueStr,
+    timezone,
   });
+
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -181,6 +184,7 @@ export const useField = <
     }
 
     event.preventDefault();
+    resetCharacterQuery();
     updateValueFromValueStr(pastedValue);
   });
 
@@ -346,10 +350,12 @@ export const useField = <
 
         const newSectionValue = adjustSectionValue(
           utils,
+          timezone,
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           activeDateManager.date,
+          { minutesStep },
         );
 
         updateSectionValue({
@@ -401,7 +407,7 @@ export const useField = <
   });
 
   const validationError = useValidation(
-    { ...internalProps, value: state.value },
+    { ...internalProps, value: state.value, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,

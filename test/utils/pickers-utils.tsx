@@ -31,6 +31,7 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
+import { clockPointerClasses } from '@mui/x-date-pickers';
 
 export type AdapterName =
   | 'date-fns'
@@ -658,4 +659,27 @@ export const getExpectedOnChangeCount = (
     return (getChangeCountForComponentFamily(componentFamily) - 1) * 2;
   }
   return getChangeCountForComponentFamily(componentFamily);
+};
+
+export const getTimeClockValue = () => {
+  const clockPointer = document.querySelector<HTMLDivElement>(`.${clockPointerClasses.root}`);
+  const transform = clockPointer?.style?.transform ?? '';
+  const isMinutesView = screen.getByRole('listbox').getAttribute('aria-label')?.includes('minutes');
+
+  const rotation = Number(/rotateZ\(([0-9]+)deg\)/.exec(transform)?.[1] ?? '0');
+
+  if (isMinutesView) {
+    return rotation / 6;
+  }
+
+  return rotation / 30;
+};
+
+export const getDateOffset = <TDate extends unknown>(
+  adapter: MuiPickersAdapter<TDate>,
+  date: TDate,
+) => {
+  const utcHour = adapter.getHours(adapter.setTimezone(adapter.startOfDay(date), 'UTC'));
+  const cleanUtcHour = utcHour > 12 ? 24 - utcHour : -utcHour;
+  return cleanUtcHour * 60;
 };

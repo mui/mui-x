@@ -57,6 +57,7 @@ export {
   WEEK_NUMBER_SIZE,
 } from './constants/dimensions';
 
+export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,

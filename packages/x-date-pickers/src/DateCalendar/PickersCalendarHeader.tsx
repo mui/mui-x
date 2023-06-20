@@ -195,6 +195,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     reduceAnimations,
     views,
     labelId,
+    timezone,
   } = props;
 
   const ownerState = props;
@@ -228,10 +229,12 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
     maxDate,
+    timezone,
   });
   const isPreviousMonthDisabled = usePreviousMonthDisabled(month, {
     disablePast,
     minDate,
+    timezone,
   });
 
   const handleToggleView = () => {
