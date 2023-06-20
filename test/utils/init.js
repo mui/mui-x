@@ -1,5 +1,6 @@
 import './licenseRelease';
 import './licenseKey';
+import './addChaiAssertions';
 import { unstable_resetCleanupTracking } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingPro } from '@mui/x-data-grid-pro';
 
