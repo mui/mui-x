@@ -143,7 +143,7 @@
     "glob-gitignore": "^1.0.14",
     "globby": "^13.1.4",
     "html-webpack-plugin": "^5.5.3",
-    "jsdom": "^21.1.2",
+    "jsdom": "^22.1.0",
     "jss": "^10.10.0",
     "jss-plugin-template": "^10.10.0",
     "jss-rtl": "^0.3.0",
