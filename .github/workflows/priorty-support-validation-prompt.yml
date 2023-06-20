@@ -24,7 +24,7 @@ jobs:
           body-includes: You have created a priority support request
 
       - name: Create comment
-        if: ${{ steps.findComment.outputs.comment-id == '' && endsWith(github.event.label.name, 'unknown') }}
+        if: ${{ steps.findComment.outputs.comment-id == '' && github.event.label.name === 'support: unknown' }}
         uses: peter-evans/create-or-update-comment@5f728c3dae25f329afbe34ee4d08eef25569d79f # v3.0.2
         with:
           issue-number: ${{ github.event.issue.number }}
@@ -38,7 +38,7 @@ jobs:
             Priority support will only be provided to verified customers. Once you have verified your support key, we will remove the `support: unknown` label and add the `support: priority` label to this issue. Only then the time for the SLA will start counting.
 
       - name: Update comment
-        if: ${{ steps.fc.outputs.comment-id != '' && github.event.label.name === 'support: priority') }}
+        if: ${{ steps.findComment.outputs.comment-id != '' && github.event.label.name == 'support: priority' }}
         uses: peter-evans/create-or-update-comment@5f728c3dae25f329afbe34ee4d08eef25569d79f # v3.0.2
         with:
           comment-id: ${{ steps.findComment.outputs.comment-id }}
