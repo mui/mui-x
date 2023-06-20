@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { unstable_joySlots } from '@mui/x-data-grid/joy';
 import {
@@ -96,38 +97,74 @@ export default function GridJoyUISlots() {
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
-        <Box sx={{ height: 420, width: '100%' }}>
-          <DataGrid
-            pagination
-            slots={{
-              ...unstable_joySlots,
-              toolbar: GridToolbar,
-            }}
-            columns={columns}
-            rows={rows}
-            checkboxSelection
-            disableRowSelectionOnClick
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 5, page: 0 },
-              },
-            }}
-            pageSizeOptions={[5, 10, 20]}
-            slotProps={{
-              filterPanel: {
-                sx: {
-                  '& .MuiDataGrid-filterForm': {
-                    alignItems: 'flex-end',
-                  },
-                  '& .MuiDataGrid-panelContent': {
-                    // To prevent the Select popup being hidden by the panel
-                    overflow: 'visible',
+        <Stack spacing={2}>
+          <Box sx={{ height: 420, width: '100%' }}>
+            <DataGrid
+              pagination
+              slots={{
+                ...unstable_joySlots,
+                toolbar: GridToolbar,
+              }}
+              columns={columns}
+              rows={rows}
+              checkboxSelection
+              disableRowSelectionOnClick
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 5, page: 0 },
+                },
+              }}
+              pageSizeOptions={[5, 10, 20]}
+              slotProps={{
+                filterPanel: {
+                  sx: {
+                    '& .MuiDataGrid-filterForm': {
+                      alignItems: 'flex-end',
+                    },
+                    '& .MuiDataGrid-panelContent': {
+                      // To prevent the Select popup being hidden by the panel
+                      overflow: 'visible',
+                    },
                   },
                 },
-              },
-            }}
-          />
-        </Box>
+              }}
+            />
+          </Box>
+
+          <Box sx={{ height: 420, width: '100%', mt: 3 }}>
+            <DataGrid
+              loading
+              pagination
+              slots={{
+                ...unstable_joySlots,
+                toolbar: GridToolbar,
+              }}
+              columns={columns}
+              rows={rows}
+              checkboxSelection
+              disableRowSelectionOnClick
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 5, page: 0 },
+                },
+              }}
+              pageSizeOptions={[5, 10, 20]}
+              slotProps={{
+                filterPanel: {
+                  sx: {
+                    '& .MuiDataGrid-filterForm': {
+                      alignItems: 'flex-end',
+                    },
+                    '& .MuiDataGrid-panelContent': {
+                      // To prevent the Select popup being hidden by the panel
+                      overflow: 'visible',
+                    },
+                  },
+                },
+              }}
+            />
+          </Box>
+        </Stack>
       </JoyCssVarsProvider>
     </MaterialCssVarsProvider>
   );
