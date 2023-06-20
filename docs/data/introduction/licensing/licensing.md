@@ -263,9 +263,9 @@ For example, if you purchase a one-year license today, you will be able to updat
 
 #### 3. `Expired license key`
 
-This error indicates that your license key is expired.
+This error indicates that your annual license key is expired.
 
-The subscription license key works **forever in production** with any version released before your license term ends.
+The annual license works **forever in production** with any version released before your license term ends.
 However, when the term ends, you are not allowed to use the current or older versions in **development**.
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.

@@ -442,7 +442,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
 
-You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
 These changes apply to all the components that had the prop.
 For example, the `ToolbarComponent` has been replaced by a `Toolbar` component slot on all pickers.

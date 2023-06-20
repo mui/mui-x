@@ -11,19 +11,18 @@ const series = [
     type: 'bar',
     stack: '',
     yAxisKey: 'eco',
-    color: 'red',
     data: [2, 5, 3, 4, 1],
   },
   {
     type: 'bar',
     stack: '',
     yAxisKey: 'eco',
-    color: 'blue',
     data: [5, 6, 2, 8, 9],
   },
   {
     type: 'line',
     yAxisKey: 'pib',
+    color: 'red',
     data: [1000, 1500, 3000, 5000, 10000],
   },
 ];
@@ -33,12 +32,13 @@ export default function Combining() {
     <ChartContainer
       series={series}
       width={500}
-      height={500}
+      height={400}
       xAxis={[
         {
           id: 'years',
           data: [2010, 2011, 2012, 2013, 2014],
           scaleType: 'band',
+          valueFormatter: (value) => value.toString(),
         },
       ]}
       yAxis={[

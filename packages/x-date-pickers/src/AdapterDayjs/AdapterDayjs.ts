@@ -149,7 +149,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
   public lib = 'dayjs';
 
-  public rawDayJsInstance: typeof defaultDayjs;
+  public rawDayJsInstance?: typeof defaultDayjs;
 
   public dayjs: Constructor;
 
@@ -162,8 +162,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   public formatTokenMap = formatTokenMap;
 
   constructor({ locale, formats, instance }: AdapterOptions<string, typeof defaultDayjs> = {}) {
-    this.rawDayJsInstance = instance || defaultDayjs;
-    this.dayjs = withLocale(this.rawDayJsInstance, locale);
+    this.rawDayJsInstance = instance;
+    this.dayjs = withLocale(this.rawDayJsInstance ?? defaultDayjs, locale);
     this.locale = locale;
     this.formats = { ...defaultFormats, ...formats };
 
@@ -189,9 +189,31 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
     return value.format(comparisonTemplate) === comparingInValueTimezone.format(comparisonTemplate);
   };
 
+  /**
+   * Replace "default" by undefined before passing it to `dayjs
+   */
+  private cleanTimezone = (timezone: string) => (timezone === 'default' ? undefined : timezone);
+
   private createSystemDate = (value: string | undefined): Dayjs => {
     // TODO v7: Stop using `this.rawDayJsInstance` (drop the `instance` param on the adapters)
-    return this.rawDayJsInstance(value);
+    /* istanbul ignore next */
+    if (this.rawDayJsInstance) {
+      return this.rawDayJsInstance(value);
+    }
+
+    if (this.hasUTCPlugin() && this.hasTimezonePlugin()) {
+      const timezone = defaultDayjs.tz.guess();
+
+      // We can't change the system timezone in the tests
+      /* istanbul ignore next */
+      if (timezone !== 'UTC') {
+        return defaultDayjs.tz(value, timezone);
+      }
+
+      return defaultDayjs(value);
+    }
+
+    return defaultDayjs(value);
   };
 
   private createUTCDate = (value: string | undefined): Dayjs => {
@@ -214,10 +236,8 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
 
-    const cleanTimezone = timezone === 'default' ? undefined : timezone;
     const keepLocalTime = value !== undefined && !value.endsWith('Z');
-
-    return defaultDayjs(value).tz(cleanTimezone, keepLocalTime);
+    return defaultDayjs(value).tz(this.cleanTimezone(timezone), keepLocalTime);
   };
 
   private getLocaleFormats = () => {
@@ -296,12 +316,11 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       return value.utc();
     }
 
+    // We know that we have the UTC plugin.
+    // Otherwise, the value timezone would always equal "system".
+    // And it would be caught by the first "if" of this method.
     if (timezone === 'system') {
-      if (this.hasUTCPlugin()) {
-        return value.local();
-      }
-
-      return value;
+      return value.local();
     }
 
     if (!this.hasTimezonePlugin()) {
@@ -313,9 +332,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       throw new Error(MISSING_TIMEZONE_PLUGIN);
     }
 
-    const cleanZone = timezone === 'default' ? undefined : timezone;
-
-    return defaultDayjs.tz(value, cleanZone);
+    return defaultDayjs.tz(value, this.cleanTimezone(timezone));
   };
 
   public toJsDate = (value: Dayjs) => {
@@ -403,7 +420,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       return true;
     }
 
-    return this.dayjs(value).isSame(comparing);
+    return this.dayjs(value).toDate().getTime() === this.dayjs(comparing).toDate().getTime();
   };
 
   public isSameYear = (value: Dayjs, comparing: Dayjs) => {
@@ -616,9 +633,11 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   public getWeekArray = (value: Dayjs) => {
-    const cleanLocale = this.setLocaleToValue(value);
-    const start = cleanLocale.startOf('month').startOf('week');
-    const end = cleanLocale.endOf('month').endOf('week');
+    const timezone = this.getTimezone(value);
+
+    const cleanValue = this.setLocaleToValue(value);
+    const start = cleanValue.startOf('month').startOf('week');
+    const end = cleanValue.endOf('month').endOf('week');
 
     let count = 0;
     let current = start;
@@ -630,6 +649,15 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
       nestedWeeks[weekNumber].push(current);
 
       current = current.add(1, 'day');
+
+      // If the new day does not have the same offset as the old one (when switching to summer day time for example),
+      // Then dayjs will not automatically adjust the offset (moment does)
+      // We have to parse again the value to make sure the `fixOffset` method is applied
+      // See https://github.com/iamkun/dayjs/blob/b3624de619d6e734cd0ffdbbd3502185041c1b60/src/plugin/timezone/index.js#L72
+      if (this.hasTimezonePlugin() && timezone !== 'UTC' && timezone !== 'system') {
+        current = current.tz(this.cleanTimezone(timezone), true);
+      }
+
       count += 1;
     }
 

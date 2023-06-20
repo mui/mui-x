@@ -1,14 +1,19 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import barSeriesFormatter from '../BarChart/formatter';
 import scatterSeriesFormatter from '../ScatterChart/formatter';
 import lineSeriesFormatter from '../LineChart/formatter';
 import { AllSeriesType } from '../models/seriesType';
 import { defaultizeColor } from '../internals/defaultizeColor';
 import { ChartSeriesType, FormatterParams, FormatterResult } from '../models/seriesType/config';
+import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
 
 export type SeriesContextProviderProps = {
   series: AllSeriesType[];
-  colors?: string[];
+  /**
+   * Color palette used to colorize multiple series.
+   */
+  colors?: ChartsColorPalette;
   children: React.ReactNode;
 };
 
@@ -49,8 +54,17 @@ const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
   return formattedSeries;
 };
 
-export function SeriesContextProvider({ series, colors, children }: SeriesContextProviderProps) {
-  const formattedSeries = React.useMemo(() => formatSeries(series, colors), [series, colors]);
+export function SeriesContextProvider({
+  series,
+  colors = blueberryTwilightPalette,
+  children,
+}: SeriesContextProviderProps) {
+  const theme = useTheme();
+
+  const formattedSeries = React.useMemo(
+    () => formatSeries(series, typeof colors === 'function' ? colors(theme.palette.mode) : colors),
+    [series, colors, theme.palette.mode],
+  );
 
   return <SeriesContext.Provider value={formattedSeries}>{children}</SeriesContext.Provider>;
 }

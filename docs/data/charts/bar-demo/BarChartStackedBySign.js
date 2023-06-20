@@ -20,8 +20,8 @@ export default function BarChartStackedBySign() {
       width={500}
       height={300}
       series={[
-        { data: pData, label: 'pv', id: 'pvId', color: '#8884d8', stack: 'stack1' },
-        { data: uData, label: 'uv', id: 'uvId', color: '#82ca9d', stack: 'stack1' },
+        { data: pData, label: 'pv', id: 'pvId', stack: 'stack1' },
+        { data: uData, label: 'uv', id: 'uvId', stack: 'stack1' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
     />

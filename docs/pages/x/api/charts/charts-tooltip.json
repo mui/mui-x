@@ -1,6 +1,7 @@
 {
   "props": {
     "axisContent": { "type": { "name": "elementType" } },
+    "classes": { "type": { "name": "object" } },
     "itemContent": { "type": { "name": "elementType" } },
     "trigger": {
       "type": {
@@ -12,7 +13,11 @@
   },
   "slots": {},
   "name": "ChartsTooltip",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsTooltip" },
+  "styles": {
+    "classes": ["root", "markCell", "labelCell", "valueCell"],
+    "globalClasses": {},
+    "name": "MuiChartsTooltip"
+  },
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltip.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsTooltip" }]

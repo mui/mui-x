@@ -71,7 +71,7 @@ export default function StackOffsetDemo() {
       </Stack>
       <BarChart
         width={600}
-        height={400}
+        height={300}
         series={getSeries({ hasNegativeValue, stackOffset })}
       />
     </Box>

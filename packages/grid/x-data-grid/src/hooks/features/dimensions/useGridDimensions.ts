@@ -220,25 +220,17 @@ export function useGridDimensions(
       return;
     }
 
-    const height = mainEl.clientHeight || 0;
-    const width = mainEl.clientWidth || 0;
-
     const win = ownerWindow(mainEl);
-
     const computedStyle = win.getComputedStyle(mainEl);
-    const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
-    const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
-    const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
-    const paddingBottom = parseInt(computedStyle.paddingBottom, 10) || 0;
 
-    const newHeight = height - paddingTop - paddingBottom;
-    const newWidth = width - paddingLeft - paddingRight;
+    const height = parseFloat(computedStyle.height) || 0;
+    const width = parseFloat(computedStyle.width) || 0;
 
-    const hasHeightChanged = newHeight !== previousSize.current?.height;
-    const hasWidthChanged = newWidth !== previousSize.current?.width;
+    const hasHeightChanged = height !== previousSize.current?.height;
+    const hasWidthChanged = width !== previousSize.current?.width;
 
     if (!previousSize.current || hasHeightChanged || hasWidthChanged) {
-      const size = { width: newWidth, height: newHeight };
+      const size = { width, height };
       apiRef.current.publishEvent('resize', size);
       previousSize.current = size;
     }

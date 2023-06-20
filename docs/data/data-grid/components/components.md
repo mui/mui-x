@@ -1,4 +1,4 @@
-# Data Grid - Components
+# Data Grid - Custom subcomponents
 
 <p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
 
