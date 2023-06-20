@@ -5,6 +5,7 @@ import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { createPickerRenderer, adapterToUse, wrapPickerMount } from 'test/utils/pickers-utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { expect } from 'chai';
+import { digitalClockHandler } from 'test/utils/pickers/viewHandlers';
 
 describe('<DigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -63,12 +64,7 @@ describe('<DigitalClock /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 30);
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const formattedLabel = adapterToUse.format(
-        newValue,
-        hasMeridiem ? 'fullTime12h' : 'fullTime24h',
-      );
-      userEvent.mousePress(screen.getByRole('option', { name: formattedLabel }));
+      digitalClockHandler.setViewValue(adapterToUse, newValue);
 
       return newValue;
     },

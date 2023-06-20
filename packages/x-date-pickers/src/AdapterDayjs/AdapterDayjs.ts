@@ -272,6 +272,10 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
 
     let parsedValue: Dayjs;
 
+    if (timezone === 'date') {
+      console.trace();
+    }
+
     if (timezone === 'UTC') {
       parsedValue = this.createUTCDate(value);
     } else if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {

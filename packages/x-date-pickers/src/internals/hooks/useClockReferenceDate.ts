@@ -26,7 +26,7 @@ export const useClockReferenceDate = <TDate, TProps extends {}>({
         referenceDate: referenceDateProp,
         granularity: SECTION_TYPE_GRANULARITY.day,
         timezone,
-        getTodayDate: () => getTodayDate(utils, 'date'),
+        getTodayDate: () => getTodayDate(utils, timezone, 'date'),
       }),
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
