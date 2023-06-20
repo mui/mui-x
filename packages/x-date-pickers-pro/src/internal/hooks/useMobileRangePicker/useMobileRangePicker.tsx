@@ -45,6 +45,7 @@ export const useMobileRangePicker = <
     sx,
     format,
     formatDensity,
+    timezone,
     label,
     inputRef,
     readOnly,
@@ -87,6 +88,7 @@ export const useMobileRangePicker = <
 
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
+    TDate,
     RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
@@ -100,6 +102,7 @@ export const useMobileRangePicker = <
       sx,
       format,
       formatDensity,
+      timezone,
       ...(fieldType === 'single-input' && { inputRef }),
       ...innerFieldProps
     },

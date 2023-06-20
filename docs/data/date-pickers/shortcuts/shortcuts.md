@@ -60,6 +60,15 @@ In the following demonstration, it is used to get the next available week and we
 
 {{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}
 
+## Behavior when selecting a shortcut
+
+You can change the behavior when selecting a shortcut using the `changeImportance` property:
+
+- `"accept"` (_default value_): fires `onChange`, fires `onAccept` and closes the picker.
+- `"set"`: fires `onChange` but do not fire `onAccept` and does not close the picker.
+
+{{"demo": "ChangeImportance.js", "bg": "inline"}}
+
 ## Customization
 
 Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.

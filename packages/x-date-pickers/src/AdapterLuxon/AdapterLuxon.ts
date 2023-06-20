@@ -6,6 +6,7 @@ import {
   AdapterUnits,
   FieldFormatTokenMap,
   MuiPickersAdapter,
+  PickersTimezone,
 } from '../models';
 
 const formatTokenMap: FieldFormatTokenMap = {
@@ -55,33 +56,37 @@ const formatTokenMap: FieldFormatTokenMap = {
 };
 
 const defaultFormats: AdapterFormats = {
+  year: 'yyyy',
+  month: 'LLLL',
+  monthShort: 'MMM',
   dayOfMonth: 'd',
+  weekday: 'cccc',
+  weekdayShort: 'ccc',
+  hours24h: 'HH',
+  hours12h: 'hh',
+  meridiem: 'a',
+  minutes: 'mm',
+  seconds: 'ss',
+
   fullDate: 'DD',
   fullDateWithWeekday: 'DDDD',
-  fullDateTime: 'ff',
-  fullDateTime12h: 'DD, hh:mm a',
-  fullDateTime24h: 'DD, T',
+  keyboardDate: 'D',
+  shortDate: 'MMM d',
+  normalDate: 'd MMMM',
+  normalDateWithWeekday: 'EEE, MMM d',
+  monthAndYear: 'LLLL yyyy',
+  monthAndDate: 'MMMM d',
+
   fullTime: 't',
   fullTime12h: 'hh:mm a',
   fullTime24h: 'HH:mm',
-  hours12h: 'hh',
-  hours24h: 'HH',
-  keyboardDate: 'D',
+
+  fullDateTime: 'ff',
+  fullDateTime12h: 'DD, hh:mm a',
+  fullDateTime24h: 'DD, T',
   keyboardDateTime: 'D t',
   keyboardDateTime12h: 'D hh:mm a',
   keyboardDateTime24h: 'D T',
-  minutes: 'mm',
-  seconds: 'ss',
-  month: 'LLLL',
-  monthAndDate: 'MMMM d',
-  monthAndYear: 'LLLL yyyy',
-  monthShort: 'MMM',
-  weekday: 'cccc',
-  weekdayShort: 'ccc',
-  normalDate: 'd MMMM',
-  normalDateWithWeekday: 'EEE, MMM d',
-  shortDate: 'MMM d',
-  year: 'yyyy',
 };
 
 /**
@@ -112,6 +117,8 @@ const defaultFormats: AdapterFormats = {
 export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   public isMUIAdapter = true;
 
+  public isTimezoneCompatible = true;
+
   public lib = 'luxon';
 
   public locale: string;
@@ -126,6 +133,15 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     this.locale = locale || 'en-US';
     this.formats = { ...defaultFormats, ...formats };
   }
+
+  private setLocaleToValue = (value: DateTime) => {
+    const expectedLocale = this.getCurrentLocaleCode();
+    if (expectedLocale === value.locale) {
+      return value;
+    }
+
+    return value.setLocale(expectedLocale);
+  };
 
   public date = (value?: any) => {
     if (typeof value === 'undefined') {
@@ -149,6 +165,40 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return DateTime.fromJSDate(value, { locale: this.locale });
   };
 
+  public dateWithTimezone = (
+    value: string | null | undefined,
+    timezone: PickersTimezone,
+  ): DateTime | null => {
+    if (value === null) {
+      return null;
+    }
+
+    if (typeof value === 'undefined') {
+      // @ts-ignore
+      return DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
+    }
+
+    // @ts-ignore
+    return DateTime.fromISO(value, { locale: this.locale, zone: timezone });
+  };
+
+  public getTimezone = (value: DateTime): string => {
+    // When using the system zone, we want to return "system", not something like "Europe/Paris"
+    if (value.zone.type === 'system') {
+      return 'system';
+    }
+
+    return value.zoneName!;
+  };
+
+  public setTimezone = (value: DateTime, timezone: PickersTimezone): DateTime => {
+    if (!value.zone.equals(Info.normalizeZone(timezone))) {
+      return value.setZone(timezone);
+    }
+
+    return value;
+  };
+
   public toJsDate = (value: DateTime) => {
     return value.toJSDate();
   };
@@ -158,7 +208,7 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public toISO = (value: DateTime) => {
-    return value.toISO({ format: 'extended' })!;
+    return value.toUTC().toISO({ format: 'extended' })!;
   };
 
   public parse = (value: string, formatString: string) => {
@@ -259,23 +309,27 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
       return false;
     }
 
-    return this.date(value)!.equals(this.date(comparing)!);
+    return +this.date(value)! === +this.date(comparing)!;
   };
 
   public isSameYear = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'year');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'year');
   };
 
   public isSameMonth = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'month');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'month');
   };
 
   public isSameDay = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'day');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'day');
   };
 
   public isSameHour = (value: DateTime, comparing: DateTime) => {
-    return value.hasSame(comparing, 'hour');
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    return value.hasSame(comparingInValueTimezone, 'hour');
   };
 
   public isAfter = (value: DateTime, comparing: DateTime) => {
@@ -283,12 +337,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public isAfterYear = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.endOf('year'), 'years').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.endOf('year'), 'years').toObject();
     return diff.years! > 0;
   };
 
   public isAfterDay = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.endOf('day'), 'days').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.endOf('day'), 'days').toObject();
     return diff.days! > 0;
   };
 
@@ -297,12 +353,14 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public isBeforeYear = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.startOf('year'), 'years').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.startOf('year'), 'years').toObject();
     return diff.years! < 0;
   };
 
   public isBeforeDay = (value: DateTime, comparing: DateTime) => {
-    const diff = value.diff(comparing.startOf('day'), 'days').toObject();
+    const comparingInValueTimezone = this.setTimezone(comparing, this.getTimezone(value));
+    const diff = value.diff(comparingInValueTimezone.startOf('day'), 'days').toObject();
     return diff.days! < 0;
   };
 
@@ -399,6 +457,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return value.get('second');
   };
 
+  public getMilliseconds = (value: DateTime) => {
+    return value.get('millisecond');
+  };
+
   public setYear = (value: DateTime, year: number) => {
     return value.set({ year });
   };
@@ -421,6 +483,10 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
 
   public setSeconds = (value: DateTime, seconds: number) => {
     return value.set({ second: seconds });
+  };
+
+  public setMilliseconds = (value: DateTime, milliseconds: number) => {
+    return value.set({ millisecond: milliseconds });
   };
 
   public getDaysInMonth = (value: DateTime) => {
@@ -460,17 +526,18 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
   };
 
   public getWeekArray = (value: DateTime) => {
-    const { days } = value
+    const cleanValue = this.setLocaleToValue(value);
+    const { days } = cleanValue
       .endOf('month')
       .endOf('week')
-      .diff(value.startOf('month').startOf('week'), 'days')
+      .diff(cleanValue.startOf('month').startOf('week'), 'days')
       .toObject();
 
     const weeks: DateTime[][] = [];
     new Array<number>(Math.round(days!))
       .fill(0)
       .map((_, i) => i)
-      .map((day) => value.startOf('month').startOf('week').plus({ days: day }))
+      .map((day) => cleanValue.startOf('month').startOf('week').plus({ days: day }))
       .forEach((v, i) => {
         if (i === 0 || (i % 7 === 0 && i > 6)) {
           weeks.push([v]);

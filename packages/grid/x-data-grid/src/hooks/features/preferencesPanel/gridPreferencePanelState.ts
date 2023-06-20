@@ -2,6 +2,8 @@ import { GridPreferencePanelsValue } from './gridPreferencePanelsValue';
 
 export interface GridPreferencePanelState {
   open: boolean;
+  panelId?: string;
+  labelId?: string;
   /**
    * Tab currently opened.
    * @default GridPreferencePanelsValue.filter

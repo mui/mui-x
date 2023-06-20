@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { fastMemo } from '../utils/fastMemo';
 import {
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-import { GridScrollArea } from './GridScrollArea';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
@@ -57,12 +57,10 @@ const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProp
 
     return (
       <GridBaseColumnHeaders ref={ref} {...getRootProps(other)}>
-        <GridScrollArea scrollDirection="left" />
         <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
           {getColumnGroupHeaders()}
           {getColumnHeaders()}
         </GridColumnHeadersInner>
-        <GridScrollArea scrollDirection="right" />
       </GridBaseColumnHeaders>
     );
   },
@@ -116,4 +114,6 @@ GridColumnHeaders.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
-export { GridColumnHeaders };
+const MemoizedGridColumnHeaders = fastMemo(GridColumnHeaders);
+
+export { MemoizedGridColumnHeaders as GridColumnHeaders };

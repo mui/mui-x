@@ -7,12 +7,8 @@ import {
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar.types';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import {
-  applyDefaultViewProps,
-  isYearAndMonthViews,
-  isYearOnlyView,
-} from '../internals/utils/views';
-import { DateValidationError, DateView, MuiPickersAdapter } from '../models';
+import { applyDefaultViewProps } from '../internals/utils/views';
+import { DateValidationError, DateView } from '../models';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { BaseDateValidationProps, UncapitalizeObjectKeys } from '../internals';
@@ -84,22 +80,6 @@ type UseDatePickerDefaultizedProps<
     'components' | 'componentsProps'
   >
 >;
-
-export const getDatePickerFieldFormat = (
-  utils: MuiPickersAdapter<any>,
-  { format, views }: { format?: string; views: readonly DateView[] },
-) => {
-  if (format != null) {
-    return format;
-  }
-  if (isYearOnlyView(views)) {
-    return utils.formats.year;
-  }
-  if (isYearAndMonthViews(views)) {
-    return utils.formats.monthAndYear;
-  }
-  return undefined;
-};
 
 export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
   props: Props,

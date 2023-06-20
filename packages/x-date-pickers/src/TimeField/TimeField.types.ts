@@ -19,7 +19,7 @@ export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
 
 export interface UseTimeFieldProps<TDate>
   extends MakeOptional<
-      UseFieldInternalProps<TDate | null, FieldSection, TimeValidationError>,
+      UseFieldInternalProps<TDate | null, TDate, FieldSection, TimeValidationError>,
       'format'
     >,
     TimeValidationProps<TDate>,

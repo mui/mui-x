@@ -1058,7 +1058,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(NoRowsOverlay.callCount).not.to.equal(0);
   });
 
-  describe('sould not overflow parent', () => {
+  describe('should not overflow parent', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         this.skip(); // Doesn't work with mocked window.getComputedStyle
@@ -1126,5 +1126,24 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     await sleep(200);
     // The width should not increase infinitely
     expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
+  });
+
+  it('should not add scrollbars when the parent container has fractional size', async function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 300.5, width: 400 }}>
+        <DataGrid rows={[]} columns={[{ field: 'id', flex: 1 }]} />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+    // It should not have a horizontal scrollbar
+    expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+    // It should not have a vertical scrollbar
+    expect(virtualScroller.scrollHeight - virtualScroller.clientHeight).to.equal(0);
   });
 });

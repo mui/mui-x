@@ -10,7 +10,6 @@ import {
   GridEditModes,
   useGridApiRef,
   GridApi,
-  GridRow,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -777,10 +776,7 @@ describe('<DataGrid /> - Row Selection', () => {
   });
 
   describe('performance', () => {
-    it('should not rerender unrelated rows', () => {
-      // TODO: remove this requirement, find ways to scope down react tree rerenders.
-      const MemoizedRow = React.memo(GridRow);
-
+    it('should not rerender unrelated nodes', () => {
       // Couldn't use <RenderCounter> because we need to track multiple components
       let commits: any[] = [];
       function CustomCell(props: any) {
@@ -803,9 +799,6 @@ describe('<DataGrid /> - Row Selection', () => {
                 renderCell: (params) => <CustomCell {...params} />,
               },
             ]}
-            slots={{
-              row: MemoizedRow,
-            }}
             rows={[
               { id: 0, currencyPair: 'USDGBP' },
               { id: 1, currencyPair: 'USDEUR' },
@@ -821,8 +814,8 @@ describe('<DataGrid /> - Row Selection', () => {
       fireEvent.click(getCell(0, 1));
       expect(getSelectedRowIds()).to.deep.equal([0]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', true);
-      // It shouldn't rerender rowId 1
-      expect(commits).to.deep.equal([{ rowId: 0 }]);
+      // It shouldn't rerender any of the custom cells
+      expect(commits).to.deep.equal([]);
     });
   });
 });

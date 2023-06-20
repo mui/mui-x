@@ -24,7 +24,7 @@ export interface UseDateFieldParams<TDate, TChildProps extends {}> {
 
 export interface UseDateFieldProps<TDate>
   extends MakeOptional<
-      UseFieldInternalProps<TDate | null, FieldSection, DateValidationError>,
+      UseFieldInternalProps<TDate | null, TDate, FieldSection, DateValidationError>,
       'format'
     >,
     DayValidationProps<TDate>,

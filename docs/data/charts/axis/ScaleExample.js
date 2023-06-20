@@ -8,8 +8,8 @@ export default function ScaleExample() {
     <LineChart
       xAxis={[{ data: sample }]}
       yAxis={[
-        { id: 'linearAxis', scaleType: 'linear', max: 110 },
-        { id: 'logAxis', scaleType: 'log', max: 110 },
+        { id: 'linearAxis', scaleType: 'linear' },
+        { id: 'logAxis', scaleType: 'log' },
       ]}
       series={[
         { yAxisKey: 'linearAxis', data: sample, label: 'linear' },
@@ -17,8 +17,8 @@ export default function ScaleExample() {
       ]}
       leftAxis="linearAxis"
       rightAxis="logAxis"
-      width={600}
-      height={500}
+      width={500}
+      height={400}
     />
   );
 }

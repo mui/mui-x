@@ -50,13 +50,14 @@ export const renderTimeViewClock = <TDate extends unknown>({
   autoFocus,
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
-}: TimeViewRendererProps<TimeViewWithMeridiem, TimeClockProps<TDate, TimeViewWithMeridiem>>) => (
+  timezone,
+}: TimeViewRendererProps<TimeView, TimeClockProps<TDate, TimeView>>) => (
   <TimeClock<TDate>
-    view={view as TimeView}
+    view={view}
     onViewChange={onViewChange}
-    focusedView={focusedView as TimeView}
+    focusedView={focusedView && isTimeView(focusedView) ? focusedView : null}
     onFocusedViewChange={onFocusedViewChange}
-    views={views.filter(isTimeView) as TimeView[]}
+    views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
     onChange={onChange}
@@ -81,6 +82,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
     autoFocus={autoFocus}
     showViewSwitcher={showViewSwitcher}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
+    timezone={timezone}
   />
 );
 
@@ -114,6 +116,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
+  timezone,
 }: TimeViewRendererProps<
   Extract<TimeView, 'hours'>,
   Omit<DigitalClockProps<TDate>, 'timeStep'> & Pick<TimePickerProps<TDate>, 'timeSteps'>
@@ -148,6 +151,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
     timeStep={timeSteps?.minutes}
     skipDisabled={skipDisabled}
+    timezone={timezone}
   />
 );
 
@@ -181,6 +185,7 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
+  timezone,
 }: TimeViewRendererProps<TimeViewWithMeridiem, MultiSectionDigitalClockProps<TDate>>) => (
   <MultiSectionDigitalClock<TDate>
     view={view}
@@ -212,5 +217,6 @@ export const renderMultiSectionDigitalClockTimeView = <TDate extends unknown>({
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
     timeSteps={timeSteps}
     skipDisabled={skipDisabled}
+    timezone={timezone}
   />
 );

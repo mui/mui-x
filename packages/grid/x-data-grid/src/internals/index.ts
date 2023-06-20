@@ -123,7 +123,11 @@ export type {
 } from '../models/props/DataGridProps';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
-export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
+export {
+  createSelector,
+  createSelectorMemoized,
+  unstable_resetCreateSelectorCache,
+} from '../utils/createSelector';
 export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';

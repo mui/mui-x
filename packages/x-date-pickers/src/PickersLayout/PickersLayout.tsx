@@ -140,6 +140,7 @@ PickersLayout.propTypes = {
   onClose: PropTypes.func.isRequired,
   onDismiss: PropTypes.func.isRequired,
   onOpen: PropTypes.func.isRequired,
+  onSelectShortcut: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
   /**

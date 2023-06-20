@@ -86,6 +86,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
   | `headerHeight`             | `columnHeaderHeight`          |
 
+- The corresponding type for `rowSelectionModel` (previously `selectionModel`) was renamed from `GridSelectionModel` to `GridRowSelectionModel`.
+
 ### Removed props
 
 - The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
@@ -294,7 +296,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### Pagination
 
-- The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and `onPaginationModelChange` instead.
+- The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and [`onPaginationModelChange`](/x/react-data-grid/pagination/#controlled-pagination-model) instead.
 
   ```diff
    <DataGrid
@@ -307,14 +309,14 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
    />
   ```
 
-- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
+- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use [`initialState.pagination.paginationModel`](/x/react-data-grid/pagination/#initializing-the-pagination-model) instead.
 
   ```diff
   -initialState={{ pagination: { page: 1, pageSize: 10 } }}
   +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
   ```
 
-- ✅ The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+- ✅ The `rowsPerPageOptions` prop was renamed to [`pageSizeOptions`](/x/react-data-grid/pagination/#page-size-options).
 
   ```diff
   -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
@@ -414,7 +416,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
    />
   ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
-- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#server-side-persistence) section about the topic.
 - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
 - The `GridEditRowsModel` type was removed.
 - The following API methods were removed:

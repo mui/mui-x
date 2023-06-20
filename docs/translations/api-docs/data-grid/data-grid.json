@@ -433,6 +433,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator icon element"
     },
+    "headerFilterRow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the column header filter row"
+    },
     "main": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the main container element"

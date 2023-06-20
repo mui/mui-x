@@ -1,3 +1,0 @@
-<Stack direction={{ xs: 'column', md: 'row' }}>
-  <BarChart {...barChartsParams} highlight={{ x: 'band' }} />
-</Stack>
