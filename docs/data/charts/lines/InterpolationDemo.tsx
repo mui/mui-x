@@ -20,12 +20,12 @@ export default function InterpolationDemo() {
   const [curveType, setCurveType] = React.useState<CurveType>('linear');
 
   return (
-    <Box>
+    <Box sx={{ p: 2 }}>
       <TextField
         select
         label="interpolation method"
         value={curveType}
-        sx={{ minWidth: 200 }}
+        sx={{ minWidth: 200, mb: 2 }}
         onChange={(event) => setCurveType(event.target.value as CurveType)}
       >
         {curveTypes.map((curve) => (
@@ -37,11 +37,12 @@ export default function InterpolationDemo() {
       <LineChart
         xAxis={[{ data: [1, 3, 5, 6, 7, 9], min: 0, max: 10 }]}
         series={[
-          { curve: curveType, data: [0, 5, 2, 6, 3, 9] },
-          { curve: curveType, data: [6, 3, 7, 9, 4, 2] },
+          { curve: curveType, data: [0, 5, 2, 6, 3, 9.3] },
+          { curve: curveType, data: [6, 3, 7, 9.5, 4, 2] },
         ]}
-        width={600}
-        height={500}
+        width={500}
+        height={300}
+        margin={{ top: 10, bottom: 30 }}
       />
     </Box>
   );

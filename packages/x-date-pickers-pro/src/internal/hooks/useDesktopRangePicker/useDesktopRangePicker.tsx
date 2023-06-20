@@ -46,6 +46,7 @@ export const useDesktopRangePicker = <
     sx,
     format,
     formatDensity,
+    timezone,
     label,
     inputRef,
     readOnly,
@@ -103,6 +104,7 @@ export const useDesktopRangePicker = <
 
   const fieldProps: BaseFieldProps<
     DateRange<TDate>,
+    TDate,
     RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
@@ -116,6 +118,7 @@ export const useDesktopRangePicker = <
       sx,
       format,
       formatDensity,
+      timezone,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
       ...(fieldType === 'single-input' && { inputRef }),

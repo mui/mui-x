@@ -2459,6 +2459,39 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         expect(getColumnValues(1)).to.deep.equal(['', 'Cat 1 (1)', '', 'Cat 2 (2)', '', '']);
       });
     });
+
+    it('should not apply filters when the row is expanded', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+        />,
+      );
+
+      const onFilteredRowsSet = spy();
+      apiRef.current.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
+
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
+      expect(onFilteredRowsSet.callCount).to.equal(0);
+    });
+
+    it('should not apply filters when the row is collapsed', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      const onFilteredRowsSet = spy();
+      apiRef.current.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
+
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
+      expect(onFilteredRowsSet.callCount).to.equal(0);
+    });
   });
 
   describe('apiRef: addRowGroupingCriteria', () => {

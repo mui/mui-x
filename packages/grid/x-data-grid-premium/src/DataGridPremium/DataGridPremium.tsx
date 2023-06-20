@@ -33,7 +33,13 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.forwardedProps}
+      >
         <GridHeader />
         <GridBody
           VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -313,6 +319,11 @@ DataGridPremiumRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps: PropTypes.object,
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
@@ -949,6 +960,11 @@ DataGridPremiumRaw.propTypes = {
    */
   unstable_cellSelectionModel: PropTypes.object,
   /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  unstable_headerFilters: PropTypes.bool,
+  /**
    * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
    * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
    * @default: false
@@ -970,7 +986,7 @@ DataGridPremiumRaw.propTypes = {
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(text) => text.split(/\r\n|\n|\r/).map((row) => row.split('\t'))`
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
    */
   unstable_splitClipboardPastedText: PropTypes.func,
 } as any;

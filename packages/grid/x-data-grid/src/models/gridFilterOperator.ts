@@ -7,13 +7,17 @@ import type { GridValidRowModel } from './gridRows';
 /**
  * Filter operator definition interface.
  * @demos
- *   - [Custom filter operator](/x/react-data-grid/filtering/#create-a-custom-operator)
+ *   - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
  */
 export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The label of the filter operator.
    */
   label?: string;
+  /**
+   * The label of the filter shown in header filter row.
+   */
+  headerLabel?: string;
   /**
    * The name of the filter operator.
    * It will be matched with the `operator` property of the filter items.

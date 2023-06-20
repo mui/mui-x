@@ -52,7 +52,9 @@ export interface RangePickerFieldSlotsComponent {
 
 export interface RangePickerFieldSlotsComponentsProps<TDate> {
   field?: SlotComponentProps<
-    React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, unknown>>,
+    React.ElementType<
+      BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
+    >,
     {},
     UsePickerProps<DateRange<TDate>, any, RangeFieldSection, any, any, any>
   >;
@@ -70,11 +72,12 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  FieldProps extends BaseFieldProps<DateRange<TDate>, RangeFieldSection, TError> = BaseFieldProps<
+  FieldProps extends BaseFieldProps<
     DateRange<TDate>,
+    TDate,
     RangeFieldSection,
     TError
-  >,
+  > = BaseFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>,
 > extends Pick<
       UsePickerResponse<DateRange<TDate>, TView, RangeFieldSection, any>,
       'open' | 'actions'
@@ -112,9 +115,9 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   TDate,
   TView,
   TError,
-  BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>
+  BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>
 >) => {
-  type ReturnType = BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>;
+  type ReturnType = BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>;
 
   const localeText = useLocaleText<TDate>();
   const startRef = React.useRef<HTMLInputElement>(null);
@@ -247,9 +250,9 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   TDate,
   TView,
   TError,
-  BaseSingleInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>
+  BaseSingleInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>
 >) => {
-  type ReturnType = BaseSingleInputFieldProps<DateRange<TDate>, RangeFieldSection, TError>;
+  type ReturnType = BaseSingleInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleInputRef = useForkRef(inInputRef, inputRef);

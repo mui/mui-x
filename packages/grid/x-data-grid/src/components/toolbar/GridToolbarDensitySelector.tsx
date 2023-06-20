@@ -108,9 +108,9 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           size="small"
           startIcon={startIcon}
           aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
-          aria-expanded={open ? 'true' : undefined}
           aria-haspopup="menu"
-          aria-controls={densityMenuId}
+          aria-expanded={open}
+          aria-controls={open ? densityMenuId : undefined}
           id={densityButtonId}
           {...other}
           onClick={handleDensitySelectorOpen}

@@ -231,6 +231,7 @@
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" } },
+    "unstable_headerFilters": { "type": { "name": "bool" } },
     "unstable_ignoreValueFormatterDuringExport": {
       "type": {
         "name": "union",
@@ -245,6 +246,7 @@
     "baseChip": { "default": "Chip", "type": { "name": "elementType" } },
     "baseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
     "baseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "baseInputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "baseInputLabel": { "default": "InputLabel", "type": { "name": "elementType" } },
     "baseListItemIcon": { "default": "ListItemIcon", "type": { "name": "elementType" } },
     "baseListItemText": { "default": "ListItemText", "type": { "name": "elementType" } },
@@ -333,6 +335,11 @@
     "groupingCriteriaExpandIcon": {
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
+    },
+    "headerFilterCell": { "default": "GridHeaderFilterCell", "type": { "name": "elementType" } },
+    "headerFilterMenu": {
+      "default": "GridHeaderFilterMenu",
+      "type": { "name": "elementType | null" }
     },
     "loadIcon": { "default": "GridLoadIcon", "type": { "name": "elementType" } },
     "loadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
@@ -432,6 +439,7 @@
       "footerContainer",
       "iconButtonContainer",
       "iconSeparator",
+      "headerFilterRow",
       "main",
       "menu",
       "menuIcon",

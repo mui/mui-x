@@ -15,7 +15,10 @@ import type {
   MultiSectionDigitalClockSlotsComponentsProps,
 } from './MultiSectionDigitalClock.types';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import {
+  DIGITAL_CLOCK_VIEW_HEIGHT,
+  MULTI_SECTION_CLOCK_SECTION_WIDTH,
+} from '../internals/constants/dimensions';
 
 export interface ExportedMultiSectionDigitalClockSectionProps {
   className?: string;
@@ -66,7 +69,8 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     '&:after': {
       display: 'block',
       content: '""',
-      height: 188,
+      // subtracting the height of one item, extra margin and borders to make sure the max height is correct
+      height: 'calc(100% - 40px - 6px)',
     },
   }),
 );
@@ -78,7 +82,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 })(({ theme }) => ({
   padding: 8,
   margin: '2px 4px',
-  width: 48,
+  width: MULTI_SECTION_CLOCK_SECTION_WIDTH,
   justifyContent: 'center',
   '&:first-of-type': {
     marginTop: 4,
@@ -182,7 +186,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
               key={option.label}
               onClick={() => !readOnly && onChange(option.value)}
               selected={isSelected}
-              disabled={disabled ?? option.isDisabled?.(option.value)}
+              disabled={disabled || option.isDisabled?.(option.value)}
               disableRipple={readOnly}
               role="option"
               // aria-readonly is not supported here and does not have any effect
