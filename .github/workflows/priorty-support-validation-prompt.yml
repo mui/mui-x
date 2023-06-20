@@ -24,7 +24,7 @@ jobs:
           body-includes: You have created a priority support request
 
       - name: Create comment
-        if: ${{ steps.findComment.outputs.comment-id == '' && github.event.label.name === 'support: unknown' }}
+        if: ${{ steps.findComment.outputs.comment-id == '' && endsWith(github.event.label.name, 'unknown') }}
         uses: peter-evans/create-or-update-comment@5f728c3dae25f329afbe34ee4d08eef25569d79f # v3.0.2
         with:
           issue-number: ${{ github.event.issue.number }}
