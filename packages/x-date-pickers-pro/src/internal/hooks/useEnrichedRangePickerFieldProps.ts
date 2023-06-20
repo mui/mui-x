@@ -57,7 +57,10 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
     >,
     {},
     UsePickerProps<DateRange<TDate>, any, RangeFieldSection, any, any, any>
-  >;
+  > & {
+    clearable?: boolean;
+    onClear?: React.MouseEventHandler<HTMLButtonElement>;
+  };
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
 

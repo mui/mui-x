@@ -529,7 +529,7 @@ export const useField = <
     onClear: handleClearValue,
     error: inputError,
     ref: handleRef,
-    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly ),
+    clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly),
     focused: inputHasFocus,
   };
 };

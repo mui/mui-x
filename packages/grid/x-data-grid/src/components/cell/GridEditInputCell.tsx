@@ -151,21 +151,21 @@ GridEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.object.isRequired,
+  api: PropTypes.object,
   /**
    * The mode of the cell.
    */
-  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  cellMode: PropTypes.oneOf(['edit', 'view']),
   changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: PropTypes.object.isRequired,
+  colDef: PropTypes.object,
   debounceMs: PropTypes.number,
   /**
    * The column field of the cell that triggered the event.
    */
-  field: PropTypes.string.isRequired,
+  field: PropTypes.string,
   /**
    * The cell value formatted with the column valueFormatter.
    */
@@ -173,11 +173,11 @@ GridEditInputCell.propTypes = {
   /**
    * If true, the cell is the active element.
    */
-  hasFocus: PropTypes.bool.isRequired,
+  hasFocus: PropTypes.bool,
   /**
    * The grid row id.
    */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * If true, the cell is editable.
    */
@@ -194,15 +194,15 @@ GridEditInputCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.any.isRequired,
+  row: PropTypes.any,
   /**
    * The node of the row that the current cell belongs to.
    */
-  rowNode: PropTypes.object.isRequired,
+  rowNode: PropTypes.object,
   /**
    * the tabIndex value.
    */
-  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  tabIndex: PropTypes.oneOf([-1, 0]),
   /**
    * The cell value.
    * If the column has `valueGetter`, use `params.row` to directly access the fields.

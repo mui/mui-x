@@ -41,7 +41,6 @@ export const useMobilePicker = <
     readOnly,
     disabled,
     localeText,
-    fieldProps: innerFieldProps,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -88,7 +87,6 @@ export const useMobilePicker = <
       formatDensity,
       timezone,
       label,
-      ...innerFieldProps
     },
     ownerState: props,
   });

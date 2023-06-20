@@ -74,11 +74,6 @@ export interface UseDesktopRangePickerProps<
    * @default {}
    */
   slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
-  /**
-   * Props used only for the date input. Passed down to [TextField](https://mui.com/api/text-field/) component.
-   * @default {}
-   */
-  fieldProps?: {clearable?: boolean, onClear?: React.MouseEventHandler<HTMLButtonElement>};
 }
 
 export interface DesktopRangePickerAdditionalViewProps

@@ -52,7 +52,6 @@ export const useMobileRangePicker = <
     disabled,
     disableOpenPicker,
     localeText,
-    fieldProps: innerFieldProps,
   } = props;
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
@@ -86,6 +85,7 @@ export const useMobileRangePicker = <
   const Field = slots.field;
   const fieldType = (Field as any).fieldType ?? 'multi-input';
 
+
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
     TDate,
@@ -104,7 +104,6 @@ export const useMobileRangePicker = <
       formatDensity,
       timezone,
       ...(fieldType === 'single-input' && { inputRef }),
-      ...innerFieldProps
     },
     ownerState: props,
   });

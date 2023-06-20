@@ -71,7 +71,10 @@ export interface ExportedUseDesktopPickerSlotsComponentsProps<
     React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},
     UsePickerProps<TDate | null, any, FieldSection, any, any, any>
-  >;
+  > & {
+    clearable?: boolean;
+    onClear?: React.MouseEventHandler<HTMLButtonElement>;
+  };
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   inputAdornment?: Partial<InputAdornmentProps>;
   openPickerButton?: SlotComponentProps<
@@ -110,12 +113,6 @@ export interface UseDesktopPickerProps<
    * @default {}
    */
   slotProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
-  /**
-   * Props used only for the date input. Passed down to [TextField](https://mui.com/api/text-field/) component.
-   * @default {}
-   */
-  fieldProps?: {clearable?: boolean, onClear?: React.MouseEventHandler<HTMLButtonElement>};
-  
 }
 
 export interface UseDesktopPickerParams<

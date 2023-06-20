@@ -36,7 +36,6 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
    */
   TextField?: React.ElementType<TextFieldProps>;
 }
-
 export interface ExportedUseMobilePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
@@ -46,7 +45,10 @@ export interface ExportedUseMobilePickerSlotsComponentsProps<
     React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},
     UsePickerProps<TDate | null, any, FieldSection, any, any, any>
-  >;
+  > & {
+    clearable?: boolean;
+    onClear?: React.MouseEventHandler<HTMLButtonElement>;
+  };
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
@@ -79,11 +81,6 @@ export interface UseMobilePickerProps<
    * @default {}
    */
   slotProps?: UseMobilePickerSlotsComponentsProps<TDate, TView>;
-  /**
-   * Props used only for the date input. Passed down to [TextField](https://mui.com/api/text-field/) component.
-   * @default {}
-   */
-  fieldProps?: {clearable?: boolean, onClear?: React.MouseEventHandler<HTMLButtonElement>};
 }
 
 export interface UseMobilePickerParams<
