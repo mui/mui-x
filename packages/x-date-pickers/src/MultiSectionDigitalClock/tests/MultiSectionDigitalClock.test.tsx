@@ -33,7 +33,7 @@ describe('<MultiSectionDigitalClock />', () => {
     it('should not use `referenceDate` when a value is defined', () => {
       const onChange = spy();
 
-      const ControlledMultiSectionDigitalClock = (props: MultiSectionDigitalClockProps<any>) => {
+      function ControlledMultiSectionDigitalClock(props: MultiSectionDigitalClockProps<any>) {
         const [value, setValue] = React.useState(props.value);
 
         return (
@@ -46,7 +46,7 @@ describe('<MultiSectionDigitalClock />', () => {
             }}
           />
         );
-      };
+      }
 
       render(
         <ControlledMultiSectionDigitalClock
