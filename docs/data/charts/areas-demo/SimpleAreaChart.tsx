@@ -17,7 +17,7 @@ export default function SimpleAreaChart() {
     <LineChart
       width={500}
       height={300}
-      series={[{ data: uData, label: 'uv', area: true, color: '#82ca9d' }]}
+      series={[{ data: uData, label: 'uv', area: true }]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
       sx={{
         '.MuiLineElement-root, .MuiMarkElement-root': {

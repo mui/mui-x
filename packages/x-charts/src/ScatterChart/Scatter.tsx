@@ -71,7 +71,7 @@ function Scatter(props: ScatterProps) {
               r={markerSize}
               transform={`translate(${x}, ${y})`}
               fill={color}
-              opacity={(isHighlighted && 1) || (isFaded && 0.3) || 0.8}
+              opacity={(isFaded && 0.3) || 1}
               {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
             />
           );

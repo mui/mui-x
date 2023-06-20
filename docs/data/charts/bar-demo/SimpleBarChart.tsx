@@ -19,8 +19,8 @@ export default function SimpleBarChart() {
       width={500}
       height={300}
       series={[
-        { data: pData, label: 'pv', id: 'pvId', color: '#8884d8' },
-        { data: uData, label: 'uv', id: 'uvId', color: '#82ca9d' },
+        { data: pData, label: 'pv', id: 'pvId' },
+        { data: uData, label: 'uv', id: 'uvId' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
     />
