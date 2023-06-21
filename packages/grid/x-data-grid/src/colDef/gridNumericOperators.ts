@@ -12,15 +12,17 @@ const parseNumericValue = (value: unknown) => {
   return Number(value);
 };
 
-export const getGridNumericQuickFilterFn = tagInternalFilter((value: any): GridApplyQuickFilterV7 | null => {
-  if (value == null || Number.isNaN(value) || value === '') {
-    return null;
-  }
+export const getGridNumericQuickFilterFn = tagInternalFilter(
+  (value: any): GridApplyQuickFilterV7 | null => {
+    if (value == null || Number.isNaN(value) || value === '') {
+      return null;
+    }
 
-  return (columnValue): boolean => {
-    return parseNumericValue(columnValue) === parseNumericValue(value);
-  };
-});
+    return (columnValue): boolean => {
+      return parseNumericValue(columnValue) === parseNumericValue(value);
+    };
+  },
+);
 
 export const getGridNumericOperators = (): GridFilterOperator<any, number | string | null, any>[] =>
   convertLegacyOperators([

@@ -6,16 +6,18 @@ import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { convertLegacyOperators, tagInternalFilter } from './utils';
 
-export const getGridStringQuickFilterFn = tagInternalFilter((value: any): GridApplyQuickFilterV7 | null => {
-  if (!value) {
-    return null;
-  }
-  const filterRegex = new RegExp(escapeRegExp(value), 'i');
-  return (_, row, column, apiRef): boolean => {
-    const columnValue = apiRef.current.getRowFormattedValue(row, column);
-    return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
-  };
-});
+export const getGridStringQuickFilterFn = tagInternalFilter(
+  (value: any): GridApplyQuickFilterV7 | null => {
+    if (!value) {
+      return null;
+    }
+    const filterRegex = new RegExp(escapeRegExp(value), 'i');
+    return (_, row, column, apiRef): boolean => {
+      const columnValue = apiRef.current.getRowFormattedValue(row, column);
+      return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
+    };
+  },
+);
 
 export const getGridStringOperators = (
   disableTrim: boolean = false,
