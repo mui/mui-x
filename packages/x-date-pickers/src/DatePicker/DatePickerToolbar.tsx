@@ -12,6 +12,7 @@ import {
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 import { resolveDateFormat } from '../internals/utils/date-utils';
+import { CALENDAR_MARGIN } from '../internals';
 
 export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
   classes?: Partial<DatePickerToolbarClasses>;
@@ -45,7 +46,7 @@ const DatePickerToolbarTitle = styled(Typography, {
   overridesResolver: (_, styles) => styles.title,
 })<{ ownerState: DatePickerToolbarProps<any> }>(({ ownerState }) => ({
   ...(ownerState.isLandscape && {
-    margin: 'auto 16px auto auto',
+    margin: `auto ${CALENDAR_MARGIN}px auto auto`,
   }),
 }));
 
