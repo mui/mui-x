@@ -1,0 +1,6 @@
+<DatePicker
+  sx={{ width: '300px' }}
+  slotProps={{
+    field: { clearable: true, onClear: () => setCleared(true) },
+  }}
+/>
