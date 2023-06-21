@@ -50,7 +50,7 @@ shows you which cells re-render in reaction to your interaction with the grid.
 
 ## Filtering
 
-For filtering performance, see [the filter customization section](/x/react-data-grid/filtering/customization#optimize-performance).
+For filtering performance, see [the filter customization section](/x/react-data-grid/filtering/customization/#optimize-performance).
 
 ## API
 
