@@ -702,4 +702,17 @@ describe('<DataGridPro /> - Tree Data', () => {
       ]);
     });
   });
+
+  describe('regressions', () => {
+    it('should not fail with checkboxSelection', () => {
+      const initialRows = rowsWithoutGap;
+      const { setProps } = render(<Test checkboxSelection rows={initialRows} />);
+
+      const newRows = [...initialRows];
+      newRows.splice(7, 1);
+      setProps({
+        rows: newRows,
+      });
+    });
+  });
 });
