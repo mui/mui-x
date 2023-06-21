@@ -228,7 +228,15 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
     separator: pickerSlotProps?.fieldSeparator,
   };
 
-  const enrichedFieldProps: ReturnType = { ...fieldProps, slots, slotProps };
+  /* TODO: remove this when a clearable behavior for multiple input range fields is implemented */
+  const unclearableFieldProps = Object.keys(fieldProps).reduce((prev, key) => {
+    if (key !== 'clearable' && key !== 'onClear') {
+      return { ...prev, [key]: fieldProps[key] };
+    }
+    return prev;
+  }, {});
+
+  const enrichedFieldProps: ReturnType = { ...unclearableFieldProps, slots, slotProps };
 
   return enrichedFieldProps;
 };
