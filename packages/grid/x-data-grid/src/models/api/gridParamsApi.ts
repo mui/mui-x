@@ -24,7 +24,8 @@ export interface GridParamsApi {
    */
   getRowValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
   /**
-   * Gets the formatted value of a row
+   * Gets the cell formatted value
+   * Use it instead of `getCellParams` for better performance if you only need the formatted value.
    * @template V
    * @param {GridRowModel} row The row model.
    * @param {GridColDef} colDef The column definition.
