@@ -70,7 +70,7 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
       display: 'block',
       content: '""',
       // subtracting the height of one item, extra margin and borders to make sure the max height is correct
-      height: 'calc(100% - 40px - 6px)',
+      maxHeight: 'calc(100% - 40px - 6px)',
     },
   }),
 );
