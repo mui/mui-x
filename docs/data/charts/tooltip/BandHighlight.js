@@ -32,6 +32,7 @@ const barChartsParams = {
 
 export default function BandHighlight() {
   const [xHighlight, setXHightlight] = React.useState('band');
+
   const [yHighlight, setYHightlight] = React.useState('none');
 
   const handleChange = (direction) => (event) => {
