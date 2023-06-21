@@ -3,18 +3,19 @@ import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridFooterCell } from './GridFooterCell';
 
-function GridGroupingColumnFooterCell(props: GridRenderCellParams & { offsetMultiplier: number }) {
-  const { rowNode, offsetMultiplier } = props;
-
+function GridGroupingColumnFooterCell({
+  offsetMultiplier,
+  ...props
+}: GridRenderCellParams & { offsetMultiplier: number }) {
   const rootProps = useGridRootProps();
 
   let marginLeft: number;
-  if (rowNode.parent == null) {
+  if (props.rowNode.parent == null) {
     marginLeft = 0;
   } else if (rootProps.rowGroupingColumnMode === 'multiple') {
     marginLeft = 2;
   } else {
-    marginLeft = rowNode.depth * offsetMultiplier;
+    marginLeft = props.rowNode.depth * offsetMultiplier;
   }
 
   return <GridFooterCell sx={{ ml: marginLeft }} {...props} />;
