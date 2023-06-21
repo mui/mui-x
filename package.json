@@ -3,7 +3,6 @@
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
-    "benchmark:browser": "yarn workspace benchmark browser",
     "docs:dev": "yarn workspace docs dev",
     "docs:start": "yarn workspace docs start",
     "docs:create-playground": "yarn workspace docs create-playground",
@@ -182,7 +181,6 @@
   ],
   "workspaces": {
     "packages": [
-      "benchmark",
       "packages/*",
       "!packages/grid",
       "packages/grid/*",
