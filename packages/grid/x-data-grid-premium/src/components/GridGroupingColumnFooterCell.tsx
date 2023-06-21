@@ -3,8 +3,8 @@ import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { GridFooterCell } from './GridFooterCell';
 
-function GridGroupingColumnFooterCell(props: GridRenderCellParams) {
-  const { rowNode } = props;
+function GridGroupingColumnFooterCell(props: GridRenderCellParams & { offsetMultiplier: number }) {
+  const { rowNode, offsetMultiplier } = props;
 
   const rootProps = useGridRootProps();
 
@@ -14,7 +14,7 @@ function GridGroupingColumnFooterCell(props: GridRenderCellParams) {
   } else if (rootProps.rowGroupingColumnMode === 'multiple') {
     marginLeft = 2;
   } else {
-    marginLeft = rowNode.depth * 2;
+    marginLeft = rowNode.depth * offsetMultiplier;
   }
 
   return <GridFooterCell sx={{ ml: marginLeft }} {...props} />;

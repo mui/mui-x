@@ -27,10 +27,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, any, GridGroupNode> {
   hideDescendantCount?: boolean;
+  offsetMultiplier: number;
 }
 
 export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
-  const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
+  const { id, field, rowNode, hideDescendantCount, formattedValue, offsetMultiplier } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -61,7 +62,8 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     event.stopPropagation();
   };
 
-  const marginLeft = rootProps.rowGroupingColumnMode === 'multiple' ? 0 : rowNode.depth * 2;
+  const marginLeft =
+    rootProps.rowGroupingColumnMode === 'multiple' ? 0 : rowNode.depth * offsetMultiplier;
 
   let cellContent: React.ReactNode;
 

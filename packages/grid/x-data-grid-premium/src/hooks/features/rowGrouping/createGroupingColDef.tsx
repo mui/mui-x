@@ -18,6 +18,8 @@ import {
 } from './gridRowGroupingUtils';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
 
+const defaultOffsetMultiplier = 2;
+
 const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
   disableReorder: true,
@@ -156,8 +158,13 @@ export const createGroupingColDefForOneGroupingCriteria = ({
   groupingCriteria,
   colDefOverride,
 }: CreateGroupingColDefMonoCriteriaParams): GridColDef => {
-  const { leafField, mainGroupingCriteria, hideDescendantCount, ...colDefOverrideProperties } =
-    colDefOverride ?? {};
+  const {
+    leafField,
+    mainGroupingCriteria,
+    hideDescendantCount,
+    offsetMultiplier = defaultOffsetMultiplier,
+    ...colDefOverrideProperties
+  } = colDefOverride ?? {};
   const leafColDef = leafField ? columnsLookup[leafField] : null;
 
   // The properties that do not depend on the presence of a `leafColDef` and that can be overridden by `colDefOverride`
@@ -169,7 +176,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
     renderCell: (params) => {
       // Render footer
       if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
-        return <GridGroupingColumnFooterCell {...params} />;
+        return <GridGroupingColumnFooterCell {...params} offsetMultiplier={offsetMultiplier} />;
       }
 
       // Render leaves
@@ -184,7 +191,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
             return leafColDef.renderCell(leafParams);
           }
 
-          return <GridGroupingColumnLeafCell {...leafParams} />;
+          return <GridGroupingColumnLeafCell {...leafParams} offsetMultiplier={offsetMultiplier} />;
         }
 
         return '';
@@ -196,6 +203,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
           <GridGroupingCriteriaCell
             {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
             hideDescendantCount={hideDescendantCount}
+            offsetMultiplier={offsetMultiplier}
           />
         );
       }
@@ -284,8 +292,13 @@ export const createGroupingColDefForAllGroupingCriteria = ({
   rowGroupingModel,
   colDefOverride,
 }: CreateGroupingColDefSeveralCriteriaParams): GridColDef => {
-  const { leafField, mainGroupingCriteria, hideDescendantCount, ...colDefOverrideProperties } =
-    colDefOverride ?? {};
+  const {
+    leafField,
+    mainGroupingCriteria,
+    hideDescendantCount,
+    offsetMultiplier = defaultOffsetMultiplier,
+    ...colDefOverrideProperties
+  } = colDefOverride ?? {};
   const leafColDef = leafField ? columnsLookup[leafField] : null;
 
   // The properties that do not depend on the presence of a `leafColDef` and that can be overridden by `colDefOverride`
@@ -300,7 +313,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
     renderCell: (params) => {
       // Render footer
       if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
-        return <GridGroupingColumnFooterCell {...params} />;
+        return <GridGroupingColumnFooterCell {...params} offsetMultiplier={offsetMultiplier} />;
       }
 
       // Render the leaves
@@ -315,7 +328,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
             return leafColDef.renderCell(leafParams);
           }
 
-          return <GridGroupingColumnLeafCell {...leafParams} />;
+          return <GridGroupingColumnLeafCell {...leafParams} offsetMultiplier={offsetMultiplier} />;
         }
 
         return '';
@@ -326,6 +339,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
         <GridGroupingCriteriaCell
           {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
           hideDescendantCount={hideDescendantCount}
+          offsetMultiplier={offsetMultiplier}
         />
       );
     },
