@@ -2,7 +2,7 @@ import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilter
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import type { GridApplyQuickFilterV7 } from '../models/colDef/gridColDef';
-import { convertLegacyOperators } from './utils';
+import { convertLegacyOperators, tagInternalFilter } from './utils';
 
 const parseNumericValue = (value: unknown) => {
   if (value == null) {
@@ -12,7 +12,7 @@ const parseNumericValue = (value: unknown) => {
   return Number(value);
 };
 
-export const getGridNumericQuickFilterFn = (value: any): GridApplyQuickFilterV7 | null => {
+export const getGridNumericQuickFilterFn = tagInternalFilter((value: any): GridApplyQuickFilterV7 | null => {
   if (value == null || Number.isNaN(value) || value === '') {
     return null;
   }
@@ -20,7 +20,7 @@ export const getGridNumericQuickFilterFn = (value: any): GridApplyQuickFilterV7 
   return (columnValue): boolean => {
     return parseNumericValue(columnValue) === parseNumericValue(value);
   };
-};
+});
 
 export const getGridNumericOperators = (): GridFilterOperator<any, number | string | null, any>[] =>
   convertLegacyOperators([

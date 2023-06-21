@@ -282,7 +282,10 @@ export const buildAggregatedQuickFilterApplier = (
     const getApplyQuickFilterFn = column?.getApplyQuickFilterFn;
     const getApplyQuickFilterFnV7 = column?.getApplyQuickFilterFnV7;
 
-    if (getApplyQuickFilterFnV7) {
+    const hasUserFunctionLegacy = !isInternalFilter(getApplyQuickFilterFn);
+    const hasUserFunctionV7 = !isInternalFilter(getApplyQuickFilterFnV7);
+
+    if (getApplyQuickFilterFnV7 && !(hasUserFunctionLegacy && !hasUserFunctionV7)) {
       appliersPerField.push({
         column,
         appliers: quickFilterValues.map((value) => ({

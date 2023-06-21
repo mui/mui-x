@@ -4,9 +4,9 @@ import type { GridApplyQuickFilterV7 } from '../models/colDef/gridColDef';
 import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
-import { convertLegacyOperators } from './utils';
+import { convertLegacyOperators, tagInternalFilter } from './utils';
 
-export const getGridStringQuickFilterFn = (value: any): GridApplyQuickFilterV7 | null => {
+export const getGridStringQuickFilterFn = tagInternalFilter((value: any): GridApplyQuickFilterV7 | null => {
   if (!value) {
     return null;
   }
@@ -15,7 +15,7 @@ export const getGridStringQuickFilterFn = (value: any): GridApplyQuickFilterV7 |
     const columnValue = apiRef.current.getRowFormattedValue(row, column);
     return columnValue != null ? filterRegex.test(columnValue.toString()) : false;
   };
-};
+});
 
 export const getGridStringOperators = (
   disableTrim: boolean = false,

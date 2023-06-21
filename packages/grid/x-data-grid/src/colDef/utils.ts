@@ -52,7 +52,7 @@ export function convertLegacyOperators(
 export function convertQuickFilterV7ToLegacy(
   fn: GetApplyQuickFilterFnV7,
 ): GetApplyQuickFilterFnLegacy<any, any, any> {
-  return (filterItem, column, apiRef) => {
+  return tagInternalFilter((filterItem, column, apiRef) => {
     const filterFn = fn(filterItem, column, apiRef);
     if (!filterFn) {
       return filterFn;
@@ -60,5 +60,5 @@ export function convertQuickFilterV7ToLegacy(
     return (cellParams): boolean => {
       return filterFn(cellParams.value, cellParams.row, column, apiRef);
     };
-  };
+  });
 }
