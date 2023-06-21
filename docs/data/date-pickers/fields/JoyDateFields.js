@@ -100,7 +100,7 @@ export default function JoyDateFields() {
               </DemoItem>
               <DemoItem>
                 <SingleInputDateRangeField
-                  label="Date Range Field"
+                  label="Joy Date Range Field"
                   clearable
                   slots={{
                     textField: JoyField,
