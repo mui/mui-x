@@ -1,0 +1,50 @@
+import * as React from 'react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+
+const BrowserField = React.forwardRef((props, ref) => {
+  const {
+    disabled,
+    id,
+    label,
+    inputProps: { ref: inputRef } = {},
+    InputProps: { startAdornment, endAdornment } = {},
+    ...other
+  } = props;
+
+  return (
+    <form
+      id={id}
+      style={{
+        flexGrow: 1,
+      }}
+    >
+      <label>{label}</label>
+      <div ref={ref} style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+        {startAdornment}
+        <input disabled={disabled} {...other} ref={inputRef} />
+        {endAdornment}
+      </div>
+    </form>
+  );
+});
+
+export default function NativeBrowserDateFields() {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateField', 'TimeField']}>
+        <DemoItem>
+          <DateField
+            label="Browser date field"
+            clearable
+            slots={{
+              textField: BrowserField,
+            }}
+          />
+        </DemoItem>
+      </DemoContainer>
+    </LocalizationProvider>
+  );
+}

@@ -108,3 +108,39 @@ Please only use it if needed.
 :::
 
 {{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
+
+### Clearable behavior
+
+You can use the `clearable` prop to enable the default clearing behavior on a field. Aditionally, you can also customize the event handler using the `onClear` method.
+
+:::info
+For **multi-input** range fields the clearable behavior is not supported yet.
+:::
+
+{{"demo": "ClearableBehavior.js"}}
+
+You can also customize the icon you want to be displayed inside the clear `IconButton`
+
+{{"demo": "CustomizeClearIcon.js"}}
+
+### Using a custom input
+
+You can customize the input field used within the field components.
+
+#### Using the Joy UI input
+
+You can use the [_Joy UI_](https://mui.com/joy-ui/getting-started/overview/) components instead of the _Material UI_ ones:
+
+{{"demo": "JoyDateFields.js"}}
+
+#### Using the browser input
+
+You can also use the default browser input
+
+{{"demo": "BrowserDateFields.js"}}
+
+:::warning
+You will need to use a _Material UI_ component that supports the `sx` prop as a wrapper to your input, in order to be able to benefit from the hover behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the behavior on **focus** and **hover** depend on the `sx` prop.
+:::
+
+{{"demo": "NativeBrowserDateFields.js"}}

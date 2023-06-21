@@ -118,6 +118,15 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
+  /**
+   * Event fired when the clear button is clicked.
+   */
+  onClear?: React.MouseEventHandler;
+  /**
+   * If `true`, the field will be cleared when the user clicks on the clear button.
+   * @default false
+   */
+  clearable?: boolean;
 }
 
 export interface FieldRef<TSection extends FieldSection> {
