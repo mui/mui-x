@@ -28,7 +28,7 @@ const PickersArrowSwitcherSpacer = styled('div', {
 })<{
   ownerState: PickersArrowSwitcherProps;
 }>(({ theme }) => ({
-  width: theme.spacing(2),
+  width: theme.spacing(3),
 }));
 
 const PickersArrowSwitcherButton = styled(IconButton, {

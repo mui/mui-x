@@ -317,7 +317,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         slots={slots}
         slotProps={slotProps}
         timezone={timezone}
-        displayWeekNumber={displayWeekNumber}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}

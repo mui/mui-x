@@ -201,6 +201,7 @@ const PickersCalendarWeekNumber = styled(Typography, {
   alignItems: 'center',
   justifyContent: 'center',
   display: 'inline-flex',
+  margin: '0 1px',
 }));
 
 const PickersCalendarLoadingContainer = styled('div', {

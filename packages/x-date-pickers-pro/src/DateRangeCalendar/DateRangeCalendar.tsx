@@ -556,7 +556,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               slots={slots}
               slotProps={slotProps}
               timezone={timezone}
-              displayWeekNumber={displayWeekNumber}
             />
           ) : (
             <DateRangeCalendarArrowSwitcher

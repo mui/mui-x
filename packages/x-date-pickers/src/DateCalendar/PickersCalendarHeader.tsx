@@ -28,7 +28,6 @@ import {
 } from './pickersCalendarHeaderClasses';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { CALENDAR_MARGIN } from '../internals/constants/dimensions';
-import { ExportedDayCalendarProps } from './DayCalendar';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
@@ -66,8 +65,7 @@ export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
 
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedPickersArrowSwitcherProps,
-    DateComponentValidationProps<TDate>,
-    Pick<ExportedDayCalendarProps, 'displayWeekNumber'> {
+    DateComponentValidationProps<TDate> {
   /**
    * Overridable component slots.
    * @default {}
@@ -108,17 +106,17 @@ const PickersCalendarHeaderRoot = styled('div', {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
-}>(({ ownerState }) => ({
+}>({
   display: 'flex',
   alignItems: 'center',
   marginTop: CALENDAR_MARGIN,
   marginBottom: 8,
-  paddingLeft: ownerState.displayWeekNumber ? 22 : 26,
-  paddingRight: ownerState.displayWeekNumber ? 14 : 16,
+  paddingLeft: 12,
+  paddingRight: 12,
   // prevent jumping in safari
   maxHeight: 34,
   minHeight: 34,
-}));
+});
 
 const PickersCalendarHeaderLabelContainer = styled('div', {
   name: 'MuiPickersCalendarHeader',
@@ -143,6 +141,7 @@ const PickersCalendarHeaderLabel = styled('div', {
 })<{
   ownerState: PickersCalendarHeaderOwnerState<any>;
 }>({
+  marginLeft: 4,
   marginRight: 4,
 });
 
