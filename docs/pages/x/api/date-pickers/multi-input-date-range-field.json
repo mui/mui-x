@@ -1,5 +1,6 @@
 {
   "props": {
+    "clearable": { "type": { "name": "bool" } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -32,6 +33,7 @@
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
     "onChange": { "type": { "name": "func" } },
+    "onClear": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },

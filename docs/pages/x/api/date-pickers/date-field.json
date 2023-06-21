@@ -1,6 +1,7 @@
 {
   "props": {
     "autoFocus": { "type": { "name": "bool" } },
+    "clearable": { "type": { "name": "bool" } },
     "color": {
       "type": {
         "name": "enum",
@@ -53,6 +54,7 @@
     "minDate": { "type": { "name": "any" } },
     "name": { "type": { "name": "string" } },
     "onChange": { "type": { "name": "func" } },
+    "onClear": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
@@ -97,6 +99,10 @@
     }
   },
   "slots": {
+    "clearIcon": {
+      "default": "Clear from '@mui/icons-material'",
+      "type": { "name": "elementType" }
+    },
     "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "DateField",
