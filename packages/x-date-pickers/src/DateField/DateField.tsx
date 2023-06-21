@@ -101,6 +101,11 @@ DateField.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
+   * If `true`, the field will be cleared when the user clicks on the clear button.
+   * @default false
+   */
+  clearable: PropTypes.bool,
+  /**
    * The color of the component.
    * It supports both default and custom theme colors, which can be added as shown in the
    * [palette customization guide](https://mui.com/material-ui/customization/palette/#adding-new-colors).
@@ -232,6 +237,10 @@ DateField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
+  /**
+   * Event fired when the clear button is clicked.
+   */
+  onClear: PropTypes.func,
   /**
    * @ignore
    */
