@@ -1,0 +1,6 @@
+<DataGridPremium
+  {...data}
+  apiRef={apiRef}
+  initialState={initialState}
+  groupingColDef={groupingColDef}
+/>
