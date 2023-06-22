@@ -2,12 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
-import {
-  unstable_composeClasses as composeClasses,
-  unstable_useControlled as useControlled,
-  unstable_useId as useId,
-} from '@mui/utils';
-import useEventCallback from '@mui/utils/useEventCallback';
+import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
@@ -20,6 +15,8 @@ import { getTimeClockUtilityClass } from './timeClockClasses';
 import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
@@ -66,8 +63,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   inProps: TimeClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
-  const now = useNow<TDate>();
   const utils = useUtils<TDate>();
 
   const props = useThemeProps({
@@ -104,25 +99,23 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     className,
     disabled,
     readOnly,
+    timezone: timezoneProp,
     ...other
   } = props;
 
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
   const slotProps = innerSlotProps ?? componentsProps;
 
-  const [value, setValue] = useControlled({
-    name: 'DateCalendar',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+    name: 'TimeClock',
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: singleItemValueManager,
   });
-
-  const handleValueChange = useEventCallback(
-    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
-      setValue(newValue);
-      onChange?.(newValue, selectionState);
-    },
-  );
+  const localeText = useLocaleText<TDate>();
+  const now = useNow<TDate>(timezone);
 
   const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
     view: inView,
@@ -534,6 +527,14 @@ TimeClock.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -21,6 +21,7 @@ import {
   PickerValueUpdaterParams,
   PickerChangeHandlerContext,
 } from './usePickerValue.types';
+import { useValueWithTimezone } from '../useValueWithTimezone';
 
 /**
  * Decide if the new value should be published
@@ -168,6 +169,7 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
+    timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
@@ -236,8 +238,16 @@ export const usePickerValue = <
     };
   });
 
+  const { timezone, handleValueChange } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValue,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
+
   useValidation(
-    { ...props, value: dateState.draft },
+    { ...props, value: dateState.draft, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,
@@ -264,21 +274,21 @@ export const usePickerValue = <
       hasBeenModifiedSinceMount: true,
     }));
 
-    if (shouldPublish && onChange) {
+    if (shouldPublish) {
       const validationError =
         action.name === 'setValueFromField'
           ? action.context.validationError
           : validator({
               adapter,
               value: action.value,
-              props: { ...props, value: action.value },
+              props: { ...props, value: action.value, timezone },
             });
 
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
       };
 
-      onChange(action.value, context);
+      handleValueChange(action.value, context);
     }
 
     if (shouldCommit && onAccept) {
@@ -296,6 +306,7 @@ export const usePickerValue = <
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+
     setDateState((prev) => ({
       ...prev,
       lastControlledValue: inValue,
@@ -344,7 +355,7 @@ export const usePickerValue = <
 
   const handleSetToday = useEventCallback(() => {
     updateDate({
-      value: valueManager.getTodayValue(utils, valueType),
+      value: valueManager.getTodayValue(utils, timezone, valueType),
       name: 'setValueFromAction',
       pickerAction: 'today',
     });
@@ -414,7 +425,7 @@ export const usePickerValue = <
     const error = validator({
       adapter,
       value: testedValue,
-      props: { ...props, value: testedValue },
+      props: { ...props, value: testedValue, timezone },
     });
 
     return !valueManager.hasError(error);

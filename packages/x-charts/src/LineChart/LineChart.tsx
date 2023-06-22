@@ -124,7 +124,10 @@ LineChart.propTypes = {
   ]),
   children: PropTypes.node,
   className: PropTypes.string,
-  colors: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * Color palette used to colorize multiple series.
+   */
+  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,

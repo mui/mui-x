@@ -14,7 +14,7 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Year
   Y: 'year',
   YY: 'year',
-  YYYY: 'year',
+  YYYY: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
 
   // Month
   M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
@@ -233,6 +233,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public setTimezone = (value: Moment, timezone: PickersTimezone): Moment => {
+    if (this.getTimezone(value) === timezone) {
+      return value;
+    }
+
     if (timezone === 'UTC') {
       return value.clone().utc();
     }
@@ -242,12 +246,12 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     }
 
     if (!this.hasTimezonePlugin()) {
-      if (timezone === 'default') {
-        return value;
+      /* istanbul ignore next */
+      if (timezone !== 'default') {
+        throw new Error(MISSING_TIMEZONE_PLUGIN);
       }
 
-      /* istanbul ignore next */
-      throw new Error(MISSING_TIMEZONE_PLUGIN);
+      return value;
     }
 
     const cleanZone =
@@ -255,6 +259,10 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
         ? // @ts-ignore
           this.moment.defaultZone?.name ?? 'system'
         : timezone;
+
+    if (cleanZone === 'system') {
+      return value.clone().local();
+    }
 
     const newValue = value.clone();
     newValue.tz(cleanZone);
@@ -562,9 +570,9 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
   };
 
   public getWeekArray = (value: Moment) => {
-    const cleanLocale = this.setLocaleToValue(value);
-    const start = cleanLocale.clone().startOf('month').startOf('week');
-    const end = cleanLocale.clone().endOf('month').endOf('week');
+    const cleanValue = this.setLocaleToValue(value);
+    const start = cleanValue.clone().startOf('month').startOf('week');
+    const end = cleanValue.clone().endOf('month').endOf('week');
 
     let count = 0;
     let current = start;

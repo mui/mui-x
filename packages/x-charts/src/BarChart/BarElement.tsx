@@ -2,6 +2,7 @@ import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
+import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import {
   getIsFaded,
@@ -51,9 +52,11 @@ const BarElementPath = styled('rect', {
 })<{ ownerState: BarElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
   shapeRendering: 'crispEdges',
-  fill: ownerState.color,
-  transition: 'opacity 0.2s ease-in',
-  opacity: (ownerState.isFaded && 0.3) || (ownerState.isHighlighted && 1) || 0.8,
+  fill: ownerState.isHighlighted
+    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
+    : ownerState.color,
+  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  opacity: (ownerState.isFaded && 0.3) || 1,
 }));
 
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &

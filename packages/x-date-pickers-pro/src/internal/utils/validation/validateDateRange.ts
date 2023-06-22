@@ -1,11 +1,18 @@
-import { Validator, validateDate, BaseDateValidationProps } from '@mui/x-date-pickers/internals';
+import { TimezoneProps } from '@mui/x-date-pickers/models';
+import {
+  Validator,
+  validateDate,
+  BaseDateValidationProps,
+  DefaultizedProps,
+} from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../date-utils';
 import { DateRange, DayRangeValidationProps } from '../../models';
 import { DateRangeValidationError } from '../../../models';
 
 export interface DateRangeComponentValidationProps<TDate>
   extends DayRangeValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>> {}
+    Required<BaseDateValidationProps<TDate>>,
+    DefaultizedProps<TimezoneProps, 'timezone'> {}
 
 export const validateDateRange: Validator<
   DateRange<any>,
