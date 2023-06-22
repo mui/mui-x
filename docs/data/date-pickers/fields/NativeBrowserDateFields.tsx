@@ -2,10 +2,7 @@ import * as React from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { Stack, Box } from '@mui/material';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -43,56 +40,32 @@ const BrowserField = React.forwardRef(
         }}
       >
         <label>{label}</label>
-        <Box
+        <div
           ref={ref}
-          sx={{ ...other?.sx, display: 'flex', alignItems: 'center', flexGrow: 1 }}
+          style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
         >
           {startAdornment}
           <input disabled={disabled} {...other} ref={inputRef} />
           {endAdornment}
-        </Box>
+        </div>
       </form>
     );
   },
 ) as BrowserFieldComponent;
 
-export default function BrowserDateFields() {
+export default function NativeBrowserDateFields() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'TimeField']}>
-        <Stack spacing={2}>
-          <DemoItem>
-            <DateField
-              label="Browser date field"
-              clearable
-              slots={{
-                textField: BrowserField,
-              }}
-              sx={{ width: '300px' }}
-            />
-          </DemoItem>
-
-          <DemoItem>
-            <TimeField
-              label="Browser time field"
-              clearable
-              slots={{
-                textField: BrowserField,
-              }}
-              sx={{ width: '300px' }}
-            />
-          </DemoItem>
-          <DemoItem>
-            <SingleInputDateRangeField
-              label="Browser Date Range Field"
-              clearable
-              slots={{
-                textField: BrowserField,
-              }}
-              sx={{ width: '300px' }}
-            />
-          </DemoItem>
-        </Stack>
+        <DemoItem>
+          <DateField
+            label="Browser date field"
+            clearable
+            slots={{
+              textField: BrowserField,
+            }}
+          />
+        </DemoItem>
       </DemoContainer>
     </LocalizationProvider>
   );

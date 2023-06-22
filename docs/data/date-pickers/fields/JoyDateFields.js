@@ -8,7 +8,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import Input from '@mui/joy/Input';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import {
   useTheme as useMaterialTheme,
   useColorScheme as useMaterialColorScheme,
@@ -76,7 +76,7 @@ export default function JoyDateFields() {
         <SyncThemeMode mode={materialTheme.palette.mode} />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DateField', 'TimeField']}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Stack spacing={2}>
               <DemoItem>
                 <DateField
                   label="Joy date field"
@@ -108,7 +108,7 @@ export default function JoyDateFields() {
                   sx={{ width: '300px' }}
                 />
               </DemoItem>
-            </Box>
+            </Stack>
           </DemoContainer>
         </LocalizationProvider>
       </CssVarsProvider>

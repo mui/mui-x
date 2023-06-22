@@ -5,7 +5,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { Box } from '@mui/material';
+import { Stack, Box } from '@mui/material';
 
 const BrowserField = React.forwardRef((props, ref) => {
   const {
@@ -41,7 +41,7 @@ export default function BrowserDateFields() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'TimeField']}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Stack spacing={2}>
           <DemoItem>
             <DateField
               label="Browser date field"
@@ -73,7 +73,7 @@ export default function BrowserDateFields() {
               sx={{ width: '300px' }}
             />
           </DemoItem>
-        </Box>
+        </Stack>
       </DemoContainer>
     </LocalizationProvider>
   );

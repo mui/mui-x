@@ -21,17 +21,17 @@ export default function ClearableProp() {
   }, [cleared]);
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        position: 'relative',
-      }}
-    >
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DateField']}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateField']}>
+        <Box
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            position: 'relative',
+          }}
+        >
           <DemoItem label="DatePicker">
             <DatePicker
               sx={{ width: '300px' }}
@@ -40,13 +40,17 @@ export default function ClearableProp() {
               }}
             />
           </DemoItem>
-        </DemoContainer>
-      </LocalizationProvider>
-      {cleared && (
-        <Alert sx={{ position: 'absolute', bottom: 0, right: 0 }} severity="success">
-          Field cleared!
-        </Alert>
-      )}
-    </Box>
+
+          {cleared && (
+            <Alert
+              sx={{ position: 'absolute', bottom: 0, right: 0 }}
+              severity="success"
+            >
+              Field cleared!
+            </Alert>
+          )}
+        </Box>
+      </DemoContainer>
+    </LocalizationProvider>
   );
 }
