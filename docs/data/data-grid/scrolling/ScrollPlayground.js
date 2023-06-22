@@ -58,9 +58,11 @@ export default function ScrollPlayground() {
     const rowIndex = gridExpandedSortedRowIdsSelector(apiRef).findIndex(
       (id) => id === params.id,
     );
+
     const colIndex = gridVisibleColumnDefinitionsSelector(apiRef).findIndex(
       (column) => column.field === params.field,
     );
+
     setCoordinates({ rowIndex, colIndex });
   };
 

@@ -42,6 +42,7 @@ function buildApplyDateFilterFn(filterItem, compareFn, showTime = false) {
       0,
       0,
     );
+
     const cellValueMs = dateCopy.getTime();
 
     return compareFn(cellValueMs, filterValueMs);

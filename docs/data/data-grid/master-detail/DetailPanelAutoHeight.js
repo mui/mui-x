@@ -48,6 +48,7 @@ function DetailPanelContent({ row: rowProp }) {
       const newProducts = rowProp.products.filter(
         (product) => product.id !== productId,
       );
+
       apiRef.current.updateRows([{ ...rowProp, products: newProducts }]);
     },
     [apiRef, rowProp],
@@ -146,6 +147,7 @@ const columns = [
         (acc, product) => product.unitPrice * product.quantity,
         0,
       );
+
       const taxes = subtotal * 0.05;
       return subtotal + taxes;
     },
