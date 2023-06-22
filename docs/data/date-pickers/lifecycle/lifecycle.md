@@ -22,12 +22,12 @@ The field components have an internal state controlling the visible value.
 
 It will only call the `onChange` callback when:
 
-- the user fills one section of an empty input. The value equals `Invalid date`.
-- the user completes all sections of an input. The value reflects the input.
-- the user cleans one section of a completed input. The value equals `Invalid date`.
-- the user cleans all sections of an input. The value equals `null`.
+- the user fills one section of an empty field. The value equals `Invalid date`.
+- the user completes all sections of a field. The value reflects the field.
+- the user cleans one section of a completed field. The value equals `Invalid date`.
+- the user cleans all sections of an field. The value equals `null`.
 
-In the example below, `onChange` will be called when any of the conditions above are triggered:
+The example below shows the last value received by onChange.
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
@@ -37,7 +37,8 @@ On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... 
 `onChange` is called if the date you are modifying is matching one of the conditions above,
 even if the other date does not.
 
-In the example below, changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
+The example below shows the last value received by onChange.
+Note how changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
@@ -255,7 +256,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 **Action n°2:** Clicking on a day
 
-- Fires `onClose` (or closes the picker)
+- Fires `onClose` (and closes the picker if the `open` prop is not controlled)
 - Fires `onChange` with the selected day (keeps the time of the previous value)
 - Fires `onAccept` with the selected day (keeps the time of the previous value)
 
@@ -287,7 +288,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 **Action n°4:** Clicking on a day
 
-- Fires `onClose` (or closes the picker)
+- Fires `onClose` (and closes the picker if the `open` prop is not controlled)
 - Fires `onChange` with the selected day (keeps the time of the previous value)
 - Fires `onAccept` with the selected day (keeps the time of the previous value)
 
@@ -307,7 +308,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 **Action n°3:** Clicking on the _OK_ action
 
-- Fires `onClose` (or closes the picker)
+- Fires `onClose` (and closes the picker if the `open` prop is not controlled)
 - Fires `onAccept` with the selected day (keeps the time of the previous value)
 
 ## Only update for valid values
