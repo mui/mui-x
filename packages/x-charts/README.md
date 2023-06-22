@@ -1,4 +1,4 @@
-# @mui/charts
+# @mui/x-charts
 
 This package is the community edition of the charts components.
 It's part of MUI X, an open-core extension of MUI, with advanced components.
