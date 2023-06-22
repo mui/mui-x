@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.9.0
+
+_Jun 22, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 We release a new package `@mui/x-charts`.
+  This package aims at simplifying the integration of charts into your dashboards. 📊
+
+  ![image](https://github.com/mui/mui-x/assets/45398769/613bae2f-537d-4ec3-8046-591d1a504a72)
+
+  It already contains [lines](https://mui.com/x/react-charts/lines/), [bars](https://mui.com/x/react-charts/bars/), and [scatter](https://mui.com/x/react-charts/scatter/) charts with basic customization features.
+  Please, visit the new [documentation](https://mui.com/x/react-charts/) to know what it does, and open issues to get the feature you need to be implemented.
+
+- 🚀 Introduce the UTC and timezone support for pickers.
+  ![image](https://github.com/mui/mui-x/assets/3309670/f8b552b0-9ec2-417b-b769-95740308291d)
+  Please visit the [documentation](https://mui.com/x/react-date-pickers/timezone/) to learn how to use it.
+
+- 🌍 Improve Brazilian Portuguese (pt-BR) on the data grid
+- 🌍 Improve Czech (cs-CZ) locale on the pickers
+- 🚅 Performance improvements
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.9.0` / `@mui/x-data-grid-pro@v6.9.0` / `@mui/x-data-grid-premium@v6.9.0`
+
+#### Changes
+
+- [DataGrid] Filtering performance: use unmemoized selectors by default (#9287) @romgrk
+- [DataGrid] Use container dimensions from `getComputedStyle` (#9236) @m4theushw
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#9404) @julioAz
+
+### `@mui/x-date-pickers@v6.9.0` / `@mui/x-date-pickers-pro@v6.9.0`
+
+#### Changes
+
+- [fields] Ensure `minutesStep` is respected by fields arrows up/down (#9338) @alexfauquette
+- [fields] Reset internal state when `referenceValue` changes (#9390) @adrianmxb
+- [l10n] Improve Czech (cs-CZ) locale (#9397) @radimkafka
+- [pickers] Add proper support for UTC and timezones (#8261) @flaviendelangle
+- [pickers] Fix field section selection on `DateTimePicker` (#9342) @LukasTy
+- [pickers] Reduce date range calendar vertical border width (#9368) @oliviertassinari
+- [pickers] Reset fields internal state when pasting value (#9385) @alexfauquette
+
+### `@mui/x-charts@v6.0.0-alpha.0`
+
+#### Changes
+
+- [charts] Allow to customize colors based on the theme mode (#9006) @alexfauquette
+- [charts] Prepare the charts release (#9361) @alexfauquette
+- [charts] Various improvements of charts docs (#9341) @alexfauquette
+
+### Docs
+
+- [docs] Add examples of using different time view renderers (#9360) @LukasTy
+- [docs] Add recipe for single-click editing (#8365) @m4theushw
+- [docs] Fix Base UI references (#9349) @oliviertassinari
+- [docs] Fix random screenshot generation (#9364) @cherniavskii
+- [docs] Remove random generation from chart doc example (#9343) @flaviendelangle
+- [docs] Sync h1 with sidenav link (#9252) @oliviertassinari
+- [docs] Use the mui-x Stack Overflow tag (#9352) @oliviertassinari
+
+### Core
+
+- [core] Add PR template and update the contributions guide (#9329) @DanailH
+- [core] Bump monorepo (#9420) @LukasTy
+- [core] Fix file typo (#9421) @DanailH
+- [core] Fix proptypes (#9396) @LukasTy
+- [core] Move old release notes in `CHANGELOG.old.md` (#9269) @flaviendelangle
+- [core] Add priority support issue template (#8928) @DanailH
+
 ## 6.8.0
 
 _Jun 16, 2023_
