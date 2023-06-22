@@ -173,11 +173,6 @@ MultiInputDateRangeField.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the field will be cleared when the user clicks on the clear button.
-   * @default false
-   */
-  clearable: PropTypes.bool,
-  /**
    * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
@@ -248,10 +243,6 @@ MultiInputDateRangeField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
-  /**
-   * Event fired when the clear button is clicked.
-   */
-  onClear: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.

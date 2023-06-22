@@ -1,7 +1,6 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "clearable": { "type": { "name": "bool" } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -40,7 +39,6 @@
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onChange": { "type": { "name": "func" } },
-    "onClear": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
