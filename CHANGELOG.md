@@ -18,6 +18,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
   Please, visit the new [documentation](https://mui.com/x/react-charts/) to know what it does, and open issues to get the feature you need to be implemented.
 
 - 🚀 Introduce the UTC and timezone support for pickers.
+  ![image](https://github.com/mui/mui-x/assets/3309670/f8b552b0-9ec2-417b-b769-95740308291d)
   Please visit the [documentation](https://mui.com/x/react-date-pickers/timezone/) to learn how to use it.
 
 - 🌍 Improve Brazilian Portuguese (pt-BR) on the data grid
@@ -39,7 +40,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 #### Changes
 
 - [fields] Ensure `minutesStep` is respected by fields arrows up/down (#9338) @alexfauquette
-- [fields] Reset internal state when referenceValue changes (#9390) @adrianmxb
+- [fields] Reset internal state when `referenceValue` changes (#9390) @adrianmxb
 - [l10n] Improve Czech (cs-CZ) locale (#9397) @radimkafka
 - [pickers] Add proper support for UTC and timezones (#8261) @flaviendelangle
 - [pickers] Fix field section selection on `DateTimePicker` (#9342) @LukasTy
