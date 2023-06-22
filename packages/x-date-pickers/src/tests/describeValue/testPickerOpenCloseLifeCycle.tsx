@@ -129,7 +129,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       expect(onClose.callCount).to.equal(1);
     });
 
-    it.only('should not call onChange or onAccept when selecting the same value', () => {
+    it('should not call onChange or onAccept when selecting the same value', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
