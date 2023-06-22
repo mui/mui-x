@@ -1,4 +1,4 @@
-name: Priorty Support Validation Prompt
+name: Priority Support Validation Prompt
 
 on:
   issues:
