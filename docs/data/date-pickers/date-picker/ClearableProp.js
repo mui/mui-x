@@ -32,7 +32,7 @@ export default function ClearableProp() {
     >
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DateField']}>
-          <DemoItem label="DateField">
+          <DemoItem label="DatePicker">
             <DatePicker
               sx={{ width: '300px' }}
               slotProps={{

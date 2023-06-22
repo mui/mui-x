@@ -49,6 +49,7 @@ export default function BrowserDateFields() {
               slots={{
                 textField: BrowserField,
               }}
+              sx={{ width: '300px' }}
             />
           </DemoItem>
 
@@ -59,6 +60,7 @@ export default function BrowserDateFields() {
               slots={{
                 textField: BrowserField,
               }}
+              sx={{ width: '300px' }}
             />
           </DemoItem>
           <DemoItem>
@@ -68,6 +70,7 @@ export default function BrowserDateFields() {
               slots={{
                 textField: BrowserField,
               }}
+              sx={{ width: '300px' }}
             />
           </DemoItem>
         </Box>

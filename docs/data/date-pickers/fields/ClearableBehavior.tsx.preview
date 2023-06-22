@@ -1,7 +1,11 @@
-<DateField
-  sx={{ width: '300px' }}
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
-  onClear={() => setCleared(true)}
-  clearable
-/>
+<DemoContainer components={['DateField']}>
+  <DemoItem label="DateField">
+    <DateField
+      sx={{ width: '300px' }}
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+      onClear={() => setCleared(true)}
+      clearable
+    />
+  </DemoItem>
+</DemoContainer>

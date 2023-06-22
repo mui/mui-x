@@ -1,6 +1,10 @@
-<DatePicker
-  sx={{ width: '300px' }}
-  slotProps={{
-    field: { clearable: true, onClear: () => setCleared(true) },
-  }}
-/>
+<DemoContainer components={['DateField']}>
+  <DemoItem label="DatePicker">
+    <DatePicker
+      sx={{ width: '300px' }}
+      slotProps={{
+        field: { clearable: true, onClear: () => setCleared(true) },
+      }}
+    />
+  </DemoItem>
+</DemoContainer>
