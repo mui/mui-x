@@ -13,7 +13,7 @@ export default function BasicPie() {
           ],
         },
       ]}
-      width={500}
+      width={400}
       height={300}
     />
   );

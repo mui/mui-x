@@ -2,13 +2,12 @@
   series={[
     {
       data: [
-        { id: 0, value: 10, label: 'A' },
-        { id: 1, value: 15, label: 'B' },
-        { id: 2, value: 20, label: 'C' },
+        { id: 0, value: 10, label: 'series A' },
+        { id: 1, value: 15, label: 'series B' },
+        { id: 2, value: 20, label: 'series C' },
       ],
-      area: true,
     },
   ]}
-  width={500}
+  width={400}
   height={300}
 />

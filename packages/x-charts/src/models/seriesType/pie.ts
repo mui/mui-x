@@ -4,9 +4,42 @@ import { CommonDefaultizedProps, CommonSeriesType } from './common';
 
 export type PieValueType = { id: string | number; value: number; label?: string; color?: string };
 
-export interface PieSeriesType extends CommonSeriesType<PieValueType> {
+export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
+
+export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Tdata> {
   type: 'pie';
-  data: PieValueType[];
+  data: Tdata[];
+  /**
+   * The radius between circle center and the begining of the arc.
+   * @default 0
+   */
+  innerRadius?: number;
+  /**
+   * The radius between circle center and the end of the arc.
+   * @default R_max The maximal radius that fit into the drawing area.
+   */
+  outerRadius?: number;
+  /**
+   * The radius applied to arc corners (similar to border radius).
+   * @default 0
+   */
+  cornerRadius?: number;
+  /**
+   * The start angle (deg) of the first item.
+   * @default 0
+   */
+  startAngle?: number;
+  /**
+   * The end angle (deg) of the last item.
+   * @default 360
+   */
+  endAngle?: number;
+  /**
+   * The padding angle (deg) between two arcs.
+   * @default 0
+   */
+  paddingAngle?: number;
+  sortingValues?: ChartsPieSorting;
 }
 
 /**

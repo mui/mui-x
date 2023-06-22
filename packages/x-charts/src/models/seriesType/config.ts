@@ -3,7 +3,7 @@ import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from '.
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueType } from './pie';
 import { AxisConfig } from '../axis';
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps, MakeOptional } from '../helpers';
 import { StackingGroupsType } from '../../internals/stackSeries';
 
 interface ChartsSeriesConfig {
@@ -26,7 +26,7 @@ interface ChartsSeriesConfig {
   };
   pie: {
     seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
-      data: (PieValueType & { color: string })[];
+      data: (MakeOptional<PieValueType, 'id'> & { color: string })[];
     };
     series: DefaultizedPieSeriesType;
     itemIdentifier: PieItemIdentifier;

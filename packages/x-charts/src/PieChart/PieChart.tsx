@@ -12,11 +12,12 @@ import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { PiePlot } from './PiePlot';
+import { PieValueType } from '../models/seriesType/pie';
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
     ChartsAxisProps {
-  series: MakeOptional<PieSeriesType, 'type'>[];
+  series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
@@ -112,7 +113,10 @@ PieChart.propTypes = {
   ]),
   children: PropTypes.node,
   className: PropTypes.string,
-  colors: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * Color palette used to colorize multiple series.
+   */
+  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -182,19 +186,29 @@ PieChart.propTypes = {
   series: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string,
+      cornerRadius: PropTypes.number,
       data: PropTypes.arrayOf(
         PropTypes.shape({
           color: PropTypes.string,
-          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+          id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
           label: PropTypes.string,
           value: PropTypes.number.isRequired,
         }),
       ).isRequired,
+      endAngle: PropTypes.number,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
       }),
       id: PropTypes.string,
+      innerRadius: PropTypes.number,
+      outerRadius: PropTypes.number,
+      paddingAngle: PropTypes.number,
+      sortingValues: PropTypes.oneOfType([
+        PropTypes.oneOf(['asc', 'desc', 'none']),
+        PropTypes.func,
+      ]),
+      startAngle: PropTypes.number,
       type: PropTypes.oneOf(['pie']),
       valueFormatter: PropTypes.func,
     }),

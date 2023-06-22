@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
@@ -11,6 +12,7 @@ import {
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
 import { HighlightScope } from '../context/HighlightProvider';
+import { PieSeriesType } from '../models/seriesType/pie';
 
 export interface PieElementClasses {
   /** Styles applied to the root element. */
@@ -84,12 +86,26 @@ PieElementPath.propTypes = {
 } as any;
 
 export type PieElementProps = Omit<PieElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  React.ComponentPropsWithoutRef<'path'> & {
+  React.ComponentPropsWithoutRef<'path'> &
+  D3PieArcDatum<any> & {
     highlightScope?: Partial<HighlightScope>;
+    innerRadius: PieSeriesType['innerRadius'];
+    outerRadius: number;
+    cornerRadius: PieSeriesType['cornerRadius'];
   };
 
 function PieElement(props: PieElementProps) {
-  const { id, dataIndex, classes: innerClasses, color, highlightScope, ...other } = props;
+  const {
+    id,
+    dataIndex,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    innerRadius = 0,
+    outerRadius,
+    cornerRadius = 0,
+    ...other
+  } = props;
 
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
@@ -116,6 +132,13 @@ function PieElement(props: PieElementProps) {
 
   return (
     <PieElementPath
+      d={
+        d3Arc().cornerRadius(cornerRadius)({
+          ...other,
+          innerRadius,
+          outerRadius,
+        })!
+      }
       {...other}
       ownerState={ownerState}
       className={classes.root}
@@ -130,11 +153,14 @@ PieElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
+  cornerRadius: PropTypes.number,
   dataIndex: PropTypes.number.isRequired,
   highlightScope: PropTypes.shape({
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  innerRadius: PropTypes.number,
+  outerRadius: PropTypes.number.isRequired,
 } as any;
 
 export { PieElement };

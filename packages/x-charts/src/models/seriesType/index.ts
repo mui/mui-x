@@ -1,9 +1,14 @@
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import { DefaultizedLineSeriesType, LineItemIdentifier, LineSeriesType } from './line';
 import { DefaultizedScatterSeriesType, ScatterItemIdentifier, ScatterSeriesType } from './scatter';
-import { DefaultizedPieSeriesType, PieSeriesType, PieItemIdentifier } from './pie';
+import { DefaultizedPieSeriesType, PieSeriesType, PieItemIdentifier, PieValueType } from './pie';
+import { MakeOptional } from '../helpers';
 
-type AllSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType | PieSeriesType;
+type AllSeriesType =
+  | BarSeriesType
+  | LineSeriesType
+  | ScatterSeriesType
+  | PieSeriesType<MakeOptional<PieValueType, 'id'>>;
 
 type CartesianSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType;
 
