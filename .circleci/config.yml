@@ -85,7 +85,7 @@ commands:
                 name: Restore playwright cache
                 keys:
                   - v5-playwright-{{ arch }}-{{ checksum "/tmp/playwright_info.json" }}
-            - install_playwright:
+            - run:
                 name: Install playwright
                 command: npx playwright install --with-deps chromium
       - run:
