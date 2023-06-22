@@ -24,6 +24,7 @@ import {
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 import { DateRangeValidationError } from '../../../models';
+import { excludeClearableProps } from './shared';
 
 export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {}>({
   sharedProps: inSharedProps,
@@ -151,15 +152,7 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     inputRef: endInputRef,
   }) as UseFieldResponse<TTextFieldSlotProps>;
 
-  /* TODO: remove this when a clearable behavior for multiple input range fields is implemented */
-  const excludeClearableProps = (props) =>
-    Object.keys(props).reduce((prev, key) => {
-      if (key !== 'clearable' && key !== 'onClear') {
-        return { ...prev, [key]: props[key] };
-      }
-      return prev;
-    }, {}) as UseFieldResponse<TTextFieldSlotProps>;
-
+  /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
     startDate: excludeClearableProps(startDateResponse),
     endDate: excludeClearableProps(endDateResponse),
