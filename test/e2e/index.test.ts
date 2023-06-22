@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as playwright from 'playwright';
+import { Page, Browser, chromium } from '@playwright/test';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -43,7 +43,7 @@ function waitFor(callback: () => Promise<void>): Promise<void> {
  * @param page
  * @param url
  */
-async function attemptGoto(page: playwright.Page, url: string): Promise<boolean> {
+async function attemptGoto(page: Page, url: string): Promise<boolean> {
   const maxAttempts = 10;
   const retryTimeoutMS = 250;
 
@@ -64,8 +64,8 @@ async function attemptGoto(page: playwright.Page, url: string): Promise<boolean>
 
 describe('e2e', () => {
   const baseUrl = 'http://localhost:5001';
-  let browser: playwright.Browser;
-  let page: playwright.Page;
+  let browser: Browser;
+  let page: Page;
 
   async function renderFixture(fixturePath: string) {
     await page.goto(`${baseUrl}/e2e/${fixturePath}#no-dev`);
@@ -74,7 +74,7 @@ describe('e2e', () => {
   before(async function beforeHook() {
     this.timeout(20000);
 
-    browser = await playwright.chromium.launch({
+    browser = await chromium.launch({
       headless: true,
     });
     page = await browser.newPage();
