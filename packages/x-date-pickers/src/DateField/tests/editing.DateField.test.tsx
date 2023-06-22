@@ -955,7 +955,7 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should reset the input query state on an unfocused field', () => {
-      const { setProps } = render(<DateField value={null} />);
+      const { setProps } = render(<DateField />);
       const input = getTextbox();
 
       clickOnInput(input, 0);
@@ -990,6 +990,7 @@ describe('<DateField /> - Editing', () => {
       });
 
       fireEvent.change(input, { target: { value: '11/23/2' } }); // Press "2"
+      expectInputValue(input, '11/23/0002');
       fireEvent.change(input, { target: { value: '11/23/1' } }); // Press "0"
       expectInputValue(input, '11/23/0021');
     });
