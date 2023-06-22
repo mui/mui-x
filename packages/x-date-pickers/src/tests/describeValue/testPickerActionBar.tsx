@@ -2,14 +2,22 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { adapterToUse } from 'test/utils/pickers-utils';
+import { adapterToUse, getExpectedOnChangeCount } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
-  getOptions,
+  options,
 ) => {
-  const { componentFamily, render, values, emptyValue, setNewValue, type } = getOptions();
+  const {
+    componentFamily,
+    render,
+    renderWithProps,
+    values,
+    emptyValue,
+    setNewValue,
+    ...pickerParams
+  } = options;
 
   if (componentFamily !== 'picker') {
     return;
@@ -36,7 +44,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         // Clear the date
         userEvent.mousePress(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(1);
-        if (type === 'date-range') {
+        if (pickerParams.type === 'date-range') {
           onChange.lastCall.args[0].forEach((value, index) => {
             expect(value).to.deep.equal(emptyValue[index]);
           });
@@ -44,7 +52,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           expect(onChange.lastCall.args[0]).to.deep.equal(emptyValue);
         }
         expect(onAccept.callCount).to.equal(1);
-        if (type === 'date-range') {
+        if (pickerParams.type === 'date-range') {
           onAccept.lastCall.args[0].forEach((value, index) => {
             expect(value).to.deep.equal(emptyValue[index]);
           });
@@ -84,25 +92,25 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        render(
-          <ElementToTest
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            open
-            value={values[0]}
-            slotProps={{ actionBar: { actions: ['cancel'] } }}
-            closeOnSelect={false}
-          />,
-        );
+        const { selectSection } = renderWithProps({
+          onChange,
+          onAccept,
+          onClose,
+          open: true,
+          value: values[0],
+          slotProps: { actionBar: { actions: ['cancel'] } },
+          closeOnSelect: false,
+        });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true });
+        setNewValue(values[0], { isOpened: true, selectSection });
 
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
-        expect(onChange.callCount).to.equal(2);
-        if (type === 'date-range') {
+        expect(onChange.callCount).to.equal(
+          getExpectedOnChangeCount(componentFamily, pickerParams) + 1,
+        );
+        if (pickerParams.type === 'date-range') {
           values[0].forEach((value, index) => {
             expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
           });
@@ -144,24 +152,24 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         const onAccept = spy();
         const onClose = spy();
 
-        render(
-          <ElementToTest
-            onChange={onChange}
-            onAccept={onAccept}
-            onClose={onClose}
-            open
-            defaultValue={values[0]}
-            slotProps={{ actionBar: { actions: ['accept'] } }}
-            closeOnSelect={false}
-          />,
-        );
+        const { selectSection } = renderWithProps({
+          onChange,
+          onAccept,
+          onClose,
+          open: true,
+          defaultValue: values[0],
+          slotProps: { actionBar: { actions: ['accept'] } },
+          closeOnSelect: false,
+        });
 
         // Change the value (already tested)
-        setNewValue(values[0], { isOpened: true });
+        setNewValue(values[0], { isOpened: true, selectSection });
 
         // Accept the modifications
         userEvent.mousePress(screen.getByText(/ok/i));
-        expect(onChange.callCount).to.equal(1); // The accepted value as already been committed, don't call onChange again
+        expect(onChange.callCount).to.equal(
+          getExpectedOnChangeCount(componentFamily, pickerParams),
+        ); // The accepted value as already been committed, don't call onChange again
         expect(onAccept.callCount).to.equal(1);
         expect(onClose.callCount).to.equal(1);
       });
@@ -235,10 +243,12 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         userEvent.mousePress(screen.getByText(/today/i));
 
         const startOfToday =
-          type === 'date' ? adapterToUse.startOfDay(adapterToUse.date()) : adapterToUse.date();
+          pickerParams.type === 'date'
+            ? adapterToUse.startOfDay(adapterToUse.date())
+            : adapterToUse.date();
 
         expect(onChange.callCount).to.equal(1);
-        if (type === 'date-range') {
+        if (pickerParams.type === 'date-range') {
           onChange.lastCall.args[0].forEach((value) => {
             expect(value).toEqualDateTime(startOfToday);
           });
@@ -246,7 +256,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
           expect(onChange.lastCall.args[0]).toEqualDateTime(startOfToday);
         }
         expect(onAccept.callCount).to.equal(1);
-        if (type === 'date-range') {
+        if (pickerParams.type === 'date-range') {
           onAccept.lastCall.args[0].forEach((value) => {
             expect(value).toEqualDateTime(startOfToday);
           });

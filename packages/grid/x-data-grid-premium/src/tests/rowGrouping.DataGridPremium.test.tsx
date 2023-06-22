@@ -2459,6 +2459,39 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         expect(getColumnValues(1)).to.deep.equal(['', 'Cat 1 (1)', '', 'Cat 2 (2)', '', '']);
       });
     });
+
+    it('should not apply filters when the row is expanded', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+        />,
+      );
+
+      const onFilteredRowsSet = spy();
+      apiRef.current.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
+
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
+      expect(onFilteredRowsSet.callCount).to.equal(0);
+    });
+
+    it('should not apply filters when the row is collapsed', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      const onFilteredRowsSet = spy();
+      apiRef.current.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
+
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
+      expect(onFilteredRowsSet.callCount).to.equal(0);
+    });
   });
 
   describe('apiRef: addRowGroupingCriteria', () => {
@@ -2653,5 +2686,29 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       expect(screen.getByRole('button', { name: 'hide children' })).toBeVisible();
     });
     await waitFor(() => expect(getCell(1, 3).textContent).to.equal('username 2'));
+  });
+
+  // See https://github.com/mui/mui-x/issues/8853
+  it('should not reorder rows after calling `updateRows`', async () => {
+    render(
+      <Test
+        columns={[{ field: 'id' }, { field: 'group' }, { field: 'username', width: 150 }]}
+        rows={[
+          { id: 1, group: 'A', username: 'username1' },
+          { id: 2, group: 'A', username: 'username2' },
+        ]}
+        rowGroupingModel={['group']}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+
+    expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+
+    // trigger row update without any changes in row data
+    act(() => apiRef.current.updateRows([{ id: 1 }]));
+
+    await waitFor(() => {
+      expect(getColumnValues(3)).to.deep.equal(['', 'username1', 'username2']);
+    });
   });
 });

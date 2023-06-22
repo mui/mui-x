@@ -23,7 +23,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any> & { minutesStep?: number },
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -40,12 +40,13 @@ export const useField = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    timezone,
   } = useFieldState(params);
 
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false, unstableFieldRef },
+    internalProps: { readOnly = false, unstableFieldRef, minutesStep },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -66,7 +67,9 @@ export const useField = <
     updateSectionValue,
     sectionsValueBoundaries,
     setTempAndroidValueStr,
+    timezone,
   });
+
   const inputRef = React.useRef<HTMLInputElement>(null);
   const handleRef = useForkRef(inputRefProp, inputRef);
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
@@ -84,12 +87,18 @@ export const useField = <
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
-    const nextSectionIndex =
-      browserStartIndex <= state.sections[0].startInInput
-        ? 1 // Special case if browser index is in invisible characters at the beginning.
-        : state.sections.findIndex(
-            (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
-          );
+    let nextSectionIndex: number;
+    if (browserStartIndex <= state.sections[0].startInInput) {
+      // Special case if browser index is in invisible characters at the beginning
+      nextSectionIndex = 1;
+    } else if (browserStartIndex >= state.sections[state.sections.length - 1].endInInput) {
+      // If the click is after the last character of the input, then we want to select the 1st section.
+      nextSectionIndex = 1;
+    } else {
+      nextSectionIndex = state.sections.findIndex(
+        (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+      );
+    }
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
     setSelectedSections(sectionIndex);
@@ -112,7 +121,7 @@ export const useField = <
     // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
-    clearTimeout(focusTimeoutRef.current);
+    window.clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
       if (!input || input !== inputRef.current) {
@@ -175,6 +184,7 @@ export const useField = <
     }
 
     event.preventDefault();
+    resetCharacterQuery();
     updateValueFromValueStr(pastedValue);
   });
 
@@ -196,7 +206,8 @@ export const useField = <
     let keyPressed: string;
     if (
       selectedSectionIndexes.startIndex === 0 &&
-      selectedSectionIndexes.endIndex === state.sections.length - 1
+      selectedSectionIndexes.endIndex === state.sections.length - 1 &&
+      cleanValueStr.length === 1
     ) {
       keyPressed = cleanValueStr;
     } else {
@@ -237,7 +248,10 @@ export const useField = <
         activeSection.end -
         cleanString(activeSection.endSeparator || '').length;
 
-      keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
+      keyPressed = cleanValueStr.slice(
+        activeSection.start + cleanString(activeSection.startSeparator || '').length,
+        activeSectionEndRelativeToNewValue,
+      );
     }
 
     if (isAndroid() && keyPressed.length === 0) {
@@ -336,10 +350,12 @@ export const useField = <
 
         const newSectionValue = adjustSectionValue(
           utils,
+          timezone,
           activeSection,
           event.key as AvailableAdjustKeyCode,
           sectionsValueBoundaries,
           activeDateManager.date,
+          { minutesStep },
         );
 
         updateSectionValue({
@@ -353,12 +369,15 @@ export const useField = <
   });
 
   useEnhancedEffect(() => {
+    if (!inputRef.current) {
+      return;
+    }
     if (selectedSectionIndexes == null) {
-      if (inputRef.current!.scrollLeft) {
+      if (inputRef.current.scrollLeft) {
         // Ensure that input content is not marked as selected.
         // setting selection range to 0 causes issues in Safari.
         // https://bugs.webkit.org/show_bug.cgi?id=224425
-        inputRef.current!.scrollLeft = 0;
+        inputRef.current.scrollLeft = 0;
       }
       return;
     }
@@ -374,19 +393,24 @@ export const useField = <
     }
 
     if (
-      selectionStart !== inputRef.current!.selectionStart ||
-      selectionEnd !== inputRef.current!.selectionEnd
+      selectionStart !== inputRef.current.selectionStart ||
+      selectionEnd !== inputRef.current.selectionEnd
     ) {
       // Fix scroll jumping on iOS browser: https://github.com/mui/mui-x/issues/8321
-      const currentScrollTop = inputRef.current!.scrollTop;
-      inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+      const currentScrollTop = inputRef.current.scrollTop;
+      // On multi input range pickers we want to update selection range only for the active input
+      // This helps avoiding the focus jumping on Safari https://github.com/mui/mui-x/issues/9003
+      // because WebKit implements the `setSelectionRange` based on the spec: https://bugs.webkit.org/show_bug.cgi?id=224425
+      if (inputRef.current === getActiveElement(document)) {
+        inputRef.current.setSelectionRange(selectionStart, selectionEnd);
+      }
       // Even reading this variable seems to do the trick, but also setting it just to make use of it
-      inputRef.current!.scrollTop = currentScrollTop;
+      inputRef.current.scrollTop = currentScrollTop;
     }
   });
 
   const validationError = useValidation(
-    { ...internalProps, value: state.value },
+    { ...internalProps, value: state.value, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,

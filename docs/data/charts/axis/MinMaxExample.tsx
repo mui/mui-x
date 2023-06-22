@@ -42,19 +42,16 @@ export default function MinMaxExample() {
       <ScatterChart
         xAxis={[
           {
-            id: 'x',
+            label: 'x',
             min: value[0],
             max: value[1],
           },
         ]}
-        series={[
-          {
-            id: 'linear',
-            data,
-          },
-        ]}
-        width={600}
-        height={500}
+        series={[{ data }]}
+        width={500}
+        height={300}
+        margin={{ top: 10 }}
+        sx={{ mt: 2 }}
       />
       <Slider
         value={value}
@@ -62,6 +59,7 @@ export default function MinMaxExample() {
         valueLabelDisplay="auto"
         min={-40}
         max={40}
+        sx={{ mt: 2 }}
       />
     </div>
   );

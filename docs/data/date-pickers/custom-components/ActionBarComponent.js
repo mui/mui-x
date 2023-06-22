@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -109,22 +108,6 @@ function CustomActionBar(props) {
     </DialogActions>
   );
 }
-
-CustomActionBar.propTypes = {
-  /**
-   * Ordered array of actions to display.
-   * If empty, does not display that action bar.
-   * @default `['cancel', 'accept']` for mobile and `[]` for desktop
-   */
-  actions: PropTypes.arrayOf(
-    PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']),
-  ),
-  className: PropTypes.string,
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-};
 
 export default function ActionBarComponent() {
   return (

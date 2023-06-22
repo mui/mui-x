@@ -19,7 +19,7 @@ export default function TestLines() {
       series={[
         {
           stack: '1',
-          area: {},
+          area: true,
           data: [2, 5, 3, 4, 1],
         },
         {
@@ -27,7 +27,7 @@ export default function TestLines() {
         },
         {
           stack: '1',
-          area: {},
+          area: true,
           data: [10, 3, 1, 2, 10],
         },
       ]}

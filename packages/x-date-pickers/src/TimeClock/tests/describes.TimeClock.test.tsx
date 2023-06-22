@@ -31,13 +31,10 @@ describe('<TimeClock /> - Describes', () => {
     render,
     componentFamily: 'clock',
     values: [
-      adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 18, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 12, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 13, 35)),
     ],
     emptyValue: null,
-    defaultProps: {
-      openTo: 'minutes',
-    },
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const clockPointer = document.querySelector<HTMLDivElement>(`.${clockPointerClasses.root}`);
@@ -45,14 +42,32 @@ describe('<TimeClock /> - Describes', () => {
         expect(clockPointer).to.equal(null);
       } else {
         const transform = clockPointer?.style?.transform;
-        expect(transform).to.equal(`rotateZ(${adapterToUse.getMinutes(expectedValue) * 6}deg)`);
+        const isMinutesView = screen
+          .getByRole('listbox')
+          .getAttribute('aria-label')
+          ?.includes('minutes');
+        if (isMinutesView) {
+          expect(transform).to.equal(`rotateZ(${adapterToUse.getMinutes(expectedValue) * 6}deg)`);
+        } else {
+          const hours = adapterToUse.getHours(expectedValue);
+          expect(transform).to.equal(`rotateZ(${(hours > 12 ? hours % 12 : hours) * 30}deg)`);
+        }
       }
     },
     setNewValue: (value) => {
-      const newValue = adapterToUse.addMinutes(value, 1);
-      const hourClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
+      const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+      // change hours
+      const hourClockEvent = getClockTouchEvent(
+        adapterToUse.getHours(newValue),
+        hasMeridiem ? '12hours' : '24hours',
+      );
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      // change minutes
+      const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
 
       return newValue;
     },

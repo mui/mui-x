@@ -5,20 +5,22 @@ import {
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
 import { InteractionProvider } from '../context/InteractionProvider';
-import { Surface, SurfaceProps } from '../Surface';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
 import {
   CartesianContextProvider,
   CartesianContextProviderProps,
 } from '../context/CartesianContextProvider';
-import { Tooltip, TooltipProps } from '../Tooltip';
+import { HighlightProvider } from '../context/HighlightProvider';
 
 export type ChartContainerProps = Omit<
-  SurfaceProps &
+  ChartsSurfaceProps &
     SeriesContextProviderProps &
     Omit<DrawingProviderProps, 'svgRef'> &
     CartesianContextProviderProps,
   'children'
-> & { children?: React.ReactNode; tooltip?: TooltipProps };
+> & {
+  children?: React.ReactNode;
+};
 
 export function ChartContainer(props: ChartContainerProps) {
   const {
@@ -32,7 +34,7 @@ export function ChartContainer(props: ChartContainerProps) {
     sx,
     title,
     desc,
-    tooltip,
+    disableAxisListener,
     children,
   } = props;
   const ref = React.useRef<SVGSVGElement>(null);
@@ -42,10 +44,19 @@ export function ChartContainer(props: ChartContainerProps) {
       <SeriesContextProvider series={series} colors={colors}>
         <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
           <InteractionProvider>
-            <Surface width={width} height={height} ref={ref} sx={sx} title={title} desc={desc}>
-              {children}
-              <Tooltip {...tooltip} />
-            </Surface>
+            <HighlightProvider>
+              <ChartsSurface
+                width={width}
+                height={height}
+                ref={ref}
+                sx={sx}
+                title={title}
+                desc={desc}
+                disableAxisListener={disableAxisListener}
+              >
+                {children}
+              </ChartsSurface>
+            </HighlightProvider>
           </InteractionProvider>
         </CartesianContextProvider>
       </SeriesContextProvider>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -15,39 +14,46 @@ import {
   expectInputValue,
   MockedDataTransfer,
 } from 'test/utils/pickers-utils';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/de';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import {
   describeGregorianAdapter,
-  TEST_DATE_ISO,
+  TEST_DATE_ISO_STRING,
 } from 'packages/x-date-pickers/src/tests/describeGregorianAdapter';
 
-dayjs.extend(utc);
+import 'dayjs/locale/fr';
+import 'dayjs/locale/de';
+// We import the plugins here just to have the typing
+import 'dayjs/plugin/utc';
+import 'dayjs/plugin/timezone';
 
-const testDate = new Date(2018, 4, 15, 9, 35);
-const localizedTexts = {
-  undefined: {
-    placeholder: 'MM/DD/YYYY hh:mm aa',
-    value: '05/15/2018 09:35 AM',
-  },
-  fr: {
-    placeholder: 'DD/MM/YYYY hh:mm',
-    value: '15/05/2018 09:35',
-  },
-  de: {
-    placeholder: 'DD.MM.YYYY hh:mm',
-    value: '15.05.2018 09:35',
-  },
-};
 describe('<AdapterDayjs />', () => {
-  describeGregorianAdapter(AdapterDayjs, { formatDateTime: 'YYYY-MM-DD HH:mm:ss', locale: 'en' });
+  const commonParams = {
+    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
+    setDefaultTimezone: dayjs.tz.setDefault,
+    getLocaleFromDate: (value: Dayjs) => value.locale(),
+    frenchLocale: 'fr',
+  };
+
+  describeGregorianAdapter(AdapterDayjs, commonParams);
+
+  // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
+  describeGregorianAdapter(AdapterDayjs, {
+    ...commonParams,
+    prepareAdapter: (adapter) => {
+      // @ts-ignore
+      adapter.hasUTCPlugin = () => false;
+      // @ts-ignore
+      adapter.hasTimezonePlugin = () => false;
+      // Makes sure that we don't run timezone related tests, that would not work.
+      adapter.isTimezoneCompatible = false;
+    },
+  });
 
   describe('Adapter localization', () => {
     describe('English', () => {
-      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'en' });
-      const date = adapter.date(TEST_DATE_ISO)!;
+      const adapter = new AdapterDayjs({ locale: 'en' });
+      const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('getWeekdays: should start on Sunday', () => {
         const result = adapter.getWeekdays();
@@ -65,7 +71,7 @@ describe('<AdapterDayjs />', () => {
     });
 
     describe('Russian', () => {
-      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'ru' });
+      const adapter = new AdapterDayjs({ locale: 'ru' });
 
       it('getWeekDays: should start on Monday', () => {
         const result = adapter.getWeekdays();
@@ -73,7 +79,7 @@ describe('<AdapterDayjs />', () => {
       });
 
       it('getWeekArray: should start on Monday', () => {
-        const date = adapter.date(TEST_DATE_ISO)!;
+        const date = adapter.date(TEST_DATE_ISO_STRING)!;
         const result = adapter.getWeekArray(date);
         expect(result[0][0].format('dd')).to.equal('пн');
       });
@@ -112,9 +118,32 @@ describe('<AdapterDayjs />', () => {
       expectDate('keyboardDateTime12h', '02/01/2020 11:44 PM', '01.02.2020 11:44 вечера');
       expectDate('keyboardDateTime24h', '02/01/2020 23:44', '01.02.2020 23:44');
     });
+
+    it('should warn when trying to use a non-loaded locale', () => {
+      const adapter = new AdapterDayjs({ locale: 'pl' });
+      expect(() => adapter.is12HourCycleInCurrentLocale()).toWarnDev(
+        'Your locale has not been found.',
+      );
+    });
   });
 
   describe('Picker localization', () => {
+    const testDate = new Date(2018, 4, 15, 9, 35);
+    const localizedTexts = {
+      undefined: {
+        placeholder: 'MM/DD/YYYY hh:mm aa',
+        value: '05/15/2018 09:35 AM',
+      },
+      fr: {
+        placeholder: 'DD/MM/YYYY hh:mm',
+        value: '15/05/2018 09:35',
+      },
+      de: {
+        placeholder: 'DD.MM.YYYY hh:mm',
+        value: '15.05.2018 09:35',
+      },
+    };
+
     Object.keys(localizedTexts).forEach((localeKey) => {
       const localeName = localeKey === 'undefined' ? 'default' : `"${localeKey}"`;
       const localeObject = localeKey === 'undefined' ? undefined : { code: localeKey };
@@ -144,7 +173,8 @@ describe('<AdapterDayjs />', () => {
     });
   });
 
-  describe('UTC plugin', () => {
+  // TODO v7: Remove
+  describe('UTC plugin - LEGACY APPROACH', () => {
     const { render } = createPickerRenderer({
       clock: 'fake',
       adapterName: 'dayjs',

@@ -1,9 +1,9 @@
-import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useDateField as useDateField,
   UseDateFieldComponentProps,
   UseDateFieldProps,
+  UseDateFieldDefaultizedProps,
 } from '@mui/x-date-pickers/DateField';
 import {
   useLocalizationContext,
@@ -11,9 +11,9 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   UseFieldResponse,
+  useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
 import { DateValidationError } from '@mui/x-date-pickers/models';
-import useControlled from '@mui/utils/useControlled';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { DateRange } from '../../models/range';
@@ -53,14 +53,16 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     readOnly,
     selectedSections,
     onSelectedSectionsChange,
+    timezone: timezoneProp,
   } = sharedProps;
 
-  const firstDefaultValue = React.useRef(defaultValue);
-  const [value, setValue] = useControlled<DateRange<TDate>>({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'useMultiInputDateRangeField',
-    state: 'value',
-    controlled: valueProp,
-    default: firstDefaultValue.current ?? rangeValueManager.emptyValue,
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: rangeValueManager,
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
@@ -71,18 +73,16 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
       const newDateRange: DateRange<TDate> =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
-      setValue(newDateRange);
-
       const context: FieldChangeHandlerContext<DateRangeValidationError> = {
         ...rawContext,
         validationError: validateDateRange({
           adapter,
           value: newDateRange,
-          props: sharedProps,
+          props: { ...sharedProps, timezone },
         }),
       };
 
-      onChange?.(newDateRange, context);
+      handleValueChange(newDateRange, context);
     };
   };
 
@@ -95,13 +95,16 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     DateRangeValidationError,
     DateRangeComponentValidationProps<TDate>
   >(
-    { ...sharedProps, value },
+    { ...sharedProps, value, timezone },
     validateDateRange,
     rangeValueManager.isSameError,
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseDateFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const startFieldProps: UseDateFieldComponentProps<
+    TDate,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[0],
     ...startTextFieldProps,
     disabled,
@@ -109,6 +112,7 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     format,
     formatDensity,
     shouldRespectLeadingZeros,
+    timezone,
     unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
@@ -117,7 +121,10 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     onSelectedSectionsChange,
   };
 
-  const endFieldProps: UseDateFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const endFieldProps: UseDateFieldComponentProps<
+    TDate,
+    UseDateFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,
@@ -125,6 +132,7 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldSlotProps extends {
     shouldRespectLeadingZeros,
     disabled,
     readOnly,
+    timezone,
     unstableFieldRef: unstableEndFieldRef,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],

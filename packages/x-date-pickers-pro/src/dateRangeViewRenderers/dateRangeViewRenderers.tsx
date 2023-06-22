@@ -31,6 +31,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   defaultRangePosition,
   onRangePositionChange,
   calendars,
+  currentMonthCalendarPosition,
   components,
   componentsProps,
   slots,
@@ -48,6 +49,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   fixedWeekNumber,
   disableDragEditing,
   displayWeekNumber,
+  timezone,
 }: DateRangeViewRendererProps<TDate, any>) => (
   <DateRangeCalendar
     value={value}
@@ -67,6 +69,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     defaultRangePosition={defaultRangePosition}
     onRangePositionChange={onRangePositionChange}
     calendars={calendars}
+    currentMonthCalendarPosition={currentMonthCalendarPosition}
     components={components}
     componentsProps={componentsProps}
     slots={slots}
@@ -84,5 +87,6 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     fixedWeekNumber={fixedWeekNumber}
     disableDragEditing={disableDragEditing}
     displayWeekNumber={displayWeekNumber}
+    timezone={timezone}
   />
 );

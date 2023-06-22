@@ -51,6 +51,7 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
+export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
@@ -116,7 +117,14 @@ export type {
   DateTimeValidationProps,
 } from './models/validation';
 
-export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
+export {
+  applyDefaultDate,
+  replaceInvalidDateByNull,
+  areDatesEqual,
+  getTodayDate,
+} from './utils/date-utils';
+export { splitFieldInternalAndForwardedProps } from './utils/fields';
+export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
@@ -128,7 +136,7 @@ export { extractValidationProps } from './utils/validation/extractValidationProp
 export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
 export { validateTime } from './utils/validation/validateTime';
-export { buildDeprecatedPropsWarning } from './utils/warning';
+export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 export { uncapitalizeObjectKeys } from './utils/slots-migration';
 export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
 

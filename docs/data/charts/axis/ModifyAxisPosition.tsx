@@ -10,21 +10,20 @@ const data = Array.from({ length: 200 }, () => ({
   y: chance.floating({ min: -25, max: 25 }),
 })).map((d, index) => ({ ...d, id: index }));
 
+const params = {
+  series: [{ data }],
+  width: 500,
+  height: 300,
+};
 export default function ModifyAxisPosition() {
   return (
     <ScatterChart
-      series={[
-        {
-          id: 'linear',
-          data,
-        },
-      ]}
+      {...params}
       leftAxis={null}
       bottomAxis={null}
       topAxis={DEFAULT_X_AXIS_KEY}
       rightAxis={DEFAULT_Y_AXIS_KEY}
-      width={600}
-      height={500}
+      margin={{ top: 30, bottom: 10 }}
     />
   );
 }

@@ -1,14 +1,8 @@
 <ScatterChart
-  series={[
-    {
-      id: 'linear',
-      data,
-    },
-  ]}
+  {...params}
   leftAxis={null}
   bottomAxis={null}
   topAxis={DEFAULT_X_AXIS_KEY}
   rightAxis={DEFAULT_Y_AXIS_KEY}
-  width={600}
-  height={500}
+  margin={{ top: 30, bottom: 10 }}
 />

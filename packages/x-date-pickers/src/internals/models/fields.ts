@@ -3,8 +3,8 @@ import { TextFieldProps } from '@mui/material/TextField';
 import type { UseFieldInternalProps } from '../hooks/useField';
 import type { FieldSection } from '../../models';
 
-export interface BaseFieldProps<TValue, TSection extends FieldSection, TError>
-  extends Omit<UseFieldInternalProps<TValue, TSection, TError>, 'format'> {
+export interface BaseFieldProps<TValue, TDate, TSection extends FieldSection, TError>
+  extends Omit<UseFieldInternalProps<TValue, TDate, TSection, TError>, 'format'> {
   className?: string;
   format?: string;
   disabled?: boolean;
