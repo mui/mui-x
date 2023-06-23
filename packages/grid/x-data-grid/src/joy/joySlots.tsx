@@ -363,10 +363,13 @@ const Pagination = React.forwardRef<
       <JoyFormControl orientation="horizontal" size="sm">
         <JoyFormLabel>Rows per page:</JoyFormLabel>
         <JoySelect<number> onChange={handleChangeRowsPerPage} value={pageSize}>
-          {pageSizeOptions.map((option) => {
+          {pageSizeOptions.map((option: number | { label: string; value: number }) => {
             return (
-              <Option value={option} key={option}>
-                {option}
+              <Option
+                value={typeof option !== 'number' && option.value ? option.value : option}
+                key={typeof option !== 'number' && option.label ? option.label : `${option}`}
+              >
+                {typeof option !== 'number' && option.label ? option.label : `${option}`}
               </Option>
             );
           })}
