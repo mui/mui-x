@@ -22,7 +22,7 @@ On the `DataGridPro` component, you can select multiple rows in two ways:
 
 ## Disable row selection on click
 
-You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableRowSelectionOnClick` prop in this case.
+You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` prop in this case.
 
 {{"demo": "DisableClickSelectionGrid.js", "bg": "inline"}}
 
