@@ -11,29 +11,36 @@ These components are significantly more complex than the ones found in the [MUI 
 They feature advanced functionality for data-rich applications and a wide range of other use cases.
 
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
-See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
+See [Licensing](https://mui.com/x/introduction/licensing/) for details.
 
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6293/badge)](https://bestpractices.coreinfrastructure.org/projects/6293)
 
 ## Components
 
-- [Data Grid](https://mui.com/x/react-data-grid/)
-- [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
-- [Charts](https://mui.com/x/react-charts/)
-
-## Installation
+- [Data Grid](#data-grid)
+- [Date and Time Pickers](#date-and-time-pickers)
+- [Charts](#charts)
 
 ### Data Grid
 
-Read the Data Grid [Installation instructions](https://mui.com/x/react-data-grid/getting-started/#installation) in the MUI X docs.
+- [Documentation](https://mui.com/x/react-data-grid/)
+- [Installation instructions](https://mui.com/x/react-data-grid/getting-started/#installation)
+
+![Data Grid)](https://github.com/mui/mui-x/assets/3309670/45a1c935-dda1-48e7-bfaf-ef85c4ca9611)
 
 ### Date and Time Pickers
 
-Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation) in the MUI X docs.
+- [Documentation](https://mui.com/x/react-date-pickers/)
+- [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation)
+
+![Date and Time Pickers](https://github.com/mui/mui-x/assets/3309670/7752bc18-c8f9-48e6-abe0-730289fa2190)
 
 ### Charts
 
-Read the Charts [Installation instructions](https://mui.com/x/react-charts/#getting-started) in the MUI X docs.
+- [Documentation](https://mui.com/x/react-charts/)
+- [Installation instructions](https://mui.com/x/react-charts/#getting-started)
+
+![Charts](https://github.com/mui/mui-x/assets/3309670/8cda11e6-9d5e-4ef2-a35f-2f31d1e1364c)
 
 ## MIT vs. commercial licenses
 
