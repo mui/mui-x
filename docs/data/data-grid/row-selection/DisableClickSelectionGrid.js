@@ -11,7 +11,7 @@ export default function DisableClickSelectionGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid checkboxSelection disableRowSelectionOnClick {...data} />
+      <DataGrid checkboxSelection disableSelectionOnClick {...data} />
     </div>
   );
 }
