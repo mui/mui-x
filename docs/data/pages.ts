@@ -317,40 +317,9 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/migration-group',
-    title: 'Migration',
-    icon: standardNavIcons.BookIcon,
-    children: [
-      {
-        pathname: '/x/migration-v6',
-        subheader: 'Upgrade to v6',
-        children: [
-          { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
-          {
-            pathname: '/x/migration/migration-pickers-v5',
-            title: 'Breaking changes: Date and Time Pickers',
-          },
-        ],
-      },
-      {
-        pathname: '/x/migration-earlier',
-        subheader: 'Earlier versions',
-        children: [
-          {
-            pathname: '/x/migration/migration-pickers-lab',
-            title: 'Migration from lab to v5 (Date and Time Pickers)',
-          },
-          {
-            pathname: '/x/migration/migration-data-grid-v4',
-            title: 'Migration from v4 to v5 (Data Grid)',
-          },
-        ],
-      },
-    ],
-  },
-  {
     pathname: '/x/react-charts-group',
-    title: 'Charts 🧪',
+    title: 'Charts',
+    newFeature: true,
     icon: ChartIcon,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
@@ -400,6 +369,38 @@ const pages: MuiPage[] = [
         pathname: '/x/api/charts-group',
         title: 'API Reference',
         children: [...chartsComponentApi],
+      },
+    ],
+  },
+  {
+    pathname: '/x/migration-group',
+    title: 'Migration',
+    icon: standardNavIcons.BookIcon,
+    children: [
+      {
+        pathname: '/x/migration-v6',
+        subheader: 'Upgrade to v6',
+        children: [
+          { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v5',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
+        ],
+      },
+      {
+        pathname: '/x/migration-earlier',
+        subheader: 'Earlier versions',
+        children: [
+          {
+            pathname: '/x/migration/migration-pickers-lab',
+            title: 'Migration from lab to v5 (Date and Time Pickers)',
+          },
+          {
+            pathname: '/x/migration/migration-data-grid-v4',
+            title: 'Migration from v4 to v5 (Data Grid)',
+          },
+        ],
       },
     ],
   },
