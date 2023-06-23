@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ResizeObserver } from '@juggle/resize-observer';
-import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer/ChartContainer';
 import { MakeOptional } from '../models/helpers';
 
 const useChartDimensions = (

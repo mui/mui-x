@@ -1,6 +1,6 @@
-import { styled, SxProps, Theme } from '@mui/system';
 import * as React from 'react';
-import { useAxisEvents } from './hooks/useAxisEvents';
+import { styled, SxProps, Theme } from '@mui/system';
+import { useAxisEvents } from '../hooks/useAxisEvents';
 
 type ViewBox = {
   x?: number;
