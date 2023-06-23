@@ -6,7 +6,11 @@ export const excludeClearableProps = <TTextFieldSlotProps extends {}>(
 ): UseFieldResponse<TTextFieldSlotProps> =>
   Object.keys(props).reduce((prev, key) => {
     if (key !== 'clearable' && key !== 'onClear') {
-      return { ...prev, [key]: props[key] };
+      return {
+        ...prev,
+        [key as keyof UseFieldResponse<TTextFieldSlotProps>]:
+          props[key as keyof UseFieldResponse<TTextFieldSlotProps>],
+      };
     }
     return prev;
   }, {}) as UseFieldResponse<TTextFieldSlotProps>;

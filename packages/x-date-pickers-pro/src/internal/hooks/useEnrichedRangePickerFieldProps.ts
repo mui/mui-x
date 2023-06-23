@@ -231,7 +231,18 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   /* TODO: remove this when a clearable behavior for multiple input range fields is implemented */
   const unclearableFieldProps = Object.keys(fieldProps).reduce((prev, key) => {
     if (key !== 'clearable' && key !== 'onClear') {
-      return { ...prev, [key]: fieldProps[key] };
+      return {
+        ...prev,
+        [key as keyof BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>]:
+          fieldProps[
+            key as keyof BaseMultiInputFieldProps<
+              DateRange<TDate>,
+              TDate,
+              RangeFieldSection,
+              TError
+            >
+          ],
+      };
     }
     return prev;
   }, {});

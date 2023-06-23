@@ -1,13 +1,14 @@
 import * as React from 'react';
 
 import { useSlotProps } from '@mui/base';
-import ClearIcon from '@mui/icons-material/Clear';
 import IconButton from '@mui/material/IconButton';
+import { SxProps } from '@mui/system';
+import { ClearIcon } from '../../icons';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useField.types';
 import { FieldsTextFieldProps } from '../models';
 
 type UseClearFieldProps<
-  TFieldProps extends FieldsTextFieldProps & { focus?: boolean },
+  TFieldProps extends FieldsTextFieldProps & { focused?: boolean },
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlots extends FieldSlotsComponents,
   TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
@@ -22,7 +23,7 @@ type UseClearFieldProps<
 
 export const useClearField = <
   TFieldProps extends FieldsTextFieldProps & {
-    focus?: boolean;
+    focused?: boolean;
   },
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlotsComponents extends FieldSlotsComponents,
@@ -77,8 +78,8 @@ export const useClearField = <
         },
       },
       ...forwardedFieldProps?.sx,
-    },
-  };
+    } as SxProps,
+  } as TFieldProps;
 
   return { InputProps, fieldProps };
 };
