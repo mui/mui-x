@@ -19,7 +19,10 @@ export type UseMultiInputTimeRangeFieldParams<
 > = UseMultiInputRangeFieldParams<UseMultiInputTimeRangeFieldProps<TDate>, TTextFieldSlotProps>;
 
 export interface UseMultiInputTimeRangeFieldProps<TDate>
-  extends Omit<UseTimeRangeFieldProps<TDate>, 'unstableFieldRef' | 'clearable' | 'onClear'> {
+  extends Omit<
+    UseTimeRangeFieldProps<TDate>,
+    'unstableFieldRef' | 'clearable' | 'onClear' | 'inputHasFocus'
+  > {
   unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
   unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }

@@ -165,7 +165,15 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
-    startDate: excludeClearableProps(startDateResponse),
-    endDate: excludeClearableProps(endDateResponse),
+    startDate: excludeClearableProps<UseFieldResponse<TTextFieldSlotProps>>(startDateResponse, [
+      'clearable',
+      'onClear',
+      'inputHasFocus',
+    ]),
+    endDate: excludeClearableProps<UseFieldResponse<TTextFieldSlotProps>>(endDateResponse, [
+      'clearable',
+      'onClear',
+      'inputHasFocus',
+    ]),
   };
 };

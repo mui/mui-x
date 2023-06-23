@@ -7,14 +7,25 @@ import { ClearIcon } from '../../icons';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useField.types';
 import { FieldsTextFieldProps } from '../models';
 
+const excludeClearableProps = <TProps extends {}>(props: TProps, excludedProps: string[]): TProps =>
+  Object.keys(props).reduce((prev, key) => {
+    if (!excludedProps.includes(key)) {
+      return {
+        ...prev,
+        [key as keyof TProps]: props[key as keyof TProps],
+      };
+    }
+    return prev;
+  }, {}) as TProps;
+
 type UseClearFieldProps<
-  TFieldProps extends FieldsTextFieldProps & { focused?: boolean },
+  TFieldProps extends FieldsTextFieldProps & { inputHasFocus?: boolean },
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlots extends FieldSlotsComponents,
   TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
 > = {
   clearable: boolean;
-  fieldProps?: TFieldProps;
+  fieldProps: TFieldProps;
   InputProps: TInputProps;
   onClear: React.MouseEventHandler<HTMLButtonElement>;
   slots?: { [K in keyof TFieldSlots as Uncapitalize<K & string>]: TFieldSlots[K] };
@@ -23,7 +34,7 @@ type UseClearFieldProps<
 
 export const useClearField = <
   TFieldProps extends FieldsTextFieldProps & {
-    focused?: boolean;
+    inputHasFocus?: boolean;
   },
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlotsComponents extends FieldSlotsComponents,
@@ -63,14 +74,14 @@ export const useClearField = <
   };
 
   const fieldProps = {
-    ...forwardedFieldProps,
+    ...excludeClearableProps<TFieldProps | {}>(forwardedFieldProps, ['inputHasFocus']),
     sx: {
       '& .clearButton': {
         visibility: 'visible',
       },
       '@media (pointer: fine)': {
-        '& .clearButton': {
-          visibility: forwardedFieldProps?.focused ? 'visible' : 'hidden',
+        '&.Mui-focused .clearButton': {
+          visibility: forwardedFieldProps?.inputHasFocus ? 'visible' : 'hidden',
         },
 
         '&:hover .clearButton': {
