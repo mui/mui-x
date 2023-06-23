@@ -953,6 +953,47 @@ describe('<DateField /> - Editing', () => {
       clickOnInput(input, 0);
       expectInputValue(input, 'MM/DD/YYYY');
     });
+
+    it('should reset the input query state on an unfocused field', () => {
+      const { setProps } = render(<DateField />);
+      const input = getTextbox();
+
+      clickOnInput(input, 0);
+
+      fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
+      expectInputValue(input, '01/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
+      expectInputValue(input, '11/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/2/YYYY' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '11/5/YYYY' } }); // Press "5"
+      expectInputValue(input, '11/25/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/25/2' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '11/25/0' } }); // Press "0"
+      expectInputValue(input, '11/25/0020');
+
+      act(() => {
+        input.blur();
+      });
+
+      setProps({ value: adapter.date(new Date(2022, 10, 23)) });
+      expectInputValue(input, '11/23/2022');
+
+      // not using clickOnInput here because it will call `runLast` on the fake timer
+      act(() => {
+        fireEvent.mouseDown(input);
+        fireEvent.mouseUp(input);
+        input.setSelectionRange(6, 9);
+        fireEvent.click(input);
+      });
+
+      fireEvent.change(input, { target: { value: '11/23/2' } }); // Press "2"
+      expectInputValue(input, '11/23/0002');
+      fireEvent.change(input, { target: { value: '11/23/1' } }); // Press "0"
+      expectInputValue(input, '11/23/0021');
+    });
   });
 
   describeAdapters(
