@@ -27,17 +27,21 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.9.0` / `@mui/x-data-grid-pro@v6.9.0` / `@mui/x-data-grid-premium@v6.9.0`
-
-#### Changes
+### `@mui/x-data-grid@v6.9.0`
 
 - [DataGrid] Filtering performance: use unmemoized selectors by default (#9287) @romgrk
 - [DataGrid] Use container dimensions from `getComputedStyle` (#9236) @m4theushw
 - [l10n] Improve Brazilian Portuguese (pt-BR) locale (#9404) @julioAz
 
-### `@mui/x-date-pickers@v6.9.0` / `@mui/x-date-pickers-pro@v6.9.0`
+### `@mui/x-data-grid-pro@v6.9.0`
 
-#### Changes
+Same changes as `@mui/x-data-grid@v6.9.0`
+
+### `@mui/x-data-grid-premium@v6.9.0`
+
+Same changes as `@mui/x-data-grid-pro@v6.9.0`
+
+### `@mui/x-date-pickers@v6.9.0`
 
 - [fields] Ensure `minutesStep` is respected by fields arrows up/down (#9338) @alexfauquette
 - [fields] Reset internal state when `referenceValue` changes (#9390) @adrianmxb
@@ -47,9 +51,11 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [pickers] Reduce date range calendar vertical border width (#9368) @oliviertassinari
 - [pickers] Reset fields internal state when pasting value (#9385) @alexfauquette
 
-### `@mui/x-charts@v6.0.0-alpha.0`
+### `@mui/x-date-pickers-pro@v6.9.0`
 
-#### Changes
+Same changes as `@mui/x-date-pickers@v6.9.0`
+
+### `@mui/x-charts@v6.0.0-alpha.0`
 
 - [charts] Allow to customize colors based on the theme mode (#9006) @alexfauquette
 - [charts] Prepare the charts release (#9361) @alexfauquette
@@ -85,9 +91,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@6.8.0` / `@mui/x-data-grid-pro@6.8.0` / `@mui/x-data-grid-premium@6.8.0`
-
-#### Changes
+### `@mui/x-data-grid@6.8.0`
 
 - [DataGrid] Add missing styles to `overridesResolver` (#9248) @mrmuhammadali
 - [DataGrid] Keep column header menu icon always visible on touch devices (#9076) @cherniavskii
@@ -101,14 +105,24 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Scroll performance improvements (#9037) @romgrk
 - [l10n] Improve Greek (el-GR) locale (#9292) @clytras
 
-### `@mui/x-date-pickers@6.8.0` / `@mui/x-date-pickers-pro@6.8.0`
+### `@mui/x-data-grid-pro@6.8.0`
 
-#### Changes
+Same changes as `@mui/x-data-grid@6.8.0`.
+
+### `@mui/x-data-grid-premium@6.8.0`
+
+Same changes as `@mui/x-data-grid-pro@6.8.0`.
+
+### `@mui/x-date-pickers@6.8.0`
 
 - [l10n] Add Greek (el-GR) locale (#9293) @clytras
 - [pickers] Add a `referenceDate` prop on `DateCalendar`, `MonthCalendar` and `YearCalendar` (#9260) @flaviendelangle
 - [pickers] Close the calendar when a shortcut is selected (#9080) @flaviendelangle
 - [pickers] Fix disabling for digital clock (#9300) @alexfauquette
+
+### `@mui/x-date-pickers-pro@6.8.0`
+
+Same changes as `@mui/x-date-pickers@6.8.0`.
 
 ### Docs
 
@@ -167,9 +181,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.7.0` / `@mui/x-data-grid-pro@v6.7.0` / `@mui/x-data-grid-premium@v6.7.0`
-
-#### Changes
+### `@mui/x-data-grid@v6.7.0`
 
 - [DataGrid] Allow overflowing grid root element (#9179) @cherniavskii
 - [DataGrid] Fix module augmentation error when using `@mui/lab` (#9235) @cherniavskii
@@ -178,19 +190,32 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Improve grouping performance for large datasets (#9200) @romgrk
 - [DataGrid] Increase threshold to trigger memory leak warning (#9263) @m4theushw
 - [DataGrid] Update data grid migration guide to include updated type (#9272) @MBilalShafi
-- [DataGridPro] Improve header filter menu visuals (#9181) @MBilalShafi
-- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
 - [l10n] Improve Czech (cs-CZ) locale (#9266) @MartinSkarpa
 - [l10n] Improve German (de-DE) locale (#9259) @ximex
 - [l10n] Improve Turkish (tr-TR) locale (#9237) @MCErtan
 
-### `@mui/x-date-pickers@v6.7.0` / `@mui/x-date-pickers-pro@v6.7.0`
+### `@mui/x-data-grid-pro@v6.7.0`
 
-#### Changes
+Same changes as in `@mui/x-data-grid@v6.7.0`, plus:
+
+- [DataGridPro] Improve header filter menu visuals (#9181) @MBilalShafi
+
+### `@mui/x-data-grid-premium@v6.7.0`
+
+Same changes as in `@mui/x-data-grid-pro@v6.7.0`, plus:
+
+- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
+
+### `@mui/x-date-pickers@v6.7.0`
 
 - [l10n] Add Romanian (ro-RO) locale (#9257) @ximex
 - [l10n] Improve German (de-DE) locale (#9258) @ximex
 - [pickers] Apply dynamic default format depending on views for all desktop and mobile pickers (#9126) @flaviendelangle
+
+### `@mui/x-date-pickers-pro@v6.7.0`
+
+Same changes as in `@mui/x-date-pickers@v6.7.0`, plus:
+
 - [pickers] Update `DateRangePickerDay` props JSDoc (#9191) @stevus
 
 ### Docs
