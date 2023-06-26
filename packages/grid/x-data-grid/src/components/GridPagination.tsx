@@ -96,9 +96,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       }
     }
 
-    const pageSizeOptions = isPageSizeOptionsIncludesPageSize(
-      rootProps.paginationModel?.pageSize ?? paginationModel.pageSize,
-    )
+    const pageSizeOptions = isPageSizeOptionsIncludesPageSize(paginationModel.pageSize)
       ? rootProps.pageSizeOptions
       : [];
 
