@@ -44,3 +44,4 @@ jobs:
           comment-id: ${{ steps.findComment.outputs.comment-id }}
           body: |
             Thank you for verifying your support key 🔑, your SLA starts now.
+          edit-mode: replace
