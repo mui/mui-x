@@ -14,7 +14,8 @@ export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFi
 export type UseSingleInputDateRangeFieldDefaultizedProps<
   TDate,
   AdditionalProps extends {},
-> = UseDateRangeFieldDefaultizedProps<TDate> & AdditionalProps;
+> = UseDateRangeFieldDefaultizedProps<TDate> &
+  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;
 
 export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,

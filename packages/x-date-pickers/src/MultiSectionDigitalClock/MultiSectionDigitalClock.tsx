@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
-import useControlled from '@mui/utils/useControlled';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
@@ -20,6 +19,8 @@ import {
 import { getHourSectionOptions, getTimeSectionOptions } from './MultiSectionDigitalClock.utils';
 import { TimeStepOptions, TimeView } from '../models';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -48,9 +49,7 @@ type MultiSectionDigitalClockComponent = (<TDate>(
 export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
   TDate extends unknown,
 >(inProps: MultiSectionDigitalClockProps<TDate>, ref: React.Ref<HTMLDivElement>) {
-  const now = useNow<TDate>();
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText<TDate>();
 
   const props = useThemeProps({
     props: inProps,
@@ -86,8 +85,26 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     disabled,
     readOnly,
     skipDisabled = false,
+    timezone: timezoneProp,
     ...other
   } = props;
+
+  const {
+    value,
+    handleValueChange: handleRawValueChange,
+    timezone,
+  } = useControlledValueWithTimezone({
+    name: 'MultiSectionDigitalClock',
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: singleItemValueManager,
+  });
+
+  const localeText = useLocaleText<TDate>();
+  const now = useNow<TDate>(timezone);
+
   const timeSteps = React.useMemo<Required<TimeStepOptions>>(
     () => ({
       hours: 1,
@@ -98,22 +115,12 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
     [inTimeSteps],
   );
 
-  const [value, setValue] = useControlled({
-    name: 'MultiSectionDigitalClock',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
-  });
-
   const handleValueChange = useEventCallback(
     (
       newValue: TDate | null,
       selectionState?: PickerSelectionState,
       selectedView?: TimeViewWithMeridiem,
-    ) => {
-      setValue(newValue);
-      onChange?.(newValue, selectionState, selectedView);
-    },
+    ) => handleRawValueChange(newValue, selectionState, selectedView),
   );
 
   const views = React.useMemo<readonly TimeViewWithMeridiem[]>(() => {
@@ -561,6 +568,14 @@ MultiSectionDigitalClock.propTypes = {
     minutes: PropTypes.number,
     seconds: PropTypes.number,
   }),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

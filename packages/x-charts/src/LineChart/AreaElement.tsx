@@ -57,7 +57,10 @@ const AreaElementPath = styled('path', {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: AreaElementOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
-  fill: d3Color(ownerState.color)!.brighter(1).formatHex(),
+  fill: ownerState.isHighlighted
+    ? d3Color(ownerState.color)!.brighter(1).formatHex()
+    : d3Color(ownerState.color)!.brighter(0.5).formatHex(),
+  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 

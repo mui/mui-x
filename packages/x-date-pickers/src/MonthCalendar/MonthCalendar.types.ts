@@ -2,6 +2,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { MonthCalendarClasses } from './monthCalendarClasses';
 import { BaseDateValidationProps, MonthValidationProps } from '../internals/models/validation';
+import { TimezoneProps } from '../models';
 
 export interface ExportedMonthCalendarProps {
   /**
@@ -13,7 +14,8 @@ export interface ExportedMonthCalendarProps {
 export interface MonthCalendarProps<TDate>
   extends ExportedMonthCalendarProps,
     MonthValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
+    BaseDateValidationProps<TDate>,
+    TimezoneProps {
   autoFocus?: boolean;
   /**
    * className applied to the root element.
@@ -47,7 +49,7 @@ export interface MonthCalendarProps<TDate>
   /**
    * Callback fired when the value changes.
    * @template TDate
-   * @param {TDate | null} value The new value.
+   * @param {TDate} value The new value.
    */
   onChange?: (value: TDate) => void;
   /** If `true` picker is readonly */

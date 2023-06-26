@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useTimeField as useTimeField,
@@ -13,9 +12,9 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   UseFieldResponse,
+  useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
 import { TimeValidationError } from '@mui/x-date-pickers/models';
-import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import {
   validateTimeRange,
@@ -68,17 +67,19 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     defaultValue,
     format,
     shouldRespectLeadingZeros,
+    timezone: timezoneProp,
     onChange,
     disabled,
     readOnly,
   } = sharedProps;
 
-  const firstDefaultValue = React.useRef(defaultValue);
-  const [value, setValue] = useControlled<DateRange<TDate>>({
-    name: 'useMultiInputTimeRangeField',
-    state: 'value',
-    controlled: valueProp,
-    default: firstDefaultValue.current ?? rangeValueManager.emptyValue,
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+    name: 'useMultiInputDateRangeField',
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: rangeValueManager,
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
@@ -89,18 +90,16 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
       const newDateRange: DateRange<TDate> =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
-      setValue(newDateRange);
-
       const context: FieldChangeHandlerContext<TimeRangeValidationError> = {
         ...rawContext,
         validationError: validateTimeRange({
           adapter,
           value: newDateRange,
-          props: sharedProps,
+          props: { ...sharedProps, timezone },
         }),
       };
 
-      onChange?.(newDateRange, context);
+      handleValueChange(newDateRange, context);
     };
   };
 
@@ -113,7 +112,7 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     TimeRangeValidationError,
     TimeRangeComponentValidationProps
   >(
-    { ...sharedProps, value },
+    { ...sharedProps, value, timezone },
     validateTimeRange,
     rangeValueManager.isSameError,
     rangeValueManager.defaultErrorState,
@@ -129,6 +128,7 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     shouldRespectLeadingZeros,
     disabled,
     readOnly,
+    timezone,
     unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
@@ -145,6 +145,7 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldSlotProps extends {
     shouldRespectLeadingZeros,
     disabled,
     readOnly,
+    timezone,
     unstableFieldRef: unstableEndFieldRef,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],

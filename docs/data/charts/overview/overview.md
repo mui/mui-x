@@ -11,13 +11,13 @@ title: Charts - Overview
 
 ## Overview
 
-The `@mui-x/chars` is an MIT library to render charts.
+The `@mui/x-charts` is an MIT library to render charts.
 It relies on D3.js for data manipulation and SVG for rendering.
 
 Like other MUI X components, charts are built to be production-ready components with nice integration into your application for common use cases.
 They also provide a high level of customization.
 
-To achieve this goal, the `@mui-x/chars` relies on three levels of customization:
+To achieve this goal, the `@mui/x-charts` relies on three levels of customization:
 _single components_ with nice default, extensive _configuration props_, and subcomponents for _composition_.
 
 To modify the styling of charts you can rely on all the MUI styling tools, such as the theme override, or the `sx` props.

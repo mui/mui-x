@@ -79,6 +79,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   autoFocus,
   fixedWeekNumber,
   displayWeekNumber,
+  timezone,
   disableIgnoringDatePartForTimeValidation,
   timeSteps,
   skipDisabled,
@@ -130,6 +131,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           autoFocus={autoFocus}
           fixedWeekNumber={fixedWeekNumber}
           displayWeekNumber={displayWeekNumber}
+          timezone={timezone}
         />
         {timeViewsCount > 0 && (
           <React.Fragment>
@@ -171,6 +173,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
               disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
               timeSteps={timeSteps}
               skipDisabled={skipDisabled}
+              timezone={timezone}
             />
           </React.Fragment>
         )}

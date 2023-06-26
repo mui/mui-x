@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { color as d3Color } from 'd3-color';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
@@ -55,10 +56,13 @@ const LineElementPath = styled('path', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: LineElementOwnerState }>(({ ownerState }) => ({
-  stroke: ownerState.color,
   strokeWidth: 2,
   strokeLinejoin: 'round',
   fill: 'none',
+  stroke: ownerState.isHighlighted
+    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
+    : ownerState.color,
+  transition: 'opacity 0.2s ease-in, stroke 0.2s ease-in',
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
