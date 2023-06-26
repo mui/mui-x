@@ -58,6 +58,23 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       [apiRef],
     );
 
+    const isPageSizeOptionsIncludesPageSize = (pageSize: number) => {
+      let includesPageSize = false;
+      rootProps.pageSizeOptions.map((option) => {
+        if (typeof option === 'number') {
+          if (option === pageSize) {
+            includesPageSize = true;
+          }
+          return undefined;
+        }
+        if (option.value === pageSize) {
+          includesPageSize = true;
+        }
+        return undefined;
+      });
+      return includesPageSize;
+    };
+
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const warnedOnceMissingInPageSizeOptions = React.useRef(false);
@@ -66,7 +83,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       if (
         !warnedOnceMissingInPageSizeOptions.current &&
         !rootProps.autoPageSize &&
-        !rootProps.pageSizeOptions.includes(pageSize)
+        !isPageSizeOptionsIncludesPageSize(pageSize)
       ) {
         console.warn(
           [
