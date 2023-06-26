@@ -116,7 +116,6 @@ export default function LinkedFieldsCellEditing() {
     setRows((prevRows) =>
       prevRows.map((row) => (row.id === editingRow.current?.id ? newRow : row)),
     );
-
     return newRow;
   };
 
