@@ -327,6 +327,26 @@ describe('<DataGrid /> - Pagination', () => {
       ]);
     });
 
+    it('should not display a warning if the prop pageSize is in the prop pageSizeOptions when it is an array of objects', () => {
+      const pageSize = 10;
+
+      expect(() => {
+        render(
+          <BaselineTestCase
+            paginationModel={{ pageSize, page: 0 }}
+            pageSizeOptions={[
+              { label: '10', value: 10 },
+              { label: '20', value: 20 },
+              { label: '30', value: 30 },
+            ]}
+          />,
+        );
+      }).not.toWarnDev([
+        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+      ]);
+    });
+
     it('should display a warning if the prop pageSize is not in the default pageSizeOptions', () => {
       const pageSize = 12;
 
