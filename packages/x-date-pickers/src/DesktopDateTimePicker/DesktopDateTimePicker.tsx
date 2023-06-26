@@ -93,7 +93,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
         ampmInClock,
         toolbarVariant: shouldUseNewRenderer ? 'desktop' : 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
-      },
+      } as any,
       tabs: {
         hidden: true,
         ...defaultizedProps.slotProps?.tabs,
