@@ -704,6 +704,7 @@ describe('<DataGridPro /> - Tree Data', () => {
   });
 
   describe('regressions', () => {
+    // See https://github.com/mui/mui-x/issues/9402
     it('should not fail with checkboxSelection', () => {
       const initialRows = rowsWithoutGap;
       const { setProps } = render(<Test checkboxSelection rows={initialRows} />);
