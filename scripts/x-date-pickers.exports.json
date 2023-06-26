@@ -9,6 +9,7 @@
   { "name": "beBY", "kind": "Variable" },
   { "name": "caES", "kind": "Variable" },
   { "name": "CalendarIcon", "kind": "Variable" },
+  { "name": "ClearIcon", "kind": "Variable" },
   { "name": "clockClasses", "kind": "Variable" },
   { "name": "ClockClasses", "kind": "Interface" },
   { "name": "ClockClassKey", "kind": "TypeAlias" },
