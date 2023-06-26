@@ -543,7 +543,7 @@ DataGridRaw.propTypes = {
         label: PropTypes.string.isRequired,
         value: PropTypes.number.isRequired,
       }),
-    ]),
+    ]).isRequired,
   ),
   pagination: (props: any) => {
     if (props.pagination === false) {

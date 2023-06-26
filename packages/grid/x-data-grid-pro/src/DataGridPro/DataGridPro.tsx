@@ -715,7 +715,7 @@ DataGridProRaw.propTypes = {
         label: PropTypes.string.isRequired,
         value: PropTypes.number.isRequired,
       }),
-    ]),
+    ]).isRequired,
   ),
   /**
    * If `true`, pagination is enabled.
