@@ -51,7 +51,7 @@ DatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -70,7 +70,7 @@ DatePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -124,6 +124,12 @@ DatePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -250,7 +256,7 @@ DatePicker.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -310,7 +316,7 @@ DatePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -322,6 +328,14 @@ DatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

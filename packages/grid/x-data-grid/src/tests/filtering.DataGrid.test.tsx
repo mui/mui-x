@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -12,6 +11,7 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -207,7 +207,7 @@ describe('<DataGrid /> - Filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
       clock.runToLast();
@@ -1106,8 +1106,59 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('filter button tooltip', () => {
+    it('should display `falsy` value', () => {
+      const { setProps } = render(
+        <DataGrid
+          filterModel={{
+            items: [{ id: 0, field: 'isAdmin', operator: 'is', value: false }],
+          }}
+          autoHeight
+          rows={[
+            {
+              id: 0,
+              isAdmin: false,
+              level: 0,
+            },
+          ]}
+          columns={[
+            {
+              field: 'isAdmin',
+              type: 'singleSelect',
+              valueOptions: [
+                {
+                  value: false,
+                  label: false,
+                },
+              ],
+            },
+            {
+              field: 'level',
+              type: 'number',
+            },
+          ]}
+          components={{ Toolbar: GridToolbarFilterButton }}
+        />,
+      );
+
+      const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
+
+      const tooltip = screen.getByRole('tooltip');
+
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('false');
+
+      setProps({ filterModel: { items: [{ id: 0, field: 'level', operator: '=', value: 0 }] } });
+      expect(tooltip.textContent).to.contain('0');
+    });
+  });
+
   describe('custom `filterOperators`', () => {
-    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+    it('should allow to customize filter tooltip using `filterOperator.getValueAsString`', () => {
       render(
         <div style={{ width: '100%', height: '400px' }}>
           <DataGrid
@@ -1155,7 +1206,7 @@ describe('<DataGrid /> - Filter', () => {
         </div>,
       );
 
-      const filterButton = document.querySelector('button[aria-label="Show filters"]');
+      const filterButton = document.querySelector('button[aria-label="Show filters"]')!;
       expect(screen.queryByRole('tooltip')).to.equal(null);
 
       fireEvent.mouseOver(filterButton);
@@ -1197,5 +1248,77 @@ describe('<DataGrid /> - Filter', () => {
         </div>
       );
     }).not.to.throw();
+  });
+
+  it('should update the filter model on columns change', () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({ columns: [{ field: 'id' }] });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
+  });
+
+  // See https://github.com/mui/mui-x/issues/9204
+  it('should not clear the filter model when both columns and filterModel change', async () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({
+      columns: [{ field: 'id' }],
+      filterModel: {
+        items: [{ field: 'id', operator: 'equals', value: '1' }],
+      },
+    });
+    expect(getColumnValues(0)).to.deep.equal(['1']);
+    expect(onFilterModelChange.callCount).to.equal(0);
   });
 });

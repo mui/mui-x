@@ -47,6 +47,7 @@ const deDEGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
+  filterPanelRemoveAll: 'Alle entfernen',
   filterPanelDeleteIconLabel: 'Löschen',
   filterPanelLogicOperator: 'Logische Operatoren',
   filterPanelOperator: 'Operatoren',
@@ -70,6 +71,33 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
   filterOperatorIsAnyOf: 'ist einer der Werte',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Enthält',
+  headerFilterOperatorEquals: 'Gleich',
+  headerFilterOperatorStartsWith: 'Beginnt mit',
+  headerFilterOperatorEndsWith: 'Endet mit',
+  headerFilterOperatorIs: 'Ist',
+  headerFilterOperatorNot: 'Ist nicht',
+  headerFilterOperatorAfter: 'Ist nach',
+  headerFilterOperatorOnOrAfter: 'Ist am oder nach',
+  headerFilterOperatorBefore: 'Ist vor',
+  headerFilterOperatorOnOrBefore: 'Ist am oder vor',
+  headerFilterOperatorIsEmpty: 'Ist leer',
+  headerFilterOperatorIsNotEmpty: 'Ist nicht leer',
+  headerFilterOperatorIsAnyOf: 'Ist eines von',
+  'headerFilterOperator=': 'Gleich',
+  'headerFilterOperator!=': 'Ungleich',
+  'headerFilterOperator>': 'Größer als',
+  'headerFilterOperator>=': 'Größer als oder gleich',
+  'headerFilterOperator<': 'Kleiner als',
+  'headerFilterOperator<=': 'Kleiner als oder gleich',
 
   // Filter values text
   filterValueAny: 'Beliebig',
@@ -79,7 +107,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Zeige alle Spalten',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Spalten verwalten',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Sortierung deaktivieren',

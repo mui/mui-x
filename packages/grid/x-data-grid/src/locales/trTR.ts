@@ -46,6 +46,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
+  filterPanelRemoveAll: 'Hepsini kaldır',
   filterPanelDeleteIconLabel: 'Kaldır',
   filterPanelLogicOperator: 'Mantıksal operatörler',
   filterPanelOperator: 'Operatör',
@@ -69,6 +70,33 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'boş',
   filterOperatorIsNotEmpty: 'dolu',
   filterOperatorIsAnyOf: 'herhangi biri',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
+
+  // Header filter operators text
+  headerFilterOperatorContains: 'Şunu içerir',
+  headerFilterOperatorEquals: 'Şuna eşittir',
+  headerFilterOperatorStartsWith: 'Şununla başlar',
+  headerFilterOperatorEndsWith: 'Şununla biter',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'herhangi',
@@ -78,10 +106,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Sütunları göster',
-  // columnMenuManageColumns: 'Manage columns',
-  columnMenuFilter: 'Filtre uygula',
+  columnMenuManageColumns: 'Sütunları yönet',
+  columnMenuFilter: 'Filtre Ekle',
   columnMenuHideColumn: 'Gizle',
-  columnMenuUnsort: 'Sıralama',
+  columnMenuUnsort: 'Varsayılan Sıralama',
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',
 

@@ -20,10 +20,6 @@ Using your favorite package manager, install:
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
 
-:::warning
-Note we're using the `next` tag to download the latest v6 **beta** version.
-:::
-
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
 :::info
@@ -44,22 +40,33 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) >= 17.0.2 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.2 are peer dependencies.
+Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
 
-MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
+```
+
+### Style engine
+
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
 ```sh
 // with npm
-npm install @mui/material @mui/styled-engine-sc styled-components
+npm install @mui/styled-engine-sc styled-components
 
 // with yarn
-yarn add @mui/material @mui/styled-engine-sc styled-components
+yarn add @mui/styled-engine-sc styled-components
 ```
 
-## Code setup
+Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
+
+## Setup your date library adapter
 
 Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
-This component receives your chosen date library's adapter and makes it accessible to all the Date and Time Pickers component using React context.
+This component receives your chosen [date library's adapter](https://mui.com/x/react-date-pickers/#date-library) (the doc uses `AdapterDayjs` which is based on [dayjs](https://day.js.org/)) and makes it accessible to all the Date and Time Pickers component using React context.
 
 Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
 This is **not** a pattern to reproduce.

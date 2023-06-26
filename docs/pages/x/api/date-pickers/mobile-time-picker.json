@@ -1,7 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "ampmInClock": { "type": { "name": "bool" } },
+    "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
@@ -27,6 +27,10 @@
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
+    "formatDensity": {
+      "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
+      "default": "\"dense\""
+    },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
@@ -72,6 +76,10 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
     "value": { "type": { "name": "any" } },
     "view": {
       "type": {
@@ -90,22 +98,24 @@
     }
   },
   "slots": {
-    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
-    "Field": { "type": { "name": "elementType" } },
-    "Layout": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
-    "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
-    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
+    "field": { "type": { "name": "elementType" } },
+    "layout": { "type": { "name": "elementType" } },
+    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "mobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "mobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
+    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
+    "toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileTimePicker" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileTimePicker/MobileTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",

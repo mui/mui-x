@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -40,13 +39,6 @@ function ActionList(props) {
   );
 }
 
-ActionList.propTypes = {
-  onAccept: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSetToday: PropTypes.func.isRequired,
-};
-
 function RestaurantHeader() {
   return (
     <Box
@@ -72,6 +64,7 @@ function CustomLayout(props) {
     <PickersLayoutRoot
       ownerState={props}
       sx={{
+        overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,

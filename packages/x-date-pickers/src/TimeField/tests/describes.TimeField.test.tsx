@@ -1,18 +1,17 @@
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
-  buildFieldInteractions,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({ clock });
 
   describeValidation(TimeField, () => ({
     render,
@@ -29,22 +28,19 @@ describe('<TimeField /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'fullTime12h' : 'fullTime24h',
-        );
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+        : '';
+      expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value) => {
+    setNewValue: (value, { selectSection }) => {
       const newValue = adapterToUse.addHours(value, 1);
-
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1); // Update the hour
+      selectSection('hours');
+      const input = getTextbox();
       userEvent.keyPress(input, { key: 'ArrowUp' });
 
       return newValue;

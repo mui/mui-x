@@ -47,6 +47,7 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'ختم کریں',
   filterPanelLogicOperator: 'لاجک آپریٹر',
   filterPanelOperator: 'آپریٹر',
@@ -70,6 +71,33 @@ const urPKGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'خالی ہے',
   filterOperatorIsNotEmpty: 'خالی نہیں ہے',
   filterOperatorIsAnyOf: 'ان میں سے کوئی ہے',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'کوئی بھی',
@@ -141,12 +169,12 @@ const urPKGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
 
   // Aggregation
-  aggregationMenuItemHeader: 'Aggregation',
-  aggregationFunctionLabelSum: 'sum',
-  aggregationFunctionLabelAvg: 'avg',
-  aggregationFunctionLabelMin: 'min',
-  aggregationFunctionLabelMax: 'max',
-  aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'ایگریگیشن',
+  aggregationFunctionLabelSum: 'کل',
+  aggregationFunctionLabelAvg: 'اوسط',
+  aggregationFunctionLabelMin: 'کم از کم',
+  aggregationFunctionLabelMax: 'زیادہ سے زیادہ',
+  aggregationFunctionLabelSize: 'سائز',
 };
 
 export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);

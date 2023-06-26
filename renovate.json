@@ -19,10 +19,6 @@
       "matchPackagePatterns": "@babel/*"
     },
     {
-      "groupName": "date-io",
-      "matchPackagePatterns": "@date-io/*"
-    },
-    {
       "groupName": "Emotion",
       "matchPackagePatterns": "@emotion/*"
     },
@@ -46,8 +42,17 @@
       "matchPackageNames": ["react", "react-dom", "react-is", "react-test-renderer"]
     },
     {
+      "groupName": "React router",
+      "matchPackageNames": ["react-router", "react-router-dom"]
+    },
+    {
       "groupName": "typescript-eslint",
       "matchPackagePatterns": "@typescript-eslint/*"
+    },
+    {
+      "groupName": "@types/node",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "< 19.0.0"
     },
     {
       "groupName": "bundling fixtures",
@@ -80,6 +85,7 @@
         "@mui/joy",
         "@mui/icons-material",
         "@mui/base",
+        "@mui/styles",
         "@mui/system",
         "@mui/utils"
       ]

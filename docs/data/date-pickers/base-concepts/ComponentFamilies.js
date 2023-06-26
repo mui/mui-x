@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -26,10 +25,6 @@ function ProLabel({ children }) {
   );
 }
 
-ProLabel.propTypes = {
-  children: PropTypes.node,
-};
-
 export default function ComponentFamilies() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -44,20 +39,20 @@ export default function ComponentFamilies() {
         ]}
       >
         <DemoItem label="Date">
-          <DateField defaultValue={dayjs('2022-04-07')} />
+          <DateField defaultValue={dayjs('2022-04-17')} />
         </DemoItem>
         <DemoItem label="Time">
-          <TimeField defaultValue={dayjs('2022-04-07T15:30')} />
+          <TimeField defaultValue={dayjs('2022-04-17T15:30')} />
         </DemoItem>
         <DemoItem label="Date Time">
-          <DateTimeField defaultValue={dayjs('2022-04-07T15:30')} />
+          <DateTimeField defaultValue={dayjs('2022-04-17T15:30')} />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Range</ProLabel>}
           component="MultiInputDateRangeField"
         >
           <MultiInputDateRangeField
-            defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+            defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
           />
         </DemoItem>
         <DemoItem
@@ -65,7 +60,7 @@ export default function ComponentFamilies() {
           component="MultiInputTimeRangeField"
         >
           <MultiInputTimeRangeField
-            defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
+            defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-17T18:30')]}
           />
         </DemoItem>
         <DemoItem
@@ -73,7 +68,7 @@ export default function ComponentFamilies() {
           component="MultiInputDateTimeRangeField"
         >
           <MultiInputDateTimeRangeField
-            defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-10T18:30')]}
+            defaultValue={[dayjs('2022-04-17T15:30'), dayjs('2022-04-21T18:30')]}
           />
         </DemoItem>
       </DemoContainer>

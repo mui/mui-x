@@ -3,6 +3,7 @@ import {
   DesktopDateTimePickerSlotsComponent,
   DesktopDateTimePickerSlotsComponentsProps,
 } from '../DesktopDateTimePicker';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileDateTimePickerProps,
@@ -12,15 +13,15 @@ import {
 
 export interface DateTimePickerSlotsComponents<TDate>
   extends DesktopDateTimePickerSlotsComponent<TDate>,
-    MobileDateTimePickerSlotsComponent<TDate> {}
+    MobileDateTimePickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem> {}
 
 export interface DateTimePickerSlotsComponentsProps<TDate>
   extends DesktopDateTimePickerSlotsComponentsProps<TDate>,
-    MobileDateTimePickerSlotsComponentsProps<TDate> {}
+    MobileDateTimePickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem> {}
 
 export interface DateTimePickerProps<TDate>
   extends DesktopDateTimePickerProps<TDate>,
-    MobileDateTimePickerProps<TDate> {
+    Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -33,7 +34,7 @@ export interface DateTimePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -45,7 +46,7 @@ export interface DateTimePickerProps<TDate>
    */
   componentsProps?: DateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DateTimePickerSlotsComponents<TDate>>;

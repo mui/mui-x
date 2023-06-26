@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'ساعت ها',
+  minutes: 'دقیقه ها',
+  seconds: 'ثانیه ها',
+  meridiem: 'بعد از ظهر',
+};
 
 const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -32,7 +40,7 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
+    ` را انتخاب کنید ${timeViews[view]}. ${
       time === null
         ? 'هیچ ساعتی انتخاب نشده است'
         : `ساعت انتخاب ${adapter.format(time, 'fullTime')} می باشد`
@@ -41,11 +49,14 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} دقیقه ها`,
   secondsClockNumberText: (seconds) => `${seconds} ثانیه ها`,
 
+  // Digital clock labels
+  selectViewText: (view) => ` را انتخاب کنید ${timeViews[view]}`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'عدد هفته',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `هفته ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -62,14 +73,14 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'انتخاب ساعت',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  fieldWeekDayPlaceholder: (params) => (params.contentType === 'letter' ? 'EEEE' : 'EE'),
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const faIR = getPickersLocalization(faIRPickers);

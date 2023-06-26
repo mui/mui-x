@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import IconButton from '@mui/material/IconButton';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -48,21 +47,27 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
 
   return (
     <div className={classes.root}>
-      <IconButton
-        ref={iconButtonRef}
-        tabIndex={-1}
-        className={classes.button}
-        aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+      <rootProps.slots.baseTooltip
         title={apiRef.current.getLocaleText('columnMenuLabel')}
-        size="small"
-        onClick={handleMenuIconClick}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        aria-controls={columnMenuId}
-        id={columnMenuButtonId}
+        enterDelay={1000}
+        {...rootProps.slotProps?.baseTooltip}
       >
-        <rootProps.components.ColumnMenuIcon fontSize="small" />
-      </IconButton>
+        <rootProps.slots.baseIconButton
+          ref={iconButtonRef}
+          tabIndex={-1}
+          className={classes.button}
+          aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
+          size="small"
+          onClick={handleMenuIconClick}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? columnMenuId : undefined}
+          id={columnMenuButtonId}
+          {...rootProps.slotProps?.baseIconButton}
+        >
+          <rootProps.slots.columnMenuIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
+      </rootProps.slots.baseTooltip>
     </div>
   );
 });

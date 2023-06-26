@@ -9,40 +9,47 @@ import {
   BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { DateOrTimeView } from '../internals/models/views';
+import { DateOrTimeView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
 
-export interface MobileDateTimePickerSlotsComponent<TDate>
-  extends BaseDateTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate, DateOrTimeView>, 'Field'> {}
+export interface MobileDateTimePickerSlotsComponent<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
+> extends BaseDateTimePickerSlotsComponent<TDate>,
+    MakeOptional<UseMobilePickerSlotsComponent<TDate, TView>, 'Field'> {}
 
-export interface MobileDateTimePickerSlotsComponentsProps<TDate>
-  extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    ExportedUseMobilePickerSlotsComponentsProps<TDate, DateOrTimeView> {}
+export interface MobileDateTimePickerSlotsComponentsProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
+> extends BaseDateTimePickerSlotsComponentsProps<TDate>,
+    ExportedUseMobilePickerSlotsComponentsProps<TDate, TView> {}
 
-export interface MobileDateTimePickerProps<TDate>
-  extends BaseDateTimePickerProps<TDate>,
+export interface MobileDateTimePickerProps<
+  TDate,
+  TView extends DateOrTimeViewWithMeridiem = DateOrTimeView,
+> extends BaseDateTimePickerProps<TDate, TView>,
     MobileOnlyPickerProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
-  components?: MobileDateTimePickerSlotsComponent<TDate>;
+  components?: MobileDateTimePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    * @deprecated Please use `slotProps`.
    */
-  componentsProps?: MobileDateTimePickerSlotsComponentsProps<TDate>;
+  componentsProps?: MobileDateTimePickerSlotsComponentsProps<TDate, TView>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MobileDateTimePickerSlotsComponent<TDate>>;
+  slots?: UncapitalizeObjectKeys<MobileDateTimePickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: MobileDateTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: MobileDateTimePickerSlotsComponentsProps<TDate, TView>;
 }

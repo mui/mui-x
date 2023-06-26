@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
+import { Store } from '../../utils/Store';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
@@ -36,7 +37,12 @@ export interface GridCoreApi {
    * Unique identifier for each component instance in a page.
    * @ignore - do not document.
    */
-  instanceId: number;
+  instanceId: { id: number };
+  /**
+   * The pub/sub store containing a reference to the public state.
+   * @ignore - do not document.
+   */
+  store: Store<GridApiCommon['state']>;
 }
 
 export interface GridCorePrivateApi<
@@ -60,6 +66,10 @@ export interface GridCorePrivateApi<
    * The React ref of the grid virtual scroller container element.
    */
   virtualScrollerRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid main container div element.
+   */
+  mainElementRef?: React.RefObject<HTMLDivElement>;
   register: <
     V extends 'public' | 'private',
     T extends V extends 'public'
@@ -81,6 +91,10 @@ export interface GridCorePrivateApi<
    * The React ref of the grid column container virtualized div element.
    */
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The React ref of the grid header filter row element.
+   */
+  headerFiltersElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The React ref of the grid column headers container element.
    */

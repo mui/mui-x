@@ -2,17 +2,36 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
-import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps &
-  TextFieldProps & { type?: 'date' | 'datetime-local' };
+  TextFieldProps & {
+    type?: 'date' | 'datetime-local';
+    clearButton?: React.ReactNode | null;
+    /**
+     * It is `true` if the filter either has a value or an operator with no value
+     * required is selected (e.g. `isEmpty`)
+     */
+    isFilterActive?: boolean;
+  };
 
 export const SUBMIT_FILTER_DATE_STROKE_TIME = 500;
 
 function GridFilterInputDate(props: GridFilterInputDateProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, InputProps, ...other } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    InputProps,
+    isFilterActive,
+    clearButton,
+    tabIndex,
+    disabled,
+    ...other
+  } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
@@ -47,7 +66,8 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   }, [item.value]);
 
   return (
-    <rootProps.components.BaseTextField
+    <rootProps.slots.baseTextField
+      fullWidth
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -60,15 +80,25 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       }}
       inputRef={focusElementRef}
       InputProps={{
-        ...(applying ? { endAdornment: <GridLoadIcon /> } : {}),
+        ...(applying || clearButton
+          ? {
+              endAdornment: applying ? (
+                <rootProps.slots.loadIcon fontSize="small" color="action" />
+              ) : (
+                clearButton
+              ),
+            }
+          : {}),
+        disabled,
         ...InputProps,
         inputProps: {
           max: type === 'datetime-local' ? '9999-12-31T23:59' : '9999-12-31',
+          tabIndex,
           ...InputProps?.inputProps,
         },
       }}
       {...other}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotProps?.baseTextField}
     />
   );
 }
@@ -82,10 +112,16 @@ GridFilterInputDate.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   applyValue: PropTypes.func.isRequired,
+  clearButton: PropTypes.node,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * It is `true` if the filter either has a value or an operator with no value
+   * required is selected (e.g. `isEmpty`)
+   */
+  isFilterActive: PropTypes.bool,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

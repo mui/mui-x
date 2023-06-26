@@ -22,7 +22,7 @@ export interface StaticDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
     MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -34,7 +34,7 @@ export interface StaticDateRangePickerProps<TDate>
    */
   componentsProps?: StaticDateRangePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<StaticDateRangePickerSlotsComponent<TDate>>;

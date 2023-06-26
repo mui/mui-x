@@ -132,6 +132,7 @@ async function main(argv) {
   // Dispatch commits in different sections
   const dataGridCommits = [];
   const pickersCommits = [];
+  const chartsCommits = [];
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -154,6 +155,9 @@ async function main(argv) {
       case 'pickers':
       case 'fields':
         pickersCommits.push(commitItem);
+        break;
+      case 'charts':
+        chartsCommits.push(commitItem);
         break;
       case 'docs':
         docsCommits.push(commitItem);
@@ -214,6 +218,9 @@ ${logChangelogSection(dataGridCommits, '#### Changes')}
 
 ### \`@mui/x-date-pickers@v__VERSION__\` / \`@mui/x-date-pickers-pro@v__VERSION__\`
 ${logChangelogSection(pickersCommits, '#### Changes')}
+
+### \`@mui/x-charts@v__CHARTS_VERSION__\`
+${logChangelogSection(chartsCommits, '#### Changes')}
 ${logChangelogSection(
   codemodCommits,
   `### \`@mui/x-codemod@v__VERSION__\`
@@ -249,7 +256,7 @@ yargs(process.argv.slice(2))
         })
         .option('release', {
           // #default-branch-switch
-          default: 'next',
+          default: 'master',
           describe: 'Ref which we want to release',
           type: 'string',
         });

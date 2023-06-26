@@ -5,7 +5,7 @@ import { screen } from '@mui/monorepo/test/utils';
 import { adapterToUse } from 'test/utils/pickers-utils';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
-const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput?: boolean) => {
+const testInvalidStatus = (expectedAnswer: boolean[], isSingleInput: boolean | undefined) => {
   const answers = isSingleInput ? [expectedAnswer[0] || expectedAnswer[1]] : expectedAnswer;
 
   const textBoxes = screen.getAllByRole('textbox');

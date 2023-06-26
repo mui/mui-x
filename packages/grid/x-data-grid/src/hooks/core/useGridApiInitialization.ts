@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Store } from '../../utils/Store';
 import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -9,7 +10,6 @@ import type {
   GridPrivateOnlyApiCommon,
 } from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
-import { unstable_resetCreateSelectorCache } from '../../utils/createSelector';
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -61,9 +61,12 @@ export function useGridApiInitialization<
   const publicApiRef = React.useRef() as React.MutableRefObject<Api>;
 
   if (!publicApiRef.current) {
+    const state = {} as Api['state'];
+
     publicApiRef.current = {
-      state: {} as Api['state'],
-      instanceId: globalId,
+      state,
+      store: Store.create(state),
+      instanceId: { id: globalId },
     } as Api;
 
     globalId += 1;
@@ -116,7 +119,6 @@ export function useGridApiInitialization<
     const api = privateApiRef.current;
 
     return () => {
-      unstable_resetCreateSelectorCache(api.instanceId);
       api.publishEvent('unmount');
     };
   }, [privateApiRef]);

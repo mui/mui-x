@@ -1,5 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
+
+const timeViews: Record<TimeViewWithMeridiem, string> = {
+  hours: 'klukkustundir',
+  minutes: 'mínútur',
+  seconds: 'sekúndur',
+  meridiem: 'eftirmiðdagur',
+};
 
 const isISPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -32,12 +40,15 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
+    `Velja ${timeViews[view]}. ${
       time === null ? 'Enginn tími valinn' : `Valinn tími er ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} klukkustundir`,
   minutesClockNumberText: (minutes) => `${minutes} mínútur`,
   secondsClockNumberText: (seconds) => `${seconds} sekúndur`,
+
+  // Digital clock labels
+  selectViewText: (view) => `Velja ${timeViews[view]}`,
 
   // Calendar labels
   // calendarWeekNumberHeaderLabel: 'Week number',

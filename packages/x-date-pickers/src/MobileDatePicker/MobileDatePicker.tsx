@@ -3,18 +3,14 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { MobileDatePickerProps } from './MobileDatePicker.types';
-import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../DatePicker/shared';
-import {
-  PickerViewRendererLookup,
-  DateView,
-  useLocaleText,
-  useUtils,
-  validateDate,
-} from '../internals';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import { PickerViewRendererLookup, useLocaleText, useUtils, validateDate } from '../internals';
+import { DateView } from '../models';
 import { DateField } from '../DateField';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
+import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -44,7 +40,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: getDatePickerFieldFormat(utils, defaultizedProps),
+    format: resolveDateFormat(utils, defaultizedProps, false),
     slots: {
       field: DateField,
       ...defaultizedProps.slots,
@@ -66,6 +62,7 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
   const { renderPicker } = useMobilePicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDate,
   });
@@ -95,7 +92,7 @@ MobileDatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -114,7 +111,7 @@ MobileDatePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -162,6 +159,12 @@ MobileDatePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -288,7 +291,7 @@ MobileDatePicker.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -348,7 +351,7 @@ MobileDatePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -360,6 +363,14 @@ MobileDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

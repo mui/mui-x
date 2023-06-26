@@ -9,13 +9,14 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
-import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { gridPinnedColumnsSelector } from '../hooks/features/columnPinning/gridColumnPinningSelector';
 
 const releaseInfo = getReleaseInfo();
 
@@ -27,13 +28,21 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
+  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.forwardedProps}
+      >
         <GridHeader />
         <GridBody
-          ColumnHeadersComponent={DataGridProColumnHeaders}
           VirtualScrollerComponent={DataGridProVirtualScroller}
+          ColumnHeadersProps={{ pinnedColumns }}
         >
           <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
         </GridBody>
@@ -108,6 +117,11 @@ DataGridProRaw.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: PropTypes.string,
+  /**
    * Number of extra columns to be rendered before/after the visible slice.
    * @default 3
    */
@@ -133,11 +147,13 @@ DataGridProRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overrideable components.
+   * Overridable components.
+   * @deprecated Use the `slots` prop instead.
    */
   components: PropTypes.object,
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
   /**
@@ -239,7 +255,6 @@ DataGridProRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
-    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -271,6 +286,11 @@ DataGridProRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps: PropTypes.object,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -462,10 +482,15 @@ DataGridProRaw.propTypes = {
   onCellKeyDown: PropTypes.func,
   /**
    * Callback fired when the `cellModesModel` prop changes.
-   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCellModesModel} cellModesModel Object containing which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange: PropTypes.func,
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy: PropTypes.func,
   /**
    * Callback fired when a click event comes from a column header element.
    * @param {GridColumnHeaderParams} params With all properties from [[GridColumnHeaderParams]].
@@ -641,7 +666,7 @@ DataGridProRaw.propTypes = {
   onRowEditStop: PropTypes.func,
   /**
    * Callback fired when the `rowModesModel` prop changes.
-   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowModesModelChange: PropTypes.func,
@@ -803,6 +828,14 @@ DataGridProRaw.propTypes = {
    */
   showColumnVerticalBorder: PropTypes.bool,
   /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable components.
+   */
+  slots: PropTypes.object,
+  /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
    * Set it to 'server' if you would like to handle sorting on the server-side.
@@ -842,4 +875,21 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * If `true`, enables the data grid filtering on header feature.
+   * @default false
+   */
+  unstable_headerFilters: PropTypes.bool,
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default: false
+   */
+  unstable_ignoreValueFormatterDuringExport: PropTypes.oneOfType([
+    PropTypes.shape({
+      clipboardExport: PropTypes.bool,
+      csvExport: PropTypes.bool,
+    }),
+    PropTypes.bool,
+  ]),
 } as any;

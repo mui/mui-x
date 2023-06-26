@@ -5,20 +5,23 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
+  getTextbox,
+  expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<DesktopDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  describePicker(DesktopDatePicker, { render, fieldType: 'single-input', variant: 'desktop' });
 
   describeValidation(DesktopDatePicker, () => ({
     render,
     clock,
     views: ['year', 'month', 'day'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 
   describeValue(DesktopDatePicker, () => ({
@@ -30,20 +33,25 @@ describe('<DesktopDatePicker /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const expectedValueStr =
-        expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, 'MM/DD/YYYY');
+      }
+      expectInputValue(
+        input,
+        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
+      );
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue, selectSection }) => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
         userEvent.mousePress(
-          screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }),
+          screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
-        const input = screen.getByRole('textbox');
-        clickOnInput(input, 10); // Update the day
+        selectSection('day');
+        const input = getTextbox();
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { SlotComponentProps } from '@mui/base';
 import { Theme } from '@mui/material/styles';
+import { TimezoneProps } from '@mui/x-date-pickers/models';
 import {
   BaseDateValidationProps,
   DefaultizedProps,
@@ -51,6 +52,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
+    TimezoneProps,
     // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
     Pick<ExportedUseViewsOptions<'day'>, 'autoFocus'> {
   /**
@@ -89,6 +91,11 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   calendars?: 1 | 2 | 3;
   /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition?: 1 | 2 | 3;
+  /**
    * If `true`, editing dates by dragging is disabled.
    * @default false
    */
@@ -122,7 +129,7 @@ export interface DateRangeCalendarProps<TDate>
    */
   sx?: SxProps<Theme>;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -134,7 +141,7 @@ export interface DateRangeCalendarProps<TDate>
    */
   componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;

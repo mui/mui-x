@@ -1,6 +1,9 @@
 import { CSSInterpolation } from '@mui/system';
 import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 import { gridClasses } from '../../constants/gridClasses';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+
+export type OwnerState = DataGridProcessedProps;
 
 function getBorderColor(theme: Theme) {
   if (theme.vars) {
@@ -11,6 +14,24 @@ function getBorderColor(theme: Theme) {
   }
   return darken(alpha(theme.palette.divider, 1), 0.68);
 }
+
+const columnHeadersStyles = {
+  [`.${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]: {
+    visibility: 'visible',
+    width: 'auto',
+  },
+};
+
+const columnHeaderStyles = {
+  [`& .${gridClasses.iconButtonContainer}`]: {
+    visibility: 'visible',
+    width: 'auto',
+  },
+  [`& .${gridClasses.menuIcon}`]: {
+    width: 'auto',
+    visibility: 'visible',
+  },
+};
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -47,6 +68,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
     { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
     { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
+    { [`& .${gridClasses['cell--withRightBorder']}`]: styles['cell--withRightBorder'] },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
@@ -59,7 +81,12 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
     { [`& .${gridClasses['columnHeader--sortable']}`]: styles['columnHeader--sortable'] },
     { [`& .${gridClasses['columnHeader--sorted']}`]: styles['columnHeader--sorted'] },
+    {
+      [`& .${gridClasses['columnHeader--withRightBorder']}`]:
+        styles['columnHeader--withRightBorder'],
+    },
     { [`& .${gridClasses.columnHeader}`]: styles.columnHeader },
+    { [`& .${gridClasses.headerFilterRow}`]: styles.headerFilterRow },
     { [`& .${gridClasses.columnHeaderCheckbox}`]: styles.columnHeaderCheckbox },
     { [`& .${gridClasses.columnHeaderDraggableContainer}`]: styles.columnHeaderDraggableContainer },
     { [`& .${gridClasses.columnHeaderTitleContainer}`]: styles.columnHeaderTitleContainer },
@@ -90,22 +117,30 @@ export const GridRootStyles = styled('div', {
     },
     styles.root,
   ],
-})(({ theme }) => {
+})<{ ownerState: OwnerState }>(({ theme }) => {
   const borderColor = getBorderColor(theme);
+  const radius = theme.shape.borderRadius;
 
   const gridStyle: CSSInterpolation = {
+    '--unstable_DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
+    '--unstable_DataGrid-headWeight': theme.typography.fontWeightMedium,
+    '--unstable_DataGrid-overlayBackground': theme.vars
+      ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
+      : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 'var(--unstable_DataGrid-radius)',
     color: (theme.vars || theme).palette.text.primary,
     ...theme.typography.body2,
     outline: 'none',
     height: '100%',
     display: 'flex',
+    minWidth: 0, // See https://github.com/mui/mui-x/issues/8547
+    minHeight: 0,
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
     [`&.${gridClasses.autoHeight}`]: {
@@ -158,10 +193,6 @@ export const GridRootStyles = styled('div', {
           duration: theme.transitions.duration.shorter,
         }),
       },
-    [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
-      {
-        opacity: 0.5,
-      },
     [`& .${gridClasses.columnHeaderTitleContainer}`]: {
       display: 'flex',
       alignItems: 'center',
@@ -169,6 +200,8 @@ export const GridRootStyles = styled('div', {
       flex: 1,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
+      // to anchor the aggregation label
+      position: 'relative',
     },
     [`& .${gridClasses.columnHeaderTitleContainerContent}`]: {
       overflow: 'hidden',
@@ -190,6 +223,9 @@ export const GridRootStyles = styled('div', {
         borderBottomStyle: 'solid',
         boxSizing: 'border-box',
       },
+    [`& .${gridClasses.headerFilterRow}`]: {
+      borderTop: `1px solid ${borderColor}`,
+    },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
     },
@@ -225,11 +261,18 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
-    [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
-      {
-        visibility: 'visible',
-        width: 'auto',
-      },
+    '@media (hover: hover)': {
+      [`& .${gridClasses.columnHeaders}:hover`]: columnHeadersStyles,
+      [`& .${gridClasses.columnHeader}:hover`]: columnHeaderStyles,
+      [`& .${gridClasses.columnHeader}:not(.${gridClasses['columnHeader--sorted']}):hover .${gridClasses.sortIcon}`]:
+        {
+          opacity: 0.5,
+        },
+    },
+    '@media (hover: none)': {
+      [`& .${gridClasses.columnHeaders}`]: columnHeadersStyles,
+      [`& .${gridClasses.columnHeader}`]: columnHeaderStyles,
+    },
     [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
       left: -12,
     },
@@ -263,16 +306,6 @@ export const GridRootStyles = styled('div', {
       marginRight: -10,
       display: 'flex',
       alignItems: 'center',
-    },
-    [`& .${gridClasses.columnHeader}:hover`]: {
-      [`& .${gridClasses.iconButtonContainer}`]: {
-        visibility: 'visible',
-        width: 'auto',
-      },
-      [`& .${gridClasses.menuIcon}`]: {
-        width: 'auto',
-        visibility: 'visible',
-      },
     },
     [`.${gridClasses.menuOpen}`]: {
       visibility: 'visible',
@@ -429,13 +462,13 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
       background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: 'var(--unstable_DataGrid-radius)',
       opacity: (theme.vars || theme).palette.action.disabledOpacity,
     },
     [`& .${gridClasses['row--dragging']}`]: {
       background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: 'var(--unstable_DataGrid-radius)',
       opacity: (theme.vars || theme).palette.action.disabledOpacity,
 
       [`& .${gridClasses.rowReorderCellPlaceholder}`]: {

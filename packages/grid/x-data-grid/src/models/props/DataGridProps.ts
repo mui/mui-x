@@ -31,6 +31,7 @@ import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColu
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationModel } from '../gridPaginationProps';
+import { UncapitalizeObjectKeys } from '../../internals/utils';
 
 export interface GridExperimentalFeatures {
   /**
@@ -62,7 +63,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPropsWithoutDefaultValue<R> {}
+    Omit<DataGridPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
@@ -85,7 +86,7 @@ export type DataGridForcedPropsKey =
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
-  components: GridSlotsComponent;
+  slots: UncapitalizeObjectKeys<GridSlotsComponent>;
   localeText: GridLocaleText;
 }
 
@@ -94,9 +95,14 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
  */
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
-   * Overrideable components.
+   * Overridable components.
+   * @deprecated Use `slots` instead.
    */
   components?: Partial<GridSlotsComponent>;
+  /**
+   * Overridable components.
+   */
+  slots?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>>;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
@@ -332,6 +338,22 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   keepColumnPositionIfDraggedOutside: boolean;
+  /**
+   * If `true`, the grid will not use `valueFormatter` when exporting to CSV or copying to clipboard.
+   * If an object is provided, you can choose to ignore the `valueFormatter` for CSV export or clipboard export.
+   * @default: false
+   */
+  unstable_ignoreValueFormatterDuringExport:
+    | boolean
+    | {
+        csvExport?: boolean;
+        clipboardExport?: boolean;
+      };
+  /**
+   * The character used to separate cell values when copying to the clipboard.
+   * @default '\t'
+   */
+  clipboardCopyCellDelimiter: string;
 }
 
 /**
@@ -343,6 +365,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
@@ -586,7 +613,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   cellModesModel?: GridCellModesModel;
   /**
    * Callback fired when the `cellModesModel` prop changes.
-   * @param {GridCellModesModel} cellModesModel Object containig which cells are in "edit" mode.
+   * @param {GridCellModesModel} cellModesModel Object containing which cells are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellModesModelChange?: (
@@ -599,7 +626,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   rowModesModel?: GridRowModesModel;
   /**
    * Callback fired when the `rowModesModel` prop changes.
-   * @param {GridRowModesModel} rowModesModel Object containig which rows are in "edit" mode.
+   * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
@@ -685,7 +712,12 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   initialState?: GridInitialStateCommunity;
   /**
-   * Overrideable components props dynamically passed to the component at rendering.
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridSlotsComponentsProps;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps?: GridSlotsComponentsProps;
   /**
@@ -711,4 +743,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onProcessRowUpdateError?: (error: any) => void;
   columnGroupingModel?: GridColumnGroupingModel;
+  /**
+   * Callback called when the data is copied to the clipboard.
+   * @param {string} data The data copied to the clipboard.
+   */
+  onClipboardCopy?: GridEventListener<'clipboardCopy'>;
 }

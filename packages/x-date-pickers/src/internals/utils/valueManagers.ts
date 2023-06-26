@@ -1,14 +1,16 @@
 import type { PickerValueManager } from '../hooks/usePicker';
-import type { DateValidationError } from '../hooks/validation/useDateValidation';
-import type { TimeValidationError } from '../hooks/validation/useTimeValidation';
-import type { DateTimeValidationError } from '../hooks/validation/useDateTimeValidation';
-import type { FieldSection, FieldValueManager } from '../hooks/useField';
-import { replaceInvalidDateByNull } from './date-utils';
+import {
+  DateValidationError,
+  TimeValidationError,
+  DateTimeValidationError,
+  FieldSection,
+} from '../../models';
+import type { FieldValueManager } from '../hooks/useField';
+import { areDatesEqual, getTodayDate, replaceInvalidDateByNull } from './date-utils';
+import { getDefaultReferenceDate } from './getDefaultReferenceDate';
 import {
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
-  splitFormatIntoSections,
-  getSectionOrder,
 } from '../hooks/useField/useField.utils';
 
 export type SingleItemPickerValueManager<
@@ -19,41 +21,53 @@ export type SingleItemPickerValueManager<
 
 export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
+  getTodayValue: getTodayDate,
+  getInitialReferenceValue: ({ value, referenceDate, ...params }) => {
+    if (value != null && params.utils.isValid(value)) {
+      return value;
+    }
+
+    if (referenceDate != null) {
+      return referenceDate;
+    }
+
+    return getDefaultReferenceDate(params);
+  },
   cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+  areValuesEqual: areDatesEqual,
   isSameError: (a, b) => a === b,
+  hasError: (error) => error != null,
   defaultErrorState: null,
+  getTimezone: (utils, value) => (value == null ? null : utils.getTimezone(value)),
+  setTimezone: (utils, timezone, value) =>
+    value == null ? null : utils.setTimezone(value, timezone),
 };
 
-export const singleItemFieldValueManager: FieldValueManager<
-  any,
-  any,
-  FieldSection,
-  DateValidationError | TimeValidationError | DateTimeValidationError
-> = {
+export const singleItemFieldValueManager: FieldValueManager<any, any, FieldSection> = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
-    addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
-  getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
-  getActiveDateSections: (sections) => sections,
+  getSectionsFromValue: (utils, date, prevSections, isRTL, getSectionsFromDate) => {
+    const shouldReUsePrevDateSections = !utils.isValid(date) && !!prevSections;
+
+    if (shouldReUsePrevDateSections) {
+      return prevSections;
+    }
+
+    return addPositionPropertiesToSections(getSectionsFromDate(date), isRTL);
+  },
+  getValueStrFromSections: createDateStrForInputFromSections,
   getActiveDateManager: (utils, state) => ({
-    activeDate: state.value,
-    referenceActiveDate: state.referenceValue,
-    getNewValueFromNewActiveDate: (newActiveDate) => {
-      return {
-        value: newActiveDate,
-        referenceValue:
-          newActiveDate == null || !utils.isValid(newActiveDate)
-            ? state.referenceValue
-            : newActiveDate,
-      };
-    },
+    date: state.value,
+    referenceDate: state.referenceValue,
+    getSections: (sections) => sections,
+    getNewValuesFromNewActiveDate: (newActiveDate) => ({
+      value: newActiveDate,
+      referenceValue:
+        newActiveDate == null || !utils.isValid(newActiveDate)
+          ? state.referenceValue
+          : newActiveDate,
+    }),
   }),
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
-  hasError: (error) => error != null,
-  getSectionOrder: (utils, localeText, format, isRTL) =>
-    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
 };

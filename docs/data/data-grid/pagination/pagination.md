@@ -2,17 +2,9 @@
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 
-:::warning
-The default pagination behavior depends on your plan.
-
-- On the `DataGrid`, pagination is enabled by default and can't be disabled
-- On the `DataGridPro`, pagination is disabled by default, use the `pagination` prop to enable it
-
-:::
-
 ## Size of the page
 
-The MIT `DataGrid` is limited to pages of up to 100 rows.
+The `DataGrid` (MIT license) is limited to pages of up to 100 rows.
 If you want larger pages, you will need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 
 By default, each page contains 100 rows. The user can change the size of the page through the selector in the footer.
@@ -28,10 +20,24 @@ You can configure the page size the user can choose from with the `pageSizeOptio
 Use the `autoPageSize` prop to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 
 :::warning
-You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the grid according to the `pageSize`.
+You can't use both the `autoPageSize` and `autoHeight` props at the same time because `autoHeight` scales the height of the data grid according to the `pageSize`.
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
+
+## Pagination on Pro and Premium
+
+The default pagination behavior depends on your plan.
+
+- On the `DataGrid`, pagination is enabled by default and can't be disabled.
+- On the `DataGridPro` and `DataGridPremium`, pagination is disabled by default; use the `pagination` prop to enable it.
+
+The following example activates pagination on a `DataGridPremium` component.
+
+:::info
+On a side note, exported CSV and Excel files will contain the full data and disregard the pagination by default. To apply pagination on exported files, please check the available [row selectors](/x/react-data-grid/export/#exported-rows).
+:::
+{{"demo": "PageSizeAutoPremium.js", "bg": "inline"}}
 
 ## Pagination model
 
@@ -74,7 +80,7 @@ const [paginationModel, setPaginationModel] = React.useState({
 ## Server-side pagination
 
 By default, the pagination is handled on the client.
-This means you have to give the rows of all pages to the grid.
+This means you have to give the rows of all pages to the data grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
 :::info
@@ -84,7 +90,7 @@ For more information regarding server-side pagination in combination with contro
 ### Basic implementation
 
 - Set the prop `paginationMode` to `server`
-- Provide a `rowCount` prop to let the grid know how many pages there are
+- Provide a `rowCount` prop to let the data grid know how many pages there are
 - Use the `onPaginationModelChange` prop callback to load the rows when the page changes
 
 Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
@@ -116,8 +122,10 @@ You can customize the rendering of the pagination in the footer following [the c
 
 ## apiRef
 
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the data grid.
 :::
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}

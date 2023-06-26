@@ -81,7 +81,7 @@ Each _Picker_ is available in a responsive, desktop and mobile variant:
 
 There are many components available, each fitting specific use cases. Use the form below to find the component you need:
 
-{{"demo": "ComponentExplorerNoSnap.tsx", "hideToolbar": true}}
+{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 
 ## Accessibility
 
@@ -98,7 +98,7 @@ Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` 
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#theme-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#theme-default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
@@ -153,5 +153,5 @@ const cleanText = (string) =>
   string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
 // Example of a test using the helper
-expect(cleanText(input.value)).to.equal('10-11-2021');
+expect(cleanText(input.value)).to.equal('04-17-2022');
 ```

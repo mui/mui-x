@@ -10,10 +10,9 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridLoadIcon } from '../icons/index';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -29,7 +28,7 @@ const GridEditInputCellRoot = styled(InputBase, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
   overridesResolver: (props, styles) => styles.editInputCell,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   ...theme.typography.body2,
   padding: '1px 0',
   '& input': {
@@ -81,8 +80,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
     const apiRef = useGridApiContext();
     const inputRef = React.useRef<HTMLInputElement>();
     const [valueState, setValueState] = React.useState(value);
-    const ownerState = { classes: rootProps.classes };
-    const classes = useUtilityClasses(ownerState);
+    const classes = useUtilityClasses(rootProps);
 
     const handleChange = React.useCallback(
       async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,11 +127,16 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
         ref={ref}
         inputRef={inputRef}
         className={classes.root}
+        ownerState={rootProps}
         fullWidth
         type={colDef.type === 'number' ? colDef.type : 'text'}
         value={valueState ?? ''}
         onChange={handleChange}
-        endAdornment={isProcessingProps ? <GridLoadIcon /> : undefined}
+        endAdornment={
+          isProcessingProps ? (
+            <rootProps.slots.loadIcon fontSize="small" color="action" />
+          ) : undefined
+        }
         {...other}
       />
     );
@@ -148,21 +151,21 @@ GridEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
-  api: PropTypes.object,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
-  cellMode: PropTypes.oneOf(['edit', 'view']),
+  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
   changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: PropTypes.object,
+  colDef: PropTypes.object.isRequired,
   debounceMs: PropTypes.number,
   /**
    * The column field of the cell that triggered the event.
    */
-  field: PropTypes.string,
+  field: PropTypes.string.isRequired,
   /**
    * The cell value formatted with the column valueFormatter.
    */
@@ -170,11 +173,11 @@ GridEditInputCell.propTypes = {
   /**
    * If true, the cell is the active element.
    */
-  hasFocus: PropTypes.bool,
+  hasFocus: PropTypes.bool.isRequired,
   /**
    * The grid row id.
    */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If true, the cell is editable.
    */
@@ -191,15 +194,15 @@ GridEditInputCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.any,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
-  rowNode: PropTypes.object,
+  rowNode: PropTypes.object.isRequired,
   /**
    * the tabIndex value.
    */
-  tabIndex: PropTypes.oneOf([-1, 0]),
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
    * The cell value.
    * If the column has `valueGetter`, use `params.row` to directly access the fields.

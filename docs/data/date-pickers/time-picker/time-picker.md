@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 # Time Picker
 
-<p class="description">The Time Picker component let the user select a time.</p>
+<p class="description">The Time Picker component lets the user select a time.</p>
 
 ## Basic usage
 
@@ -17,19 +17,26 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 ## Component composition
 
-The component is built using the `TimeField` for the keyboard editing and the `TimeClock` for the view editing.
+The component is built using the `TimeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
 All the documented props of those two components can also be passed to the Time Picker component.
 
 Check-out their documentation page for more information:
 
 - [Time Field](/x/react-date-pickers/time-field/)
+- [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
 
-## Uncontrolled vs. Controlled
-
-The component can be uncontrolled or controlled
+The value of the component can be uncontrolled or controlled.
 
 {{"demo": "TimePickerValue.js"}}
+
+:::info
+
+- The value is **controlled** when its parent manages it by providing a `value` prop.
+- The value is **uncontrolled** when it is managed by the component's own internal state. This state can be initialized using the `defaultValue` prop.
+
+Learn more about the _Controlled and uncontrolled_ pattern in the [React documentation](https://react.dev/learn/sharing-state-between-components#controlled-and-uncontrolled-components).
+:::
 
 ## Available components
 
@@ -70,7 +77,7 @@ Use the `views` prop to change this behavior:
 
 {{"demo": "TimePickerViews.js"}}
 
-By default, the component renders the `hours` view on mount.
+By default, the `MobileTimePicker` component renders the `hours` view on mount.
 Use the `openTo` prop to change this behavior:
 
 {{"demo": "TimePickerOpenTo.js"}}
@@ -87,6 +94,13 @@ By default, the Time Picker component automatically sets the orientation based o
 You can force a specific orientation using the `orientation` prop.
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
+
+## Choose time view renderer
+
+You can use the `viewRenderers` prop to change the view that is used for rendering a view.
+You might be interested in using the [Time Clock](/x/react-date-pickers/time-clock/) instead of the [Digital Clock](/x/react-date-pickers/digital-clock/) on desktop as well as mobile.
+
+{{"demo": "TimePickerViewRenderers.js"}}
 
 ## Validation
 

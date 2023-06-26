@@ -17,6 +17,10 @@
       "deprecated": true,
       "deprecationInfo": "Please use <code>slotProps</code>."
     },
+    "currentMonthCalendarPosition": {
+      "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
+      "default": "1"
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
@@ -58,16 +62,20 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {
-    "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
+    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "switchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "switchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
   },
   "name": "DateRangeCalendar",
   "styles": {
@@ -79,6 +87,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Calendar </a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-calendar/\">Date Range Calendar </a></li>\n<li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li></ul>",
   "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangeCalendar" }]
 }

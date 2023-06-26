@@ -4,6 +4,6 @@ export interface DataGridProComponentNameToClassKey {
   MuiDataGrid: GridClassKey;
 }
 
-declare module '@mui/material/styles/overrides' {
+declare module '@mui/material/styles' {
   interface ComponentNameToClassKey extends DataGridProComponentNameToClassKey {}
 }

@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -283,6 +282,31 @@ describe('<DataGridPro /> - Rows', () => {
       setProps({ loading: false });
       expect(getColumnValues(0)).to.deep.equal(['Nike 2', 'Adidas', 'Puma']);
     });
+
+    it('should not trigger unnecessary cells rerenders', () => {
+      const renderCellSpy = spy((params: any) => {
+        return params.value;
+      });
+      function Test() {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro
+              rows={[{ id: 1, name: 'John' }]}
+              columns={[{ field: 'name', renderCell: renderCellSpy }]}
+              apiRef={apiRef}
+            />
+          </div>
+        );
+      }
+
+      render(<Test />);
+      const initialRendersCount = 2;
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
+
+      act(() => apiRef.current.updateRows([{ id: 1, name: 'John' }]));
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
+    });
   });
 
   describe('apiRef: setRows', () => {
@@ -399,7 +423,7 @@ describe('<DataGridPro /> - Rows', () => {
       });
       await act(() => Promise.resolve());
       clock.runToLast();
-      expect(getRows()).to.have.length(4);
+      expect(getRows()).to.have.length(3);
     });
 
     it('should render last row when scrolling to the bottom', () => {
@@ -791,7 +815,7 @@ describe('<DataGridPro /> - Rows', () => {
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
-      fireEvent.click(document.body);
+      userEvent.mousePress(document.body);
       expect(gridFocusCellSelector(apiRef)).to.deep.equal(null);
     });
 
@@ -801,7 +825,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.subscribeEvent('cellFocusOut', handleCellFocusOut);
       userEvent.mousePress(getCell(1, 0));
       expect(handleCellFocusOut.callCount).to.equal(0);
-      fireEvent.click(document.body);
+      userEvent.mousePress(document.body);
       expect(handleCellFocusOut.callCount).to.equal(1);
       expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);

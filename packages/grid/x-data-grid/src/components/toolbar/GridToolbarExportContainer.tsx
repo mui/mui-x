@@ -14,8 +14,8 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
 
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const buttonId = useId();
-    const menuId = useId();
+    const exportButtonId = useId();
+    const exportMenuId = useId();
 
     const [open, setOpen] = React.useState(false);
     const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -54,21 +54,21 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
 
     return (
       <React.Fragment>
-        <rootProps.components.BaseButton
+        <rootProps.slots.baseButton
           ref={handleRef}
           size="small"
-          startIcon={<rootProps.components.ExportIcon />}
-          aria-expanded={open ? 'true' : undefined}
+          startIcon={<rootProps.slots.exportIcon />}
+          aria-expanded={open}
           aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
-          aria-labelledby={menuId}
-          id={buttonId}
+          aria-controls={open ? exportMenuId : undefined}
+          id={exportButtonId}
           {...other}
           onClick={handleMenuOpen}
-          {...rootProps.componentsProps?.baseButton}
+          {...rootProps.slotProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
-        </rootProps.components.BaseButton>
+        </rootProps.slots.baseButton>
         <GridMenu
           open={open}
           target={buttonRef.current}
@@ -76,9 +76,9 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
           position="bottom-start"
         >
           <MenuList
-            id={menuId}
+            id={exportMenuId}
             className={gridClasses.menuList}
-            aria-labelledby={buttonId}
+            aria-labelledby={exportButtonId}
             onKeyDown={handleListKeyDown}
             autoFocusItem={open}
           >

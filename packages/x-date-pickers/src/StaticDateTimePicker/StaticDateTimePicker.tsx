@@ -6,8 +6,8 @@ import { renderTimeViewClock } from '../timeViewRenderers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { DateOrTimeView } from '../internals/models';
-import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
+import { DateOrTimeView } from '../models';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticDateTimePickerComponent = (<TDate>(
@@ -20,10 +20,12 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
 ) {
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
+    DateOrTimeView,
     StaticDateTimePickerProps<TDate>
   >(inProps, 'MuiStaticDateTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
+  const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,
@@ -40,6 +42,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    ampmInClock,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
     slotProps: {
       ...defaultizedProps.slotProps,
@@ -49,6 +52,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
       },
       toolbar: {
         hidden: displayStaticWrapperAs === 'desktop',
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     } satisfies StaticDateTimePickerProps<TDate>['slotProps'],
@@ -57,8 +61,9 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
   const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    ref,
+    valueType: 'date-time',
     validator: validateDateTime,
+    ref,
   });
 
   return renderPicker();
@@ -76,7 +81,7 @@ StaticDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -91,7 +96,7 @@ StaticDateTimePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -110,7 +115,7 @@ StaticDateTimePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -220,6 +225,12 @@ StaticDateTimePicker.propTypes = {
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired when component requests to be closed.
+   * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
+   * @deprecated Please avoid using as it will be removed in next major version.
+   */
+  onClose: PropTypes.func,
+  /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
@@ -293,6 +304,7 @@ StaticDateTimePicker.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
@@ -322,7 +334,7 @@ StaticDateTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -334,6 +346,14 @@ StaticDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

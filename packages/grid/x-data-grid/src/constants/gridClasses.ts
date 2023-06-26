@@ -277,7 +277,7 @@ export interface GridClasses {
    */
   filterFormDeleteIcon: string;
   /**
-   * Styles applied to the link operator inout of the filter form component.
+   * Styles applied to the link operator input of the filter form component.
    */
   filterFormLogicOperatorInput: string;
   /**
@@ -312,6 +312,10 @@ export interface GridClasses {
    * Styles applied to the column header separator icon element.
    */
   iconSeparator: string;
+  /**
+   * Styles applied to the column header filter row.
+   */
+  headerFilterRow: string;
   /**
    * Styles applied to the main container element.
    */
@@ -540,6 +544,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignLeft',
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
+  'aggregationColumnHeaderLabel',
   'autoHeight',
   'booleanCell',
   'cell--editable',
@@ -608,6 +613,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormValueInput',
   'filterIcon',
   'footerContainer',
+  'headerFilterRow',
   'iconButtonContainer',
   'iconSeparator',
   'main',
@@ -617,6 +623,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'menuOpen',
   'menuList',
   'overlay',
+  'overlayWrapper',
+  'overlayWrapperInner',
   'root',
   'root--densityStandard',
   'root--densityComfortable',

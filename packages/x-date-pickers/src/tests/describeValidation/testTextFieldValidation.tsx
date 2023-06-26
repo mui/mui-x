@@ -2,8 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
+import { TimeView } from '@mui/x-date-pickers/models';
 import { adapterToUse } from 'test/utils/pickers-utils';
-import { TimeView } from '@mui/x-date-pickers/internals';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
@@ -448,6 +448,35 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       expect(onErrorMock.callCount).to.equal(3);
       expect(onErrorMock.lastCall.args[0]).to.equal(null);
       expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+    });
+
+    it('should apply minutesStep', function test() {
+      if (['picker', 'field'].includes(componentFamily) && !withTime) {
+        return;
+      }
+
+      const onErrorMock = spy();
+      const { setProps } = render(
+        <ElementToTest
+          onError={onErrorMock}
+          value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
+          minutesStep={30}
+        />,
+      );
+      if (withTime) {
+        expect(onErrorMock.callCount).to.equal(1);
+        expect(onErrorMock.lastCall.args[0]).to.equal('minutesStep');
+        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'true');
+
+        setProps({ value: adapterToUse.date(new Date(2019, 5, 15, 10, 30)) });
+
+        expect(onErrorMock.callCount).to.equal(2);
+        expect(onErrorMock.lastCall.args[0]).to.equal(null);
+        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      } else {
+        expect(onErrorMock.callCount).to.equal(0);
+        expect(screen.getByRole('textbox')).to.have.attribute('aria-invalid', 'false');
+      }
     });
   });
 };

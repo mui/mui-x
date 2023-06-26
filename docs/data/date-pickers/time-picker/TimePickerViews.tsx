@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 export default function TimePickerViews() {
   return (
@@ -10,16 +10,15 @@ export default function TimePickerViews() {
       <DemoContainer
         components={['MobileTimePicker', 'MobileTimePicker', 'MobileTimePicker']}
       >
-        <MobileTimePicker
-          label={'"hours", "minutes" and "seconds"'}
-          views={['hours', 'minutes', 'seconds']}
-        />
-        <MobileTimePicker label={'"hours"'} views={['hours']} />
-        <MobileTimePicker
-          label={'"minutes" and "seconds"'}
-          views={['minutes', 'seconds']}
-          format="mm:ss"
-        />
+        <DemoItem label={'"hours", "minutes" and "seconds"'}>
+          <TimePicker views={['hours', 'minutes', 'seconds']} />
+        </DemoItem>
+        <DemoItem label={'"hours"'}>
+          <TimePicker views={['hours']} />
+        </DemoItem>
+        <DemoItem label={'"minutes" and "seconds"'}>
+          <TimePicker views={['minutes', 'seconds']} format="mm:ss" />
+        </DemoItem>
       </DemoContainer>
     </LocalizationProvider>
   );

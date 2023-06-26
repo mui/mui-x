@@ -54,7 +54,7 @@ const findDeepASTPath = (j, currentPath, currentIdentifiers) => {
  * @param {PreRequisiteUsage} preReqs
  * @returns {boolean}
  */
-const checkPreRequisitesSatisfied = (j, root, preReqs: PreRequisiteUsage): boolean => {
+export const checkPreRequisitesSatisfied = (j, root, preReqs: PreRequisiteUsage): boolean => {
   if (preReqs.packageRegex || preReqs.components) {
     // check if any of the components is imported from a package which satisfies `preReqs.packageRegex`
     const imports = root.find(j.ImportDeclaration);
@@ -129,7 +129,7 @@ export default function renameIdentifiers({
 }: RenameIdentifiersArgs) {
   root
     .find(j.Identifier)
-    .filter((path) => !!identifiers[path.node.name])
+    .filter((path) => identifiers.hasOwnProperty(path.node.name))
     .replaceWith((path) => {
       if (!preRequisiteUsages || !preRequisiteUsages[path.node.name]) {
         return j.importSpecifier(j.identifier(identifiers[path.node.name]));

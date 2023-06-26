@@ -65,8 +65,8 @@ export const useGridColumnPinning = (
     | 'initialState'
     | 'pinnedColumns'
     | 'onPinnedColumnsChange'
-    | 'componentsProps'
-    | 'components'
+    | 'slotProps'
+    | 'slots'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -188,7 +188,7 @@ export const useGridColumnPinning = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuPinningItem'];
+      return [...columnMenuItems, 'columnMenuPinningItem'];
     },
     [props.disableColumnPinning],
   );

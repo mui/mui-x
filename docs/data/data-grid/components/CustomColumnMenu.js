@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -23,7 +22,7 @@ const StyledGridColumnMenu = styled(GridColumnMenu)(({ theme, ownerState }) => (
   background: theme.palette[ownerState.color].main,
 }));
 
-function CustomColumnMenuComponent(props) {
+export function CustomColumnMenuComponent(props) {
   const { hideMenu, colDef, color, ...other } = props;
 
   if (colDef.field === 'name') {
@@ -72,14 +71,6 @@ function CustomColumnMenuComponent(props) {
   );
 }
 
-CustomColumnMenuComponent.propTypes = {
-  colDef: PropTypes.object.isRequired,
-  color: PropTypes.oneOf(['primary', 'secondary']).isRequired,
-  hideMenu: PropTypes.func.isRequired,
-};
-
-export { CustomColumnMenuComponent };
-
 export default function CustomColumnMenu() {
   const [color, setColor] = React.useState('primary');
   const apiRef = useGridApiRef();
@@ -119,10 +110,10 @@ export default function CustomColumnMenu() {
               default: 'Enterprise',
             },
           ]}
-          components={{
-            ColumnMenu: CustomColumnMenuComponent,
+          slots={{
+            columnMenu: CustomColumnMenuComponent,
           }}
-          componentsProps={{
+          slotProps={{
             columnMenu: { color },
           }}
         />

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,7 +16,6 @@ function CustomFilterItem(props) {
     },
     [apiRef, colDef.field, onClick],
   );
-
   return (
     <MenuItem onClick={handleClick}>
       <ListItemIcon>
@@ -28,18 +26,13 @@ function CustomFilterItem(props) {
   );
 }
 
-CustomFilterItem.propTypes = {
-  colDef: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
-
 function CustomColumnMenu(props) {
   return (
     <GridColumnMenu
       {...props}
-      components={{
-        // Override slot for `ColumnMenuFilterItem`
-        ColumnMenuFilterItem: CustomFilterItem,
+      slots={{
+        // Override slot for `columnMenuFilterItem`
+        columnMenuFilterItem: CustomFilterItem,
       }}
     />
   );
@@ -54,7 +47,7 @@ export default function OverrideColumnMenuGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} components={{ ColumnMenu: CustomColumnMenu }} />
+      <DataGrid {...data} slots={{ columnMenu: CustomColumnMenu }} />
     </div>
   );
 }

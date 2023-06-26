@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -21,7 +21,7 @@ const GridMainContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Main',
   overridesResolver: (props, styles) => styles.main,
-})(() => ({
+})<{ ownerState: OwnerState }>(() => ({
   position: 'relative',
   flexGrow: 1,
   display: 'flex',
@@ -29,9 +29,14 @@ const GridMainContainerRoot = styled('div', {
   overflow: 'hidden',
 }));
 
-export function GridMainContainer(props: React.PropsWithChildren<{}>) {
-  const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
-  return <GridMainContainerRoot className={classes.root}>{props.children}</GridMainContainerRoot>;
-}
+export const GridMainContainer = React.forwardRef<HTMLDivElement, React.PropsWithChildren<{}>>(
+  (props, ref) => {
+    const rootProps = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
+    return (
+      <GridMainContainerRoot ref={ref} className={classes.root} ownerState={rootProps}>
+        {props.children}
+      </GridMainContainerRoot>
+    );
+  },
+);

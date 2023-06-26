@@ -22,9 +22,16 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
+import {
+  FieldRef,
+  FieldSection,
+  FieldSectionType,
+  MuiPickersAdapter,
+} from '@mui/x-date-pickers/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
+import { clockPointerClasses } from '@mui/x-date-pickers';
 
 export type AdapterName =
   | 'date-fns'
@@ -36,7 +43,7 @@ export type AdapterName =
   // | 'js-joda'
   | 'date-fns-jalali';
 
-const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
+const availableAdapters: { [key in AdapterName]: new (...args: any) => MuiPickersAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
@@ -92,16 +99,20 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: Locale;
   adapterName?: AdapterName;
+  instance?: any;
 }
 
-export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
-  return (node: React.ReactNode) =>
+export function wrapPickerMount(
+  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
+) {
+  return (node: React.ReactElement) =>
     mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
 }
 
 export function createPickerRenderer({
   locale,
   adapterName,
+  instance,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
@@ -118,8 +129,8 @@ export function createPickerRenderer({
     adapterLocale = adapterLocale.slice(0, 2);
   }
   const adapter = adapterName
-    ? new availableAdapters[adapterName]({ locale: adapterLocale })
-    : new AdapterClassToUse({ locale: adapterLocale });
+    ? new availableAdapters[adapterName]({ locale: adapterLocale, instance })
+    : new AdapterClassToUse({ locale: adapterLocale, instance });
 
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
@@ -150,10 +161,22 @@ export type OpenPickerParams =
       type: 'date-range';
       variant: 'mobile' | 'desktop';
       initialFocus: 'start' | 'end';
+      /**
+       * @default false
+       */
+      isSingleInput?: boolean;
     };
 
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
+    if (params.isSingleInput) {
+      const target = screen.getByRole<HTMLInputElement>('textbox');
+      userEvent.mousePress(target);
+      const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
+
+      return target.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
     const target = screen.getAllByRole('textbox')[params.initialFocus === 'start' ? 0 : 1];
 
     return userEvent.mousePress(target);
@@ -294,9 +317,19 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 export const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
-export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+export const cleanText = (text, specialCase?: 'singleDigit' | 'RTL') => {
+  const clean = text.replace(/\u202f/g, ' ');
+  switch (specialCase) {
+    case 'singleDigit':
+      return clean.replace(/\u200e/g, '');
+    case 'RTL':
+      return clean.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+    default:
+      return clean;
+  }
+};
 
 export const getCleanedSelectedContent = (input: HTMLInputElement) =>
   cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
@@ -304,32 +337,82 @@ export const getCleanedSelectedContent = (input: HTMLInputElement) =>
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
-  shouldRemoveDashSpaces: boolean = false,
+  specialCase?: 'singleDigit' | 'RTL',
 ) => {
-  let value = cleanText(input.value);
-  if (shouldRemoveDashSpaces) {
-    value = value.replace(/ \/ /g, '/');
-  }
-
+  const value = cleanText(input.value, specialCase);
   return expect(value).to.equal(expectedValue);
 };
 
-export const buildFieldInteractions = ({
-  clock,
-}: {
+export const expectInputPlaceholder = (
+  input: HTMLInputElement,
+  placeholder: string,
+  specialCase?: 'singleDigit' | 'RTL',
+) => {
+  const cleanPlaceholder = cleanText(input.placeholder, specialCase);
+  return expect(cleanPlaceholder).to.equal(placeholder);
+};
+
+interface BuildFieldInteractionsParams<P extends {}> {
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
-}) => {
-  const clickOnInput = (
+  render: ReturnType<typeof createRenderer>['render'];
+  Component: React.FunctionComponent<P>;
+}
+
+export type FieldSectionSelector = (
+  selectedSection: FieldSectionType | undefined,
+  index?: 'first' | 'last',
+) => void;
+
+export interface BuildFieldInteractionsResponse<P extends {}> {
+  renderWithProps: (
+    props: P,
+    hook?: (props: P) => Record<string, any>,
+    componentFamily?: 'picker' | 'field',
+  ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
+    input: HTMLInputElement;
+    selectSection: FieldSectionSelector;
+  };
+  clickOnInput: (
     input: HTMLInputElement,
     cursorStartPosition: number,
+    cursorEndPosition?: number,
+  ) => void;
+  testFieldKeyPress: (
+    params: P & {
+      key: string;
+      expectedValue: string;
+      selectedSection?: FieldSectionType;
+    },
+  ) => void;
+  testFieldChange: (
+    params: P & {
+      keyStrokes: { value: string; expected: string }[];
+      selectedSection?: FieldSectionType;
+    },
+  ) => void;
+}
+
+export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
+
+export const buildFieldInteractions = <P extends {}>({
+  clock,
+  render,
+  Component,
+}: BuildFieldInteractionsParams<P>): BuildFieldInteractionsResponse<P> => {
+  const clickOnInput: BuildFieldInteractionsResponse<P>['clickOnInput'] = (
+    input,
+    cursorStartPosition,
     cursorEndPosition = cursorStartPosition,
   ) => {
+    if (document.activeElement !== input) {
+      act(() => {
+        input.focus();
+      });
+      clock.runToLast();
+    }
     act(() => {
       fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
       fireEvent.mouseUp(input);
       input.setSelectionRange(cursorStartPosition, cursorEndPosition);
       fireEvent.click(input);
@@ -338,7 +421,108 @@ export const buildFieldInteractions = ({
     });
   };
 
-  return { clickOnInput };
+  const renderWithProps: BuildFieldInteractionsResponse<P>['renderWithProps'] = (
+    props,
+    hook,
+    componentFamily = 'field',
+  ) => {
+    let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
+
+    function WrappedComponent() {
+      fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+      const hookResult = hook?.(props);
+      const allProps = {
+        ...props,
+        ...hookResult,
+      } as any;
+
+      if (componentFamily === 'field') {
+        allProps.unstableFieldRef = fieldRef;
+      } else {
+        if (!allProps.slotProps) {
+          allProps.slotProps = {};
+        }
+
+        if (!allProps.slotProps.field) {
+          allProps.slotProps.field = {};
+        }
+
+        const hasMultipleInputs =
+          // @ts-ignore
+          Component.render.name.includes('Range') &&
+          allProps.slots?.field?.fieldType !== 'single-input';
+        if (hasMultipleInputs) {
+          allProps.slotProps.field.unstableStartFieldRef = fieldRef;
+        } else {
+          allProps.slotProps.field.unstableFieldRef = fieldRef;
+        }
+      }
+
+      return <Component {...(allProps as P)} />;
+    }
+
+    const result = render(<WrappedComponent />);
+
+    const input = screen.queryAllByRole<HTMLInputElement>('textbox')[0];
+
+    const selectSection: FieldSectionSelector = (selectedSection, index = 'first') => {
+      if (document.activeElement !== input) {
+        // focus input to trigger setting placeholder as value if no value is present
+        act(() => {
+          input.focus();
+        });
+        // make sure the value of the input is rendered before proceeding
+        clock.runToLast();
+      }
+
+      let clickPosition: number;
+      if (selectedSection) {
+        const sections = fieldRef.current!.getSections();
+        const cleanSections = index === 'first' ? sections : [...sections].reverse();
+        const sectionToSelect = cleanSections.find((section) => section.type === selectedSection);
+        clickPosition = sectionToSelect!.startInInput;
+      } else {
+        clickPosition = 1;
+      }
+
+      clickOnInput(input, clickPosition);
+    };
+
+    return { input, selectSection, ...result };
+  };
+
+  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
+    key,
+    expectedValue,
+    selectedSection,
+    ...props
+  }) => {
+    const { input, selectSection } = renderWithProps(props as any as P);
+    selectSection(selectedSection);
+
+    userEvent.keyPress(input, { key });
+    expectInputValue(input, expectedValue);
+  };
+
+  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
+    keyStrokes,
+    selectedSection,
+    ...props
+  }) => {
+    const { input, selectSection } = renderWithProps(props as any as P);
+    selectSection(selectedSection);
+
+    keyStrokes.forEach((keyStroke) => {
+      fireEvent.change(input, { target: { value: keyStroke.value } });
+      expectInputValue(
+        input,
+        keyStroke.expected,
+        (props as any).shouldRespectLeadingZeros ? 'singleDigit' : undefined,
+      );
+    });
+  };
+
+  return { clickOnInput, testFieldKeyPress, testFieldChange, renderWithProps };
 };
 
 export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {
@@ -438,3 +622,64 @@ export class MockedDataTransfer implements DataTransfer {
     this.yOffset = yOffset;
   }
 }
+
+const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily) => {
+  switch (componentFamily) {
+    case 'clock':
+    case 'multi-section-digital-clock':
+      return 3;
+    default:
+      return 1;
+  }
+};
+
+export const getExpectedOnChangeCount = (
+  componentFamily: PickerComponentFamily,
+  params: OpenPickerParams,
+) => {
+  if (componentFamily === 'digital-clock') {
+    return getChangeCountForComponentFamily(componentFamily);
+  }
+  if (params.type === 'date-time') {
+    return (
+      getChangeCountForComponentFamily(componentFamily) +
+      getChangeCountForComponentFamily(
+        params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+      )
+    );
+  }
+  if (componentFamily === 'picker' && params.type === 'time') {
+    return getChangeCountForComponentFamily(
+      params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+    );
+  }
+  if (componentFamily === 'clock') {
+    // the `TimeClock` fires change for both touch move and touch end
+    // but does not have meridiem control
+    return (getChangeCountForComponentFamily(componentFamily) - 1) * 2;
+  }
+  return getChangeCountForComponentFamily(componentFamily);
+};
+
+export const getTimeClockValue = () => {
+  const clockPointer = document.querySelector<HTMLDivElement>(`.${clockPointerClasses.root}`);
+  const transform = clockPointer?.style?.transform ?? '';
+  const isMinutesView = screen.getByRole('listbox').getAttribute('aria-label')?.includes('minutes');
+
+  const rotation = Number(/rotateZ\(([0-9]+)deg\)/.exec(transform)?.[1] ?? '0');
+
+  if (isMinutesView) {
+    return rotation / 6;
+  }
+
+  return rotation / 30;
+};
+
+export const getDateOffset = <TDate extends unknown>(
+  adapter: MuiPickersAdapter<TDate>,
+  date: TDate,
+) => {
+  const utcHour = adapter.getHours(adapter.setTimezone(adapter.startOfDay(date), 'UTC'));
+  const cleanUtcHour = utcHour > 12 ? 24 - utcHour : -utcHour;
+  return cleanUtcHour * 60;
+};

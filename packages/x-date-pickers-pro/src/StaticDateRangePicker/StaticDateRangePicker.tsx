@@ -6,7 +6,7 @@ import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { rangeValueManager } from '../internal/utils/valueManagers';
-import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { validateDateRange } from '../internal/utils/validation/validateDateRange';
 import { DateRange } from '../internal/models';
 
 type StaticDateRangePickerComponent = (<TDate>(
@@ -49,6 +49,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TD
   const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
+    valueType: 'date',
     validator: validateDateRange,
     ref,
   });
@@ -78,7 +79,7 @@ StaticDateRangePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -89,6 +90,11 @@ StaticDateRangePicker.propTypes = {
    * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
+  /**
+   * Position the current month is rendered in.
+   * @default 1
+   */
+  currentMonthCalendarPosition: PropTypes.oneOf([1, 2, 3]),
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
@@ -190,6 +196,12 @@ StaticDateRangePicker.propTypes = {
    */
   onChange: PropTypes.func,
   /**
+   * Callback fired when component requests to be closed.
+   * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
+   * @deprecated Please avoid using as it will be removed in next major version.
+   */
+  onClose: PropTypes.func,
+  /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
@@ -252,7 +264,7 @@ StaticDateRangePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,
@@ -264,6 +276,14 @@ StaticDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

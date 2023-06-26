@@ -7,11 +7,12 @@ const alias = {
   '@mui/x-data-grid-premium': '../packages/grid/x-data-grid-premium/src',
   '@mui/x-date-pickers': '../packages/x-date-pickers/src',
   '@mui/x-date-pickers-pro': '../packages/x-date-pickers-pro/src',
+  '@mui/x-charts': '../packages/x-charts/src',
   '@mui/x-license-pro': '../packages/x-license-pro/src',
   '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
   '@mui/markdown': '../node_modules/@mui/monorepo/packages/markdown',
   '@mui/monorepo': '../node_modules/@mui/monorepo',
-  '@mui/joy': '../node_modules/@mui/monorepo/packages/mui-joy/src',
+  '@mui-internal/docs-utilities': '../node_modules/@mui/monorepo/packages/docs-utilities',
   docs: '../node_modules/@mui/monorepo/docs',
   docsx: './',
 };

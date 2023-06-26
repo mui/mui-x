@@ -14,21 +14,31 @@ import {
   openPicker,
   wrapPickerMount,
   getClockTouchEvent,
+  expectInputPlaceholder,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 
 describe('<MobileTimePicker /> - Describes', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 2, 12, 8, 16, 0),
+  });
+
+  describePicker(MobileTimePicker, { render, fieldType: 'single-input', variant: 'mobile' });
 
   describeValidation(MobileTimePicker, () => ({
     render,
     clock,
     views: ['hours', 'minutes'],
     componentFamily: 'picker',
+    variant: 'mobile',
   }));
 
   describeConformance(<MobileTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiMobileTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
@@ -51,42 +61,57 @@ describe('<MobileTimePicker /> - Describes', () => {
     type: 'time',
     variant: 'mobile',
     values: [
-      adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
-      adapterToUse.date(new Date(2018, 0, 1, 18, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 11, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 12, 35)),
     ],
     emptyValue: null,
-    defaultProps: {
-      openTo: 'minutes',
-    },
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'fullTime12h' : 'fullTime24h',
-        );
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+        : '';
 
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(input, expectedValueStr);
     },
-    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+    setNewValue: (value, { isOpened, applySameValue }) => {
       if (!isOpened) {
         openPicker({ type: 'time', variant: 'mobile' });
       }
 
-      const newValue = applySameValue ? value : adapterToUse.addMinutes(value, 1);
-      const hourClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
+      const newValue = applySameValue
+        ? value
+        : adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
+      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+      // change hours
+      const hourClockEvent = getClockTouchEvent(
+        adapterToUse.getHours(newValue),
+        hasMeridiem ? '12hours' : '24hours',
+      );
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+      // change minutes
+      const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
 
-      // Close the picker to return to the initial state
+      if (hasMeridiem) {
+        const newHours = adapterToUse.getHours(newValue);
+        // select appropriate meridiem
+        userEvent.mousePress(screen.getByRole('button', { name: newHours >= 12 ? 'PM' : 'AM' }));
+      }
+
+      // Close the picker
       if (!isOpened) {
         userEvent.keyPress(document.activeElement!, { key: 'Escape' });
         clock.runToLast();
+      } else {
+        // return to the hours view in case we'd like to repeat the selection process
+        userEvent.mousePress(screen.getByRole('button', { name: 'open previous view' }));
       }
 
       return newValue;

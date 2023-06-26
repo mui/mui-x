@@ -57,7 +57,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   // + <LocalizationProvider dateAdapter={AdapterDateFns} />
   root
     .find(j.Identifier)
-    .filter((path) => !!adapterVariableNames[path.node.name])
+    .filter((path) => adapterVariableNames.hasOwnProperty(path.node.name))
     .replaceWith((path) => j.identifier(adapterVariableNames[path.node.name]));
 
   return root.toSource(printOptions);

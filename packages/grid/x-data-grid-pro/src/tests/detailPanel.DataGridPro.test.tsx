@@ -18,14 +18,13 @@ import {
   waitFor,
   act,
   userEvent,
-  // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
-import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
+import { getRow, getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Detail panel', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -84,6 +83,29 @@ describe('<DataGridPro /> - Detail panel', () => {
     virtualScroller.scrollTop = 250; // 50 + 50 (detail panel) + 50 + 100 (detail panel * 2)
     act(() => virtualScroller.dispatchEvent(new Event('scroll')));
     expect(getColumnValues(1)[0]).to.equal('2'); // If there was no expanded row, the first rendered would be 5
+  });
+
+  it('should only render detail panels for the rows that are rendered', function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+    render(
+      <TestCase
+        getDetailPanelHeight={() => 50}
+        getDetailPanelContent={() => <div />}
+        rowBuffer={0}
+        rowThreshold={0}
+        nbRows={10}
+        initialState={{
+          detailPanel: {
+            expandedRowIds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+          },
+        }}
+      />,
+    );
+    const rows = getRows();
+    const detailPanels = document.querySelectorAll('.MuiDataGrid-detailPanel');
+    expect(detailPanels.length).to.equal(rows.length);
   });
 
   it('should derive the height from the content if getDetailPanelHeight returns "auto"', async function test() {
@@ -472,8 +494,8 @@ describe('<DataGridPro /> - Detail panel', () => {
         columns={[{ field: 'id', width: 400 }]}
       />,
     );
-    fireEvent.click(getCell(1, 0).querySelector('button'));
-    expect(screen.queryByText('Detail').offsetWidth).to.equal(50 + 400);
+    fireEvent.click(getCell(1, 0).querySelector('button')!);
+    expect(screen.getByText('Detail').offsetWidth).to.equal(50 + 400);
   });
 
   it('should add an accessible name to the toggle column', () => {
@@ -505,17 +527,19 @@ describe('<DataGridPro /> - Detail panel', () => {
   });
 
   it('should not reuse detail panel components', () => {
+    let counter = 0;
     function DetailPanel() {
-      const [today] = React.useState(() => new Date());
-      return <div>Date is {today.toISOString()}</div>;
+      const [number] = React.useState((counter += 1));
+      return <div data-testid="detail-panel-content">{number}</div>;
     }
     const { setProps } = render(
       <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
     );
-    expect(screen.queryByText('Date is 1970-01-01T00:00:00.000Z')).not.to.equal(null);
-    clock.tick(100);
-    setProps({ detailPanelExpandedRowIds: [1] });
-    expect(screen.queryByText('Date is 1970-01-01T00:00:00.100Z')).not.to.equal(null);
+    expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
+    act(() => {
+      setProps({ detailPanelExpandedRowIds: [1] });
+    });
+    expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {
@@ -612,6 +636,15 @@ describe('<DataGridPro /> - Detail panel', () => {
         act(() => apiRef.current.toggleDetailPanel(1));
         expect(document.querySelector('.MuiDataGrid-detailPanels')).to.equal(null);
         expect(getRow(1)).not.toHaveComputedStyle({ marginBottom: '50px' });
+      });
+
+      // See https://github.com/mui/mui-x/pull/8976
+      it('should not toggle the panel if the row id is of a different type', () => {
+        render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
+        expect(screen.queryByText('Detail')).to.equal(null);
+        // '0' !== 0
+        act(() => apiRef.current.toggleDetailPanel('0'));
+        expect(screen.queryByText('Detail')).to.equal(null);
       });
     });
 

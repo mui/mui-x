@@ -7,7 +7,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 
-const defaultValue = dayjs('2022-04-07T14:30:22');
+const defaultValue = dayjs('2022-04-17T15:30');
 
 export default function SingleDateFieldExamples() {
   return (

@@ -74,6 +74,16 @@ export interface PickersDayProps<TDate>
    */
   outsideCurrentMonth: boolean;
   /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: boolean;
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: boolean;
+  /**
    * If `true`, renders as selected.
    * @default false
    */
@@ -121,20 +131,20 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   height: DAY_SIZE,
   borderRadius: '50%',
   padding: 0,
-  // background required here to prevent collides with the other days when animating with transition group
-  backgroundColor: (theme.vars || theme).palette.background.paper,
+  // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
+  backgroundColor: 'transparent',
   color: (theme.vars || theme).palette.text.primary,
   '@media (pointer: fine)': {
     '&:hover': {
       backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-        : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+        ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.primary.main, theme.palette.action.hoverOpacity),
     },
   },
   '&:focus': {
     backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+      ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.focusOpacity})`
+      : alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
       backgroundColor: (theme.vars || theme).palette.primary.dark,
@@ -152,8 +162,11 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
-  [`&.${pickersDayClasses.disabled}`]: {
+  [`&.${pickersDayClasses.disabled}:not(.${pickersDayClasses.selected})`]: {
     color: (theme.vars || theme).palette.text.disabled,
+  },
+  [`&.${pickersDayClasses.disabled}&.${pickersDayClasses.selected}`]: {
+    opacity: 0.6,
   },
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,
@@ -241,6 +254,8 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
+    isFirstVisibleCell,
+    isLastVisibleCell,
     ...other
   } = props;
   const ownerState = {
@@ -399,6 +414,16 @@ PickersDayRaw.propTypes = {
    */
   focusVisibleClassName: PropTypes.string,
   isAnimating: PropTypes.bool,
+  /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: PropTypes.bool.isRequired,
   onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,

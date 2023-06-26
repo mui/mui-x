@@ -27,16 +27,16 @@ const arSDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'بحث...',
+  toolbarQuickFilterLabel: 'بحث',
+  toolbarQuickFilterDeleteIconLabel: 'أزال',
 
   // Export selector toolbar button text
   toolbarExport: 'تصدير',
   toolbarExportLabel: 'تصدير',
   toolbarExportCSV: 'تنزيل كملف CSV',
-  // toolbarExportPrint: 'Print',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportPrint: 'طباعة',
+  toolbarExportExcel: 'تحميل كملف الإكسل',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'البحث عن العمود',
@@ -47,6 +47,7 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'إضافة مرشِح',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLogicOperator: 'عامل منطقي',
   filterPanelOperator: 'عامل',
@@ -70,6 +71,33 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'خالي',
   filterOperatorIsNotEmpty: 'غير خالي',
   filterOperatorIsAnyOf: 'أي من',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'أي',
@@ -133,20 +161,20 @@ const arSDGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `إيقاف التجميع حسب ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'اظهار/اخفاء لوحة التفاصيل',
   expandDetailPanel: 'توسيع',
   collapseDetailPanel: 'طوي',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'أعادة ترتيب الصفوف',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'الدلالات الحسابية',
+  aggregationFunctionLabelSum: 'مجموع',
+  aggregationFunctionLabelAvg: 'معدل',
+  aggregationFunctionLabelMin: 'الحد الادنى',
+  aggregationFunctionLabelMax: 'الحد الاقصى',
+  aggregationFunctionLabelSize: 'الحجم',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

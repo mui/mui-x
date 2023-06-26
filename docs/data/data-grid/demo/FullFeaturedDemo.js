@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import {
   DataGridPro,
@@ -224,13 +223,6 @@ function SettingsPanel(props) {
   );
 }
 
-SettingsPanel.propTypes = {
-  onApply: PropTypes.func.isRequired,
-  size: PropTypes.number.isRequired,
-  theme: PropTypes.oneOf(['ant', 'default']).isRequired,
-  type: PropTypes.oneOf(['Commodity', 'Employee']).isRequired,
-};
-
 export default function FullFeaturedDemo() {
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState('Commodity');
@@ -301,10 +293,10 @@ export default function FullFeaturedDemo() {
       />
       <DataGridComponent
         {...data}
-        components={{
-          Toolbar: GridToolbar,
+        slots={{
+          toolbar: GridToolbar,
         }}
-        componentsProps={{
+        slotProps={{
           toolbar: { showQuickFilter: true },
         }}
         loading={loading}

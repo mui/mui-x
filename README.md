@@ -19,6 +19,7 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
+- [Charts](https://mui.com/x/react-charts/)
 
 ## Installation
 
@@ -29,6 +30,10 @@ Read the Data Grid [Installation instructions](https://mui.com/x/react-data-grid
 ### Date and Time Pickers
 
 Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation) in the MUI X docs.
+
+### Charts
+
+Read the Charts [Installation instructions](https://mui.com/x/react-charts/#getting-started) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 
@@ -47,13 +52,14 @@ See the [Pricing](https://mui.com/pricing/) page for a detailed feature comparis
 
 ### Community Plan
 
-The free version of MUI X is [published under an MIT license](https://tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
+The free version of MUI X is [published under an MIT license](https://www.tldrlegal.com/license/mit-license) and is [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd#20f609acab4441cf9346614119fbbac1).
 This version contains features that we believe are maintainable by contributions from the open-source community.
 
 MIT licensed packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
+- [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
 
 ### Pro Plan
 
@@ -90,7 +96,7 @@ You can search through existing issues and pull requests to see if someone has r
 
 Visit Stack Overflow to ask questions and read crowdsourced answers from expert developers in the MUI community, as well as MUI maintainers.
 
-[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow using the "mui" tag.
+[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
 
 ### Bugs and feature requests
 

@@ -47,6 +47,7 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Xóa',
   filterPanelLogicOperator: 'Toán tử logic',
   filterPanelOperator: 'Toán tử',
@@ -70,6 +71,33 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
   // filterOperatorIsAnyOf: 'is any of',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',

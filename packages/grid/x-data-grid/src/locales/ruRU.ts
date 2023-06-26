@@ -55,6 +55,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Удалить',
   filterPanelLogicOperator: 'Логические операторы',
   filterPanelOperator: 'Операторы',
@@ -78,6 +79,33 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'пустой',
   filterOperatorIsNotEmpty: 'не пустой',
   filterOperatorIsAnyOf: 'любой из',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'любой',
@@ -87,7 +115,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Управление колонками',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
   columnMenuUnsort: 'Отменить сортировку',

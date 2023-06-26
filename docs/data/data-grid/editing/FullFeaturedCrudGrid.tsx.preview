@@ -4,13 +4,12 @@
   editMode="row"
   rowModesModel={rowModesModel}
   onRowModesModelChange={handleRowModesModelChange}
-  onRowEditStart={handleRowEditStart}
   onRowEditStop={handleRowEditStop}
   processRowUpdate={processRowUpdate}
-  components={{
-    Toolbar: EditToolbar,
+  slots={{
+    toolbar: EditToolbar,
   }}
-  componentsProps={{
+  slotProps={{
     toolbar: { setRows, setRowModesModel },
   }}
 />

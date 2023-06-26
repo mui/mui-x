@@ -14,7 +14,8 @@ export interface UseSingleInputDateRangeFieldProps<TDate> extends UseDateRangeFi
 export type UseSingleInputDateRangeFieldDefaultizedProps<
   TDate,
   AdditionalProps extends {},
-> = UseDateRangeFieldDefaultizedProps<TDate> & AdditionalProps;
+> = UseDateRangeFieldDefaultizedProps<TDate> &
+  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;
 
 export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -22,10 +23,12 @@ export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extend
 > &
   UseSingleInputDateRangeFieldProps<TDate>;
 
-export interface SingleInputDateRangeFieldProps<TDate>
-  extends UseSingleInputDateRangeFieldComponentProps<TDate, FieldsTextFieldProps> {
+export type SingleInputDateRangeFieldProps<
+  TDate,
+  TChildProps extends {} = FieldsTextFieldProps,
+> = UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps> & {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -37,7 +40,7 @@ export interface SingleInputDateRangeFieldProps<TDate>
    */
   componentsProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<SingleInputDateRangeFieldSlotsComponent>;
@@ -46,7 +49,7 @@ export interface SingleInputDateRangeFieldProps<TDate>
    * @default {}
    */
   slotProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate>;
-}
+};
 
 export type SingleInputDateRangeFieldOwnerState<TDate> = SingleInputDateRangeFieldProps<TDate>;
 

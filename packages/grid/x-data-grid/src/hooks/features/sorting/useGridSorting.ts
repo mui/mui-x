@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -125,7 +126,7 @@ export const useGridSorting = (
       const sortingOrder = colDef.sortingOrder || props.sortingOrder;
 
       if (sortingOrder.some((item) => !!item)) {
-        return [...columnMenuItems, 'ColumnMenuSortItem'];
+        return [...columnMenuItems, 'columnMenuSortItem'];
       }
 
       return columnMenuItems;
@@ -366,7 +367,7 @@ export const useGridSorting = (
   /**
    * EFFECTS
    */
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (props.sortModel !== undefined) {
       apiRef.current.setSortModel(props.sortModel);
     }

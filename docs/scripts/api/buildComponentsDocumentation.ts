@@ -14,6 +14,7 @@ import generatePropTypeDescription, {
 } from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
+import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
@@ -32,8 +33,9 @@ import {
   writePrettifiedFile,
 } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
+import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
-interface ReactApi extends ReactDocgenApi {
+export interface ReactApi extends ReactDocgenApi {
   /**
    * list of page pathnames
    * @example ['/components/Accordion']
@@ -145,7 +147,12 @@ function extractSlots(options: {
       return;
     }
 
-    slots[name] = {
+    // Workaround to generate correct (camelCase) keys for slots in v6 `API Reference` documentation
+    // TODO v7: Remove camelCase once `Grid(Pro|Premium)SlotsComponent` type is refactored to have `camelCase` names
+    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedGridSlotsComponent`
+    const slotName = camelCase(name);
+
+    slots[slotName] = {
       type,
       description,
       default: defaultValue,
@@ -330,6 +337,14 @@ const buildComponentDocumentation = async (options: {
       } else if (propName === 'sx') {
         description +=
           ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
+      }
+      // Parse and generate `@see` doc with a {@link}
+      const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
+      if (seeTag && seeTag.description) {
+        description += ` ${seeTag.description.replace(
+          /{@link ([^|| ]*)[|| ]([^}]*)}/,
+          '<a href="$1">$2</a>',
+        )}`;
       }
       componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 
@@ -531,6 +546,12 @@ Page.getInitialProps = () => {
 
   // eslint-disable-next-line no-console
   console.log('Built API docs for', reactApi.name);
+
+  return {
+    name: reactApi.name,
+    packages: reactApi.packages,
+    folder: project.documentationFolderName,
+  };
 };
 
 interface BuildComponentsDocumentationOptions {
@@ -562,9 +583,10 @@ export default async function buildComponentsDocumentation(
     }
 
     const componentsWithApiDoc = project.getComponentsWithApiDoc(project);
-    return componentsWithApiDoc.map<Promise<void>>(async (filename) => {
+    return componentsWithApiDoc.map<Promise<ApiPageType>>(async (filename) => {
       try {
-        return await buildComponentDocumentation({
+        // Create the api files, and data to create it's link
+        const { name, packages, folder } = await buildComponentDocumentation({
           filename,
           project,
           projects,
@@ -572,6 +594,13 @@ export default async function buildComponentsDocumentation(
           pagesMarkdown,
           documentedInterfaces,
         });
+
+        return {
+          folderName: folder,
+          pathname: `/x/api/${folder}/${kebabCase(name)}`,
+          title: name,
+          plan: getPlan(packages),
+        };
       } catch (error: any) {
         error.message = `${path.relative(process.cwd(), filename)}: ${error.message}`;
         throw error;
@@ -591,6 +620,19 @@ export default async function buildComponentsDocumentation(
   if (fails.length > 0) {
     process.exit(1);
   }
+
+  // Build charts API page indexes
+  const createdPages = builds
+    .filter(
+      (promise): promise is PromiseFulfilledResult<ApiPageType> => promise.status === 'fulfilled',
+    )
+    .map((build) => build.value);
+
+  return saveApiDocPages(createdPages, {
+    dataFolder,
+    identifier: 'component-api',
+    project: projects.get(projects.keys().next().value)!, // Use any project since it's only for pretifier
+  });
 }
 
 interface PageMarkdown {

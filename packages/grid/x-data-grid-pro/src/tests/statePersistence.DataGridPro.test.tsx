@@ -10,7 +10,6 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -72,6 +71,8 @@ const FULL_INITIAL_STATE: GridInitialState = {
   preferencePanel: {
     open: true,
     openedPanelValue: GridPreferencePanelsValue.filters,
+    panelId: undefined,
+    labelId: undefined,
   },
   sorting: {
     sortModel: [{ field: 'id', sort: 'desc' }],

@@ -47,6 +47,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
+  filterPanelRemoveAll: 'Ta bort alla',
   filterPanelDeleteIconLabel: 'Ta bort',
   filterPanelLogicOperator: 'Logisk operatör',
   filterPanelOperator: 'Operatör',
@@ -70,6 +71,33 @@ const svSEGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'är tom',
   filterOperatorIsNotEmpty: 'är inte tom',
   filterOperatorIsAnyOf: 'är någon av',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'något',
@@ -79,7 +107,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Visa kolumner',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Hantera kolumner',
   columnMenuFilter: 'Filtrera',
   columnMenuHideColumn: 'Dölj',
   columnMenuUnsort: 'Osortera',

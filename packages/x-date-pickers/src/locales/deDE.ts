@@ -1,11 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
 // maps TimeView to its translation
-const timeViews = {
+const timeViews: Record<TimeViewWithMeridiem, string> = {
   hours: 'Stunden',
   minutes: 'Minuten',
   seconds: 'Sekunden',
+  meridiem: 'Meridiem',
 };
 
 const deDEPickers: Partial<PickersLocaleText<any>> = {
@@ -48,11 +50,14 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes}`,
   secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds}`,
 
+  // Digital clock labels
+  selectViewText: (view) => `${timeViews[view]} auswählen`,
+
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: 'Kalenderwoche',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Woche ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -73,7 +78,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'TT',
   // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
-  fieldHoursPlaceholder: () => 'ss',
+  fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
   fieldMeridiemPlaceholder: () => 'aa',

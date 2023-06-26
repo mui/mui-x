@@ -1,11 +1,20 @@
-import { MuiPickersAdapter } from '../models';
+import { MuiPickersAdapter, TimeView } from '../../models';
+import { DateOrTimeViewWithMeridiem, TimeViewWithMeridiem } from '../models';
+import { areViewsEqual } from './views';
 
-type Meridiem = 'am' | 'pm' | null;
+const timeViews = ['hours', 'minutes', 'seconds'];
+export const isTimeView = (view: DateOrTimeViewWithMeridiem) => timeViews.includes(view);
+
+export const isInternalTimeView = (
+  view: DateOrTimeViewWithMeridiem,
+): view is TimeViewWithMeridiem => timeViews.includes(view) || view === 'meridiem';
+
+export type Meridiem = 'am' | 'pm';
 
 export const getMeridiem = <TDate>(
   date: TDate | null,
   utils: MuiPickersAdapter<TDate>,
-): Meridiem => {
+): Meridiem | null => {
   if (!date) {
     return null;
   }
@@ -13,7 +22,7 @@ export const getMeridiem = <TDate>(
   return utils.getHours(date) >= 12 ? 'pm' : 'am';
 };
 
-export const convertValueToMeridiem = (value: number, meridiem: Meridiem, ampm: boolean) => {
+export const convertValueToMeridiem = (value: number, meridiem: Meridiem | null, ampm: boolean) => {
   if (ampm) {
     const currentMeridiem = value >= 12 ? 'pm' : 'am';
     if (currentMeridiem !== meridiem) {
@@ -26,7 +35,7 @@ export const convertValueToMeridiem = (value: number, meridiem: Meridiem, ampm: 
 
 export const convertToMeridiem = <TDate>(
   time: TDate,
-  meridiem: 'am' | 'pm',
+  meridiem: Meridiem,
   ampm: boolean,
   utils: MuiPickersAdapter<TDate>,
 ) => {
@@ -47,3 +56,39 @@ export const createIsAfterIgnoreDatePart =
 
     return getSecondsInDay(dateLeft, utils) > getSecondsInDay(dateRight, utils);
   };
+
+export const resolveTimeFormat = (
+  utils: MuiPickersAdapter<any>,
+  { format, views, ampm }: { format?: string; views: readonly TimeView[]; ampm: boolean },
+) => {
+  if (format != null) {
+    return format;
+  }
+
+  const formats = utils.formats;
+  if (areViewsEqual(views, ['hours'])) {
+    return ampm ? `${formats.hours12h} ${formats.meridiem}` : formats.hours24h;
+  }
+
+  if (areViewsEqual(views, ['minutes'])) {
+    return formats.minutes;
+  }
+
+  if (areViewsEqual(views, ['seconds'])) {
+    return formats.seconds;
+  }
+
+  if (areViewsEqual(views, ['minutes', 'seconds'])) {
+    return `${formats.minutes}:${formats.seconds}`;
+  }
+
+  if (areViewsEqual(views, ['hours', 'minutes', 'seconds'])) {
+    return ampm
+      ? `${formats.hours12h}:${formats.minutes}:${formats.seconds} ${formats.meridiem}`
+      : `${formats.hours24h}:${formats.minutes}:${formats.seconds}`;
+  }
+
+  return ampm
+    ? `${formats.hours12h}:${formats.minutes} ${formats.meridiem}`
+    : `${formats.hours24h}:${formats.minutes}`;
+};
