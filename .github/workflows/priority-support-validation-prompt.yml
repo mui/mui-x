@@ -19,7 +19,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@5f728c3dae25f329afbe34ee4d08eef25569d79f # v3.0.2
         id: findComment
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: ${{ github.event.issue.number }}
           comment-author: 'github-actions[bot]'
           body-includes: You have created a priority support request
 
