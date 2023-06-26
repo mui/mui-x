@@ -181,6 +181,8 @@ function AppWrapper(props) {
     productId = 'x-data-grid';
   } else if (canonicalAs.startsWith('/x/api/date-pickers/')) {
     productId = 'x-date-pickers';
+  } else if (canonicalAs.startsWith('/x/api/charts/')) {
+    productId = 'x-charts';
   }
 
   React.useEffect(() => {
