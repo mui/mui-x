@@ -96,17 +96,19 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       }
     }
 
+    const pageSizeOptions = isPageSizeOptionsIncludesPageSize(
+      rootProps.paginationModel?.pageSize ?? paginationModel.pageSize,
+    )
+      ? rootProps.pageSizeOptions
+      : [];
+
     return (
       <GridPaginationRoot
         ref={ref}
         component="div"
         count={rowCount}
         page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
-        rowsPerPageOptions={
-          rootProps.pageSizeOptions?.includes(paginationModel.pageSize)
-            ? rootProps.pageSizeOptions
-            : []
-        }
+        rowsPerPageOptions={pageSizeOptions}
         rowsPerPage={paginationModel.pageSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handlePageSizeChange}
