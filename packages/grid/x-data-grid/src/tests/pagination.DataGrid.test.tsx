@@ -327,7 +327,7 @@ describe('<DataGrid /> - Pagination', () => {
       ]);
     });
 
-    it('should not display a warning if the prop pageSize is in the prop pageSizeOptions when it is an array of objects', () => {
+    it('should not display a warning if the prop pageSize is in the prop pageSizeOptions when it is an array of objects.', () => {
       const pageSize = 10;
 
       expect(() => {
