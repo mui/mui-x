@@ -45,7 +45,7 @@ Those components' name ends with "Chart" and only require the `series` prop, des
 
 They also have plenty of other props to customize the chart behavior.
 
-{{"demo": "SimpleCharts.js", "bg": "inline"}}
+{{"demo": "SimpleCharts.js"}}
 
 ### Multiple charts
 
@@ -53,7 +53,7 @@ To combine different charts, like lines with bars, you can use composition with 
 
 Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<AreaPlot />`, `<ScatterPlot />`)
 
-{{"demo": "Combining.js", "bg": "inline"}}
+{{"demo": "Combining.js"}}
 
 ## Axis management
 

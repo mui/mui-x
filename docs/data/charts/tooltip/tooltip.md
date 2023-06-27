@@ -17,7 +17,7 @@ The tooltip can be triggered by two kinds of events:
 - `'item'`—when the user's mouse hovers over an item on the chart, the tooltip will display data about this specific item.
 - `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip will display data about all series at this specific x value.
 
-{{"demo": "Interaction.js", "bg": "inline"}}
+{{"demo": "Interaction.js"}}
 
 ## Highlights
 
@@ -35,7 +35,7 @@ axisHighlight={{
 }}
 ```
 
-{{"demo": "BandHighlight.js",  "bg": "inline"}}
+{{"demo": "BandHighlight.js" }}
 
 ### Highlighting series
 
@@ -43,7 +43,7 @@ In parallel with the tooltip, you can highlight/fade elements.
 
 This kind of interaction is controlled by series properties `highlightScope` which contains two options:
 
-- `higlighted` Indicates which item to highlight. Its value can be
+- `highlighted` Indicates which item to highlight. Its value can be
   - `'none'` Do nothing (default one).
   - `'item'` Only highlight the item itself.
   - `'series'` Highlight all items of the series.
@@ -52,7 +52,7 @@ This kind of interaction is controlled by series properties `highlightScope` whi
   - `'series'` Fade all the items of the series.
   - `'global'` Fade all the items of the chart.
 
-{{"demo": "ElementHighlights.js", "bg": "inline"}}
+{{"demo": "ElementHighlights.js"}}
 
 ## Customization
 
@@ -64,7 +64,7 @@ Here is a demo with:
 - The time axis is formatted to only show the year
 - The number values are formatted in U.S. Dollars.
 
-{{"demo": "Formatting.js", "bg": "inline"}}
+{{"demo": "Formatting.js"}}
 
 ## Composition
 

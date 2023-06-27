@@ -17,20 +17,20 @@ This `data` array corresponds to y values.
 By default, those y values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
 To modify the x values, you should provide a `xAxis` with data property.
 
-{{"demo": "BasicLineChart.js", "bg": "inline"}}
+{{"demo": "BasicLineChart.js"}}
 
 ### Area
 
 You can fill the area of the line by setting the series' `area` property to `true`.
 
-{{"demo": "BasicArea.js", "bg": "inline"}}
+{{"demo": "BasicArea.js"}}
 
 ## Stacking
 
 Each line series can get a `stack` property which expects a string value.
 Series with the same `stack` will be stacked on top of each other.
 
-{{"demo": "StackedAreas.js", "bg": "inline"}}
+{{"demo": "StackedAreas.js"}}
 
 ### Stacking strategy
 
@@ -47,7 +47,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
-{{"demo": "InterpolationDemo.js", "bg": "inline"}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline", "disableAd": true}}
 
 ### CSS
 
@@ -75,4 +75,4 @@ sx={{
 }}
 ```
 
-{{"demo": "CSSCustomization.js", "bg": "inline"}}
+{{"demo": "CSSCustomization.js"}}
