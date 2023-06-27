@@ -4,6 +4,7 @@ import { styled } from '@mui/system';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -33,8 +34,18 @@ export const GridMainContainer = React.forwardRef<HTMLDivElement, React.PropsWit
   (props, ref) => {
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
+
+    // ariaV7 should never change
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const ariaAttributes = rootProps.experimentalFeatures?.ariaV7 ? useGridAriaAttributes() : null;
+
     return (
-      <GridMainContainerRoot ref={ref} className={classes.root} ownerState={rootProps}>
+      <GridMainContainerRoot
+        ref={ref}
+        className={classes.root}
+        ownerState={rootProps}
+        {...ariaAttributes}
+      >
         {props.children}
       </GridMainContainerRoot>
     );

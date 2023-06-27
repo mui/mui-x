@@ -79,7 +79,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ clipboardPaste?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ ariaV7?: bool, clipboardPaste?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
