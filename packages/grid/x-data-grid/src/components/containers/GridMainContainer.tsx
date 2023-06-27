@@ -35,9 +35,10 @@ export const GridMainContainer = React.forwardRef<HTMLDivElement, React.PropsWit
     const rootProps = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
-    // ariaV7 should never change
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const ariaAttributes = rootProps.experimentalFeatures?.ariaV7 ? useGridAriaAttributes() : null;
+    const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
+      ? useGridAriaAttributes
+      : null;
+    const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
 
     return (
       <GridMainContainerRoot

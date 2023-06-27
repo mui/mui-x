@@ -28,6 +28,10 @@ You can start using the new accessibility features by enabling `ariaV7` experime
 <DataGrid experimentalFeatures={{ ariaV7: true }} />
 ```
 
+:::warning
+The value of `ariaV7` should be constant and not change during the lifetime of the Data Grid.
+:::
+
 {{"demo": "GridAriaV7.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Density

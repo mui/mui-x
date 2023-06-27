@@ -54,9 +54,10 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
 
-  // ariaV7 should never change
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const ariaAttributes = rootProps.experimentalFeatures?.ariaV7 ? null : useGridAriaAttributes();
+  const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
+    ? null
+    : useGridAriaAttributes;
+  const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
 
   const ownerState = {
     ...rootProps,
