@@ -9,8 +9,12 @@ title: Charts - Pie demonstration
 
 ## TwoLevelPieChart
 
-{{"demo": "TwoLevelPieChart.js", "bg": "inline"}}
+{{"demo": "TwoLevelPieChart.js"}}
 
 ## StraightAnglePieChart
 
-{{"demo": "StraightAnglePieChart.js", "bg": "inline"}}
+{{"demo": "StraightAnglePieChart.js"}}
+
+## PieChartWithPaddingAngle
+
+{{"demo": "PieChartWithPaddingAngle.js"}}

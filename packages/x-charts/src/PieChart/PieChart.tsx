@@ -22,6 +22,8 @@ export interface PieChartProps
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
 }
+
+const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
 function PieChart(props: PieChartProps) {
   const {
     xAxis,
@@ -29,7 +31,7 @@ function PieChart(props: PieChartProps) {
     series,
     width,
     height,
-    margin = { top: 5, bottom: 5, left: 5, right: 100 },
+    margin: marginProps,
     colors,
     sx,
     tooltip = { trigger: 'item' },
@@ -42,6 +44,7 @@ function PieChart(props: PieChartProps) {
     children,
   } = props;
 
+  const margin = { ...defaultMargin, ...marginProps };
   return (
     <ResponsiveChartContainer
       series={series.map((s) => ({ type: 'pie', ...s }))}

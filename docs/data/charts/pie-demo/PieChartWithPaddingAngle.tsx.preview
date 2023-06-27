@@ -1,0 +1,11 @@
+<PieChart
+  series={[
+    {
+      startAngle: -90,
+      endAngle: 90,
+      paddingAngle: 5,
+      data,
+    },
+  ]}
+  height={300}
+/>
