@@ -427,6 +427,12 @@ export const useField = <
   }, [valueManager, validationError, error]);
 
   React.useEffect(() => {
+    if (!inputError && !selectedSectionIndexes) {
+      resetCharacterQuery();
+    }
+  }, [state.referenceValue, selectedSectionIndexes, inputError]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
     if (inputRef.current && inputRef.current === document.activeElement) {
       setSelectedSections('all');
