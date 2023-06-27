@@ -9,17 +9,17 @@ _Jun 22, 2023_
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 We release a new package `@mui/x-charts`.
-  This package aims at simplifying the integration of charts into your dashboards. 📊
+- 🎁 We released a new open-source package: `@mui/x-charts`. This package aims at simplifying the integration of charts into your dashboards. 📊
 
-  ![image](https://github.com/mui/mui-x/assets/45398769/613bae2f-537d-4ec3-8046-591d1a504a72)
+  <img width="512" alt="charts" src="https://github.com/mui/mui-x/assets/3165635/41201d3c-16a4-442d-a230-68356e6b433d">
 
-  It already contains [lines](https://mui.com/x/react-charts/lines/), [bars](https://mui.com/x/react-charts/bars/), and [scatter](https://mui.com/x/react-charts/scatter/) charts with basic customization features.
-  Please, visit the new [documentation](https://mui.com/x/react-charts/) to know what it does, and open issues to get the feature you need to be implemented.
+  It already contains [line](https://mui.com/x/react-charts/lines/), [bar](https://mui.com/x/react-charts/bars/), and [scatter](https://mui.com/x/react-charts/scatter/) charts, with basic customization features. Check out the [documentation](https://mui.com/x/react-charts/) to see what it can do, and open issues to get the feature you need implemented.
 
-- 🚀 Introduce the UTC and timezone support for pickers.
-  ![image](https://github.com/mui/mui-x/assets/3309670/f8b552b0-9ec2-417b-b769-95740308291d)
-  Please visit the [documentation](https://mui.com/x/react-date-pickers/timezone/) to learn how to use it.
+- 🚀 Introducing UTC and timezone support for pickers.
+
+  <img width="774" height="314" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348">
+
+  Visit the [documentation](https://mui.com/x/react-date-pickers/timezone/) to learn how to use it.
 
 - 🌍 Improve Brazilian Portuguese (pt-BR) on the data grid
 - 🌍 Improve Czech (cs-CZ) locale on the pickers
