@@ -36,8 +36,10 @@ const GridHeaderFilterRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'HeaderFilterRow',
   overridesResolver: (props, styles) => styles.headerFilterRow,
-})<{ ownerState: OwnerState }>(() => ({
+})<{ ownerState: OwnerState; height: number }>(({ height }) => ({
   display: 'flex',
+  boxSizing: 'border-box',
+  height,
 }));
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
@@ -136,6 +138,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         className={classes.headerFilterRow}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
+        height={headerHeight}
       >
         {filters}
       </GridHeaderFilterRow>

@@ -235,7 +235,6 @@ const GridHeaderFilterCell = React.forwardRef<HTMLDivElement, GridHeaderFilterCe
         className={clsx(classes.root, headerClassName)}
         ref={handleRef}
         style={{
-          height,
           width,
           minWidth: width,
           maxWidth: width,
