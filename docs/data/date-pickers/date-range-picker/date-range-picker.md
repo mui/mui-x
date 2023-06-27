@@ -12,14 +12,14 @@ materialDesign: https://material.io/components/date-pickers
 <p class="description">The date range picker let the user select a range of dates.</p>
 
 :::success
-This component has received several major improvements on the new **v6 beta**:
+This component has received several major improvements on the new **v6**:
 
-- [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
-- [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
-- [Shortcuts for picking specific dates in a calendar](https://next.mui.com/x/react-date-pickers/shortcuts/)
-- [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/)
+- [Fields: the new default input for pickers](https://mui.com/x/react-date-pickers/fields/).
+- [Improved layout customization](https://mui.com/x/react-date-pickers/custom-layout/)
+- [Shortcuts for picking specific dates in a calendar](https://mui.com/x/react-date-pickers/shortcuts/)
+- [Edit date ranges with drag and drop](https://mui.com/x/react-date-pickers/date-range-calendar/)
 
-You can also take a look at [the dedicated blog post](https://mui.com/blog/v6-beta-pickers/) and the [new documentation of the DateRangePicker](https://next.mui.com/x/react-date-pickers/date-range-picker/) for more information.
+You can also take a look at [the dedicated blog post](https://mui.com/blog/v6-beta-pickers/) and the [new documentation of the DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/) for more information.
 :::
 
 ## Basic usage
