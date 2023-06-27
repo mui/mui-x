@@ -11,8 +11,8 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarDensity: 'Densidad',
   toolbarDensityLabel: 'Densidad',
   toolbarDensityCompact: 'Compacta',
-  toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Comoda',
+  toolbarDensityStandard: 'Estándar',
+  toolbarDensityComfortable: 'Cómoda',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnas',
@@ -47,7 +47,7 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Remover todos',
   filterPanelDeleteIconLabel: 'Borrar',
   filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',
