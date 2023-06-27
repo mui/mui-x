@@ -45,6 +45,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
   const {
     ref: inputRef,
     onPaste,
+    onKeyDown,
     inputMode,
     readOnly,
     clearable,
@@ -74,7 +75,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
       ref={ref}
       {...processedFieldProps}
       InputProps={{ ...ProcessedInputProps, readOnly }}
-      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
+      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
     />
   );
 }) as DateRangeFieldComponent;

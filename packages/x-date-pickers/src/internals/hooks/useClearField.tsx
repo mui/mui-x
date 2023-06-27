@@ -80,7 +80,7 @@ export const useClearField = <
         visibility: 'visible',
       },
       '@media (pointer: fine)': {
-        '&.Mui-focused .clearButton': {
+        '& .clearButton': {
           visibility: forwardedFieldProps?.inputHasFocus ? 'visible' : 'hidden',
         },
 
