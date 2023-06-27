@@ -15,7 +15,8 @@ const useChartDimensions = (
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
 
-  const computeSizeAndPublishResizeEvent = React.useCallback(() => {
+  // Adaptation of the `computeSizeAndPublishResizeEvent` from the grid.
+  const computeSize = React.useCallback(() => {
     const mainEl = rootRef?.current;
 
     if (!mainEl) {
@@ -33,7 +34,7 @@ const useChartDimensions = (
   }, []);
 
   React.useEffect(() => {
-    // Ensure the error detection occures after first rendering
+    // Ensure the error detection occurs after the first rendering.
     displayError.current = true;
   }, []);
 
@@ -41,7 +42,7 @@ const useChartDimensions = (
     if (inWidth !== undefined && inHeight !== undefined) {
       return () => {};
     }
-    computeSizeAndPublishResizeEvent();
+    computeSize();
 
     const elementToObserve = rootRef.current;
     if (typeof ResizeObserver === 'undefined') {
@@ -52,7 +53,7 @@ const useChartDimensions = (
     const observer = new ResizeObserver(() => {
       // See https://github.com/mui/mui-x/issues/8733
       animationFrame = window.requestAnimationFrame(() => {
-        computeSizeAndPublishResizeEvent();
+        computeSize();
       });
     });
 
@@ -69,7 +70,7 @@ const useChartDimensions = (
         observer.unobserve(elementToObserve);
       }
     };
-  }, [computeSizeAndPublishResizeEvent, inHeight, inWidth]);
+  }, [computeSize, inHeight, inWidth]);
 
   if (process.env.NODE_ENV !== 'production') {
     if (displayError.current && inWidth === undefined && width === 0) {
