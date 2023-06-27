@@ -27,6 +27,7 @@ const GridColumnHeadersRoot = styled('div', {
   overflow: 'hidden',
   display: 'flex',
   alignItems: 'center',
+  flexShrink: 0,
   boxSizing: 'border-box',
   borderBottom: '1px solid',
   borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',

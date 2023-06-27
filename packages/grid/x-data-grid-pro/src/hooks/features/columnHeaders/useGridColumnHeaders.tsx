@@ -11,7 +11,6 @@ import {
   useGridColumnHeaders as useGridColumnHeadersCommunity,
   UseGridColumnHeadersProps,
   GetHeadersParams,
-  getTotalHeaderHeight,
   useGridPrivateApiContext,
   getGridFilter,
 } from '@mui/x-data-grid/internals';
@@ -64,9 +63,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const disableHeaderFiltering = !rootProps.unstable_headerFilters;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const totalHeaderHeight =
-    getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight) +
-    (disableHeaderFiltering ? 0 : headerHeight);
 
   const columnHeaderFilterFocus = useGridSelector(
     apiRef,
@@ -145,17 +141,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     );
   };
 
-  const rootStyle = {
-    minHeight: totalHeaderHeight,
-    maxHeight: totalHeaderHeight,
-    lineHeight: `${headerHeight}px`,
-  };
-
   return {
     ...otherProps,
     getColumnFilters,
-    getRootProps: disableHeaderFiltering
-      ? getRootProps
-      : (other = {}) => ({ style: rootStyle, ...other }),
+    getRootProps: disableHeaderFiltering ? getRootProps : (other = {}) => other,
   };
 };

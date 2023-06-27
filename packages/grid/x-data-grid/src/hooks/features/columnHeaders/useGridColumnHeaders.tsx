@@ -9,7 +9,7 @@ import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
-import { getFirstColumnIndexToRender, getTotalHeaderHeight } from '../columns/gridColumnsUtils';
+import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import {
   areRenderContextsEqual,
@@ -108,7 +108,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
   const setRenderContext = React.useCallback(
@@ -487,19 +486,13 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     return columns;
   };
 
-  const rootStyle = {
-    minHeight: totalHeaderHeight,
-    maxHeight: totalHeaderHeight,
-    lineHeight: `${headerHeight}px`,
-  };
-
   return {
     renderContext,
     getColumnHeaders,
     getColumnsToRender,
     getColumnGroupHeaders,
     isDragging: !!dragCol,
-    getRootProps: (other = {}) => ({ style: rootStyle, ...other }),
+    getRootProps: (other = {}) => other,
     getInnerProps: () => ({
       ref: handleInnerRef,
       role: 'rowgroup',
