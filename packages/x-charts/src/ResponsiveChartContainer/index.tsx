@@ -1,6 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
+import { styled } from '@mui/material/styles';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { MakeOptional } from '../models/helpers';
 
@@ -90,25 +91,30 @@ const useChartDimensions = (
 
 export type ResponsiveChartContainerProps = MakeOptional<ChartContainerProps, 'width' | 'height'>;
 
+const ResizableContainer = styled('div', {
+  name: 'MuiResponsiveChart',
+  slot: 'Container',
+})<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
+  display: 'flex',
+  position: 'relative',
+  flexGrow: 1,
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+}));
+
 export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
   const [containerRef, width, height] = useChartDimensions(props.width, props.height);
 
   return (
-    <div
+    <ResizableContainer
       ref={containerRef}
-      style={{
-        width: props.width ?? '100%',
-        height: props.height ?? '100%',
-        display: 'flex',
-        position: 'relative',
-        flexGrow: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-      }}
+      ownerState={{ width: props.width, height: props.height }}
     >
       <ChartContainer {...props} width={width} height={height} />
-    </div>
+    </ResizableContainer>
   );
 }
