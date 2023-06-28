@@ -82,4 +82,4 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    * @default true
    */
   requiresFilterValue?: boolean;
-};
+}
