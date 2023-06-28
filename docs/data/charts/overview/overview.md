@@ -1,5 +1,5 @@
 ---
-title: Charts - Overview
+title: React Chart components
 ---
 
 # Charts - Overview
