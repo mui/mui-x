@@ -244,7 +244,7 @@ export const useGridCellSelection = (
       clearTimeout(autoScrollInterval.current);
       autoScrollInterval.current = null;
     }
-  }, [apiRef]);
+  }, []);
 
   const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>((params) => {
     cellWithVirtualFocus.current = { id: params.id, field: params.field };
