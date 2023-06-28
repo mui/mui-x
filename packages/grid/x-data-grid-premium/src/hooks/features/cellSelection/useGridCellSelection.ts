@@ -441,7 +441,9 @@ export const useGridCellSelection = (
     if (props.unstable_cellSelectionModel) {
       apiRef.current.unstable_setCellSelectionModel(props.unstable_cellSelectionModel);
     }
+  }, [apiRef, props.unstable_cellSelectionModel]);
 
+  React.useEffect(() => {
     const rootRef = apiRef.current.rootElementRef?.current;
 
     return () => {
@@ -450,7 +452,7 @@ export const useGridCellSelection = (
       const document = ownerDocument(rootRef);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [apiRef, handleMouseUp, props.unstable_cellSelectionModel, stopAutoScroll]);
+  }, [apiRef, handleMouseUp, stopAutoScroll]);
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {
