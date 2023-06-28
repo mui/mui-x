@@ -31,7 +31,7 @@ export type GetApplyFilterFnLegacy<R extends GridValidRowModel = any, V = any, F
  * @demos
  *   - [Custom filter operator](/x/react-data-grid/filtering/customization/#create-a-custom-operator)
  */
-export type GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> = {
+export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The label of the filter operator.
    */
