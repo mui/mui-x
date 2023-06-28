@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Axis
 ---
 
