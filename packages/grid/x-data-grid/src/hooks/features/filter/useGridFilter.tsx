@@ -5,7 +5,7 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridGroupNode, GridRowId } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -15,7 +15,7 @@ import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePan
 import { getDefaultGridFilterModel } from './gridFilterState';
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
-import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
+import { gridRowsLookupSelector } from '../rows';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
@@ -72,8 +72,10 @@ export const useGridFilter = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
+    | 'rows'
     | 'initialState'
     | 'filterModel'
+    | 'getRowId'
     | 'onFilterModelChange'
     | 'filterMode'
     | 'disableMultipleColumnsFiltering'
@@ -96,7 +98,9 @@ export const useGridFilter = (
     apiRef.current.setState((state) => {
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
-        props.filterMode === 'client' ? buildAggregatedFilterApplier(filterModel, apiRef) : null;
+        props.filterMode === 'client'
+          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef)
+          : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
         isRowMatchingFilters,
@@ -119,7 +123,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [props.filterMode, apiRef]);
+  }, [apiRef, props.filterMode, props.getRowId]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
@@ -384,44 +388,56 @@ export const useGridFilter = (
     [props.slots.filterPanel, props.slotProps?.filterPanel],
   );
 
+  const dataRowIdToIdLookup = apiRef.current.state.rows.dataRowIdToModelLookup;
+  const rows = React.useMemo(() => Object.values(dataRowIdToIdLookup), [dataRowIdToIdLookup]);
+
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
-      if (props.filterMode === 'client' && params.isRowMatchingFilters) {
-        const tree = gridRowTreeSelector(apiRef);
-        const rowIds = (tree[GRID_ROOT_GROUP_ID] as GridGroupNode).children;
-        const filteredRowsLookup: Record<GridRowId, boolean> = {};
-        const filterCache = {};
-
-        for (let i = 0; i < rowIds.length; i += 1) {
-          const rowId = rowIds[i];
-          let isRowPassing;
-          if (typeof rowId === 'string' && rowId.startsWith('auto-generated-group-footer')) {
-            isRowPassing = true;
-          } else {
-            const { passingFilterItems, passingQuickFilterValues } =
-              params.isRowMatchingFilters(rowId);
-            isRowPassing = passFilterLogic(
-              [passingFilterItems],
-              [passingQuickFilterValues],
-              params.filterModel,
-              apiRef,
-              filterCache,
-            );
-          }
-          filteredRowsLookup[rowId] = isRowPassing;
-        }
+      if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
         return {
-          filteredRowsLookup,
+          filteredRowsLookup: {},
           filteredDescendantCountLookup: {},
         };
       }
 
+      const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
+      const filteredRowsLookup: Record<GridRowId, boolean> = {};
+      const { isRowMatchingFilters } = params;
+      const filterCache = {};
+
+      const result = {
+        passingFilterItems: null,
+        passingQuickFilterValues: null,
+      };
+
+      for (let i = 0; i < rows.length; i += 1) {
+        const row = rows[i];
+
+        isRowMatchingFilters(row, undefined, result);
+
+        const isRowPassing = passFilterLogic(
+          [result.passingFilterItems],
+          [result.passingQuickFilterValues],
+          params.filterModel,
+          apiRef,
+          filterCache,
+        );
+
+        filteredRowsLookup[row.id] = isRowPassing;
+      }
+
+      const footerId = 'auto-generated-group-footer-root';
+      const footer = dataRowIdToModelLookup[footerId];
+      if (footer) {
+        filteredRowsLookup[footerId] = true;
+      }
+
       return {
-        filteredRowsLookup: {},
+        filteredRowsLookup,
         filteredDescendantCountLookup: {},
       };
     },
-    [apiRef, props.filterMode],
+    [apiRef, props.filterMode, rows],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
