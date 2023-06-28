@@ -35,6 +35,10 @@
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
+    },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -42,6 +46,7 @@
       }
     },
     "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "spacing": {
@@ -57,21 +62,25 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
     "useFlexGap": { "type": { "name": "bool" } },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {
-    "Root": { "default": "MultiInputDateRangeFieldRoot", "type": { "name": "elementType" } },
-    "Separator": {
+    "root": { "default": "MultiInputDateRangeFieldRoot", "type": { "name": "elementType" } },
+    "separator": {
       "default": "MultiInputDateRangeFieldSeparator",
       "type": { "name": "elementType" }
     },
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "MultiInputDateRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateRangeField" },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiInputDateRangeField" }
   ]

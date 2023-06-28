@@ -4,7 +4,7 @@ import { GridCellParams } from '../../../../models/params/gridCellParams';
 import { GridStateColDef } from '../../../../models/colDef/gridColDef';
 import { buildWarning } from '../../../../utils/warning';
 
-const serializeCellValue = (value: any, delimiterCharacter: string) => {
+function sanitizeCellValue(value: any, delimiterCharacter: string) {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
 
@@ -17,6 +17,30 @@ const serializeCellValue = (value: any, delimiterCharacter: string) => {
   }
 
   return value;
+}
+
+export const serializeCellValue = (
+  cellParams: GridCellParams,
+  options: { delimiterCharacter: string; ignoreValueFormatter: boolean },
+) => {
+  const { delimiterCharacter, ignoreValueFormatter } = options;
+  let value: any;
+  if (ignoreValueFormatter) {
+    const columnType = cellParams.colDef.type;
+    if (columnType === 'number') {
+      value = String(cellParams.value);
+    } else if (columnType === 'date' || columnType === 'dateTime') {
+      value = (cellParams.value as Date)?.toISOString();
+    } else if (typeof cellParams.value?.toString === 'function') {
+      value = cellParams.value.toString();
+    } else {
+      value = cellParams.value;
+    }
+  } else {
+    value = cellParams.formattedValue;
+  }
+
+  return sanitizeCellValue(value, delimiterCharacter);
 };
 
 const objectFormattedValueWarning = buildWarning([
@@ -24,12 +48,19 @@ const objectFormattedValueWarning = buildWarning([
   'You can provide a `valueFormatter` with a string representation to be used.',
 ]);
 
-const serializeRow = (
-  id: GridRowId,
-  columns: GridStateColDef[],
-  getCellParams: (id: GridRowId, field: string) => GridCellParams,
-  delimiterCharacter: string,
-) =>
+const serializeRow = ({
+  id,
+  columns,
+  getCellParams,
+  delimiterCharacter,
+  ignoreValueFormatter,
+}: {
+  id: GridRowId;
+  columns: GridStateColDef[];
+  getCellParams: (id: GridRowId, field: string) => GridCellParams;
+  delimiterCharacter: string;
+  ignoreValueFormatter: boolean;
+}) =>
   columns.map((column) => {
     const cellParams = getCellParams(id, column.field);
     if (process.env.NODE_ENV !== 'production') {
@@ -37,7 +68,10 @@ const serializeRow = (
         objectFormattedValueWarning();
       }
     }
-    return serializeCellValue(cellParams.formattedValue, delimiterCharacter);
+    return serializeCellValue(cellParams, {
+      delimiterCharacter,
+      ignoreValueFormatter,
+    });
   });
 
 interface BuildCSVOptions {
@@ -46,17 +80,29 @@ interface BuildCSVOptions {
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: string;
   includeHeaders: boolean;
+  ignoreValueFormatter: boolean;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
-  const { columns, rowIds, getCellParams, delimiterCharacter, includeHeaders } = options;
+  const {
+    columns,
+    rowIds,
+    getCellParams,
+    delimiterCharacter,
+    includeHeaders,
+    ignoreValueFormatter,
+  } = options;
 
   const CSVBody = rowIds
     .reduce<string>(
       (acc, id) =>
-        `${acc}${serializeRow(id, columns, getCellParams, delimiterCharacter).join(
+        `${acc}${serializeRow({
+          id,
+          columns,
+          getCellParams,
           delimiterCharacter,
-        )}\r\n`,
+          ignoreValueFormatter,
+        }).join(delimiterCharacter)}\r\n`,
       '',
     )
     .trim();
@@ -67,7 +113,7 @@ export function buildCSV(options: BuildCSVOptions): string {
 
   const CSVHead = `${columns
     .filter((column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field)
-    .map((column) => serializeCellValue(column.headerName || column.field, delimiterCharacter))
+    .map((column) => sanitizeCellValue(column.headerName || column.field, delimiterCharacter))
     .join(delimiterCharacter)}\r\n`;
 
   return `${CSVHead}${CSVBody}`.trim();

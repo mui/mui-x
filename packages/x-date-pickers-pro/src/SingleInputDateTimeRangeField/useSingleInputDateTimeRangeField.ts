@@ -3,6 +3,7 @@ import {
   useField,
   applyDefaultDate,
   useDefaultDates,
+  splitFieldInternalAndForwardedProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseSingleInputDateTimeRangeFieldDefaultizedProps,
@@ -10,7 +11,7 @@ import {
   UseSingleInputDateTimeRangeFieldProps,
 } from './SingleInputDateTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
-import { validateDateTimeRange } from '../internal/hooks/validation/useDateTimeRangeValidation';
+import { validateDateTimeRange } from '../internal/utils/validation/validateDateTimeRange';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateTimeRangeFieldProps<TDate>,
@@ -37,60 +38,20 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
 };
 
 export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>({
-  props,
+  props: inProps,
   inputRef,
 }: UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps>) => {
-  const {
-    value,
-    defaultValue,
-    format,
-    formatDensity,
-    onChange,
-    readOnly,
-    onError,
-    shouldDisableDate,
-    minDate,
-    maxDate,
-    disableFuture,
-    disablePast,
-    minTime,
-    maxTime,
-    minDateTime,
-    maxDateTime,
-    minutesStep,
-    shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation,
-    selectedSections,
-    onSelectedSectionsChange,
-    unstableFieldRef,
-    ...other
-  } = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(props);
+  const props = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inProps);
+
+  const { forwardedProps, internalProps } = splitFieldInternalAndForwardedProps<
+    typeof props,
+    keyof UseSingleInputDateTimeRangeFieldProps<any>
+  >(props, 'date-time');
 
   return useField({
     inputRef,
-    forwardedProps: other as Omit<TChildProps, keyof UseSingleInputDateTimeRangeFieldProps<TDate>>,
-    internalProps: {
-      value,
-      defaultValue,
-      format,
-      formatDensity,
-      onChange,
-      readOnly,
-      onError,
-      shouldDisableDate,
-      minDate,
-      maxDate,
-      disableFuture,
-      disablePast,
-      minTime,
-      maxTime,
-      minutesStep,
-      shouldDisableTime,
-      disableIgnoringDatePartForTimeValidation,
-      selectedSections,
-      onSelectedSectionsChange,
-      unstableFieldRef,
-    },
+    forwardedProps,
+    internalProps,
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
     validator: validateDateTimeRange,

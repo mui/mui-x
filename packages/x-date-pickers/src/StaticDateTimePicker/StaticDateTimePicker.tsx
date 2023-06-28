@@ -7,7 +7,7 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView } from '../models';
-import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticDateTimePickerComponent = (<TDate>(
@@ -20,6 +20,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
 ) {
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
+    DateOrTimeView,
     StaticDateTimePickerProps<TDate>
   >(inProps, 'MuiStaticDateTimePicker');
 
@@ -60,8 +61,9 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
   const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    ref,
+    valueType: 'date-time',
     validator: validateDateTime,
+    ref,
   });
 
   return renderPicker();
@@ -113,7 +115,7 @@ StaticDateTimePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -302,6 +304,7 @@ StaticDateTimePicker.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
@@ -343,6 +346,14 @@ StaticDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

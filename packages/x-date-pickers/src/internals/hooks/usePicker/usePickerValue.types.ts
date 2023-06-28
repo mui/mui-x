@@ -1,8 +1,17 @@
 import { FieldChangeHandlerContext, UseFieldInternalProps } from '../useField';
-import { InferError, Validator } from '../validation/useValidation';
+import { InferError, Validator } from '../useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
-import { FieldSection, FieldSelectedSections, MuiPickersAdapter } from '../../../models';
+import {
+  FieldSection,
+  FieldSelectedSections,
+  FieldValueType,
+  TimezoneProps,
+  MuiPickersAdapter,
+  PickersTimezone,
+} from '../../../models';
+import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
+import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -26,9 +35,35 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * Method returning the value to set when clicking the "Today" button
    * @template TDate, TValue
    * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {PickersTimezone} timezone The current timezone.
+   * @param {FieldValueType} valueType The type of the value being edited.
    * @returns {TValue} The value to set when clicking the "Today" button.
    */
-  getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
+  getTodayValue: (
+    utils: MuiPickersAdapter<TDate>,
+    timezone: PickersTimezone,
+    valueType: FieldValueType,
+  ) => TValue;
+  /**
+   * @template TDate, TValue
+   * Method returning the reference value to use when mounting the component.
+   * @param {object} params The params of the method.
+   * @param {TDate | undefined} params.referenceDate The referenceDate provided by the user.
+   * @param {TValue} params.value The value provided by the user.
+   * @param {GetDefaultReferenceDateProps<TDate>} params.props The validation props needed to compute the reference value.
+   * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
+   * @param {number} params.granularity The granularity of the selection possible on this component.
+   * @param {PickersTimezone} params.timezone The current timezone.
+   * @returns {TValue} The reference value to use for non-provided dates.
+   */
+  getInitialReferenceValue: (params: {
+    referenceDate: TDate | undefined;
+    value: TValue;
+    props: GetDefaultReferenceDateProps<TDate>;
+    utils: MuiPickersAdapter<TDate>;
+    granularity: number;
+    timezone: PickersTimezone;
+  }) => TValue;
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
    * @template TDate, TValue
@@ -69,6 +104,28 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * The value identifying no error, used to initialise the error state.
    */
   defaultErrorState: TError;
+  /**
+   * Return the timezone of the date inside a value.
+   * Throw an error on range picker if both values don't have the same timezone.
+   @template TValue, TDate
+   @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   @param {TValue} value The current value.
+   @returns {string | null} The timezone of the current value.
+   */
+  getTimezone: (utils: MuiPickersAdapter<TDate>, value: TValue) => string | null;
+  /**
+   * Change the timezone of the dates inside a value.
+   @template TValue, TDate
+   @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   @param {PickersTimezone} timezone The current timezone.
+   @param {TValue} value The value to convert.
+   @returns {TValue} The value with the new dates in the new timezone.
+   */
+  setTimezone: (
+    utils: MuiPickersAdapter<TDate>,
+    timezone: PickersTimezone,
+    value: TValue,
+  ) => TValue;
 }
 
 export interface PickerChangeHandlerContext<TError> {
@@ -137,6 +194,11 @@ export type PickerValueUpdateAction<TValue, TError> =
       name: 'setValueFromAction';
       value: TValue;
       pickerAction: 'accept' | 'today' | 'cancel' | 'dismiss' | 'clear';
+    }
+  | {
+      name: 'setValueFromShortcut';
+      value: TValue;
+      changeImportance: PickerShortcutChangeImportance;
     };
 
 /**
@@ -184,7 +246,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
  */
 export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSection>
   extends Pick<
-    UseFieldInternalProps<TValue, TSection, unknown>,
+    UseFieldInternalProps<TValue, unknown, TSection, unknown>,
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
@@ -214,7 +276,8 @@ export interface UsePickerValueNonStaticProps<TValue, TSection extends FieldSect
  */
 export interface UsePickerValueProps<TValue, TSection extends FieldSection, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
-    UsePickerValueNonStaticProps<TValue, TSection> {}
+    UsePickerValueNonStaticProps<TValue, TSection>,
+    TimezoneProps {}
 
 export interface UsePickerValueParams<
   TValue,
@@ -224,6 +287,7 @@ export interface UsePickerValueParams<
 > {
   props: TExternalProps;
   valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
+  valueType: FieldValueType;
   wrapperVariant: WrapperVariant;
   validator: Validator<
     TValue,
@@ -245,7 +309,7 @@ export interface UsePickerValueActions {
 
 export type UsePickerValueFieldResponse<TValue, TSection extends FieldSection, TError> = Required<
   Pick<
-    UseFieldInternalProps<TValue, TSection, TError>,
+    UseFieldInternalProps<TValue, unknown, TSection, TError>,
     'value' | 'onChange' | 'selectedSections' | 'onSelectedSectionsChange'
   >
 >;
@@ -267,6 +331,7 @@ export interface UsePickerValueViewsResponse<TValue> {
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;
   onChange: (newValue: TValue) => void;
+  onSelectShortcut: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
   isValid: (value: TValue) => boolean;
 }
 

@@ -1,11 +1,31 @@
 import { DefaultizedProps } from '../helpers';
-import { CartesianSeriesType, CommonSeriesType, DefaultizedCommonSeriesType } from './common';
+import {
+  CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  StackableSeriesType,
+} from './common';
 
-export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
+export type CurveType =
+  | 'catmullRom'
+  | 'linear'
+  | 'monotoneX'
+  | 'monotoneY'
+  | 'natural'
+  | 'step'
+  | 'stepBefore'
+  | 'stepAfter';
+
+export interface LineSeriesType
+  extends CommonSeriesType<number>,
+    CartesianSeriesType,
+    StackableSeriesType {
   type: 'line';
   data: number[];
   stack?: string;
-  area?: any;
+  area?: boolean;
+  label?: string;
+  curve?: CurveType;
 }
 
 /**
@@ -14,7 +34,7 @@ export interface LineSeriesType extends CommonSeriesType, CartesianSeriesType {
  */
 export type LineItemIdentifier = {
   type: 'line';
-  seriesId: LineSeriesType['id'];
+  seriesId: DefaultizedLineSeriesType['id'];
   /**
    * `dataIndex` can be `undefined` if the mouse is over the area and not a specific item.
    */
@@ -22,5 +42,4 @@ export type LineItemIdentifier = {
 };
 
 export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, 'xAxisKey' | 'yAxisKey'>,
-    DefaultizedCommonSeriesType {}
+  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps> {}

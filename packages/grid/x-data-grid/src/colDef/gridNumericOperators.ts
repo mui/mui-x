@@ -27,7 +27,6 @@ export const getGridNumericOperators = (): GridFilterOperator<
   any
 >[] => [
   {
-    label: '=',
     value: '=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
@@ -42,7 +41,6 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '!=',
     value: '!=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
@@ -57,7 +55,6 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '>',
     value: '>',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
@@ -76,7 +73,6 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '>=',
     value: '>=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
@@ -95,7 +91,6 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '<',
     value: '<',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {
@@ -114,7 +109,6 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
   {
-    label: '<=',
     value: '<=',
     getApplyFilterFn: (filterItem) => {
       if (filterItem.value == null || Number.isNaN(filterItem.value)) {

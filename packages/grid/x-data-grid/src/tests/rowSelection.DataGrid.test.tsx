@@ -190,7 +190,7 @@ describe('<DataGrid /> - Row Selection', () => {
       expect(getColumnHeaderCell(0).querySelectorAll('input')).to.have.length(1);
     });
 
-    it('should check and uncheck when double clicking the row', () => {
+    it('should check then uncheck when clicking twice the row', () => {
       render(<TestDataGridSelection checkboxSelection />);
       expect(getSelectedRowIds()).to.deep.equal([]);
       expect(getRow(0).querySelector('input')).to.have.property('checked', false);
@@ -772,6 +772,50 @@ describe('<DataGrid /> - Row Selection', () => {
     it('should not select rows passed in the rowSelectionModel prop', () => {
       render(<TestDataGridSelection rowSelection={false} rowSelectionModel={[0]} />);
       expect(getSelectedRowIds()).to.deep.equal([]);
+    });
+  });
+
+  describe('performance', () => {
+    it('should not rerender unrelated nodes', () => {
+      // Couldn't use <RenderCounter> because we need to track multiple components
+      let commits: any[] = [];
+      function CustomCell(props: any) {
+        React.useEffect(() => {
+          commits.push({
+            rowId: props.id,
+          });
+        });
+        return <div>Hello</div>;
+      }
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[
+              { field: 'id', headerName: 'id', type: 'number' },
+              {
+                field: 'currencyPair',
+                headerName: 'Currency Pair',
+                renderCell: (params) => <CustomCell {...params} />,
+              },
+            ]}
+            rows={[
+              { id: 0, currencyPair: 'USDGBP' },
+              { id: 1, currencyPair: 'USDEUR' },
+            ]}
+            autoHeight={isJSDOM}
+            checkboxSelection
+          />
+        </div>,
+      );
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', false);
+      commits = [];
+      fireEvent.click(getCell(0, 1));
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      expect(getRow(0).querySelector('input')).to.have.property('checked', true);
+      // It shouldn't rerender any of the custom cells
+      expect(commits).to.deep.equal([]);
     });
   });
 });

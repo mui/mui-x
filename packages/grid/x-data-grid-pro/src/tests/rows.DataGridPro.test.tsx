@@ -300,15 +300,12 @@ describe('<DataGridPro /> - Rows', () => {
         );
       }
 
-      // For some reason the number of renders in test env is 2x the number of renders in the browser
-      const renrederMultiplier = 2;
-
       render(<Test />);
       const initialRendersCount = 2;
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount * renrederMultiplier);
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
 
       act(() => apiRef.current.updateRows([{ id: 1, name: 'John' }]));
-      expect(renderCellSpy.callCount).to.equal((initialRendersCount + 2) * renrederMultiplier);
+      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
     });
   });
 
@@ -818,7 +815,7 @@ describe('<DataGridPro /> - Rows', () => {
         id: baselineProps.rows[1].id,
         field: baselineProps.columns[0].field,
       });
-      fireEvent.click(document.body);
+      userEvent.mousePress(document.body);
       expect(gridFocusCellSelector(apiRef)).to.deep.equal(null);
     });
 
@@ -828,7 +825,7 @@ describe('<DataGridPro /> - Rows', () => {
       apiRef.current.subscribeEvent('cellFocusOut', handleCellFocusOut);
       userEvent.mousePress(getCell(1, 0));
       expect(handleCellFocusOut.callCount).to.equal(0);
-      fireEvent.click(document.body);
+      userEvent.mousePress(document.body);
       expect(handleCellFocusOut.callCount).to.equal(1);
       expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
       expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);

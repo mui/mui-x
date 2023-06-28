@@ -4,8 +4,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
-import { InferError, useValidation } from '../validation/useValidation';
+import { InferError, useValidation } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
+import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -20,6 +21,7 @@ import {
   PickerValueUpdaterParams,
   PickerChangeHandlerContext,
 } from './usePickerValue.types';
+import { useValueWithTimezone } from '../useValueWithTimezone';
 
 /**
  * Decide if the new value should be published
@@ -51,6 +53,16 @@ const shouldPublishValue = <TValue, TError>(
   }
 
   if (action.name === 'setValueFromView' && action.selectionState !== 'shallow') {
+    // On the first view,
+    // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
+    if (isCurrentValueTheDefaultValue) {
+      return true;
+    }
+
+    return hasChanged(dateState.lastPublishedValue);
+  }
+
+  if (action.name === 'setValueFromShortcut' && action.changeImportance === 'accept') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {
@@ -98,6 +110,10 @@ const shouldCommitValue = <TValue, TError>(
     return hasChanged(dateState.lastCommittedValue);
   }
 
+  if (action.name === 'setValueFromShortcut') {
+    return action.changeImportance === 'accept' && hasChanged(dateState.lastCommittedValue);
+  }
+
   return false;
 };
 
@@ -117,6 +133,10 @@ const shouldClosePicker = <TValue, TError>(
     return action.selectionState === 'finish' && closeOnSelect;
   }
 
+  if (action.name === 'setValueFromShortcut') {
+    return action.changeImportance === 'accept';
+  }
+
   return false;
 };
 
@@ -131,6 +151,7 @@ export const usePickerValue = <
 >({
   props,
   valueManager,
+  valueType,
   wrapperVariant,
   validator,
 }: UsePickerValueParams<TValue, TDate, TSection, TExternalProps>): UsePickerValueResponse<
@@ -148,6 +169,7 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
+    timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
@@ -216,8 +238,16 @@ export const usePickerValue = <
     };
   });
 
+  const { timezone, handleValueChange } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValue,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
+
   useValidation(
-    { ...props, value: dateState.draft },
+    { ...props, value: dateState.draft, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,
@@ -244,21 +274,21 @@ export const usePickerValue = <
       hasBeenModifiedSinceMount: true,
     }));
 
-    if (shouldPublish && onChange) {
+    if (shouldPublish) {
       const validationError =
         action.name === 'setValueFromField'
           ? action.context.validationError
           : validator({
               adapter,
               value: action.value,
-              props: { ...props, value: action.value },
+              props: { ...props, value: action.value, timezone },
             });
 
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
       };
 
-      onChange(action.value, context);
+      handleValueChange(action.value, context);
     }
 
     if (shouldCommit && onAccept) {
@@ -270,18 +300,25 @@ export const usePickerValue = <
     }
   });
 
-  React.useEffect(() => {
-    if (isOpen) {
-      setDateState((prev) => ({ ...prev, lastCommittedValue: dateState.draft }));
-    }
-  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
-
   if (
     inValue !== undefined &&
     (dateState.lastControlledValue === undefined ||
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
-    setDateState((prev) => ({ ...prev, lastControlledValue: inValue, draft: inValue }));
+    const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+
+    setDateState((prev) => ({
+      ...prev,
+      lastControlledValue: inValue,
+      ...(isUpdateComingFromPicker
+        ? {}
+        : {
+            lastCommittedValue: inValue,
+            lastPublishedValue: inValue,
+            draft: inValue,
+            hasBeenModifiedSinceMount: true,
+          }),
+    }));
   }
 
   const handleClear = useEventCallback(() => {
@@ -318,7 +355,7 @@ export const usePickerValue = <
 
   const handleSetToday = useEventCallback(() => {
     updateDate({
-      value: valueManager.getTodayValue(utils),
+      value: valueManager.getTodayValue(utils, timezone, valueType),
       name: 'setValueFromAction',
       pickerAction: 'today',
     });
@@ -333,7 +370,16 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
-  const handleChangeField = useEventCallback(
+  const handleSelectShortcut = useEventCallback(
+    (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) =>
+      updateDate({
+        name: 'setValueFromShortcut',
+        value: newValue,
+        changeImportance: changeImportance ?? 'accept',
+      }),
+  );
+
+  const handleChangeFromField = useEventCallback(
     (newValue: TValue, context: FieldChangeHandlerContext<TError>) =>
       updateDate({ name: 'setValueFromField', value: newValue, context }),
   );
@@ -357,7 +403,7 @@ export const usePickerValue = <
 
   const fieldResponse: UsePickerValueFieldResponse<TValue, TSection, TError> = {
     value: dateState.draft,
-    onChange: handleChangeField,
+    onChange: handleChangeFromField,
     selectedSections,
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
@@ -379,7 +425,7 @@ export const usePickerValue = <
     const error = validator({
       adapter,
       value: testedValue,
-      props: { ...props, value: testedValue },
+      props: { ...props, value: testedValue, timezone },
     });
 
     return !valueManager.hasError(error);
@@ -389,6 +435,7 @@ export const usePickerValue = <
     ...actions,
     value: viewValue,
     onChange: handleChange,
+    onSelectShortcut: handleSelectShortcut,
     isValid,
   };
 

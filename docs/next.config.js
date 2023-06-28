@@ -21,7 +21,7 @@ module.exports = withDocsInfra({
     FEEDBACK_URL: process.env.FEEDBACK_URL,
     CONTEXT: process.env.CONTEXT,
     // #default-branch-switch
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
+    SOURCE_GITHUB_BRANCH: 'master',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
@@ -111,6 +111,11 @@ module.exports = withDocsInfra({
       const prefix = userLanguage === 'en' ? '' : `/${userLanguage}`;
 
       pages2.forEach((page) => {
+        // The experiments pages are only meant for experiments, they shouldn't leak to production.
+        if (page.pathname.includes('/experiments/') && process.env.DEPLOY_ENV === 'production') {
+          return;
+        }
+
         if (!page.children) {
           map[`${prefix}${page.pathname.replace(/^\/api-docs\/(.*)/, '/api/$1')}`] = {
             page: page.pathname,

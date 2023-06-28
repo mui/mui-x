@@ -5,12 +5,16 @@ import {
   addPositionPropertiesToSections,
   createDateStrForInputFromSections,
   areDatesEqual,
+  getTodayDate,
+  getDefaultReferenceDate,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
-import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
-import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
-import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import type {
+  DateRangeValidationError,
+  DateTimeRangeValidationError,
+  TimeRangeValidationError,
+} from '../../models';
 import { RangeFieldSection } from '../models/fields';
 
 export type RangePickerValueManager<
@@ -24,7 +28,25 @@ export type RangePickerValueManager<
 
 export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
+  getTodayValue: (utils, timezone, valueType) => [
+    getTodayDate(utils, timezone, valueType),
+    getTodayDate(utils, timezone, valueType),
+  ],
+  getInitialReferenceValue: ({ value, referenceDate: referenceDateProp, ...params }) => {
+    const shouldKeepStartDate = value[0] != null && params.utils.isValid(value[0]);
+    const shouldKeepEndDate = value[1] != null && params.utils.isValid(value[1]);
+
+    if (shouldKeepStartDate && shouldKeepEndDate) {
+      return value;
+    }
+
+    const referenceDate = referenceDateProp ?? getDefaultReferenceDate(params);
+
+    return [
+      shouldKeepStartDate ? value[0] : referenceDate,
+      shouldKeepEndDate ? value[1] : referenceDate,
+    ];
+  },
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
   areValuesEqual: (utils, a, b) =>
@@ -32,6 +54,20 @@ export const rangeValueManager: RangePickerValueManager = {
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
   hasError: (error) => error[0] != null || error[1] != null,
   defaultErrorState: [null, null],
+  getTimezone: (utils, value) => {
+    const timezoneStart = value[0] == null ? null : utils.getTimezone(value[0]);
+    const timezoneEnd = value[1] == null ? null : utils.getTimezone(value[1]);
+
+    if (timezoneStart != null && timezoneEnd != null && timezoneStart !== timezoneEnd) {
+      throw new Error('MUI: The timezone of the start and the end date should be the same');
+    }
+
+    return timezoneStart ?? timezoneEnd;
+  },
+  setTimezone: (utils, timezone, value) => [
+    value[0] == null ? null : utils.setTimezone(value[0], timezone),
+    value[1] == null ? null : utils.setTimezone(value[1], timezone),
+  ],
 };
 
 export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, RangeFieldSection> = {
@@ -76,7 +112,7 @@ export const rangeFieldValueManager: FieldValueManager<DateRange<any>, any, Rang
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}\u2069 – \u2066`,
+            endSeparator: `${section.endSeparator}${isRTL ? '\u2069 – \u2066' : ' – '}`,
           };
         }
 

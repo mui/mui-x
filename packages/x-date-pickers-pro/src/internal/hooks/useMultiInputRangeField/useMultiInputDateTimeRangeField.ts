@@ -1,9 +1,9 @@
-import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useDateTimeField as useDateTimeField,
   UseDateTimeFieldComponentProps,
   UseDateTimeFieldProps,
+  UseDateTimeFieldDefaultizedProps,
 } from '@mui/x-date-pickers/DateTimeField';
 import {
   applyDefaultDate,
@@ -14,20 +14,20 @@ import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   UseFieldResponse,
+  useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
 import { DateTimeValidationError } from '@mui/x-date-pickers/models';
-import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import type {
   UseMultiInputDateTimeRangeFieldDefaultizedProps,
   UseMultiInputDateTimeRangeFieldParams,
   UseMultiInputDateTimeRangeFieldProps,
 } from '../../../MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.types';
+import { DateTimeRangeValidationError } from '../../../models';
 import {
   DateTimeRangeComponentValidationProps,
-  DateTimeRangeValidationError,
   validateDateTimeRange,
-} from '../validation/useDateTimeRangeValidation';
+} from '../../utils/validation/validateDateTimeRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
@@ -72,14 +72,24 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
   );
   const adapter = useLocalizationContext<TDate>();
 
-  const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
+  const {
+    value: valueProp,
+    defaultValue,
+    format,
+    shouldRespectLeadingZeros,
+    timezone: timezoneProp,
+    onChange,
+    disabled,
+    readOnly,
+  } = sharedProps;
 
-  const firstDefaultValue = React.useRef(defaultValue);
-  const [value, setValue] = useControlled<DateRange<TDate>>({
-    name: 'useMultiInputDateTimeRangeField',
-    state: 'value',
-    controlled: valueProp,
-    default: firstDefaultValue.current ?? rangeValueManager.emptyValue,
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
+    name: 'useMultiInputDateRangeField',
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: rangeValueManager,
   });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
@@ -90,18 +100,16 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
       const newDateRange: DateRange<TDate> =
         index === 0 ? [newDate, value[1]] : [value[0], newDate];
 
-      setValue(newDateRange);
-
       const context: FieldChangeHandlerContext<DateTimeRangeValidationError> = {
         ...rawContext,
         validationError: validateDateTimeRange({
           adapter,
           value: newDateRange,
-          props: sharedProps,
+          props: { ...sharedProps, timezone },
         }),
       };
 
-      onChange?.(newDateRange, context);
+      handleValueChange(newDateRange, context);
     };
   };
 
@@ -114,30 +122,40 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
     DateTimeRangeValidationError,
     DateTimeRangeComponentValidationProps<TDate>
   >(
-    { ...sharedProps, value },
+    { ...sharedProps, value, timezone },
     validateDateTimeRange,
     rangeValueManager.isSameError,
     rangeValueManager.defaultErrorState,
   );
 
-  const startFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const startFieldProps: UseDateTimeFieldComponentProps<
+    TDate,
+    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[0],
     ...startTextFieldProps,
     format,
+    shouldRespectLeadingZeros,
     disabled,
     readOnly,
+    timezone,
     unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
   };
 
-  const endFieldProps: UseDateTimeFieldComponentProps<TDate, TTextFieldSlotProps> = {
+  const endFieldProps: UseDateTimeFieldComponentProps<
+    TDate,
+    UseDateTimeFieldDefaultizedProps<TTextFieldSlotProps>
+  > = {
     error: !!validationError[1],
     ...endTextFieldProps,
     format,
+    shouldRespectLeadingZeros,
     disabled,
     readOnly,
+    timezone,
     unstableFieldRef: unstableEndFieldRef,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],

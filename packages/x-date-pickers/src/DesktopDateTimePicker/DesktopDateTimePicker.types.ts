@@ -11,21 +11,34 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { DateOrTimeView } from '../models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { DesktopOnlyTimePickerProps } from '../internals/models/props/clock';
+import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import {
+  MultiSectionDigitalClockSlotsComponent,
+  MultiSectionDigitalClockSlotsComponentsProps,
+} from '../MultiSectionDigitalClock';
 
 export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
     MakeOptional<
-      UseDesktopPickerSlotsComponent<TDate, DateOrTimeView>,
+      UseDesktopPickerSlotsComponent<TDate, DateOrTimeViewWithMeridiem>,
       'Field' | 'OpenPickerIcon'
-    > {}
+    >,
+    MultiSectionDigitalClockSlotsComponent {}
 
 export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
   extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeView> {}
+    ExportedUseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeViewWithMeridiem>,
+    MultiSectionDigitalClockSlotsComponentsProps {}
 
 export interface DesktopDateTimePickerProps<TDate>
-  extends BaseDateTimePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate> {
+  extends BaseDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>,
+    DesktopOnlyPickerProps<TDate>,
+    Omit<DesktopOnlyTimePickerProps<TDate>, 'thresholdToRenderTimeInASingleColumn'> {
+  /**
+   * Available views.
+   */
+  views?: readonly DateOrTimeView[];
   /**
    * Years rendered per row.
    * @default 4

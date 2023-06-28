@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   DataGridPro,
   useGridApiContext,
@@ -92,30 +91,6 @@ function EditTextarea(props) {
     </div>
   );
 }
-
-EditTextarea.propTypes = {
-  /**
-   * The column of the row that the current cell belongs to.
-   */
-  colDef: PropTypes.object.isRequired,
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * If true, the cell is the active element.
-   */
-  hasFocus: PropTypes.bool.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.string,
-};
 
 const multilineColumn = {
   type: 'string',

@@ -4,6 +4,7 @@ import {
   GridPipeProcessor,
   GridStateInitializer,
   isNavigationKey,
+  serializeCellValue,
   useGridRegisterPipeProcessor,
   useGridVisibleRows,
 } from '@mui/x-data-grid-pro/internals';
@@ -50,6 +51,8 @@ export const useGridCellSelection = (
     | 'unstable_onCellSelectionModelChange'
     | 'pagination'
     | 'paginationMode'
+    | 'unstable_ignoreValueFormatterDuringExport'
+    | 'clipboardCopyCellDelimiter'
   >,
 ) => {
   const visibleRows = useGridVisibleRows(apiRef, props);
@@ -57,6 +60,13 @@ export const useGridCellSelection = (
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
   const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
   const autoScrollInterval = React.useRef<NodeJS.Timer | null>();
+
+  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
+  const ignoreValueFormatter =
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.clipboardExport
+      : ignoreValueFormatterProp) || false;
+  const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -551,7 +561,36 @@ export const useGridCellSelection = (
     [apiRef, props.unstable_cellSelection, hasClickedValidCellForRangeSelection],
   );
 
+  const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
+    (value) => {
+      if (apiRef.current.unstable_getSelectedCellsAsArray().length <= 1) {
+        return value;
+      }
+      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+      const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
+        const fieldsMap = cellSelectionModel[rowId];
+        const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+          let cellData: string;
+          if (fieldsMap[field]) {
+            const cellParams = apiRef.current.getCellParams(rowId, field);
+            cellData = serializeCellValue(cellParams, {
+              delimiterCharacter: clipboardCopyCellDelimiter,
+              ignoreValueFormatter,
+            });
+          } else {
+            cellData = '';
+          }
+          return acc2 === '' ? cellData : [acc2, cellData].join(clipboardCopyCellDelimiter);
+        }, '');
+        return acc === '' ? rowString : [acc, rowString].join('\r\n');
+      }, '');
+      return copyData;
+    },
+    [apiRef, ignoreValueFormatter, clipboardCopyCellDelimiter],
+  );
+
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);
   useGridRegisterPipeProcessor(apiRef, 'cellClassName', addClassesToCells);
   useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
+  useGridRegisterPipeProcessor(apiRef, 'clipboardCopy', handleClipboardCopy);
 };

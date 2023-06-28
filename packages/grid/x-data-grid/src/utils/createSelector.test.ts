@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createSelector, OutputSelector } from './createSelector';
+import { createSelectorMemoized, OutputSelector } from './createSelector';
 import { GridStateCommunity } from '../models/gridStateCommunity';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('createSelector', () => {
   describe('state as argument', () => {
     it('should warn if the instance ID is missing', () => {
-      const selector = createSelector([], () => []);
+      const selector = createSelectorMemoized([], () => []);
       const state = {} as GridStateCommunity;
       expect(() => selector(state)).toWarnDev(
         'MUI: A selector was called without passing the instance ID, which may impact the performance of the grid.',
@@ -16,14 +16,17 @@ describe('createSelector', () => {
     });
 
     it('should fallback to the default behavior when no cache key is provided', () => {
-      const selector = createSelector([], () => []) as OutputSelector<GridStateCommunity, any>;
+      const selector = createSelectorMemoized([], () => []) as OutputSelector<
+        GridStateCommunity,
+        any
+      >;
       const state = {} as GridStateCommunity;
       const instanceId = { id: 0 };
       expect(selector(state, instanceId)).to.equal(selector(state, instanceId));
     });
 
     it('should clear the cached value when another state is passed', () => {
-      const selector = createSelector(
+      const selector = createSelectorMemoized(
         (state: any) => state,
         () => [],
       );
@@ -42,7 +45,10 @@ describe('createSelector', () => {
 
   describe('apiRef as argument', () => {
     it('should return different selectors for different cache keys', () => {
-      const selector = createSelector([], () => []) as OutputSelector<GridStateCommunity, any>;
+      const selector = createSelectorMemoized([], () => []) as OutputSelector<
+        GridStateCommunity,
+        any
+      >;
       const apiRef1 = {
         current: { state: {}, instanceId: { id: 0 } },
       } as React.MutableRefObject<GridApiCommunity>;
@@ -53,7 +59,10 @@ describe('createSelector', () => {
     });
 
     it('should not clear the cache of one selector when another key is passed', () => {
-      const selector = createSelector([], () => []) as OutputSelector<GridStateCommunity, any>;
+      const selector = createSelectorMemoized([], () => []) as OutputSelector<
+        GridStateCommunity,
+        any
+      >;
       const apiRef1 = {
         current: { state: {}, instanceId: { id: 0 } },
       } as React.MutableRefObject<GridApiCommunity>;

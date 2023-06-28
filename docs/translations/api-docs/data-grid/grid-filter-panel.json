@@ -2,6 +2,8 @@
   "componentDescription": "",
   "propDescriptions": {
     "columnsSort": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop.",
+    "disableAddFilterButton": "If <code>true</code>, the <code>Add filter</code> button will not be displayed.",
+    "disableRemoveAllButton": "If <code>true</code>, the <code>Remove all</code> button will be disabled",
     "filterFormProps": "Props passed to each filter form.",
     "getColumnForNewFilter": "Function that returns the next filter item to be picked as default filter.<br><br><strong>Signature:</strong><br><code>function(args: GetColumnForNewFilterArgs) =&gt; void</code><br><em>args:</em> Currently configured filters and columns.",
     "logicOperators": "Sets the available logic operators.",

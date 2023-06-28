@@ -1,5 +1,6 @@
 import * as React from 'react';
 import moment from 'moment';
+import momentTZ from 'moment-timezone';
 import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import {
   AdapterName,
@@ -9,8 +10,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 type AdapterTestRunner<P extends {}> = (
-  params: ReturnType<typeof createPickerRenderer> &
-    BuildFieldInteractionsResponse<P> & { adapterName: AdapterName },
+  params: ReturnType<typeof createPickerRenderer> & BuildFieldInteractionsResponse<P>,
 ) => void;
 
 const ADAPTERS: AdapterName[] = ['dayjs', 'date-fns', 'luxon', 'moment'];
@@ -31,6 +31,7 @@ function innerDescribeAdapters<P extends {}>(
         adapterName,
         clock: 'fake',
         clockConfig: new Date(2022, 5, 15),
+        instance: adapterName === 'moment' ? momentTZ : undefined,
       });
 
       const fieldInteractions = buildFieldInteractions<P>({
@@ -39,7 +40,7 @@ function innerDescribeAdapters<P extends {}>(
         Component: FieldComponent,
       });
 
-      testRunner({ adapterName, ...pickerRendererResponse, ...fieldInteractions });
+      testRunner({ ...pickerRendererResponse, ...fieldInteractions });
     });
   });
 }

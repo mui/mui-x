@@ -5,12 +5,15 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DateTimeField } from '../DateTimeField';
 import { MobileDateTimePickerProps } from './MobileDateTimePicker.types';
 import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
-import { PickerViewRendererLookup, useLocaleText, validateDateTime } from '../internals';
+import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
+import { validateDateTime } from '../internals/utils/validation/validateDateTime';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateOrTimeView } from '../models';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
+import { resolveDateTimeFormat } from '../internals/utils/date-time-utils';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -21,10 +24,12 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date time pickers
   const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
+    DateOrTimeView,
     MobileDateTimePickerProps<TDate>
   >(inProps, 'MuiMobileDateTimePicker');
 
@@ -43,6 +48,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    format: resolveDateTimeFormat(utils, defaultizedProps),
     ampmInClock,
     slots: {
       field: DateTimeField,
@@ -54,7 +60,6 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        ampm: defaultizedProps.ampm,
       }),
       toolbar: {
         hidden: false,
@@ -71,6 +76,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date-time',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDateTime,
   });
@@ -129,7 +135,7 @@ MobileDateTimePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -383,6 +389,7 @@ MobileDateTimePicker.propTypes = {
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
+   * @template TDate
    * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
@@ -424,6 +431,14 @@ MobileDateTimePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

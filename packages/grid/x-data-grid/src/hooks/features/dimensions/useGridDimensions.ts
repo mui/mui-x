@@ -23,7 +23,6 @@ import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
-import { gridClasses } from '../../../constants/gridClasses';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
@@ -215,32 +214,23 @@ export function useGridDimensions(
   }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const computeSizeAndPublishResizeEvent = React.useCallback(() => {
-    const rootEl = apiRef.current.rootElementRef?.current;
-    const mainEl = rootEl?.querySelector<HTMLDivElement>(`.${gridClasses.main}`);
+    const mainEl = apiRef.current.mainElementRef?.current;
 
     if (!mainEl) {
       return;
     }
 
-    const height = mainEl.offsetHeight || 0;
-    const width = mainEl.offsetWidth || 0;
-
     const win = ownerWindow(mainEl);
-
     const computedStyle = win.getComputedStyle(mainEl);
-    const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
-    const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
-    const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
-    const paddingBottom = parseInt(computedStyle.paddingBottom, 10) || 0;
 
-    const newHeight = height - paddingTop - paddingBottom;
-    const newWidth = width - paddingLeft - paddingRight;
+    const height = parseFloat(computedStyle.height) || 0;
+    const width = parseFloat(computedStyle.width) || 0;
 
-    const hasHeightChanged = newHeight !== previousSize.current?.height;
-    const hasWidthChanged = newWidth !== previousSize.current?.width;
+    const hasHeightChanged = height !== previousSize.current?.height;
+    const hasWidthChanged = width !== previousSize.current?.width;
 
     if (!previousSize.current || hasHeightChanged || hasWidthChanged) {
-      const size = { width: newWidth, height: newHeight };
+      const size = { width, height };
       apiRef.current.publishEvent('resize', size);
       previousSize.current = size;
     }

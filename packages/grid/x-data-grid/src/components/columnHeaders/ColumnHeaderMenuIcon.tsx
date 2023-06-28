@@ -59,9 +59,9 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
           aria-label={apiRef.current.getLocaleText('columnMenuLabel')}
           size="small"
           onClick={handleMenuIconClick}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
-          aria-controls={columnMenuId}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? columnMenuId : undefined}
           id={columnMenuButtonId}
           {...rootProps.slotProps?.baseIconButton}
         >
