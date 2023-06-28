@@ -8,10 +8,6 @@ import type { DataGridProcessedProps } from '../../../models/props/DataGridProps
 
 export interface GridRowsInternalCache {
   /**
-   * The full list of rows.
-   */
-  rows: DataGridProcessedProps['rows'];
-  /**
    * The rows as they were the last time all the rows have been updated at once
    * It is used to avoid processing several time the same set of rows
    */

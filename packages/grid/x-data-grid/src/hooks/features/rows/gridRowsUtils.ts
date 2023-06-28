@@ -102,7 +102,6 @@ export const createRowsInternalCache = ({
   }
 
   return {
-    rows,
     rowsBeforePartialUpdates: rows,
     loadingPropBeforePartialUpdates: loading,
     rowCountPropBeforePartialUpdates: rowCount,
@@ -356,7 +355,6 @@ export const updateCacheWithNewRows = ({
   }
 
   return {
-    rows: Object.values(dataRowIdToModelLookup),
     dataRowIdToModelLookup,
     dataRowIdToIdLookup,
     updates: partialUpdates,
