@@ -10,8 +10,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 <p class="description">The Date and Time pickers expose a lot of components to fit your every need.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
-
 ## Controlled value
 
 All the components have a `value` / `onChange` API to set and control the values:

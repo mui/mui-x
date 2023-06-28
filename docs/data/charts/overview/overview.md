@@ -1,5 +1,7 @@
 ---
 title: React Chart components
+githubLabel: 'component: charts'
+packageName: '@mui/x-charts'
 ---
 
 # Charts - Overview
@@ -7,6 +9,8 @@ title: React Chart components
 <p class="description">This page groups general topics that are common to multiple charts.</p>
 
 > ⚠️ This library is in the alpha phase. This means it might receive some breaking changes if they are needed to improve the components.
+
+{{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
 
 ## Overview
 

@@ -10,8 +10,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 <p class="description">Get started with the Date and Time pickers. Install the package, configure your application and start using the components.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
-
 ## Installation
 
 Using your favorite package manager, install:
