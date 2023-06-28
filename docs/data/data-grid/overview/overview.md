@@ -53,7 +53,7 @@ The Premium version includes everything from Pro, as well as advanced features f
 
 You can visit the [showcase page](/x/react-data-grid/demo/) for a comprehensible overview of all features exclusive to this plan.
 
-The demo below groups rows by commodity name, and uses an aggregation function to calculate the sum of quantities for each group and in total (displayed on a summary row). You can experiment with grouping other columns in the column menu.
+The demo below groups rows by commodity name, and uses an aggregation function to calculate the sum of quantities for each group and in total (displayed on a summary row). You can experiment with grouping other columns in the columns' header menus.
 
 And since you're here, try exporting to Excel and copying and pasting data from-to Excel tables.
 
