@@ -388,6 +388,11 @@ export const useGridFilter = (
     [props.slots.filterPanel, props.slotProps?.filterPanel],
   );
 
+  const rows = React.useMemo(
+    () => Object.values(apiRef.current.state.rows.dataRowIdToModelLookup),
+    [apiRef.current.state.rows.dataRowIdToModelLookup],
+  );
+
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
@@ -397,7 +402,6 @@ export const useGridFilter = (
         };
       }
 
-      const rows = apiRef.current.caches.rows.rows;
       const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
       const filteredRowsLookup: Record<GridRowId, boolean> = {};
       const { isRowMatchingFilters } = params;
