@@ -12,6 +12,7 @@ import type {
   GridRowPinningApi,
   GridDetailPanelPrivateApi,
 } from '../hooks';
+import type { GridTreeDataLazyLoadingApi } from '../hooks/features/treeData/gridTreeDataLazyLoadingApi';
 
 /**
  * The api of `DataGridPro`.
@@ -19,6 +20,7 @@ import type {
 export interface GridApiPro
   extends GridApiCommon<GridStatePro, GridInitialStatePro>,
     GridRowProApi,
+    GridTreeDataLazyLoadingApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
     GridRowPinningApi,

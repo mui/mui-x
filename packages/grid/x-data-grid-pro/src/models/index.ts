@@ -4,3 +4,4 @@ export * from './gridRowOrderChangeParams';
 export * from './gridFetchRowsParams';
 export * from './gridProSlotsComponent';
 export * from './gridProIconSlotsComponent';
+export * from './gridDataSource';

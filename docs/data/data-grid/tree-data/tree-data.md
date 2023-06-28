@@ -115,17 +115,26 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 
 ## Children lazy-loading
 
-:::warning
-This feature isn't implemented yet. It's coming.
+To lazy-load tree data children, define a data source and pass it as the `unstable_dataSource` prop.
 
-👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
-:::
+```tsx
+const dataSource = {
+  getRows: async ({ filterModel, sortModel, groupKeys }: GetRowsParams) => {
+    const rows = await fetchRows({ filterModel, sortModel, groupKeys });
+    return rows;
+  },
+}
 
-Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.
-This implementation does not support every feature of the data grid but can be a good starting point for large datasets.
+<DataGridPro
+  {...otherProps}
+  treeData
+  unstable_dataSource={unstable_dataSource}
+/>
+```
 
-The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
-To do so, you need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.
+To enable lazy-loading for a given row, you also need to set the `isServerSideRow` prop to a function that returns `true` for the rows that have children and `false` for the rows that don't have children. If you have the information on server, you can provide an optional `getDescendantCount` prop which returns the number of descendants for a parent row.
+
+Following demo implements a simple lazy-loading tree data grid using mock server.
 
 {{"demo": "TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
 

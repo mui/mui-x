@@ -25,6 +25,7 @@ import {
 import { GridInitialStatePro } from './gridStatePro';
 import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
 import type { GridProSlotProps } from './gridProSlotProps';
+import type { GridDataSource } from './gridDataSource';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -158,6 +159,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
   /**
+   * DataSource object to allow server-side data fetching
+   * @ignore - do not document.
+   */
+  unstable_dataSource?: GridDataSource;
+  /**
    * The initial state of the DataGridPro.
    * The data in it will be set in the state on initialization but will not be controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
@@ -247,6 +253,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    */
   onFetchRows?: GridEventListener<'fetchRows'>;
   /**
+   * Callback fired when children rows of a parent row are requested to be loaded.
+   * @param {GridFetchRowChildrenParams} params With all properties from [[GridFetchRowChildrenParams]].
+   */
+  onFetchRowChildren?: GridEventListener<'fetchRowChildren'>;
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows?: GridPinnedRowsProp<R>;
@@ -259,4 +270,16 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps?: GridProSlotProps;
+  /**
+   * Callback that returns true for those rows which have children on server.
+   * @param {GridValidRowModel} row The row to test.
+   * @returns {boolean} A boolean indicating if the row has children on server.
+   */
+  isServerSideRow?: (row: GridValidRowModel) => boolean;
+  /**
+   * Callback that checks the number of children for server side rows. i.e. rows that have `isServerSideRow` returning true.
+   * @param {GridValidRowModel} row The row to test.
+   * @returns {number} A boolean indicating if the row has children on server.
+   */
+  getDescendantCount?: (row: GridValidRowModel) => number;
 }

@@ -97,6 +97,7 @@
       "default": "`(groupNode) => groupNode == null ? 'footer' : 'inline'`"
     },
     "getCellClassName": { "type": { "name": "func" } },
+    "getDescendantCount": { "type": { "name": "func" } },
     "getDetailPanelContent": { "type": { "name": "func" } },
     "getDetailPanelHeight": { "type": { "name": "func" }, "default": "\"() => 500\"" },
     "getEstimatedRowHeight": { "type": { "name": "func" } },
@@ -117,6 +118,7 @@
     "isCellEditable": { "type": { "name": "func" } },
     "isGroupExpandedByDefault": { "type": { "name": "func" } },
     "isRowSelectable": { "type": { "name": "func" } },
+    "isServerSideRow": { "type": { "name": "func" } },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" } },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
@@ -158,6 +160,7 @@
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
     "onExcelExportStateChange": { "type": { "name": "func" } },
+    "onFetchRowChildren": { "type": { "name": "func" } },
     "onFetchRows": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },
