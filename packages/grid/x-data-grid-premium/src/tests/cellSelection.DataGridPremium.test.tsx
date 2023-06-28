@@ -13,7 +13,7 @@ import {
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 describe('<DataGridPremium /> - Cell Selection', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -312,6 +312,8 @@ describe('<DataGridPremium /> - Cell Selection', () => {
   });
 
   describe('Auto-scroll', () => {
+    clock.withFakeTimers();
+
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting
