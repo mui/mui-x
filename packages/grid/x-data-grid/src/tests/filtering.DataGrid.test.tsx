@@ -10,6 +10,7 @@ import {
   GridPreferencePanelsValue,
   GridToolbar,
   GridFilterOperator,
+  GRID_STRING_COL_DEF,
   getGridStringOperators,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -1221,7 +1222,7 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('v7 compatibility', () => {
+  describe('v7 filter compatibility', () => {
     const getRows = (operator: GridFilterOperator) => {
       const { unmount } = render(
         <TestCase
@@ -1231,9 +1232,7 @@ describe('<DataGrid /> - Filter', () => {
           rows={[
             { id: 0, country: 'Canada' },
             { id: 1, country: 'Spain' },
-            { id: 2, country: 'France' },
-            { id: 3, country: 'Germany' },
-            { id: 4, country: 'UK' },
+            { id: 2, country: 'UK' },
           ]}
           columns={[
             {
@@ -1308,6 +1307,83 @@ describe('<DataGrid /> - Filter', () => {
       };
 
       expect(getRows(operator)).to.deep.equal(['Spain']);
+    });
+  });
+
+  describe('v7 quick filter compatibility', () => {
+    const getRows = (colDef: Partial<GridColDef>) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [],
+            quickFilterValues: ['UK'],
+          }}
+          rows={[
+            { id: 0, country: 'Canada' },
+            { id: 1, country: 'Spain' },
+            { id: 2, country: 'UK' },
+          ]}
+          columns={[
+            {
+              field: 'country',
+              type: 'string',
+              ...colDef,
+            },
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    it('works with internal filters', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['UK']);
+    });
+
+    it('works with custom getApplyFilterFn', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          }
+        },
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['Canada']);
+    });
+
+    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          }
+        },
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          }
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
+    });
+
+    it('works with custom getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          }
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
     });
   });
 
