@@ -1264,7 +1264,7 @@ describe('<DataGrid /> - Filter', () => {
     it('works with custom getApplyFilterFn', () => {
       const operator: GridFilterOperator = {
         value: 'equals',
-        getApplyFilterFn: (_filterItem: GridFilterItem) => {
+        getApplyFilterFn: () => {
           return (params): boolean => {
             return params.value === 'Canada';
           };
@@ -1279,12 +1279,12 @@ describe('<DataGrid /> - Filter', () => {
     it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
       const operator: GridFilterOperator = {
         value: 'equals',
-        getApplyFilterFn: (_filterItem: GridFilterItem) => {
+        getApplyFilterFn: () => {
           return (params): boolean => {
             return params.value === 'Canada';
           };
         },
-        getApplyFilterFnV7: (_filterItem: GridFilterItem) => {
+        getApplyFilterFnV7: () => {
           return (value): boolean => {
             return value === 'Spain';
           };
@@ -1299,7 +1299,7 @@ describe('<DataGrid /> - Filter', () => {
         value: 'equals',
         getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
           .getApplyFilterFn,
-        getApplyFilterFnV7: (_filterItem: GridFilterItem) => {
+        getApplyFilterFnV7: () => {
           return (value): boolean => {
             return value === 'Spain';
           };
@@ -1351,7 +1351,7 @@ describe('<DataGrid /> - Filter', () => {
         getApplyQuickFilterFn: () => {
           return (params) => {
             return params.value === 'Canada';
-          }
+          };
         },
         getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
       };
@@ -1363,12 +1363,12 @@ describe('<DataGrid /> - Filter', () => {
         getApplyQuickFilterFn: () => {
           return (params) => {
             return params.value === 'Canada';
-          }
+          };
         },
         getApplyQuickFilterFnV7: () => {
           return (value) => {
             return value === 'Spain';
-          }
+          };
         },
       };
       expect(getRows(colDef)).to.deep.equal(['Spain']);
@@ -1380,7 +1380,7 @@ describe('<DataGrid /> - Filter', () => {
         getApplyQuickFilterFnV7: () => {
           return (value) => {
             return value === 'Spain';
-          }
+          };
         },
       };
       expect(getRows(colDef)).to.deep.equal(['Spain']);

@@ -388,10 +388,8 @@ export const useGridFilter = (
     [props.slots.filterPanel, props.slotProps?.filterPanel],
   );
 
-  const rows = React.useMemo(
-    () => Object.values(apiRef.current.state.rows.dataRowIdToModelLookup),
-    [apiRef.current.state.rows.dataRowIdToModelLookup],
-  );
+  const dataRowIdToIdLookup = apiRef.current.state.rows.dataRowIdToModelLookup;
+  const rows = React.useMemo(() => Object.values(dataRowIdToIdLookup), [dataRowIdToIdLookup]);
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
@@ -439,7 +437,7 @@ export const useGridFilter = (
         filteredDescendantCountLookup: {},
       };
     },
-    [apiRef, props.filterMode],
+    [apiRef, props.filterMode, rows],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
