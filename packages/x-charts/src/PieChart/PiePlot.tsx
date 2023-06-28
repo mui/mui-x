@@ -1,7 +1,31 @@
 import * as React from 'react';
 import { SeriesContext } from '../context/SeriesContextProvider';
-import { PieElement } from './PieElement';
+import PieArc from './PieArc';
+import PieArcLabel from './PieArcLabel';
 import { DrawingContext } from '../context/DrawingProvider';
+import { DefaultizedPieValueType, PieSeriesType } from '../models/seriesType/pie';
+
+const RATIO = 180 / Math.PI;
+
+function getItemLabel(
+  arcLabel: PieSeriesType['arcLabel'],
+  arcLabelMinAngle: number,
+  item: DefaultizedPieValueType,
+) {
+  if (!arcLabel) {
+    return null;
+  }
+  const angle = (item.endAngle - item.startAngle) * RATIO;
+  if (angle < arcLabelMinAngle) {
+    return null;
+  }
+
+  if (typeof arcLabel === 'string') {
+    return item[arcLabel]?.toString();
+  }
+
+  return arcLabel(item);
+}
 
 export function PiePlot() {
   const seriesData = React.useContext(SeriesContext).pie;
@@ -20,33 +44,47 @@ export function PiePlot() {
   return (
     <g>
       {seriesOrder.map((seriesId) => {
-        const { innerRadius, outerRadius, cornerRadius, data } = series[seriesId];
+        const {
+          innerRadius,
+          outerRadius,
+          cornerRadius,
+          arcLabel,
+          arcLabelMinAngle = 0,
+          data,
+        } = series[seriesId];
         return (
           <g key={seriesId} transform={`translate(${center.x}, ${center.y})`}>
-            {data.map(
-              (
-                {
-                  id,
-                  color,
-
-                  ...other
-                },
-                index,
-              ) => {
+            <g>
+              {data.map((item, index) => {
                 return (
-                  <PieElement
+                  <PieArc
+                    {...item}
                     innerRadius={innerRadius}
                     outerRadius={outerRadius ?? availableRadius}
                     cornerRadius={cornerRadius}
                     id={seriesId}
-                    color={color}
+                    color={item.color}
                     dataIndex={index}
                     highlightScope={series[seriesId].highlightScope}
-                    {...other}
                   />
                 );
-              },
-            )}
+              })}
+              {data.map((item, index) => {
+                return (
+                  <PieArcLabel
+                    {...item}
+                    innerRadius={innerRadius}
+                    outerRadius={outerRadius ?? availableRadius}
+                    cornerRadius={cornerRadius}
+                    id={seriesId}
+                    color={item.color}
+                    dataIndex={index}
+                    highlightScope={series[seriesId].highlightScope}
+                    formattedArcLabel={getItemLabel(arcLabel, arcLabelMinAngle, item)}
+                  />
+                );
+              })}
+            </g>
           </g>
         );
       })}

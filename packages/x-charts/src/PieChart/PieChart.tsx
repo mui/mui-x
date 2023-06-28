@@ -188,6 +188,11 @@ PieChart.propTypes = {
   ]),
   series: PropTypes.arrayOf(
     PropTypes.shape({
+      arcLabel: PropTypes.oneOfType([
+        PropTypes.oneOf(['formattedValue', 'label', 'value']),
+        PropTypes.func,
+      ]),
+      arcLabelMinAngle: PropTypes.number,
       color: PropTypes.string,
       cornerRadius: PropTypes.number,
       data: PropTypes.arrayOf(

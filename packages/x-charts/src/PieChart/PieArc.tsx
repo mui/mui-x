@@ -14,7 +14,7 @@ import {
 import { HighlightScope } from '../context/HighlightProvider';
 import { PieSeriesType } from '../models/seriesType/pie';
 
-export interface PieElementClasses {
+export interface PieArcClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element when higlighted. */
@@ -23,69 +23,51 @@ export interface PieElementClasses {
   faded: string;
 }
 
-export type PieElementClassKey = keyof PieElementClasses;
+export type PieArcClassKey = keyof PieArcClasses;
 
-export interface PieElementOwnerState {
+export interface PieArcOwnerState {
   id: string;
   dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
-  classes?: Partial<PieElementClasses>;
+  classes?: Partial<PieArcClasses>;
 }
 
-export function getPieElementUtilityClass(slot: string) {
-  return generateUtilityClass('MuiPieElement', slot);
+export function getPieArcUtilityClass(slot: string) {
+  return generateUtilityClass('MuiPieArc', slot);
 }
 
-export const pieElementClasses: PieElementClasses = generateUtilityClasses('MuiPieElement', [
+export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', [
   'root',
   'highlighted',
   'faded',
 ]);
 
-const useUtilityClasses = (ownerState: PieElementOwnerState) => {
+const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   const { classes, id, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    arc: ['arc'],
+    arcLabel: ['arcLabel'],
   };
 
-  return composeClasses(slots, getPieElementUtilityClass, classes);
+  return composeClasses(slots, getPieArcUtilityClass, classes);
 };
 
-const PieElementPath = styled('path', {
-  name: 'MuiPieElement',
+const PieArcRoot = styled('path', {
+  name: 'MuiPieArc',
   slot: 'Root',
-  overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: PieElementOwnerState }>(({ ownerState }) => ({
+  overridesResolver: (_, styles) => styles.arc,
+})<{ ownerState: PieArcOwnerState }>(({ ownerState }) => ({
   stroke: 'none',
   strokeWidth: 2,
-  strokePiejoin: 'round',
+  strokeLinejoin: 'round',
   fill: ownerState.color,
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
-PieElementPath.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.shape({
-    classes: PropTypes.object,
-    color: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    isFaded: PropTypes.bool.isRequired,
-    isHighlighted: PropTypes.bool.isRequired,
-  }).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
-
-export type PieElementProps = Omit<PieElementOwnerState, 'isFaded' | 'isHighlighted'> &
+export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> &
   D3PieArcDatum<any> & {
     highlightScope?: Partial<HighlightScope>;
@@ -94,7 +76,7 @@ export type PieElementProps = Omit<PieElementOwnerState, 'isFaded' | 'isHighligh
     cornerRadius: PieSeriesType['cornerRadius'];
   };
 
-function PieElement(props: PieElementProps) {
+export default function PieArc(props: PieArcProps) {
   const {
     id,
     dataIndex,
@@ -131,7 +113,7 @@ function PieElement(props: PieElementProps) {
   const classes = useUtilityClasses(ownerState);
 
   return (
-    <PieElementPath
+    <PieArcRoot
       d={
         d3Arc().cornerRadius(cornerRadius)({
           ...other,
@@ -147,7 +129,7 @@ function PieElement(props: PieElementProps) {
   );
 }
 
-PieElement.propTypes = {
+PieArc.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -162,5 +144,3 @@ PieElement.propTypes = {
   innerRadius: PropTypes.number,
   outerRadius: PropTypes.number.isRequired,
 } as any;
-
-export { PieElement };

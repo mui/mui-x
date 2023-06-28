@@ -31,13 +31,18 @@ const formatter: Formatter<'pie'> = (params) => {
       series[seriesId].data.map((piePoint) => piePoint.value),
     );
     defaultizedSeries[seriesId] = {
-      valueFormatter: (v: PieValueType) => v.value.toLocaleString(),
+      valueFormatter: (item: PieValueType) => item.value.toLocaleString(),
       ...series[seriesId],
-      data: series[seriesId].data.map((piePoint, index) => ({
-        ...piePoint,
-        id: piePoint.id ?? `auto-generated-pie-id-${seriesId}-${index}`,
-        ...arcs[index],
-      })),
+      data: series[seriesId].data
+        .map((item, index) => ({
+          ...item,
+          id: item.id ?? `auto-generated-pie-id-${seriesId}-${index}`,
+          ...arcs[index],
+        }))
+        .map((item) => ({
+          ...item,
+          formattedValue: series[seriesId].valueFormatter?.(item) ?? item.value.toLocaleString(),
+        })),
     };
   });
 

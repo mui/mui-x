@@ -4,6 +4,9 @@ import { CommonDefaultizedProps, CommonSeriesType } from './common';
 
 export type PieValueType = { id: string | number; value: number; label?: string; color?: string };
 
+export type DefaultizedPieValueType = PieValueType &
+  D3PieArcDatum<any> & { color: string; formattedValue: string };
+
 export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
 
 export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Tdata> {
@@ -40,6 +43,14 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    */
   paddingAngle?: number;
   sortingValues?: ChartsPieSorting;
+  /**
+   * The label displayed into the arc.
+   */
+  arcLabel?: 'formattedValue' | 'label' | 'value' | ((item: DefaultizedPieValueType) => string);
+  /**
+   * The minimal angle required to display the arc label.
+   */
+  arcLabelMinAngle?: number;
 }
 
 /**
@@ -54,5 +65,5 @@ export type PieItemIdentifier = {
 
 export interface DefaultizedPieSeriesType
   extends DefaultizedProps<PieSeriesType, CommonDefaultizedProps> {
-  data: (PieValueType & D3PieArcDatum<any> & { color: string })[];
+  data: DefaultizedPieValueType[];
 }
