@@ -774,11 +774,11 @@ GridCellV7.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  align: PropTypes.oneOf(['center', 'left', 'right']),
+  align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
   className: PropTypes.string,
-  colIndex: PropTypes.number,
+  colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
-  column: PropTypes.object,
+  column: PropTypes.object.isRequired,
   disableDragEvents: PropTypes.bool,
   editCellState: PropTypes.shape({
     changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
@@ -786,7 +786,7 @@ GridCellV7.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
-  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,
@@ -794,9 +794,9 @@ GridCellV7.propTypes = {
   onKeyDown: PropTypes.func,
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
-  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   showRightBorder: PropTypes.bool,
-  width: PropTypes.number,
+  width: PropTypes.number.isRequired,
 } as any;
 
 const MemoizedGridCellV7 = fastMemo(GridCellV7);

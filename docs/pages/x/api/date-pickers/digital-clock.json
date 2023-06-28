@@ -45,6 +45,10 @@
       }
     },
     "timeStep": { "type": { "name": "number" }, "default": "30" },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
     "value": { "type": { "name": "any" } },
     "view": { "type": { "name": "enum", "description": "'hours'" } },
     "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }

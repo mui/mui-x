@@ -2,7 +2,7 @@ import * as React from 'react';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
-  showExpiredLicenseKeyError,
+  showExpiredAnnualLicenseKeyError,
   showInvalidLicenseKeyError,
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
@@ -54,8 +54,8 @@ export function useLicenseVerifier(
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus === LicenseStatus.NotFound) {
       showMissingLicenseKeyError({ plan, packageName: fullPackageName });
-    } else if (licenseStatus === LicenseStatus.Expired) {
-      showExpiredLicenseKeyError();
+    } else if (licenseStatus === LicenseStatus.ExpiredAnnual) {
+      showExpiredAnnualLicenseKeyError({ plan });
     } else if (licenseStatus === LicenseStatus.ExpiredVersion) {
       showExpiredPackageVersionError({ packageName: fullPackageName });
     }

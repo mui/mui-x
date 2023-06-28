@@ -30,7 +30,6 @@ export default function PercentAreaChart() {
           label: 'a',
           area: true,
           stack: 'total',
-          color: '#8884d8',
         },
         {
           data: getPercents(b),
@@ -38,7 +37,6 @@ export default function PercentAreaChart() {
           label: 'b',
           area: true,
           stack: 'total',
-          color: '#82ca9d',
         },
         {
           data: getPercents(c),
@@ -46,7 +44,6 @@ export default function PercentAreaChart() {
           label: 'c',
           area: true,
           stack: 'total',
-          color: '#ffc658',
         },
       ]}
       xAxis={[

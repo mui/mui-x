@@ -5,6 +5,7 @@ import {
 } from '../../LocalizationProvider/LocalizationProvider';
 import { DEFAULT_LOCALE } from '../../locales/enUS';
 import { PickersLocaleText } from '../../locales/utils/pickersLocaleTextApi';
+import { PickersTimezone } from '../../models';
 
 export const useLocalizationContext = <TDate>() => {
   const localization = React.useContext(MuiPickersAdapterContext);
@@ -50,9 +51,13 @@ export const useDefaultDates = <TDate>() => useLocalizationContext<TDate>().defa
 
 export const useLocaleText = <TDate>() => useLocalizationContext<TDate>().localeText;
 
-export const useNow = <TDate>(): TDate => {
+export const useNow = <TDate>(timezone: PickersTimezone): TDate => {
   const utils = useUtils<TDate>();
-  const now = React.useRef(utils.date());
+
+  const now = React.useRef() as React.MutableRefObject<TDate>;
+  if (now.current === undefined) {
+    now.current = utils.dateWithTimezone(undefined, timezone)!;
+  }
 
   return now.current!;
 };
