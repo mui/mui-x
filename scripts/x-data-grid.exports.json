@@ -273,7 +273,7 @@
   { "name": "GridFilterListIcon", "kind": "Variable" },
   { "name": "GridFilterModel", "kind": "Interface" },
   { "name": "gridFilterModelSelector", "kind": "Variable" },
-  { "name": "GridFilterOperator", "kind": "TypeAlias" },
+  { "name": "GridFilterOperator", "kind": "Interface" },
   { "name": "GridFilterPanel", "kind": "Variable" },
   { "name": "GridFilterState", "kind": "Interface" },
   { "name": "GridFocusApi", "kind": "Interface" },
