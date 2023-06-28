@@ -239,36 +239,12 @@ export const useGridCellSelection = (
     [apiRef, handleMouseUp, hasClickedValidCellForRangeSelection],
   );
 
-  const handleMouseOver = useEventCallback((event: MouseEvent) => {
-    const virtualScrollerRect = apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
-
-    if (!virtualScrollerRect) {
-      return;
-    }
-
-    const isInsideVirtualScroller =
-      event.clientX <= virtualScrollerRect.right &&
-      event.clientX >= virtualScrollerRect.left &&
-      event.clientY >= virtualScrollerRect.top &&
-      event.clientY <= virtualScrollerRect.bottom;
-
-    if (!isInsideVirtualScroller) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      stopAutoScroll();
-    }
-  });
-
   const stopAutoScroll = React.useCallback(() => {
     if (autoScrollInterval.current) {
       clearTimeout(autoScrollInterval.current);
       autoScrollInterval.current = null;
     }
-
-    if (apiRef.current.virtualScrollerRef?.current) {
-      const document = ownerDocument(apiRef.current.virtualScrollerRef.current);
-      document.removeEventListener('mouseover', handleMouseOver);
-    }
-  }, [apiRef, handleMouseOver]);
+  }, [apiRef]);
 
   const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>((params) => {
     cellWithVirtualFocus.current = { id: params.id, field: params.field };
@@ -282,9 +258,6 @@ export const useGridCellSelection = (
     if (!apiRef.current.virtualScrollerRef?.current) {
       return;
     }
-
-    const document = ownerDocument(apiRef.current.virtualScrollerRef.current);
-    document.addEventListener('mouseover', handleMouseOver);
 
     autoScrollInterval.current = setInterval(() => {
       if (!apiRef.current.virtualScrollerRef?.current) {
@@ -334,7 +307,7 @@ export const useGridCellSelection = (
         });
       }
     }, 20);
-  }, [apiRef, handleMouseOver]);
+  }, [apiRef]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -477,9 +450,8 @@ export const useGridCellSelection = (
 
       const document = ownerDocument(rootRef);
       document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mouseover', handleMouseOver);
     };
-  }, [apiRef, handleMouseOver, handleMouseUp, props.unstable_cellSelectionModel, stopAutoScroll]);
+  }, [apiRef, handleMouseUp, props.unstable_cellSelectionModel, stopAutoScroll]);
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {
