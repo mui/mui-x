@@ -259,15 +259,14 @@ export const useGridCellSelection = (
       return;
     }
 
+    const virtualScrollerRect = apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
+
+    if (!virtualScrollerRect) {
+      return;
+    }
+
     autoScrollInterval.current = setInterval(() => {
-      if (!apiRef.current.virtualScrollerRef?.current) {
-        return;
-      }
-
-      const virtualScrollerRect =
-        apiRef.current.virtualScrollerRef?.current?.getBoundingClientRect();
-
-      if (!virtualScrollerRect || !mousePosition.current) {
+      if (!mousePosition.current || !apiRef.current.virtualScrollerRef?.current) {
         return;
       }
 
