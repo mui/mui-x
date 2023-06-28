@@ -341,10 +341,7 @@ describe('<DataGrid /> - Pagination', () => {
             ]}
           />,
         );
-      }).not.toWarnDev([
-        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
-        `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
-      ]);
+      }).not.toWarnDev();
     });
 
     it('should display a warning if the prop pageSize is not in the default pageSizeOptions', () => {
