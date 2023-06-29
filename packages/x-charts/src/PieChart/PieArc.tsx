@@ -59,9 +59,9 @@ const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
-})<{ ownerState: PieArcOwnerState }>(({ ownerState }) => ({
-  stroke: 'none',
-  strokeWidth: 2,
+})<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
+  stroke: theme.palette.background.paper,
+  strokeWidth: 1,
   strokeLinejoin: 'round',
   fill: ownerState.color,
   opacity: ownerState.isFaded ? 0.3 : 1,
