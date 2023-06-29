@@ -145,7 +145,7 @@ export const useDataGridPremiumComponent = (
   useGridRowPinning(privateApiRef, props);
   useGridColumns(privateApiRef, props);
   useGridRows(privateApiRef, props);
-  useGridParamsApi(privateApiRef);
+  useGridParamsApi(privateApiRef, props);
   useGridDetailPanel(privateApiRef, props);
   useGridColumnSpanning(privateApiRef);
   useGridColumnGrouping(privateApiRef, props);
