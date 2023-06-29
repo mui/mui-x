@@ -14,14 +14,14 @@ Bar charts series should contain a `data` property containing an array of values
 You can customize bar ticks with the `xAxis`.
 This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
-{{"demo": "BasicBars.js", "bg": "inline"}}
+{{"demo": "BasicBars.js"}}
 
 ## Stacking
 
 Each bar series can get a `stack` property expecting a string value.
 Series with the same `stack` will be stacked on top of each other.
 
-{{"demo": "StackBars.js", "bg": "inline"}}
+{{"demo": "StackBars.js"}}
 
 ### Stacking strategy
 

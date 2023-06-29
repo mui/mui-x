@@ -11,7 +11,7 @@ title: Charts - Legend
 
 In chart components, the legend links series with `label` properties and their color.
 
-{{"demo": "BasicLegend.js", "bg": "inline"}}
+{{"demo": "BasicLegend.js"}}
 
 ## Placement
 

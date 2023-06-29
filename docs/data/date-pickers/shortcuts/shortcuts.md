@@ -36,20 +36,20 @@ You can use `slotProps.shortcuts` to customize this prop. For example to add a s
 />
 ```
 
-{{"demo": "BasicShortcuts.js", "bg": "inline"}}
+{{"demo": "BasicShortcuts.js"}}
 
 ## Disabled dates
 
 By default, the shortcuts are disabled if the returned value does not pass validation.
 Here is an example where `minDate` is set to the middle of the year.
 
-{{"demo": "DisabledDatesShortcuts.js", "bg": "inline"}}
+{{"demo": "DisabledDatesShortcuts.js"}}
 
 ## Range shortcuts [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 Shortcuts on range pickers require `getValue` property to return an array with two values.
 
-{{"demo": "BasicRangeShortcuts.js", "bg": "inline"}}
+{{"demo": "BasicRangeShortcuts.js"}}
 
 ## Advanced shortcuts
 
@@ -58,7 +58,7 @@ You can use it to test if a value is valid or not based on the [validation props
 
 In the following demonstration, it is used to get the next available week and weekend.
 
-{{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}
+{{"demo": "AdvancedRangeShortcuts.js"}}
 
 ## Behavior when selecting a shortcut
 
@@ -67,11 +67,11 @@ You can change the behavior when selecting a shortcut using the `changeImportanc
 - `"accept"` (_default value_): fires `onChange`, fires `onAccept` and closes the picker.
 - `"set"`: fires `onChange` but do not fire `onAccept` and does not close the picker.
 
-{{"demo": "ChangeImportance.js", "bg": "inline"}}
+{{"demo": "ChangeImportance.js"}}
 
 ## Customization
 
 Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
 Here is an example with horizontal shortcuts.
 
-{{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
+{{"demo": "CustomizedRangeShortcuts.js"}}
