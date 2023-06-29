@@ -117,15 +117,15 @@ export default function PieArc(props: PieArcProps) {
   const classes = useUtilityClasses(ownerState);
 
   const attibuesOverride = {
-    additionalRaidus: 0,
-    ...((isFaded && faded) || (isHighlighted && highlighted) || undefined),
+    additionalRadius: 0,
+    ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
   };
+  const innerRadius = Math.max(0, attibuesOverride.innerRadius ?? baseInnerRadius);
 
-  const innerRadius =
-    attibuesOverride.innerRadius ?? baseInnerRadius + attibuesOverride.additionalRaidus;
-
-  const outerRadius =
-    attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRaidus;
+  const outerRadius = Math.max(
+    0,
+    attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRadius,
+  );
   const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
 
   return (
