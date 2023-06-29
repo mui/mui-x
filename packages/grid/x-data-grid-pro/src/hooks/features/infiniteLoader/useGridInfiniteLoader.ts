@@ -20,42 +20,62 @@ export const useGridInfiniteLoader = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    | 'onRowsScrollEnd'
-    | 'scrollEndThreshold'
-    | 'pagination'
-    | 'paginationMode'
-    | 'rowsLoadingMode'
-    | 'signature'
+    'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
   >,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
+  let previousY = 0;
+  let previousRatio = 0;
 
-  const handleLoadMoreRows = React.useCallback(() => {
-    const viewportPageSize = apiRef.current.getViewportPageSize();
-    const rowScrollEndParam: GridRowScrollEndParams = {
-      visibleColumns,
-      viewportPageSize,
-      visibleRowsCount: currentPage.rows.length,
-    };
+  const handleLoadMoreRows = React.useCallback(
+    ([entry]: any) => {
+      const currentY = entry.boundingClientRect.y;
+      const currentRatio = entry.intersectionRatio;
+      const isIntersecting = entry.isIntersecting;
 
-    apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParam);
-  }, [apiRef, visibleColumns, currentPage.rows.length]);
+      // Scrolling down check
+      if (currentY < previousY || isIntersecting) {
+        if (currentRatio > previousRatio) {
+          const viewportPageSize = apiRef.current.getViewportPageSize();
+          const rowScrollEndParam: GridRowScrollEndParams = {
+            visibleColumns,
+            viewportPageSize,
+            visibleRowsCount: currentPage.rows.length,
+          };
+          apiRef.current.publishEvent('rowsScrollEnd', rowScrollEndParam);
+        }
+      }
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      previousY = currentY;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      previousRatio = currentRatio;
+    },
+    [apiRef, visibleColumns, currentPage.rows.length],
+  );
 
   const lastVisibleRowRef = React.useCallback<GridInfiniteLoaderApi['unstable_lastVisibleRowRef']>(
     (node) => {
+      // Prevent the infite loading working in combination with lazy loading
+      if (props.rowsLoadingMode !== 'client') {
+        return;
+      }
+
       if (observer.current) {
         observer.current.disconnect();
       }
 
-      observer.current = new IntersectionObserver(handleLoadMoreRows);
+      observer.current = new IntersectionObserver(handleLoadMoreRows, {
+        threshold: props.scrollEndThreshold,
+      });
 
       if (node) {
         observer.current.observe(node);
       }
     },
-    [handleLoadMoreRows],
+    [props, handleLoadMoreRows],
   );
 
   const infiteLoaderApi: GridInfiniteLoaderApi = {

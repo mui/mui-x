@@ -415,49 +415,31 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
       }
     : null;
 
-  const renderCell = () => {
+  const handleRowRef = (element: HTMLDivElement | null) => {
     if (isLastVisible && (rootProps as any).onRowsScrollEnd) {
-      return (
-        <div ref={(apiRef as any).current.unstable_lastVisibleRowRef}>
-          <div
-            ref={handleRef}
-            data-id={rowId}
-            data-rowindex={index}
-            role="row"
-            className={clsx(...rowClassNames, classes.root, className)}
-            aria-rowindex={ariaRowIndex}
-            aria-selected={selected}
-            style={style}
-            {...eventHandlers}
-            {...other}
-          >
-            {cells}
-            {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-          </div>
-        </div>
-      );
+      (apiRef as any).current.unstable_lastVisibleRowRef(element);
     }
 
-    return (
-      <div
-        ref={handleRef}
-        data-id={rowId}
-        data-rowindex={index}
-        role="row"
-        className={clsx(...rowClassNames, classes.root, className)}
-        aria-rowindex={ariaRowIndex}
-        aria-selected={selected}
-        style={style}
-        {...eventHandlers}
-        {...other}
-      >
-        {cells}
-        {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
-      </div>
-    );
+    return handleRef && handleRef(element);
   };
 
-  return renderCell();
+  return (
+    <div
+      ref={handleRowRef}
+      data-id={rowId}
+      data-rowindex={index}
+      role="row"
+      className={clsx(...rowClassNames, classes.root, className)}
+      aria-rowindex={ariaRowIndex}
+      aria-selected={selected}
+      style={style}
+      {...eventHandlers}
+      {...other}
+    >
+      {cells}
+      {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
+    </div>
+  );
 });
 
 GridRow.propTypes = {
