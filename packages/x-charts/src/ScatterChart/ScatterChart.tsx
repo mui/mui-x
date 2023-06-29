@@ -130,6 +130,7 @@ ScatterChart.propTypes = {
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
     itemWidth: PropTypes.number,
     markSize: PropTypes.number,
     offset: PropTypes.shape({

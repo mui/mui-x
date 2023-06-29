@@ -147,6 +147,7 @@ PieChart.propTypes = {
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
     itemWidth: PropTypes.number,
     markSize: PropTypes.number,
     offset: PropTypes.shape({
@@ -195,6 +196,8 @@ PieChart.propTypes = {
       arcLabelMinAngle: PropTypes.number,
       color: PropTypes.string,
       cornerRadius: PropTypes.number,
+      cx: PropTypes.number,
+      cy: PropTypes.number,
       data: PropTypes.arrayOf(
         PropTypes.shape({
           color: PropTypes.string,
@@ -204,6 +207,18 @@ PieChart.propTypes = {
         }),
       ).isRequired,
       endAngle: PropTypes.number,
+      faded: PropTypes.shape({
+        additionalRaidus: PropTypes.number,
+        cornerRadius: PropTypes.number,
+        innerRadius: PropTypes.number,
+        outerRadius: PropTypes.number,
+      }),
+      highlighted: PropTypes.shape({
+        additionalRaidus: PropTypes.number,
+        cornerRadius: PropTypes.number,
+        innerRadius: PropTypes.number,
+        outerRadius: PropTypes.number,
+      }),
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
