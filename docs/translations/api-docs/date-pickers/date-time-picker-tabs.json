@@ -38,6 +38,6 @@
       "typeDescriptions": {}
     }
   },
-  "classDescriptions": {},
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {}
 }

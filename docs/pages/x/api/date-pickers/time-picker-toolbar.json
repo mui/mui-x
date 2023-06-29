@@ -29,7 +29,20 @@
   },
   "slots": {},
   "name": "TimePickerToolbar",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePickerToolbar" },
+  "styles": {
+    "classes": [
+      "root",
+      "separator",
+      "hourMinuteLabel",
+      "hourMinuteLabelLandscape",
+      "hourMinuteLabelReverse",
+      "ampmSelection",
+      "ampmLandscape",
+      "ampmLabel"
+    ],
+    "globalClasses": {},
+    "name": "MuiTimePickerToolbar"
+  },
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [

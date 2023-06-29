@@ -12,7 +12,11 @@
   },
   "slots": {},
   "name": "MarkElement",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkElement" },
+  "styles": {
+    "classes": ["root", "highlighted", "faded"],
+    "globalClasses": {},
+    "name": "MuiMarkElement"
+  },
   "filename": "/packages/x-charts/src/LineChart/MarkElement.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "MarkElement" }]

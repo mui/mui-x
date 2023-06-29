@@ -29,7 +29,11 @@
     "toolbar": { "type": { "name": "elementType" } }
   },
   "name": "PickersLayout",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPickersLayout" },
+  "styles": {
+    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs", "shortcuts"],
+    "globalClasses": {},
+    "name": "MuiPickersLayout"
+  },
   "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
   "packages": [

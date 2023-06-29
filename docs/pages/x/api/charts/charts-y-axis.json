@@ -25,7 +25,24 @@
   },
   "slots": {},
   "name": "ChartsYAxis",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsYAxis" },
+  "styles": {
+    "classes": [
+      "root",
+      "line",
+      "tickContainer",
+      "tick",
+      "tickLabel",
+      "label",
+      "directionX",
+      "directionY",
+      "top",
+      "bottom",
+      "left",
+      "right"
+    ],
+    "globalClasses": {},
+    "name": "MuiChartsYAxis"
+  },
   "filename": "/packages/x-charts/src/ChartsYAxis/ChartsYAxis.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsYAxis" }]

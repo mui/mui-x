@@ -1,6 +1,18 @@
 {
   "componentDescription": "",
   "propDescriptions": {},
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "highlighted": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "higlighted"
+    },
+    "faded": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "faded"
+    }
+  },
   "slotDescriptions": {}
 }

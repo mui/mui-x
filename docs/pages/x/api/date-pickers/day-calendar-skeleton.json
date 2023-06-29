@@ -11,7 +11,11 @@
   },
   "slots": {},
   "name": "DayCalendarSkeleton",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDayCalendarSkeleton" },
+  "styles": {
+    "classes": ["root", "week", "daySkeleton"],
+    "globalClasses": {},
+    "name": "MuiDayCalendarSkeleton"
+  },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/DayCalendarSkeleton/DayCalendarSkeleton.tsx",

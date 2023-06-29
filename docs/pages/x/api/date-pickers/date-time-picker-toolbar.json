@@ -30,7 +30,21 @@
   },
   "slots": {},
   "name": "DateTimePickerToolbar",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimePickerToolbar" },
+  "styles": {
+    "classes": [
+      "root",
+      "dateContainer",
+      "timeContainer",
+      "timeDigitsContainer",
+      "timeLabelReverse",
+      "separator",
+      "ampmSelection",
+      "ampmLandscape",
+      "ampmLabel"
+    ],
+    "globalClasses": {},
+    "name": "MuiDateTimePickerToolbar"
+  },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [

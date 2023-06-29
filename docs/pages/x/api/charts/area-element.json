@@ -2,7 +2,11 @@
   "props": {},
   "slots": {},
   "name": "AreaElement",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaElement" },
+  "styles": {
+    "classes": ["root", "highlighted", "faded"],
+    "globalClasses": {},
+    "name": "MuiAreaElement"
+  },
   "filename": "/packages/x-charts/src/LineChart/AreaElement.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "AreaElement" }]
