@@ -1,7 +1,7 @@
 Broken links found by `yarn docs:link-check` that exist:
 
-- https://mui.com/base/api/portal/#props
+- https://mui.com/base-ui/react-autocomplete/hooks-api/#use-autocomplete
+- https://mui.com/base-ui/react-portal/components-api
 - https://mui.com/blog/material-ui-v4-is-out/#premium-themes-store-✨
 - https://mui.com/size-snapshot
-- https://mui.com/x/react-data-grid/filtering/#quick-filter
 - https://mui.com/x/react-data-grid/migration-v4

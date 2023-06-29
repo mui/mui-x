@@ -12,6 +12,8 @@ import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
 import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import JoyBox from '@mui/joy/Box';
 import JoyTypography from '@mui/joy/Typography';
+import JoyCircularProgress from '@mui/joy/CircularProgress';
+import JoyTooltip from '@mui/joy/Tooltip';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
@@ -19,6 +21,7 @@ import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridFilteredTopLevelRowCountSelector, gridPaginationModelSelector } from '../hooks';
+import { GridOverlay } from '../components/containers/GridOverlay';
 
 function convertColor<
   T extends
@@ -405,6 +408,17 @@ const Pagination = React.forwardRef<
   );
 });
 
+const LoadingOverlay = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['loadingOverlay']>
+>((props, ref) => {
+  return (
+    <GridOverlay {...props} ref={ref}>
+      <JoyCircularProgress />
+    </GridOverlay>
+  );
+});
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   ...joyIconSlots,
   baseCheckbox: Checkbox,
@@ -416,9 +430,9 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
   baseFormControl: JoyFormControl,
-  // BaseTooltip: MUITooltip,
-  // BasePopper: MUIPopper,
+  baseTooltip: JoyTooltip,
   pagination: Pagination,
+  loadingOverlay: LoadingOverlay,
 };
 
 export default joySlots;

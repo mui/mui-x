@@ -658,12 +658,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const rootStyle = React.useMemo(() => {
     const style = {} as React.CSSProperties;
+
     if (!needsHorizontalScrollbar) {
       style.overflowX = 'hidden';
     }
+
     if (rootProps.autoHeight) {
       style.overflowY = 'hidden';
     }
+
     return style;
   }, [needsHorizontalScrollbar, rootProps.autoHeight]);
 
