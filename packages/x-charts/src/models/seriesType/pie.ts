@@ -53,14 +53,40 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   arcLabelMinAngle?: number;
   /**
    * The x coordinate of the pie center.
-   * @default width/2 the center of the drawing area
+   * @default width/2 the center of the drawing area.
    */
   cx?: number;
   /**
    * The y coordinate of the pie center.
-   * @default height/2 the center of the drawing area
+   * @default height/2 the center of the drawing area.
    */
   cy?: number;
+  /**
+   * Override the arc attibutes when it is highlighted.
+   */
+  highlighted?: {
+    /**
+     * Value added to the default `innerRadius` and `outerRadius`.
+     * Can be negative.
+     */
+    additionalRaidus?: number;
+    innerRadius?: number;
+    outerRadius?: number;
+    cornerRadius?: number;
+  };
+  /**
+   * Override the arc attibutes when it is faded.
+   */
+  faded?: {
+    /**
+     * Value added to the default `innerRadius` and `outerRadius`.
+     * Can be negative.
+     */
+    additionalRaidus?: number;
+    innerRadius?: number;
+    outerRadius?: number;
+    cornerRadius?: number;
+  };
 }
 
 /**

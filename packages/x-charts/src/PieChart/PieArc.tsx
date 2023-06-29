@@ -74,6 +74,8 @@ export type PieArcProps = Omit<PieArcOwnerState, 'isFaded' | 'isHighlighted'> &
     innerRadius: PieSeriesType['innerRadius'];
     outerRadius: number;
     cornerRadius: PieSeriesType['cornerRadius'];
+    highlighted: PieSeriesType['highlighted'];
+    faded: PieSeriesType['faded'];
   };
 
 export default function PieArc(props: PieArcProps) {
@@ -83,9 +85,11 @@ export default function PieArc(props: PieArcProps) {
     classes: innerClasses,
     color,
     highlightScope,
-    innerRadius = 0,
-    outerRadius,
-    cornerRadius = 0,
+    innerRadius: baseInnerRadius = 0,
+    outerRadius: baseOuterRadius,
+    cornerRadius: baseCornerRadius = 0,
+    highlighted,
+    faded,
     ...other
   } = props;
 
@@ -111,6 +115,18 @@ export default function PieArc(props: PieArcProps) {
     isHighlighted,
   };
   const classes = useUtilityClasses(ownerState);
+
+  const attibuesOverride = {
+    additionalRaidus: 0,
+    ...((isFaded && faded) || (isHighlighted && highlighted) || undefined),
+  };
+
+  const innerRadius =
+    attibuesOverride.innerRadius ?? baseInnerRadius + attibuesOverride.additionalRaidus;
+
+  const outerRadius =
+    attibuesOverride.outerRadius ?? baseOuterRadius + attibuesOverride.additionalRaidus;
+  const cornerRadius = attibuesOverride.cornerRadius ?? baseCornerRadius;
 
   return (
     <PieArcRoot

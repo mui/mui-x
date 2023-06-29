@@ -53,6 +53,8 @@ export function PiePlot() {
           data,
           cx,
           cy,
+          highlighted,
+          faded,
         } = series[seriesId];
         return (
           <g
@@ -73,6 +75,8 @@ export function PiePlot() {
                     color={item.color}
                     dataIndex={index}
                     highlightScope={series[seriesId].highlightScope}
+                    highlighted={highlighted}
+                    faded={faded}
                   />
                 );
               })}

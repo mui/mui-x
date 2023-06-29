@@ -10,3 +10,5 @@ title: Charts - Pie
 {{"demo": "BasicPie.js"}}
 
 {{"demo": "PieArcLabel.js"}}
+
+{{"demo": "PieActiveArc.js"}}
