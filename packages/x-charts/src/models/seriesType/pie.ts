@@ -51,6 +51,16 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
    * The minimal angle required to display the arc label.
    */
   arcLabelMinAngle?: number;
+  /**
+   * The x coordinate of the pie center.
+   * @default width/2 the center of the drawing area
+   */
+  cx?: number;
+  /**
+   * The y coordinate of the pie center.
+   * @default height/2 the center of the drawing area
+   */
+  cy?: number;
 }
 
 /**

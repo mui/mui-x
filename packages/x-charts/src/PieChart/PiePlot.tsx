@@ -51,9 +51,16 @@ export function PiePlot() {
           arcLabel,
           arcLabelMinAngle = 0,
           data,
+          cx,
+          cy,
         } = series[seriesId];
         return (
-          <g key={seriesId} transform={`translate(${center.x}, ${center.y})`}>
+          <g
+            key={seriesId}
+            transform={`translate(${cx === undefined ? center.x : left + cx}, ${
+              cy === undefined ? center.y : top + cy
+            })`}
+          >
             <g>
               {data.map((item, index) => {
                 return (
