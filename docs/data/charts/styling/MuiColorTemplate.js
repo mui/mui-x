@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import globalChance from 'chance';
+import { Chance } from 'chance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 
 import {
@@ -18,7 +18,7 @@ import {
   cheerfulFiestaPalette,
 } from '@mui/x-charts/colorPalettes';
 
-const chance = globalChance();
+const chance = new Chance(42);
 
 function getGaussianSeriesData(mean, stdev = [0.3, 0.4], N = 50) {
   return [...Array(N)].map((_, i) => {
