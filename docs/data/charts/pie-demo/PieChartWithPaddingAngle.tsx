@@ -3,10 +3,10 @@ import Stack from '@mui/material/Stack';
 import { PieChart } from '@mui/x-charts/PieChart';
 
 const data = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
+  { label: 'Group A', value: 400 },
+  { label: 'Group B', value: 300 },
+  { label: 'Group C', value: 300 },
+  { label: 'Group D', value: 200 },
 ];
 
 export default function PieChartWithPaddingAngle() {
@@ -24,6 +24,7 @@ export default function PieChartWithPaddingAngle() {
         margin={{ right: 5 }}
         width={200}
         height={200}
+        legend={{ hidden: true }}
       />
       <PieChart
         series={[
@@ -39,6 +40,7 @@ export default function PieChartWithPaddingAngle() {
         margin={{ right: 5 }}
         width={200}
         height={200}
+        legend={{ hidden: true }}
       />
     </Stack>
   );

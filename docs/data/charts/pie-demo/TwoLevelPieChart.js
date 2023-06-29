@@ -39,6 +39,7 @@ export default function TwoLevelPieChart() {
       ]}
       width={400}
       height={300}
+      legend={{ hidden: true }}
     />
   );
 }

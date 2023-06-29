@@ -15,6 +15,10 @@ title: Charts - Pie demonstration
 
 {{"demo": "StraightAnglePieChart.js"}}
 
+## TwoSimplePieChart
+
+{{"demo": "TwoSimplePieChart.js"}}
+
 ## PieChartWithPaddingAngle
 
 {{"demo": "PieChartWithPaddingAngle.js"}}
