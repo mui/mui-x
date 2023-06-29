@@ -77,7 +77,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Explicit `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting the day. The user will have to click on the _OK_ action to close it.
+  **Behavior:** The picker won't close when selecting a day. The user will have to click on the _OK_ action to close it.
 
   :::success
   If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
@@ -98,7 +98,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting the day. The user will have to click on the _OK_ action to close it.
+  **Behavior:** The picker won't close when selecting a day. The user will have to click on the _OK_ action to close it.
 
 - ```tsx
   <DesktopDatePicker views={['day', 'month', 'year']} />
