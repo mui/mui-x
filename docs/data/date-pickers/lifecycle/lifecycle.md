@@ -77,7 +77,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   - Default `views` prop: `['year', 'day']`
   - Explicit `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker won't close when selecting the day.
+  **Behavior:** The picker won't close when selecting the day. The user will have to click on the _OK_ action to close it.
 
   :::success
   If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
@@ -90,6 +90,15 @@ The examples below are using the desktop and mobile variants of the pickers, but
   ```
 
   :::
+
+- ```tsx
+  <MobileDatePicker />
+  ```
+
+  - Default `views` prop: `['year', 'day']`
+  - Default `closeOnSelect` prop: `false`
+
+  **Behavior:** The picker won't close when selecting the day. The user will have to click on the _OK_ action to close it.
 
 - ```tsx
   <DesktopDatePicker views={['day', 'month', 'year']} />
@@ -242,7 +251,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 ## Classic scenarios
 
-### Date Picker
+### `DatePicker` on desktop
 
 #### Controlled `DesktopDatePicker`: basic usage
 
@@ -291,6 +300,8 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 - Fires `onClose` (and closes the picker if the `open` prop is not controlled)
 - Fires `onChange` with the selected day (keeps the time of the previous value)
 - Fires `onAccept` with the selected day (keeps the time of the previous value)
+
+### `DatePicker` on mobile
 
 #### Controlled `MobileDatePicker`: basic usage
 
