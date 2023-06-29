@@ -813,8 +813,8 @@ DataGridProRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * Set the percentage of the element that needs to be visible in order to invoke the rowsScrollEnd callback. A threshold of 1.0 means that when 100% of the target needs to be visible.
-   * @default 1.0
+   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
+   * @default 80
    */
   scrollEndThreshold: PropTypes.number,
   /**
