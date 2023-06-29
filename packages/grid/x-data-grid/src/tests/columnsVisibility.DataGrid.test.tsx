@@ -311,24 +311,50 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     expect(screen.queryByRole('button', { name: 'Show all' })).to.equal(null);
   });
 
-  it('should control columns shown in columns panel using `getTogglableColumns` prop', () => {
-    const getTogglableColumns = (cols: GridColDef[]) =>
-      cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
-    render(
-      <TestDataGrid
-        slots={{
-          toolbar: GridToolbar,
-        }}
-        slotProps={{
-          columnsPanel: {
-            getTogglableColumns,
-          },
-        }}
-      />,
-    );
+  describe('prop: `getTogglableColumns`', () => {
+    it('should control columns shown in columns panel using `getTogglableColumns` prop', () => {
+      const getTogglableColumns = (cols: GridColDef[]) =>
+        cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
+      render(
+        <TestDataGrid
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          slotProps={{
+            columnsPanel: {
+              getTogglableColumns,
+            },
+          }}
+        />,
+      );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
-    expect(screen.queryByRole('checkbox', { name: 'id' })).not.to.equal(null);
-    expect(screen.queryByRole('checkbox', { name: 'idBis' })).to.equal(null);
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      expect(screen.queryByRole('checkbox', { name: 'id' })).not.to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: 'idBis' })).to.equal(null);
+    });
+
+    it('should avoid toggling columns provided by `getTogglableColumns` prop on `Show all` or `Hide all`', () => {
+      const getTogglableColumns = (cols: GridColDef[]) =>
+        cols.filter((column) => column.field !== 'idBis').map((column) => column.field);
+      render(
+        <TestDataGrid
+          slots={{
+            toolbar: GridToolbar,
+          }}
+          slotProps={{
+            columnsPanel: {
+              getTogglableColumns,
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Hide all' }));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Show all' }));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
+    });
   });
 });

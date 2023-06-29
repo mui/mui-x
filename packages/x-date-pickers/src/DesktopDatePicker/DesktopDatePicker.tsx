@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { DesktopDatePickerProps } from './DesktopDatePicker.types';
-import { getDatePickerFieldFormat, useDatePickerDefaultizedProps } from '../DatePicker/shared';
+import { useDatePickerDefaultizedProps } from '../DatePicker/shared';
 import { useLocaleText, useUtils, validateDate } from '../internals';
 import { DateView } from '../models';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
-import { Calendar } from '../internals/components/icons';
+import { CalendarIcon } from '../icons';
 import { DateField } from '../DateField';
-import { extractValidationProps } from '../internals/utils/validation';
+import { extractValidationProps } from '../internals/utils/validation/extractValidationProps';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -41,10 +42,10 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    format: getDatePickerFieldFormat(utils, defaultizedProps),
+    format: resolveDateFormat(utils, defaultizedProps, false),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
-      openPickerIcon: Calendar,
+      openPickerIcon: CalendarIcon,
       field: DateField,
       ...defaultizedProps.slots,
     },
@@ -65,6 +66,7 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
   const { renderPicker } = useDesktopPicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
+    valueType: 'date',
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     validator: validateDate,
   });
@@ -113,7 +115,7 @@ DesktopDatePicker.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -161,6 +163,12 @@ DesktopDatePicker.propTypes = {
    * Defaults to localized format based on the used `views`.
    */
   format: PropTypes.string,
+  /**
+   * Density of the format when rendered in the input.
+   * Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+   * @default "dense"
+   */
+  formatDensity: PropTypes.oneOf(['dense', 'spacious']),
   /**
    * Pass a ref to the `input` element.
    */
@@ -359,6 +367,14 @@ DesktopDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

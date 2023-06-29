@@ -48,9 +48,6 @@ export const useGridEditing = (
       if (isCellEditableProp) {
         return isCellEditableProp(params);
       }
-      if (params.rowNode.type === 'pinnedRow') {
-        return false;
-      }
       return true;
     },
     [isCellEditableProp],

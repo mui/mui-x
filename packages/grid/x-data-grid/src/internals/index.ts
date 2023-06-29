@@ -10,6 +10,7 @@ export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColum
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
+export { getGridFilter } from '../components/panel/filterPanel/GridFilterPanel';
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
 export {
@@ -21,12 +22,21 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
-export type { UseGridColumnHeadersProps } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export {
+  unstable_gridHeaderFilteringEditFieldSelector,
+  unstable_gridHeaderFilteringMenuSelector,
+} from '../hooks/features/headerFiltering/gridHeaderFilteringSelectors';
+export type { GridSlotsComponentsProps } from '../models/gridSlotsComponentsProps';
+export type {
+  UseGridColumnHeadersProps,
+  GetHeadersParams,
+} from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
+export { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
 export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 export {
   useGridColumnGrouping,
@@ -44,7 +54,10 @@ export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport'
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
-export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
+export type {
+  GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
+} from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
@@ -78,6 +91,10 @@ export {
   gridAdditionalRowGroupsSelector,
   gridPinnedRowsSelector,
 } from '../hooks/features/rows/gridRowsSelector';
+export {
+  headerFilteringStateInitializer,
+  useGridHeaderFiltering,
+} from '../hooks/features/headerFiltering/useGridHeaderFiltering';
 export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
   useGridRowSelection,
@@ -96,7 +113,7 @@ export {
   getRenderableIndexes,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 
-export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
+export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 
@@ -109,8 +126,12 @@ export type {
 } from '../models/props/DataGridProps';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
-export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
-export { findParentElementFromClassName } from '../utils/domUtils';
+export {
+  createSelector,
+  createSelectorMemoized,
+  unstable_resetCreateSelectorCache,
+} from '../utils/createSelector';
+export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
@@ -121,4 +142,7 @@ export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
 
+export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
+
+export * from '../colDef/utils';
 export * from './utils';

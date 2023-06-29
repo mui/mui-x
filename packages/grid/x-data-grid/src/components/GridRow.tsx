@@ -5,8 +5,9 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
+import { fastMemo } from '../utils/fastMemo';
 import { GridRowEventLookup } from '../models/events';
-import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridRows';
+import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
@@ -14,18 +15,18 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
-import { useGridSelector } from '../hooks/utils/useGridSelector';
+import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
-import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
+import { GridCellWrapper, GridCellV7 } from './cell/GridCell';
 import type { GridCellProps } from './cell/GridCell';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 
@@ -256,140 +257,50 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     [apiRef, onClick, publish, rowId],
   );
 
-  const {
-    slots,
-    slotProps,
-    classes: rootClasses,
-    disableColumnReorder,
-    getCellClassName,
-  } = rootProps;
+  const { slots, slotProps, disableColumnReorder } = rootProps;
+  const CellComponent = slots.cell === GridCellV7 ? GridCellV7 : GridCellWrapper;
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
-  const CellComponent = slots.cell;
+  const getCell = (
+    column: GridStateColDef,
+    cellProps: Pick<
+      GridCellProps,
+      'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
+    >,
+  ) => {
+    const disableDragEvents =
+      (disableColumnReorder && column.disableReorder) ||
+      (!rowReordering &&
+        !!sortModel.length &&
+        treeDepth > 1 &&
+        Object.keys(editRowsState).length > 0);
 
-  const getCell = React.useCallback(
-    (
-      column: GridStateColDef,
-      cellProps: Pick<
-        GridCellProps,
-        'width' | 'colSpan' | 'showRightBorder' | 'indexRelativeToAllColumns'
-      >,
-    ) => {
-      const cellParams = apiRef.current.getCellParams<any, any, any, GridTreeNodeWithRender>(
-        rowId,
-        column.field,
-      );
+    const editCellState = editRowsState[rowId]?.[column.field] ?? null;
 
-      const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
-        id: rowId,
-        field: column.field,
-      });
+    return (
+      <CellComponent
+        key={column.field}
+        column={column}
+        width={cellProps.width}
+        rowId={rowId}
+        height={rowHeight}
+        showRightBorder={cellProps.showRightBorder}
+        align={column.align || 'left'}
+        colIndex={cellProps.indexRelativeToAllColumns}
+        colSpan={cellProps.colSpan}
+        disableDragEvents={disableDragEvents}
+        editCellState={editCellState}
+        {...slotProps?.cell}
+      />
+    );
+  };
 
-      const disableDragEvents =
-        (disableColumnReorder && column.disableReorder) ||
-        (!rowReordering &&
-          !!sortModel.length &&
-          treeDepth > 1 &&
-          Object.keys(editRowsState).length > 0);
-
-      if (column.cellClassName) {
-        classNames.push(
-          clsx(
-            typeof column.cellClassName === 'function'
-              ? column.cellClassName(cellParams)
-              : column.cellClassName,
-          ),
-        );
-      }
-
-      const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
-      let content: React.ReactNode;
-
-      if (editCellState == null && column.renderCell) {
-        content = column.renderCell({ ...cellParams, api: apiRef.current });
-        // TODO move to GridCell
-        classNames.push(
-          clsx(gridClasses['cell--withRenderer'], rootClasses?.['cell--withRenderer']),
-        );
-      }
-
-      if (editCellState != null && column.renderEditCell) {
-        const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
-
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const { changeReason, unstable_updateValueOnRender, ...editCellStateRest } = editCellState;
-
-        const params: GridRenderEditCellParams = {
-          ...cellParams,
-          row: updatedRow,
-          ...editCellStateRest,
-          api: apiRef.current,
-        };
-
-        content = column.renderEditCell(params);
-        // TODO move to GridCell
-        classNames.push(clsx(gridClasses['cell--editing'], rootClasses?.['cell--editing']));
-      }
-
-      if (getCellClassName) {
-        // TODO move to GridCell
-        classNames.push(getCellClassName(cellParams));
-      }
-
-      const hasFocus = focusedCell === column.field;
-      const tabIndex = tabbableCell === column.field ? 0 : -1;
-
-      const isSelected = apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
-        id: rowId,
-        field: column.field,
-      });
-
-      return (
-        <CellComponent
-          key={column.field}
-          value={cellParams.value}
-          field={column.field}
-          width={cellProps.width}
-          rowId={rowId}
-          height={rowHeight}
-          showRightBorder={cellProps.showRightBorder}
-          formattedValue={cellParams.formattedValue}
-          align={column.align || 'left'}
-          cellMode={cellParams.cellMode}
-          colIndex={cellProps.indexRelativeToAllColumns}
-          isEditable={cellParams.isEditable}
-          isSelected={isSelected}
-          hasFocus={hasFocus}
-          tabIndex={tabIndex}
-          className={clsx(classNames)}
-          colSpan={cellProps.colSpan}
-          disableDragEvents={disableDragEvents}
-          {...slotProps?.cell}
-        >
-          {content}
-        </CellComponent>
-      );
-    },
-    [
-      apiRef,
-      rowId,
-      disableColumnReorder,
-      rowReordering,
-      sortModel.length,
-      treeDepth,
-      editRowsState,
-      getCellClassName,
-      focusedCell,
-      tabbableCell,
-      CellComponent,
-      rowHeight,
-      slotProps?.cell,
-      rootClasses,
-    ],
+  const sizes = useGridSelector(
+    apiRef,
+    () => ({ ...apiRef.current.unstable_getRowInternalSizes(rowId) }),
+    objectShallowCompare,
   );
-
-  const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
 
   let minHeight = rowHeight;
   if (minHeight === 'auto' && sizes) {
@@ -448,7 +359,13 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }
 
   const randomNumber = randomNumberBetween(10000, 20, 80);
-  const rowType = apiRef.current.getRowNode(rowId)!.type;
+
+  const rowNode = apiRef.current.getRowNode(rowId);
+  if (!rowNode) {
+    return null;
+  }
+
+  const rowType = rowNode.type;
   const cells: JSX.Element[] = [];
 
   for (let i = 0; i < renderedColumns.length; i += 1) {
@@ -475,7 +392,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         const contentWidth = Math.round(randomNumber());
 
         cells.push(
-          <rootProps.slots.skeletonCell
+          <slots.skeletonCell
             key={column.field}
             width={width}
             contentWidth={contentWidth}
@@ -548,8 +465,8 @@ GridRow.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  containerWidth: PropTypes.number,
-  firstColumnToRender: PropTypes.number,
+  containerWidth: PropTypes.number.isRequired,
+  firstColumnToRender: PropTypes.number.isRequired,
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
@@ -559,25 +476,27 @@ GridRow.propTypes = {
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
    */
-  index: PropTypes.number,
+  index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
-  lastColumnToRender: PropTypes.number,
+  lastColumnToRender: PropTypes.number.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
-  position: PropTypes.oneOf(['center', 'left', 'right']),
-  renderedColumns: PropTypes.arrayOf(PropTypes.object),
+  position: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
+  renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
   row: PropTypes.object,
-  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
-  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  selected: PropTypes.bool,
+  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  selected: PropTypes.bool.isRequired,
   /**
    * Determines which cell should be tabbable by having tabIndex=0.
    * If `null`, no cell in this row is in the tab sequence.
    */
   tabbableCell: PropTypes.string,
-  visibleColumns: PropTypes.arrayOf(PropTypes.object),
+  visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
-export { GridRow };
+const MemoizedGridRow = fastMemo(GridRow);
+
+export { MemoizedGridRow as GridRow };

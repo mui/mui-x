@@ -25,7 +25,7 @@ You can use the `fieldSeparator` slot to pass custom props to the `Typography` r
 
 ### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-You can pass the single input fields to the you range picker to use it for keyboard editing:
+You can pass the single input fields to the range picker to use it for keyboard editing:
 
 {{"demo": "SingleInputDateRangePicker.js"}}
 
@@ -41,6 +41,13 @@ You can manually add an `endAdornment` if you want your range picker to look exa
 :::info
 This adornment is purely decorative, the focus remains on the field when the picker is opened.
 :::
+
+### Change the format density
+
+You can control the field format spacing using the `formatDensity` prop.
+Setting `formatDensity` to `"spacious"` will add a space before and after each `/`, `-` and `.` character.
+
+{{"demo": "FieldFormatDensity.js"}}
 
 ## Commonly used custom field
 
@@ -85,11 +92,21 @@ On the examples below, you can see that the typing of the props received by a cu
 ```tsx
 interface JoyDateFieldProps
   extends UseDateFieldProps<Dayjs>, // The headless field props
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {} // The DOM field props
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateValidationError
+    > {} // The DOM field props
 
 interface JoyDateTimeFieldProps
   extends UseDateTimeFieldProps<Dayjs>, // The headless field props
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateTimeValidationError> {} // The DOM field props
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateTimeValidationError
+    > {} // The DOM field props
 ```
 
 ### The headless field props

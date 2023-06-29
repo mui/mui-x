@@ -4,19 +4,61 @@ import {
   SeriesContextProvider,
   SeriesContextProviderProps,
 } from '../context/SeriesContextProvider';
-import Surface, { SurfaceProps } from '../Surface';
+import { InteractionProvider } from '../context/InteractionProvider';
+import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
+import {
+  CartesianContextProvider,
+  CartesianContextProviderProps,
+} from '../context/CartesianContextProvider';
+import { HighlightProvider } from '../context/HighlightProvider';
 
-type ChartContainerProps = SurfaceProps & SeriesContextProviderProps & DrawingProviderProps;
+export type ChartContainerProps = Omit<
+  ChartsSurfaceProps &
+    SeriesContextProviderProps &
+    Omit<DrawingProviderProps, 'svgRef'> &
+    CartesianContextProviderProps,
+  'children'
+> & {
+  children?: React.ReactNode;
+};
 
 export function ChartContainer(props: ChartContainerProps) {
-  const { width, height, series, margin, sx, title, desc, children } = props;
+  const {
+    width,
+    height,
+    series,
+    margin,
+    xAxis,
+    yAxis,
+    colors,
+    sx,
+    title,
+    desc,
+    disableAxisListener,
+    children,
+  } = props;
+  const ref = React.useRef<SVGSVGElement>(null);
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={series}>
-        <Surface width={width} height={height} sx={sx} title={title} desc={desc}>
-          {children}
-        </Surface>
+    <DrawingProvider width={width} height={height} margin={margin} svgRef={ref}>
+      <SeriesContextProvider series={series} colors={colors}>
+        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
+          <InteractionProvider>
+            <HighlightProvider>
+              <ChartsSurface
+                width={width}
+                height={height}
+                ref={ref}
+                sx={sx}
+                title={title}
+                desc={desc}
+                disableAxisListener={disableAxisListener}
+              >
+                {children}
+              </ChartsSurface>
+            </HighlightProvider>
+          </InteractionProvider>
+        </CartesianContextProvider>
       </SeriesContextProvider>
     </DrawingProvider>
   );

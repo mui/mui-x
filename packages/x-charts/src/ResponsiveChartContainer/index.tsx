@@ -1,54 +1,121 @@
 import * as React from 'react';
-import { ResizeObserver } from '@juggle/resize-observer';
-import { DrawingProvider } from '../context/DrawingProvider';
-import {
-  SeriesContextProvider,
-  SeriesContextProviderProps,
-} from '../context/SeriesContextProvider';
-import { LayoutConfig } from '../models/layout';
-import Surface from '../Surface';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import ownerWindow from '@mui/utils/ownerWindow';
+import { styled } from '@mui/material/styles';
+import { ChartContainer, ChartContainerProps } from '../ChartContainer';
+import { MakeOptional } from '../models/helpers';
 
-const useChartDimensions = (): [React.MutableRefObject<HTMLDivElement>, number, number] => {
-  const ref = React.useRef<HTMLDivElement>(null);
+const useChartDimensions = (
+  inWidth?: number,
+  inHeight?: number,
+): [React.RefObject<HTMLDivElement>, number, number] => {
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const displayError = React.useRef<boolean>(false);
 
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
 
+  // Adaptation of the `computeSizeAndPublishResizeEvent` from the grid.
+  const computeSize = React.useCallback(() => {
+    const mainEl = rootRef?.current;
+
+    if (!mainEl) {
+      return;
+    }
+
+    const win = ownerWindow(mainEl);
+    const computedStyle = win.getComputedStyle(mainEl);
+
+    const newHeight = parseFloat(computedStyle.height) || 0;
+    const newWidth = parseFloat(computedStyle.width) || 0;
+
+    setWidth(newWidth);
+    setHeight(newHeight);
+  }, []);
+
   React.useEffect(() => {
-    const element = ref.current;
-    const resizeObserver = new ResizeObserver((entries) => {
-      if (Array.isArray(entries) && entries.length) {
-        const entry = entries[0];
-        setWidth(entry.contentRect.width);
-        setHeight(entry.contentRect.height);
-      }
+    // Ensure the error detection occurs after the first rendering.
+    displayError.current = true;
+  }, []);
+
+  useEnhancedEffect(() => {
+    if (inWidth !== undefined && inHeight !== undefined) {
+      return () => {};
+    }
+    computeSize();
+
+    const elementToObserve = rootRef.current;
+    if (typeof ResizeObserver === 'undefined') {
+      return () => {};
+    }
+
+    let animationFrame: number;
+    const observer = new ResizeObserver(() => {
+      // See https://github.com/mui/mui-x/issues/8733
+      animationFrame = window.requestAnimationFrame(() => {
+        computeSize();
+      });
     });
-    // @ts-ignore
-    resizeObserver.observe(element);
 
-    return () => resizeObserver.disconnect();
-  }, [height, width]);
+    if (elementToObserve) {
+      observer.observe(elementToObserve);
+    }
 
-  // @ts-ignore
-  return [ref, width, height];
+    return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      if (elementToObserve) {
+        observer.unobserve(elementToObserve);
+      }
+    };
+  }, [computeSize, inHeight, inWidth]);
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (displayError.current && inWidth === undefined && width === 0) {
+      console.error(
+        `MUI: Charts does not have \`width\` prop, and its container has no \`width\` defined.`,
+      );
+      displayError.current = false;
+    }
+    if (displayError.current && inHeight === undefined && height === 0) {
+      console.error(
+        `MUI: Charts does not have \`height\` prop, and its container has no \`height\` defined.`,
+      );
+      displayError.current = false;
+    }
+  }
+
+  return [rootRef, inWidth ?? width, inHeight ?? height];
 };
 
-type ChartContainerProps = LayoutConfig & SeriesContextProviderProps;
+export type ResponsiveChartContainerProps = MakeOptional<ChartContainerProps, 'width' | 'height'>;
 
-export function ResponsiveChartContainer(props: ChartContainerProps) {
-  const { series, margin, children } = props;
+const ResizableContainer = styled('div', {
+  name: 'MuiResponsiveChart',
+  slot: 'Container',
+})<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
+  display: 'flex',
+  position: 'relative',
+  flexGrow: 1,
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+}));
 
-  const [ref, width, height] = useChartDimensions();
+export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
+  const [containerRef, width, height] = useChartDimensions(props.width, props.height);
 
   return (
-    <div ref={ref} style={{ width: '100%', height: '100%' }}>
-      <DrawingProvider width={width} height={height} margin={margin}>
-        <SeriesContextProvider series={series}>
-          <Surface width={width} height={height}>
-            {children}
-          </Surface>
-        </SeriesContextProvider>
-      </DrawingProvider>
-    </div>
+    <ResizableContainer
+      ref={containerRef}
+      ownerState={{ width: props.width, height: props.height }}
+    >
+      <ChartContainer {...props} width={width} height={height} />
+    </ResizableContainer>
   );
 }

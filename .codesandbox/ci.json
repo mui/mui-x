@@ -1,7 +1,7 @@
 {
   "buildCommand": "build:codesandbox",
   "installCommand": "install:codesandbox",
-  "node": "14",
+  "node": "18",
   "packages": [
     "packages/x-license-pro",
     "packages/grid/x-data-grid",

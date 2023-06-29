@@ -1,7 +1,7 @@
 # @mui/x-date-pickers
 
 This package is the community edition of the date and time picker components.
-It's part of MUI X, an open core extension of MUI, with advanced components.
+It's part of MUI X, an open-core extension of MUI, with advanced components.
 
 ## Installation
 
@@ -12,7 +12,7 @@ npm install @mui/x-date-pickers
 ```
 
 Then install the date library of your choice (if not already installed).
-We currently support 4 different date-libraries:
+We currently support 4 different date libraries:
 
 - [date-fns](https://date-fns.org/)
 - [Day.js](https://day.js.org/)
@@ -34,23 +34,15 @@ This component has the following peer dependencies that you will need to install
 
 ```json
 "peerDependencies": {
+  "@mui/base": "^5.0.0-alpha.87",
   "@mui/material": "^5.8.6",
   "@mui/system": "^5.8.0",
-  "react": "^17.0.2 || ^18.0.0",
-  "react-dom": "^17.0.2 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
 },
 ```
 
-If you need to use `js-joda`, `date-fns-jalali`, `jalaali`, or `hijri` library, you should be able to find the corresponding date-library from [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
-In such a case, you will have to install both the date-library and the corresponding @date-io adapter.
-
-```jsx
-// To use moment-jalaali
-npm install moment-jalaali
-npm install @date-io/jalaali
-```
-
-After installation completed, you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly.
+After completing the installation, you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly.
 The supported adapters are exported from `@mui/x-date-pickers`.
 
 ```jsx

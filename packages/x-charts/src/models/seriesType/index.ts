@@ -1,23 +1,28 @@
-import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
-import { DefaultizedLineSeriesType, LineSeriesType } from './line';
-import { PieSeriesType } from './pie';
-import { DefaultizedScatterSeriesType, ScatterSeriesType } from './scatter';
+import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import { DefaultizedLineSeriesType, LineItemIdentifier, LineSeriesType } from './line';
+// import { PieSeriesType } from './pie';
+import { DefaultizedScatterSeriesType, ScatterItemIdentifier, ScatterSeriesType } from './scatter';
 
-type AllSeriesType = BarSeriesType | LineSeriesType | PieSeriesType | ScatterSeriesType;
+type AllSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType;
+// | PieSeriesType;
 
-type CartesianSeriesType = BarSeriesType | LineSeriesType | PieSeriesType | ScatterSeriesType;
+type CartesianSeriesType = BarSeriesType | LineSeriesType | ScatterSeriesType;
+// | PieSeriesType;
 type DefaultizedCartesianSeriesType =
   | DefaultizedBarSeriesType
   | DefaultizedLineSeriesType
-  | PieSeriesType
   | DefaultizedScatterSeriesType;
-type StackableSeriesType = BarSeriesType | LineSeriesType;
+// | PieSeriesType
+type StackableSeriesType = DefaultizedBarSeriesType | DefaultizedLineSeriesType;
 
+export type SeriesItemIdentifier = BarItemIdentifier | LineItemIdentifier | ScatterItemIdentifier;
+
+export * from './line';
+export * from './bar';
+export * from './scatter';
+export type { StackOrderType, StackOffsetType } from './common';
 export type {
-  BarSeriesType,
-  LineSeriesType,
-  PieSeriesType,
-  ScatterSeriesType,
+  // PieSeriesType,
   AllSeriesType,
   CartesianSeriesType,
   DefaultizedCartesianSeriesType,

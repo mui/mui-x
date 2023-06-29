@@ -313,6 +313,10 @@ export interface GridClasses {
    */
   iconSeparator: string;
   /**
+   * Styles applied to the column header filter row.
+   */
+  headerFilterRow: string;
+  /**
    * Styles applied to the main container element.
    */
   main: string;
@@ -540,6 +544,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'aggregationColumnHeader--alignLeft',
   'aggregationColumnHeader--alignCenter',
   'aggregationColumnHeader--alignRight',
+  'aggregationColumnHeaderLabel',
   'autoHeight',
   'booleanCell',
   'cell--editable',
@@ -608,6 +613,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'filterFormValueInput',
   'filterIcon',
   'footerContainer',
+  'headerFilterRow',
   'iconButtonContainer',
   'iconSeparator',
   'main',
@@ -617,6 +623,8 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'menuOpen',
   'menuList',
   'overlay',
+  'overlayWrapper',
+  'overlayWrapperInner',
   'root',
   'root--densityStandard',
   'root--densityComfortable',

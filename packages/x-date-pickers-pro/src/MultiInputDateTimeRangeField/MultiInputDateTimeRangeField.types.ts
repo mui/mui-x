@@ -97,4 +97,5 @@ export interface MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate> {
 export type UseMultiInputDateTimeRangeFieldDefaultizedProps<
   TDate,
   AdditionalProps extends {},
-> = UseDateTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps;
+> = UseDateTimeRangeFieldDefaultizedProps<TDate> &
+  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;

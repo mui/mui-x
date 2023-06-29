@@ -1,8 +1,7 @@
 import { useIsLandscape } from '../useIsLandscape';
-import { UsePickerValueLayoutResponse } from './usePickerValue';
+import { UsePickerValueLayoutResponse } from './usePickerValue.types';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
-import { DateOrTimeView } from '../../../models';
-import { WrapperVariant } from '../../models/common';
+import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../../models/common';
 
 /**
  * Props used to create the layout of the views.
@@ -17,8 +16,10 @@ export interface UsePickerLayoutProps {
   orientation?: 'portrait' | 'landscape';
 }
 
-export interface UsePickerLayoutPropsResponseLayoutProps<TValue, TView extends DateOrTimeView>
-  extends UsePickerValueLayoutResponse<TValue>,
+export interface UsePickerLayoutPropsResponseLayoutProps<
+  TValue,
+  TView extends DateOrTimeViewWithMeridiem,
+> extends UsePickerValueLayoutResponse<TValue>,
     UsePickerViewsLayoutResponse<TView>,
     UsePickerLayoutProps {
   isLandscape: boolean;
@@ -26,11 +27,11 @@ export interface UsePickerLayoutPropsResponseLayoutProps<TValue, TView extends D
   isValid: (value: TValue) => boolean;
 }
 
-export interface UsePickerLayoutPropsResponse<TValue, TView extends DateOrTimeView> {
+export interface UsePickerLayoutPropsResponse<TValue, TView extends DateOrTimeViewWithMeridiem> {
   layoutProps: UsePickerLayoutPropsResponseLayoutProps<TValue, TView>;
 }
 
-export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView> {
+export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeViewWithMeridiem> {
   props: UsePickerLayoutProps;
   propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
@@ -40,7 +41,7 @@ export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView
 /**
  * Prepare the props for the view layout (managed by `PickersLayout`)
  */
-export const usePickerLayoutProps = <TValue, TView extends DateOrTimeView>({
+export const usePickerLayoutProps = <TValue, TView extends DateOrTimeViewWithMeridiem>({
   props,
   propsFromPickerValue,
   propsFromPickerViews,

@@ -1,10 +1,12 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { TimeViewWithMeridiem } from '../internals/models';
 
-const views = {
+const views: Record<TimeViewWithMeridiem, string> = {
   hours: 'שעות',
   minutes: 'דקות',
   seconds: 'שניות',
+  meridiem: 'מרידיאם',
 };
 
 const heILPickers: Partial<PickersLocaleText<any>> = {
@@ -44,6 +46,9 @@ const heILPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} שעות`,
   minutesClockNumberText: (minutes) => `${minutes} דקות`,
   secondsClockNumberText: (seconds) => `${seconds} שניות`,
+
+  // Digital clock labels
+  selectViewText: (view) => `בחירת ${views[view]}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'שבוע מספר',

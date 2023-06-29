@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGrid
   experimentalFeatures={{ columnGrouping: true }}
   rows={rows}
   columns={columns}

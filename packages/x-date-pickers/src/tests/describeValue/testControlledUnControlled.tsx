@@ -3,14 +3,16 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import { getExpectedOnChangeCount } from 'test/utils/pickers-utils';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,
-  getOptions,
+  options,
 ) => {
   const {
     render,
+    renderWithProps,
     values,
     componentFamily,
     emptyValue,
@@ -18,7 +20,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     setNewValue,
     clock,
     ...pickerParams
-  } = getOptions();
+  } = options;
+
+  const params = pickerParams as DescribeValueOptions<'picker', any>;
 
   describe('Controlled / uncontrolled value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
@@ -44,12 +48,12 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      render(<ElementToTest defaultValue={values[0]} onChange={onChange} />);
-      const newValue = setNewValue(values[0]);
+      const { selectSection } = renderWithProps({ defaultValue: values[0], onChange });
+      const newValue = setNewValue(values[0], { selectSection });
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
-      expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -62,10 +66,25 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.value`', () => {
       const onChange = spy();
 
-      render(<ElementToTest value={values[0]} onChange={onChange} />);
-      const newValue = setNewValue(values[0]);
+      const useControlledElement = (props) => {
+        const [value, setValue] = React.useState(props?.value || null);
+        const handleChange = React.useCallback(
+          (newValue) => {
+            setValue(newValue);
+            props?.onChange(newValue);
+          },
+          [props],
+        );
+        return { value, onChange: handleChange };
+      };
 
-      expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
+      const { selectSection } = renderWithProps(
+        { value: values[0], onChange },
+        useControlledElement,
+      );
+      const newValue = setNewValue(values[0], { selectSection });
+
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -97,10 +116,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should not allow editing with keyboard in mobile pickers', () => {
-      if (
-        componentFamily !== 'picker' ||
-        (pickerParams as DescribeValueOptions<'picker', any>).variant !== 'mobile'
-      ) {
+      if (componentFamily !== 'picker' || params.variant !== 'mobile') {
         return;
       }
       const handleChange = spy();
@@ -117,10 +133,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should have correct labelledby relationship when toolbar is shown', () => {
-      const params = pickerParams as DescribeValueOptions<'picker', any>;
       if (
         componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+        (params.variant === 'desktop' && params.type === 'date-range')
       ) {
         return;
       }
@@ -136,10 +151,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should have correct labelledby relationship with provided label when toolbar is hidden', () => {
-      const params = pickerParams as DescribeValueOptions<'picker', any>;
       if (
         componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+        (params.variant === 'desktop' && params.type === 'date-range')
       ) {
         return;
       }
@@ -165,10 +179,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {
-      const params = pickerParams as DescribeValueOptions<'picker', any>;
       if (
         componentFamily !== 'picker' ||
-        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+        (params.variant === 'desktop' && params.type === 'date-range')
       ) {
         return;
       }

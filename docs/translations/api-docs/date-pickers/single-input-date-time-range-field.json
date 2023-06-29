@@ -13,6 +13,7 @@
     "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "focused": "If <code>true</code>, the component is displayed in focused state.",
     "format": "Format of the date when rendered in the input(s).",
+    "formatDensity": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
     "FormHelperTextProps": "Props applied to the <a href=\"/material-ui/api/form-helper-text/\"><code>FormHelperText</code></a> element.",
     "fullWidth": "If <code>true</code>, the input will take up the full width of its container.",
     "helperText": "The helper text content.",
@@ -36,21 +37,24 @@
     "onError": "Callback fired when the error associated to the current value changes.<br><br><strong>Signature:</strong><br><code>function(error: TError, value: TValue) =&gt; void</code><br><em>error:</em> The new error.<br><em>value:</em> The value associated to the error.",
     "onSelectedSectionsChange": "Callback fired when the selected sections change.<br><br><strong>Signature:</strong><br><code>function(newValue: FieldSelectedSections) =&gt; void</code><br><em>newValue:</em> The new selected sections.",
     "readOnly": "It prevents the user from changing the value of the field (not from interacting with the field).",
+    "referenceDate": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set.",
     "required": "If <code>true</code>, the label is displayed as required and the <code>input</code> element is required.",
     "selectedSections": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
     "shouldDisableClock": "Disable specific clock time.<br><br><strong>Signature:</strong><br><code>function(clockValue: number, view: TimeView) =&gt; boolean</code><br><em>clockValue:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): If <code>true</code> the time will be disabled.",
     "shouldDisableDate": "Disable specific date.<br><br><strong>Signature:</strong><br><code>function(day: TDate, position: string) =&gt; boolean</code><br><em>day:</em> The date to test.<br><em>position:</em> The date to test, &#39;start&#39; or &#39;end&#39;.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
     "shouldDisableTime": "Disable specific time.<br><br><strong>Signature:</strong><br><code>function(value: TDate, view: TimeView) =&gt; boolean</code><br><em>value:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): If <code>true</code> the time will be disabled.",
+    "shouldRespectLeadingZeros": "If <code>true</code>, the format will respect the leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>) If <code>false</code>, the format will always add leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: &quot;DD&quot;), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired. If you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, &#39;&#39;)</code>.<br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros. This mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library.",
     "size": "The size of the component.",
     "slotProps": "The props used for each component slot.",
     "slots": "Overridable component slots.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
+    "timezone": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used. See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
     "unstableFieldRef": "The ref object used to imperatively interact with the field.",
     "value": "The selected value. Used when the component is controlled.",
     "variant": "The variant to use."
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "TextField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "textField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
   }
 }

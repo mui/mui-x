@@ -46,7 +46,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: '清除全部',
   filterPanelDeleteIconLabel: '删除',
   filterPanelLogicOperator: '逻辑操作器',
   filterPanelOperator: '操作器',
@@ -70,6 +70,33 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '为空',
   filterOperatorIsNotEmpty: '不为空',
   filterOperatorIsAnyOf: '属于',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: '任何',
@@ -79,7 +106,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '菜单',
   columnMenuShowColumns: '显示',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: '管理列',
   columnMenuFilter: '筛选器',
   columnMenuHideColumn: '隐藏',
   columnMenuUnsort: '恢复默认',
