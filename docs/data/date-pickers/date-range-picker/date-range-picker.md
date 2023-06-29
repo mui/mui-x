@@ -105,6 +105,8 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
 The Month Range Picker allows setting a range of months.
