@@ -89,7 +89,7 @@ export default function PieArc(props: PieArcProps) {
     outerRadius: baseOuterRadius,
     cornerRadius: baseCornerRadius = 0,
     highlighted,
-    faded = { additionalRaidus: -5 },
+    faded = { additionalRadius: -5 },
     ...other
   } = props;
 
