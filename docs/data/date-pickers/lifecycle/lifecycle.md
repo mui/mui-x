@@ -25,9 +25,9 @@ It will only call the `onChange` callback when:
 - the user fills one section of an empty field. The value equals `Invalid date`.
 - the user completes all sections of a field. The value reflects the field.
 - the user cleans one section of a completed field. The value equals `Invalid date`.
-- the user cleans all sections of an field. The value equals `null`.
+- the user cleans all sections of a field. The value equals `null`.
 
-The example below shows the last value received by onChange.
+The example below shows the last value received by `onChange`.
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
@@ -35,9 +35,9 @@ The example below shows the last value received by onChange.
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
 `onChange` is called if the date you are modifying is matching one of the conditions above,
-even if the other date does not.
+regardless of the other date state.
 
-The example below shows the last value received by onChange.
+The example below shows the last value received by `onChange`.
 Note how changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
@@ -47,18 +47,18 @@ Note how changing the value of the start date section will call `onChange` even 
 ### When is `onClose` called?
 
 :::info
-If you are not controlling the `open` prop, then all the scenarios below also describe when the picker closes.
+In all the below scenarios, the picker closes when `onClose` is called, except if you are controlling the `open` prop.
 :::
 
 #### When the last view is completed
 
-When the last view is completed, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
+When a selection in the last view is made, `onClose` will be called only if the `closeOnSelect` prop is equal to `true`.
 By default, it is set to `true` on desktop and `false` on mobile.
 
 Here are a few examples:
 
 :::info
-The example below are using the desktop and mobile variant of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
+The examples below are using the desktop and mobile variants of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
 :::
 
 - ```tsx
@@ -132,7 +132,7 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 #### When the field calls `onChange`
 
-When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` event.
+When editing your value through the input(s) of your field, the picker will just re-publish the `onChange` callback.
 Take a look at the [dedicated section](/x/react-date-pickers/lifecycle/#fields-lifecycle) for more information.
 
 #### When the user interacts with the view
@@ -146,14 +146,14 @@ If the component is not controlled, the behavior is the same, except if no value
 
 Some views can decide not to call `onChange` for some value modifications.
 The most common example is the mobile time views (using the [`TimeClock`](/x/react-date-pickers/time-clock/) component).
-The `onChange` is only fired once when the dragging (touching) of the clock hands ends even though the UI updates on each position change.
+The `onChange` is only fired once when the dragging (touching) of the clock hand ends even though the UI updates on each position change.
 
 #### When a value is selected using the action bar
 
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on any built-in actions will call `onChange` if the value to publish is different from the current value.
 
-If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_ and _OK_ action that will call `onChange` if no value has ever been published, even if the current value equals the value to publish.
+If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onChange` if no value has ever been published, even if the current value equals the value to publish.
 
 #### When a shortcut is picked
 
@@ -164,13 +164,13 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 #### When the last view is completed
 
-When the last view is completed, `onAccept` will be called only if the `closeOnSelect` prop is equal to `true` and the value has been modified since the last time `onAccept` was called.
+When a selection in the last view is made, `onAccept` will be called only if the `closeOnSelect` prop is equal to `true` and the value has been modified since the last time `onAccept` was called.
 By default, `closeOnSelect`, is set to `true` on desktop and `false` on mobile.
 
 Here are a few examples:
 
 :::info
-The examples below are using the desktop and mobile variant of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
+The examples below are using the desktop and mobile variants of the pickers, but the behavior is exactly the same when using the responsive variant (`DatePicker`, `TimePicker`, ...) on a mobile or desktop environment.
 :::
 
 - ```tsx
@@ -191,7 +191,7 @@ The examples below are using the desktop and mobile variant of the pickers, but 
 
   **Behavior:** The picker won't call `onAccept` when selecting a value.
 
-  :::warning
+  :::success
   If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
 
   ```tsx
@@ -233,7 +233,7 @@ When the user presses <kbd class="key">Escape</kbd> or clicks outside the picker
 If the component is controlled (i.e: if it has a `value` prop),
 clicking on any built-in actions will call `onAccept` if the value to publish is different from the current value.
 
-If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_ and _OK_ action that will call `onAccept` if no value has ever been published, even if the current value equals the value to publish.
+If the component is not controlled, the behavior is the same, except for the _Clear_, _Today_, and _OK_ actions that will call `onAccept` if no value has ever been published, even if the current value equals the value to publish.
 
 #### When a shortcut is picked
 
