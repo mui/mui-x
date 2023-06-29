@@ -3,7 +3,7 @@ import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { convertLegacyOperators } from './utils';
 
-export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | null, any>[] =>
+export const getGridBooleanOperators = () =>
   convertLegacyOperators([
     {
       value: 'is',
@@ -19,4 +19,4 @@ export const getGridBooleanOperators = (): GridFilterOperator<any, boolean | nul
       },
       InputComponent: GridFilterInputBoolean,
     },
-  ]);
+  ] as const satisfies ReadonlyArray<Omit<GridFilterOperator<any, boolean | null, any>, 'getApplyFilterFn'>>);

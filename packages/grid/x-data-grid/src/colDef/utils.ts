@@ -37,9 +37,9 @@ export function convertFilterV7ToLegacy(fn: GetApplyFilterFnV7): GetApplyFilterF
   });
 }
 
-export function convertLegacyOperators(
-  ops: Omit<GridFilterOperator, 'getApplyFilterFn'>[],
-): GridFilterOperator[] {
+export function convertLegacyOperators<
+  const Op extends Omit<GridFilterOperator, 'getApplyFilterFn'>,
+>(ops: ReadonlyArray<Op>) {
   return ops.map((op) => {
     return {
       ...op,

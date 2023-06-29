@@ -11,7 +11,7 @@ const parseObjectValue = (value: unknown) => {
   return value.value;
 };
 
-export const getGridSingleSelectOperators = (): GridFilterOperator[] =>
+export const getGridSingleSelectOperators = () =>
   convertLegacyOperators([
     {
       value: 'is',
@@ -44,4 +44,4 @@ export const getGridSingleSelectOperators = (): GridFilterOperator[] =>
       },
       InputComponent: GridFilterInputMultipleSingleSelect,
     },
-  ]);
+  ] as const satisfies ReadonlyArray<Omit<GridFilterOperator, 'getApplyFilterFn'>>);

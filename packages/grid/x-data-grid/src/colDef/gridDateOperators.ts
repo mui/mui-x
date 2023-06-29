@@ -44,7 +44,7 @@ function buildApplyFilterFn(
   };
 }
 
-export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any, Date, any>[] =>
+export const getGridDateOperators = (showTime?: boolean) =>
   convertLegacyOperators([
     {
       value: 'is',
@@ -117,4 +117,4 @@ export const getGridDateOperators = (showTime?: boolean): GridFilterOperator<any
       },
       requiresFilterValue: false,
     },
-  ]);
+  ] as const satisfies ReadonlyArray<Omit<GridFilterOperator<any, Date, any>, 'getApplyFilterFn'>>);

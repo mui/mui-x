@@ -24,7 +24,7 @@ export const getGridNumericQuickFilterFn = tagInternalFilter(
   },
 );
 
-export const getGridNumericOperators = (): GridFilterOperator<any, number | string | null, any>[] =>
+export const getGridNumericOperators = () =>
   convertLegacyOperators([
     {
       value: '=',
@@ -158,4 +158,4 @@ export const getGridNumericOperators = (): GridFilterOperator<any, number | stri
       InputComponent: GridFilterInputMultipleValue,
       InputComponentProps: { type: 'number' },
     },
-  ]);
+  ] as const satisfies ReadonlyArray<Omit<GridFilterOperator<any, number | string | null, any>, 'getApplyFilterFn'>>);
