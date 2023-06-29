@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridRowId } from '@mui/x-data-grid-pro';
-import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
+import { GridFilterOperator, GridRowId } from '@mui/x-data-grid-pro';
+import { GridBaseColDef, tagInternalFilter } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -131,23 +131,44 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
   getCellAggregationResult,
 }) =>
   filterOperators!.map((operator) => {
-    return {
-      ...operator,
-      getApplyFilterFn: (filterItem, column) => {
-        const originalFn = operator.getApplyFilterFn(filterItem, column);
-        if (!originalFn) {
+    const baseGetApplyFilterFn = operator.getApplyFilterFn;
+    const baseGetApplyFilterFnV7 = operator.getApplyFilterFnV7;
+
+    const getApplyFilterFn: GridFilterOperator<any, any, any>['getApplyFilterFn'] =
+      tagInternalFilter((filterItem, colDef) => {
+        const filterFn = baseGetApplyFilterFn(filterItem, colDef);
+        if (!filterFn) {
           return null;
         }
-
         return (params) => {
           if (getCellAggregationResult(params.id, params.field) != null) {
             return true;
           }
-
-          return originalFn(params);
+          return filterFn(params);
         };
-      },
-    };
+      });
+
+    const getApplyFilterFnV7: GridFilterOperator<any, any, any>['getApplyFilterFnV7'] =
+      baseGetApplyFilterFnV7 === undefined
+        ? undefined
+        : tagInternalFilter((filterItem, colDef) => {
+            const filterFn = baseGetApplyFilterFnV7(filterItem, colDef);
+            if (!filterFn) {
+              return null;
+            }
+            return (value, row, column, api) => {
+              if (getCellAggregationResult(row.id, column.field) != null) {
+                return true;
+              }
+              return filterFn(value, row, column, api);
+            };
+          });
+
+    return {
+      ...operator,
+      getApplyFilterFn,
+      getApplyFilterFnV7,
+    } as GridFilterOperator;
   });
 
 /**
