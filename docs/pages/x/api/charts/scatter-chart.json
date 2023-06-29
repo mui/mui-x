@@ -8,6 +8,10 @@
       "default": "xAxisIds[0] The id of the first provided axis",
       "additionalPropsInfo": {}
     },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "additionalPropsInfo": {}
+    },
     "leftAxis": {
       "type": {
         "name": "union",

@@ -54,7 +54,10 @@ export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport'
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
 export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
-export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
+export type {
+  GridAggregatedFilterItemApplier,
+  GridAggregatedFilterItemApplierResult,
+} from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
 export {
@@ -123,7 +126,11 @@ export type {
 } from '../models/props/DataGridProps';
 
 export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
-export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
+export {
+  createSelector,
+  createSelectorMemoized,
+  unstable_resetCreateSelectorCache,
+} from '../utils/createSelector';
 export { findParentElementFromClassName, getActiveElement } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
@@ -137,4 +144,5 @@ export type { GridApiCaches } from '../models/gridApiCaches';
 
 export { serializeCellValue } from '../hooks/features/export/serializers/csvSerializer';
 
+export * from '../colDef/utils';
 export * from './utils';

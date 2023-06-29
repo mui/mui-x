@@ -1,0 +1,21 @@
+{
+  "props": {
+    "axisContent": { "type": { "name": "elementType" }, "additionalPropsInfo": {} },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "itemContent": { "type": { "name": "elementType" }, "additionalPropsInfo": {} },
+    "trigger": {
+      "type": {
+        "name": "enum",
+        "description": "'axis'<br>&#124;&nbsp;'item'<br>&#124;&nbsp;'none'"
+      },
+      "default": "'item'",
+      "additionalPropsInfo": {}
+    }
+  },
+  "slots": {},
+  "name": "ChartsTooltip",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsTooltip" },
+  "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltip.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsTooltip" }]
+}

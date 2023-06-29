@@ -12,3 +12,4 @@ There are, however, a few differences:
 
 - The default GitHub branch might be different.
 - The local documentation site opens on a different port: 3001 instead of 3000.
+- You would need to sign a contributor license agreement (CLA) if the PR changes code located in the following folders: `x-data-grid-pro`, `x-data-grid-premium`, `x-date-pickers-pro`

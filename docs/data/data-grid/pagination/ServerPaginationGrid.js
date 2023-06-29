@@ -21,7 +21,6 @@ export default function ServerPaginationGrid() {
   const [rowCountState, setRowCountState] = React.useState(
     pageInfo?.totalRowCount || 0,
   );
-
   React.useEffect(() => {
     setRowCountState((prevRowCountState) =>
       pageInfo?.totalRowCount !== undefined

@@ -67,6 +67,12 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "shouldDisableYear": {
       "description": "Disable specific year.",
       "notes": "",
@@ -78,6 +84,12 @@
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "timezone": {
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}

@@ -29,7 +29,7 @@
       }
     },
     "defaultCalendarMonth": {
-      "description": "Default calendar month displayed when <code>value={null}</code>.",
+      "description": "Default calendar month displayed when <code>value</code> and <code>defaultValue</code> are empty.",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
@@ -160,6 +160,12 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "renderLoading": {
       "description": "Component displaying when passed <code>loading</code> true.",
       "notes": "",
@@ -217,6 +223,12 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "timezone": {
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "value": {
       "description": "The selected value. Used when the component is controlled.",
       "notes": "",
@@ -250,12 +262,12 @@
     }
   },
   "slotDescriptions": {
-    "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
-    "LeftArrowIcon": "Icon displayed in the left view switch button.",
-    "NextIconButton": "Button allowing to switch to the right view.",
-    "PreviousIconButton": "Button allowing to switch to the left view.",
-    "RightArrowIcon": "Icon displayed in the right view switch button.",
-    "SwitchViewButton": "Button displayed to switch between different calendar views.",
-    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;."
+    "day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+    "leftArrowIcon": "Icon displayed in the left view switch button.",
+    "nextIconButton": "Button allowing to switch to the right view.",
+    "previousIconButton": "Button allowing to switch to the left view.",
+    "rightArrowIcon": "Icon displayed in the right view switch button.",
+    "switchViewButton": "Button displayed to switch between different calendar views.",
+    "switchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;."
   }
 }

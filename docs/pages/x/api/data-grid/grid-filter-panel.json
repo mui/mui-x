@@ -4,6 +4,8 @@
       "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" },
       "additionalPropsInfo": {}
     },
+    "disableAddFilterButton": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableRemoveAllButton": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "filterFormProps": {
       "type": {
         "name": "shape",

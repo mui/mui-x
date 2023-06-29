@@ -74,7 +74,7 @@
       "typeDescriptions": {}
     },
     "isEndOfPreviewing": {
-      "description": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range.",
+      "description": "Set to <code>true</code> if the <code>day</code> is the end of a previewing date range.",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
@@ -110,7 +110,7 @@
       "typeDescriptions": {}
     },
     "isStartOfPreviewing": {
-      "description": "Set to <code>true</code> if the <code>day</code> is the end of a previewing date range.",
+      "description": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range.",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}

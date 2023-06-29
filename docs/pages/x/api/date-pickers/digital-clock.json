@@ -90,6 +90,11 @@
       "additionalPropsInfo": { "sx": true }
     },
     "timeStep": { "type": { "name": "number" }, "default": "30", "additionalPropsInfo": {} },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "additionalPropsInfo": {}
+    },
     "value": { "type": { "name": "any" }, "additionalPropsInfo": {} },
     "view": { "type": { "name": "enum", "description": "'hours'" }, "additionalPropsInfo": {} },
     "views": {
@@ -98,7 +103,7 @@
     }
   },
   "slots": {
-    "DigitalClockItem": {
+    "digitalClockItem": {
       "default": "MenuItem from '@mui/material'",
       "type": { "name": "elementType" }
     }

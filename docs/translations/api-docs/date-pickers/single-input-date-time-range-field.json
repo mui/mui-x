@@ -224,7 +224,7 @@
       "typeDescriptions": {}
     },
     "referenceDate": {
-      "description": "The date used to generate a part of the date-time that is not present in the format when both <code>value</code> and <code>defaultValue</code> are not present. For example, on time fields it will be used to determine the date to set.",
+      "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set.",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
@@ -301,6 +301,12 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "timezone": {
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "unstableFieldRef": {
       "description": "The ref object used to imperatively interact with the field.",
       "notes": "",
@@ -322,6 +328,6 @@
   },
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
-    "TextField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "textField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
   }
 }

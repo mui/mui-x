@@ -1017,5 +1017,26 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getCell(2, 1)).to.have.text('21');
       expect(getCell(2, 2)).to.have.text('22');
     });
+
+    it('should remove the last line break when pasting', async () => {
+      render(<Test rowLength={5} colLength={5} />);
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      let clipboardData = ['01', '11'].join('\n');
+      // Add newline at the end
+      clipboardData += '\n';
+
+      paste(cell, clipboardData);
+
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text('01');
+        expect(getCell(1, 1)).to.have.text('11');
+        // Should not be empty
+        expect(getCell(2, 1)).to.have.text('GBPEUR');
+      });
+    });
   });
 });

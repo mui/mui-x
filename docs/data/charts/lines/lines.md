@@ -13,7 +13,9 @@ title: Charts - Lines
 
 To plot lines, a series must have a `data` property containing an array of numbers.
 This `data` array corresponds to y values.
-To modify the x value, you should provide a `xAxis` with data properties.
+
+By default, those y values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
+To modify the x values, you should provide a `xAxis` with data property.
 
 {{"demo": "BasicLineChart.js", "bg": "inline"}}
 

@@ -1,11 +1,13 @@
 import { createIsAfterIgnoreDatePart } from '../time-utils';
 import { Validator } from '../../hooks/useValidation';
 import { BaseTimeValidationProps, TimeValidationProps } from '../../models/validation';
-import { TimeValidationError } from '../../../models';
+import { TimeValidationError, TimezoneProps } from '../../../models';
+import { DefaultizedProps } from '../../models/helpers';
 
 export interface TimeComponentValidationProps<TDate>
   extends Required<BaseTimeValidationProps>,
-    TimeValidationProps<TDate> {}
+    TimeValidationProps<TDate>,
+    DefaultizedProps<TimezoneProps, 'timezone'> {}
 
 export const validateTime: Validator<
   any | null,
@@ -13,6 +15,10 @@ export const validateTime: Validator<
   TimeValidationError,
   TimeComponentValidationProps<any>
 > = ({ adapter, value, props }): TimeValidationError => {
+  if (value === null) {
+    return null;
+  }
+
   const {
     minTime,
     maxTime,
@@ -22,18 +28,14 @@ export const validateTime: Validator<
     disableIgnoringDatePartForTimeValidation = false,
     disablePast,
     disableFuture,
+    timezone,
   } = props;
 
-  const now = adapter.utils.date()!;
-  const date = adapter.utils.date(value);
+  const now = adapter.utils.dateWithTimezone(undefined, timezone)!;
   const isAfter = createIsAfterIgnoreDatePart(
     disableIgnoringDatePartForTimeValidation,
     adapter.utils,
   );
-
-  if (value === null) {
-    return null;
-  }
 
   switch (true) {
     case !adapter.utils.isValid(value):
@@ -45,10 +47,10 @@ export const validateTime: Validator<
     case Boolean(maxTime && isAfter(value, maxTime)):
       return 'maxTime';
 
-    case Boolean(disableFuture && adapter.utils.isAfter(date, now)):
+    case Boolean(disableFuture && adapter.utils.isAfter(value, now)):
       return 'disableFuture';
 
-    case Boolean(disablePast && adapter.utils.isBefore(date, now)):
+    case Boolean(disablePast && adapter.utils.isBefore(value, now)):
       return 'disablePast';
 
     case Boolean(shouldDisableTime && shouldDisableTime(value, 'hours')):

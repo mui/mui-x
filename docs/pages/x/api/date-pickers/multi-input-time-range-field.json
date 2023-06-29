@@ -127,6 +127,11 @@
       },
       "additionalPropsInfo": { "sx": true }
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
+      "additionalPropsInfo": {}
+    },
     "useFlexGap": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
     "value": {
       "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
@@ -134,17 +139,17 @@
     }
   },
   "slots": {
-    "Root": { "default": "MultiInputTimeRangeFieldRoot", "type": { "name": "elementType" } },
-    "Separator": {
+    "root": { "default": "MultiInputTimeRangeFieldRoot", "type": { "name": "elementType" } },
+    "separator": {
       "default": "MultiInputTimeRangeFieldSeparator",
       "type": { "name": "elementType" }
     },
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "MultiInputTimeRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputTimeRangeField" },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputTimeRangeField/MultiInputTimeRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field </a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field </a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiInputTimeRangeField" }
   ]

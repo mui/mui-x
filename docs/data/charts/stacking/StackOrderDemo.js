@@ -5,6 +5,8 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { BarChart } from '@mui/x-charts/BarChart';
 
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
+
 // Data comming from https://www.insee.fr/fr/statistiques/5013868
 const commonTransportation = [
   6.5, 12.5, 17.2, 19.6, 20.1, 20.0, 19.5, 18.8, 18.2, 17.3, 16.4, 15.9, 15.2, 14.7,
@@ -109,17 +111,20 @@ export default function StackOrderDemo() {
       </Stack>
       <BarChart
         width={700}
-        height={400}
+        height={300}
         xAxis={[xAxis]}
         yAxis={[{ min: 0, max: 100 }]}
         series={modifiedSeries}
+        margin={{ bottom: 60 }}
         sx={{
-          '.MuiAxis-bottom': {
-            '.MuiAxis-tickLabel': {
-              transform: 'translate(0, 23px) rotate(45deg)',
+          [`.${axisClasses.bottom}`]: {
+            [`.${axisClasses.tickLabel}`]: {
+              transform: 'rotate(45deg)',
+              alignmentBaseline: 'hanging',
+              textAnchor: 'start',
             },
-            '.MuiAxis-label': {
-              transform: 'translate(400px, 50px)',
+            [`.${axisClasses.label}`]: {
+              transform: 'translateY(15px)',
             },
           },
         }}

@@ -7,6 +7,18 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableAddFilterButton": {
+      "description": "If <code>true</code>, the <code>Add filter</code> button will not be displayed.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableRemoveAllButton": {
+      "description": "If <code>true</code>, the <code>Remove all</code> button will be disabled",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "filterFormProps": {
       "description": "Props passed to each filter form.",
       "notes": "",

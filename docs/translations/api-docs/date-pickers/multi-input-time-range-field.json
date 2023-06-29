@@ -122,7 +122,7 @@
       "typeDescriptions": {}
     },
     "referenceDate": {
-      "description": "The date used to generate a part of the date-time that is not present in the format when both <code>value</code> and <code>defaultValue</code> are not present. For example, on time fields it will be used to determine the date to set.",
+      "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set.",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
@@ -183,6 +183,12 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "timezone": {
+      "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "useFlexGap": {
       "description": "If <code>true</code>, the CSS flexbox <code>gap</code> is used instead of applying <code>margin</code> to children.<br>While CSS <code>gap</code> removes the <a href=\"https://mui.com/joy-ui/react-stack/#limitations\">known limitations</a>, it is not fully supported in some browsers. We recommend checking <a href=\"https://caniuse.com/?search=flex%20gap\">https://caniuse.com/?search=flex%20gap</a> before using this flag.<br>To enable this flag globally, follow the <a href=\"https://mui.com/material-ui/customization/theme-components/#default-props\">theme&#39;s default props</a> configuration.",
       "notes": "",
@@ -198,8 +204,8 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "Root": "Element rendered at the root.",
-    "Separator": "Element rendered between the two inputs.",
-    "TextField": "Form control with an input to render a time.\nIt is rendered twice: once for the start time and once for the end time.\nReceives the same props as <code>@mui/material/TextField</code>."
+    "root": "Element rendered at the root.",
+    "separator": "Element rendered between the two inputs.",
+    "textField": "Form control with an input to render a time.\nIt is rendered twice: once for the start time and once for the end time.\nReceives the same props as <code>@mui/material/TextField</code>."
   }
 }
