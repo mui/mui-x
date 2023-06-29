@@ -208,13 +208,13 @@ PieChart.propTypes = {
       ).isRequired,
       endAngle: PropTypes.number,
       faded: PropTypes.shape({
-        additionalRaidus: PropTypes.number,
+        additionalRadius: PropTypes.number,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
       }),
       highlighted: PropTypes.shape({
-        additionalRaidus: PropTypes.number,
+        additionalRadius: PropTypes.number,
         cornerRadius: PropTypes.number,
         innerRadius: PropTypes.number,
         outerRadius: PropTypes.number,
