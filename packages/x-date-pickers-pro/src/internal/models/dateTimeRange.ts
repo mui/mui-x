@@ -6,6 +6,7 @@ import {
   UseFieldInternalProps,
   DateTimeValidationProps,
 } from '@mui/x-date-pickers/internals';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
 import { DateTimeRangeValidationError } from '../../models';
@@ -37,3 +38,5 @@ export type UseDateTimeRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateTimeRangeFieldProps<TDate>,
   keyof BaseDateValidationProps<TDate> | 'format' | 'disableIgnoringDatePartForTimeValidation'
 >;
+
+export type DateTimeRangePickerViews = Exclude<DateOrTimeViewWithMeridiem, 'month' | 'year'>;
