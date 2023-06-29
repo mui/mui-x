@@ -63,6 +63,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/master-detail', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-pinning', plan: 'pro' },
+          { pathname: '/x/react-data-grid/row-recipes', title: 'Recipes' },
         ],
       },
       { pathname: '/x/react-data-grid/editing' },
