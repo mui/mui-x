@@ -27,7 +27,7 @@ export const useClockReferenceDate = <TDate, TProps extends {}>({
         granularity: SECTION_TYPE_GRANULARITY.day,
         timezone,
         getTodayDate: () => getTodayDate(utils, timezone, 'date'),
-      }),
+      }), // We only want to compute the reference date on mount.
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
 

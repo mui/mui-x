@@ -54,7 +54,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
    * @param {number} params.granularity The granularity of the selection possible on this component.
    * @param {PickersTimezone} params.timezone The current timezone.
-   * @param {() => TDate} params.getTodayDate The reference date to use if not reference date is passed to the component.
+   * @param {() => TDate} params.getTodayDate The reference date to use if no reference date is passed to the component.
    * @returns {TValue} The reference value to use for non-provided dates.
    */
   getInitialReferenceValue: (params: {
