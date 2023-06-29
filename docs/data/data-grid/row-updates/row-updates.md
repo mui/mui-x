@@ -10,13 +10,13 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the data grid.
 
-<!-- {{"demo": "UpdateRowsProp.js", "bg": "inline"}} -->
+{{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
 ## The `updateRows` method
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
-<!-- {{"demo": "UpdateRowsApiRef.js", "bg": "inline"}} -->
+{{"demo": "UpdateRowsApiRef.js", "bg": "inline"}}
 
 The default behavior of `updateRows` API is to upsert rows.
 So if a row has an id that is not in the current list of rows then it will be added to the data grid.
@@ -61,7 +61,7 @@ Then, set `rowCount` to reflect the number of available rows on the server.
 Third, set a callback function on `onFetchRows` to load the data corresponding to the row indices passed within `GridFetchRowsParams`.
 Finally, replace the empty rows with the newly fetched ones using `apiRef.current.unstable_replaceRows()` like in the demo below.
 
-<!-- {{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}} -->
+{{"demo": "LazyLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 :::warning
 The `onFetchRows` callback is called every time a new row is in the viewport, so when you scroll, you can easily send multiple requests to your backend. We recommend developers limit those by implementing debouncing.
@@ -84,7 +84,7 @@ When receiving updates more frequently than this threshold, the data grid will w
 
 The following demo updates the rows every 10 ms, but they are only applied every 2 seconds.
 
-<!-- {{"demo": "ThrottledRowsGrid.js", "bg": "inline", "disableAd": true}} -->
+{{"demo": "ThrottledRowsGrid.js", "bg": "inline", "disableAd": true}}
 
 ## API
 
