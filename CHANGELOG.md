@@ -57,6 +57,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [docs] Update charts overview.md (#9429) @brentertz
 - [docs] Avoid systematic usage of `"bg": "inline"` (#9499) @alexfauquette
 - [docs] Display plan icon in ToC (#9490) @cherniavskii
+- [docs] Remove "product" markdown header (#9517) @oliviertassinari
 
 ### Core
 
