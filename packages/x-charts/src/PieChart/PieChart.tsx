@@ -94,7 +94,7 @@ PieChart.propTypes = {
     y: PropTypes.oneOf(['line', 'none']),
   }),
   /**
-   * Indicate which axis to display the the bottom of the charts.
+   * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
@@ -124,7 +124,7 @@ PieChart.propTypes = {
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
   /**
-   * Indicate which axis to display the the left of the charts.
+   * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
@@ -167,7 +167,7 @@ PieChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
-   * Indicate which axis to display the the right of the charts.
+   * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default null
    */
@@ -249,7 +249,7 @@ PieChart.propTypes = {
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
-   * Indicate which axis to display the the top of the charts.
+   * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default null
    */
