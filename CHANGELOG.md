@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.9.1
 
-_Jun 29, 2023_
+_Jun 30, 2023_
 
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
