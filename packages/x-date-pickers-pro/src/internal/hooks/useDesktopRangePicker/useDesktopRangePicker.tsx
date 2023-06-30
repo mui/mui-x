@@ -106,7 +106,7 @@ export const useDesktopRangePicker = <
         <Box sx={{ display: 'flex', margin: '0 auto' }}>
           {isInternalTimeView(popperView) ? (
             <React.Fragment>
-              {viewRenderers?.day?.({
+              {viewRenderers['day' as DateOrTimeViewWithMeridiem]?.({
                 ...rendererProps,
                 view: isDatePickerView(popperView) ? popperView : 'day',
               })}
@@ -117,8 +117,8 @@ export const useDesktopRangePicker = <
           {isDatePickerView(popperView) ? (
             <React.Fragment>
               <Divider orientation="vertical" />
-              {viewRenderers?.hours?.({
-                ...rendererProps,
+              {viewRenderers['hours' as DateOrTimeViewWithMeridiem]?.({
+                ...finalProps,
                 view: isInternalTimeView(popperView) ? popperView : 'hours',
               })}
             </React.Fragment>
