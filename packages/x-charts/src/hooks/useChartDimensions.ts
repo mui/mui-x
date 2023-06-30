@@ -9,7 +9,6 @@ const useChartDimensions = (width: number, height: number, margin: LayoutConfig[
   };
 
   const drawingArea = React.useMemo(() => {
-    console.log(defaultizedMargin);
     return {
       left: defaultizedMargin.left,
       top: defaultizedMargin.top,

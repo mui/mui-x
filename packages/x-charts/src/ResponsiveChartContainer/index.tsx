@@ -28,7 +28,7 @@ const useChartDimensions = (
 
     const newHeight = parseFloat(computedStyle.height) || 0;
     const newWidth = parseFloat(computedStyle.width) || 0;
-    console.log(newHeight, newWidth);
+
     setWidth(newWidth);
     setHeight(newHeight);
   }, []);
