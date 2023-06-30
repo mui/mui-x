@@ -1,3 +1,7 @@
+---
+productId: x-date-pickers
+---
+
 # Migration from v5 to v6
 
 <!-- #default-branch-switch -->
