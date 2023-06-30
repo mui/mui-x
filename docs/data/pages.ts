@@ -318,40 +318,9 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/migration-group',
-    title: 'Migration',
-    icon: standardNavIcons.BookIcon,
-    children: [
-      {
-        pathname: '/x/migration-v6',
-        subheader: 'Upgrade to v6',
-        children: [
-          { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
-          {
-            pathname: '/x/migration/migration-pickers-v5',
-            title: 'Breaking changes: Date and Time Pickers',
-          },
-        ],
-      },
-      {
-        pathname: '/x/migration-earlier',
-        subheader: 'Earlier versions',
-        children: [
-          {
-            pathname: '/x/migration/migration-pickers-lab',
-            title: 'Migration from lab to v5 (Date and Time Pickers)',
-          },
-          {
-            pathname: '/x/migration/migration-data-grid-v4',
-            title: 'Migration from v4 to v5 (Data Grid)',
-          },
-        ],
-      },
-    ],
-  },
-  {
     pathname: '/x/react-charts-group',
     title: 'Charts 🧪',
+    newFeature: true,
     icon: ChartIcon,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
@@ -380,16 +349,15 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
         ],
       },
+      { pathname: '/x/react-charts/axis', title: 'Axis' },
+      { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
+      { pathname: '/x/react-charts/legend', title: 'Legend' },
+      { pathname: '/x/react-charts/styling', title: 'Styling' },
+      { pathname: '/x/react-charts/stacking', title: 'Stacking' },
       {
-        pathname: '/x/react-charts-common-components',
-        title: 'Common components',
-        children: [
-          { pathname: '/x/react-charts/axis', title: 'Axis' },
-          { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
-          { pathname: '/x/react-charts/legend', title: 'Legend' },
-          { pathname: '/x/react-charts/styling', title: 'Styling' },
-          { pathname: '/x/react-charts/stacking', title: 'Stacking' },
-        ],
+        pathname: '/x/api/charts-group',
+        title: 'API Reference',
+        children: [...chartsComponentApi],
       },
       { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
       { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
@@ -397,10 +365,37 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
       { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
       { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
+    ],
+  },
+  {
+    pathname: '/x/migration-group',
+    title: 'Migration',
+    icon: standardNavIcons.BookIcon,
+    children: [
       {
-        pathname: '/x/api/charts-group',
-        title: 'API Reference',
-        children: [...chartsComponentApi],
+        pathname: '/x/migration-v6',
+        subheader: 'Upgrade to v6',
+        children: [
+          { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
+          {
+            pathname: '/x/migration/migration-pickers-v5',
+            title: 'Breaking changes: Date and Time Pickers',
+          },
+        ],
+      },
+      {
+        pathname: '/x/migration-earlier',
+        subheader: 'Earlier versions',
+        children: [
+          {
+            pathname: '/x/migration/migration-pickers-lab',
+            title: 'Migration from lab to v5 (Date and Time Pickers)',
+          },
+          {
+            pathname: '/x/migration/migration-data-grid-v4',
+            title: 'Migration from v4 to v5 (Data Grid)',
+          },
+        ],
       },
     ],
   },
