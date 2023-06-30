@@ -59,8 +59,6 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [core] Fix priority support prompt action (#9472) @DanailH
 - [core] Update `uses` for priority support action (#9480) @DanailH
 - [core] Bumb update monorepo (#9476) @alexfauquette
-- [CHANGELOG] Revert "[CHANGELOG] Be clearer about each plan" @oliviertassinari
-- [CHANGELOG] Be clearer about each plan @oliviertassinari
 - [CHANGELOG] Fix media quality (#9439) @oliviertassinari
 - [CHANGELOG] Remove height img attribute @oliviertassinari
 - [test] Skip flaky row pinning tests in JSDOM (#9511) @cherniavskii
