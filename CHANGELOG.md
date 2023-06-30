@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 #### Changes
 
-- [DataGrid] Add Joy UI tooltip and `loadingOverlay` slots (#9028) @cherniavskii
+- [DataGrid] Add Joy UI `tooltip` and `loadingOverlay` slots (#9028) @cherniavskii
 - [DataGrid] Add section about enabling pagination on Pro and Premium (#8759) @joserodolfofreitas
 - [DataGrid] Don't forward `editCellState` prop to DOM element (#9501) @m4theushw
 - [DataGrid] Add experimental API for faster filtering performance (#9254) @romgrk
