@@ -122,6 +122,12 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "shouldDisableClock": {
       "description": "Disable specific clock time.",
       "notes": "",

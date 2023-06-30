@@ -69,6 +69,11 @@
       "additionalPropsInfo": {}
     },
     "readOnly": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.",
+      "additionalPropsInfo": {}
+    },
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,

@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "bottomAxis": {
-      "description": "Indicate which axis to display the the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>",
+      "description": "Indicate which axis to display the bottom of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
@@ -14,19 +14,19 @@
       "typeDescriptions": {}
     },
     "leftAxis": {
-      "description": "Indicate which axis to display the the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>",
+      "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rightAxis": {
-      "description": "Indicate which axis to display the the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>",
+      "description": "Indicate which axis to display the right of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "topAxis": {
-      "description": "Indicate which axis to display the the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>",
+      "description": "Indicate which axis to display the top of the charts. Can be a string (the id of the axis) or an object <code>ChartsXAxisProps</code>",
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {}

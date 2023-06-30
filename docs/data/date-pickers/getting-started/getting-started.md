@@ -1,5 +1,4 @@
 ---
-product: date-pickers
 title: Date and Time Picker - Getting started
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
@@ -10,8 +9,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 # Date and Time Pickers - Getting Started
 
 <p class="description">Get started with the Date and Time pickers. Install the package, configure your application and start using the components.</p>
-
-{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 ## Installation
 
