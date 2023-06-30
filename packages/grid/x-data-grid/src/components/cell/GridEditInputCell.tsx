@@ -114,7 +114,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
       : EMPTY_META;
 
     React.useEffect(() => {
-      if (meta && meta.changeReason !== 'debouncedSetEditCellValue') {
+      if (meta?.changeReason !== 'debouncedSetEditCellValue') {
         setValueState(value);
       }
     }, [meta, value]);
