@@ -199,7 +199,6 @@ export default function ElementHighlights() {
           <FormControlLabel
             control={
               <Switch
-                defaultChecked
                 checked={withArea}
                 onChange={(event) => setWithArea(event.target.checked)}
               />

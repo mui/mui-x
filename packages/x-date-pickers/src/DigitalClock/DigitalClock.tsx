@@ -17,6 +17,7 @@ import { TimeView } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -104,6 +105,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     slots,
     slotProps,
     value: valueProp,
+    defaultValue,
+    referenceDate: referenceDateProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
@@ -113,7 +116,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     shouldDisableClock,
     shouldDisableTime,
     onChange,
-    defaultValue,
     view: inView,
     openTo,
     onViewChange,
@@ -154,6 +156,14 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
   const clockItemProps = slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem;
 
+  const valueOrReferenceDate = useClockReferenceDate({
+    value,
+    referenceDate: referenceDateProp,
+    utils,
+    props,
+    timezone,
+  });
+
   const handleValueChange = useEventCallback((newValue: TDate | null) =>
     handleRawValueChange(newValue, 'finish'),
   );
@@ -188,11 +198,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
   });
-
-  const selectedTimeOrMidnight = React.useMemo(
-    () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
-    [value, now, utils],
-  );
 
   const isTimeDisabled = React.useCallback(
     (valueToCheck: TDate) => {
@@ -251,15 +256,15 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
-    const startOfDay = utils.startOfDay(selectedTimeOrMidnight);
+    const startOfDay = utils.startOfDay(valueOrReferenceDate);
     return [
       startOfDay,
       ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
         utils.addMinutes(startOfDay, timeStep * (index + 1)),
       ),
-      utils.endOfDay(selectedTimeOrMidnight),
+      utils.endOfDay(valueOrReferenceDate),
     ];
-  }, [selectedTimeOrMidnight, timeStep, utils]);
+  }, [valueOrReferenceDate, timeStep, utils]);
 
   return (
     <DigitalClockRoot
@@ -380,7 +385,7 @@ DigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TDate
+   * @template TDate, TView
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
@@ -410,6 +415,11 @@ DigitalClock.propTypes = {
    * @default false
    */
   readOnly: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
