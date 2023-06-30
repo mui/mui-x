@@ -7,6 +7,7 @@ import {
 import { styled } from '@mui/material/styles';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import { GridEditCellMeta } from '../../models/api/gridEditingApi';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -52,6 +53,8 @@ export interface GridEditInputCellProps
     newValue: string,
   ) => Promise<void> | void;
 }
+
+const EMPTY_META = {} as GridEditCellMeta;
 
 const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellProps>(
   (props, ref) => {
@@ -108,7 +111,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
 
     const meta = apiRef.current.unstable_getEditCellMeta
       ? apiRef.current.unstable_getEditCellMeta(id, field)
-      : {};
+      : EMPTY_META;
 
     React.useEffect(() => {
       if (meta && meta.changeReason !== 'debouncedSetEditCellValue') {
