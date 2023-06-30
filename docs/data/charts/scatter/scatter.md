@@ -12,7 +12,7 @@ title: Charts - Scatter
 Scatter chart series should contain a `data` property containing an array of objects.
 Those objects require `x`, `y`, and `id` properties.
 
-{{"demo": "BasicScatter.js", "bg": "inline"}}
+{{"demo": "BasicScatter.js"}}
 
 ## Styling
 

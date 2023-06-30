@@ -23,7 +23,7 @@ But one uses a linear, and the other a log axis.
 Each axis definition is identified by its property `id`.
 And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
 
-{{"demo": "ScaleExample.js", "bg": "inline"}}
+{{"demo": "ScaleExample.js"}}
 
 :::info
 The management of those ids is for advanced use cases, such as charts with multiple axes.
@@ -66,7 +66,7 @@ To show a specific range of values, you can provide properties `min` and/or `max
 xAxis={[{ min: 10, max: 50,  }]}
 ```
 
-{{"demo": "MinMaxExample.js", "bg": "inline"}}
+{{"demo": "MinMaxExample.js"}}
 
 ## Axis customization
 
@@ -81,7 +81,7 @@ Those pros can accept three type of value:
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
 - `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
 
-{{"demo": "ModifyAxisPosition.js", "bg": "inline"}}
+{{"demo": "ModifyAxisPosition.js"}}
 
 ### Rendering
 
@@ -99,4 +99,4 @@ Those components require an `axisId` prop to link them to an axis you defined in
 You can choose their position with `position` props which accept `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
 Other props are similar to the ones defined in the [previous section](/x/react-charts/axis/#rendering).
 
-{{"demo": "AxisWithComposition.js", "bg": "inline"}}
+{{"demo": "AxisWithComposition.js"}}
