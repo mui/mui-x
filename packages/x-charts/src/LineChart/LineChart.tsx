@@ -59,7 +59,8 @@ function LineChart(props: LineChartProps) {
           {
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'point',
-            data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
+            data: Array.from(
+              { length: Math.max(...series.map((s) => s.data.length)) },
               (_, index) => index,
             ),
           },
@@ -124,7 +125,10 @@ LineChart.propTypes = {
   ]),
   children: PropTypes.node,
   className: PropTypes.string,
-  colors: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * Color palette used to colorize multiple series.
+   */
+  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -236,6 +240,7 @@ LineChart.propTypes = {
   title: PropTypes.string,
   tooltip: PropTypes.shape({
     axisContent: PropTypes.elementType,
+    classes: PropTypes.object,
     itemContent: PropTypes.elementType,
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),

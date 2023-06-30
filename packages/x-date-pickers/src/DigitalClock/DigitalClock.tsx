@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
-import useControlled from '@mui/utils/useControlled';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import useForkRef from '@mui/utils/useForkRef';
@@ -16,6 +15,9 @@ import { DigitalClockProps } from './DigitalClock.types';
 import { useViews } from '../internals/hooks/useViews';
 import { TimeView } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -84,11 +86,10 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   inProps: DigitalClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const now = useNow<TDate>();
   const utils = useUtils<TDate>();
+
   const containerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, containerRef);
-  const localeText = useLocaleText<TDate>();
 
   const props = useThemeProps({
     props: inProps,
@@ -104,6 +105,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     slots,
     slotProps,
     value: valueProp,
+    defaultValue,
+    referenceDate: referenceDateProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
@@ -113,7 +116,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     shouldDisableClock,
     shouldDisableTime,
     onChange,
-    defaultValue,
     view: inView,
     openTo,
     onViewChange,
@@ -124,8 +126,25 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     readOnly,
     views = ['hours'],
     skipDisabled = false,
+    timezone: timezoneProp,
     ...other
   } = props;
+
+  const {
+    value,
+    handleValueChange: handleRawValueChange,
+    timezone,
+  } = useControlledValueWithTimezone({
+    name: 'DigitalClock',
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: singleItemValueManager,
+  });
+
+  const localeText = useLocaleText<TDate>();
+  const now = useNow<TDate>(timezone);
 
   const ownerState = React.useMemo(
     () => ({ ...props, alreadyRendered: !!containerRef.current }),
@@ -137,17 +156,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
   const clockItemProps = slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem;
 
-  const [value, setValue] = useControlled({
-    name: 'DigitalClock',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
+  const valueOrReferenceDate = useClockReferenceDate({
+    value,
+    referenceDate: referenceDateProp,
+    utils,
+    props,
+    timezone,
   });
 
-  const handleValueChange = useEventCallback((newValue: TDate | null) => {
-    setValue(newValue);
-    onChange?.(newValue, 'finish');
-  });
+  const handleValueChange = useEventCallback((newValue: TDate | null) =>
+    handleRawValueChange(newValue, 'finish'),
+  );
 
   const { setValueAndGoToNextView } = useViews<TDate | null, Extract<TimeView, 'hours'>>({
     view: inView,
@@ -179,11 +198,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
   });
-
-  const selectedTimeOrMidnight = React.useMemo(
-    () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
-    [value, now, utils],
-  );
 
   const isTimeDisabled = React.useCallback(
     (valueToCheck: TDate) => {
@@ -242,15 +256,15 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
-    const startOfDay = utils.startOfDay(selectedTimeOrMidnight);
+    const startOfDay = utils.startOfDay(valueOrReferenceDate);
     return [
       startOfDay,
       ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
         utils.addMinutes(startOfDay, timeStep * (index + 1)),
       ),
-      utils.endOfDay(selectedTimeOrMidnight),
+      utils.endOfDay(valueOrReferenceDate),
     ];
-  }, [selectedTimeOrMidnight, timeStep, utils]);
+  }, [valueOrReferenceDate, timeStep, utils]);
 
   return (
     <DigitalClockRoot
@@ -371,7 +385,7 @@ DigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TDate
+   * @template TDate, TView
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
@@ -401,6 +415,11 @@ DigitalClock.propTypes = {
    * @default false
    */
   readOnly: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
@@ -446,6 +465,14 @@ DigitalClock.propTypes = {
    * @default 30
    */
   timeStep: PropTypes.number,
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.
