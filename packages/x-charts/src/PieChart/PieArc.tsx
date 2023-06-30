@@ -137,7 +137,6 @@ export default function PieArc(props: PieArcProps) {
           outerRadius,
         })!
       }
-      {...other}
       ownerState={ownerState}
       className={classes.root}
       {...getInteractionItemProps({ type: 'pie', seriesId: id, dataIndex })}

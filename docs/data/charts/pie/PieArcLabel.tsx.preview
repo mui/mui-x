@@ -2,10 +2,12 @@
   series={[
     {
       arcLabel: (item) => `${item.label} (${item.value})`,
+      arcLabelMinAngle: 45,
       data: [
-        { id: 0, value: 10, label: 'series A' },
-        { id: 1, value: 15, label: 'series B' },
-        { id: 2, value: 20, label: 'series C' },
+        { value: 5, label: 'A' },
+        { value: 10, label: 'B' },
+        { value: 15, label: 'C' },
+        { value: 20, label: 'D' },
       ],
     },
   ]}

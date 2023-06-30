@@ -68,6 +68,7 @@ export function PiePlot() {
                 return (
                   <PieArc
                     {...item}
+                    key={item.id}
                     innerRadius={innerRadius}
                     outerRadius={outerRadius ?? availableRadius}
                     cornerRadius={cornerRadius}
@@ -84,6 +85,7 @@ export function PiePlot() {
                 return (
                   <PieArcLabel
                     {...item}
+                    key={item.id}
                     innerRadius={innerRadius}
                     outerRadius={outerRadius ?? availableRadius}
                     cornerRadius={cornerRadius}

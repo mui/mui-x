@@ -39,6 +39,9 @@ export function ChartContainer(props: ChartContainerProps) {
   } = props;
   const ref = React.useRef<SVGSVGElement>(null);
 
+  React.useEffect(() => {
+    console.log(width);
+  }, [width]);
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={ref}>
       <SeriesContextProvider series={series} colors={colors}>

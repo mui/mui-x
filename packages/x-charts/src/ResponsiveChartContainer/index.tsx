@@ -28,7 +28,7 @@ const useChartDimensions = (
 
     const newHeight = parseFloat(computedStyle.height) || 0;
     const newWidth = parseFloat(computedStyle.width) || 0;
-
+    console.log(newHeight, newWidth);
     setWidth(newWidth);
     setHeight(newHeight);
   }, []);
@@ -105,17 +105,23 @@ const ResizableContainer = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
+  '&>svg': {
+    width: '100%',
+    height: '100%',
+  },
 }));
 
 export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
-  const [containerRef, width, height] = useChartDimensions(props.width, props.height);
+  const { sx, width: propsWidth, height: propsHeight, ...other } = props;
+  const [containerRef, width, height] = useChartDimensions(propsWidth, propsHeight);
 
   return (
     <ResizableContainer
       ref={containerRef}
       ownerState={{ width: props.width, height: props.height }}
+      sx={sx}
     >
-      <ChartContainer {...props} width={width} height={height} />
+      <ChartContainer {...other} width={width} height={height} />
     </ResizableContainer>
   );
 }

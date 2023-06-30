@@ -12,9 +12,9 @@ export default function PieActiveArc() {
             { id: 2, value: 20, label: 'series C' },
           ],
           highlightScope: { faded: 'global', highlighted: 'item' },
+          faded: { innerRadius: 30, additionalRadius: -30 },
         },
       ]}
-      width={400}
       height={200}
     />
   );

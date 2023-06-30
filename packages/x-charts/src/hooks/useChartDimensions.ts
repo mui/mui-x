@@ -8,22 +8,22 @@ const useChartDimensions = (width: number, height: number, margin: LayoutConfig[
     ...margin,
   };
 
-  const drawingArea = React.useMemo(
-    () => ({
+  const drawingArea = React.useMemo(() => {
+    console.log(defaultizedMargin);
+    return {
       left: defaultizedMargin.left,
       top: defaultizedMargin.top,
       width: Math.max(0, width - defaultizedMargin.left - defaultizedMargin.right),
       height: Math.max(0, height - defaultizedMargin.top - defaultizedMargin.bottom),
-    }),
-    [
-      width,
-      height,
-      defaultizedMargin.top,
-      defaultizedMargin.bottom,
-      defaultizedMargin.left,
-      defaultizedMargin.right,
-    ],
-  );
+    };
+  }, [
+    width,
+    height,
+    defaultizedMargin.top,
+    defaultizedMargin.bottom,
+    defaultizedMargin.left,
+    defaultizedMargin.right,
+  ]);
 
   return drawingArea;
 };
