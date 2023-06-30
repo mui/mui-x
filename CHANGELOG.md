@@ -45,7 +45,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 - [charts] Take responsive container from data grid (#9497) @alexfauquette
 - [charts] Update README.md (#9426) @alexfauquette
-- [charts] Fix typo and small refacto (#9526) @flaviendelangle
+- [charts] Fix typo and small refactor (#9526) @flaviendelangle
 
 ### Docs
 
