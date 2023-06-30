@@ -14,8 +14,13 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   BaseFieldProps,
+  isDatePickerView,
+  isInternalTimeView,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import Box from '@mui/material/Box';
+import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock/multiSectionDigitalClockSectionClasses';
+import Divider from '@mui/material/Divider';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -83,6 +88,43 @@ export const useDesktopRangePicker = <
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
+    },
+    rendererInterceptor(viewRenderers, popperView, rendererProps) {
+      const finalProps = {
+        ...rendererProps,
+        focusedView: null,
+        sx: {
+          borderBottom: 0,
+          width: 'auto',
+          [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+            maxHeight: '100%',
+          },
+          ...(Array.isArray(sx) ? sx : [sx]),
+        },
+      };
+      return (
+        <Box sx={{ display: 'flex', margin: '0 auto' }}>
+          {isInternalTimeView(popperView) ? (
+            <React.Fragment>
+              {viewRenderers?.day?.({
+                ...rendererProps,
+                view: isDatePickerView(popperView) ? popperView : 'day',
+              })}
+              <Divider orientation="vertical" />
+            </React.Fragment>
+          ) : null}
+          {viewRenderers[popperView]?.(finalProps)}
+          {isDatePickerView(popperView) ? (
+            <React.Fragment>
+              <Divider orientation="vertical" />
+              {viewRenderers?.hours?.({
+                ...rendererProps,
+                view: isInternalTimeView(popperView) ? popperView : 'hours',
+              })}
+            </React.Fragment>
+          ) : null}
+        </Box>
+      );
     },
   });
 

@@ -29,6 +29,7 @@ export const usePicker = <
   additionalViewProps,
   validator,
   autoFocusView,
+  rendererInterceptor,
 }: UsePickerParams<
   TValue,
   TDate,
@@ -56,6 +57,7 @@ export const usePicker = <
     additionalViewProps,
     autoFocusView,
     propsFromPickerValue: pickerValueResponse.viewProps,
+    rendererInterceptor,
   });
 
   const pickerLayoutResponse = usePickerLayoutProps({

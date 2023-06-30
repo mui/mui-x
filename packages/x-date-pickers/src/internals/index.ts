@@ -157,3 +157,6 @@ export type {
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
+
+export { isDatePickerView } from './utils/date-utils';
+export { isInternalTimeView, isTimeView } from './utils/time-utils';
