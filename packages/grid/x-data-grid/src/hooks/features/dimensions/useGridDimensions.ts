@@ -109,7 +109,7 @@ export function useGridDimensions(
 
     if (props.autoHeight) {
       hasScrollY = false;
-      hasScrollX = Math.round(columnsTotalWidth) > rootDimensionsRef.current.width;
+      hasScrollX = columnsTotalWidth > rootDimensionsRef.current.width;
 
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
@@ -122,7 +122,7 @@ export function useGridDimensions(
       };
 
       const scrollInformation = hasScroll({
-        content: { width: Math.round(columnsTotalWidth), height: rowsMeta.currentPageTotalHeight },
+        content: { width: columnsTotalWidth, height: rowsMeta.currentPageTotalHeight },
         container: {
           width: viewportOuterSize.width,
           height: viewportOuterSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom,

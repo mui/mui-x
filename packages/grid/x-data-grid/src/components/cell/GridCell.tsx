@@ -247,6 +247,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const {
     align,
     children: childrenProp,
+    editCellState,
     colIndex,
     column,
     cellMode,

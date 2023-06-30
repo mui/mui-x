@@ -172,7 +172,18 @@ function AppWrapper(props) {
   const { children, emotionCache, pageProps } = props;
 
   const router = useRouter();
-  const { productId, productCategoryId } = getProductInfoFromUrl(router.asPath);
+  const { productId: productIdRaw, productCategoryId } = getProductInfoFromUrl(router.asPath);
+  const { canonicalAs } = pathnameToLanguage(router.asPath);
+  let productId = productIdRaw;
+
+  // Not respecting URL convention, ad-hoc workaround
+  if (canonicalAs.startsWith('/x/api/data-grid/')) {
+    productId = 'x-data-grid';
+  } else if (canonicalAs.startsWith('/x/api/date-pickers/')) {
+    productId = 'x-date-pickers';
+  } else if (canonicalAs.startsWith('/x/api/charts/')) {
+    productId = 'x-charts';
+  }
 
   React.useEffect(() => {
     loadDependencies();
@@ -192,11 +203,8 @@ function AppWrapper(props) {
     ];
   }
 
-  const { canonicalAs } = pathnameToLanguage(router.asPath);
-
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
-
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
 
     let productIdentifier = {
@@ -209,10 +217,7 @@ function AppWrapper(props) {
       ],
     };
 
-    if (
-      canonicalAs.startsWith('/x/react-data-grid/') ||
-      canonicalAs.startsWith('/x/api/data-grid/')
-    ) {
+    if (productId === 'x-data-grid') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Data Grid',
@@ -222,10 +227,7 @@ function AppWrapper(props) {
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
-    } else if (
-      canonicalAs.startsWith('/x/react-date-pickers/') ||
-      canonicalAs.startsWith('/x/api/date-pickers/')
-    ) {
+    } else if (productId === 'x-date-pickers') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Date Pickers',
@@ -239,8 +241,14 @@ function AppWrapper(props) {
       };
     }
 
-    return { activePage, activePageParents, pages, productIdentifier };
-  }, [canonicalAs, pageProps.userLanguage, router.pathname]);
+    return {
+      activePage,
+      activePageParents,
+      pages,
+      productIdentifier,
+      productId,
+    };
+  }, [productId, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
