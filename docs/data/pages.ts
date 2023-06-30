@@ -319,7 +319,7 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/react-charts-group',
-    title: 'Charts',
+    title: 'Charts 🧪',
     newFeature: true,
     icon: ChartIcon,
     children: [
@@ -349,16 +349,15 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
         ],
       },
+      { pathname: '/x/react-charts/axis', title: 'Axis' },
+      { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
+      { pathname: '/x/react-charts/legend', title: 'Legend' },
+      { pathname: '/x/react-charts/styling', title: 'Styling' },
+      { pathname: '/x/react-charts/stacking', title: 'Stacking' },
       {
-        pathname: '/x/react-charts-common-components',
-        title: 'Common components',
-        children: [
-          { pathname: '/x/react-charts/axis', title: 'Axis' },
-          { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
-          { pathname: '/x/react-charts/legend', title: 'Legend' },
-          { pathname: '/x/react-charts/styling', title: 'Styling' },
-          { pathname: '/x/react-charts/stacking', title: 'Stacking' },
-        ],
+        pathname: '/x/api/charts-group',
+        title: 'API Reference',
+        children: [...chartsComponentApi],
       },
       { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
       { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
@@ -366,11 +365,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
       { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
       { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
-      {
-        pathname: '/x/api/charts-group',
-        title: 'API Reference',
-        children: [...chartsComponentApi],
-      },
     ],
   },
   {
