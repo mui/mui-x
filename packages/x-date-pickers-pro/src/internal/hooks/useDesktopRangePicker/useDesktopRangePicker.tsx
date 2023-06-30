@@ -21,6 +21,8 @@ import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models
 import Box from '@mui/material/Box';
 import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock/multiSectionDigitalClockSectionClasses';
 import Divider from '@mui/material/Divider';
+import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
+import { DateTimeRangePickerTimeWrapper } from '../../../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -97,7 +99,8 @@ export const useDesktopRangePicker = <
           borderBottom: 0,
           width: 'auto',
           [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-            maxHeight: '100%',
+            // subtract time range position controls height with it's border
+            maxHeight: VIEW_HEIGHT - 33,
           },
           ...(Array.isArray(sx) ? sx : [sx]),
         },
@@ -113,14 +116,22 @@ export const useDesktopRangePicker = <
               <Divider orientation="vertical" />
             </React.Fragment>
           ) : null}
-          {viewRenderers[popperView]?.(finalProps)}
+          {isInternalTimeView(popperView) ? (
+            <DateTimeRangePickerTimeWrapper {...rendererProps}>
+              {viewRenderers[popperView]?.(finalProps)}
+            </DateTimeRangePickerTimeWrapper>
+          ) : (
+            viewRenderers[popperView]?.(finalProps)
+          )}
           {isDatePickerView(popperView) ? (
             <React.Fragment>
               <Divider orientation="vertical" />
-              {viewRenderers['hours' as DateOrTimeViewWithMeridiem]?.({
-                ...finalProps,
-                view: isInternalTimeView(popperView) ? popperView : 'hours',
-              })}
+              <DateTimeRangePickerTimeWrapper {...rendererProps}>
+                {viewRenderers['hours' as DateOrTimeViewWithMeridiem]?.({
+                  ...finalProps,
+                  view: isInternalTimeView(popperView) ? popperView : 'hours',
+                })}
+              </DateTimeRangePickerTimeWrapper>
             </React.Fragment>
           ) : null}
         </Box>
