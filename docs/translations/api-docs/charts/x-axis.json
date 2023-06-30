@@ -6,7 +6,6 @@
     "disableLine": "If true, the axis line is disabled.",
     "disableTicks": "If true, the ticks are disabled.",
     "fill": "The fill color of the axis text.",
-    "hidden": "If true, the axis will not be rendered.",
     "label": "The label of the axis.",
     "labelFontSize": "The font size of the axis label.",
     "position": "Position of the axis.",

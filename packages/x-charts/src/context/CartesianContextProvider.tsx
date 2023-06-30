@@ -14,13 +14,7 @@ import {
   getExtremumY as getLineExtremumY,
 } from '../LineChart/extremums';
 import { getScale } from '../hooks/useScale';
-import {
-  AxisConfig,
-  AxisDefaultized,
-  ScaleName,
-  XAxisPosition,
-  YAxisPosition,
-} from '../models/axis';
+import { AxisConfig, AxisDefaultized, ScaleName } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
@@ -52,8 +46,8 @@ const yExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
   line: getLineExtremumY,
 };
 
-type DefaultizedAxisConfig<P extends XAxisPosition | YAxisPosition> = {
-  [axisKey: string]: AxisDefaultized<ScaleName, any, P>;
+type DefaultizedAxisConfig = {
+  [axisKey: string]: AxisDefaultized;
 };
 
 export const CartesianContext = React.createContext<{
@@ -62,10 +56,10 @@ export const CartesianContext = React.createContext<{
    */
   xAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
-  } & DefaultizedAxisConfig<XAxisPosition>;
+  } & DefaultizedAxisConfig;
   yAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
-  } & DefaultizedAxisConfig<YAxisPosition>;
+  } & DefaultizedAxisConfig;
   xAxisIds: string[];
   yAxisIds: string[];
   // @ts-ignore
@@ -126,7 +120,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
         : []),
     ];
 
-    const completedXAxis: DefaultizedAxisConfig<XAxisPosition | YAxisPosition> = {};
+    const completedXAxis: DefaultizedAxisConfig = {};
     allXAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
@@ -174,7 +168,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
         : []),
     ];
 
-    const completedYAxis: DefaultizedAxisConfig<XAxisPosition | YAxisPosition> = {};
+    const completedYAxis: DefaultizedAxisConfig = {};
     allYAxis.forEach((axis, axisIndex) => {
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);

@@ -30,7 +30,6 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
 };
 const defaultProps = {
   position: 'bottom',
-  hidden: false,
   disableLine: false,
   disableTicks: false,
   tickFontSize: 12,
@@ -39,7 +38,7 @@ const defaultProps = {
 } as const;
 
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChartsXAxis' });
+  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsXAxis' });
   const {
     xAxis: {
       [props.axisId]: { scale: xScale, ticksNumber, ...settings },
@@ -72,7 +71,6 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     x: left + width / 2,
     y: positionSigne * (tickFontSize + tickSize + 10),
   };
-
   return (
     <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}

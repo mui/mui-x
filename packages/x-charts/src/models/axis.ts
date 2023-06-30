@@ -63,18 +63,15 @@ export interface ChartsYAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
    */
-  position?: YAxisPosition;
+  position?: 'left' | 'right';
 }
 
 export interface ChartsXAxisProps extends ChartsAxisProps {
   /**
    * Position of the axis.
    */
-  position?: XAxisPosition;
+  position?: 'top' | 'bottom';
 }
-
-export type YAxisPosition = 'left' | 'right';
-export type XAxisPosition = 'top' | 'bottom';
 
 export type ScaleName = 'linear' | 'band' | 'point' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
 export type ContinuouseScaleName = 'linear' | 'log' | 'pow' | 'sqrt' | 'time' | 'utc';
@@ -122,21 +119,18 @@ interface AxisScaleConfig {
   };
 }
 
-export type AxisConfig<
-  S = ScaleName,
-  V = any,
-  P extends XAxisPosition | YAxisPosition = XAxisPosition | YAxisPosition,
-> = {
+export type AxisConfig<S = ScaleName, V = any> = {
   id: string;
   scaleType?: S;
   min?: number;
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
-} & Partial<ChartsAxisProps> & { position?: P } & TickParams;
+} & Partial<ChartsXAxisProps | ChartsYAxisProps> &
+  TickParams;
 
-export type AxisDefaultized<
-  S extends ScaleName = ScaleName,
-  V = any,
-  P extends XAxisPosition | YAxisPosition = XAxisPosition | YAxisPosition,
-> = Omit<AxisConfig<S, V, P>, 'scaleType'> & AxisScaleConfig[S];
+export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
+  AxisConfig<S, V>,
+  'scaleType'
+> &
+  AxisScaleConfig[S];
