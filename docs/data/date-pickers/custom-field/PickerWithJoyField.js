@@ -63,14 +63,14 @@ const JoyField = React.forwardRef((props, inputRef) => {
         slotProps={{ input: { ref: inputRef } }}
         startDecorator={
           <React.Fragment>
-            {startDecorator}
             {startAdornment}
+            {startDecorator}
           </React.Fragment>
         }
         endDecorator={
           <React.Fragment>
-            {endDecorator}
             {endAdornment}
+            {endDecorator}
           </React.Fragment>
         }
         {...other}
