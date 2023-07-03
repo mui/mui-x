@@ -1,5 +1,5 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-  <DateField
+  <DatePicker
     value={value}
     onChange={(newValue, context) => {
       if (context.validationError == null) {

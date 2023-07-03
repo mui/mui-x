@@ -350,7 +350,7 @@ MonthCalendar.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
-   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableDate`.
+   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`.
    */
   referenceDate: PropTypes.any,
   /**

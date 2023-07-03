@@ -1,13 +1,18 @@
 ---
-product: charts
-title: Charts - Overview
+title: React Chart components
+githubLabel: 'component: charts'
+packageName: '@mui/x-charts'
 ---
 
 # Charts - Overview
 
 <p class="description">This page groups general topics that are common to multiple charts.</p>
 
-> ⚠️ This library is in the alpha phase. This means it might receive some breaking changes if they are needed to improve the components.
+:::warning
+⚠️ This library is in the alpha phase. This means it might receive some breaking changes if they are needed to improve the components.
+:::
+
+{{"component": "modules/components/ComponentLinkHeader.js", "design": false}}
 
 ## Overview
 
@@ -45,7 +50,7 @@ Those components' name ends with "Chart" and only require the `series` prop, des
 
 They also have plenty of other props to customize the chart behavior.
 
-{{"demo": "SimpleCharts.js", "bg": "inline"}}
+{{"demo": "SimpleCharts.js"}}
 
 ### Multiple charts
 
@@ -53,7 +58,7 @@ To combine different charts, like lines with bars, you can use composition with 
 
 Inside this wrapper, you can render `<XAxis />`, `<YAxis />`, or any plot component (`<BarPlot />`, `<LinePlot />`, `<AreaPlot />`, `<ScatterPlot />`)
 
-{{"demo": "Combining.js", "bg": "inline"}}
+{{"demo": "Combining.js"}}
 
 ## Axis management
 
