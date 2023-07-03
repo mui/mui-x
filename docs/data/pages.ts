@@ -299,6 +299,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
       },
+      { pathname: '/x/react-date-pickers/lifecycle', title: 'Components lifecycle' },
       { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
       {
         pathname: '/x/react-date-pickers/visual-customization',
