@@ -117,21 +117,21 @@ export const useDesktopRangePicker = <
             </React.Fragment>
           ) : null}
           {isInternalTimeView(popperView) ? (
-            <DateTimeRangePickerTimeWrapper {...rendererProps}>
-              {viewRenderers[popperView]?.(finalProps)}
-            </DateTimeRangePickerTimeWrapper>
+            <DateTimeRangePickerTimeWrapper
+              {...finalProps}
+              viewRenderer={viewRenderers[popperView]}
+            />
           ) : (
             viewRenderers[popperView]?.(finalProps)
           )}
           {isDatePickerView(popperView) ? (
             <React.Fragment>
               <Divider orientation="vertical" />
-              <DateTimeRangePickerTimeWrapper {...rendererProps}>
-                {viewRenderers['hours' as DateOrTimeViewWithMeridiem]?.({
-                  ...finalProps,
-                  view: isInternalTimeView(popperView) ? popperView : 'hours',
-                })}
-              </DateTimeRangePickerTimeWrapper>
+              <DateTimeRangePickerTimeWrapper
+                {...finalProps}
+                view={isInternalTimeView(popperView) ? popperView : 'hours'}
+                viewRenderer={viewRenderers['hours' as DateOrTimeViewWithMeridiem]}
+              />
             </React.Fragment>
           ) : null}
         </Box>

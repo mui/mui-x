@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
+import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { rangeValueManager } from '../internal/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -10,7 +11,6 @@ import { validateDateRange } from '../internal/utils/validation/validateDateRang
 import { DateRange, DateTimeRangePickerViews } from '../internal/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
-import { renderMultiSectionDigitalClockTimeRangeView } from '../timeRangeViewRenderers';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,10 +36,10 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     {}
   > = {
     day: renderDateRangeViewCalendar,
-    hours: renderMultiSectionDigitalClockTimeRangeView,
-    minutes: renderMultiSectionDigitalClockTimeRangeView,
-    seconds: renderMultiSectionDigitalClockTimeRangeView,
-    meridiem: renderMultiSectionDigitalClockTimeRangeView,
+    hours: renderMultiSectionDigitalClockTimeView,
+    minutes: renderMultiSectionDigitalClockTimeView,
+    seconds: renderMultiSectionDigitalClockTimeView,
+    meridiem: renderMultiSectionDigitalClockTimeView,
     ...defaultizedProps.viewRenderers,
   };
 

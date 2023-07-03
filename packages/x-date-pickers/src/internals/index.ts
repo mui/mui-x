@@ -78,6 +78,7 @@ export type {
 export type {
   UsePickerViewsNonStaticProps,
   PickerViewRendererLookup,
+  PickerViewRenderer,
   UsePickerViewsProps,
 } from './hooks/usePicker/usePickerViews';
 export { useStaticPicker } from './hooks/useStaticPicker';

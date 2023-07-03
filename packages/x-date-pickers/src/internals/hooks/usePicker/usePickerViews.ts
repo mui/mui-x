@@ -26,7 +26,7 @@ export type PickerViewsRendererProps<
     onFocusedViewChange: (viewToFocus: TView, hasFocus: boolean) => void;
   };
 
-type PickerViewRenderer<
+export type PickerViewRenderer<
   TValue,
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
