@@ -10,6 +10,7 @@ import {
 } from '@mui/monorepo/test/utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
+import { timeClockHandler } from 'test/utils/pickers/viewHandlers';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
@@ -512,6 +513,67 @@ describe('<TimeClock />', () => {
       expect(adapterToUse.getHours(newDate)).to.equal(1);
       expect(adapterToUse.getMinutes(newDate)).to.equal(0);
       expect(adapterToUse.getSeconds(newDate)).to.equal(0);
+    });
+  });
+
+  describe('Reference date', () => {
+    it('should use `referenceDate` when no value defined', () => {
+      const onChange = spy();
+
+      render(
+        <TimeClock
+          onChange={onChange}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 12, 30))}
+        />,
+      );
+
+      timeClockHandler.setViewValue(
+        adapterToUse,
+        adapterToUse.setHours(adapterToUse.date(), 3),
+        'hours',
+      );
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 0, 1, 15, 30));
+    });
+
+    it('should not use `referenceDate` when a value is defined', () => {
+      const onChange = spy();
+
+      render(
+        <TimeClock
+          onChange={onChange}
+          value={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+        />,
+      );
+
+      timeClockHandler.setViewValue(
+        adapterToUse,
+        adapterToUse.setHours(adapterToUse.date(), 3),
+        'hours',
+      );
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
+    });
+
+    it('should not use `referenceDate` when a defaultValue is defined', () => {
+      const onChange = spy();
+
+      render(
+        <TimeClock
+          onChange={onChange}
+          defaultValue={adapterToUse.date(new Date(2019, 0, 1, 12, 20))}
+          referenceDate={adapterToUse.date(new Date(2018, 0, 1, 15, 30))}
+        />,
+      );
+
+      timeClockHandler.setViewValue(
+        adapterToUse,
+        adapterToUse.setHours(adapterToUse.date(), 3),
+        'hours',
+      );
+      expect(onChange.callCount).to.equal(2);
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2019, 0, 1, 15, 20));
     });
   });
 });

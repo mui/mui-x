@@ -1,5 +1,4 @@
 ---
-product: date-pickers
 title: Date and Time pickers - Custom layout
 components: PickersActionBar, PickersLayout
 githubLabel: 'component: pickers'
