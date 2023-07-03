@@ -343,10 +343,10 @@ export const useGridCellSelection = (
       const hasEnteredSensitivityArea =
         hasEnteredVerticalSensitivityArea || hasEnteredHorizontalSensitivityArea;
 
-      if (hasEnteredSensitivityArea || !autoScrollInterval.current) {
+      if (hasEnteredSensitivityArea) {
         // Mouse has entered the sensitity area for the first time
         startAutoScroll();
-      } else if (!hasEnteredSensitivityArea && autoScrollInterval.current) {
+      } else {
         // Mouse has left the sensitivity area while auto scroll is on
         stopAutoScroll();
       }
