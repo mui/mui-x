@@ -1186,4 +1186,28 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
     ]);
   });
+
+  // See https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+  it('should not exceed maximum call stack size caused by floating point precision error', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 'auto', width: 1584 }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[
+            { field: '1', flex: 1 },
+            { field: '2', flex: 1 },
+            { field: '3', flex: 1 },
+            { field: '4', flex: 1 },
+            { field: '5', flex: 1 },
+            { field: '6', flex: 1 },
+          ]}
+        />
+      </div>,
+    );
+  });
 });
