@@ -8,7 +8,7 @@ import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useF
 import { FieldsTextFieldProps } from '../models';
 
 const excludeClearableProps = <TProps extends {}>(props: TProps, excludedProps: string[]): TProps =>
-  Object.keys(props).reduce((prev, key) => {
+  Object.keys(props || {}).reduce((prev, key) => {
     if (!excludedProps.includes(key)) {
       return {
         ...prev,

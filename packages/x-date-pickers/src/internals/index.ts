@@ -93,6 +93,7 @@ export {
   useLocaleText,
   useNow,
 } from './hooks/useUtils';
+export { useClearField } from './hooks/useClearField';
 export type { ExportedUseViewsOptions } from './hooks/useViews';
 export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';

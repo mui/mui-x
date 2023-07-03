@@ -1,9 +1,0 @@
-<DemoItem>
-  <DateField
-    label="Browser date field"
-    clearable
-    slots={{
-      textField: BrowserField,
-    }}
-  />
-</DemoItem>

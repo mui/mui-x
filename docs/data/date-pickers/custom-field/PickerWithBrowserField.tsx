@@ -21,7 +21,10 @@ import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
+  DateFieldSlotsComponent,
+  DateFieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/DateField';
+import { useClearField } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
   DateRange,
@@ -45,6 +48,7 @@ interface BrowserFieldProps
   error?: boolean;
   focused?: boolean;
   ownerState?: any;
+  sx?: any;
 }
 
 type BrowserFieldComponent = ((
@@ -62,12 +66,13 @@ const BrowserField = React.forwardRef(
       error,
       focused,
       ownerState,
+      sx,
       ...other
     } = props;
 
     return (
       <Box
-        sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
+        sx={{ ...(sx || {}), display: 'flex', alignItems: 'center', flexGrow: 1 }}
         id={id}
         ref={containerRef}
       >
@@ -109,26 +114,46 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       ownerState: props as any,
     });
 
-    const response = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>({
+    const {
+      onClear,
+      clearable,
+      slots: rangeSlots,
+      slotProps: rangeSlotProps,
+      ...fieldProps
+    } = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>({
       props: textFieldProps,
       inputRef: externalInputRef,
     });
 
-    return (
-      <BrowserField
-        {...response}
-        style={{
-          minWidth: 300,
-        }}
-        InputProps={{
-          ...response.InputProps,
-          ref,
+    const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
+      useClearField<
+        {},
+        typeof textFieldProps.InputProps,
+        DateFieldSlotsComponent,
+        DateFieldSlotsComponentsProps<Dayjs>
+      >({
+        onClear,
+        clearable,
+        fieldProps,
+        InputProps: {
+          ...fieldProps.InputProps,
           endAdornment: (
             <IconButton onClick={onAdornmentClick}>
               <DateRangeIcon />
             </IconButton>
           ),
+        },
+        slots: rangeSlots as any,
+        slotProps: rangeSlotProps as any,
+      });
+
+    return (
+      <BrowserField
+        {...processedFieldProps}
+        style={{
+          minWidth: 300,
         }}
+        InputProps={{ ...ProcessedInputProps, ref }}
       />
     );
   },
@@ -257,14 +282,31 @@ interface BrowserDateFieldProps
     > {}
 
 function BrowserDateField(props: BrowserDateFieldProps) {
-  const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
+  const { inputRef: externalInputRef, ...textFieldProps } = props;
 
-  const response = useDateField<Dayjs, typeof textFieldProps>({
+  const { onClear, clearable, slots, slotProps, ...fieldProps } = useDateField<
+    Dayjs,
+    typeof textFieldProps
+  >({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
+    useClearField<
+      {},
+      typeof textFieldProps.InputProps,
+      DateFieldSlotsComponent,
+      DateFieldSlotsComponentsProps<Dayjs>
+    >({
+      onClear,
+      clearable,
+      fieldProps,
+      InputProps: fieldProps.InputProps,
+      slots,
+      slotProps,
+    });
 
-  return <BrowserField {...response} />;
+  return <BrowserField {...processedFieldProps} InputProps={ProcessedInputProps} />;
 }
 
 function BrowserDatePicker(props: DatePickerProps<Dayjs>) {
@@ -279,8 +321,16 @@ export default function PickerWithBrowserField() {
       <DemoContainer
         components={['DatePicker', 'SingleInputDateRangeField', 'DateRangePicker']}
       >
-        <BrowserDatePicker />
-        <BrowserSingleInputDateRangePicker />
+        <BrowserDatePicker
+          slotProps={{
+            field: { clearable: true },
+          }}
+        />
+        <BrowserSingleInputDateRangePicker
+          slotProps={{
+            field: { clearable: true },
+          }}
+        />
         <BrowserDateRangePicker />
       </DemoContainer>
     </LocalizationProvider>
