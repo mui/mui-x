@@ -7,7 +7,6 @@ import {
 import { styled } from '@mui/material/styles';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
-import { GridEditCellMeta } from '../../models/api/gridEditingApi';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
