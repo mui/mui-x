@@ -106,15 +106,13 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
       [apiRef, debounceMs, field, id, onValueChange],
     );
 
-    const meta = apiRef.current.unstable_getEditCellMeta
-      ? apiRef.current.unstable_getEditCellMeta(id, field)
-      : {};
+    const meta = apiRef.current.unstable_getEditCellMeta(id, field);
 
     React.useEffect(() => {
-      if (meta.changeReason !== 'debouncedSetEditCellValue') {
+      if (meta?.changeReason !== 'debouncedSetEditCellValue') {
         setValueState(value);
       }
-    }, [meta.changeReason, value]);
+    }, [meta, value]);
 
     useEnhancedEffect(() => {
       if (hasFocus) {

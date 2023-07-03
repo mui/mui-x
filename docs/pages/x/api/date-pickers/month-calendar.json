@@ -17,7 +17,7 @@
     "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
       "type": { "name": "any" },
-      "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableDate`."
+      "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`."
     },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "sx": {

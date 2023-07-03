@@ -1,5 +1,4 @@
 ---
-product: date-pickers
 title: React Date Fields components
 components: DateField, TimeField, DateTimeField, MultiInputDateRangeField, SingleInputDateRangeField, MultiInputTimeRangeField, SingleInputTimeRangeField, MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
