@@ -1,5 +1,4 @@
 ---
-product: date-pickers
 title: React Time Range Field components
 components: MultiInputTimeRangeField, SingleInputTimeRangeField
 githubLabel: 'component: pickers'

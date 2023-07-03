@@ -22,7 +22,7 @@ const barChartsParams = {
 export default function Interaction() {
   return (
     <Box>
-      <Stack direction={{ xs: 'column', md: 'row' }}>
+      <Stack direction="column">
         <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
         <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
       </Stack>
