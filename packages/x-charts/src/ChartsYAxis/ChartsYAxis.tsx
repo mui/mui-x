@@ -55,6 +55,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     label,
     labelFontSize,
     tickSize: tickSizeProp,
+    valueFormatter,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -64,7 +65,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const yTicks = useTicks({ scale: yScale, ticksNumber });
+  const yTicks = useTicks({ scale: yScale, ticksNumber, valueFormatter });
 
   const positionSigne = position === 'right' ? 1 : -1;
 
@@ -81,13 +82,13 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         <Line y1={yScale.range()[0]} y2={yScale.range()[1]} className={classes.line} />
       )}
 
-      {yTicks.map(({ value, offset, labelOffset }, index) => {
+      {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
         const xTickLabel = positionSigne * (tickSize + 2);
         const yTickLabel = labelOffset;
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
             {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
-            {value !== undefined && (
+            {formattedValue !== undefined && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
@@ -97,7 +98,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
                 }}
                 className={classes.tickLabel}
               >
-                {value.toLocaleString()}
+                {formattedValue.toLocaleString()}
               </TickLabel>
             )}
           </g>

@@ -39,6 +39,10 @@
       }
     },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
+    },
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -60,6 +64,10 @@
         "description": "{ hours?: number, minutes?: number, seconds?: number }"
       },
       "default": "{ hours: 1, minutes: 5, seconds: 5 }"
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "any" } },
     "view": {

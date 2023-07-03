@@ -1127,4 +1127,38 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     // The width should not increase infinitely
     expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
   });
+
+  // See https://github.com/mui/mui-x/issues/8689#issuecomment-1582616570
+  it('should not add scrollbars when the parent container has fractional size', async function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 300.5, width: 400 }}>
+        <DataGrid rows={[]} columns={[{ field: 'id', flex: 1 }]} />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+    // It should not have a horizontal scrollbar
+    expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
+    // It should not have a vertical scrollbar
+    expect(virtualScroller.scrollHeight - virtualScroller.clientHeight).to.equal(0);
+  });
+
+  // See https://github.com/mui/mui-x/issues/9510
+  it('should not exceed maximum call stack size when the parent container has fractional width', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: '100%', width: 400.6 }}>
+        <DataGrid rows={[{ id: 1 }]} columns={[{ field: 'id', flex: 1 }]} />
+      </div>,
+    );
+  });
 });

@@ -2,14 +2,6 @@
 
 <p class="description">Easily paginate your rows and only fetch what you need.</p>
 
-:::warning
-The default pagination behavior depends on your plan.
-
-- On the `DataGrid`, pagination is enabled by default and can't be disabled
-- On the `DataGridPro`, pagination is disabled by default, use the `pagination` prop to enable it
-
-:::
-
 ## Size of the page
 
 The `DataGrid` (MIT license) is limited to pages of up to 100 rows.
@@ -32,6 +24,20 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 :::
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
+
+## Pagination on Pro and Premium
+
+The default pagination behavior depends on your plan.
+
+- On the `DataGrid`, pagination is enabled by default and can't be disabled.
+- On the `DataGridPro` and `DataGridPremium`, pagination is disabled by default; use the `pagination` prop to enable it.
+
+The following example activates pagination on a `DataGridPremium` component.
+
+:::info
+On a side note, exported CSV and Excel files will contain the full data and disregard the pagination by default. To apply pagination on exported files, please check the available [row selectors](/x/react-data-grid/export/#exported-rows).
+:::
+{{"demo": "PageSizeAutoPremium.js", "bg": "inline"}}
 
 ## Pagination model
 

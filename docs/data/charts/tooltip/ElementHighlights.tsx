@@ -72,8 +72,8 @@ const scatterChartsParams = {
 export default function ElementHighlights() {
   const [chartType, setChartType] = React.useState('bar');
   const [withArea, setWithArea] = React.useState(false);
-  const [highlighted, setHighlighted] = React.useState('none');
-  const [faded, setFaded] = React.useState('none');
+  const [highlighted, setHighlighted] = React.useState('item');
+  const [faded, setFaded] = React.useState('global');
 
   const handleChartType = (event: any, newChartType: string) => {
     if (newChartType !== null) {
@@ -166,7 +166,6 @@ export default function ElementHighlights() {
           <FormControlLabel
             control={
               <Switch
-                defaultChecked
                 checked={withArea}
                 onChange={(event) => setWithArea(event.target.checked)}
               />

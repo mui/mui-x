@@ -1,3 +1,7 @@
+---
+productId: x-date-pickers
+---
+
 # Migration from v5 to v6
 
 <!-- #default-branch-switch -->
@@ -442,7 +446,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
 
-You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
 These changes apply to all the components that had the prop.
 For example, the `ToolbarComponent` has been replaced by a `Toolbar` component slot on all pickers.
@@ -933,6 +937,18 @@ Component name changes are also reflected in `themeAugmentation`:
    },
  });
 ```
+
+## Behavior of field `onChange` props
+
+Since the masked input has been replaced by [fields](/x/react-date-pickers/fields/#fields-to-edit-a-single-element) the input value is valid most of the time.
+
+In v5, the user had to delete a character and type in another character to update the date resulting in `onChange` being called twice.
+Firstly with deleted character, and then with the complete date again.
+
+In v6, user can override the field section, so `onChange` is called at nearly every key pressed.
+
+If you were relying on `onChange` to send server requests, you might be interested in debouncing it to avoid sending too many requests.
+To do so please refer to the corresponding [docs example](/x/react-date-pickers/lifecycle/#server-interaction).
 
 ## Rename `components` to `slots` (optional)
 
