@@ -54,8 +54,6 @@ export interface GridEditInputCellProps
   ) => Promise<void> | void;
 }
 
-const EMPTY_META = {} as GridEditCellMeta;
-
 const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellProps>(
   (props, ref) => {
     const rootProps = useGridRootProps();
@@ -109,9 +107,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
       [apiRef, debounceMs, field, id, onValueChange],
     );
 
-    const meta = apiRef.current.unstable_getEditCellMeta
-      ? apiRef.current.unstable_getEditCellMeta(id, field)
-      : EMPTY_META;
+    const meta = apiRef.current.unstable_getEditCellMeta(id, field);
 
     React.useEffect(() => {
       if (meta?.changeReason !== 'debouncedSetEditCellValue') {
