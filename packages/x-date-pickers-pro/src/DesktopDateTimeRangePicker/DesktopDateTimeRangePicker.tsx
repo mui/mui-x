@@ -1,8 +1,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
+import {
+  extractValidationProps,
+  isDatePickerView,
+  isInternalTimeView,
+  PickerViewRendererLookup,
+} from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
+import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
+import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
+import Box from '@mui/material/Box';
+import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import Divider from '@mui/material/Divider';
 import { rangeValueManager } from '../internal/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -11,6 +21,7 @@ import { validateDateRange } from '../internal/utils/validation/validateDateRang
 import { DateRange, DateTimeRangePickerViews } from '../internal/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
+import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -64,14 +75,58 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
     },
   };
 
-  const { renderPicker } = useDesktopRangePicker<TDate, DateTimeRangePickerViews, typeof props>(
-    {
-      props,
-      valueManager: rangeValueManager,
-      valueType: 'date-time',
-      validator: validateDateRange,
+  const { renderPicker } = useDesktopRangePicker<TDate, DateTimeRangePickerViews, typeof props>({
+    props,
+    valueManager: rangeValueManager,
+    valueType: 'date-time',
+    validator: validateDateRange,
+    rendererInterceptor(inViewRenderers, popperView, rendererProps) {
+      const finalProps = {
+        ...rendererProps,
+        focusedView: null,
+        sx: {
+          borderBottom: 0,
+          width: 'auto',
+          [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+            // subtract time range position controls height with it's border
+            maxHeight: VIEW_HEIGHT - 33,
+          },
+          ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        },
+      };
+      return (
+        <Box sx={{ display: 'flex', margin: '0 auto' }}>
+          {isInternalTimeView(popperView) ? (
+            <React.Fragment>
+              {inViewRenderers['day' as DateOrTimeViewWithMeridiem]?.({
+                ...rendererProps,
+                view: isDatePickerView(popperView) ? popperView : 'day',
+              })}
+              <Divider orientation="vertical" />
+            </React.Fragment>
+          ) : null}
+          {isInternalTimeView(popperView) ? (
+            <DateTimeRangePickerTimeWrapper
+              {...finalProps}
+              viewRenderer={inViewRenderers[popperView]}
+            />
+          ) : (
+            inViewRenderers[popperView]?.(finalProps)
+          )}
+          {isDatePickerView(popperView) ? (
+            <React.Fragment>
+              <Divider orientation="vertical" />
+              <DateTimeRangePickerTimeWrapper
+                {...finalProps}
+                view={isInternalTimeView(popperView) ? popperView : 'hours'}
+                viewRenderer={inViewRenderers['hours' as DateOrTimeViewWithMeridiem]}
+              />
+            </React.Fragment>
+          ) : null}
+        </Box>
+      );
     },
-  );
+  });
 
   return renderPicker();
 }) as DesktopDateRangePickerComponent;

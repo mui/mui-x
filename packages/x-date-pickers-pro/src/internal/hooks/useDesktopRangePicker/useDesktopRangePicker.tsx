@@ -14,15 +14,8 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   BaseFieldProps,
-  isDatePickerView,
-  isInternalTimeView,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
-import Box from '@mui/material/Box';
-import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock/multiSectionDigitalClockSectionClasses';
-import Divider from '@mui/material/Divider';
-import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
-import { DateTimeRangePickerTimeWrapper } from '../../../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -90,52 +83,6 @@ export const useDesktopRangePicker = <
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
-    },
-    rendererInterceptor(viewRenderers, popperView, rendererProps) {
-      const finalProps = {
-        ...rendererProps,
-        focusedView: null,
-        sx: {
-          borderBottom: 0,
-          width: 'auto',
-          [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-            // subtract time range position controls height with it's border
-            maxHeight: VIEW_HEIGHT - 33,
-          },
-          ...(Array.isArray(sx) ? sx : [sx]),
-        },
-      };
-      return (
-        <Box sx={{ display: 'flex', margin: '0 auto' }}>
-          {isInternalTimeView(popperView) ? (
-            <React.Fragment>
-              {viewRenderers['day' as DateOrTimeViewWithMeridiem]?.({
-                ...rendererProps,
-                view: isDatePickerView(popperView) ? popperView : 'day',
-              })}
-              <Divider orientation="vertical" />
-            </React.Fragment>
-          ) : null}
-          {isInternalTimeView(popperView) ? (
-            <DateTimeRangePickerTimeWrapper
-              {...finalProps}
-              viewRenderer={viewRenderers[popperView]}
-            />
-          ) : (
-            viewRenderers[popperView]?.(finalProps)
-          )}
-          {isDatePickerView(popperView) ? (
-            <React.Fragment>
-              <Divider orientation="vertical" />
-              <DateTimeRangePickerTimeWrapper
-                {...finalProps}
-                view={isInternalTimeView(popperView) ? popperView : 'hours'}
-                viewRenderer={viewRenderers['hours' as DateOrTimeViewWithMeridiem]}
-              />
-            </React.Fragment>
-          ) : null}
-        </Box>
-      );
     },
   });
 
