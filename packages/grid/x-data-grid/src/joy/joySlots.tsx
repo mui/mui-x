@@ -341,24 +341,21 @@ const Pagination = React.forwardRef<
   const page = paginationModel.page <= lastPage ? paginationModel.page : lastPage;
   const pageSize = paginationModel.pageSize;
 
-  const isPageSizeOptionsIncludesPageSize = () => {
-    let includesPageSize = false;
-    rootProps.pageSizeOptions.map((option) => {
+  const isPageSizeIncludedInPageSizeOptions = () => {
+    for (let i = 0; i < rootProps.pageSizeOptions.length; i += 1) {
+      const option = rootProps.pageSizeOptions[i];
       if (typeof option === 'number') {
         if (option === pageSize) {
-          includesPageSize = true;
+          return true;
         }
-        return undefined;
+      } else if (option.value === pageSize) {
+        return true;
       }
-      if (option.value === pageSize) {
-        includesPageSize = true;
-      }
-      return undefined;
-    });
-    return includesPageSize;
+    }
+    return false;
   };
 
-  const pageSizeOptions = isPageSizeOptionsIncludesPageSize() ? rootProps.pageSizeOptions : [];
+  const pageSizeOptions = isPageSizeIncludedInPageSizeOptions() ? rootProps.pageSizeOptions : [];
 
   const handleChangeRowsPerPage: JoySelectProps<number>['onChange'] = (event, newValue) => {
     const newPageSize = Number(newValue);

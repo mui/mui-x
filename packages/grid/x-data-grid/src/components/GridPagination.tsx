@@ -58,21 +58,18 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       [apiRef],
     );
 
-    const isPageSizeOptionsIncludesPageSize = (pageSize: number) => {
-      let includesPageSize = false;
-      rootProps.pageSizeOptions.map((option) => {
+    const isPageSizeIncludedInPageSizeOptions = (pageSize: number) => {
+      for (let i = 0; i < rootProps.pageSizeOptions.length; i += 1) {
+        const option = rootProps.pageSizeOptions[i];
         if (typeof option === 'number') {
           if (option === pageSize) {
-            includesPageSize = true;
+            return true;
           }
-          return undefined;
+        } else if (option.value === pageSize) {
+          return true;
         }
-        if (option.value === pageSize) {
-          includesPageSize = true;
-        }
-        return undefined;
-      });
-      return includesPageSize;
+      }
+      return false;
     };
 
     if (process.env.NODE_ENV !== 'production') {
@@ -83,7 +80,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       if (
         !warnedOnceMissingInPageSizeOptions.current &&
         !rootProps.autoPageSize &&
-        !isPageSizeOptionsIncludesPageSize(pageSize)
+        !isPageSizeIncludedInPageSizeOptions(pageSize)
       ) {
         console.warn(
           [
@@ -96,7 +93,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       }
     }
 
-    const pageSizeOptions = isPageSizeOptionsIncludesPageSize(paginationModel.pageSize)
+    const pageSizeOptions = isPageSizeIncludedInPageSizeOptions(paginationModel.pageSize)
       ? rootProps.pageSizeOptions
       : [];
 
