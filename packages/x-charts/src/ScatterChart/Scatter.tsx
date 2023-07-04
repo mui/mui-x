@@ -1,13 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
-import { D3Scale, getValueToPositionMapper } from '../hooks/useScale';
+import { getValueToPositionMapper } from '../hooks/useScale';
 import {
   getIsFaded,
   getIsHighlighted,
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
+import { D3Scale } from '../models/axis';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
