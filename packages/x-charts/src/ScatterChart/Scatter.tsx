@@ -109,8 +109,8 @@ Scatter.propTypes = {
     xAxisKey: PropTypes.string,
     yAxisKey: PropTypes.string,
   }).isRequired,
-  xScale: PropTypes.any.isRequired,
-  yScale: PropTypes.any.isRequired,
+  xScale: PropTypes.func.isRequired,
+  yScale: PropTypes.func.isRequired,
 } as any;
 
 export { Scatter };
