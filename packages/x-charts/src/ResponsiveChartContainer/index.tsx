@@ -107,7 +107,10 @@ const ResizableContainer = styled('div', {
   overflow: 'hidden',
 }));
 
-export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
+export const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
+  props: ResponsiveChartContainerProps,
+  ref,
+) {
   const [containerRef, width, height] = useChartDimensions(props.width, props.height);
 
   return (
@@ -115,7 +118,7 @@ export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
       ref={containerRef}
       ownerState={{ width: props.width, height: props.height }}
     >
-      <ChartContainer {...props} width={width} height={height} />
+      <ChartContainer {...props} width={width} height={height} ref={ref} />
     </ResizableContainer>
   );
-}
+});
