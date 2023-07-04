@@ -1,6 +1,7 @@
 ---
 product: date-pickers
 title: React Date Time Range Picker component
+components: DateTimeRangePicker, DesktopDateTimeRangePicker, DateRangeCalendar, DateRangePickerDay, DigitalClock, MultiSectionDigitalClock
 githubLabel: 'component: DateTimeRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -13,3 +14,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #4547](https://github.com/mui/mui-x/issues/4547) if you want to see it land faster.
+
+## Basic usage
+
+{{"demo": "BasicDateTimeRangePicker.js"}}
