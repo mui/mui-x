@@ -10,7 +10,6 @@ import { Watermark } from '@mui/x-license-pro';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
-  DAY_MARGIN,
   DayCalendar,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
@@ -30,7 +29,11 @@ import {
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
   buildWarning,
   useControlledValueWithTimezone,
+  CALENDAR_MARGIN,
+  DIALOG_WIDTH,
 } from '@mui/x-date-pickers/internals';
+import Typography from '@mui/material/Typography';
+import { dayPickerClasses } from '@mui/x-date-pickers';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -64,11 +67,18 @@ const DateRangeCalendarRoot = styled('div', {
 })<{ ownerState: DateRangeCalendarOwnerState<any> }>({
   display: 'flex',
   flexDirection: 'row',
+  [`& .${dayPickerClasses.header} .${dayPickerClasses.weekDayLabel}`]: {
+    width: 39,
+    margin: 0,
+  },
+  [`& .${dayPickerClasses.weekNumberLabel}`]: {
+    margin: 0,
+  },
 });
 
 const DateRangeCalendarMonthContainer = styled('div', {
   name: 'MuiDateRangeCalendar',
-  slot: 'Container',
+  slot: 'MonthContainer',
   overridesResolver: (_, styles) => styles.monthContainer,
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
@@ -76,23 +86,30 @@ const DateRangeCalendarMonthContainer = styled('div', {
   },
 }));
 
-const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher)({
-  padding: '16px 16px 8px 16px',
-  display: 'flex',
+const DateRangeCalendarArrowSwitcher = styled(PickersArrowSwitcher, {
+  name: 'MuiDateRangeCalendar',
+  slot: 'ArrowSwitcher',
+  overridesResolver: (_, styles) => styles.arrowSwitcher,
+})({
+  padding: `${CALENDAR_MARGIN}px 12px 8px 6px`,
+  [`.${dateRangeCalendarClasses.monthContainerWithoutWeekNumber} &`]: {
+    paddingLeft: 24,
+    paddingRight: 24,
+  },
   alignItems: 'center',
   justifyContent: 'space-between',
 });
-
-const DAY_RANGE_SIZE = 40;
-const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const warnInvalidCurrentMonthCalendarPosition = buildWarning([
   'The `currentMonthCalendarPosition` prop must be an integer between `1` and the amount of calendars rendered.',
   'For example if you have 2 calendars rendered, it should be equal to either 1 or 2.',
 ]);
 
+const DAY_RANGE_SIZE = 39;
+const weeksContainerHeight = (DAY_RANGE_SIZE + 4) * 6;
+
 const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
-  minWidth: 312,
+  minWidth: DIALOG_WIDTH,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
     [`& .${dayClasses.day}`]: {
@@ -140,10 +157,11 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
 }
 
 const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
-  const { classes, isDragging } = ownerState;
+  const { classes, isDragging, displayWeekNumber } = ownerState;
   const slots = {
     root: ['root'],
-    monthContainer: ['monthContainer'],
+    monthContainer: ['monthContainer', !displayWeekNumber && 'monthContainerWithoutWeekNumber'],
+    arrowSwitcher: ['arrowSwitcher'],
     dayCalendar: [isDragging && 'dayDragging'],
   };
 
@@ -551,8 +569,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               nextLabel={localeText.nextMonth}
               slots={slots}
               slotProps={slotProps}
+              className={classes.arrowSwitcher}
             >
-              {utils.format(visibleMonths[month], 'monthAndYear')}
+              <Typography variant="body1" fontWeight="medium" component="span">
+                {utils.format(visibleMonths[month], 'monthAndYear')}
+              </Typography>
             </DateRangeCalendarArrowSwitcher>
           )}
 

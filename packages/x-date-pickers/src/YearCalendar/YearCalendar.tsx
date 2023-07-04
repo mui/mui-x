@@ -15,6 +15,7 @@ import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { YearCalendarProps } from './YearCalendar.types';
+import { DIALOG_WIDTH } from '../internals';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
@@ -62,8 +63,7 @@ const YearCalendarRoot = styled('div', {
   flexWrap: 'wrap',
   overflowY: 'auto',
   height: '100%',
-  padding: '0 4px',
-  width: 320,
+  width: DIALOG_WIDTH,
   maxHeight: 304,
 });
 

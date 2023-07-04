@@ -49,7 +49,13 @@ export type {
 } from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
 
-export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
+export {
+  DAY_MARGIN,
+  DIALOG_WIDTH,
+  DAY_SIZE,
+  CALENDAR_MARGIN,
+  WEEK_NUMBER_SIZE,
+} from './constants/dimensions';
 
 export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';

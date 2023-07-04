@@ -7,6 +7,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { BaseToolbarProps } from '../models/props/toolbar';
 import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersToolbarClasses';
 import { DateOrTimeViewWithMeridiem } from '../models';
+import { CALENDAR_MARGIN } from '../constants/dimensions';
 
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeViewWithMeridiem>
   extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
@@ -33,16 +34,15 @@ const PickersToolbarRoot = styled('div', {
   overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: PickersToolbarProps<any, any>;
-}>(({ theme, ownerState }) => ({
+}>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
   justifyContent: 'space-between',
-  padding: theme.spacing(2, 3),
+  padding: CALENDAR_MARGIN,
   ...(ownerState.isLandscape && {
     height: 'auto',
     maxWidth: 160,
-    padding: 16,
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
   }),

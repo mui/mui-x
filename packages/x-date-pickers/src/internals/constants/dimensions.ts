@@ -1,6 +1,9 @@
 export const DAY_SIZE = 36;
-export const DAY_MARGIN = 2;
+export const WEEK_NUMBER_SIZE = 28;
+export const DAY_MARGIN = 3;
 export const DIALOG_WIDTH = 320;
-export const VIEW_HEIGHT = 358;
+export const CALENDAR_MARGIN = 12;
+export const VIEW_HEIGHT = 370;
 export const DIGITAL_CLOCK_VIEW_HEIGHT = 232;
 export const MULTI_SECTION_CLOCK_SECTION_WIDTH = 48;
+export const WEEKS_CONTAINER_HEIGHT = (DAY_SIZE + 4) * 6;

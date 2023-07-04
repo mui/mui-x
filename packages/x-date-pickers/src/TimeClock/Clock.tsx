@@ -11,7 +11,7 @@ import { ClockPointer } from './ClockPointer';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { getHours, getMinutes } from './shared';
+import { CLOCK_WIDTH, getHours, getMinutes } from './shared';
 import { TimeView } from '../models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 
@@ -76,8 +76,8 @@ const ClockClock = styled('div', {
 })({
   backgroundColor: 'rgba(0,0,0,.07)',
   borderRadius: '50%',
-  height: 220,
-  width: 220,
+  height: CLOCK_WIDTH,
+  width: CLOCK_WIDTH,
   flexShrink: 0,
   position: 'relative',
   pointerEvents: 'none',

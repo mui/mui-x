@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { useUtils } from '@mui/x-date-pickers/internals';
-import { PickersDay, pickersDayClasses, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { DAY_SIZE, useUtils } from '@mui/x-date-pickers/internals';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
@@ -248,18 +248,14 @@ const DateRangePickerDayDay = styled(PickersDay, {
 })<{
   ownerState: OwnerState;
 }>(({ ownerState }) => ({
+  // account for difference in expected margin and the preview border
+  width: DAY_SIZE - 1,
+  height: DAY_SIZE - 1,
   // Required to overlap preview border
   transform: 'scale(1.1)',
   '& > *': {
     transform: 'scale(0.9)',
   },
-  ...(!ownerState.selected &&
-    ownerState.isHighlighting && {
-      opacity: 0.7,
-      [`&.${pickersDayClasses.dayOutsideMonth}`]: {
-        opacity: 0.4,
-      },
-    }),
   ...(ownerState.draggable && {
     cursor: 'grab',
   }),
@@ -475,6 +471,11 @@ DateRangePickerDayRaw.propTypes = {
    * If `true`, day is outside of month and will be hidden.
    */
   outsideCurrentMonth: PropTypes.bool.isRequired,
+  /**
+   * If `true`, days horizontal margin is reduced in half. Useful when trying to fit more information in same width (i.e. adding week numbers).
+   * @default false
+   */
+  reduceHorizontalMargin: PropTypes.bool,
   /**
    * If `true`, renders as selected.
    * @default false

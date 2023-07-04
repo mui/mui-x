@@ -67,10 +67,7 @@ const DateCalendarRoot = styled(PickerViewRoot, {
   name: 'MuiDateCalendar',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: DateCalendarProps<any> }>({
-  display: 'flex',
-  flexDirection: 'column',
-});
+})<{ ownerState: DateCalendarProps<any> }>({});
 
 const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
   name: 'MuiDateCalendar',

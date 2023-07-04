@@ -4,10 +4,14 @@ import {
 } from '@mui/utils';
 
 export interface DayCalendarClasses {
+  /** Styles applied to the root element. */
+  root: string;
   /** Styles applied to the header element. */
   header: string;
   /** Styles applied to the week day label element. */
   weekDayLabel: string;
+  /** Styles applied to the week day label element, if `displayWeekNumber=true`. */
+  'weekDayLabel--withWeekNumber': string;
   /** Styles applied to the loading container element. */
   loadingContainer: string;
   /** Styles applied to the slide transition element. */
@@ -28,8 +32,10 @@ export const getDayCalendarUtilityClass = (slot: string) =>
   generateUtilityClass('MuiDayCalendar', slot);
 
 export const dayPickerClasses: DayCalendarClasses = generateUtilityClasses('MuiDayCalendar', [
+  'root',
   'header',
   'weekDayLabel',
+  'weekDayLabel--withWeekNumber',
   'loadingContainer',
   'slideTransition',
   'monthContainer',

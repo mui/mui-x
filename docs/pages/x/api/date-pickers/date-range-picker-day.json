@@ -27,6 +27,7 @@
     "focusVisibleClassName": { "type": { "name": "string" } },
     "isVisuallySelected": { "type": { "name": "bool" } },
     "onFocusVisible": { "type": { "name": "func" } },
+    "reduceHorizontalMargin": { "type": { "name": "bool" } },
     "selected": { "type": { "name": "bool" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "sx": {

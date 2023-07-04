@@ -5,13 +5,11 @@ import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.t
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersLayout } from '../../../PickersLayout';
-import { DIALOG_WIDTH } from '../../constants/dimensions';
 import { FieldSection } from '../../../models';
 import { DateOrTimeViewWithMeridiem } from '../../models';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
-  minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
 })) as unknown as typeof PickersLayout;
 
