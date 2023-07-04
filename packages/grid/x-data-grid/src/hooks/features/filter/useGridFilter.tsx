@@ -412,6 +412,7 @@ export const useGridFilter = (
 
       for (let i = 0; i < rows.length; i += 1) {
         const row = rows[i];
+        const id = props.getRowId ? props.getRowId(row) : row.id;
 
         isRowMatchingFilters(row, undefined, result);
 
@@ -423,7 +424,7 @@ export const useGridFilter = (
           filterCache,
         );
 
-        filteredRowsLookup[row.id] = isRowPassing;
+        filteredRowsLookup[id] = isRowPassing;
       }
 
       const footerId = 'auto-generated-group-footer-root';
