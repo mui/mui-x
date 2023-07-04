@@ -46,8 +46,8 @@ The `d3-scale` default method map from values to coordinates.
 For example, you can get the `x=0` position as follow:
 
 ```jsx
-const bottomScale = useXScale();// get the default Y scale
-const originePosition = leftScale(0)
+const bottomScale = useXScale(); // get the default Y scale
+const originePosition = leftScale(0);
 ```
 
 {{"demo": "OrigineDemo.js"}}
