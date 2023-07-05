@@ -420,6 +420,11 @@ DataGridProRaw.propTypes = {
    */
   keepNonExistentRowsSelected: PropTypes.bool,
   /**
+   * Has a value between 0 and 1. It represents the percentage of the last visible row before onRowsScrollEnd is called.
+   * @default 0
+   */
+  lastVisibleRowThreshold: PropTypes.number,
+  /**
    * If `true`, a  loading overlay is displayed.
    */
   loading: PropTypes.bool,
@@ -813,11 +818,6 @@ DataGridProRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
-   * @default 80
-   */
-  scrollEndThreshold: PropTypes.number,
-  /**
    * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
@@ -870,11 +870,6 @@ DataGridProRaw.propTypes = {
    * @default 0
    */
   throttleRowsMs: PropTypes.number,
-  /**
-   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
-   * @default false
-   */
-  treeData: PropTypes.bool,
   /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false

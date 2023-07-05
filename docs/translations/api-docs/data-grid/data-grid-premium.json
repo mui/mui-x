@@ -136,6 +136,7 @@
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
     "scrollbarSize": "Override the height/width of the grid inner scrollbar.",
     "scrollEndThreshold": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called.",
+    "lastVisibleRowThreshold": "Has a value between 0 and 1. It represents the percentage of the last visible row before onRowsScrollEnd is called.",
     "showCellVerticalBorder": "If <code>true</code>, the vertical borders of the cells are displayed.",
     "showColumnVerticalBorder": "If <code>true</code>, the right border of the column headers are displayed.",
     "slotProps": "Overridable components props dynamically passed to the component at rendering.",

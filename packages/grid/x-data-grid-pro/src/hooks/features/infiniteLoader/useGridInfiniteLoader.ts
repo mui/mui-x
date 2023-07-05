@@ -20,14 +20,18 @@ export const useGridInfiniteLoader = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
+    | 'onRowsScrollEnd'
+    | 'pagination'
+    | 'paginationMode'
+    | 'rowsLoadingMode'
+    | 'lastVisibleRowThreshold'
   >,
 ): void => {
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const observer = React.useRef<IntersectionObserver>();
-  let previousY = 0;
-  let previousRatio = 0;
+  const previousY = React.useRef(0);
+  const previousRatio = React.useRef(0);
 
   const handleLoadMoreRows = React.useCallback(
     ([entry]: any) => {
@@ -36,8 +40,8 @@ export const useGridInfiniteLoader = (
       const isIntersecting = entry.isIntersecting;
 
       // Scrolling down check
-      if (currentY < previousY || isIntersecting) {
-        if (currentRatio > previousRatio) {
+      if (currentY < previousY.current || isIntersecting) {
+        if (currentRatio >= previousRatio.current) {
           const viewportPageSize = apiRef.current.getViewportPageSize();
           const rowScrollEndParam: GridRowScrollEndParams = {
             visibleColumns,
@@ -48,10 +52,8 @@ export const useGridInfiniteLoader = (
         }
       }
 
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      previousY = currentY;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      previousRatio = currentRatio;
+      previousY.current = currentY;
+      previousRatio.current = currentRatio;
     },
     [apiRef, visibleColumns, currentPage.rows.length],
   );
@@ -68,14 +70,14 @@ export const useGridInfiniteLoader = (
       }
 
       observer.current = new IntersectionObserver(handleLoadMoreRows, {
-        threshold: props.scrollEndThreshold,
+        threshold: props.lastVisibleRowThreshold,
       });
 
       if (node) {
         observer.current.observe(node);
       }
     },
-    [props, handleLoadMoreRows],
+    [props.rowsLoadingMode, props.lastVisibleRowThreshold, handleLoadMoreRows],
   );
 
   const infiteLoaderApi: GridInfiniteLoaderApi = {
