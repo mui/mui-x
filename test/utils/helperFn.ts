@@ -1,4 +1,22 @@
+import * as React from 'react';
+import { spy } from 'sinon';
 import { act } from '@mui/monorepo/test/utils';
+
+export function sleep(duration: number) {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
+}
+
+export function microtasks() {
+  return act(() => Promise.resolve());
+}
+
+export function spyApi(api: any, methodName: string) {
+  return spy(api.__private__, methodName);
+}
 
 export async function raf() {
   return new Promise<void>((resolve) => {
@@ -50,18 +68,6 @@ export function getActiveColumnHeader() {
   }
 
   return `${Number(activeElement.getAttribute('aria-colindex')) - 1}`;
-}
-
-export function sleep(duration: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
-export function microtasks() {
-  return act(() => Promise.resolve());
 }
 
 export function getColumnValues(colIndex: number) {

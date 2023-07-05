@@ -23,7 +23,7 @@ function createPrivateAPI<
   PrivateApi extends GridPrivateApiCommon,
   Api extends GridApiCommon,
 >(publicApiRef: React.MutableRefObject<Api>): PrivateApi {
-  const existingPrivateApi = (publicApiRef.current as any)[SYMBOL_API_PRIVATE];
+  const existingPrivateApi = (publicApiRef.current as any)?.[SYMBOL_API_PRIVATE];
   if (existingPrivateApi) {
     return existingPrivateApi;
   }
@@ -35,6 +35,8 @@ function createPrivateAPI<
     instanceId: { id: globalId },
     [SYMBOL_API_TYPE]: 'private',
   } as any as PrivateApi;
+
+  globalId += 1;
 
   privateApi.getPublicApi = () => publicApiRef.current;
 
@@ -76,7 +78,11 @@ function createPublicAPI<
     [SYMBOL_API_PRIVATE]: privateApiRef.current,
   } as any as Api;
 
-  globalId += 1;
+  // We need access to the private API in the tests, but we don't want to export
+  // any function that gives access to it.
+  if ((window as any).__karma__) {
+    (publicApi as any).__private__ = privateApiRef.current;
+  }
 
   return publicApi;
 }
@@ -89,7 +95,7 @@ export function useGridApiInitialization<
   props: Pick<DataGridProcessedProps, 'signature'>,
 ): React.MutableRefObject<PrivateApi> {
 
-  const publicApiRef = inputApiRef ?? React.useRef() as React.MutableRefObject<Api>;
+  const publicApiRef = React.useRef() as React.MutableRefObject<Api>;
   const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
 
   if (!privateApiRef.current) {
@@ -130,6 +136,8 @@ export function useGridApiInitialization<
   );
 
   useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent } as any, 'public');
+
+  React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
 
   React.useEffect(() => {
     const api = privateApiRef.current;
