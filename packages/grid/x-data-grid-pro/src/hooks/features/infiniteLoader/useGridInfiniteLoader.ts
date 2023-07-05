@@ -34,7 +34,7 @@ export const useGridInfiniteLoader = (
   const previousRatio = React.useRef(0);
 
   const handleLoadMoreRows = React.useCallback(
-    ([entry]: any) => {
+    ([entry]: IntersectionObserverEntry[]) => {
       const currentY = entry.boundingClientRect.y;
       const currentRatio = entry.intersectionRatio;
       const isIntersecting = entry.isIntersecting;
