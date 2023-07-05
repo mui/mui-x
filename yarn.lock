@@ -2928,9 +2928,9 @@
     moment ">=2.14.0"
 
 "@types/node@*", "@types/node@>= 8", "@types/node@>=10.0.0", "@types/node@^14.0.1", "@types/node@^18.16.18":
-  version "18.16.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.16.18.tgz#85da09bafb66d4bc14f7c899185336d0c1736390"
-  integrity sha512-/aNaQZD0+iSBAGnvvN2Cx92HqE5sZCPZtx2TsK+4nvV23fFe09jVDvpArXr2j9DnYlzuU9WuoykDDc6wqvpNcw==
+  version "18.16.19"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.16.19.tgz#cb03fca8910fdeb7595b755126a8a78144714eea"
+  integrity sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -9458,6 +9458,11 @@ markdownlint@0.29.0:
   dependencies:
     markdown-it "13.0.1"
     markdownlint-micromark "0.1.5"
+
+marked-highlight@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/marked-highlight/-/marked-highlight-2.0.1.tgz#a2b48533df77ea73bec3895be98bae6160dceec3"
+  integrity sha512-LDUfR/zDvD+dJ+lQOWHkxvBLNxiXcaN8pBtwJ/i4pI0bkDC/Ef6Mz1qUrAuHXfnpdr2rabdMpVFhqFuU+5Mskg==
 
 marked@^5.1.0:
   version "5.1.0"
