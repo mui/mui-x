@@ -103,7 +103,7 @@ export const useGridColumnReorder = (
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
         // For Android and iOS, if event.dataTransfer.setData is not called it doesn't allow to drag
-        event.dataTransfer.setData('text/html', params.field);
+        event.dataTransfer.setData('text', params.field);
       }
       apiRef.current.setState((state) => ({
         ...state,
