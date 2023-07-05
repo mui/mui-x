@@ -77,7 +77,7 @@ function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends Gr
   // We need access to the private API in the tests, but we don't want to export
   // any function that gives access to it.
   /* eslint-disable no-underscore-dangle */
-  if ((window as any).__karma__) {
+  if (typeof window !== 'undefined' && (window as any).__karma__) {
     (publicApi as any).__private__ = privateApiRef.current;
   }
   /* eslint-enable no-underscore-dangle */
