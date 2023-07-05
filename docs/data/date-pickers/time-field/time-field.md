@@ -1,5 +1,5 @@
 ---
-productId: date-pickers
+productId: x-date-pickers
 title: React Time Field component
 components: TimeField
 githubLabel: 'component: pickers'

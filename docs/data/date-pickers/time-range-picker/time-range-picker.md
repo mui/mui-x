@@ -1,5 +1,5 @@
 ---
-productId: date-pickers
+productId: x-date-pickers
 title: React Time Range Picker component
 githubLabel: 'component: TimeRangePicker'
 packageName: '@mui/x-date-pickers-pro'

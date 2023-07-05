@@ -1,5 +1,5 @@
 ---
-productId: date-pickers
+productId: x-date-pickers
 title: React Date Range Picker component
 components: DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateRangeCalendar, DateRangePickerDay
 githubLabel: 'component: DateRangePicker'
