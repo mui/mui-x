@@ -49,6 +49,43 @@ const objectFormattedValueWarning = buildWarning([
   'You can provide a `valueFormatter` with a string representation to be used.',
 ]);
 
+type CSVRowOptions = {
+  delimiterCharacter: string;
+  sanitizeValue?: boolean;
+};
+class CSVRow {
+  options: CSVRowOptions;
+
+  rowString = '';
+
+  isEmpty = true;
+
+  constructor(options: CSVRowOptions) {
+    this.options = options;
+    if (this.options.sanitizeValue === undefined) {
+      this.options.sanitizeValue = true;
+    }
+  }
+
+  addValue(value: string) {
+    if (!this.isEmpty) {
+      this.rowString += this.options.delimiterCharacter;
+    }
+    if (value === null || value === undefined) {
+      this.rowString += '';
+    } else if (this.options.sanitizeValue) {
+      this.rowString += sanitizeCellValue(value, this.options.delimiterCharacter);
+    } else {
+      this.rowString += value;
+    }
+    this.isEmpty = false;
+  }
+
+  getRowString() {
+    return this.rowString;
+  }
+}
+
 const serializeRow = ({
   id,
   columns,
@@ -61,46 +98,21 @@ const serializeRow = ({
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   delimiterCharacter: string;
   ignoreValueFormatter: boolean;
-}) =>
-  columns.map((column) => {
+}) => {
+  const row = new CSVRow({ delimiterCharacter, sanitizeValue: false });
+
+  columns.forEach((column) => {
     const cellParams = getCellParams(id, column.field);
     if (process.env.NODE_ENV !== 'production') {
       if (String(cellParams.formattedValue) === '[object Object]') {
         objectFormattedValueWarning();
       }
     }
-    return serializeCellValue(cellParams, {
-      delimiterCharacter,
-      ignoreValueFormatter,
-    });
+    row.addValue(serializeCellValue(cellParams, { delimiterCharacter, ignoreValueFormatter }));
   });
 
-type CSVRowOptions = {
-  delimiterCharacter: string;
+  return row.getRowString();
 };
-class CSVRow {
-  options: CSVRowOptions;
-
-  rowString = '';
-
-  cellCount = 0;
-
-  constructor(options: CSVRowOptions) {
-    this.options = options;
-  }
-
-  addValue(value: string) {
-    if (this.cellCount !== 0) {
-      this.rowString += this.options.delimiterCharacter;
-    }
-    this.rowString += sanitizeCellValue(value, this.options.delimiterCharacter);
-    this.cellCount += 1;
-  }
-
-  getRowString() {
-    return this.rowString;
-  }
-}
 
 interface BuildCSVOptions {
   columns: GridStateColDef[];
@@ -132,7 +144,7 @@ export function buildCSV(options: BuildCSVOptions): string {
           getCellParams: apiRef.current.getCellParams,
           delimiterCharacter,
           ignoreValueFormatter,
-        }).join(delimiterCharacter)}\r\n`,
+        })}\r\n`,
       '',
     )
     .trim();
