@@ -33,8 +33,8 @@ export const useGridCsvExport = (
       ? ignoreValueFormatterProp?.csvExport
       : ignoreValueFormatterProp) || false;
 
-  const getDataAsCsv = React.useCallback(
-    (options: GridCsvExportOptions = {}): string => {
+  const getDataAsCsv = React.useCallback<GridCsvExportApi['getDataAsCsv']>(
+    (options = {}) => {
       logger.debug(`Get data as CSV`);
 
       const exportedColumns = getColumnsToExport({
