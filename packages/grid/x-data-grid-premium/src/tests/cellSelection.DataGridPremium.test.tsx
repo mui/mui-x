@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { expect } from 'chai';
 import { spyApi, getCell } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';

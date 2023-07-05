@@ -4,14 +4,11 @@ import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { GridSignature } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridCoreApi } from '../../models';
-import type {
-  GridApiCommon,
-  GridPrivateApiCommon,
-} from '../../models/api/gridApiCommon';
+import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
 
-const SYMBOL_API_TYPE    = Symbol('mui.api_type')
-const SYMBOL_API_PRIVATE = Symbol('mui.api_private')
+const SYMBOL_API_TYPE = Symbol('mui.api_type');
+const SYMBOL_API_PRIVATE = Symbol('mui.api_private');
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -19,10 +16,9 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 
 let globalId = 0;
 
-function createPrivateAPI<
-  PrivateApi extends GridPrivateApiCommon,
-  Api extends GridApiCommon,
->(publicApiRef: React.MutableRefObject<Api>): PrivateApi {
+function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
+  publicApiRef: React.MutableRefObject<Api>,
+): PrivateApi {
   const existingPrivateApi = (publicApiRef.current as any)?.[SYMBOL_API_PRIVATE];
   if (existingPrivateApi) {
     return existingPrivateApi;
@@ -59,20 +55,20 @@ function createPrivateAPI<
   return privateApi;
 }
 
-function createPublicAPI<
-  PrivateApi extends GridPrivateApiCommon,
-  Api extends GridApiCommon,
->(privateApiRef: React.MutableRefObject<PrivateApi>): Api {
-
+function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
+  privateApiRef: React.MutableRefObject<PrivateApi>,
+): Api {
   const publicApi = {
     get state() {
-      return privateApiRef.current.state
+      return privateApiRef.current.state;
     },
     set state(value) {
       // XXX: need to prevent this, setting state should be done on the private instance
       privateApiRef.current.state = value;
     },
-    get store() { return privateApiRef.current.store },
+    get store() {
+      return privateApiRef.current.store;
+    },
     instanceId: privateApiRef.current.instanceId,
     [SYMBOL_API_TYPE]: 'public',
     [SYMBOL_API_PRIVATE]: privateApiRef.current,
@@ -80,9 +76,11 @@ function createPublicAPI<
 
   // We need access to the private API in the tests, but we don't want to export
   // any function that gives access to it.
+  /* eslint-disable no-underscore-dangle */
   if ((window as any).__karma__) {
     (publicApi as any).__private__ = privateApiRef.current;
   }
+  /* eslint-enable no-underscore-dangle */
 
   return publicApi;
 }
@@ -94,7 +92,6 @@ export function useGridApiInitialization<
   inputApiRef: React.MutableRefObject<Api> | undefined,
   props: Pick<DataGridProcessedProps, 'signature'>,
 ): React.MutableRefObject<PrivateApi> {
-
   const publicApiRef = React.useRef() as React.MutableRefObject<Api>;
   const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
 

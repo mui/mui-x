@@ -198,7 +198,6 @@ export const wrapColumnWithAggregationValue = ({
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
 }): GridBaseColDef => {
-
   const getCellAggregationResult = (
     id: GridRowId,
     field: string,

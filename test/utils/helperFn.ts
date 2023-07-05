@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { act } from '@mui/monorepo/test/utils';
 
@@ -15,6 +14,7 @@ export function microtasks() {
 }
 
 export function spyApi(api: any, methodName: string) {
+  // eslint-disable-next-line no-underscore-dangle
   return spy(api.__private__, methodName);
 }
 
