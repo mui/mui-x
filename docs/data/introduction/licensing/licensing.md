@@ -218,6 +218,7 @@ export default function MyApp(props) {
   return <Component {...pageProps} />;
 }
 ```
+
 #### Install the key as an environment variable in Next.js
 
 The license validation happens on the client side, so you must expose the environment variable to the browser.
