@@ -390,6 +390,7 @@ export const useGridFilter = (
 
   const dataRowIdToIdLookup = apiRef.current.state.rows.dataRowIdToModelLookup;
   const rows = React.useMemo(() => Object.values(dataRowIdToIdLookup), [dataRowIdToIdLookup]);
+  const { getRowId } = props;
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
@@ -412,7 +413,7 @@ export const useGridFilter = (
 
       for (let i = 0; i < rows.length; i += 1) {
         const row = rows[i];
-        const id = props.getRowId ? props.getRowId(row) : row.id;
+        const id = getRowId ? getRowId(row) : row.id;
 
         isRowMatchingFilters(row, undefined, result);
 
@@ -438,7 +439,7 @@ export const useGridFilter = (
         filteredDescendantCountLookup: {},
       };
     },
-    [apiRef, props, rows],
+    [apiRef, rows, props.filterMode, getRowId],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
