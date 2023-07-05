@@ -59,7 +59,7 @@ export const useGridCellSelection = (
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
   const mousePosition = React.useRef<{ x: number; y: number } | null>(null);
-  const autoScrollInterval = React.useRef<NodeJS.Timer | null>();
+  const autoScrollRAF = React.useRef<number | null>();
 
   const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
@@ -240,9 +240,9 @@ export const useGridCellSelection = (
   );
 
   const stopAutoScroll = React.useCallback(() => {
-    if (autoScrollInterval.current) {
-      clearTimeout(autoScrollInterval.current);
-      autoScrollInterval.current = null;
+    if (autoScrollRAF.current) {
+      cancelAnimationFrame(autoScrollRAF.current);
+      autoScrollRAF.current = null;
     }
   }, []);
 
@@ -251,7 +251,7 @@ export const useGridCellSelection = (
   }, []);
 
   const startAutoScroll = React.useCallback(() => {
-    if (autoScrollInterval.current) {
+    if (autoScrollRAF.current) {
       return;
     }
 
@@ -265,7 +265,7 @@ export const useGridCellSelection = (
       return;
     }
 
-    autoScrollInterval.current = setInterval(() => {
+    function autoScroll() {
       if (!mousePosition.current || !apiRef.current.virtualScrollerRef?.current) {
         return;
       }
@@ -305,7 +305,11 @@ export const useGridCellSelection = (
           left: scrollLeft + deltaX * factor,
         });
       }
-    }, 20);
+
+      autoScrollRAF.current = requestAnimationFrame(autoScroll);
+    }
+
+    autoScroll();
   }, [apiRef]);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
