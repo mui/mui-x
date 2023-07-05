@@ -1872,7 +1872,7 @@
 
 "@mui/monorepo@https://github.com/alexfauquette/material-ui.git#new-api-page":
   version "5.13.6"
-  resolved "https://github.com/alexfauquette/material-ui.git#d7172aa079869985e238247563276c1b61229daa"
+  resolved "https://github.com/alexfauquette/material-ui.git#e9778305bf9c0ee0a7d7aae0152cf5377eb95990"
 
 "@mui/private-theming@^5.13.1":
   version "5.13.1"
