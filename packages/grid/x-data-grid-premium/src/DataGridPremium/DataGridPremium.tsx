@@ -946,6 +946,11 @@ DataGridPremiumRaw.propTypes = {
    */
   throttleRowsMs: PropTypes.number,
   /**
+   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
+   * @default false
+   */
+  treeData: PropTypes.bool,
+  /**
    * If `true`, the cell selection mode is enabled.
    * @default false
    */

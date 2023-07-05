@@ -871,6 +871,11 @@ DataGridProRaw.propTypes = {
    */
   throttleRowsMs: PropTypes.number,
   /**
+   * If `true`, the rows will be gathered in a tree structure according to the `getTreeDataPath` prop.
+   * @default false
+   */
+  treeData: PropTypes.bool,
+  /**
    * If `true`, enables the data grid filtering on header feature.
    * @default false
    */
