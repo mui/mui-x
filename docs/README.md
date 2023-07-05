@@ -16,8 +16,3 @@ _DO NOT USE NPM, use Yarn to install the dependencies._
 
 [You can follow this guide](https://github.com/mui/material-ui/blob/HEAD/CONTRIBUTING.md)
 on how to get started contributing to MUI.
-
-## How do I help to improve the translations?
-
-Please visit https://translate.mui.com/ where you will be able to select a language and edit the translations.
-Please don't submit pull requests directly.

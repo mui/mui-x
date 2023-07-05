@@ -5,8 +5,8 @@ import Divider from '@mui/material/Divider';
 import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { BaseClockProps } from '@mui/x-date-pickers/internals/models/props/clock';
 import { PickerSelectionState, PickerViewRenderer } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internal/models';
-import { UseRangePositionResponse } from '../internal/hooks/useRangePosition';
+import { DateRange } from '../internals/models';
+import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 
 export type DateTimeRangePickerTimeWrapperProps<
   TDate extends unknown,

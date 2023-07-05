@@ -3,13 +3,13 @@ import {
   UseDesktopRangePickerSlotsComponent,
   UseDesktopRangePickerSlotsComponentsProps,
   DesktopRangeOnlyPickerProps,
-} from '../internal/hooks/useDesktopRangePicker';
+} from '../internals/hooks/useDesktopRangePicker';
 import {
   BaseDateTimeRangePickerProps,
   BaseDateTimeRangePickerSlotsComponent,
   BaseDateTimeRangePickerSlotsComponentsProps,
 } from '../DateTimeRangePicker/shared';
-import { DateTimeRangePickerViews } from '../internal/models';
+import { DateTimeRangePickerViews } from '../internals/models';
 
 export interface DesktopDateTimeRangePickerSlotsComponent<TDate>
   extends BaseDateTimeRangePickerSlotsComponent<TDate>,
