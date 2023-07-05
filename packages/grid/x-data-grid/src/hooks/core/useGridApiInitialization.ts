@@ -10,8 +10,8 @@ import type {
 } from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
 
-const API_TYPE = Symbol('mui.api_type')
-const PRIVATE_SYMBOL = Symbol('mui.private_api')
+const SYMBOL_API_TYPE    = Symbol('mui.api_type')
+const SYMBOL_API_PRIVATE = Symbol('mui.api_private')
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
@@ -19,11 +19,67 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
 
 let globalId = 0;
 
-const wrapPublicApi = <PrivateApi extends GridPrivateApiCommon, PublicApi extends GridApiCommon>(
-  publicApi: any,
-) => {
+function createPrivateAPI<
+  PrivateApi extends GridPrivateApiCommon,
+  Api extends GridApiCommon,
+>(publicApiRef: React.MutableRefObject<Api>): PrivateApi {
+  const existingPrivateApi = (publicApiRef.current as any)[SYMBOL_API_PRIVATE];
+  if (existingPrivateApi) {
+    return existingPrivateApi;
+  }
 
-};
+  const state = {} as Api['state'];
+  const privateApi = {
+    state,
+    store: Store.create(state),
+    instanceId: { id: globalId },
+    [SYMBOL_API_TYPE]: 'private',
+  } as any as PrivateApi;
+
+  privateApi.getPublicApi = () => publicApiRef.current;
+
+  privateApi.register = (visibility, methods) => {
+    Object.keys(methods).forEach((methodName) => {
+      if (visibility === 'public') {
+        publicApiRef.current[methodName as keyof Api] = (methods as any)[methodName];
+        privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
+      } else {
+        privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
+      }
+    });
+  };
+
+  privateApi.register('private', {
+    caches: {} as PrivateApi['caches'],
+    eventManager: new EventManager(),
+  });
+
+  return privateApi;
+}
+
+function createPublicAPI<
+  PrivateApi extends GridPrivateApiCommon,
+  Api extends GridApiCommon,
+>(privateApiRef: React.MutableRefObject<PrivateApi>): Api {
+
+  const publicApi = {
+    get state() {
+      return privateApiRef.current.state
+    },
+    set state(value) {
+      // XXX: need to prevent this, setting state should be done on the private instance
+      privateApiRef.current.state = value;
+    },
+    get store() { return privateApiRef.current.store },
+    instanceId: privateApiRef.current.instanceId,
+    [SYMBOL_API_TYPE]: 'public',
+    [SYMBOL_API_PRIVATE]: privateApiRef.current,
+  } as any as Api;
+
+  globalId += 1;
+
+  return publicApi;
+}
 
 export function useGridApiInitialization<
   PrivateApi extends GridPrivateApiCommon,
@@ -37,51 +93,11 @@ export function useGridApiInitialization<
   const privateApiRef = React.useRef() as React.MutableRefObject<PrivateApi>;
 
   if (!privateApiRef.current) {
-    const state = {} as Api['state'];
-    const privateApi = {
-      state,
-      store: Store.create(state),
-      instanceId: { id: globalId },
-      [API_TYPE]: 'private',
-    } as any as PrivateApi;
-
-    privateApi.getPublicApi = () => publicApiRef.current;
-
-    privateApi.register = (visibility, methods) => {
-      Object.keys(methods).forEach((methodName) => {
-        if (visibility === 'public') {
-          publicApiRef.current[methodName as keyof Api] = (methods as any)[methodName];
-          privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
-        } else {
-          privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
-        }
-      });
-    };
-
-    privateApi.register('private', {
-      caches: {} as PrivateApi['caches'],
-      eventManager: new EventManager(),
-    });
-
-    privateApiRef.current = privateApi;
+    privateApiRef.current = createPrivateAPI(publicApiRef) as PrivateApi;
   }
 
-  if (!publicApiRef.current || !(publicApiRef.current as any)[API_TYPE]) {
-    publicApiRef.current = {
-      get state() {
-        return privateApiRef.current.state
-      },
-      set state(value) {
-        throw 42
-        // privateApiRef.current.state;
-      },
-      store: privateApiRef.current.store,
-      instanceId: privateApiRef.current.instanceId,
-      [API_TYPE]: 'public',
-      [PRIVATE_SYMBOL]: privateApiRef.current,
-    } as any as Api;
-
-    globalId += 1;
+  if (!publicApiRef.current || !(publicApiRef.current as any)[SYMBOL_API_TYPE]) {
+    publicApiRef.current = createPublicAPI(privateApiRef);
   }
 
   const publishEvent = React.useCallback<GridCoreApi['publishEvent']>(
