@@ -1,4 +1,5 @@
 ---
+productId: date-pickers
 title: Components lifecycle
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'

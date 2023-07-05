@@ -1,4 +1,5 @@
 ---
+productId: date-pickers
 title: React Digital Clock component
 components: DigitalClock, MultiSectionDigitalClock
 githubLabel: 'component: TimePicker'

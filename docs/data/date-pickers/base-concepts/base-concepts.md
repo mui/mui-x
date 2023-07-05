@@ -1,4 +1,5 @@
 ---
+productId: date-pickers
 title: Date and Time Picker - Base concepts
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
