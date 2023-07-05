@@ -1,0 +1,38 @@
+{
+  "StaticDatePicker": {
+    "customizationLabels": {
+      "customTheme": "Custom Theme",
+      "styledComponents": "Styled Components",
+      "sxProp": "SX Prop"
+    },
+    "examples": {
+      "PickersToolbar": {
+        "customTheme": "ToolbarCustomTheme.js",
+        "styledComponents": "ToolbarCustomTheme.js",
+        "sxProp": "ToolbarCustomTheme.js"
+      },
+      "DateCalendar": {
+        "customTheme": "ToolbarCustomTheme.js",
+        "styledComponents": "ToolbarCustomTheme.js"
+      }
+    }
+  },
+  "StaticTimePicker": {
+    "customizationLabels": {
+      "customTheme": "Custom Theme",
+      "styledComponents": "Styled Components",
+      "sxProp": "SX Prop"
+    },
+    "examples": {
+      "PickersToolbar": {
+        "customTheme": "ToolbarCustomTheme.js",
+        "styledComponents": "ToolbarCustomTheme.js",
+        "sxProp": "ToolbarCustomTheme.js"
+      },
+      "TimeClock": {
+        "customTheme": "ToolbarCustomTheme.js",
+        "styledComponents": "ToolbarCustomTheme.js"
+      }
+    }
+  }
+}

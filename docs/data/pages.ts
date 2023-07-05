@@ -304,6 +304,10 @@ const pages: MuiPage[] = [
         title: 'Visual customization',
         children: [
           { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
+          {
+            pathname: '/x/react-date-pickers/customization-examples',
+            title: 'Customization examples',
+          },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
           { pathname: '/x/react-date-pickers/shortcuts' },

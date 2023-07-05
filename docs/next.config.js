@@ -79,6 +79,15 @@ module.exports = withDocsInfra({
             ],
           },
           {
+            test: /\.ts$/,
+            resourceQuery: /@muix\/customization/,
+            use: [
+              {
+                loader: require.resolve('./src/modules/utils/customLoader.js'),
+              },
+            ],
+          },
+          {
             test: /\.+(js|jsx|mjs|ts|tsx)$/,
             include: includesMonorepo,
             use: options.defaultLoaders.babel,
