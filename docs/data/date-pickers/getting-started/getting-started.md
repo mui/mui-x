@@ -28,13 +28,14 @@ take a look at the [dedicated section](/x/react-date-pickers/#date-library)
 The Date and Time Pickers package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
-```bash
-// with npm
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/material @emotion/react @emotion/styled
-
-// with yarn
+```
+```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
+</codeblock>
 
 <!-- #react-peer-version -->
 
@@ -51,13 +52,16 @@ Please note that [react](https://www.npmjs.com/package/react) and [react-dom](ht
 
 Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
-```bash
-// with npm
-npm install @mui/styled-engine-sc styled-components
 
-// with yarn
+<codeblock storageKey="package-manager">
+```bash npm
+npm install @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
 yarn add @mui/styled-engine-sc styled-components
 ```
+</codeblock>
 
 Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
 

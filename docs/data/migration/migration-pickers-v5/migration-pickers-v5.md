@@ -31,7 +31,7 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-```sh
+```bash
 // Date and Time Pickers specific
 npx @mui/x-codemod v6.0.0/pickers/preset-safe <path>
 // Target Data Grid as well
@@ -958,7 +958,7 @@ To smooth the transition, pickers support both the `components` props which are 
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
