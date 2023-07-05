@@ -1,7 +1,8 @@
-import { GridRowId } from '../../../../models';
+import type { GridColumnGroup, GridCsvExportOptions, GridRowId } from '../../../../models';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
-import { GridCellParams } from '../../../../models/params/gridCellParams';
-import { GridStateColDef } from '../../../../models/colDef/gridColDef';
+import type { GridCellParams } from '../../../../models/params/gridCellParams';
+import type { GridStateColDef } from '../../../../models/colDef/gridColDef';
+import type { GridApiCommunity } from '../../../../models/api/gridApiCommunity';
 import { buildWarning } from '../../../../utils/warning';
 
 function sanitizeCellValue(value: any, delimiterCharacter: string) {
@@ -74,23 +75,52 @@ const serializeRow = ({
     });
   });
 
+type CSVRowOptions = {
+  delimiterCharacter: string;
+};
+class CSVRow {
+  options: CSVRowOptions;
+
+  rowString = '';
+
+  cellCount = 0;
+
+  constructor(options: CSVRowOptions) {
+    this.options = options;
+  }
+
+  addValue(value: string) {
+    if (this.cellCount !== 0) {
+      this.rowString += this.options.delimiterCharacter;
+    }
+    this.rowString += sanitizeCellValue(value, this.options.delimiterCharacter);
+    this.cellCount += 1;
+  }
+
+  getRowString() {
+    return this.rowString;
+  }
+}
+
 interface BuildCSVOptions {
   columns: GridStateColDef[];
   rowIds: GridRowId[];
-  getCellParams: (id: GridRowId, field: string) => GridCellParams;
-  delimiterCharacter: string;
-  includeHeaders: boolean;
+  delimiterCharacter: NonNullable<GridCsvExportOptions['delimiter']>;
+  includeHeaders: NonNullable<GridCsvExportOptions['includeHeaders']>;
+  includeColumnGroupsHeaders: NonNullable<GridCsvExportOptions['includeColumnGroupsHeaders']>;
   ignoreValueFormatter: boolean;
+  apiRef: React.MutableRefObject<GridApiCommunity>;
 }
 
 export function buildCSV(options: BuildCSVOptions): string {
   const {
     columns,
     rowIds,
-    getCellParams,
     delimiterCharacter,
     includeHeaders,
+    includeColumnGroupsHeaders,
     ignoreValueFormatter,
+    apiRef,
   } = options;
 
   const CSVBody = rowIds
@@ -99,7 +129,7 @@ export function buildCSV(options: BuildCSVOptions): string {
         `${acc}${serializeRow({
           id,
           columns,
-          getCellParams,
+          getCellParams: apiRef.current.getCellParams,
           delimiterCharacter,
           ignoreValueFormatter,
         }).join(delimiterCharacter)}\r\n`,
@@ -111,10 +141,43 @@ export function buildCSV(options: BuildCSVOptions): string {
     return CSVBody;
   }
 
-  const CSVHead = `${columns
-    .filter((column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field)
-    .map((column) => sanitizeCellValue(column.headerName || column.field, delimiterCharacter))
-    .join(delimiterCharacter)}\r\n`;
+  const filteredColumns = columns.filter(
+    (column) => column.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field,
+  );
+
+  const headerRows: CSVRow[] = [];
+
+  if (includeColumnGroupsHeaders) {
+    const columnGroupLookup = apiRef.current.unstable_getAllGroupDetails();
+
+    let maxColumnGroupsDepth = 0;
+    const columnGroupPathsLookup = filteredColumns.reduce<
+      Record<GridStateColDef['field'], GridColumnGroup['groupId'][]>
+    >((acc, column) => {
+      const columnGroupPath = apiRef.current.unstable_getColumnGroupPath(column.field);
+      acc[column.field] = columnGroupPath;
+      maxColumnGroupsDepth = Math.max(maxColumnGroupsDepth, columnGroupPath.length);
+      return acc;
+    }, {});
+
+    for (let i = 0; i < maxColumnGroupsDepth; i += 1) {
+      const headerGroupRow = new CSVRow({ delimiterCharacter });
+      headerRows.push(headerGroupRow);
+      filteredColumns.forEach((column) => {
+        const columnGroupId = (columnGroupPathsLookup[column.field] || [])[i];
+        const columnGroup = columnGroupLookup[columnGroupId];
+        headerGroupRow.addValue(columnGroup ? columnGroup.headerName || columnGroup.groupId : '');
+      });
+    }
+  }
+
+  const mainHeaderRow = new CSVRow({ delimiterCharacter });
+  filteredColumns.forEach((column) => {
+    mainHeaderRow.addValue(column.headerName || column.field);
+  });
+  headerRows.push(mainHeaderRow);
+
+  const CSVHead = `${headerRows.map((row) => row.getRowString()).join('\r\n')}\r\n`;
 
   return `${CSVHead}${CSVBody}`.trim();
 }

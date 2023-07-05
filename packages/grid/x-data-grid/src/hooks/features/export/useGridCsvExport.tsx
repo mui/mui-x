@@ -48,10 +48,11 @@ export const useGridCsvExport = (
       return buildCSV({
         columns: exportedColumns,
         rowIds: exportedRowIds,
-        getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options.delimiter || ',',
         includeHeaders: options.includeHeaders ?? true,
+        includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
         ignoreValueFormatter,
+        apiRef,
       });
     },
     [logger, apiRef, ignoreValueFormatter],
