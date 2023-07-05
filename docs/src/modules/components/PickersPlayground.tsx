@@ -442,6 +442,10 @@ export default function PickersPlayground() {
               sm: 0,
             },
             flexGrow: 1,
+            width: {
+              xs: '100%',
+              sm: 312,
+            },
           }}
         >
           <BooleanRadioGroupControl
