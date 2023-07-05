@@ -205,12 +205,6 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
-    "scrollEndThreshold": {
-      "type": { "name": "number" },
-      "default": "80",
-      "deprecated": true,
-      "deprecationInfo": "Please use <code>lastVisibleRowThreshold</code>."
-    },
     "showCellVerticalBorder": { "type": { "name": "bool" } },
     "showColumnVerticalBorder": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" } },
