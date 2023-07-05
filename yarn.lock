@@ -1872,7 +1872,7 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.13.7"
-  resolved "https://github.com/mui/material-ui.git#41f15df97b74bbf102715857564374551fac6162"
+  resolved "https://github.com/mui/material-ui.git#4bd5a21b708d3091865480a9bea36c1736273885"
 
 "@mui/private-theming@^5.13.1":
   version "5.13.1"
@@ -9458,11 +9458,6 @@ markdownlint@0.29.0:
   dependencies:
     markdown-it "13.0.1"
     markdownlint-micromark "0.1.5"
-
-marked-highlight@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/marked-highlight/-/marked-highlight-2.0.1.tgz#a2b48533df77ea73bec3895be98bae6160dceec3"
-  integrity sha512-LDUfR/zDvD+dJ+lQOWHkxvBLNxiXcaN8pBtwJ/i4pI0bkDC/Ef6Mz1qUrAuHXfnpdr2rabdMpVFhqFuU+5Mskg==
 
 marked@^5.1.0:
   version "5.1.0"
