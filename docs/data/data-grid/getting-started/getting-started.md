@@ -19,6 +19,7 @@ npm install @mui/material @emotion/react @emotion/styled
 ```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
+
 </codeblock>
 
 <!-- #react-peer-version -->

@@ -39,6 +39,7 @@ npm install @mui/x-charts
 ```bash yarn
 yarn add @mui/x-charts
 ```
+
 </codeblock>
 
 ## Display charts

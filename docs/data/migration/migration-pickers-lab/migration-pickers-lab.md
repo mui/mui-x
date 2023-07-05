@@ -39,6 +39,7 @@ npm install @mui/x-date-pickers
 ```bash yarn
 yarn add @mui/x-date-pickers
 ```
+
 </codeblock>
 
 #### Pro Plan
@@ -51,6 +52,7 @@ npm install @mui/x-date-pickers-pro @mui/x-license-pro
 ```bash yarn
 yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
+
 </codeblock>
 
 When you purchase a commercial license, you'll receive a license key by email.
