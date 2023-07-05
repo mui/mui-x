@@ -161,7 +161,7 @@ The bundle size of `setLicenseKey()` is relatively small, it should be small eno
 
 #### Next.js app
 
-When using Next.js app, if have multiple options to install the license key.
+When using Next.js app, you have multiple options to install the license key.
 
 1. If your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) is already using `'use client'`, you can do:
 
@@ -217,6 +217,14 @@ export default function MyApp(props) {
   const { Component, pageProps } = props;
   return <Component {...pageProps} />;
 }
+```
+#### Install the key as an environment variable in Next.js
+
+The license validation happens on the client side, so you must expose the environment variable to the browser.
+To do that, you can prefix it with `NEXT_PUBLIC_` as explained in [Next.js documentation](https://nextjs.org/docs/basic-features/environment-variables).
+
+```tsx
+LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
 ```
 
 ### What is the key for?
