@@ -11,7 +11,7 @@ import {
   getDateRangePickerDayUtilityClass,
   dateRangePickerDayClasses,
 } from './dateRangePickerDayClasses';
-import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 

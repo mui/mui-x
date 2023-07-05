@@ -13,8 +13,8 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internal/models';
-import { UseRangePositionResponse } from '../internal/hooks/useRangePosition';
+import { DateRange } from '../internals/models';
+import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
