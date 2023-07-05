@@ -316,12 +316,14 @@ const rows = apiRef.current.getRowGroupChildren({
 
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## 🚧 Row group panel
+## Row group panel 🚧
 
 :::warning
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
 With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.

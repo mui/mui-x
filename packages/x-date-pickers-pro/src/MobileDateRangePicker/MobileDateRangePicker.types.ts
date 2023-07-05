@@ -3,7 +3,7 @@ import {
   UseMobileRangePickerSlotsComponent,
   UseMobileRangePickerSlotsComponentsProps,
   MobileRangeOnlyPickerProps,
-} from '../internal/hooks/useMobileRangePicker';
+} from '../internals/hooks/useMobileRangePicker';
 import {
   BaseDateRangePickerProps,
   BaseDateRangePickerSlotsComponent,

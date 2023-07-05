@@ -1,5 +1,4 @@
 ---
-product: date-pickers
 title: React Time Clock component
 components: TimeClock
 githubLabel: 'component: TimePicker'

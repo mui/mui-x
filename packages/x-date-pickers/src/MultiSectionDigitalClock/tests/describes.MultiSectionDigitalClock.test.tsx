@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { screen, userEvent, describeConformance } from '@mui/monorepo/test/utils';
+import { screen, describeConformance } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { createPickerRenderer, adapterToUse, wrapPickerMount } from 'test/utils/pickers-utils';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { expect } from 'chai';
+import { multiSectionDigitalClockHandler } from 'test/utils/pickers/viewHandlers';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -69,21 +70,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const hoursLabel = parseInt(
-        adapterToUse.format(newValue, hasMeridiem ? 'hours12h' : 'hours24h'),
-        10,
-      );
-      const minutesLabel = adapterToUse.getMinutes(newValue).toString();
-      userEvent.mousePress(screen.getByRole('option', { name: `${hoursLabel} hours` }));
-      userEvent.mousePress(screen.getByRole('option', { name: `${minutesLabel} minutes` }));
-      if (hasMeridiem) {
-        userEvent.mousePress(
-          screen.getByRole('option', {
-            name: adapterToUse.getMeridiemText(adapterToUse.getHours(newValue) >= 12 ? 'pm' : 'am'),
-          }),
-        );
-      }
+      multiSectionDigitalClockHandler.setViewValue(adapterToUse, newValue);
 
       return newValue;
     },
