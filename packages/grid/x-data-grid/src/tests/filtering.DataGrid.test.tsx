@@ -222,30 +222,28 @@ describe('<DataGrid /> - Filter', () => {
     it('works with filter', () => {
       render(
         <TestCase
-          getRowId={row => row.brand}
+          getRowId={(row) => row.brand}
           filterModel={{
-            items: [
-              { id: 0, field: 'brand', operator: 'contains', value: 'Nike' },
-            ],
+            items: [{ id: 0, field: 'brand', operator: 'contains', value: 'Nike' }],
           }}
-        />
+        />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Nike']);
-    })
+    });
 
     it('works with quick filter', () => {
       render(
         <TestCase
-          getRowId={row => row.brand}
+          getRowId={(row) => row.brand}
           filterModel={{
             items: [],
             quickFilterValues: ['Nike'],
           }}
-        />
+        />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Nike']);
-    })
-  })
+    });
+  });
 
   describe('column type: string', () => {
     const getRows = (item: Omit<GridFilterItem, 'field'>) => {
