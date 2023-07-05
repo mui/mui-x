@@ -14,8 +14,10 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   BaseFieldProps,
+  isInternalTimeView,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
+import { FieldRef } from '@mui/x-date-pickers/models';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
@@ -41,7 +43,7 @@ export const useDesktopRangePicker = <
 
   const {
     slots,
-    slotProps,
+    slotProps: inSlotProps,
     className,
     sx,
     format,
@@ -54,12 +56,58 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
+    onViewChange,
+    views,
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
+
+  const startInputRef = React.useRef<HTMLInputElement>(null);
+  const endInputRef = React.useRef<HTMLInputElement>(null);
+  const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+
+  const slotProps = {
+    ...inSlotProps,
+    textField: (ownerState) => ({
+      ...inSlotProps?.textField,
+      inputRef: ownerState.position === 'start' ? startInputRef : endInputRef,
+    }),
+  };
+
+  const handleViewChange = React.useCallback(
+    (view: TView) => {
+      let inputToFocus = rangePosition === 'start' ? startInputRef.current : endInputRef.current;
+      let currentFieldRef = rangePosition === 'start' ? startFieldRef.current : endFieldRef.current;
+      let newView = view;
+      if (view === 'day' && rangePosition === 'start') {
+        onRangePositionChange('end');
+        inputToFocus = endInputRef.current;
+        currentFieldRef = endFieldRef.current;
+        newView = views.filter(isInternalTimeView)[0];
+      }
+      if (view === 'hours' && rangePosition === 'end') {
+        onRangePositionChange('start');
+        inputToFocus = startInputRef.current;
+        currentFieldRef = startFieldRef.current;
+      }
+      onViewChange?.(newView);
+      inputToFocus?.focus();
+      currentFieldRef?.setSelectedSections(newView);
+    },
+    [onRangePositionChange, onViewChange, rangePosition, views],
+  );
+
+  const finalProps = React.useMemo(
+    () => ({
+      ...props,
+      onViewChange: handleViewChange,
+    }),
+    [handleViewChange, props],
+  );
 
   const {
     open,
@@ -77,9 +125,9 @@ export const useDesktopRangePicker = <
     DesktopRangePickerAdditionalViewProps
   >({
     ...pickerParams,
-    props,
+    props: finalProps,
     wrapperVariant: 'desktop',
-    autoFocusView: true,
+    autoFocusView: false,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange,
@@ -121,6 +169,8 @@ export const useDesktopRangePicker = <
       timezone,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
+      unstableStartFieldRef: startFieldRef,
+      unstableEndFieldRef: endFieldRef,
       ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,
