@@ -2,7 +2,7 @@
 
 This project is used when running the following command:
 
-```sh
+```bash
 yarn browser
 ```
 

@@ -1876,8 +1876,8 @@
     react-transition-group "^4.4.5"
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
-  version "5.13.6"
-  resolved "https://github.com/mui/material-ui.git#e6f223acbd826cccb130d7f8af543bb40251754e"
+  version "5.13.7"
+  resolved "https://github.com/mui/material-ui.git#ab2cb8cf9614ccab02b62a22de5129a1c2774d96"
 
 "@mui/private-theming@^5.13.1":
   version "5.13.1"
