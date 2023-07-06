@@ -10,11 +10,16 @@ _Jul 6, 2023_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Auto-scroll when making range selection (#8661) @m4theushw
+
+- 📚 New page: Components lifecycle (#8372) @flaviendelangle
+ 
+  Clarify pickers events and value updates in a [single docs page](https://mui.com/x/react-date-pickers/lifecycle/).
+  
 - 🥧 Add pie chart component
 
   They are fresh from the code editor. You can visit [pie charts docs](https://mui.com/x/react-charts/pie/) or their [demo page](https://mui.com/x/react-charts/pie-demo/).
 
-![image](https://github.com/mui/mui-x/assets/45398769/20f31f44-9fb0-49c1-b77c-71bdc5afea0b)
+![image](https://github.com/mui/mui-x/assets/13808724/fe908c45-803c-4316-b913-dbd2f9f0551e)
 
 - 🐞 Bugfixes
 - 📚 Documentation improvements
@@ -23,7 +28,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Changes
 
-- [DataGrid] Fix `RangeError` when flex columns have duplicated `field` property (#9554) @cherniavskii
+- [DataGrid] Fix `RangeError` when using flex columns (#9554) @cherniavskii
 - [DataGrid] Fix react 17 editing bug (#9530) @romgrk
 - [DataGrid] Use `getRowId` in filtering (#9564) @romgrk
 - [DataGridPremium] Auto-scroll when making range selection (#8661) @m4theushw
@@ -46,6 +51,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - [docs] Add pickers playground (#9164) @LukasTy
 - [docs] Fix API links for pickers (#9573) @alexfauquette
+- [docs] Fix demos with `ToggleButtonGroup` (#9548) @flaviendelangle
 - [docs] Fix typos in pagination documentation page (#9332) @RatherBeLunar
 - [docs] Hide ads on paid content @oliviertassinari
 - [docs] Move the charts in the sidebar (#9437) @flaviendelangle
