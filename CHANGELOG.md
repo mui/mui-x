@@ -12,9 +12,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 🚀 Auto-scroll when making range selection (#8661) @m4theushw
 
 - 📚 New page: Components lifecycle (#8372) @flaviendelangle
- 
+
   Clarify pickers events and value updates in a [single docs page](https://mui.com/x/react-date-pickers/lifecycle/).
-  
+
 - 🥧 Add pie chart component
 
   They are fresh from the code editor. You can visit [pie charts docs](https://mui.com/x/react-charts/pie/) or their [demo page](https://mui.com/x/react-charts/pie-demo/).
@@ -22,6 +22,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 ![image](https://github.com/mui/mui-x/assets/13808724/fe908c45-803c-4316-b913-dbd2f9f0551e)
 
 - 🐞 Bugfixes
+
 - 📚 Documentation improvements
 
 ### `@mui/x-data-grid@v6.9.2` / `@mui/x-data-grid-pro@v6.9.2` / `@mui/x-data-grid-premium@v6.9.2`
