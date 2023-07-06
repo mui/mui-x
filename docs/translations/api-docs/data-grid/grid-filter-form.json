@@ -5,7 +5,9 @@
       "description": "Callback called when the operator, column field or value is changed.",
       "notes": "",
       "deprecated": "",
-      "typeDescriptions": { "item": "The updated [[GridFilterItem]]." }
+      "typeDescriptions": {
+        "item": "The updated <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
+      }
     },
     "applyMultiFilterOperatorChanges": {
       "description": "Callback called when the logic operator is changed.",
@@ -29,7 +31,9 @@
       "description": "Callback called when the delete button is clicked.",
       "notes": "",
       "deprecated": "",
-      "typeDescriptions": { "item": "The deleted [[GridFilterItem]]." }
+      "typeDescriptions": {
+        "item": "The deleted <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
+      }
     },
     "deleteIconProps": {
       "description": "Props passed to the delete icon.",

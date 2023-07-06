@@ -234,7 +234,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridCellParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
         "string": "The CSS class to apply to the cell."
       }
     },
@@ -243,7 +243,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
         "JSX.Element": "The row detail element."
       }
     },
@@ -252,7 +252,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
         "number | string": "The height in pixels or &quot;auto&quot; to use the content height."
       }
     },
@@ -261,7 +261,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowHeightParams]].",
+        "params": "With all properties from GridRowHeightParams.",
         "number | null": "The estimated row height value. If <code>null</code> or <code>undefined</code> then the default row height, based on the density, is applied."
       }
     },
@@ -270,7 +270,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowClassNameParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-class-name-params/\">GridRowClassNameParams</a>.",
         "string": "The CSS class to apply to the row."
       }
     },
@@ -279,7 +279,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowHeightParams]].",
+        "params": "With all properties from GridRowHeightParams.",
         "GridRowHeightReturnValue": "The row height value. If <code>null</code> or <code>undefined</code> then the default row height is applied. If &quot;auto&quot; then the row height is calculated based on the content."
       }
     },
@@ -294,7 +294,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowSpacingParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-spacing-params/\">GridRowSpacingParams</a>.",
         "GridRowSpacing": "The row spacing values."
       }
     },
@@ -348,7 +348,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridCellParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
         "boolean": "A boolean indicating if the cell is editable."
       }
     },
@@ -366,7 +366,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
         "boolean": "A boolean indicating if the cell is selectable."
       }
     },
@@ -417,7 +417,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridCellParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -427,7 +427,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridCellParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -437,7 +437,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridCellParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
         "event": "The event that caused this prop to be called."
       }
     },
@@ -446,7 +446,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridCellParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
         "event": "The event that caused this prop to be called."
       }
     },
@@ -455,7 +455,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridCellParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -480,7 +480,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnHeaderParams]].",
+        "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -490,7 +490,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnHeaderParams]].",
+        "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -500,7 +500,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnHeaderParams]].",
+        "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -510,7 +510,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnHeaderParams]].",
+        "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -520,7 +520,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnHeaderParams]].",
+        "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -530,7 +530,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnHeaderParams]].",
+        "params": "With all properties from GridColumnHeaderParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -540,7 +540,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnOrderChangeParams]].",
+        "params": "With all properties from GridColumnOrderChangeParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -550,7 +550,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnResizeParams]].",
+        "params": "With all properties from GridColumnResizeParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -569,7 +569,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridColumnResizeParams]].",
+        "params": "With all properties from GridColumnResizeParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -588,7 +588,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridFetchRowsParams]].",
+        "params": "With all properties from GridFetchRowsParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -598,7 +598,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "model": "With all properties from [[GridFilterModel]].",
+        "model": "With all properties from <a href=\"/x/api/data-grid/grid-filter-model/\">GridFilterModel</a>.",
         "details": "Additional details for this callback."
       }
     },
@@ -607,7 +607,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridMenuParams]].",
+        "params": "With all properties from GridMenuParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -617,7 +617,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridMenuParams]].",
+        "params": "With all properties from GridMenuParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -645,7 +645,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridPreferencePanelParams]].",
+        "params": "With all properties from GridPreferencePanelParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -655,7 +655,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridPreferencePanelParams]].",
+        "params": "With all properties from GridPreferencePanelParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -671,7 +671,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "containerSize": "With all properties from [[ElementSize]].",
+        "containerSize": "With all properties from ElementSize.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -681,7 +681,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -691,7 +691,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[RowParams]].",
+        "params": "With all properties from RowParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -710,7 +710,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
         "event": "The event that caused this prop to be called."
       }
     },
@@ -719,7 +719,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowParams]].",
+        "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
         "event": "The event that caused this prop to be called."
       }
     },
@@ -737,7 +737,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowOrderChangeParams]].",
+        "params": "With all properties from GridRowOrderChangeParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -747,7 +747,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "rowSelectionModel": "With all the row ids [[GridSelectionModel]].",
+        "rowSelectionModel": "With all the row ids GridSelectionModel.",
         "details": "Additional details for this callback."
       }
     },
@@ -756,7 +756,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "params": "With all properties from [[GridRowScrollEndParams]].",
+        "params": "With all properties from GridRowScrollEndParams.",
         "event": "The event object.",
         "details": "Additional details for this callback."
       }
@@ -766,7 +766,7 @@
       "notes": "",
       "deprecated": "",
       "typeDescriptions": {
-        "model": "With all properties from [[GridSortModel]].",
+        "model": "With all properties from GridSortModel.",
         "details": "Additional details for this callback."
       }
     },

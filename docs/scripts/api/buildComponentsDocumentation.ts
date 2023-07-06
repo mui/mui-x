@@ -367,13 +367,17 @@ const buildComponentDocumentation = async (options: {
       const typeDescriptions: { [t: string]: string } = {};
       [...(signatureArgs ?? []), ...(signatureReturn ? [signatureReturn] : [])].forEach(
         ({ name, description: paramDescription }) => {
-          typeDescriptions[name] = renderMarkdownInline(paramDescription);
+          typeDescriptions[name] = linkify(
+            renderMarkdownInline(paramDescription),
+            documentedInterfaces,
+            'html',
+          );
         },
       );
 
       componentApi.propDescriptions[propName] = {
         description: linkify(description, documentedInterfaces, 'html'),
-        notes,
+        notes: linkify(notes, documentedInterfaces, 'html'),
         deprecated,
         typeDescriptions,
       };
