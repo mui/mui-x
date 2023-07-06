@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
   They are fresh from the code editor. You can visit [pie charts docs](https://mui.com/x/react-charts/pie/) or their [demo page](https://mui.com/x/react-charts/pie-demo/).
 
-<img width="380" alt="pie-charts" src="https://github.com/mui/mui-x/assets/13808724/fe908c45-803c-4316-b913-dbd2f9f0551e">
+  <img width="380" alt="pie-charts" src="https://github.com/mui/mui-x/assets/13808724/fe908c45-803c-4316-b913-dbd2f9f0551e">
 
 - 🐞 Bugfixes
 
