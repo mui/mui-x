@@ -10,6 +10,7 @@ export * from './ChartsTooltip';
 export * from './ChartsAxisHighlight';
 export * from './BarChart';
 export * from './LineChart';
+export * from './PieChart';
 export * from './ScatterChart';
 export * from './ChartContainer';
 export * from './ResponsiveChartContainer';

@@ -19,8 +19,8 @@ import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
+  CartesianChartSeriesType,
   ChartSeries,
-  ChartSeriesType,
   ExtremumGetter,
   ExtremumGetterResult,
 } from '../models/seriesType/config';
@@ -34,13 +34,13 @@ export type CartesianContextProviderProps = {
 };
 
 // TODO: those might be better placed in a distinct file
-const xExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
+const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumX,
   scatter: getScatterExtremumX,
   line: getLineExtremumX,
 };
 
-const yExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
+const yExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumY,
   scatter: getScatterExtremumY,
   line: getLineExtremumY,
@@ -74,7 +74,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       acc: ExtremumGetterResult,
       chartType: T,
       axis: AxisConfig,
-      getters: { [T2 in ChartSeriesType]: ExtremumGetter<T2> },
+      getters: { [T2 in CartesianChartSeriesType]: ExtremumGetter<T2> },
       isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
@@ -101,10 +101,10 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
 
     const getAxisExtremum = (
       axis: AxisConfig,
-      getters: { [T in ChartSeriesType]: ExtremumGetter<T> },
+      getters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> },
       isDefaultAxis: boolean,
     ) => {
-      const charTypes = Object.keys(getters) as ChartSeriesType[];
+      const charTypes = Object.keys(getters) as CartesianChartSeriesType[];
 
       return charTypes.reduce(
         (acc, charType) => axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis),

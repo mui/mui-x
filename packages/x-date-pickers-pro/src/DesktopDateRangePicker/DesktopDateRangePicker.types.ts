@@ -3,7 +3,7 @@ import {
   UseDesktopRangePickerSlotsComponent,
   UseDesktopRangePickerSlotsComponentsProps,
   DesktopRangeOnlyPickerProps,
-} from '../internal/hooks/useDesktopRangePicker';
+} from '../internals/hooks/useDesktopRangePicker';
 import {
   BaseDateRangePickerProps,
   BaseDateRangePickerSlotsComponent,
