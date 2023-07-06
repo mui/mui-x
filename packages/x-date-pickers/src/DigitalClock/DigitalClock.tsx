@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
@@ -154,7 +155,12 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const classes = useUtilityClasses(ownerState);
 
   const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
-  const clockItemProps = slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem;
+  const clockItemProps = useSlotProps({
+    elementType: ClockItem,
+    externalSlotProps: slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem,
+    ownerState: {},
+    className: classes.item,
+  });
 
   const valueOrReferenceDate = useClockReferenceDate({
     value,
@@ -277,6 +283,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         autoFocusItem={autoFocus || !!focusedView}
         role="listbox"
         aria-label={localeText.timePickerToolbarTitle}
+        className={classes.list}
       >
         {timeOptions.map((option) => {
           if (skipDisabled && isTimeDisabled(option)) {

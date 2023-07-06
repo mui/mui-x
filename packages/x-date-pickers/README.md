@@ -7,7 +7,7 @@ It's part of MUI X, an open-core extension of MUI, with advanced components.
 
 Install the package in your project directory with:
 
-```sh
+```bash
 npm install @mui/x-date-pickers
 ```
 
@@ -19,7 +19,7 @@ We currently support 4 different date libraries:
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
-```sh
+```bash
 // date-fns
 npm install date-fns
 // or dayjs

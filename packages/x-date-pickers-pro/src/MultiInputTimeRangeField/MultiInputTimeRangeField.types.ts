@@ -8,10 +8,10 @@ import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
-} from '../internal/models/timeRange';
-import { RangePosition } from '../internal/models/range';
-import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { RangeFieldSection } from '../internal/models/fields';
+} from '../internals/models/timeRange';
+import { RangePosition } from '../internals/models/range';
+import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internals/models/fields';
 
 export type UseMultiInputTimeRangeFieldParams<
   TDate,

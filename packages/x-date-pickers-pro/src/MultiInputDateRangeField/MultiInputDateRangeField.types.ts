@@ -5,10 +5,10 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { FieldRef } from '@mui/x-date-pickers/models';
 import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
-import { UseDateRangeFieldProps } from '../internal/models/dateRange';
-import { RangePosition } from '../internal/models/range';
-import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { RangeFieldSection } from '../internal/models/fields';
+import { UseDateRangeFieldProps } from '../internals/models/dateRange';
+import { RangePosition } from '../internals/models/range';
+import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internals/models/fields';
 
 export type UseMultiInputDateRangeFieldParams<
   TDate,

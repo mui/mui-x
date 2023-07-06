@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: Date and Time Pickers - Component localization
 components: LocalizationProvider
 githubLabel: 'component: pickers'

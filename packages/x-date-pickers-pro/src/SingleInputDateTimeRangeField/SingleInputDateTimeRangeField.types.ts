@@ -10,7 +10,7 @@ import {
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
-} from '../internal/models';
+} from '../internals/models';
 
 export interface UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
   props: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>;

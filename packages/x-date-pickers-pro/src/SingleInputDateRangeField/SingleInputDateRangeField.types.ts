@@ -6,7 +6,7 @@ import {
   FieldSlotsComponents,
   FieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals/hooks/useField/useField.types';
-import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internal/models';
+import { UseDateRangeFieldDefaultizedProps, UseDateRangeFieldProps } from '../internals/models';
 
 export interface UseSingleInputDateRangeFieldParams<TDate, TChildProps extends {}> {
   props: UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps>;

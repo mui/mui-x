@@ -7,7 +7,7 @@ import {
 } from '@mui/x-date-pickers/internals/hooks/useField/useField.types';
 import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
 import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
-import { UseTimeRangeFieldDefaultizedProps, UseTimeRangeFieldProps } from '../internal/models';
+import { UseTimeRangeFieldDefaultizedProps, UseTimeRangeFieldProps } from '../internals/models';
 
 export interface UseSingleInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
   props: UseSingleInputTimeRangeFieldComponentProps<TDate, TChildProps>;
