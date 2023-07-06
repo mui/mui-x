@@ -23,16 +23,16 @@ export default function ClearableBehavior() {
   }, [cleared]);
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        position: 'relative',
-      }}
-    >
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          position: 'relative',
+        }}
+      >
         <DemoContainer components={['DateField']}>
           <DemoItem label="DateField">
             <DateField
@@ -44,12 +44,15 @@ export default function ClearableBehavior() {
             />
           </DemoItem>
         </DemoContainer>
-      </LocalizationProvider>
-      {cleared && !value && (
-        <Alert sx={{ position: 'absolute', bottom: 0, right: 0 }} severity="success">
-          Field cleared!
-        </Alert>
-      )}
-    </Box>
+        {cleared && !value && (
+          <Alert
+            sx={{ position: 'absolute', bottom: 0, right: 0 }}
+            severity="success"
+          >
+            Field cleared!
+          </Alert>
+        )}
+      </Box>
+    </LocalizationProvider>
   );
 }

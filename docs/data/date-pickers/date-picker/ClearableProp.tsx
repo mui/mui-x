@@ -22,16 +22,16 @@ export default function ClearableProp() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateField']}>
-        <Box
-          sx={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            position: 'relative',
-          }}
-        >
+      <Box
+        sx={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          position: 'relative',
+        }}
+      >
+        <DemoContainer components={['DateField']}>
           <DemoItem label="DatePicker">
             <DatePicker
               sx={{ width: '300px' }}
@@ -49,8 +49,8 @@ export default function ClearableProp() {
               Field cleared!
             </Alert>
           )}
-        </Box>
-      </DemoContainer>
+        </DemoContainer>
+      </Box>
     </LocalizationProvider>
   );
 }
