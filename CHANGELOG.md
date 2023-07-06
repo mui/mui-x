@@ -13,8 +13,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 🥧 Add pie chart component
 
   They are fresh from the code editor. You can visit [pie charts docs](https://mui.com/x/react-charts/pie/) or their [demo page](https://mui.com/x/react-charts/pie-demo/).
-  
+
 ![image](https://github.com/mui/mui-x/assets/45398769/20f31f44-9fb0-49c1-b77c-71bdc5afea0b)
+
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
