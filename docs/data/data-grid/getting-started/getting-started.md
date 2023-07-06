@@ -40,6 +40,7 @@ Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a stylin
 <codeblock storageKey="package-manager">
 ```bash npm
 npm install @mui/styled-engine-sc styled-components
+```
 
 ```bash yarn
 yarn add @mui/styled-engine-sc styled-components
