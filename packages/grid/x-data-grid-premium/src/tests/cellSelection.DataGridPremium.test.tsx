@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { spy, stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
@@ -19,15 +19,21 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
   function TestDataGridSelection({
     rowLength = 4,
+    width = 400,
+    height = 300,
     ...other
   }: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'> &
-    Partial<Pick<DataGridPremiumProps, 'rows' | 'columns'>> & { rowLength?: number }) {
+    Partial<Pick<DataGridPremiumProps, 'rows' | 'columns'>> & {
+      rowLength?: number;
+      width?: number;
+      height?: number;
+    }) {
     apiRef = useGridApiRef();
 
     const data = React.useMemo(() => getBasicGridData(rowLength, 3), [rowLength]);
 
     return (
-      <div style={{ width: 300, height: 300 }}>
+      <div style={{ width, height }}>
         <DataGridPremium
           {...data}
           {...other}
@@ -35,6 +41,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
           rowSelection={false}
           unstable_cellSelection
           disableVirtualization
+          hideFooter
         />
       </div>
     );
@@ -301,6 +308,88 @@ describe('<DataGridPremium /> - Cell Selection', () => {
           { id: 0, field: 'currencyPair' },
         ]);
       });
+    });
+  });
+
+  describe('Auto-scroll', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should auto-scroll when the mouse approaches the bottom edge', () => {
+      stub(window, 'requestAnimationFrame').callsFake(() => 0);
+
+      const rowHeight = 30;
+      const columnHeaderHeight = 50;
+      const border = 1;
+      render(
+        <TestDataGridSelection
+          rowLength={20}
+          rowHeight={30}
+          columnHeaderHeight={50}
+          height={rowHeight * 8 + columnHeaderHeight + 2 * border}
+          width={400}
+        />,
+      );
+      const cell11 = getCell(1, 1);
+      fireEvent.mouseDown(cell11);
+      fireEvent.click(cell11);
+
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const rect = virtualScroller.getBoundingClientRect();
+
+      expect(virtualScroller.scrollTop).to.equal(0);
+      const cell71 = getCell(7, 1);
+      fireEvent.mouseOver(cell71, { clientX: rect.x, clientY: rect.y + rect.height - 25 }); // 25=half speed
+      expect(virtualScroller.scrollTop).to.equal(10);
+
+      virtualScroller.scrollTop = 0;
+      virtualScroller.dispatchEvent(new Event('scroll'));
+
+      expect(virtualScroller.scrollTop).to.equal(0);
+      fireEvent.mouseOver(cell71, { clientX: rect.x, clientY: rect.y + rect.height - 0 }); // 0=full speed
+      expect(virtualScroller.scrollTop).to.equal(20);
+
+      (window.requestAnimationFrame as SinonStub).restore();
+    });
+
+    it('should auto-scroll when the mouse approaches the top edge', () => {
+      stub(window, 'requestAnimationFrame').callsFake(() => 0);
+
+      const rowHeight = 30;
+      const columnHeaderHeight = 50;
+      const border = 1;
+      render(
+        <TestDataGridSelection
+          rowLength={20}
+          rowHeight={30}
+          columnHeaderHeight={50}
+          height={rowHeight * 8 + columnHeaderHeight + 2 * border}
+          width={400}
+        />,
+      );
+      const cell71 = getCell(7, 1);
+      fireEvent.mouseDown(cell71);
+      fireEvent.click(cell71);
+
+      const virtualScroller = document.querySelector(`.${gridClasses.virtualScroller}`)!;
+      const rect = virtualScroller.getBoundingClientRect();
+
+      virtualScroller.scrollTop = 30;
+      virtualScroller.dispatchEvent(new Event('scroll'));
+      expect(virtualScroller.scrollTop).to.equal(30);
+
+      const cell11 = getCell(1, 1);
+      fireEvent.mouseOver(cell11, { clientX: rect.x, clientY: rect.y + 25 }); // 25=half speed
+      expect(virtualScroller.scrollTop).to.equal(20);
+
+      fireEvent.mouseOver(cell11, { clientX: rect.x, clientY: rect.y }); // 0=full speed
+      expect(virtualScroller.scrollTop).to.equal(0);
+
+      (window.requestAnimationFrame as SinonStub).restore();
     });
   });
 });
