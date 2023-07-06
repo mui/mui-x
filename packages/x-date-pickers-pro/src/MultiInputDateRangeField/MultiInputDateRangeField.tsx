@@ -11,8 +11,8 @@ import {
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
-import { useMultiInputDateRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
-import { UseDateRangeFieldProps } from '../internal/models/dateRange';
+import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
+import { UseDateRangeFieldProps } from '../internals/models/dateRange';
 
 const MultiInputDateRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
