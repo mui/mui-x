@@ -112,14 +112,13 @@ const ResizableContainer = styled('div', {
 }));
 
 export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
-  const { sx, width: propsWidth, height: propsHeight, ...other } = props;
+  const { width: propsWidth, height: propsHeight, ...other } = props;
   const [containerRef, width, height] = useChartDimensions(propsWidth, propsHeight);
 
   return (
     <ResizableContainer
       ref={containerRef}
       ownerState={{ width: props.width, height: props.height }}
-      sx={sx}
     >
       <ChartContainer {...other} width={width} height={height} />
     </ResizableContainer>
