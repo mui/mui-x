@@ -11,6 +11,7 @@ import { HighlightScope } from '@mui/x-charts';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
+import { PieChart } from '@mui/x-charts/PieChart';
 
 const barChartsParams = {
   series: [
@@ -69,6 +70,26 @@ const scatterChartsParams = {
   height: 400,
 };
 
+const pieChartsParams = {
+  series: [
+    {
+      data: [{ value: 5 }, { value: 10 }, { value: 15 }],
+      label: 'Series 1',
+      outerRadius: 80,
+      highlighted: { additionalRadius: 10 },
+    },
+    {
+      data: [{ value: 5 }, { value: 10 }, { value: 15 }],
+      label: 'Series 1',
+      innerRadius: 90,
+      highlighted: { additionalRadius: 10 },
+    },
+  ],
+  width: 600,
+  height: 400,
+  margin: { top: 50, bottom: 50 },
+};
+
 export default function ElementHighlights() {
   const [chartType, setChartType] = React.useState('bar');
   const [withArea, setWithArea] = React.useState(false);
@@ -91,7 +112,7 @@ export default function ElementHighlights() {
           aria-label="chart type"
           fullWidth
         >
-          {['bar', 'line', 'scatter'].map((type) => (
+          {['bar', 'line', 'scatter', 'pie'].map((type) => (
             <ToggleButton key={type} value={type} aria-label="left aligned">
               {type}
             </ToggleButton>
@@ -126,6 +147,18 @@ export default function ElementHighlights() {
           <ScatterChart
             {...scatterChartsParams}
             series={scatterChartsParams.series.map((series) => ({
+              ...series,
+              highlightScope: {
+                highlighted,
+                faded,
+              } as HighlightScope,
+            }))}
+          />
+        )}
+        {chartType === 'pie' && (
+          <PieChart
+            {...pieChartsParams}
+            series={pieChartsParams.series.map((series) => ({
               ...series,
               highlightScope: {
                 highlighted,
