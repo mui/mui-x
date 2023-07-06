@@ -773,7 +773,15 @@ DataGridPremiumRaw.propTypes = {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  pageSizeOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * If `true`, pagination is enabled.
    * @default false
