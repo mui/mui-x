@@ -139,6 +139,10 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const updateInnerPosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
+      if (1 === 1) {
+        return;
+      }
+
       const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
         firstIndex: nextRenderContext.firstRowIndex,
         lastIndex: nextRenderContext.lastRowIndex,
@@ -291,7 +295,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       maxLastColumn,
     );
 
-    const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
+    // const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
+    const renderedColumns = visibleColumns;
 
     return {
       renderedColumns,
@@ -455,7 +460,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         <GridColumnHeaderRow
           style={{
             height: `${headerHeight}px`,
-            transform: `translateX(-${depthInfo.leftOverflow}px)`,
           }}
           key={depthIndex}
           role="row"
