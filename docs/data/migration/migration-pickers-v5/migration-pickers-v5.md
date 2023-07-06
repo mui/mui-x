@@ -938,6 +938,18 @@ Component name changes are also reflected in `themeAugmentation`:
  });
 ```
 
+## Behavior of field `onChange` props
+
+Since the masked input has been replaced by [fields](/x/react-date-pickers/fields/#fields-to-edit-a-single-element) the input value is valid most of the time.
+
+In v5, the user had to delete a character and type in another character to update the date resulting in `onChange` being called twice.
+Firstly with deleted character, and then with the complete date again.
+
+In v6, user can override the field section, so `onChange` is called at nearly every key pressed.
+
+If you were relying on `onChange` to send server requests, you might be interested in debouncing it to avoid sending too many requests.
+To do so please refer to the corresponding [docs example](/x/react-date-pickers/lifecycle/#server-interaction).
+
 ## Rename `components` to `slots` (optional)
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
