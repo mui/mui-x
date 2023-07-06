@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jul 6, 2023_
 
-We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Auto-scroll when making range selection (#8661) @m4theushw
 
@@ -30,8 +30,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 #### Changes
 
 - [DataGrid] Fix `RangeError` when using flex columns (#9554) @cherniavskii
-- [DataGrid] Fix react 17 editing bug (#9530) @romgrk
+- [DataGrid] Fix React 17 editing bug (#9530) @romgrk
 - [DataGrid] Use `getRowId` in filtering (#9564) @romgrk
+- [DataGrid] Correctly reflect `TablePagination`'s `rowsPerPageOptions` shape to `pageSizeOptions` (#9438) @burakkgunduzz
 - [DataGridPremium] Auto-scroll when making range selection (#8661) @m4theushw
 - [l10n] Improve Spanish (es-ES) locale (#9500) @fufex
 
