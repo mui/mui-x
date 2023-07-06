@@ -48,8 +48,6 @@ const useUtilityClasses = (ownerState: PieArcOwnerState) => {
   const { classes, id, isFaded, isHighlighted } = ownerState;
   const slots = {
     root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
-    arc: ['arc'],
-    arcLabel: ['arcLabel'],
   };
 
   return composeClasses(slots, getPieArcUtilityClass, classes);

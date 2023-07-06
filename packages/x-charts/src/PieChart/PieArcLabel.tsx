@@ -34,7 +34,7 @@ export function getPieArcLabelUtilityClass(slot: string) {
   return generateUtilityClass('MuiPieArcLabel', slot);
 }
 
-export const pieElementClasses: PieArcLabelClasses = generateUtilityClasses('MuiPieArcLabel', [
+export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('MuiPieArcLabel', [
   'root',
   'highlighted',
   'faded',

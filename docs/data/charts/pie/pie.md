@@ -73,10 +73,10 @@ Arcs with angles smaller than the value (in deg) will not have labels.
 Pie series can get `highlightScope` property to manage element highlighting.
 Its behavior is described in the [dedicated page](/x/react-charts/tooltip/#highlighting-series).
 
-When elements are highlighted or faded they can be customized with dedicated CSS classes.
-If CSS is well suited to modify the `color`, `stroke-width`, or `opacity`.
-It is more complicated to modify the size of a pie arc.
-To do so, we provide properties `highlighted` and `faded` which override the following values when an arc is highlighted or faded: `innerRadius`, `outerRadius`, and `cornerRadius`.
+When elements are highlighted or faded they can be customized with dedicated CSS classes: `.MuiPieArc-faded` and `.MuiPieArc-highlighted`.
+
+CSS is well suited to modify the `color`, `stroke-width`, or `opacity`.
+However, to modify the size of a pie arc, you must use the `highlighted` and `faded` properties, with which you can override any of the properties `innerRadius`, `outerRadius`, and `cornerRadius` when an arc is highlighted or faded.
 
 If you do not want to provide absolute values, you can use `additionalRadius` which will be added to the `outerRadius`.
 This value can be negative to reduce arc size.

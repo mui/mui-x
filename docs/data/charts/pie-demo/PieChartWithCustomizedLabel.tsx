@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { DefaultizedPieValueType } from '@mui/x-charts';
+import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 
 const data = [
   { label: 'Group A', value: 400, color: '#0088FE' },
@@ -8,7 +9,19 @@ const data = [
   { label: 'Group D', value: 200, color: '#FF8042' },
 ];
 
+const sizing = {
+  margin: { right: 5 },
+  width: 200,
+  height: 200,
+  legend: { hidden: true },
+};
 const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
+
+const getArcLabel = (params: DefaultizedPieValueType) => {
+  const percent = params.value / TOTAL;
+  return `${(percent * 100).toFixed(0)}%`;
+};
+
 export default function PieChartWithCustomizedLabel() {
   return (
     <PieChart
@@ -16,16 +29,16 @@ export default function PieChartWithCustomizedLabel() {
         {
           outerRadius: 80,
           data,
-          arcLabel: (params) => {
-            const percent = params.value / TOTAL;
-            return `${(percent * 100).toFixed(0)}%`;
-          },
+          arcLabel: getArcLabel,
         },
       ]}
-      margin={{ right: 5 }}
-      width={200}
-      height={200}
-      legend={{ hidden: true }}
+      sx={{
+        [`& .${pieArcLabelClasses.root}`]: {
+          fill: 'white',
+          fontSize: 14,
+        },
+      }}
+      {...sizing}
     />
   );
 }
