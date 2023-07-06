@@ -42,6 +42,7 @@ export function computeFlexColumnsWidth({
     maxWidth?: number;
   }[];
 }) {
+  const uniqueFlexColumns = new Set<GridColDef['field']>(flexColumns.map((col) => col.field));
   const flexColumnsLookup: {
     all: Record<
       GridColDef['field'],
@@ -68,7 +69,7 @@ export function computeFlexColumnsWidth({
   // Step 5 of https://drafts.csswg.org/css-flexbox-1/#resolve-flexible-lengths
   function loopOverFlexItems() {
     // 5a: If all the flex items on the line are frozen, free space has been distributed.
-    if (flexColumnsLookup.frozenFields.length === flexColumns.length) {
+    if (flexColumnsLookup.frozenFields.length === uniqueFlexColumns.size) {
       return;
     }
 

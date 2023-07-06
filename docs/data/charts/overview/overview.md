@@ -31,11 +31,16 @@ To modify the styling of charts you can rely on all the MUI styling tools, such 
 
 To install this library, run
 
-```sh
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/x-charts
-// or
+```
+
+```bash yarn
 yarn add @mui/x-charts
 ```
+
+</codeblock>
 
 ## Display charts
 

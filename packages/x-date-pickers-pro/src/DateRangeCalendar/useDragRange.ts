@@ -2,8 +2,8 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
 import { DateRangePosition } from './DateRangeCalendar.types';
-import { DateRange } from '../internal/models';
-import { isEndOfRange, isStartOfRange } from '../internal/utils/date-utils';
+import { DateRange } from '../internals/models';
+import { isEndOfRange, isStartOfRange } from '../internals/utils/date-utils';
 
 interface UseDragRangeParams<TDate> {
   disableDragEditing?: boolean;

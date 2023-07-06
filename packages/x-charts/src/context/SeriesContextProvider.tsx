@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import barSeriesFormatter from '../BarChart/formatter';
 import scatterSeriesFormatter from '../ScatterChart/formatter';
 import lineSeriesFormatter from '../LineChart/formatter';
+import pieSeriesFormatter from '../PieChart/formatter';
 import { AllSeriesType } from '../models/seriesType';
 import { defaultizeColor } from '../internals/defaultizeColor';
 import { ChartSeriesType, FormatterParams, FormatterResult } from '../models/seriesType/config';
@@ -25,8 +26,16 @@ const seriesTypeFormatter: { [type in ChartSeriesType]?: (series: any) => any } 
   bar: barSeriesFormatter,
   scatter: scatterSeriesFormatter,
   line: lineSeriesFormatter,
+  pie: pieSeriesFormatter,
 };
-
+/**
+ * This methods is the interface between what the developper is providing and what compoenents receives
+ * To simplify the components behaviors, it groups series by type, such that LinePlots props are not updated if soe line data are modified
+ * It also add defaultized values such as the ids, colors
+ * @param series The array of series provided by devs
+ * @param colors The color palette used to defaultize series colors
+ * @returns An object structuring all the series by type.
+ */
 const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
   // Group series by type
   const seriesGroups: { [type in ChartSeriesType]?: FormatterParams<type> } = {};
@@ -39,7 +48,11 @@ const formatSeries = (series: AllSeriesType[], colors?: string[]) => {
     if (seriesGroups[type]?.series[id] !== undefined) {
       throw new Error(`MUI: series' id "${id}" is not unique`);
     }
-    seriesGroups[type]!.series[id] = { id, ...defaultizeColor(seriesData, seriesIndex, colors) };
+
+    seriesGroups[type]!.series[id] = {
+      id,
+      ...defaultizeColor(seriesData, seriesIndex, colors),
+    };
     seriesGroups[type]!.seriesOrder.push(id);
   });
 

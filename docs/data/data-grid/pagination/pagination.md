@@ -93,8 +93,8 @@ For more information regarding server-side pagination in combination with contro
 - Provide a `rowCount` prop to let the data grid know how many pages there are
 - Use the `onPaginationModelChange` prop callback to load the rows when the page changes
 
-Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
-To avoid this problem, you can keep the previous value of `rowCount` while loading as follow:
+Since the `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading resets the page to zero.
+To avoid this problem, you can keep the previous value of `rowCount` while loading as follows:
 
 ```jsx
 const [rowCountState, setRowCountState] = React.useState(rowCount);

@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: React Date Field component
 components: DateTimeField
 githubLabel: 'component: pickers'
