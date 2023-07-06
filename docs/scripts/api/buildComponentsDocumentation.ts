@@ -298,7 +298,7 @@ const buildComponentDocumentation = async (options: {
     propDescriptions: {
       [key: string]: {
         description: string;
-        notes?: string;
+        requiresRef?: string;
         deprecated?: string;
         typeDescriptions?: { [t: string]: string };
       };
@@ -342,7 +342,7 @@ const buildComponentDocumentation = async (options: {
         signature: signatureType,
         signatureArgs,
         signatureReturn,
-        notes,
+        requiresRef,
       } = generatePropDescription(prop, propName);
       let description = renderMarkdownInline(jsDocText);
 
@@ -377,7 +377,7 @@ const buildComponentDocumentation = async (options: {
 
       componentApi.propDescriptions[propName] = {
         description: linkify(description, documentedInterfaces, 'html'),
-        notes: linkify(notes, documentedInterfaces, 'html'),
+        requiresRef,
         deprecated,
         typeDescriptions,
       };
