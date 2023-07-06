@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.9.2
+
+_Jul 6, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Auto-scroll when making range selection (#8661) @m4theushw
+- 🥧 Add pie chart component
+
+  They are fresh from the code editor. You can visit [pie charts docs](https://mui.com/x/react-charts/pie/) or their [demo page](https://mui.com/x/react-charts/pie-demo/).
+  
+![image](https://github.com/mui/mui-x/assets/45398769/20f31f44-9fb0-49c1-b77c-71bdc5afea0b)
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### `@mui/x-data-grid@v6.9.2` / `@mui/x-data-grid-pro@v6.9.2` / `@mui/x-data-grid-premium@v6.9.2`
+
+#### Changes
+
+- [DataGrid] Fix `RangeError` when flex columns have duplicated `field` property (#9554) @cherniavskii
+- [DataGrid] Fix react 17 editing bug (#9530) @romgrk
+- [DataGrid] Use `getRowId` in filtering (#9564) @romgrk
+- [DataGridPremium] Auto-scroll when making range selection (#8661) @m4theushw
+- [l10n] Improve Spanish (es-ES) locale (#9500) @fufex
+
+### `@mui/x-date-pickers@v6.9.2` / `@mui/x-date-pickers-pro@v6.9.2`
+
+#### Changes
+
+- [pickers] Forward digital clock classes (#9555) @YoonjiJang
+- [pickers] Rename `internal` folder to `internals` on `@mui/x-date-picker-pro` (#9571) @flaviendelangle
+
+### `@mui/x-charts@6.0.0-alpha.2`
+
+#### Changes
+
+- [charts] Add pie chart component (#9395) @alexfauquette
+
+### Docs
+
+- [docs] Add pickers playground (#9164) @LukasTy
+- [docs] Fix API links for pickers (#9573) @alexfauquette
+- [docs] Fix typos in pagination documentation page (#9332) @RatherBeLunar
+- [docs] Hide ads on paid content @oliviertassinari
+- [docs] Move the charts in the sidebar (#9437) @flaviendelangle
+- [docs] New page: Components lifecycle (#8372) @flaviendelangle
+- [docs] Remove outdated header tag @oliviertassinari
+
+### Core
+
+- [core] Fix typo in priority support @oliviertassinari
+- [core] Remove mention of Crowdin @oliviertassinari
+
 ## 6.9.1
 
 _Jun 30, 2023_
