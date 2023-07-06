@@ -86,6 +86,14 @@ const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtual
       columnHeadersElementRef: columnHeadersRef,
     });
 
+    const contentProps = getContentProps();
+
+    React.useEffect(() => {
+      if (columnsContainerRef.current) {
+        columnsContainerRef.current.style.width = `${contentProps.style.width}px`;
+      }
+    }, [contentProps.style.width]);
+
     return (
       <GridVirtualScroller className={className} {...getRootProps(other)}>
         <rootProps.slots.columnHeaders
@@ -105,10 +113,11 @@ const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtual
           columnVisibility={columnVisibility}
           columnGroupsHeaderStructure={columnGroupsHeaderStructure}
           hasOtherElementInTabSequence={hasOtherElementInTabSequence}
+          // style={{ width: contentProps.style.width }}
           // {...ColumnHeadersProps}
         />
         <GridOverlays />
-        <GridVirtualScrollerContent {...getContentProps()}>
+        <GridVirtualScrollerContent {...contentProps}>
           <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
             {getRows()}
           </GridVirtualScrollerRenderZone>
