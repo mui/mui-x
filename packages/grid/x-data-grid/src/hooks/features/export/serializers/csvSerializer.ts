@@ -51,7 +51,7 @@ const objectFormattedValueWarning = buildWarning([
 
 type CSVRowOptions = {
   delimiterCharacter: string;
-  sanitizeValue?: boolean;
+  sanitizeCellValue?: (value: any, delimiterCharacter: string) => any;
 };
 class CSVRow {
   options: CSVRowOptions;
@@ -62,9 +62,6 @@ class CSVRow {
 
   constructor(options: CSVRowOptions) {
     this.options = options;
-    if (this.options.sanitizeValue === undefined) {
-      this.options.sanitizeValue = true;
-    }
   }
 
   addValue(value: string) {
@@ -73,8 +70,8 @@ class CSVRow {
     }
     if (value === null || value === undefined) {
       this.rowString += '';
-    } else if (this.options.sanitizeValue) {
-      this.rowString += sanitizeCellValue(value, this.options.delimiterCharacter);
+    } else if (typeof this.options.sanitizeCellValue === 'function') {
+      this.rowString += this.options.sanitizeCellValue(value, this.options.delimiterCharacter);
     } else {
       this.rowString += value;
     }
@@ -99,7 +96,7 @@ const serializeRow = ({
   delimiterCharacter: string;
   ignoreValueFormatter: boolean;
 }) => {
-  const row = new CSVRow({ delimiterCharacter, sanitizeValue: false });
+  const row = new CSVRow({ delimiterCharacter });
 
   columns.forEach((column) => {
     const cellParams = getCellParams(id, column.field);
@@ -173,7 +170,7 @@ export function buildCSV(options: BuildCSVOptions): string {
     }, {});
 
     for (let i = 0; i < maxColumnGroupsDepth; i += 1) {
-      const headerGroupRow = new CSVRow({ delimiterCharacter });
+      const headerGroupRow = new CSVRow({ delimiterCharacter, sanitizeCellValue });
       headerRows.push(headerGroupRow);
       filteredColumns.forEach((column) => {
         const columnGroupId = (columnGroupPathsLookup[column.field] || [])[i];
@@ -183,7 +180,7 @@ export function buildCSV(options: BuildCSVOptions): string {
     }
   }
 
-  const mainHeaderRow = new CSVRow({ delimiterCharacter });
+  const mainHeaderRow = new CSVRow({ delimiterCharacter, sanitizeCellValue });
   filteredColumns.forEach((column) => {
     mainHeaderRow.addValue(column.headerName || column.field);
   });
