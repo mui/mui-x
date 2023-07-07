@@ -39,7 +39,7 @@ describe('<DataGrid /> - Quick Filter', () => {
   function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} components={{ Toolbar: GridToolbarQuickFilter }} {...props} />
+        <DataGrid {...baselineProps} slots={{ toolbar: GridToolbarQuickFilter }} {...props} />
       </div>
     );
   }
@@ -178,6 +178,46 @@ describe('<DataGrid /> - Quick Filter', () => {
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+    });
+
+    it('should search hidden columns when quickFilterIncludeHiddenColumns=true', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          initialState={{
+            columns: { columnVisibilityModel: { id: false } },
+            filter: { filterModel: { items: [], quickFilterIncludeHiddenColumns: true } },
+          }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Puma']);
+    });
+
+    it('should ignore hidden columns when quickFilterIncludeHiddenColumns=false', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          initialState={{
+            columns: { columnVisibilityModel: { id: false } },
+            filter: { filterModel: { items: [], quickFilterIncludeHiddenColumns: false } },
+          }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
     });
   });
 
