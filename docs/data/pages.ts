@@ -311,6 +311,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
+      { pathname: '/x/react-date-pickers/playground', title: 'Playground' },
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
@@ -340,6 +341,14 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-charts/lines', title: 'Lines' },
           { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
           { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
+        ],
+      },
+      {
+        pathname: '/x/react-charts-pie',
+        title: 'Pie',
+        children: [
+          { pathname: '/x/react-charts/pie', title: 'Pie' },
+          { pathname: '/x/react-charts/pie-demo', title: 'Demo' },
         ],
       },
       {
