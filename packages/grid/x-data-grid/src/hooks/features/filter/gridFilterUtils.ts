@@ -19,7 +19,11 @@ import {
   GridQuickFilterValueResult,
 } from './gridFilterState';
 import { buildWarning } from '../../../utils/warning';
-import { gridColumnFieldsSelector, gridColumnLookupSelector } from '../columns';
+import {
+  gridColumnFieldsSelector,
+  gridColumnLookupSelector,
+  gridVisibleColumnFieldsSelector,
+} from '../columns';
 
 type GridFilterItemApplier =
   | {
@@ -267,7 +271,11 @@ export const buildAggregatedQuickFilterApplier = (
     return null;
   }
 
-  const columnFields = gridColumnFieldsSelector(apiRef);
+  const quickFilterIncludeHiddenColumns = filterModel.quickFilterIncludeHiddenColumns ?? true;
+
+  const columnFields = quickFilterIncludeHiddenColumns
+    ? gridColumnFieldsSelector(apiRef)
+    : gridVisibleColumnFieldsSelector(apiRef);
 
   const appliersPerField = [] as {
     column: GridColDef;
