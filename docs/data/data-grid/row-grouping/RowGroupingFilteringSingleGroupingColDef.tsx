@@ -11,7 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 
-export default function RowGroupingSortingSingleGroupingColDef() {
+export default function RowGroupingFilteringSingleGroupingColDef() {
   const data = useMovieData();
   const [mainGroupingCriteria, setMainGroupingCriteria] =
     React.useState<string>('undefined');
