@@ -1,0 +1,16 @@
+<DataGrid
+  columns={columns}
+  rows={rows}
+  disableColumnFilter
+  disableDensitySelector
+  slots={{ toolbar: GridToolbar }}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [],
+        quickFilterIncludeHiddenColumns: false,
+      },
+    },
+  }}
+  slotProps={{ toolbar: { showQuickFilter: true } }}
+/>
