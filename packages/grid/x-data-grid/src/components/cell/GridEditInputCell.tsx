@@ -32,7 +32,7 @@ const GridEditInputCellRoot = styled(InputBase, {
   ...theme.typography.body2,
   padding: '1px 0',
   '& input': {
-    padding: '0 16px',
+    padding: '0 9px',
     height: '100%',
   },
 }));
