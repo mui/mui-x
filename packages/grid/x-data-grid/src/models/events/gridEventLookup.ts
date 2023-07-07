@@ -441,7 +441,6 @@ export interface GridEventLookup
   sortedRowsSet: {};
   /**
    * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
-   * @ignore - do not document.
    */
   rowExpansionChange: { params: GridGroupNode };
   /**
