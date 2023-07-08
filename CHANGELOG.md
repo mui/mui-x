@@ -39,7 +39,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 Same changes as in `@mui/x-data-grid@6.9.2`.
 
-#### `@mui/x-data-grid-premium@6.9.2`  [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+#### `@mui/x-data-grid-premium@6.9.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
 
 Same changes as in `@mui/x-data-grid-pro@6.9.2`, plus:
 
