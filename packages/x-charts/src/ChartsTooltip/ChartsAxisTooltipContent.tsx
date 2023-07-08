@@ -2,9 +2,13 @@ import * as React from 'react';
 import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { AxisInteractionData } from '../context/InteractionProvider';
-import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
+import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesDefaultized,
+  ChartSeriesType,
+} from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import {
   ChartsTooltipCell,
@@ -101,7 +105,11 @@ export function ChartsAxisTooltipContent(props: {
 
   const relevantSeries = React.useMemo(() => {
     const rep: any[] = [];
-    (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
+    (
+      Object.keys(series).filter((seriesType) =>
+        ['bar', 'line', 'scatter'].includes(seriesType),
+      ) as CartesianChartSeriesType[]
+    ).forEach((seriesType) => {
       series[seriesType]!.seriesOrder.forEach((seriesId) => {
         const axisKey = series[seriesType]!.series[seriesId].xAxisKey;
         if (axisKey === undefined || axisKey === USED_X_AXIS_ID) {

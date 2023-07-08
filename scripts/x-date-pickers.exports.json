@@ -273,5 +273,6 @@
   { "name": "YearCalendarClasses", "kind": "Interface" },
   { "name": "YearCalendarClassKey", "kind": "TypeAlias" },
   { "name": "YearCalendarProps", "kind": "Interface" },
-  { "name": "zhCN", "kind": "Variable" }
+  { "name": "zhCN", "kind": "Variable" },
+  { "name": "zhHK", "kind": "Variable" }
 ]

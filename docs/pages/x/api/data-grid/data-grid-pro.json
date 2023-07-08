@@ -159,7 +159,10 @@
     "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "pageSizeOptions": {
-      "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;number<br>&#124;&nbsp;{ label: string, value: number }&gt;"
+      },
       "default": "[25, 50, 100]"
     },
     "pagination": { "type": { "name": "bool" } },

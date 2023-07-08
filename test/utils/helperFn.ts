@@ -1,3 +1,5 @@
+import { act } from '@mui/monorepo/test/utils';
+
 export async function raf() {
   return new Promise<void>((resolve) => {
     // Chrome and Safari have a bug where calling rAF once returns the current
@@ -56,6 +58,10 @@ export function sleep(duration: number) {
       resolve();
     }, duration);
   });
+}
+
+export function microtasks() {
+  return act(() => Promise.resolve());
 }
 
 export function getColumnValues(colIndex: number) {

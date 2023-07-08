@@ -14,7 +14,7 @@ export type {
   RangeFieldSection,
   BaseMultiInputFieldProps,
   MultiInputFieldSlotTextFieldProps,
-} from './internal/models/fields';
+} from './internals/models/fields';
 
 // Calendars
 export * from './DateRangeCalendar';
@@ -28,7 +28,7 @@ export * from './StaticDateRangePicker';
 // View renderers
 export * from './dateRangeViewRenderers';
 
-export type { DateRange, RangePosition } from './internal/models/range';
-export type { UseDateRangeFieldProps } from './internal/models/dateRange';
+export type { DateRange, RangePosition } from './internals/models/range';
+export type { UseDateRangeFieldProps } from './internals/models/dateRange';
 
 export * from './models';

@@ -104,7 +104,7 @@ export default function InstallationInstructions(props: {
           </TextField>
         ) : null}
       </Stack>
-      <HighlightedCode sx={{ width: '100%' }} code={commands.join('\n')} language="sh" />
+      <HighlightedCode sx={{ width: '100%' }} code={commands.join('\n')} language="bash" />
     </Stack>
   );
 }

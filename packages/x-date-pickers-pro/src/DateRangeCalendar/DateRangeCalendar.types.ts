@@ -18,10 +18,10 @@ import {
   ExportedUseViewsOptions,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DayRangeValidationProps } from '../internal/models';
+import { DateRange, DayRangeValidationProps } from '../internals/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
-import { UseRangePositionProps } from '../internal/hooks/useRangePosition';
+import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 

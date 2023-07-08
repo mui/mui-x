@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Bar demonstration
 ---
 
@@ -9,24 +8,24 @@ title: Charts - Bar demonstration
 
 ## TinyBarChart
 
-{{"demo": "TinyBarChart.js", "bg": "inline"}}
+{{"demo": "TinyBarChart.js"}}
 
 ## SimpleBarChart
 
-{{"demo": "SimpleBarChart.js", "bg": "inline"}}
+{{"demo": "SimpleBarChart.js"}}
 
 ## StackedBarChart
 
-{{"demo": "StackedBarChart.js", "bg": "inline"}}
+{{"demo": "StackedBarChart.js"}}
 
 ## MixedBarChart
 
-{{"demo": "MixedBarChart.js", "bg": "inline"}}
+{{"demo": "MixedBarChart.js"}}
 
 ## BarChartStackedBySign
 
-{{"demo": "BarChartStackedBySign.js", "bg": "inline"}}
+{{"demo": "BarChartStackedBySign.js"}}
 
 ## BiaxialBarChart
 
-{{"demo": "BiaxialBarChart.js", "bg": "inline"}}
+{{"demo": "BiaxialBarChart.js"}}

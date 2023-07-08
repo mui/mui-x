@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: Date and Time pickers - Custom field
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'

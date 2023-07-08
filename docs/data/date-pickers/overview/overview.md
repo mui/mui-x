@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: Date and Time Picker React components
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
