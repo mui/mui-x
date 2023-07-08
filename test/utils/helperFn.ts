@@ -1,5 +1,6 @@
 import { spy } from 'sinon';
 import { act } from '@mui/monorepo/test/utils';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals'
 
 export function sleep(duration: number) {
   return new Promise<void>((resolve) => {
@@ -14,8 +15,7 @@ export function microtasks() {
 }
 
 export function spyApi(api: any, methodName: string) {
-  // eslint-disable-next-line no-underscore-dangle
-  return spy(api.__private__, methodName);
+  return spy(unwrapPrivateAPI(api), methodName as any);
 }
 
 export async function raf() {

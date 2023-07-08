@@ -14,6 +14,12 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
+export function unwrapPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
+  publicApi: Api
+): PrivateApi {
+  return (publicApi as any)[SYMBOL_API_PRIVATE];
+}
+
 let globalId = 0;
 
 function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
@@ -73,14 +79,6 @@ function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends Gr
     [SYMBOL_API_TYPE]: 'public',
     [SYMBOL_API_PRIVATE]: privateApiRef.current,
   } as any as Api;
-
-  // We need access to the private API in the tests, but we don't want to export
-  // any function that gives access to it.
-  /* eslint-disable no-underscore-dangle */
-  if (typeof window !== 'undefined' && (window as any).__karma__) {
-    (publicApi as any).__private__ = privateApiRef.current;
-  }
-  /* eslint-enable no-underscore-dangle */
 
   return publicApi;
 }
