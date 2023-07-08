@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
 import { act } from '@mui/monorepo/test/utils';
-import { unwrapPrivateAPI } from '@mui/x-data-grid/internals'
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 
 export function sleep(duration: number) {
   return new Promise<void>((resolve) => {

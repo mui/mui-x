@@ -14,9 +14,10 @@ const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
   return event.isPropagationStopped !== undefined;
 };
 
-export function unwrapPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends GridApiCommon>(
-  publicApi: Api
-): PrivateApi {
+export function unwrapPrivateAPI<
+  PrivateApi extends GridPrivateApiCommon,
+  Api extends GridApiCommon,
+>(publicApi: Api): PrivateApi {
   return (publicApi as any)[SYMBOL_API_PRIVATE];
 }
 
