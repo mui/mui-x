@@ -25,27 +25,38 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.9.2` / `@mui/x-data-grid-pro@v6.9.2` / `@mui/x-data-grid-premium@v6.9.2`
+### Data Grid
 
-#### Changes
+#### `@mui/x-data-grid@v6.9.2`
 
 - [DataGrid] Fix `RangeError` when using flex columns (#9554) @cherniavskii
 - [DataGrid] Fix React 17 editing bug (#9530) @romgrk
 - [DataGrid] Use `getRowId` in filtering (#9564) @romgrk
 - [DataGrid] Correctly reflect `TablePagination`'s `rowsPerPageOptions` shape to `pageSizeOptions` (#9438) @burakkgunduzz
-- [DataGridPremium] Auto-scroll when making range selection (#8661) @m4theushw
 - [l10n] Improve Spanish (es-ES) locale (#9500) @fufex
 
-### `@mui/x-date-pickers@v6.9.2` / `@mui/x-date-pickers-pro@v6.9.2`
+#### `@mui/x-data-grid-pro@v6.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-data-grid@v6.9.2`.
+
+#### `@mui/x-data-grid-premium@v6.9.2`  [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@v6.9.2`, plus:
+
+- [DataGridPremium] Auto-scroll when making range selection (#8661) @m4theushw
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.9.2`
 
 - [pickers] Forward digital clock classes (#9555) @YoonjiJang
 - [pickers] Rename `internal` folder to `internals` on `@mui/x-date-picker-pro` (#9571) @flaviendelangle
 
-### `@mui/x-charts@6.0.0-alpha.2`
+#### `@mui/x-date-pickers-pro@v6.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-date-pickers@v6.9.2`.
+
+### `@mui/x-charts@6.0.0-alpha.2`
 
 - [charts] Add pie chart component (#9395) @alexfauquette
 
@@ -77,9 +88,9 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.9.1` / `@mui/x-data-grid-pro@v6.9.1` / `@mui/x-data-grid-premium@v6.9.1`
+### Data Grid
 
-#### Changes
+#### `@mui/x-data-grid@v6.9.1`
 
 - [DataGrid] Add Joy UI `tooltip` and `loadingOverlay` slots (#9028) @cherniavskii
 - [DataGrid] Add section about enabling pagination on Pro and Premium (#8759) @joserodolfofreitas
@@ -87,13 +98,22 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Add experimental API for faster filtering performance (#9254) @romgrk
 - [DataGrid] Fix `nextFieldToFocus` to always be a visible column field when <kbd>Tab</kbd> key is pressed (#8314) @yaredtsy
 - [DataGrid] Fix `Maximum call stack size exceeded` error when using fractional width (#9516) @cherniavskii
-- [DataGridPro] Don't throw error in column pinning (#9507) @romgrk
-- [DataGridPro] Fix bug with `checkboxSelection` and treeData/grouping (#9418) @romgrk
 - [l10n] Improve Romanian (ro-RO) and Hungarian (hu-HU) translations (#9436) @noraleonte
 
-### `@mui/x-date-pickers@v6.9.1` / `@mui/x-date-pickers-pro@v6.9.1`
+#### `@mui/x-data-grid-pro@v6.9.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-data-grid@v6.9.1`, plus:
+
+- [DataGridPro] Don't throw error in column pinning (#9507) @romgrk
+- [DataGridPro] Fix bug with `checkboxSelection` and treeData/grouping (#9418) @romgrk
+
+#### `@mui/x-data-grid-premium@v6.9.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@v6.9.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.9.1`
 
 - [DateTimePicker] Scroll to Digital Clock section only when selection changes (#9434) @LukasTy
 - [pickers] Handle `keyDown` only when input is focused (#9481) @LukasTy
@@ -101,9 +121,13 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [l10n] Add Chinese (Hong Kong) (zh-HK) locale (#9468) @samchiu90
 - [l10n] Improve Romanian (ro-RO) translations (#9436) @noraleonte
 
-### `@mui/x-charts@6.0.0-alpha.1`
+#### `@mui/x-date-pickers-pro@v6.9.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-date-pickers@v6.9.1`.
+
+### Charts
+
+#### `@mui/x-charts@6.0.0-alpha.1`
 
 - [charts] Take responsive container from data grid (#9497) @alexfauquette
 - [charts] Update README.md (#9426) @alexfauquette
