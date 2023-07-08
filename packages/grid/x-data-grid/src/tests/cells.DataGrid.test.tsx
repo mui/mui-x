@@ -3,7 +3,8 @@ import { spy } from 'sinon';
 import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
-import { getCell } from 'test/utils/helperFn';
+import { getCell,getActiveCell } from 'test/utils/helperFn';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -183,6 +184,42 @@ describe('<DataGrid /> - Cells', () => {
       getCell(1, 0).focus();
     }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
+
+  it('selected cell  should alwys been in the dom,',function(){
+    if(isJSDOM){
+      this.skip()
+    }
+    const rowHeight = 50;
+    const defaultData = getBasicGridData(20, 20);
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={defaultData.columns} rows={defaultData.rows} rowHeight={rowHeight} />
+      </div>,
+    );
+
+   const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+
+    const thirdRowCell = getCell(1, 3);
+    userEvent.mousePress(thirdRowCell);
+
+    const activeElementTextContent= document.activeElement?.textContent
+    const columnWidth = document.activeElement!.clientWidth
+
+    // check for row virtualazition
+    let scrollTop = 10 * rowHeight;
+    virtualScroller.scrollTop = scrollTop;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    expect(document.activeElement?.textContent).to.equal(activeElementTextContent)
+    
+    // check for column virtualization
+    let scrollLeft = 10 * columnWidth
+    virtualScroller.scrollLeft = scrollLeft
+    virtualScroller.dispatchEvent(new Event('scroll'));
+
+    expect(document.activeElement?.textContent).to.equal(activeElementTextContent)
+  })
 
   // See https://github.com/mui/mui-x/issues/6378
   it('should not cause scroll jump when focused cell mounts in the render zone', async function test() {
