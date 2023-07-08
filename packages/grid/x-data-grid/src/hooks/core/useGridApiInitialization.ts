@@ -55,7 +55,7 @@ function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends G
   };
 
   privateApi.register('private', {
-    caches: {} as PrivateApi['caches'],
+    caches: {} as any,
     eventManager: new EventManager(),
   });
 
@@ -69,14 +69,12 @@ function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends Gr
     get state() {
       return privateApiRef.current.state;
     },
-    set state(value) {
-      // XXX: need to prevent this, setting state should be done on the private instance
-      privateApiRef.current.state = value;
-    },
     get store() {
       return privateApiRef.current.store;
     },
-    instanceId: privateApiRef.current.instanceId,
+    get instanceId() {
+      return privateApiRef.current.instanceId;
+    },
     [SYMBOL_API_TYPE]: 'public',
     [SYMBOL_API_PRIVATE]: privateApiRef.current,
   } as any as Api;
