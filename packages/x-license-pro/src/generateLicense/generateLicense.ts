@@ -20,7 +20,7 @@ function getClearLicenseString(details: LicenseDetails) {
   }
 
   if (details.licensingModel && !LICENSING_MODELS.includes(details.licensingModel)) {
-    throw new Error('MUI: Invalid sales model');
+    throw new Error('MUI: Invalid licensing model');
   }
 
   return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${
