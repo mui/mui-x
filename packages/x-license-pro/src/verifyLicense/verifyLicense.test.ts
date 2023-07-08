@@ -37,6 +37,8 @@ describe('License: verifyLicense', () => {
     it('should check expired license properly', () => {
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(releaseDate.getTime() - oneDayInMS),
+        scope: 'pro',
+        licensingModel: 'perpetual',
         orderNumber: 'MUI-123',
       });
 
@@ -129,6 +131,7 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
+          scope: 'pro',
           licensingModel: 'subscription',
         });
 
@@ -146,6 +149,7 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
+          scope: 'pro',
           licensingModel: 'subscription',
         });
 
@@ -163,6 +167,7 @@ describe('License: verifyLicense', () => {
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
+          scope: 'pro',
           licensingModel: 'perpetual',
         });
 
@@ -187,6 +192,26 @@ describe('License: verifyLicense', () => {
           isProduction: true,
         }),
       ).to.equal(LicenseStatus.Invalid);
+    });
+  });
+
+  describe('key version: 2.1', () => {
+    const licenseKeyPro = generateLicense({
+      expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+      orderNumber: 'MUI-123',
+      scope: 'pro',
+      licensingModel: 'annual',
+    });
+
+    it('should accept licensingModel="annual"', () => {
+      expect(
+        verifyLicense({
+          releaseInfo: RELEASE_INFO,
+          licenseKey: licenseKeyPro,
+          acceptedScopes: ['pro', 'premium'],
+          isProduction: true,
+        }),
+      ).to.equal(LicenseStatus.Valid);
     });
   });
 });
