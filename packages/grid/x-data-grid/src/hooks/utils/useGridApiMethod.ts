@@ -13,23 +13,19 @@ export function useGridApiMethod<
   T extends V extends 'public' ? Partial<PublicApi> : Partial<PrivateOnlyApi>,
 >(privateApiRef: React.MutableRefObject<PrivateApi>, apiMethods: T, visibility: V) {
   const apiMethodsRef = React.useRef(apiMethods);
-  const [apiMethodsNames] = React.useState(Object.keys(apiMethods) as Array<keyof T>);
 
   const installMethods = React.useCallback(() => {
-    if (!privateApiRef.current) {
-      return;
-    }
-    apiMethodsNames.forEach((methodName) => {
+    Object.keys(apiMethodsRef.current).forEach((methodName) => {
       if (!privateApiRef.current.hasOwnProperty(methodName)) {
         privateApiRef.current.register(visibility, {
           [methodName]: (...args: any[]) => {
-            const fn = apiMethodsRef.current[methodName] as Function;
+            const fn = (apiMethodsRef.current as any)[methodName] as Function;
             return fn(...args);
           },
         });
       }
     });
-  }, [apiMethodsNames, privateApiRef, visibility]);
+  }, [privateApiRef, visibility]);
 
   React.useEffect(() => {
     apiMethodsRef.current = apiMethods;
