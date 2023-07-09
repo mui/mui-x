@@ -1,6 +1,7 @@
 import { spy } from 'sinon';
 import { act } from '@mui/monorepo/test/utils';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
+import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
 
 export function sleep(duration: number) {
   return new Promise<void>((resolve) => {
@@ -14,7 +15,7 @@ export function microtasks() {
   return act(() => Promise.resolve());
 }
 
-export function spyApi(api: any, methodName: string) {
+export function spyApi(api: GridApiCommon, methodName: keyof GridApiCommon) {
   const privateApi = unwrapPrivateAPI(api);
   const method = privateApi[methodName];
 
