@@ -185,7 +185,7 @@ describe('<DataGrid /> - Cells', () => {
     }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
 
-  it('selected cell  should alwys been in the dom,', function () {
+  it('selected cell  should alwys been in the dom,', function test() {
     if (isJSDOM) {
       this.skip();
     }
