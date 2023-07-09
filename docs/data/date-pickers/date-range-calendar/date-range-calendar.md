@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: React Date Range Calendar component
 components: DateRangeCalendar
 githubLabel: 'component: DateRangePicker'
