@@ -336,11 +336,6 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }
 
   const style = React.useMemo(() => {
-    const rowStyle = {
-      ...styleProp,
-      maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
-      minHeight,
-    };
     if (isNotVisible) {
       return {
         opacity: 0,
@@ -348,6 +343,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         height: 0,
       };
     }
+
+    const rowStyle = {
+      ...styleProp,
+      maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
+      minHeight,
+    };
 
     if (sizes?.spacingTop) {
       const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';

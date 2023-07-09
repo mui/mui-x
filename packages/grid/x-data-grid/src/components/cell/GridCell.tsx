@@ -333,13 +333,6 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   );
 
   const style = React.useMemo(() => {
-    const cellStyle = {
-      minWidth: width,
-      maxWidth: width,
-      minHeight: height,
-      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
-    };
-
     if (isNotVisible) {
       return {
         padding: 0,
@@ -347,6 +340,12 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         width: 0,
       };
     }
+    const cellStyle = {
+      minWidth: width,
+      maxWidth: width,
+      minHeight: height,
+      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+    };
     return cellStyle;
   }, [width, height, isNotVisible]);
 
@@ -654,13 +653,6 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   );
 
   const style = React.useMemo(() => {
-    const cellStyle = {
-      minWidth: width,
-      maxWidth: width,
-      minHeight: height,
-      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
-    };
-
     if (isNotVisible) {
       return {
         padding: 0,
@@ -668,6 +660,12 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         width: 0,
       };
     }
+    const cellStyle = {
+      minWidth: width,
+      maxWidth: width,
+      minHeight: height,
+      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+    };
     return cellStyle;
   }, [width, height, isNotVisible]);
 
