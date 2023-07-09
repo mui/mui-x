@@ -45,11 +45,24 @@ function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends G
 
   privateApi.register = (visibility, methods) => {
     Object.keys(methods).forEach((methodName) => {
-      if (visibility === 'public') {
-        publicApiRef.current[methodName as keyof Api] = (methods as any)[methodName];
-        privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
+      const method = (methods as any)[methodName];
+
+      const currentPrivateMethod = privateApi[methodName as keyof typeof privateApi] as any;
+      if (currentPrivateMethod?.spying === true) {
+        currentPrivateMethod.target = method;
       } else {
-        privateApi[methodName as keyof PrivateApi] = (methods as any)[methodName];
+        privateApi[methodName as keyof typeof privateApi] = method;
+      }
+
+      if (visibility === 'public') {
+        const publicApi = publicApiRef.current;
+
+        const currentPublicMethod = publicApi[methodName as keyof typeof publicApi] as any;
+        if (currentPublicMethod?.spying === true) {
+          currentPublicMethod.target = method;
+        } else {
+          publicApi[methodName as keyof typeof publicApi] = method;
+        }
       }
     });
   };

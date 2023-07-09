@@ -15,7 +15,19 @@ export function microtasks() {
 }
 
 export function spyApi(api: any, methodName: string) {
-  return spy(unwrapPrivateAPI(api), methodName as any);
+  const privateApi = unwrapPrivateAPI(api);
+  const method = privateApi[methodName];
+
+  const spyFn = spy((...args: any[]) => {
+    return spyFn.target(...args);
+  }) as any;
+  spyFn.spying = true;
+  spyFn.target = method;
+
+  api[methodName] = spyFn;
+  privateApi[methodName] = spyFn;
+
+  return spyFn;
 }
 
 export async function raf() {

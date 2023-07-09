@@ -54,7 +54,6 @@ export const useGridPipeProcessing = (apiRef: React.MutableRefObject<GridPrivate
     if (isRunning.current || !groupCache) {
       return;
     }
-
     isRunning.current = true;
     Object.values(groupCache.appliers).forEach((callback) => {
       callback();
