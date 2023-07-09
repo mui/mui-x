@@ -15,9 +15,10 @@ export function microtasks() {
   return act(() => Promise.resolve());
 }
 
-export function spyApi(api: GridApiCommon, methodName: keyof GridApiCommon) {
+export function spyApi(api: GridApiCommon, methodName: string) {
+  const methodKey = methodName as keyof GridApiCommon;
   const privateApi = unwrapPrivateAPI(api);
-  const method = privateApi[methodName];
+  const method = privateApi[methodKey];
 
   const spyFn = spy((...args: any[]) => {
     return spyFn.target(...args);
@@ -25,8 +26,8 @@ export function spyApi(api: GridApiCommon, methodName: keyof GridApiCommon) {
   spyFn.spying = true;
   spyFn.target = method;
 
-  api[methodName] = spyFn;
-  privateApi[methodName] = spyFn;
+  api[methodKey] = spyFn;
+  privateApi[methodKey] = spyFn;
 
   return spyFn;
 }
