@@ -47,7 +47,7 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Rimuovi filtri',
   filterPanelDeleteIconLabel: 'Rimuovi',
   filterPanelLogicOperator: 'Operatore logico',
   filterPanelOperator: 'Operatori',
@@ -71,12 +71,12 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
   filterOperatorIsAnyOf: 'è uno tra',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
   headerFilterOperatorContains: 'Contiene',
@@ -107,7 +107,7 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Mostra le colonne',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Gestisci colonne',
   columnMenuFilter: 'Filtra',
   columnMenuHideColumn: 'Nascondi',
   columnMenuUnsort: "Annulla l'ordinamento",
@@ -176,7 +176,7 @@ const itITGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelAvg: 'media',
   aggregationFunctionLabelMin: 'minimo',
   aggregationFunctionLabelMax: 'massimo',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationFunctionLabelSize: 'numero di elementi',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);
