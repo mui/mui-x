@@ -78,12 +78,12 @@ const plPLGrid: Partial<GridLocaleText> = {
   // 'filterOperator<=': '<=',
 
   // Header filter operators text
-   headerFilterOperatorContains: 'Zawiera',
-   headerFilterOperatorEquals: 'Równa się',
-   headerFilterOperatorStartsWith: 'Zaczyna się od',
-   headerFilterOperatorEndsWith: 'Kończy się na',
+  headerFilterOperatorContains: 'Zawiera',
+  headerFilterOperatorEquals: 'Równa się',
+  headerFilterOperatorStartsWith: 'Zaczyna się od',
+  headerFilterOperatorEndsWith: 'Kończy się na',
   // headerFilterOperatorIs: 'Is',
-  // headerFilterOperatorNot: 'Niepuste',
+  headerFilterOperatorNot: 'Niepuste',
   // headerFilterOperatorAfter: 'Is after',
   // headerFilterOperatorOnOrAfter: 'Is on or after',
   // headerFilterOperatorBefore: 'Is before',
