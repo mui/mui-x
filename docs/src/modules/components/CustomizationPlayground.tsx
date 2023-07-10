@@ -22,7 +22,7 @@ interface CustomizationPlaygroundProps {
     customizationLabels: CustomizationOptions;
     examples: {
       [key: string]: {
-        [K in CustomizationLabelNames]: { code: string; name: string; path: string };
+        [K in CustomizationLabelNames]: string;
       };
     };
   };
@@ -185,26 +185,17 @@ export default function CustomizationPlayground({
   };
 
   const handleDemoClick = (event: React.MouseEvent<HTMLElement>) => {
-    const interactionTarget = getInteractionTarget(
-      event.target as HTMLElement,
-      demoRef,
-      config.examples,
-    );
-    if (interactionTarget) {
-      selectDemo(interactionTarget);
+    const clickTarget = getInteractionTarget(event.target as HTMLElement, demoRef, config.examples);
+    if (clickTarget) {
+      selectDemo(clickTarget);
     }
   };
 
   const handleDemoHover = (event: React.MouseEvent<HTMLElement>) => {
-    const interactionTarget = getInteractionTarget(
-      event.target as HTMLElement,
-      demoRef,
-      config.examples,
-    );
+    const hoverTarget = getInteractionTarget(event.target as HTMLElement, demoRef, config.examples);
 
-    if (interactionTarget) {
-      // set the selected subcomponent name
-      setHoveredDemo(interactionTarget);
+    if (hoverTarget) {
+      setHoveredDemo(hoverTarget);
     }
   };
 
@@ -259,7 +250,7 @@ export default function CustomizationPlayground({
 
         {selectedDemo && selectedCustomizationOption && (
           <HighlightedCode
-            code={`${config.examples[selectedDemo][selectedCustomizationOption].code} `}
+            code={`${config.examples[selectedDemo][selectedCustomizationOption]} `}
             language="js"
           />
         )}

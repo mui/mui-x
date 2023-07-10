@@ -9,6 +9,6 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Customization playground
 
-<p class="description">You can check out multiple examples for how to customize the date pickers and their sub-components.</p>
+<p class="description">You can check out multiple examples of how to customize the date pickers and their subcomponents.</p>
 
 {{"demo": "CustomizationExamples.js", "hideToolbar": true, "bg": "inline"}}
