@@ -30,10 +30,11 @@ function useTicks(options: {
     if (isBandScale(scale)) {
       const domain = scale.domain();
       return [
-        ...domain.map((value) => ({
+        ...domain.map((value, index) => ({
           formattedValue: valueFormatter?.(value) ?? value,
-          offset: scale(value) ?? 0,
-          labelOffset: scale.bandwidth() / 2,
+          offset:
+            index === 0 ? scale.range()[0] : scale(value)! - (scale.step() - scale.bandwidth()) / 2,
+          labelOffset: scale.step() / 2,
         })),
         ...(scale.bandwidth() > 0
           ? [

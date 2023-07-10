@@ -80,6 +80,18 @@ interface AxisScaleConfig {
   band: {
     scaleType: 'band';
     scale: ScaleBand<any>;
+    /**
+     * The ratio between the space alocated for padding between two category and the catergory width.
+     * 0 means no gap, and 1 no data.
+     * @default 0.1
+     */
+    categoryGapRatio: number;
+    /**
+     * The ratio between the width of a bar, and the gap between two bars.
+     * 0 means no gap, and 1 no bar.
+     * @default 0
+     */
+    barGapRatio: number;
   };
   point: {
     scaleType: 'point';
@@ -128,3 +140,15 @@ export type AxisDefaultized<S extends ScaleName = ScaleName, V = any> = Omit<
   AxisScaleConfig[S] & {
     ticksNumber: number;
   };
+
+export function isBandScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<'band'> & { scaleType: 'band' } {
+  return scaleConfig.scaleType === 'band';
+}
+
+export function isPointScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<'point'> & { scaleType: 'point' } {
+  return scaleConfig.scaleType === 'point';
+}
