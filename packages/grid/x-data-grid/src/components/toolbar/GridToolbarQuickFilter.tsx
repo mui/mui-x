@@ -149,7 +149,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
             <rootProps.slots.quickFilterClearIcon fontSize="small" />
           </rootProps.slots.baseIconButton>
         ),
-        {...other.InputProps, ...rootProps.slotProps?.baseTextField?.InputProps}
+        ...other.InputProps
       }}
       {...rootProps.slotProps?.baseTextField}
     />
