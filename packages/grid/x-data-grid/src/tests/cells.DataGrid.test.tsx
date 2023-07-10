@@ -185,7 +185,7 @@ describe('<DataGrid /> - Cells', () => {
     }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
 
-  it('Should be in the DOM even if when the focused cell is out of viewport.', function test() {
+  it('should not change the active component when the active focused cell gets out of viewport', function test() {
     if (isJSDOM) {
       this.skip();
     }
