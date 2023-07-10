@@ -109,7 +109,7 @@ export function useGridApiInitialization<
     privateApiRef.current = createPrivateAPI(publicApiRef) as PrivateApi;
   }
 
-  if (!publicApiRef.current || !(publicApiRef.current as any)[SYMBOL_API_TYPE]) {
+  if (!publicApiRef.current) {
     publicApiRef.current = createPublicAPI(privateApiRef);
   }
 
