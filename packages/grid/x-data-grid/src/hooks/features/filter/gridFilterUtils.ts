@@ -283,7 +283,7 @@ export const buildAggregatedFilterItemsApplier = (
       return result$$;
     })`;
 
-  // eslint-diable-next-line no-eval
+  // eslint-disable-next-line no-eval
   const filterItem = eval(
     filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
   ) as GridFilterItemApplierNotAggregated;
