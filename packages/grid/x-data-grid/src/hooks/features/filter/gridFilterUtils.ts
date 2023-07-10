@@ -254,27 +254,39 @@ export const buildAggregatedFilterItemsApplier = (
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
-  const filterItemTemplate =
-    `(function filterItem$$(row, shouldApplyFilter) {
-      ${appliers.map((applier, i) =>
-        `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(applier.item.field)});`
-      ).join('\n')}
+  const filterItemTemplate = `(function filterItem$$(row, shouldApplyFilter) {
+      ${appliers
+        .map(
+          (applier, i) =>
+            `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(
+              applier.item.field,
+            )});`,
+        )
+        .join('\n')}
 
       const result$$ = {
-      ${appliers.map((applier, i) =>
-        `${applier.item.id !== undefined ? parseInt(String(applier.item.id)) : 'undefined'}:
+      ${appliers
+        .map(
+          (applier, i) =>
+            `${applier.item.id !== undefined ? parseInt(String(applier.item.id), 10) : 'undefined'}:
           !shouldApply${i} ?
             false :
-            ${applier.v7 ?
-              `appliers[${i}].fn(row)` :
-              `appliers[${i}].fn(${getRowId ? 'getRowId(row)' : 'row.id'})`
+            ${
+              applier.v7
+                ? `appliers[${i}].fn(row)`
+                : `appliers[${i}].fn(${getRowId ? 'getRowId(row)' : 'row.id'})`
             },
-      `).join('\n')}};
+      `,
+        )
+        .join('\n')}};
 
       return result$$;
     })`;
 
-  const filterItem = eval(filterItemTemplate.replaceAll('$$', String(filterItemsApplierId))) as GridFilterItemApplierNotAggregated;
+  // eslint-diable-next-line no-eval
+  const filterItem = eval(
+    filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
+  ) as GridFilterItemApplierNotAggregated;
   filterItemsApplierId += 1;
 
   return filterItem;
