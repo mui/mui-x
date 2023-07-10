@@ -7,7 +7,6 @@ import type { GridCoreApi } from '../../models';
 import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { EventManager } from '../../utils/EventManager';
 
-const SYMBOL_API_TYPE = Symbol('mui.api_type');
 const SYMBOL_API_PRIVATE = Symbol('mui.api_private');
 
 const isSyntheticEvent = (event: any): event is React.SyntheticEvent => {
@@ -36,7 +35,6 @@ function createPrivateAPI<PrivateApi extends GridPrivateApiCommon, Api extends G
     state,
     store: Store.create(state),
     instanceId: { id: globalId },
-    [SYMBOL_API_TYPE]: 'private',
   } as any as PrivateApi;
 
   globalId += 1;
@@ -88,7 +86,6 @@ function createPublicAPI<PrivateApi extends GridPrivateApiCommon, Api extends Gr
     get instanceId() {
       return privateApiRef.current.instanceId;
     },
-    [SYMBOL_API_TYPE]: 'public',
     [SYMBOL_API_PRIVATE]: privateApiRef.current,
   } as any as Api;
 
