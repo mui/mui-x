@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
@@ -208,15 +208,12 @@ describe('<DataGrid /> - Cells', () => {
 
     // check for row virtualazition
     const scrollTop = 10 * rowHeight;
-    virtualScroller.scrollTop = scrollTop;
-    virtualScroller.dispatchEvent(new Event('scroll'));
-
+    fireEvent.scroll(virtualScroller, { target: { scrollTop } });
     expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
 
     // check for column virtualization
     const scrollLeft = 10 * columnWidth;
-    virtualScroller.scrollLeft = scrollLeft;
-    virtualScroller.dispatchEvent(new Event('scroll'));
+    fireEvent.scroll(virtualScroller, { target: { scrollLeft } });
 
     expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
   });
