@@ -59,7 +59,7 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
    * @param {any[]} values The new values passed to the quick filter model
    * @returns {string} The string to display in the text field
    */
-  quickFilterFormatter?: (values: GridFilterModel['quickFilterValues']) => string;
+  quickFilterFormatter?: (values: NonNullable<GridFilterModel['quickFilterValues']>) => string;
   /**
    * The debounce time in milliseconds.
    * @default 500
