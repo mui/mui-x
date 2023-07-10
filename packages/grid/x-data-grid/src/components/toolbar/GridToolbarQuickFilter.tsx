@@ -101,7 +101,9 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
 
   const updateSearchValue = React.useCallback(
     (newSearchValue: string) => {
-      apiRef.current.setQuickFilterValues(quickFilterParser(newSearchValue));
+      const newQuickFilterValues = quickFilterParser(newSearchValue);
+      setPrevQuickFilterValues(newQuickFilterValues);
+      apiRef.current.setQuickFilterValues(newQuickFilterValues);
     },
     [apiRef, quickFilterParser],
   );
