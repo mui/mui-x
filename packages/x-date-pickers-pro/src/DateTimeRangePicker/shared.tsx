@@ -132,8 +132,8 @@ export function useDateTimeRangePickerDefaultizedProps<
     ...applyDefaultViewProps({
       views: themeProps.views,
       openTo: themeProps.openTo,
-      defaultViews: ['day', 'hours', 'minutes'] as DateTimeRangePickerViews[],
-      defaultOpenTo: 'day' as DateTimeRangePickerViews,
+      defaultViews: ampm ? ['day', 'hours', 'minutes', 'meridiem'] : ['day', 'hours', 'minutes'],
+      defaultOpenTo: 'day',
     }),
     timeSteps: { hours: 1, minutes: 5, seconds: 5, ...themeProps.timeSteps },
     localeText,

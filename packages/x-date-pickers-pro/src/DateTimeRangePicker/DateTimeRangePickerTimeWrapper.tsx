@@ -22,7 +22,11 @@ export type DateTimeRangePickerTimeWrapperProps<
     views: readonly TView[];
     value?: DateRange<TDate>;
     defaultValue?: DateRange<TDate>;
-    onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
+    onChange?: (
+      value: DateRange<TDate>,
+      selectionState: PickerSelectionState,
+      selectedView: TView,
+    ) => void;
     // TODO: fix types
     viewRenderer: PickerViewRenderer<TDate, TView, any, {}>;
   };
@@ -68,14 +72,18 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
   const currentValue = (rangePosition === 'start' ? value?.[0] : value?.[1]) ?? null;
   const currentDefaultValue =
     (rangePosition === 'start' ? defaultValue?.[0] : defaultValue?.[1]) ?? null;
-  const handleOnChange = (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+  const handleOnChange = (
+    newValue: TDate | null,
+    selectionState: PickerSelectionState,
+    selectedView: TView,
+  ) => {
     if (!onChange) {
       return;
     }
     if (rangePosition === 'start') {
-      onChange([newValue, value?.[1] ?? null], selectionState);
+      onChange([newValue, value?.[1] ?? null], selectionState, selectedView);
     } else {
-      onChange([value?.[0] ?? null, newValue], selectionState);
+      onChange([value?.[0] ?? null, newValue], selectionState, selectedView);
     }
   };
 
