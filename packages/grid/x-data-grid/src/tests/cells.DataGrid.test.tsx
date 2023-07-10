@@ -185,7 +185,7 @@ describe('<DataGrid /> - Cells', () => {
     }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
   });
 
-  it('should not change the active component when the active focused cell gets out of viewport', function test() {
+  it('should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport', function test() {
     if (isJSDOM) {
       this.skip();
     }
@@ -200,8 +200,8 @@ describe('<DataGrid /> - Cells', () => {
 
     const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
 
-    const thirdRowCell = getCell(1, 3);
-    userEvent.mousePress(thirdRowCell);
+    const cell = getCell(1, 3);
+    userEvent.mousePress(cell);
 
     const activeElementTextContent = document.activeElement?.textContent;
     const columnWidth = document.activeElement!.clientWidth;
