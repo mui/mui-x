@@ -206,12 +206,10 @@ describe('<DataGrid /> - Cells', () => {
     const activeElementTextContent = document.activeElement?.textContent;
     const columnWidth = document.activeElement!.clientWidth;
 
-    // check for row virtualazition
     const scrollTop = 10 * rowHeight;
     fireEvent.scroll(virtualScroller, { target: { scrollTop } });
     expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
-
-    // check for column virtualization
+   
     const scrollLeft = 10 * columnWidth;
     fireEvent.scroll(virtualScroller, { target: { scrollLeft } });
 
