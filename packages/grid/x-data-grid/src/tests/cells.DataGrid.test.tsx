@@ -209,7 +209,7 @@ describe('<DataGrid /> - Cells', () => {
     const scrollTop = 10 * rowHeight;
     fireEvent.scroll(virtualScroller, { target: { scrollTop } });
     expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
-   
+
     const scrollLeft = 10 * columnWidth;
     fireEvent.scroll(virtualScroller, { target: { scrollLeft } });
 
