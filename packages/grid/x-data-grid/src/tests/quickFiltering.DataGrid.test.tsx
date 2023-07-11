@@ -221,6 +221,32 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
+    it('should apply filters on quickFilterExcludeHiddenColumns value change', () => {
+      const { setProps } = render(
+        <TestCase
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          columnVisibilityModel={{ brand: false }}
+          filterModel={{
+            items: [],
+            quickFilterValues: ['adid'],
+            quickFilterExcludeHiddenColumns: false,
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+
+      setProps({
+        filterModel: {
+          items: [],
+          quickFilterValues: ['adid'],
+          quickFilterExcludeHiddenColumns: true,
+        },
+      });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+
     it('should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true', () => {
       const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
