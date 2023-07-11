@@ -102,8 +102,11 @@ export const useGridColumnReorder = (
       dragColNode.current.classList.add(classes.columnHeaderDragging);
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
+        const isAndroid = /(android)/i.test(navigator.userAgent);
         // For Android and iOS, if event.dataTransfer.setData is not called it doesn't allow to drag
-        event.dataTransfer.setData('text', params.field);
+        // `text/html` doesn't work on Android but works on iOS
+        // `text` doesn't work on Safari iOS
+        event.dataTransfer.setData(isAndroid ? 'text' : 'text/html', params.field);
       }
       apiRef.current.setState((state) => ({
         ...state,
