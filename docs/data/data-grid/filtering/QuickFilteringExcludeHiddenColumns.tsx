@@ -1,7 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridToolbar, GridRowsProp, GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbar,
+  GridRowsProp,
+  GridColDef,
+  GridFilterModel,
+  GridColumnVisibilityModel,
+} from '@mui/x-data-grid';
 import { randomTraderName, randomEmail } from '@mui/x-data-grid-generator';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 80 },
@@ -24,24 +33,52 @@ const rows: GridRowsProp = [
 ];
 
 export default function QuickFilteringExcludeHiddenColumns() {
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    items: [],
+    quickFilterExcludeHiddenColumns: true,
+    quickFilterValues: ['1'],
+  });
+
+  const [columnVisibilityModel, setColumnVisibilityModel] =
+    React.useState<GridColumnVisibilityModel>({});
+
   return (
-    <Box sx={{ height: 400, width: 1 }}>
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        disableColumnFilter
-        disableDensitySelector
-        slots={{ toolbar: GridToolbar }}
-        initialState={{
-          filter: {
-            filterModel: {
-              items: [],
-              quickFilterExcludeHiddenColumns: true,
-            },
-          },
-        }}
-        slotProps={{ toolbar: { showQuickFilter: true } }}
+    <Box sx={{ width: 1 }}>
+      <FormControlLabel
+        checked={columnVisibilityModel.id !== false}
+        onChange={(event) =>
+          setColumnVisibilityModel(() => ({ id: (event.target as any).checked }))
+        }
+        control={<Switch color="primary" size="small" />}
+        label="Show ID column"
       />
+      <FormControlLabel
+        checked={filterModel.quickFilterExcludeHiddenColumns}
+        onChange={(event) =>
+          setFilterModel((model) => ({
+            ...model,
+            quickFilterExcludeHiddenColumns: (event.target as any).checked,
+          }))
+        }
+        control={<Switch color="primary" size="small" />}
+        label="Exclude hidden columns"
+      />
+      <Box sx={{ height: 400 }}>
+        <DataGrid
+          columns={columns}
+          rows={rows}
+          disableColumnFilter
+          disableDensitySelector
+          slots={{ toolbar: GridToolbar }}
+          filterModel={filterModel}
+          onFilterModelChange={(newModel) => setFilterModel(newModel)}
+          slotProps={{ toolbar: { showQuickFilter: true } }}
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) =>
+            setColumnVisibilityModel(newModel)
+          }
+        />
+      </Box>
     </Box>
   );
 }

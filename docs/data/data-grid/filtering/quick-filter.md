@@ -47,7 +47,7 @@ To exclude hidden columns from the quick filter, set `quickFilterExcludeHiddenCo
 />
 ```
 
-In the demo below, try hiding the `ID` column and searching for `1`. You will see no results, because there are no visible columns that contain `1`:
+In the demo below, try hiding the `ID` column. You will see no results, because there are no visible columns that contain `1`:
 
 {{"demo": "QuickFilteringExcludeHiddenColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
