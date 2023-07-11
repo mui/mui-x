@@ -36,7 +36,7 @@ export default function QuickFilteringExcludeHiddenColumns() {
           filter: {
             filterModel: {
               items: [],
-              quickFilterIncludeHiddenColumns: false,
+              quickFilterExcludeHiddenColumns: true,
             },
           },
         }}

@@ -28,8 +28,8 @@ export interface GridFilterModel {
    */
   quickFilterLogicOperator?: GridLogicOperator;
   /**
-   * If `false`, the quick filter will skip cell values from hidden columns.
-   * @default true
+   * If `true`, the quick filter will skip cell values from hidden columns.
+   * @default false
    */
-  quickFilterIncludeHiddenColumns?: boolean;
+  quickFilterExcludeHiddenColumns?: boolean;
 }

@@ -32,7 +32,7 @@ The quick filter values can be initialized by setting the `filter.filterModel.qu
 
 By default, the quick filter searches all columns, including those that are hidden.
 
-To exclude hidden columns from the quick filter, set `quickFilterIncludeHiddenColumns` to `false`:
+To exclude hidden columns from the quick filter, set `quickFilterExcludeHiddenColumns` to `true`:
 
 ```tsx
 <DataGrid
@@ -40,7 +40,7 @@ To exclude hidden columns from the quick filter, set `quickFilterIncludeHiddenCo
     filter: {
       filterModel: {
         items: [],
-        quickFilterIncludeHiddenColumns: false,
+        quickFilterExcludeHiddenColumns: true,
       },
     },
   }}

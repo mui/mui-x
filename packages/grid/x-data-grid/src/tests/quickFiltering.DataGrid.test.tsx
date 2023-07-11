@@ -181,13 +181,13 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
     });
 
-    it('should search hidden columns when quickFilterIncludeHiddenColumns=true', () => {
+    it('should search hidden columns when quickFilterExcludeHiddenColumns=false', () => {
       render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
             columns: { columnVisibilityModel: { id: false } },
-            filter: { filterModel: { items: [], quickFilterIncludeHiddenColumns: true } },
+            filter: { filterModel: { items: [], quickFilterExcludeHiddenColumns: false } },
           }}
         />,
       );
@@ -201,13 +201,13 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Puma']);
     });
 
-    it('should ignore hidden columns when quickFilterIncludeHiddenColumns=false', () => {
+    it('should ignore hidden columns when quickFilterExcludeHiddenColumns=true', () => {
       render(
         <TestCase
           columns={[{ field: 'id' }, { field: 'brand' }]}
           initialState={{
             columns: { columnVisibilityModel: { id: false } },
-            filter: { filterModel: { items: [], quickFilterIncludeHiddenColumns: false } },
+            filter: { filterModel: { items: [], quickFilterExcludeHiddenColumns: true } },
           }}
         />,
       );
@@ -221,7 +221,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getColumnValues(0)).to.deep.equal([]);
     });
 
-    it('should apply filters on column visibility change when quickFilterIncludeHiddenColumns=false', () => {
+    it('should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true', () => {
       const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
@@ -237,7 +237,7 @@ describe('<DataGrid /> - Quick Filter', () => {
               filterModel: {
                 items: [],
                 quickFilterValues: ['adid'],
-                quickFilterIncludeHiddenColumns: false,
+                quickFilterExcludeHiddenColumns: true,
               },
             },
           }}
@@ -258,7 +258,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(4);
     });
 
-    it('should not apply filters on column visibility change when quickFilterIncludeHiddenColumns=false but no quick filter values', () => {
+    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', () => {
       const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
@@ -270,7 +270,7 @@ describe('<DataGrid /> - Quick Filter', () => {
             filter: {
               filterModel: {
                 items: [],
-                quickFilterIncludeHiddenColumns: false,
+                quickFilterExcludeHiddenColumns: true,
               },
             },
           }}
@@ -291,7 +291,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(0);
     });
 
-    it('should not apply filters on column visibility change when quickFilterIncludeHiddenColumns=true', () => {
+    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', () => {
       const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
       const { setProps } = render(
         <TestCase
@@ -304,7 +304,7 @@ describe('<DataGrid /> - Quick Filter', () => {
               filterModel: {
                 items: [],
                 quickFilterValues: ['adid'],
-                quickFilterIncludeHiddenColumns: true,
+                quickFilterExcludeHiddenColumns: false,
               },
             },
           }}

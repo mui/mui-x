@@ -271,11 +271,11 @@ export const buildAggregatedQuickFilterApplier = (
     return null;
   }
 
-  const quickFilterIncludeHiddenColumns = filterModel.quickFilterIncludeHiddenColumns ?? true;
+  const quickFilterExcludeHiddenColumns = filterModel.quickFilterExcludeHiddenColumns ?? false;
 
-  const columnFields = quickFilterIncludeHiddenColumns
-    ? gridColumnFieldsSelector(apiRef)
-    : gridVisibleColumnFieldsSelector(apiRef);
+  const columnFields = quickFilterExcludeHiddenColumns
+    ? gridVisibleColumnFieldsSelector(apiRef)
+    : gridColumnFieldsSelector(apiRef);
 
   const appliersPerField = [] as {
     column: GridColDef;

@@ -498,7 +498,7 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
   useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
     const filterModel = gridFilterModelSelector(apiRef);
-    if (filterModel.quickFilterValues && !filterModel.quickFilterIncludeHiddenColumns) {
+    if (filterModel.quickFilterValues && filterModel.quickFilterExcludeHiddenColumns) {
       // re-apply filters because the quick filter results may have changed
       apiRef.current.unstable_applyFilters();
     }
