@@ -268,7 +268,7 @@ export const buildAggregatedFilterItemsApplier = (
       ${appliers
         .map(
           (applier, i) =>
-            `${applier.item.id !== undefined ? parseInt(String(applier.item.id), 10) : 'undefined'}:
+            `${JSON.stringify(String(applier.item.id))}:
           !shouldApply${i} ?
             false :
             ${
