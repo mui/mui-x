@@ -51,10 +51,6 @@ In the demo below, try hiding the `ID` column and searching for `1`. You will se
 
 {{"demo": "QuickFilteringExcludeHiddenColumns.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::warning
-Note, that the quick filter will not be reapplied when you toggle the visibility of a column.
-:::
-
 ## Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
