@@ -84,7 +84,7 @@ export const filterRowTreeFromGroupingColumns = (
   params: FilterRowTreeFromTreeDataParams,
 ): Omit<GridFilterState, 'filterModel'> => {
   const { apiRef, rowTree, isRowMatchingFilters, filterModel } = params;
-  const filteredRowsLookup: Record<GridRowId, boolean> = {};
+  const filteredRowsLookup = new Set<GridRowId>();
   const filteredDescendantCountLookup: Record<GridRowId, number> = {};
   const filterCache = {};
 
@@ -141,7 +141,7 @@ export const filterRowTreeFromGroupingColumns = (
       }
     }
 
-    filteredRowsLookup[node.id] = isPassingFiltering;
+    if (isPassingFiltering) filteredRowsLookup.add(node.id);
 
     if (!isPassingFiltering) {
       return 0;

@@ -44,7 +44,7 @@ export const filterStateInitializer: GridStateInitializer<
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       filteredDescendantCountLookup: {},
     },
-    visibleRowsLookup: {},
+    visibleRowsLookup: new Set(),
   };
 };
 
@@ -396,13 +396,13 @@ export const useGridFilter = (
     (params) => {
       if (props.filterMode !== 'client' || !params.isRowMatchingFilters) {
         return {
-          filteredRowsLookup: {},
+          filteredRowsLookup: new Set<GridRowId>(),
           filteredDescendantCountLookup: {},
         };
       }
 
       const dataRowIdToModelLookup = gridRowsLookupSelector(apiRef);
-      const filteredRowsLookup: Record<GridRowId, boolean> = {};
+      const filteredRowsLookup = new Set<GridRowId>();
       const { isRowMatchingFilters } = params;
       const filterCache = {};
 
@@ -425,13 +425,13 @@ export const useGridFilter = (
           filterCache,
         );
 
-        filteredRowsLookup[id] = isRowPassing;
+        if (isRowPassing) filteredRowsLookup.add(id);
       }
 
       const footerId = 'auto-generated-group-footer-root';
       const footer = dataRowIdToModelLookup[footerId];
       if (footer) {
-        filteredRowsLookup[footerId] = true;
+        filteredRowsLookup.add(footerId);
       }
 
       return {
