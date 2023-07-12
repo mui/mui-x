@@ -30,7 +30,9 @@ const columns = [
 ];
 
 export default function CustomSortIcons() {
-  const [sortModel, setSortModel] = React.useState<GridSortItem[]>([{ field: 'name', sort: 'asc' }]);
+  const [sortModel, setSortModel] = React.useState<GridSortItem[]>([
+    { field: 'name', sort: 'asc' },
+  ]);
 
   return (
     <div style={{ height: 250, width: '100%' }}>
