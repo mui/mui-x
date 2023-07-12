@@ -8,6 +8,7 @@ import {
   GridFilterModel,
   GridLogicOperator,
   GridToolbarQuickFilter,
+  getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
@@ -39,7 +40,7 @@ describe('<DataGrid /> - Quick Filter', () => {
   function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} components={{ Toolbar: GridToolbarQuickFilter }} {...props} />
+        <DataGrid {...baselineProps} slots={{ toolbar: GridToolbarQuickFilter }} {...props} />
       </div>
     );
   }
@@ -178,6 +179,176 @@ describe('<DataGrid /> - Quick Filter', () => {
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+    });
+
+    it('should search hidden columns when quickFilterExcludeHiddenColumns=false', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          initialState={{
+            columns: { columnVisibilityModel: { id: false } },
+            filter: { filterModel: { items: [], quickFilterExcludeHiddenColumns: false } },
+          }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['Puma']);
+    });
+
+    it('should ignore hidden columns when quickFilterExcludeHiddenColumns=true', () => {
+      render(
+        <TestCase
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          initialState={{
+            columns: { columnVisibilityModel: { id: false } },
+            filter: { filterModel: { items: [], quickFilterExcludeHiddenColumns: true } },
+          }}
+        />,
+      );
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '1' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+
+      fireEvent.change(screen.getByRole('searchbox'), { target: { value: '2' } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+
+    it('should apply filters on quickFilterExcludeHiddenColumns value change', () => {
+      const { setProps } = render(
+        <TestCase
+          columns={[{ field: 'id' }, { field: 'brand' }]}
+          columnVisibilityModel={{ brand: false }}
+          filterModel={{
+            items: [],
+            quickFilterValues: ['adid'],
+            quickFilterExcludeHiddenColumns: false,
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+
+      setProps({
+        filterModel: {
+          items: [],
+          quickFilterValues: ['adid'],
+          quickFilterExcludeHiddenColumns: true,
+        },
+      });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+    });
+
+    it('should apply filters on column visibility change when quickFilterExcludeHiddenColumns=true', () => {
+      const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
+      const { setProps } = render(
+        <TestCase
+          columns={[
+            {
+              field: 'id',
+              getApplyQuickFilterFnV7: getApplyQuickFilterFnV7Spy,
+            },
+            { field: 'brand' },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: ['adid'],
+                quickFilterExcludeHiddenColumns: true,
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
+
+      setProps({ columnVisibilityModel: { brand: false } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal([]);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(3);
+
+      setProps({ columnVisibilityModel: { brand: true } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(4);
+    });
+
+    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', () => {
+      const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
+      const { setProps } = render(
+        <TestCase
+          columns={[
+            { field: 'id', getApplyQuickFilterFnV7: getApplyQuickFilterFnV7Spy },
+            { field: 'brand' },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterExcludeHiddenColumns: true,
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(0);
+
+      setProps({ columnVisibilityModel: { brand: false } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(0);
+
+      setProps({ columnVisibilityModel: { brand: true } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(0);
+    });
+
+    it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', () => {
+      const getApplyQuickFilterFnV7Spy = spy(getGridStringQuickFilterFn);
+      const { setProps } = render(
+        <TestCase
+          columns={[
+            { field: 'id', getApplyQuickFilterFnV7: getApplyQuickFilterFnV7Spy },
+            { field: 'brand' },
+          ]}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterValues: ['adid'],
+                quickFilterExcludeHiddenColumns: false,
+              },
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
+
+      setProps({ columnVisibilityModel: { brand: false } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
+
+      setProps({ columnVisibilityModel: { brand: true } });
+      clock.runToLast();
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+      expect(getApplyQuickFilterFnV7Spy.callCount).to.equal(2);
     });
   });
 
