@@ -8,6 +8,7 @@ import {
   GridFilterModel,
   GridLogicOperator,
   GridToolbar,
+  getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 
