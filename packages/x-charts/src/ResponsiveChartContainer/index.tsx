@@ -119,10 +119,7 @@ export const ResponsiveChartContainer = React.forwardRef(function ResponsiveChar
   const [containerRef, width, height] = useChartDimensions(inWidth, inHeight);
 
   return (
-    <ResizableContainer
-      ref={containerRef}
-      ownerState={{ width: inWidth, height: inHeight }}
-    >
+    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
       <ChartContainer {...other} width={width} height={height} ref={ref} />
     </ResizableContainer>
   );
