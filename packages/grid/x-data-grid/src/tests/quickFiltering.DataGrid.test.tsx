@@ -7,15 +7,15 @@ import {
   DataGridProps,
   GridFilterModel,
   GridLogicOperator,
-  GridToolbarQuickFilter,
+  GridToolbar,
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Quick Filter', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -40,12 +40,28 @@ describe('<DataGrid /> - Quick Filter', () => {
   function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} slots={{ toolbar: GridToolbarQuickFilter }} {...props} />
+        <DataGrid
+          {...baselineProps}
+          slots={{ toolbar: GridToolbar }}
+          disableColumnSelector
+          disableDensitySelector
+          disableColumnFilter
+          {...props}
+          slotProps={{
+            ...props?.slotProps,
+            toolbar: {
+              showQuickFilter: true,
+              ...props?.slotProps?.toolbar,
+            },
+          }}
+        />
       </div>
     );
   }
 
   describe('component', () => {
+    clock.withFakeTimers();
+
     it('should apply filter', () => {
       render(<TestCase />);
 
@@ -58,16 +74,18 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
 
-    it('should allows to customize input splitting', () => {
+    it('should allow to customize input splitting', () => {
       const onFilterModelChange = spy();
 
       render(
         <TestCase
           onFilterModelChange={onFilterModelChange}
-          componentsProps={{
+          slotProps={{
             toolbar: {
-              quickFilterParser: (searchInput: string) =>
-                searchInput.split(',').map((value) => value.trim()),
+              quickFilterProps: {
+                quickFilterParser: (searchInput: string) =>
+                  searchInput.split(',').map((value) => value.trim()),
+              },
             },
           }}
         />,
@@ -123,9 +141,11 @@ describe('<DataGrid /> - Quick Filter', () => {
     it('should allow to customize input formatting', () => {
       const { setProps } = render(
         <TestCase
-          componentsProps={{
+          slotProps={{
             toolbar: {
-              quickFilterFormatter: (quickFilterValues: string[]) => quickFilterValues.join(', '),
+              quickFilterProps: {
+                quickFilterFormatter: (quickFilterValues: string[]) => quickFilterValues.join(', '),
+              },
             },
           }}
         />,
@@ -143,6 +163,8 @@ describe('<DataGrid /> - Quick Filter', () => {
   });
 
   describe('quick filter logic', () => {
+    clock.withFakeTimers();
+
     it('should return rows that match all values by default', () => {
       render(<TestCase />);
 
@@ -353,6 +375,8 @@ describe('<DataGrid /> - Quick Filter', () => {
   });
 
   describe('column type: string', () => {
+    clock.withFakeTimers();
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -416,6 +440,8 @@ describe('<DataGrid /> - Quick Filter', () => {
   });
 
   describe('column type: number', () => {
+    clock.withFakeTimers();
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -468,6 +494,8 @@ describe('<DataGrid /> - Quick Filter', () => {
   });
 
   describe('column type: singleSelect', () => {
+    clock.withFakeTimers();
+
     const getRows = ({ quickFilterValues }: Pick<GridFilterModel, 'quickFilterValues'>) => {
       const { unmount } = render(
         <TestCase
@@ -542,5 +570,41 @@ describe('<DataGrid /> - Quick Filter', () => {
       expect(getRows({ quickFilterValues: [undefined] }).year).to.deep.equal(ALL_ROWS_YEAR);
       expect(getRows({ quickFilterValues: [''] }).year).to.deep.equal(ALL_ROWS_YEAR);
     });
+  });
+
+  // See https://github.com/mui/mui-x/issues/6783
+  it('should not override user input when typing', async function test() {
+    if (isJSDOM) {
+      this.skip();
+    }
+    // Warning: this test doesn't fail consistently as it is timing-sensitive.
+    const debounceMs = 50;
+
+    render(
+      <TestCase
+        slotProps={{
+          toolbar: {
+            quickFilterProps: { debounceMs },
+          },
+        }}
+      />,
+    );
+
+    const searchBox = screen.getByRole<HTMLInputElement>('searchbox');
+    let searchBoxValue = searchBox.value;
+
+    expect(searchBox.value).to.equal('');
+
+    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}a` } });
+    await sleep(debounceMs - 2);
+    searchBoxValue = searchBox.value;
+
+    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}b` } });
+    await sleep(10);
+    searchBoxValue = searchBox.value;
+
+    fireEvent.change(searchBox, { target: { value: `${searchBoxValue}c` } });
+    await sleep(debounceMs * 2);
+    expect(searchBox.value).to.equal('abc');
   });
 });
