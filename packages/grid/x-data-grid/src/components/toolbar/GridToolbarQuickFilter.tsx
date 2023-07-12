@@ -83,12 +83,12 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
     quickFilterFormatter(quickFilterValues ?? []),
   );
 
-  const [prevQuickFilterValues, setPrevQuickFilterValues] = React.useState(quickFilterValues);
+  const prevQuickFilterValuesRef = React.useRef(quickFilterValues);
 
   React.useEffect(() => {
-    if (!isDeepEqual(prevQuickFilterValues, quickFilterValues)) {
+    if (!isDeepEqual(prevQuickFilterValuesRef.current, quickFilterValues)) {
       // The model of quick filter value has been updated
-      setPrevQuickFilterValues(quickFilterValues);
+      prevQuickFilterValuesRef.current = quickFilterValues;
 
       // Update the input value if needed to match the new model
       setSearchValue((prevSearchValue) =>
@@ -97,12 +97,12 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           : quickFilterFormatter(quickFilterValues ?? []),
       );
     }
-  }, [prevQuickFilterValues, quickFilterValues, quickFilterFormatter, quickFilterParser]);
+  }, [quickFilterValues, quickFilterFormatter, quickFilterParser]);
 
   const updateSearchValue = React.useCallback(
     (newSearchValue: string) => {
       const newQuickFilterValues = quickFilterParser(newSearchValue);
-      setPrevQuickFilterValues(newQuickFilterValues);
+      prevQuickFilterValuesRef.current = newQuickFilterValues;
       apiRef.current.setQuickFilterValues(newQuickFilterValues);
     },
     [apiRef, quickFilterParser],
