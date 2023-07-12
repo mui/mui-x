@@ -30,9 +30,9 @@ The quick filter values can be initialized by setting the `filter.filterModel.qu
 
 ## Excluding hidden columns
 
-By default, the quick filter searches all columns, including those that are hidden.
+By default, the quick filter searches all the columns, including those that are hidden.
 
-To exclude hidden columns from the quick filter, set `quickFilterExcludeHiddenColumns` to `true`:
+To exclude the hidden columns from the quick filter, set `filterModel.quickFilterExcludeHiddenColumns` to `true`:
 
 ```tsx
 <DataGrid
