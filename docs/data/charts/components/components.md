@@ -4,7 +4,7 @@ title: Charts - Custom components
 
 # Charts - Custom components
 
-<p class="description">Creating custom chart components is made easier by hook.</p>
+<p class="description">Creating custom chart components is made easier by hooks.</p>
 
 ## Interact with dimensions
 
