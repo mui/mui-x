@@ -30,12 +30,15 @@ const columns = [
 ];
 
 export default function CustomSortIcons() {
+  const [sortModel, setSortModel] = React.useState([{ field: 'name', sort: 'asc' }]);
+
   return (
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
         columns={columns}
         rows={rows}
-        sortModel={[{ field: 'name', sort: 'asc' }]}
+        sortModel={sortModel}
+        onSortModelChange={(model) => setSortModel(model)}
         slots={{
           columnSortedDescendingIcon: SortedDescendingIcon,
           columnSortedAscendingIcon: SortedAscendingIcon,

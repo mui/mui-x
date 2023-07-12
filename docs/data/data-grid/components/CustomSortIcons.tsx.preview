@@ -1,7 +1,8 @@
 <DataGrid
   columns={columns}
   rows={rows}
-  sortModel={[{ field: 'name', sort: 'asc' }]}
+  sortModel={sortModel}
+  onSortModelChange={(model) => setSortModel(model)}
   slots={{
     columnSortedDescendingIcon: SortedDescendingIcon,
     columnSortedAscendingIcon: SortedAscendingIcon,
