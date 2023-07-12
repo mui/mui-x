@@ -135,6 +135,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
+      {...other}
       InputProps={{
         startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
         endAdornment: (
@@ -148,8 +149,8 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
             <rootProps.slots.quickFilterClearIcon fontSize="small" />
           </rootProps.slots.baseIconButton>
         ),
+        ...other.InputProps,
       }}
-      {...other}
       {...rootProps.slotProps?.baseTextField}
     />
   );

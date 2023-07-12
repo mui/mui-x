@@ -158,7 +158,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   const handleInputRef = (el: HTMLInputElement) => {
     inputRef.current = el;
 
-    if (meta.unstable_updateValueOnRender && !hasUpdatedEditValueOnMount.current) {
+    if (meta?.unstable_updateValueOnRender && !hasUpdatedEditValueOnMount.current) {
       const inputValue = inputRef.current.value;
       const parsedDate = parseValueToDate(inputValue);
       setValueState({ parsed: parsedDate, formatted: inputValue });

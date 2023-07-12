@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Calendar component
 components: DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
 githubLabel: 'component: DatePicker'

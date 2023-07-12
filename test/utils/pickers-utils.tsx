@@ -211,7 +211,10 @@ export const getClockMouseEvent = (
   return event;
 };
 
-export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | '24hours') => {
+export const getClockTouchEvent = (
+  value: number | string,
+  view: 'minutes' | '12hours' | '24hours',
+) => {
   // TODO: Handle 24 hours clock
   if (view === '24hours') {
     throw new Error('Do not support 24 hours clock yet');
@@ -224,7 +227,7 @@ export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | 
     itemCount = 12;
   }
 
-  const angle = Math.PI / 2 - (Math.PI * 2 * value) / itemCount;
+  const angle = Math.PI / 2 - (Math.PI * 2 * Number(value)) / itemCount;
   const clientX = Math.round(((1 + Math.cos(angle)) * CLOCK_WIDTH) / 2);
   const clientY = Math.round(((1 - Math.sin(angle)) * CLOCK_WIDTH) / 2);
 

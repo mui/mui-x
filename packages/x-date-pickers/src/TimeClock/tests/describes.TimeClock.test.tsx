@@ -1,18 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { describeConformance, fireTouchChangedEvent, screen } from '@mui/monorepo/test/utils';
+import { describeConformance, screen } from '@mui/monorepo/test/utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   clockPointerClasses,
   TimeClock,
   timeClockClasses as classes,
 } from '@mui/x-date-pickers/TimeClock';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-  getClockTouchEvent,
-} from 'test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { timeClockHandler } from 'test/utils/pickers/viewHandlers';
 
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();
@@ -56,18 +52,9 @@ describe('<TimeClock /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addMinutes(adapterToUse.addHours(value, 1), 5);
-      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      // change hours
-      const hourClockEvent = getClockTouchEvent(
-        adapterToUse.getHours(newValue),
-        hasMeridiem ? '12hours' : '24hours',
-      );
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-      // change minutes
-      const minutesClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minutesClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minutesClockEvent);
+
+      timeClockHandler.setViewValue(adapterToUse, newValue, 'hours');
+      timeClockHandler.setViewValue(adapterToUse, newValue, 'minutes');
 
       return newValue;
     },

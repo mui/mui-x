@@ -299,6 +299,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
       },
+      { pathname: '/x/react-date-pickers/lifecycle', title: 'Components lifecycle' },
       { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
       {
         pathname: '/x/react-date-pickers/visual-customization',
@@ -310,11 +311,71 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
+      { pathname: '/x/react-date-pickers/playground', title: 'Playground' },
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
         children: [{ pathname: '/x/api/date-pickers', title: 'Index' }, ...pickersComponentApi],
       },
+    ],
+  },
+  {
+    pathname: '/x/react-charts-group',
+    title: 'Charts 🧪',
+    newFeature: true,
+    icon: ChartIcon,
+    children: [
+      { pathname: '/x/react-charts', title: 'Overview' },
+      {
+        pathname: '/x/react-charts-bars',
+        title: 'Bars',
+        children: [
+          { pathname: '/x/react-charts/bars', title: 'Bars' },
+          { pathname: '/x/react-charts/bar-demo', title: 'Demo' },
+        ],
+      },
+      {
+        pathname: '/x/react-charts-lines',
+        title: 'Lines',
+        children: [
+          { pathname: '/x/react-charts/lines', title: 'Lines' },
+          { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
+          { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
+        ],
+      },
+      {
+        pathname: '/x/react-charts-pie',
+        title: 'Pie',
+        children: [
+          { pathname: '/x/react-charts/pie', title: 'Pie' },
+          { pathname: '/x/react-charts/pie-demo', title: 'Demo' },
+        ],
+      },
+      {
+        pathname: '/x/react-charts-scatter',
+        title: 'Scatter',
+        children: [
+          { pathname: '/x/react-charts/scatter', title: 'Scatter' },
+          { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
+        ],
+      },
+      { pathname: '/x/react-charts/axis', title: 'Axis' },
+      { pathname: '/x/react-charts/components', title: 'Custom components' },
+      { pathname: '/x/react-charts/legend', title: 'Legend' },
+      { pathname: '/x/react-charts/stacking', title: 'Stacking' },
+      { pathname: '/x/react-charts/styling', title: 'Styling' },
+      { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
+      {
+        pathname: '/x/api/charts-group',
+        title: 'API Reference',
+        children: [...chartsComponentApi],
+      },
+      { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
+      { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
+      { pathname: '/x/react-charts/gantt', title: '🚧 Gantt' },
+      { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
+      { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
+      { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
     ],
   },
   {
@@ -346,61 +407,6 @@ const pages: MuiPage[] = [
             title: 'Migration from v4 to v5 (Data Grid)',
           },
         ],
-      },
-    ],
-  },
-  {
-    pathname: '/x/react-charts-group',
-    title: 'Charts 🧪',
-    icon: ChartIcon,
-    children: [
-      { pathname: '/x/react-charts', title: 'Overview' },
-      {
-        pathname: '/x/react-charts-bars',
-        title: 'Bars',
-        children: [
-          { pathname: '/x/react-charts/bars', title: 'Bars' },
-          { pathname: '/x/react-charts/bar-demo', title: 'Demo' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts-lines',
-        title: 'Lines',
-        children: [
-          { pathname: '/x/react-charts/lines', title: 'Lines' },
-          { pathname: '/x/react-charts/line-demo', title: 'Demo lines' },
-          { pathname: '/x/react-charts/areas-demo', title: 'Demo area' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts-scatter',
-        title: 'Scatter',
-        children: [
-          { pathname: '/x/react-charts/scatter', title: 'Scatter' },
-          { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
-        ],
-      },
-      {
-        pathname: '/x/react-charts-common-components',
-        title: 'Common components',
-        children: [
-          { pathname: '/x/react-charts/axis', title: 'Axis' },
-          { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
-          { pathname: '/x/react-charts/legend', title: 'Legend' },
-          { pathname: '/x/react-charts/styling', title: 'Styling' },
-          { pathname: '/x/react-charts/stacking', title: 'Stacking' },
-        ],
-      },
-      { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
-      { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
-      { pathname: '/x/react-charts/gantt', title: '🚧 Gantt' },
-      { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
-      { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
-      { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
-      {
-        pathname: '/x/api/charts-group',
-        title: 'API Reference',
-        children: [...chartsComponentApi],
       },
     ],
   },

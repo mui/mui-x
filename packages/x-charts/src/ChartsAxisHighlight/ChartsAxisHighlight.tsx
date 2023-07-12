@@ -2,7 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { getValueToPositionMapper, isBandScale } from '../hooks/useScale';
+import { getValueToPositionMapper } from '../hooks/useScale';
+import { isBandScale } from '../internals/isBandScale';
 
 export type ChartsAxisHighlightProps = {
   x?: 'none' | 'line' | 'band';
