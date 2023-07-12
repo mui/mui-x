@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { ScaleLinear } from 'd3-scale';
 import {
   ResponsiveChartContainer,
   LinePlot,
@@ -17,11 +17,11 @@ function CartesianAxis() {
   const { left, top, width, height } = useDrawingArea();
 
   // Get the two scale
-  const yAxisScale = useYScale();
-  const xAxisScale = useXScale();
+  const yAxisScale = useYScale() as ScaleLinear<any, any>;
+  const xAxisScale = useXScale() as ScaleLinear<any, any>;
 
-  const yOrigine = yAxisScale(0);
-  const xOrigine = xAxisScale(0);
+  const yOrigin = yAxisScale(0);
+  const xOrigin = xAxisScale(0);
 
   const xTicks = [-2, -1, 1, 2, 3];
   const yTicks = [-2, -1, 1, 2, 3, 4, 5];
@@ -53,7 +53,7 @@ function CartesianAxis() {
         />
       ))}
       <path
-        d={`M ${left} ${yOrigine} l ${width} 0`}
+        d={`M ${left} ${yOrigin} l ${width} 0`}
         style={{
           fill: 'none',
           stroke: 'black',
@@ -62,7 +62,7 @@ function CartesianAxis() {
         }}
       />
       <path
-        d={`M ${xOrigine} ${top} l 0 ${height}`}
+        d={`M ${xOrigin} ${top} l 0 ${height}`}
         style={{
           fill: 'none',
           stroke: 'black',
@@ -73,7 +73,7 @@ function CartesianAxis() {
     </React.Fragment>
   );
 }
-export default function OrigineDemo() {
+export default function OriginDemo() {
   return (
     <ResponsiveChartContainer
       margin={{ top: 5, left: 5, right: 5, bottom: 5 }}
@@ -83,6 +83,7 @@ export default function OrigineDemo() {
           type: 'line',
           data: linear,
         },
+
         {
           type: 'line',
           data: poly,
