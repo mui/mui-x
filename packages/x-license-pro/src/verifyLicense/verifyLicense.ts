@@ -129,7 +129,7 @@ export function verifyLicense({
   }
 
   if (license.licensingModel == null || !LICENSING_MODELS.includes(license.licensingModel)) {
-    console.error('Error checking license. Sales model not found or invalid!');
+    console.error('Error checking license. Licensing model not found or invalid!');
     return LicenseStatus.Invalid;
   }
 
@@ -147,7 +147,7 @@ export function verifyLicense({
     if (license.expiryTimestamp < pkgTimestamp) {
       return LicenseStatus.ExpiredVersion;
     }
-  } else if (license.licensingModel === 'subscription') {
+  } else if (license.licensingModel === 'subscription' || license.licensingModel === 'annual') {
     if (license.expiryTimestamp < new Date().getTime()) {
       return LicenseStatus.ExpiredAnnual;
     }

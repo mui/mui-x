@@ -9,6 +9,20 @@ import type {
 import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
 
+export type D3Scale =
+  | ScaleBand<any>
+  | ScaleLogarithmic<any, any>
+  | ScalePoint<any>
+  | ScalePower<any, any>
+  | ScaleTime<any, any>
+  | ScaleLinear<any, any>;
+
+export type D3ContinuouseScale =
+  | ScaleLogarithmic<any, any>
+  | ScalePower<any, any>
+  | ScaleTime<any, any>
+  | ScaleLinear<any, any>;
+
 export interface ChartsAxisProps {
   /**
    * Id of the axis to render.

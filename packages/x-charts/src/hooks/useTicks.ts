@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { D3Scale, isBandScale } from './useScale';
+import { D3Scale } from '../models/axis';
+import { isBandScale } from '../internals/isBandScale';
 
 export type TickParams = {
   maxTicks?: number;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { InteractionContext } from '../context/InteractionProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { SVGContext, DrawingContext } from '../context/DrawingProvider';
-import { isBandScale } from './useScale';
+import { isBandScale } from '../internals/isBandScale';
 
 export const useAxisEvents = (disableAxisListener: boolean) => {
   const svgRef = React.useContext(SVGContext);

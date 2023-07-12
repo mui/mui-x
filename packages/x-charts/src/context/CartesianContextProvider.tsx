@@ -13,8 +13,8 @@ import {
   getExtremumX as getLineExtremumX,
   getExtremumY as getLineExtremumY,
 } from '../LineChart/extremums';
-import { getScale } from '../hooks/useScale';
 import { AxisConfig, AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import { getScale } from '../internals/getScale';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
