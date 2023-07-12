@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.9.3
+
+_Jul 12, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Improve data grid filtering performance.
+- 🎁 Include column groups in CSV export
+- 🌍 Improve Polish (pl-PL) locale for the data grid.
+- 🌍 Improve Norwegian (nb-NO) locale for the pickers.
+
+#### `@mui/x-data-grid@6.9.3`
+
+- [DataGrid] Filtering performance: remove indirection (#9334) @romgrk
+- [DataGrid] Fix props propagation on `GridToolbarQuickFilter` component (#9633) @giladappsforce
+- [DataGrid] Include column groups in CSV export (#9585) @cherniavskii
+- [l10n] Improve Polish (pl-PL) locale (#9625) @ch1llysense
+
+#### `@mui/x-data-grid-pro@6.9.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@6.9.3`.
+
+#### `@mui/x-data-grid-premium@6.9.3` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.9.3`
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.9.3`
+
+- [l10n] Improve Norwegian (nb-NO) locale (#9608) @JosteinBrevik
+
+#### `@mui/x-date-pickers-pro@6.9.3` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.9.3`.
+
+### `@mui/x-charts@6.0.0-alpha.3`
+
+#### Changes
+
+- [charts] Simplify custom components creation (#9561) @alexfauquette
+
+### Core
+
+- [core] Disambiguate eslint plugin name @oliviertassinari
+- [core] Update priority support issue template and prompt (#9574) @DanailH
+- [CHANGELOG] Clarify each plan (#9446) @oliviertassinari
+- [license] Fix error terminology (#9614) @oliviertassinari
+
 ## 6.9.2
 
 _Jul 6, 2023_
