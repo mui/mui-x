@@ -26,7 +26,7 @@ import { useDrawingArea } from '@mui/x-charts';
 const { left, top, width, height } = useDrawingArea();
 ```
 
-{{"demo": "BasicBarDemo.js"}}
+{{"demo": "BasicScaleDemo.js"}}
 
 ### Scales
 

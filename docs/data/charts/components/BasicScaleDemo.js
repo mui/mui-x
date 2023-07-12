@@ -25,7 +25,7 @@ function DrawingAreaBox() {
     </React.Fragment>
   );
 }
-export default function BasicBarDemo() {
+export default function BasicScaleDemo() {
   return (
     <ResponsiveChartContainer
       margin={{ top: 20, left: 10, right: 10, bottom: 30 }}
