@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { isBandScale } from '../hooks/useScale';
+import { isBandScale } from '../internals/isBandScale';
 import { BarElement } from './BarElement';
 
 export function BarPlot() {
