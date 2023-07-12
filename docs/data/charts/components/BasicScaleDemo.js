@@ -1,27 +1,46 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import { ResponsiveChartContainer, LinePlot, useDrawingArea } from '@mui/x-charts';
+
+const StyledPath = styled('path')(({ theme }) => ({
+  fill: 'none',
+  stroke: theme.palette.text.primary,
+  shapeRendering: 'crispEdges',
+  strokeWidth: 1,
+  pointerEvents: 'none',
+}));
+
+const StyledText = styled('text')(({ theme }) => ({
+  stroke: 'none',
+  fill: theme.palette.text.primary,
+  shapeRendering: 'crispEdges',
+}));
 
 function DrawingAreaBox() {
   const { left, top, width, height } = useDrawingArea();
   return (
     <React.Fragment>
-      <path
+      <StyledPath
         d={`M ${left} ${top} l ${width} 0 l 0 ${height} l -${width} 0 Z`}
-        style={{ fill: 'none', stroke: 'black' }}
       />
       <circle cx={left} cy={top} r={3} style={{ fill: 'red' }} />
       <circle cx={left + width} cy={top + height} r={3} style={{ fill: 'red' }} />
-      <text x={left} y={top} textAnchor="start" alignmentBaseline="text-after-edge">
+      <StyledText
+        x={left}
+        y={top}
+        textAnchor="start"
+        alignmentBaseline="text-after-edge"
+      >
         ({left},{top})
-      </text>
-      <text
+      </StyledText>
+      <StyledText
         x={left + width}
         y={top + height}
         textAnchor="end"
         alignmentBaseline="text-before-edge"
       >
         ({left + width},{top + height})
-      </text>
+      </StyledText>
     </React.Fragment>
   );
 }

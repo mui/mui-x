@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 
 import {
   ResponsiveChartContainer,
@@ -11,6 +12,14 @@ import {
 const x = Array.from({ length: 21 }, (_, index) => -1 + 0.2 * index);
 const linear = x.map((v) => -1 + v);
 const poly = x.map((v) => -1 + v ** 2 - v);
+
+const StyledPath = styled('path')(({ theme, color }) => ({
+  fill: 'none',
+  stroke: theme.palette.text[color],
+  shapeRendering: 'crispEdges',
+  strokeWidth: 1,
+  pointerEvents: 'none',
+}));
 
 function CartesianAxis() {
   // Get the drawing area bounding box
@@ -29,47 +38,21 @@ function CartesianAxis() {
   return (
     <React.Fragment>
       {yTicks.map((value) => (
-        <path
+        <StyledPath
           key={value}
           d={`M ${left} ${yAxisScale(value)} l ${width} 0`}
-          style={{
-            fill: 'none',
-            stroke: 'gray',
-            strokeWidth: 1,
-            pointerEvents: 'none',
-          }}
+          color="secondary"
         />
       ))}
       {xTicks.map((value) => (
-        <path
+        <StyledPath
           key={value}
           d={`M ${xAxisScale(value)} ${top} l 0 ${height}`}
-          style={{
-            fill: 'none',
-            stroke: 'gray',
-            strokeWidth: 1,
-            pointerEvents: 'none',
-          }}
+          color="secondary"
         />
       ))}
-      <path
-        d={`M ${left} ${yOrigin} l ${width} 0`}
-        style={{
-          fill: 'none',
-          stroke: 'black',
-          strokeWidth: 2,
-          pointerEvents: 'none',
-        }}
-      />
-      <path
-        d={`M ${xOrigin} ${top} l 0 ${height}`}
-        style={{
-          fill: 'none',
-          stroke: 'black',
-          strokeWidth: 2,
-          pointerEvents: 'none',
-        }}
-      />
+      <StyledPath d={`M ${left} ${yOrigin} l ${width} 0`} color="primary" />
+      <StyledPath d={`M ${xOrigin} ${top} l 0 ${height}`} color="primary" />
     </React.Fragment>
   );
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ScaleLinear } from 'd3-scale';
+import { styled } from '@mui/material/styles';
 import {
   ResponsiveChartContainer,
   LinePlot,
@@ -7,6 +8,21 @@ import {
   useDrawingArea,
   useYScale,
 } from '@mui/x-charts';
+
+const StyledPath = styled('path')(({ theme }) => ({
+  fill: 'none',
+  stroke: theme.palette.text.primary,
+  shapeRendering: 'crispEdges',
+  strokeWidth: 1,
+  pointerEvents: 'none',
+  strokeDasharray: '5 2',
+}));
+
+const StyledText = styled('text')(({ theme }) => ({
+  stroke: 'none',
+  fill: theme.palette.text.primary,
+  shapeRendering: 'crispEdges',
+}));
 
 function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement> }) {
   const { svgRef } = props;
@@ -58,33 +74,24 @@ function ValueHighlight(props: { svgRef: React.RefObject<SVGSVGElement> }) {
   }
   return (
     <React.Fragment>
-      <path
-        d={`M ${left} ${mouseY} l ${width} 0`}
-        style={{
-          fill: 'none',
-          stroke: 'black',
-          strokeDasharray: '5 2',
-          strokeWidth: 1,
-          pointerEvents: 'none',
-        }}
-      />
-      <text
+      <StyledPath d={`M ${left} ${mouseY} l ${width} 0`} />
+      <StyledText
         x={left + 5}
         y={mouseY}
         textAnchor="start"
         alignmentBaseline="text-after-edge"
       >
         {leftAxisScale.invert(mouseY).toFixed(0)}
-      </text>
+      </StyledText>
 
-      <text
+      <StyledText
         x={left + width - 5}
         y={mouseY}
         textAnchor="end"
         alignmentBaseline="text-after-edge"
       >
         {rightAxisScale.invert(mouseY).toFixed(0)}
-      </text>
+      </StyledText>
     </React.Fragment>
   );
 }
