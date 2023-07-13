@@ -6,7 +6,7 @@ import { AreaElement } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function AreaPlot(props) {
+export function AreaPlot(props: React.SVGAttributes<SVGSVGElement>) {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 

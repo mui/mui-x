@@ -5,19 +5,20 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
-export default function BasicSparkLine() {
+export default function BasicSparkLineCustomization() {
   const [showHighlight, setShowHighlight] = React.useState(true);
   const [showTooltip, setShowTooltip] = React.useState(true);
 
-  const handleHighlightChange = (event) => {
+  const handleHighlightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowHighlight(event.target.checked);
   };
 
-  const handleTooltipChange = (event) => {
+  const handleTooltipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowTooltip(event.target.checked);
   };
+
   return (
-    <Stack direction="column">
+    <Stack direction="column" sx={{ width: '100%' }}>
       <Stack direction="row">
         <FormControlLabel
           value="end"

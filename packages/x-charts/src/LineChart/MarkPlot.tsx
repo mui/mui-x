@@ -4,7 +4,7 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { MarkElement } from './MarkElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 
-export function MarkPlot(props) {
+export function MarkPlot(props: React.SVGAttributes<SVGSVGElement>) {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 

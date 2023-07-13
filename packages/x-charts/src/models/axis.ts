@@ -140,6 +140,10 @@ export type AxisConfig<S = ScaleName, V = any> = {
   max?: number;
   data?: V[];
   valueFormatter?: (value: V) => string;
+  /**
+   * Set to `true` the done show this value in tooltip
+   */
+  tooltipHiden?: boolean;
 } & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   TickParams;
 

@@ -6,7 +6,7 @@ import { LineElement } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function LinePlot(props) {
+export function LinePlot(props: React.SVGAttributes<SVGSVGElement>) {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
