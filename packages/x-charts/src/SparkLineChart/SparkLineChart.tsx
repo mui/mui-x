@@ -39,9 +39,9 @@ export interface SparkLineChartProps
    */
   data: number[];
   /**
-   * Formatter used by the tooltip
-   * @param value The value to format
-   * @returns The formated value
+   * Formatter used by the tooltip.
+   * @param {number} value The value to format.
+   * @returns {string} the formatted value.
    */
   valueFormatter?: (value: number) => string;
   /**

@@ -33,10 +33,7 @@ Notice that sparkline does not manage multiple axes, so `xAxis` prop takes an ax
 Whereas most of the other charts expect an array of axis configuration objects.
 
 ```jsx
-<SparkLineChart
-  data={[1, 4, 2, 5, 7, 2, 4, 6]}
-  xAxis={{ scaleType, data }}
-/>
+<SparkLineChart data={[1, 4, 2, 5, 7, 2, 4, 6]} xAxis={{ scaleType, data }} />
 ```
 
 {{"demo": "CustomAxis.js"}}
