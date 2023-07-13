@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import { green } from '@mui/material/colors';
 import Link from 'docs/src/modules/components/Link';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 
@@ -18,50 +17,43 @@ const Root = styled('div')(({ theme }) => ({
   borderRadius: 5,
   fontWeight: 600,
   color: (theme.vars || theme).palette.text.secondary,
-
   '&.low': {
     color:
-      (theme.vars || theme).palette.mode === 'dark'
+      theme.palette.mode === 'dark'
         ? (theme.vars || theme).palette.text.primary
         : (theme.vars || theme).palette.error.dark,
-
     '& .progress-bar': {
       backgroundColor: (theme.vars || theme).palette.error.main,
       opacity: 0.3,
     },
     '& .progress-background': {
-      border: `1.5px solid ${(theme.vars || theme).palette.error.dark}`,
+      border: `1px solid ${(theme.vars || theme).palette.error.light}`,
     },
   },
   '&.medium': {
     color:
-      (theme.vars || theme).palette.mode === 'dark'
+      theme.palette.mode === 'dark'
         ? (theme.vars || theme).palette.text.primary
         : (theme.vars || theme).palette.warning.dark,
-
     '& .progress-bar': {
       backgroundColor: (theme.vars || theme).palette.warning.main,
-      opacity: 0.3,
+      opacity: theme.palette.mode === 'dark' ? 0.4 : 0.25,
     },
     '& .progress-background': {
-      border: `1.5px solid ${(theme.vars || theme).palette.warning.dark}`,
+      border: `1px solid ${(theme.vars || theme).palette.warning.light}`,
     },
   },
   '&.high': {
     color:
-      (theme.vars || theme).palette.mode === 'dark'
+      theme.palette.mode === 'dark'
         ? (theme.vars || theme).palette.text.primary
         : (theme.vars || theme).palette.success.dark,
-
     '& .progress-bar': {
       backgroundColor: (theme.vars || theme).palette.success.main,
       opacity: 0.3,
     },
     '& .progress-background': {
-      border: `1.5px solid ${green[200]}`,
-      '&.completed': {
-        border: `1.5px solid ${(theme.vars || theme).palette.success.dark}`,
-      },
+      border: `1px solid ${(theme.vars || theme).palette.success.light}`,
     },
   },
 }));
@@ -100,13 +92,9 @@ const ProgressBar = React.memo(function ProgressBar(props) {
         high: valueInPercent > 80,
       })}
     >
-      <Background
-        className={
-          numerator === denumerator ? 'progress-background completed' : 'progress-background'
-        }
-      />
+      <Background className="progress-background" />
       <Bar className="progress-bar" style={{ right: `${100 - valueInPercent}%` }} />
-      <Value>{numerator === denumerator ? 'Done! 🎉' : `${numerator}/${denumerator}`}</Value>
+      <Value>{numerator === denumerator ? 'Done 🎉' : `${numerator}/${denumerator}`}</Value>
     </Root>
   );
 });
@@ -116,7 +104,7 @@ ProgressBar.propTypes = {
   numerator: PropTypes.number.isRequired,
 };
 
-function LocalisationTable(props) {
+export default function LocalisationTable(props) {
   const { data } = props;
   return (
     <MarkdownElement
@@ -174,5 +162,3 @@ function LocalisationTable(props) {
 LocalisationTable.propTypes = {
   data: PropTypes.array.isRequired,
 };
-
-export default LocalisationTable;
