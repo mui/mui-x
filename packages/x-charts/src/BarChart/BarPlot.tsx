@@ -8,8 +8,8 @@ import { isBandScaleConfig } from '../models/axis';
  * Solution of the equations
  * W = barWidth * N + offset * (N-1)
  * offset / (offset + barWidth) = r
- * @param bandWidth The width available to put bars.
- * @param numberOfGroups The number of bars to put in that space.
+ * @param bandWidth The width available to place bars.
+ * @param numberOfGroups The number of bars to place in that space.
  * @param gapRatio The ratio of the gap between bars over the bar width.
  * @returns The bar width and the offset between bars.
  */

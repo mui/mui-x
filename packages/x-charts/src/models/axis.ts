@@ -95,7 +95,7 @@ interface AxisScaleConfig {
     scaleType: 'band';
     scale: ScaleBand<any>;
     /**
-     * The ratio between the space alocated for padding between two category and the catergory width.
+     * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
      * @default 0.1
      */

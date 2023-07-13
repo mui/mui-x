@@ -149,7 +149,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
-        // Could be merged with the two previouse if but if so, TS do not get that axis.scaleType can not be band or point.
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
 
@@ -204,7 +204,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
         };
       }
       if (axis.scaleType === 'band' || axis.scaleType === 'point') {
-        // Could be merged with the two previouse if but if so, TS do not get that axis.scaleType can not be band or point.
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
 

@@ -20,9 +20,9 @@ This axis might have `scaleType='band'` and its `data` should have the same leng
 You can define bar dimensions with `categoryGapRatio` and `barGapRatio` properties.
 
 The `categoryGapRatio` defines the gap between two categories.
-The ratio is obtained size of the gap divided by the size of the category (the space used by bars).
+The ratio is obtained by dividing the size of the gap by the size of the category (the space used by bars).
 
-The `barGapRatio` defines the gap between two bars of same category.
+The `barGapRatio` defines the gap between two bars of the same category.
 It's the size of the gap divided by the size of the bar.
 So a value of `1` will result in a gap between bars equal to the bar width.
 And a value of `-1` will make bars overlap on top of each over.
