@@ -14,7 +14,6 @@ import {
   InferError,
   ExportedBaseToolbarProps,
   BaseFieldProps,
-  isInternalTimeView,
 } from '@mui/x-date-pickers/internals';
 import { DateOrTimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { FieldRef } from '@mui/x-date-pickers/models';
@@ -56,8 +55,6 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
-    onViewChange,
-    views,
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
@@ -78,37 +75,6 @@ export const useDesktopRangePicker = <
     }),
   };
 
-  const handleViewChange = React.useCallback(
-    (view: TView) => {
-      let inputToFocus = rangePosition === 'start' ? startInputRef.current : endInputRef.current;
-      let currentFieldRef = rangePosition === 'start' ? startFieldRef.current : endFieldRef.current;
-      let newView = view;
-      if (view === 'day' && rangePosition === 'start') {
-        onRangePositionChange('end');
-        inputToFocus = endInputRef.current;
-        currentFieldRef = endFieldRef.current;
-        newView = views.filter(isInternalTimeView)[0];
-      }
-      if (view === 'hours' && rangePosition === 'end') {
-        onRangePositionChange('start');
-        inputToFocus = startInputRef.current;
-        currentFieldRef = startFieldRef.current;
-      }
-      onViewChange?.(newView);
-      inputToFocus?.focus();
-      currentFieldRef?.setSelectedSections(newView);
-    },
-    [onRangePositionChange, onViewChange, rangePosition, views],
-  );
-
-  const finalProps = React.useMemo(
-    () => ({
-      ...props,
-      onViewChange: handleViewChange,
-    }),
-    [handleViewChange, props],
-  );
-
   const {
     open,
     actions,
@@ -125,7 +91,7 @@ export const useDesktopRangePicker = <
     DesktopRangePickerAdditionalViewProps
   >({
     ...pickerParams,
-    props: finalProps,
+    props,
     wrapperVariant: 'desktop',
     autoFocusView: false,
     additionalViewProps: {
@@ -133,6 +99,18 @@ export const useDesktopRangePicker = <
       onRangePositionChange,
     },
   });
+
+  React.useEffect(() => {
+    const view = layoutProps.view;
+    if (!view || !open) {
+      return;
+    }
+    // handle field re-focusing and section selection after view and/or range position change
+    const inputToFocus = rangePosition === 'start' ? startInputRef.current : endInputRef.current;
+    const currentFieldRef = rangePosition === 'start' ? startFieldRef.current : endFieldRef.current;
+    inputToFocus?.focus();
+    currentFieldRef?.setSelectedSections(view);
+  }, [layoutProps.view, onRangePositionChange, open, rangePosition]);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {

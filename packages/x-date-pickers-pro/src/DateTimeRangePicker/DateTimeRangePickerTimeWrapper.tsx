@@ -4,9 +4,16 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { BaseClockProps } from '@mui/x-date-pickers/internals/models/props/clock';
-import { PickerSelectionState, PickerViewRenderer } from '@mui/x-date-pickers/internals';
+import {
+  PickerSelectionState,
+  PickerViewRenderer,
+  isInternalTimeView,
+  useUtils,
+} from '@mui/x-date-pickers/internals';
 import { DateRange } from '../internals/models';
 import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
+import { isRangeValid } from '../internals/utils/date-utils';
+import { calculateRangeChange } from '../internals/utils/date-range-manager';
 
 export type DateTimeRangePickerTimeWrapperProps<
   TDate extends unknown,
@@ -20,7 +27,7 @@ export type DateTimeRangePickerTimeWrapperProps<
     view: TView;
     onViewChange?: (view: TView) => void;
     views: readonly TView[];
-    value?: DateRange<TDate>;
+    value: DateRange<TDate>;
     defaultValue?: DateRange<TDate>;
     onChange?: (
       value: DateRange<TDate>,
@@ -58,6 +65,7 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePickerTimeWrapper' });
+  const utils = useUtils<TDate>();
 
   const {
     rangePosition,
@@ -66,6 +74,8 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
     value,
     onChange,
     defaultValue,
+    onViewChange,
+    views,
     ...other
   } = props;
 
@@ -73,18 +83,27 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
   const currentDefaultValue =
     (rangePosition === 'start' ? defaultValue?.[0] : defaultValue?.[1]) ?? null;
   const handleOnChange = (
-    newValue: TDate | null,
+    newDate: TDate | null,
     selectionState: PickerSelectionState,
     selectedView: TView,
   ) => {
     if (!onChange) {
       return;
     }
-    if (rangePosition === 'start') {
-      onChange([newValue, value?.[1] ?? null], selectionState, selectedView);
-    } else {
-      onChange([value?.[0] ?? null, newValue], selectionState, selectedView);
+    const { newRange } = calculateRangeChange({
+      newDate,
+      utils,
+      range: value,
+      rangePosition,
+    });
+    const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
+    const timeViews = views.filter(isInternalTimeView);
+    // reset view to the first time view and swap range position after selecting the last time view (start or end position)
+    if (selectedView === timeViews[timeViews.length - 1] && onViewChange) {
+      onViewChange(timeViews[0]);
+      onRangePositionChange(rangePosition === 'start' ? 'end' : 'start');
     }
+    onChange(newRange, isFullRangeSelected ? 'finish' : 'partial', selectedView);
   };
 
   return (
@@ -112,6 +131,8 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
       <Divider />
       {viewRenderer({
         ...other,
+        views,
+        onViewChange,
         value: currentValue,
         onChange: handleOnChange,
         defaultValue: currentDefaultValue,
