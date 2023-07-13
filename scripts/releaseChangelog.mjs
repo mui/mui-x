@@ -250,7 +250,7 @@ ${logChangelogSection(pickersCommits)}
 
 #### \`@mui/x-date-pickers-pro@v__VERSION__\`
 
-Same changes as in \`@mui/x-date-pickers-pro@v__VERSION__\`${
+Same changes as in \`@mui/x-date-pickers@v__VERSION__\`${
     pickersProCommits.length > 0 ? ', plus:' : '.'
   }
 ${logChangelogSection(pickersProCommits)}
