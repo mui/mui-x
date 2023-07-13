@@ -131,7 +131,10 @@ async function main(argv) {
 
   // Dispatch commits in different sections
   const dataGridCommits = [];
+  const dataGridProCommits = [];
+  const dataGridPremiumCommits = [];
   const pickersCommits = [];
+  const pickersProCommits = [];
   const chartsCommits = [];
   const coreCommits = [];
   const docsCommits = [];
@@ -142,19 +145,25 @@ async function main(argv) {
     const tag = parseTags(commitItem.commit.message);
     switch (tag) {
       case 'DataGrid':
-      case 'DataGridPro':
-      case 'DataGridPremium':
       case 'l10n':
       case '118n':
         dataGridCommits.push(commitItem);
         break;
+      case 'DataGridPro':
+        dataGridProCommits.push(commitItem);
+        break;
+      case 'DataGridPremium':
+        dataGridPremiumCommits.push(commitItem);
+        break;
       case 'DatePicker':
       case 'TimePicker':
       case 'DateTimePicker':
-      case 'DateRangePicker':
       case 'pickers':
       case 'fields':
         pickersCommits.push(commitItem);
+        break;
+      case 'DateRangePicker':
+        pickersProCommits.push(commitItem);
         break;
       case 'charts':
         chartsCommits.push(commitItem);
@@ -213,14 +222,42 @@ We'd like to offer a big thanks to the ${
 
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
-### \`@mui/x-data-grid@v__VERSION__\` / \`@mui/x-data-grid-pro@v__VERSION__\` / \`@mui/x-data-grid-premium@v__VERSION__\`
-${logChangelogSection(dataGridCommits, '#### Changes')}
 
-### \`@mui/x-date-pickers@v__VERSION__\` / \`@mui/x-date-pickers-pro@v__VERSION__\`
-${logChangelogSection(pickersCommits, '#### Changes')}
+### Data Grid
 
-### \`@mui/x-charts@v__CHARTS_VERSION__\`
-${logChangelogSection(chartsCommits, '#### Changes')}
+#### \`@mui/x-data-grid@v__VERSION__\`
+
+${logChangelogSection(dataGridCommits)}
+
+#### \`@mui/x-data-grid-pro@v__VERSION__\`
+
+Same changes as in \`@mui/x-data-grid@v__VERSION__\`${
+    dataGridProCommits.length > 0 ? ', plus:' : '.'
+  }
+${logChangelogSection(dataGridProCommits)}
+
+#### \`@mui/x-data-grid-premium@v__VERSION__\`
+
+Same changes as in \`@mui/x-data-grid-pro@v__VERSION__\`${
+    dataGridPremiumCommits.length > 0 ? ', plus:' : '.'
+  }
+${logChangelogSection(dataGridPremiumCommits)}
+### Date Pickers
+
+#### \`@mui/x-date-pickers@v__VERSION__\`
+
+${logChangelogSection(pickersCommits)}
+
+#### \`@mui/x-date-pickers-pro@v__VERSION__\`
+
+Same changes as in \`@mui/x-date-pickers@v__VERSION__\`${
+    pickersProCommits.length > 0 ? ', plus:' : '.'
+  }
+${logChangelogSection(pickersProCommits)}
+
+### Charts / \`@mui/x-charts@v__CHARTS_VERSION__\`
+
+${logChangelogSection(chartsCommits)}
 ${logChangelogSection(
   codemodCommits,
   `### \`@mui/x-codemod@v__VERSION__\`

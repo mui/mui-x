@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.10.0
+
+_Jul 13, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Improve data grid filtering performance
+- 🎁 Include column groups in the CSV export
+- 🌍 Improve Polish (pl-PL) locale for the data grid
+- 🌍 Improve Norwegian (nb-NO) locale for the pickers
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.10.0`
+
+- [DataGrid] Allow to exclude hidden columns from the quick filter (#9610) @cherniavskii
+- [DataGrid] Filtering performance: remove indirection (#9334) @romgrk
+- [DataGrid] Fix props propagation on `GridToolbarQuickFilter` component (#9633) @giladappsforce
+- [DataGrid] Fix quick filter input lag (#9630) @cherniavskii
+- [DataGrid] Include column groups in the CSV export (#9585) @cherniavskii
+- [DataGrid] Make `rowExpansionChange` event public (#9611) @MBilalShafi
+- [l10n] Improve Polish (pl-PL) locale (#9625) @ch1llysense
+
+#### `@mui/x-data-grid-pro@6.10.0`
+
+Same changes as in `@mui/x-data-grid@6.10.0`.
+
+#### `@mui/x-data-grid-premium@6.10.0`
+
+Same changes as in `@mui/x-data-grid-pro@6.10.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.10.0`
+
+- [pickers] Fix date calendar issues (#9652) @LukasTy
+- [l10n] Improve Norwegian (nb-NO) locale (#9608) @JosteinBrevik
+
+#### `@mui/x-date-pickers-pro@6.10.0`
+
+Same changes as in `@mui/x-date-pickers@6.10.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.3`
+
+- [charts] Allow configuring bar size (#9632) @alexfauquette
+- [charts] Simplify custom components creation (#9561) @alexfauquette
+
+### Docs
+
+- [docs] Add slot components usage alert (#9660) @LukasTy
+- [docs] Fix casing Cell selection @oliviertassinari
+
+### Core
+
+- [core] Disambiguate eslint plugin name @oliviertassinari
+- [core] Update priority support issue template and prompt (#9574) @DanailH
+- [CHANGELOG] Clarify each plan (#9446) @oliviertassinari
+- [license] Fix error terminology (#9614) @oliviertassinari
+
 ## 6.9.2
 
 _Jul 6, 2023_
