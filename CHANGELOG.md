@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.9.3
 
-_Jul 12, 2023_
+_Jul 13, 2023_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
@@ -14,7 +14,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 🌍 Improve Polish (pl-PL) locale for the data grid.
 - 🌍 Improve Norwegian (nb-NO) locale for the pickers.
 
-### `@mui/x-data-grid@6.9.3`
+### Data Grid
+
+#### `@mui/x-data-grid@6.9.3`
 
 - [DataGrid] Allow to exclude hidden columns from the quick filter (#9610) @cherniavskii
 - [DataGrid] Filtering performance: remove indirection (#9334) @romgrk
@@ -24,24 +26,26 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Make `rowExpansionChange` event public (#9611) @MBilalShafi
 - [l10n] Improve Polish (pl-PL) locale (#9625) @ch1llysense
 
-### `@mui/x-data-grid-pro@6.9.3`
+#### `@mui/x-data-grid-pro@6.9.3`
 
 Same changes as in `@mui/x-data-grid@6.9.3`.
 
-### `@mui/x-data-grid-premium@6.9.3`
+#### `@mui/x-data-grid-premium@6.9.3`
 
-Same changes as in `@mui/x-data-grid-pro@6.9.3`
+Same changes as in `@mui/x-data-grid-pro@6.9.3`.
 
-### `@mui/x-date-pickers@6.9.3`
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.9.3`
 
 - [pickers] Fix date calendar issues (#9652) @LukasTy
 - [l10n] Improve Norwegian (nb-NO) locale (#9608) @JosteinBrevik
 
-### `@mui/x-date-pickers-pro@6.9.3`
+#### `@mui/x-date-pickers-pro@6.9.3`
 
-Same changes as in `@mui/x-date-pickers-pro@6.9.3`
+Same changes as in `@mui/x-date-pickers-pro@6.9.3`.
 
-### `@mui/x-charts@6.0.0-alpha.3`
+### Charts / `@mui/x-charts@6.0.0-alpha.3`
 
 - [charts] Allow configuring bar size (#9632) @alexfauquette
 - [charts] Simplify custom components creation (#9561) @alexfauquette

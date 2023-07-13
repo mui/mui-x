@@ -223,36 +223,39 @@ We'd like to offer a big thanks to the ${
 TODO INSERT HIGHLIGHTS
 ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
-### \`@mui/x-data-grid@v__VERSION__\`
+### Data Grid
+
+#### \`@mui/x-data-grid@v__VERSION__\`
 
 ${logChangelogSection(dataGridCommits)}
 
-### \`@mui/x-data-grid-pro@v__VERSION__\`
+#### \`@mui/x-data-grid-pro@v__VERSION__\`
 
 Same changes as in \`@mui/x-data-grid@v__VERSION__\`${
     dataGridProCommits.length > 0 ? ', plus:' : '.'
   }
 ${logChangelogSection(dataGridProCommits)}
 
-### \`@mui/x-data-grid-premium@v__VERSION__\`
+#### \`@mui/x-data-grid-premium@v__VERSION__\`
 
 Same changes as in \`@mui/x-data-grid-pro@v__VERSION__\`${
     dataGridPremiumCommits.length > 0 ? ', plus:' : '.'
   }
 ${logChangelogSection(dataGridPremiumCommits)}
+### Date Pickers
 
-### \`@mui/x-date-pickers@v__VERSION__\`
+#### \`@mui/x-date-pickers@v__VERSION__\`
 
 ${logChangelogSection(pickersCommits)}
 
-### \`@mui/x-date-pickers-pro@v__VERSION__\`
+#### \`@mui/x-date-pickers-pro@v__VERSION__\`
 
 Same changes as in \`@mui/x-date-pickers-pro@v__VERSION__\`${
     pickersProCommits.length > 0 ? ', plus:' : '.'
   }
 ${logChangelogSection(pickersProCommits)}
 
-### \`@mui/x-charts@v__CHARTS_VERSION__\`
+### Charts / \`@mui/x-charts@v__CHARTS_VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
 ${logChangelogSection(
