@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
-export default function BasicSparkLine() {
+export default function CustomAxis() {
   return (
     <Stack direction="row" sx={{ width: '100%' }}>
       <Box sx={{ flexGrow: 1 }}>
@@ -21,8 +21,11 @@ export default function BasicSparkLine() {
               new Date(2022, 5, 7),
               new Date(2022, 5, 8),
             ],
+            valueFormatter: (value) => value.toISOString().slice(0, 10),
           }}
           height={100}
+          showTooltip
+          showHighlight
         />
       </Box>
       <Box sx={{ flexGrow: 1 }}>
@@ -30,6 +33,22 @@ export default function BasicSparkLine() {
           plotType="bar"
           data={[1, 4, 2, 5, 7, 2, 4, 6]}
           height={100}
+          showTooltip
+          showHighlight
+          xAxis={{
+            scaleType: 'band',
+            data: [
+              new Date(2016, 0, 1),
+              new Date(2017, 0, 1),
+              new Date(2018, 0, 1),
+              new Date(2019, 0, 1),
+              new Date(2020, 0, 1),
+              new Date(2021, 0, 1),
+              new Date(2022, 0, 1),
+              new Date(2023, 0, 1),
+            ],
+            valueFormatter: (value) => value.getFullYear(),
+          }}
         />
       </Box>
     </Stack>
