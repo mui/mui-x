@@ -387,7 +387,7 @@ describe('<DataGridPro /> - Events Params', () => {
       // arbitrary number to make sure that the bottom of the grid window is reached.
       virtualScroller.scrollTop = 12345;
       virtualScroller.dispatchEvent(new Event('scroll'));
-      expect(handleRowsScrollEnd.callCount).to.equal(1);
+      expect(handleRowsScrollEnd.callCount).to.equal(2); // this is because the mock has isIntersecting always true
     });
   });
 
