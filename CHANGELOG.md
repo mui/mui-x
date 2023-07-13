@@ -28,11 +28,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 Same changes as in `@mui/x-data-grid@6.9.3`.
 
-
 ### `@mui/x-data-grid-premium@6.9.3`
 
 Same changes as in `@mui/x-data-grid-pro@6.9.3`
-
 
 ### `@mui/x-date-pickers@6.9.3`
 
@@ -42,7 +40,6 @@ Same changes as in `@mui/x-data-grid-pro@6.9.3`
 ### `@mui/x-date-pickers-pro@6.9.3`
 
 Same changes as in `@mui/x-date-pickers-pro@6.9.3`
-
 
 ### `@mui/x-charts@6.0.0-alpha.3`
 
