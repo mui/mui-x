@@ -35,6 +35,11 @@ As an example, you could override the `ActionBar` and pass additional props to t
 />
 ```
 
+:::success
+Remember to pass a reference to the component instead of an inline render function and define it outside of the main component.
+This ensures that the component is not re-rendered on every update.
+:::
+
 To modify components position, have a look at the [custom layout](/x/react-date-pickers/custom-layout/) docs page.
 
 ## Action bar
