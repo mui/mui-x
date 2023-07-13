@@ -13,8 +13,8 @@ import {
   getExtremumX as getLineExtremumX,
   getExtremumY as getLineExtremumY,
 } from '../LineChart/extremums';
+import { AxisConfig, AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
 import { getScale } from '../internals/getScale';
-import { AxisConfig, AxisDefaultized, ScaleName } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
@@ -32,6 +32,8 @@ export type CartesianContextProviderProps = {
   yAxis?: MakeOptional<AxisConfig, 'id'>[];
   children: React.ReactNode;
 };
+
+const DEFAULT_CATEGORY_GAP_RATIO = 0.1;
 
 // TODO: those might be better placed in a distinct file
 const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
@@ -125,27 +127,34 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
-      const scaleType = axis.scaleType ?? 'linear';
       const range = [drawingArea.left, drawingArea.left + drawingArea.width];
 
-      if (scaleType === 'band') {
+      if (isBandScaleConfig(axis)) {
+        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
         completedXAxis[axis.id] = {
+          categoryGapRatio,
+          barGapRatio: 0,
           ...axis,
-          scaleType,
-          scale: scaleBand(axis.data!, range),
+          scale: scaleBand(axis.data!, range)
+            .paddingInner(categoryGapRatio)
+            .paddingOuter(categoryGapRatio / 2),
           ticksNumber: axis.data!.length,
         };
-        return;
       }
-      if (scaleType === 'point') {
+      if (isPointScaleConfig(axis)) {
         completedXAxis[axis.id] = {
           ...axis,
-          scaleType,
           scale: scalePoint(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
+      }
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
+
+      const scaleType = axis.scaleType ?? 'linear';
+
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
@@ -174,25 +183,33 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
       const range = [drawingArea.top + drawingArea.height, drawingArea.top];
 
-      const scaleType: ScaleName = axis.scaleType ?? 'linear';
-      if (scaleType === 'band') {
-        completedYAxis[axis.id] = {
+      if (isBandScaleConfig(axis)) {
+        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+
+        completedXAxis[axis.id] = {
+          categoryGapRatio,
+          barGapRatio: 0,
           ...axis,
-          scaleType,
-          scale: scaleBand(axis.data!, range),
+          scale: scaleBand(axis.data!, range)
+            .paddingInner(categoryGapRatio)
+            .paddingOuter(categoryGapRatio / 2),
           ticksNumber: axis.data!.length,
         };
-        return;
       }
-      if (scaleType === 'point') {
-        completedYAxis[axis.id] = {
+      if (isPointScaleConfig(axis)) {
+        completedXAxis[axis.id] = {
           ...axis,
-          scaleType,
           scale: scalePoint(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
+      }
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
+
+      const scaleType = axis.scaleType ?? 'linear';
+
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
