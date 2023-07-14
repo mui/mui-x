@@ -2313,10 +2313,10 @@
     "@octokit/types" "^9.2.3"
     deprecation "^2.3.1"
 
-"@octokit/plugin-retry@^5.0.4":
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-5.0.4.tgz#c726c0e4e3fcd3b34a010e709f2c8b92cce1915a"
-  integrity sha512-hw00fDIhOgijy4aSxS6weWF5uqZVeoiC/AptLLyjL8KFCJRGRaXfcfgj76h/Z3cSLTjRsEIQnNCTig8INttL/g==
+"@octokit/plugin-retry@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-5.0.5.tgz#08003f00b254e66c1b8e199cf2a8cec671d55e79"
+  integrity sha512-sB1RWMhSrre02Atv95K6bhESlJ/sPdZkK/wE/w1IdSCe0yM6FxSjksLa6T7aAvxvxlLKzQEC4KIiqpqyov1Tbg==
   dependencies:
     "@octokit/request-error" "^4.0.1"
     "@octokit/types" "^10.0.0"
