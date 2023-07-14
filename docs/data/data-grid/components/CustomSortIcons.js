@@ -38,7 +38,7 @@ export default function CustomSortIcons() {
         columns={columns}
         rows={rows}
         sortModel={sortModel}
-        onSortModelChange={(model) => setSortModel(model)}
+        onSortModelChange={setSortModel}
         slots={{
           columnSortedDescendingIcon: SortedDescendingIcon,
           columnSortedAscendingIcon: SortedAscendingIcon,
