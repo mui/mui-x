@@ -27,7 +27,11 @@ const Root = styled('div')(({ theme }) => ({
       opacity: 0.3,
     },
     '& .progress-background': {
-      border: `1px solid ${(theme.vars || theme).palette.error.light}`,
+      border: `1px solid`,
+      borderColor:
+        theme.palette.mode === 'dark'
+          ? (theme.vars || theme).palette.error.light
+          : (theme.vars || theme).palette.error.dark,
     },
   },
   '&.medium': {
@@ -40,7 +44,11 @@ const Root = styled('div')(({ theme }) => ({
       opacity: theme.palette.mode === 'dark' ? 0.4 : 0.25,
     },
     '& .progress-background': {
-      border: `1px solid ${(theme.vars || theme).palette.warning.light}`,
+      border: `1px solid`,
+      borderColor:
+        theme.palette.mode === 'dark'
+          ? (theme.vars || theme).palette.warning.light
+          : (theme.vars || theme).palette.warning.dark,
     },
   },
   '&.high': {
@@ -53,7 +61,11 @@ const Root = styled('div')(({ theme }) => ({
       opacity: 0.3,
     },
     '& .progress-background': {
-      border: `1px solid ${(theme.vars || theme).palette.success.light}`,
+      border: `1px solid`,
+      borderColor:
+        theme.palette.mode === 'dark'
+          ? (theme.vars || theme).palette.success.light
+          : (theme.vars || theme).palette.success.dark,
     },
   },
 }));
