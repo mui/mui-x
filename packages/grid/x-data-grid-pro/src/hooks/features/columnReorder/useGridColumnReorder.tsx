@@ -80,7 +80,6 @@ export const useGridColumnReorder = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const theme = useTheme();
-  const isAndroid = /(android)/i.test(navigator.userAgent);
 
   React.useEffect(() => {
     return () => {
@@ -106,6 +105,7 @@ export const useGridColumnReorder = (
         // For Android and iOS, if event.dataTransfer.setData is not called it doesn't allow to drag
         // `text/html` doesn't work on Android but works on iOS
         // `text` doesn't work on Safari iOS
+        const isAndroid = /(android)/i.test(navigator.userAgent);
         event.dataTransfer.setData(isAndroid ? 'text' : 'text/html', params.field);
       }
       apiRef.current.setState((state) => ({
@@ -329,7 +329,8 @@ export const useGridColumnReorder = (
         event.clientY < rect.top ||
         event.clientY > rect.bottom;
 
-      // We can't use event.dataTransfer.dropEffect because it's always "none" on Android
+      // We can't use event.dataTransfer.dropEffect on Android because it's always "none"
+      const isAndroid = /(android)/i.test(navigator.userAgent);
       const hasDroppedOutside = isAndroid
         ? hasDroppedOutsideFallback
         : event.dataTransfer.dropEffect === 'none';
