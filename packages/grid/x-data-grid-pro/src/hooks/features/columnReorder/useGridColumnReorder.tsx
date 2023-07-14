@@ -80,6 +80,7 @@ export const useGridColumnReorder = (
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
   const theme = useTheme();
+  const isAndroid = /(android)/i.test(navigator.userAgent);
 
   React.useEffect(() => {
     return () => {
@@ -102,7 +103,6 @@ export const useGridColumnReorder = (
       dragColNode.current.classList.add(classes.columnHeaderDragging);
       if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
-        const isAndroid = /(android)/i.test(navigator.userAgent);
         // For Android and iOS, if event.dataTransfer.setData is not called it doesn't allow to drag
         // `text/html` doesn't work on Android but works on iOS
         // `text` doesn't work on Safari iOS
@@ -323,14 +323,18 @@ export const useGridColumnReorder = (
       dragColNode.current = null;
 
       const rect = apiRef.current.rootElementRef!.current!.getBoundingClientRect();
-      const hasDroppedOutside =
+      const hasDroppedOutsideFallback =
         event.clientX < rect.left ||
         event.clientX > rect.right ||
         event.clientY < rect.top ||
         event.clientY > rect.bottom;
 
-      // Check if the column was dropped outside the grid.
       // We can't use event.dataTransfer.dropEffect because it's always "none" on Android
+      const hasDroppedOutside = isAndroid
+        ? hasDroppedOutsideFallback
+        : event.dataTransfer.dropEffect === 'none';
+
+      // Check if the column was dropped outside the grid.
       if (hasDroppedOutside && !props.keepColumnPositionIfDraggedOutside) {
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
