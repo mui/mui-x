@@ -12,8 +12,7 @@ const Root = styled('div')(({ theme }) => ({
   minWidth: '100%',
   display: 'flex',
   justifyContent: 'center',
-  paddingLeft: theme.spacing(1),
-  paddingRight: theme.spacing(1),
+  padding: theme.spacing(0, 1),
   borderRadius: 5,
   fontWeight: 600,
   color: (theme.vars || theme).palette.text.secondary,
@@ -28,10 +27,7 @@ const Root = styled('div')(({ theme }) => ({
     },
     '& .progress-background': {
       border: `1px solid`,
-      borderColor:
-        theme.palette.mode === 'dark'
-          ? (theme.vars || theme).palette.error.light
-          : (theme.vars || theme).palette.error.dark,
+      borderColor: (theme.vars || theme).palette.error.light,
     },
   },
   '&.medium': {
@@ -45,10 +41,7 @@ const Root = styled('div')(({ theme }) => ({
     },
     '& .progress-background': {
       border: `1px solid`,
-      borderColor:
-        theme.palette.mode === 'dark'
-          ? (theme.vars || theme).palette.warning.light
-          : (theme.vars || theme).palette.warning.dark,
+      borderColor: (theme.vars || theme).palette.warning.light,
     },
   },
   '&.high': {
@@ -62,10 +55,7 @@ const Root = styled('div')(({ theme }) => ({
     },
     '& .progress-background': {
       border: `1px solid`,
-      borderColor:
-        theme.palette.mode === 'dark'
-          ? (theme.vars || theme).palette.success.light
-          : (theme.vars || theme).palette.success.dark,
+      borderColor: (theme.vars || theme).palette.success.light,
     },
   },
 }));
@@ -91,7 +81,7 @@ const Background = styled('div')({
   borderRadius: 5,
 });
 
-const ProgressBar = React.memo(function ProgressBar(props) {
+function ProgressBar(props) {
   const { numerator, denumerator } = props;
   const valueInPercent =
     numerator === denumerator ? 100 : Math.floor((numerator / denumerator) * 95);
@@ -109,7 +99,7 @@ const ProgressBar = React.memo(function ProgressBar(props) {
       <Value>{numerator === denumerator ? 'Done 🎉' : `${numerator}/${denumerator}`}</Value>
     </Root>
   );
-});
+}
 
 ProgressBar.propTypes = {
   denumerator: PropTypes.number.isRequired,
@@ -132,7 +122,7 @@ export default function LocalisationTable(props) {
             <th align="left">BCP 47 language tag</th>
             <th align="left">Import name</th>
             <th align="left">Completion</th>
-            <th align="left">Related file</th>
+            <th align="left">Source file</th>
           </tr>
         </thead>
         <tbody>
