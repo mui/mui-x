@@ -164,6 +164,12 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['*.styling.tsx'],
+      rules: {
+        'filenames/match-exported': ['off'],
+      },
+    },
     buildPackageRestrictedImports('@mui/x-data-grid', 'grid/x-data-grid'),
     buildPackageRestrictedImports('@mui/x-data-grid-pro', 'grid/x-data-grid-pro'),
     buildPackageRestrictedImports('@mui/x-data-grid-premium', 'grid/x-data-grid-premium'),

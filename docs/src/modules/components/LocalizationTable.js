@@ -30,7 +30,11 @@ const Root = styled('div')(({ theme }) => ({
       opacity: 0.3,
     },
     '& .progress-background': {
-      border: `1.5px solid ${(theme.vars || theme).palette.error.dark}`,
+      border: `1px solid`,
+      borderColor:
+        theme.palette.mode === 'dark'
+          ? (theme.vars || theme).palette.error.light
+          : (theme.vars || theme).palette.error.dark,
     },
   },
   '&.medium': {
@@ -44,7 +48,11 @@ const Root = styled('div')(({ theme }) => ({
       opacity: 0.3,
     },
     '& .progress-background': {
-      border: `1.5px solid ${(theme.vars || theme).palette.warning.dark}`,
+      border: `1px solid`,
+      borderColor:
+        theme.palette.mode === 'dark'
+          ? (theme.vars || theme).palette.warning.light
+          : (theme.vars || theme).palette.warning.dark,
     },
   },
   '&.high': {

@@ -9,23 +9,25 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { blue, grey } from '@mui/material/colors';
-import pick from 'lodash/pick';
 import clsx from 'clsx';
-
-type CustomizationLabelNames = 'customTheme' | 'styledComponents';
-type CustomizationLabels = 'Custom Theme' | 'Styled Components';
-type CustomizationOptions = { [K in CustomizationLabelNames]?: CustomizationLabels };
 
 interface CustomizationPlaygroundProps {
   children: React.ReactNode;
-  config: {
-    customizationLabels: CustomizationOptions;
-    examples: {
-      [key: string]: {
-        [K in CustomizationLabelNames]: string;
-      };
+  examples: {
+    [key: string]: {
+      [key: string]: string;
     };
   };
+  selectedDemo: string | null;
+  hoveredDemo: string | null;
+  customizationOptions: { [key: string]: string };
+  selectedCustomizationOption: string;
+  handleDemoClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+  handleDemoHover: (e: React.MouseEvent<HTMLDivElement>) => void;
+  selectDemo: (interactionTarget: string) => void;
+  setHoveredDemo: (interactionTarget: string | null) => void;
+  setSelectedCustomizationOption: (interactionTarget: string) => void;
+  codeExample: string;
 }
 
 const Nav = styled(Box)(({ theme }) => ({ minWidth: theme.spacing(20) }));
@@ -64,7 +66,10 @@ const NavItem = styled(Typography)(({ theme }) => {
   };
 });
 
-const HighlightedDemo = styled(Box)(
+const HighlightedDemo = styled(Box, {
+  shouldForwardProp: (prop) =>
+    prop !== 'subComponents' && prop !== 'selected' && prop !== 'hovered',
+})(
   ({
     theme,
     subComponents = [],
@@ -80,12 +85,12 @@ const HighlightedDemo = styled(Box)(
       (prev: {}, current: {}) => {
         return {
           ...prev,
-
           [`& .Mui${current}-root`]: {
-            [`&:hover  ${current === hovered ? ', &' : ''} ${current === selected ? ', &' : ''}`]: {
+            [`${current === hovered ? '&' : ''} ${current === selected ? ', &' : ''}`]: {
               [`& > *`]: { zIndex: 1 },
               position: `relative`,
               cursor: 'pointer',
+
               [`&::before`]: {
                 borderRadius: theme!.spacing(0.5),
                 content: `''`,
@@ -133,86 +138,37 @@ const HighlightedDemo = styled(Box)(
   },
 );
 
-const getInteractionTarget = (
-  target: HTMLElement,
-  demoRef: React.MutableRefObject<null>,
-  examples: CustomizationPlaygroundProps['config']['examples'],
-): string | null => {
-  const checkSubComponent = (element: HTMLElement) => {
-    return Object.keys(examples).find((className) =>
-      element.classList.contains(`Mui${className}-root`),
-    );
-  };
-  let interactionTarget = null;
-
-  while (target !== demoRef.current) {
-    if (target.classList) {
-      const match = checkSubComponent(target);
-      if (match) {
-        interactionTarget = match;
-        break;
-      }
-    }
-    target = target.parentNode as HTMLElement;
-  }
-
-  return interactionTarget;
-};
-
-export default function CustomizationPlayground({
-  children,
-  config,
-}: CustomizationPlaygroundProps) {
-  const demoRef = React.useRef(null);
-  const [selectedDemo, setSelectedDemo] = React.useState<string | null>(null);
-  const [hoveredDemo, setHoveredDemo] = React.useState<string | null>(null);
-  const [customizationOptions, setCustomizationOptions] =
-    React.useState<CustomizationOptions | null>(null);
-  const [selectedCustomizationOption, setSelectedCustomizationOption] =
-    React.useState<CustomizationLabelNames | null>(null);
-
-  const selectDemo = (interactionTarget: string) => {
-    // set the selected subcomponent name
-    setSelectedDemo(interactionTarget);
-    // set the array of customization options to the available options for the selected subcomponent
-    setCustomizationOptions(
-      pick(config.customizationLabels, Object.keys(config.examples[interactionTarget])),
-    );
-    // set the selected customization option to the first available option for the selected subcomponent
-    setSelectedCustomizationOption(
-      Object.keys(config.examples[interactionTarget])[0] as CustomizationLabelNames,
-    );
-  };
-
-  const handleDemoClick = (event: React.MouseEvent<HTMLElement>) => {
-    const clickTarget = getInteractionTarget(event.target as HTMLElement, demoRef, config.examples);
-    if (clickTarget) {
-      selectDemo(clickTarget);
-    }
-  };
-
-  const handleDemoHover = (event: React.MouseEvent<HTMLElement>) => {
-    const hoverTarget = getInteractionTarget(event.target as HTMLElement, demoRef, config.examples);
-
-    if (hoverTarget) {
-      setHoveredDemo(hoverTarget);
-    }
-  };
-
+const CustomizationPlayground = React.forwardRef(function CustomizationPlayground(
+  {
+    children,
+    examples,
+    selectedDemo,
+    hoveredDemo,
+    customizationOptions,
+    selectedCustomizationOption,
+    handleDemoClick,
+    handleDemoHover,
+    selectDemo,
+    setHoveredDemo,
+    setSelectedCustomizationOption,
+    codeExample = '',
+  }: CustomizationPlaygroundProps,
+  ref,
+) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <HighlightedDemo
-        subComponents={Object.keys(config.examples)}
+        subComponents={Object.keys(examples)}
         onClick={(e) => handleDemoClick(e)}
         onMouseOver={(e) => handleDemoHover(e)}
         onMouseLeave={() => setHoveredDemo(null)}
         selected={selectedDemo}
         hovered={hoveredDemo}
-        ref={demoRef}
+        ref={ref}
       >
         <Nav>
           <NavLabel gutterBottom>Components</NavLabel>
-          {Object.keys(config.examples).map((item) => (
+          {Object.keys(examples).map((item) => (
             <NavItem
               onClick={() => selectDemo(item)}
               onMouseOver={() => setHoveredDemo(item)}
@@ -227,7 +183,7 @@ export default function CustomizationPlayground({
             </NavItem>
           ))}
         </Nav>
-        {children}
+        <Box sx={{ width: 'fit-content' }}> {children}</Box>
       </HighlightedDemo>
       <BrandingProvider>
         {selectedDemo && customizationOptions && (
@@ -236,25 +192,24 @@ export default function CustomizationPlayground({
             label="Customization options"
             value={selectedCustomizationOption}
             onChange={(e) => {
-              setSelectedCustomizationOption(e.target.value as CustomizationLabelNames);
+              setSelectedCustomizationOption(e.target.value as string);
             }}
             select
           >
             {Object.keys(customizationOptions)?.map((option) => (
               <MenuItem value={option} key={option}>
-                {customizationOptions[option as CustomizationLabelNames]}
+                {customizationOptions[option as string]}
               </MenuItem>
             ))}
           </TextField>
         )}
 
-        {selectedDemo && selectedCustomizationOption && (
-          <HighlightedCode
-            code={`${config.examples[selectedDemo][selectedCustomizationOption]} `}
-            language="js"
-          />
+        {selectedDemo && selectedCustomizationOption && codeExample && (
+          <HighlightedCode code={`${codeExample} `} language="js" />
         )}
       </BrandingProvider>
     </Box>
   );
-}
+});
+
+export default CustomizationPlayground;

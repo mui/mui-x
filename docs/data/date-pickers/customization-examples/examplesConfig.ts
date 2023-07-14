@@ -1,18 +1,20 @@
-export default {
-  customizationLabels: {
-    customTheme: 'Custom Theme',
-    styledComponents: 'Styled Components',
-    sxProp: 'SX Prop',
+export const customizationLabels = {
+  customTheme: 'Custom Theme',
+  styledComponents: 'Styled Components',
+  sxProp: 'SX Prop',
+};
+
+export const examples = {
+  PickersToolbar: {
+    customTheme: 'ToolbarCustomTheme.styling.tsx',
+    styledComponents: 'ToolbarStyledComponents.styling.ts',
+    sxProp: 'ToolbarSxProp.styling.tsx',
   },
-  examples: {
-    PickersToolbar: {
-      customTheme: './ToolbarCustomTheme',
-      styledComponents: './ToolbarStyledComponents',
-      sxProp: './ToolbarSxProp',
-    },
-    DateCalendar: {
-      customTheme: './CalendarCustomTheme',
-      styledComponents: './CalendarStyledComponents',
-    },
+  DateCalendar: {
+    customTheme: 'CalendarCustomTheme.styling.tsx',
+    styledComponents: 'CalendarStyledComponents.styling.ts',
+    sxProp: 'CalendarSxProp.styling.tsx',
   },
+
+  PickersCalendarHeader: { customTheme: 'CalendarHeaderCustomTheme' },
 };
