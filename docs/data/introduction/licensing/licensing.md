@@ -222,7 +222,7 @@ export default function MyApp(props) {
 #### Install the key as an environment variable in Next.js
 
 The license validation happens on the client side, so you must expose the environment variable to the browser.
-To do that, you can prefix it with `NEXT_PUBLIC_` as explained in [Next.js documentation](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser).
+To do this, you must prefix the environment variables with `NEXT_PUBLIC_` as explained in [Next.js documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser).
 
 ```tsx
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
