@@ -26,11 +26,11 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Make `rowExpansionChange` event public (#9611) @MBilalShafi
 - [l10n] Improve Polish (pl-PL) locale (#9625) @ch1llysense
 
-#### `@mui/x-data-grid-pro@6.10.0`
+#### `@mui/x-data-grid-pro@6.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
 Same changes as in `@mui/x-data-grid@6.10.0`.
 
-#### `@mui/x-data-grid-premium@6.10.0`
+#### `@mui/x-data-grid-premium@6.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
 
 Same changes as in `@mui/x-data-grid-pro@6.10.0`.
 
@@ -41,7 +41,7 @@ Same changes as in `@mui/x-data-grid-pro@6.10.0`.
 - [pickers] Fix date calendar issues (#9652) @LukasTy
 - [l10n] Improve Norwegian (nb-NO) locale (#9608) @JosteinBrevik
 
-#### `@mui/x-date-pickers-pro@6.10.0`
+#### `@mui/x-date-pickers-pro@6.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
 Same changes as in `@mui/x-date-pickers@6.10.0`.
 
