@@ -148,7 +148,11 @@ export function verifyLicense({
       return LicenseStatus.ExpiredVersion;
     }
   } else if (license.licensingModel === 'subscription' || license.licensingModel === 'annual') {
-    if (license.expiryTimestamp < new Date().getTime()) {
+    if (new Date().getTime() > license.expiryTimestamp) {
+      // 30 days grace
+      if (new Date().getTime() < license.expiryTimestamp + 1000 * 3600 * 24 * 30) {
+        return LicenseStatus.ExpiredAnnualGrace;
+      }
       return LicenseStatus.ExpiredAnnual;
     }
   }

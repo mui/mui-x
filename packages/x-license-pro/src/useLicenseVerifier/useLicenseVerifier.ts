@@ -2,6 +2,7 @@ import * as React from 'react';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
+  showExpiredAnnualGraceLicenseKeyError,
   showExpiredAnnualLicenseKeyError,
   showInvalidLicenseKeyError,
   showMissingLicenseKeyError,
@@ -28,6 +29,8 @@ export function useLicenseVerifier(
   const { key: contextKey } = React.useContext(LicenseInfoContext);
   return React.useMemo(() => {
     const licenseKey = contextKey ?? LicenseInfo.getLicenseKey();
+
+    // Cache the response to not trigger the error twice.
     if (
       sharedLicenseStatuses[packageName] &&
       sharedLicenseStatuses[packageName]!.key === licenseKey
@@ -56,6 +59,8 @@ export function useLicenseVerifier(
       showLicenseKeyPlanMismatchError();
     } else if (licenseStatus === LicenseStatus.NotFound) {
       showMissingLicenseKeyError({ plan, packageName: fullPackageName });
+    } else if (licenseStatus === LicenseStatus.ExpiredAnnualGrace) {
+      showExpiredAnnualGraceLicenseKeyError({ plan });
     } else if (licenseStatus === LicenseStatus.ExpiredAnnual) {
       showExpiredAnnualLicenseKeyError({ plan });
     } else if (licenseStatus === LicenseStatus.ExpiredVersion) {

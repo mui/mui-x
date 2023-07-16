@@ -147,7 +147,25 @@ describe('License: verifyLicense', () => {
 
       it('should not validate subscription license in dev if current date is after expiry date but release date is before expiry date', () => {
         const expiredLicenseKey = generateLicense({
-          expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
+          expiryDate: new Date(new Date().getTime() - oneDayInMS),
+          orderNumber: 'MUI-123',
+          scope: 'pro',
+          licensingModel: 'subscription',
+        });
+
+        expect(
+          verifyLicense({
+            releaseInfo: RELEASE_INFO,
+            licenseKey: expiredLicenseKey,
+            acceptedScopes: ['pro', 'premium'],
+            isProduction: false,
+          }),
+        ).to.equal(LicenseStatus.ExpiredAnnualGrace);
+      });
+
+      it('should throw if the license is expired by more than a 30 days', () => {
+        const expiredLicenseKey = generateLicense({
+          expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
           orderNumber: 'MUI-123',
           scope: 'pro',
           licensingModel: 'subscription',
