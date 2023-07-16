@@ -9,7 +9,9 @@ Instead, it takes up the space given by its parent. The grid will raise an error
 
 ## Percentage dimensions
 
-When using percentages (%) for height or width, make sure the container that you put your data grid in, has an intrinsic dimension. Browsers adjust the element based on a percentage of its parent's size. If the parent has no size, the percentage will be zero.
+When using percentages (%) for height or width, make sure that the Data Grid's parent container has intrinsic dimensions. 
+Browsers adjust the element based on a percentage of its parent's size. 
+If the parent has no size, the percentage will be zero.
 
 ## Predefined dimensions
 
