@@ -22,7 +22,7 @@ You can predefine dimensions for the parent of the data grid.
 ## Auto height
 
 The `autoHeight` prop enables the Data Grid to adjust its size based on its content.
-This means that the height of the data grid will be determined by the number of rows, ensuring that all rows are visible to the user simultaneously.
+This means that the Data Grid's height will be determined by the number of rows, ensuring that all rows will be visible to the user simultaneously.
 
 :::warning
 This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
