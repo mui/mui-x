@@ -67,6 +67,7 @@ yarn add @mui/styled-engine-sc styled-components
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
 ```
+
 </codeblock>
 
 Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
