@@ -572,7 +572,7 @@ describe('<DataGrid /> - Quick Filter', () => {
     });
   });
 
-  // See https://github.com/mui/mui-x/issues/6783
+  // https://github.com/mui/mui-x/issues/6783
   it('should not override user input when typing', async function test() {
     if (isJSDOM) {
       this.skip();
@@ -607,4 +607,20 @@ describe('<DataGrid /> - Quick Filter', () => {
     await sleep(debounceMs * 2);
     expect(searchBox.value).to.equal('abc');
   });
+
+  // https://github.com/mui/mui-x/issues/9666
+  it('should not fail when the data changes', () => {
+    const { setProps } = render(
+      <TestCase
+        filterModel={{
+          items: [],
+          quickFilterValues: ['adid'],
+        }}
+      />
+    );
+
+    setProps({
+      rows: [],
+    });
+  })
 });
