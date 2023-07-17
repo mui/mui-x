@@ -11,8 +11,8 @@ import {
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
-import { useMultiInputDateTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
-import { UseDateTimeRangeFieldProps } from '../internal/models/dateTimeRange';
+import { useMultiInputDateTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
+import { UseDateTimeRangeFieldProps } from '../internals/models/dateTimeRange';
 
 const MultiInputDateTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
@@ -293,6 +293,12 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
+   * For example, on time fields it will be used to determine the date to set.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
@@ -387,6 +393,14 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**

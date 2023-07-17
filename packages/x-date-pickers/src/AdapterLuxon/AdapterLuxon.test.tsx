@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DateTime, Settings } from 'luxon';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
@@ -18,6 +19,11 @@ import {
 describe('<AdapterLuxon />', () => {
   describeGregorianAdapter(AdapterLuxon, {
     formatDateTime: 'yyyy-MM-dd HH:mm:ss',
+    setDefaultTimezone: (timezone) => {
+      Settings.defaultZone = timezone ?? 'system';
+    },
+    getLocaleFromDate: (value: DateTime) => value.locale!,
+    frenchLocale: 'fr',
   });
 
   describe('Adapter localization', () => {
@@ -63,7 +69,7 @@ describe('<AdapterLuxon />', () => {
       ) => {
         const date = adapter.date('2020-02-01T23:44:00.000Z')!;
 
-        expect(adapter.format(date, format)).to.equal(expectedWithEn);
+        expect(cleanText(adapter.format(date, format))).to.equal(expectedWithEn);
         expect(cleanText(adapterRu.format(date, format))).to.equal(expectedWithRu);
       };
 

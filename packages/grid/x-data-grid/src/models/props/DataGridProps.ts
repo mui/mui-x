@@ -288,7 +288,7 @@ export interface DataGridPropsWithDefaultValues {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: number[];
+  pageSizeOptions: Array<number | { value: number; label: string }>;
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -365,6 +365,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps?: Record<string, unknown>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].

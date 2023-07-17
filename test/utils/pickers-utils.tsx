@@ -31,6 +31,7 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
+import { clockPointerClasses } from '@mui/x-date-pickers';
 
 export type AdapterName =
   | 'date-fns'
@@ -98,6 +99,7 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: Locale;
   adapterName?: AdapterName;
+  instance?: any;
 }
 
 export function wrapPickerMount(
@@ -110,6 +112,7 @@ export function wrapPickerMount(
 export function createPickerRenderer({
   locale,
   adapterName,
+  instance,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
@@ -126,8 +129,8 @@ export function createPickerRenderer({
     adapterLocale = adapterLocale.slice(0, 2);
   }
   const adapter = adapterName
-    ? new availableAdapters[adapterName]({ locale: adapterLocale })
-    : new AdapterClassToUse({ locale: adapterLocale });
+    ? new availableAdapters[adapterName]({ locale: adapterLocale, instance })
+    : new AdapterClassToUse({ locale: adapterLocale, instance });
 
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
@@ -208,7 +211,10 @@ export const getClockMouseEvent = (
   return event;
 };
 
-export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | '24hours') => {
+export const getClockTouchEvent = (
+  value: number | string,
+  view: 'minutes' | '12hours' | '24hours',
+) => {
   // TODO: Handle 24 hours clock
   if (view === '24hours') {
     throw new Error('Do not support 24 hours clock yet');
@@ -221,7 +227,7 @@ export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | 
     itemCount = 12;
   }
 
-  const angle = Math.PI / 2 - (Math.PI * 2 * value) / itemCount;
+  const angle = Math.PI / 2 - (Math.PI * 2 * Number(value)) / itemCount;
   const clientX = Math.round(((1 + Math.cos(angle)) * CLOCK_WIDTH) / 2);
   const clientY = Math.round(((1 - Math.sin(angle)) * CLOCK_WIDTH) / 2);
 
@@ -364,6 +370,7 @@ export type FieldSectionSelector = (
 export interface BuildFieldInteractionsResponse<P extends {}> {
   renderWithProps: (
     props: P,
+    hook?: (props: P) => Record<string, any>,
     componentFamily?: 'picker' | 'field',
   ) => ReturnType<ReturnType<typeof createRenderer>['render']> & {
     input: HTMLInputElement;
@@ -417,13 +424,19 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  const renderWithProps = (props: P, componentFamily: 'picker' | 'field' = 'field') => {
+  const renderWithProps: BuildFieldInteractionsResponse<P>['renderWithProps'] = (
+    props,
+    hook,
+    componentFamily = 'field',
+  ) => {
     let fieldRef: React.RefObject<FieldRef<FieldSection>> = { current: null };
 
     function WrappedComponent() {
       fieldRef = React.useRef<FieldRef<FieldSection>>(null);
+      const hookResult = hook?.(props);
       const allProps = {
         ...props,
+        ...hookResult,
       } as any;
 
       if (componentFamily === 'field') {
@@ -613,13 +626,63 @@ export class MockedDataTransfer implements DataTransfer {
   }
 }
 
-export const getExpectedOnChangeCount = (componentFamily: PickerComponentFamily) => {
+const getChangeCountForComponentFamily = (componentFamily: PickerComponentFamily) => {
   switch (componentFamily) {
     case 'clock':
-      return 2;
     case 'multi-section-digital-clock':
       return 3;
     default:
       return 1;
   }
+};
+
+export const getExpectedOnChangeCount = (
+  componentFamily: PickerComponentFamily,
+  params: OpenPickerParams,
+) => {
+  if (componentFamily === 'digital-clock') {
+    return getChangeCountForComponentFamily(componentFamily);
+  }
+  if (params.type === 'date-time') {
+    return (
+      getChangeCountForComponentFamily(componentFamily) +
+      getChangeCountForComponentFamily(
+        params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+      )
+    );
+  }
+  if (componentFamily === 'picker' && params.type === 'time') {
+    return getChangeCountForComponentFamily(
+      params.variant === 'desktop' ? 'multi-section-digital-clock' : 'clock',
+    );
+  }
+  if (componentFamily === 'clock') {
+    // the `TimeClock` fires change for both touch move and touch end
+    // but does not have meridiem control
+    return (getChangeCountForComponentFamily(componentFamily) - 1) * 2;
+  }
+  return getChangeCountForComponentFamily(componentFamily);
+};
+
+export const getTimeClockValue = () => {
+  const clockPointer = document.querySelector<HTMLDivElement>(`.${clockPointerClasses.root}`);
+  const transform = clockPointer?.style?.transform ?? '';
+  const isMinutesView = screen.getByRole('listbox').getAttribute('aria-label')?.includes('minutes');
+
+  const rotation = Number(/rotateZ\(([0-9]+)deg\)/.exec(transform)?.[1] ?? '0');
+
+  if (isMinutesView) {
+    return rotation / 6;
+  }
+
+  return rotation / 30;
+};
+
+export const getDateOffset = <TDate extends unknown>(
+  adapter: MuiPickersAdapter<TDate>,
+  date: TDate,
+) => {
+  const utcHour = adapter.getHours(adapter.setTimezone(adapter.startOfDay(date), 'UTC'));
+  const cleanUtcHour = utcHour > 12 ? 24 - utcHour : -utcHour;
+  return cleanUtcHour * 60;
 };

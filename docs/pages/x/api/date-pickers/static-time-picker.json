@@ -61,6 +61,10 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
+    },
     "value": { "type": { "name": "any" } },
     "view": {
       "type": {
@@ -79,14 +83,14 @@
     }
   },
   "slots": {
-    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "Layout": { "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "layout": { "type": { "name": "elementType" } },
+    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
+    "toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "StaticTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticTimePicker" },

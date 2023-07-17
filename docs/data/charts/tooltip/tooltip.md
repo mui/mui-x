@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Tooltip
 ---
 
@@ -17,7 +16,7 @@ The tooltip can be triggered by two kinds of events:
 - `'item'`—when the user's mouse hovers over an item on the chart, the tooltip will display data about this specific item.
 - `'axis'`—the user's mouse position is associated with a value of the x-axis. The tooltip will display data about all series at this specific x value.
 
-{{"demo": "Interaction.js", "bg": "inline"}}
+{{"demo": "Interaction.js"}}
 
 ## Highlights
 
@@ -29,23 +28,30 @@ By default, those highlights are lines, but it can also be a vertical band if yo
 On the chart, to customize this behavior, you can use:
 
 ```jsx
-highlight={{
+axisHighlight={{
   x: 'line', // Or 'none', or 'band'
   y: 'line', // Or 'none'
 }}
 ```
 
-{{"demo": "BandHighlight.js",  "bg": "inline"}}
+{{"demo": "BandHighlight.js" }}
 
-### Highlighting series 🚧
+### Highlighting series
 
-When the tooltip is highlighting elements, their style can be modified, and the style of other elements can be fade-out.
+In parallel with the tooltip, you can highlight/fade elements.
 
-This is under construction, and requires some management to avoid ending up with a blinking Christmas tree.
+This kind of interaction is controlled by series properties `highlightScope` which contains two options:
 
-Here is a demo of what it could be but needing much more work.
+- `highlighted` Indicates which item to highlight. Its value can be
+  - `'none'` Do nothing (default one).
+  - `'item'` Only highlight the item itself.
+  - `'series'` Highlight all items of the series.
+- `faded` Indicates which item to fade (if they are not already highlighted). Its value can be
+  - `'none'` Do nothing (default one).
+  - `'series'` Fade all the items of the series.
+  - `'global'` Fade all the items of the chart.
 
-{{"demo": "Highlights.js", "bg": "inline"}}
+{{"demo": "ElementHighlights.js"}}
 
 ## Customization
 
@@ -54,10 +60,10 @@ The same can be applied to x values when a tooltip is triggered by the `'axis'`.
 
 Here is a demo with:
 
-- Time axis formatted to only show the year
-- Number values formatted in U.S. Dollar.
+- The time axis is formatted to only show the year
+- The number values are formatted in U.S. Dollars.
 
-{{"demo": "Formatting.js", "bg": "inline"}}
+{{"demo": "Formatting.js"}}
 
 ## Composition
 

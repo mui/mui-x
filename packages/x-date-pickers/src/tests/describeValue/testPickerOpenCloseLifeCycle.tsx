@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { getTextbox, openPicker } from 'test/utils/pickers-utils';
+import { getExpectedOnChangeCount, getTextbox, openPicker } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
@@ -65,7 +65,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Change the value
       let newValue = setNewValue(values[0], { isOpened: true, selectSection });
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       if (pickerParams.type === 'date-range') {
         newValue = setNewValue(newValue, { isOpened: true, setEndDate: true, selectSection });
         newValue.forEach((value, index) => {
@@ -116,7 +116,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Change the value
       let newValue = setNewValue(values[0], { isOpened: true, selectSection });
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       if (pickerParams.type === 'date-range') {
         newValue = setNewValue(newValue, { isOpened: true, setEndDate: true, selectSection });
         newValue.forEach((value, index) => {
@@ -175,7 +175,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Change the value
       let newValue = setNewValue(values[0], { isOpened: true, selectSection });
-      expect(onChange.callCount).to.equal(1);
+      const initialChangeCount = getExpectedOnChangeCount(componentFamily, pickerParams);
+      expect(onChange.callCount).to.equal(initialChangeCount);
       if (pickerParams.type === 'date-range') {
         newValue = setNewValue(newValue, { isOpened: true, setEndDate: true, selectSection });
         newValue.forEach((value, index) => {
@@ -196,7 +197,12 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.callCount).to.equal(2);
+        expect(onChange.callCount).to.equal(
+          initialChangeCount +
+            getExpectedOnChangeCount(componentFamily, pickerParams) -
+            // meridiem does not change this time in case of multi section digital clock
+            (pickerParams.type === 'time' || pickerParams.type === 'date-time' ? 1 : 0),
+        );
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
       }
       expect(onAccept.callCount).to.equal(0);
@@ -222,7 +228,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Dismiss the picker
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
       if (pickerParams.type === 'date-range') {
         newValue.forEach((value, index) => {
@@ -286,7 +292,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Dismiss the picker
       userEvent.mousePress(document.body);
-      expect(onChange.callCount).to.equal(1);
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, pickerParams));
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
       expect(onClose.callCount).to.equal(1);

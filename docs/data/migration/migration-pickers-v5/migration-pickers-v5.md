@@ -1,3 +1,7 @@
+---
+productId: x-date-pickers
+---
+
 # Migration from v5 to v6
 
 <!-- #default-branch-switch -->
@@ -27,7 +31,7 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-```sh
+```bash
 // Date and Time Pickers specific
 npx @mui/x-codemod v6.0.0/pickers/preset-safe <path>
 // Target Data Grid as well
@@ -114,8 +118,8 @@ import { DateTime } from 'luxon';
 ### Stop rendering a clock on desktop
 
 In desktop mode, the `DateTimePicker` and `TimePicker` components will no longer render the [`TimeClock`](/x/react-date-pickers/time-clock/) component.
-The `DateTimePicker` component currently has no replacement, but on `TimePicker` a new [`DigitalClock`](/x/react-date-pickers/digital-clock/) component has been introduced instead.
-The behavior on mobile mode is still the same.
+The `TimeClock` component has been replaced with a new [`DigitalClock`](/x/react-date-pickers/digital-clock/) component instead.
+The behavior on `Mobile` and `Static` variants is still the same.
 If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/base-concepts/#testing-caveats) to choose the best replacement for it.
 
 You can manually re-enable the previous clock component using the new `viewRenderers` prop.
@@ -442,7 +446,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
 
-You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
+You can find more information about this pattern in the [Base UI documentation](https://mui.com/base-ui/getting-started/usage/#shared-props).
 
 These changes apply to all the components that had the prop.
 For example, the `ToolbarComponent` has been replaced by a `Toolbar` component slot on all pickers.
@@ -934,6 +938,18 @@ Component name changes are also reflected in `themeAugmentation`:
  });
 ```
 
+## Behavior of field `onChange` props
+
+Since the masked input has been replaced by [fields](/x/react-date-pickers/fields/#fields-to-edit-a-single-element) the input value is valid most of the time.
+
+In v5, the user had to delete a character and type in another character to update the date resulting in `onChange` being called twice.
+Firstly with deleted character, and then with the complete date again.
+
+In v6, user can override the field section, so `onChange` is called at nearly every key pressed.
+
+If you were relying on `onChange` to send server requests, you might be interested in debouncing it to avoid sending too many requests.
+To do so please refer to the corresponding [docs example](/x/react-date-pickers/lifecycle/#server-interaction).
+
 ## Rename `components` to `slots` (optional)
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
@@ -942,7 +958,7 @@ To smooth the transition, pickers support both the `components` props which are 
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 ```
 

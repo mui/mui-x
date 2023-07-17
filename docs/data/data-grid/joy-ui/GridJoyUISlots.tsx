@@ -79,9 +79,9 @@ type Row = {
   boolean: boolean;
   singleSelect: string;
 };
-const rows: Row[] = [];
+const initialRows: Row[] = [];
 for (let i = 0; i < 20; i += 1) {
-  rows.push({
+  initialRows.push({
     id: i,
     name: randomCompanyName(),
     number: randomRating(),
@@ -93,16 +93,29 @@ for (let i = 0; i < 20; i += 1) {
 }
 
 export default function GridJoyUISlots() {
+  const [rows, setRows] = React.useState<Row[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    setLoading(true);
+    const timeoutId = setTimeout(() => {
+      setRows(initialRows);
+      setLoading(false);
+    }, 800);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
     <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
       <JoyCssVarsProvider>
-        <Box sx={{ height: 420, width: '100%' }}>
+        <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
             pagination
             slots={{
               ...unstable_joySlots,
               toolbar: GridToolbar,
             }}
+            loading={loading}
             columns={columns}
             rows={rows}
             checkboxSelection

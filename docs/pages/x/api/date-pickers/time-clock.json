@@ -40,6 +40,10 @@
       }
     },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
+    },
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
@@ -53,6 +57,10 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "any" } },
     "view": {
@@ -69,10 +77,10 @@
     }
   },
   "slots": {
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
   },
   "name": "TimeClock",
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiTimeClock" },

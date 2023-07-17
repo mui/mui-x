@@ -8,7 +8,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
 import Chip from '@mui/material/Chip';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ArrowUp from '@mui/icons-material/KeyboardArrowUp';
@@ -32,6 +31,8 @@ import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
+import HeaderFiltering from '../filtering/HeaderFilteringDataGridPro';
+import ClipboardPaste from '../clipboard/ClipboardPaste';
 
 export const featuresSet = [
   {
@@ -99,7 +100,7 @@ export const featuresSet = [
     name: 'Quick filter',
     description: 'Use a single text input to filter multiple fields',
     plan: 'Community',
-    detailPage: '/filtering/#quick-filter',
+    detailPage: '/filtering/quick-filter/',
     demo: <QuickFilteringGrid />,
   },
   {
@@ -169,7 +170,7 @@ export const featuresSet = [
   },
   {
     id: 17,
-    name: 'Cell Selection',
+    name: 'Cell selection',
     description:
       'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
     plan: 'Premium',
@@ -186,29 +187,55 @@ export const featuresSet = [
     demo: <AddNewColumnMenuGrid />,
     newBadge: true,
   },
+  {
+    id: 19,
+    name: 'Clipboard paste',
+    description:
+      'Copy and paste the selected cells and rows using the copy/paste keyboard shortcuts.',
+    plan: 'Premium',
+    detailPage: '/clipboard/#clipboard-paste',
+    demo: <ClipboardPaste />,
+    newBadge: true,
+  },
+  {
+    id: 20,
+    name: 'Header filters',
+    description:
+      'Quickly accessible and customizable header filters to filter the data',
+    plan: 'Pro',
+    detailPage: '/filtering/#header-filters',
+    demo: <HeaderFiltering />,
+    newBadge: true,
+  },
 ];
 
-const getChipProperties = (plan) => {
-  switch (plan.toLowerCase()) {
-    case 'premium':
+function getChipProperties(plan) {
+  switch (plan) {
+    case 'Premium':
       return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
-    case 'pro':
+    case 'Pro':
       return { avatarLink: '/static/x/pro.svg', color: '#c8e9ff' };
     default:
       return { avatarLink: undefined, color: '#c8ffdb' };
   }
-};
+}
 
 function PlanTag(props) {
   const chipPropperties = getChipProperties(props.plan);
   const avatar = !chipPropperties.avatarLink ? undefined : (
-    <Avatar src={chipPropperties.avatarLink} />
+    <img src={chipPropperties.avatarLink} width={21} height={24} alt="" />
   );
 
   return (
     <Chip
       avatar={avatar}
-      sx={{ background: chipPropperties.color, color: 'rgba(0, 0, 0, 0.87)' }}
+      sx={{
+        backgroundColor: chipPropperties.color,
+        color: 'rgba(0, 0, 0, 0.87)',
+        '& .MuiChip-avatar': {
+          width: 21,
+        },
+      }}
       label={props.plan}
     />
   );
@@ -229,8 +256,8 @@ function RowDemo(props) {
   const panelColor = theme.palette.mode === 'dark' ? 'transparent' : '#efefef';
 
   return (
-    <Box sx={{ py: 2, background: panelColor }}>
-      <Box style={{ width: '90%', margin: 'auto', background: gridBgColor }}>
+    <Box sx={{ py: 2, backgroundColor: panelColor }}>
+      <Box sx={{ width: '90%', margin: 'auto', backgroundColor: gridBgColor }}>
         {row.demo}
       </Box>
     </Box>
@@ -373,7 +400,7 @@ export default function PopularFeaturesDemo() {
   }, []);
 
   return (
-    <div style={{ height: 'fit-content', width: '100%' }}>
+    <Box sx={{ minHeight: 1000, width: '100%' }}>
       <DataGridPremium
         apiRef={apiRef}
         autoHeight
@@ -419,6 +446,6 @@ export default function PopularFeaturesDemo() {
         hideFooter
         groupingColDef={memoizedGroupingDef}
       />
-    </div>
+    </Box>
   );
 }

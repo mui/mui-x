@@ -9,8 +9,12 @@ import {
   GridFilterItem,
   GridPreferencePanelsValue,
   GridToolbar,
+  GridFilterOperator,
+  GRID_STRING_COL_DEF,
+  getGridStringOperators,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -211,6 +215,33 @@ describe('<DataGrid /> - Filter', () => {
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Puma']);
+    });
+  });
+
+  describe('prop: getRowId', () => {
+    it('works with filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [{ id: 0, field: 'brand', operator: 'contains', value: 'Nike' }],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+    });
+
+    it('works with quick filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [],
+            quickFilterValues: ['Nike'],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
     });
   });
 
@@ -1218,6 +1249,171 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('v7 filter compatibility', () => {
+    const getRows = (operator: GridFilterOperator) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [{ field: 'country', operator: 'equals', value: 'UK' }],
+          }}
+          rows={[
+            { id: 0, country: 'Canada' },
+            { id: 1, country: 'Spain' },
+            { id: 2, country: 'UK' },
+          ]}
+          columns={[
+            {
+              field: 'country',
+              type: 'string',
+              filterOperators: [operator],
+            },
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    it('works with internal filters', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFn,
+        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFnV7,
+      };
+
+      expect(getRows(operator)).to.deep.equal(['UK']);
+    });
+
+    it('works with custom getApplyFilterFn', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: () => {
+          return (params): boolean => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFnV7,
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Canada']);
+    });
+
+    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: () => {
+          return (params): boolean => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyFilterFnV7: () => {
+          return (value): boolean => {
+            return value === 'Spain';
+          };
+        },
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Spain']);
+    });
+
+    it('works with custom getApplyFilterFnV7', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFn,
+        getApplyFilterFnV7: () => {
+          return (value): boolean => {
+            return value === 'Spain';
+          };
+        },
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Spain']);
+    });
+  });
+
+  describe('v7 quick filter compatibility', () => {
+    const getRows = (colDef: Partial<GridColDef>) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [],
+            quickFilterValues: ['UK'],
+          }}
+          rows={[
+            { id: 0, country: 'Canada' },
+            { id: 1, country: 'Spain' },
+            { id: 2, country: 'UK' },
+          ]}
+          columns={[
+            {
+              field: 'country',
+              type: 'string',
+              ...colDef,
+            },
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    it('works with internal filters', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['UK']);
+    });
+
+    it('works with custom getApplyFilterFn', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['Canada']);
+    });
+
+    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          };
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
+    });
+
+    it('works with custom getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          };
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
+    });
+  });
+
   it('should translate operators dynamically in toolbar without crashing ', () => {
     expect(() => {
       return (
@@ -1247,5 +1443,77 @@ describe('<DataGrid /> - Filter', () => {
         </div>
       );
     }).not.to.throw();
+  });
+
+  it('should update the filter model on columns change', () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({ columns: [{ field: 'id' }] });
+    expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+    expect(onFilterModelChange.callCount).to.equal(1);
+    expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({ items: [] });
+  });
+
+  // See https://github.com/mui/mui-x/issues/9204
+  it('should not clear the filter model when both columns and filterModel change', async () => {
+    const columns = [{ field: 'id' }, { field: 'brand' }];
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+
+    const onFilterModelChange = spy();
+
+    function Demo(props: Omit<DataGridProps, 'columns'>) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            columns={columns}
+            filterModel={{
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
+            }}
+            onFilterModelChange={onFilterModelChange}
+            {...props}
+          />
+        </div>
+      );
+    }
+    const { setProps } = render(<Demo rows={rows} />);
+    expect(getColumnValues(1)).to.deep.equal(['Puma']);
+
+    setProps({
+      columns: [{ field: 'id' }],
+      filterModel: {
+        items: [{ field: 'id', operator: 'equals', value: '1' }],
+      },
+    });
+    expect(getColumnValues(0)).to.deep.equal(['1']);
+    expect(onFilterModelChange.callCount).to.equal(0);
   });
 });

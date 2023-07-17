@@ -1,6 +1,6 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Custom field
+productId: x-date-pickers
+title: Date and Time Pickers - Custom field
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
@@ -53,9 +53,9 @@ Setting `formatDensity` to `"spacious"` will add a space before and after each `
 
 ### Using another input
 
-#### With the Joy input
+#### With the Joy UI input
 
-You can use the [_Joy UI_](https://mui.com/joy-ui/getting-started/overview/) components instead of the _Material UI_ ones:
+You can use the [Joy UI](https://mui.com/joy-ui/getting-started/) components instead of the Material UI ones:
 
 :::info
 A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
@@ -92,11 +92,21 @@ On the examples below, you can see that the typing of the props received by a cu
 ```tsx
 interface JoyDateFieldProps
   extends UseDateFieldProps<Dayjs>, // The headless field props
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateValidationError> {} // The DOM field props
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateValidationError
+    > {} // The DOM field props
 
 interface JoyDateTimeFieldProps
   extends UseDateTimeFieldProps<Dayjs>, // The headless field props
-    BaseSingleInputFieldProps<Dayjs | null, FieldSection, DateTimeValidationError> {} // The DOM field props
+    BaseSingleInputFieldProps<
+      Dayjs | null,
+      Dayjs,
+      FieldSection,
+      DateTimeValidationError
+    > {} // The DOM field props
 ```
 
 ### The headless field props

@@ -11,8 +11,8 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarDensity: 'Densidad',
   toolbarDensityLabel: 'Densidad',
   toolbarDensityCompact: 'Compacta',
-  toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Comoda',
+  toolbarDensityStandard: 'Estándar',
+  toolbarDensityComfortable: 'Cómoda',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnas',
@@ -47,7 +47,7 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'Remover todos',
   filterPanelDeleteIconLabel: 'Borrar',
   filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',
@@ -94,10 +94,10 @@ const esESGrid: Partial<GridLocaleText> = {
   // headerFilterOperatorIsAnyOf: 'Is any of',
   // 'headerFilterOperator=': 'Equals',
   // 'headerFilterOperator!=': 'Not equals',
-  // 'headerFilterOperator>': 'Is greater than',
-  // 'headerFilterOperator>=': 'Is greater than or equal to',
-  // 'headerFilterOperator<': 'Is less than',
-  // 'headerFilterOperator<=': 'Is less than or equal to',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'cualquiera',

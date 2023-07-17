@@ -15,13 +15,14 @@ const barChartsParams = {
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'series y' },
     { data: [10, 3, 1, 2, 10], stack: '1', label: 'series z' },
   ],
+  margin: { top: 10, right: 10 },
   width: 400,
   height: 200,
 };
 export default function Interaction() {
   return (
     <Box>
-      <Stack direction={{ xs: 'column', md: 'row' }}>
+      <Stack direction="column">
         <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
         <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
       </Stack>

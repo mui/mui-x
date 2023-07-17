@@ -48,12 +48,101 @@ const missingInstanceIdWarning = buildWarning([
   'To fix, call it with `apiRef`, e.g. `mySelector(apiRef)`, or pass the instance ID explicitly, e.g `mySelector(state, apiRef.current.instanceId)`.',
 ]);
 
-export const createSelector: CreateSelectorFunction = (...args: any) => {
+function checkIsAPIRef(value: any) {
+  return 'current' in value && 'instanceId' in value.current;
+}
+
+const DEFAULT_INSTANCE_ID = { id: 'default' };
+
+export const createSelector = ((
+  a: Function,
+  b: Function,
+  c?: Function,
+  d?: Function,
+  e?: Function,
+  f?: Function,
+  ...rest: any[]
+) => {
+  if (rest.length > 0) {
+    throw new Error('Unsupported number of selectors');
+  }
+
+  let selector: any;
+
+  if (a && b && c && d && e && f) {
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPIRef = checkIsAPIRef(stateOrApiRef);
+      const instanceId =
+        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
+      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      const vc = c(state, instanceId);
+      const vd = d(state, instanceId);
+      const ve = e(state, instanceId);
+      return f(va, vb, vc, vd, ve);
+    };
+  } else if (a && b && c && d && e) {
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPIRef = checkIsAPIRef(stateOrApiRef);
+      const instanceId =
+        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
+      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      const vc = c(state, instanceId);
+      const vd = d(state, instanceId);
+      return e(va, vb, vc, vd);
+    };
+  } else if (a && b && c && d) {
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPIRef = checkIsAPIRef(stateOrApiRef);
+      const instanceId =
+        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
+      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      const vc = c(state, instanceId);
+      return d(va, vb, vc);
+    };
+  } else if (a && b && c) {
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPIRef = checkIsAPIRef(stateOrApiRef);
+      const instanceId =
+        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
+      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId);
+      const vb = b(state, instanceId);
+      return c(va, vb);
+    };
+  } else if (a && b) {
+    selector = (stateOrApiRef: any, instanceIdParam: any) => {
+      const isAPIRef = checkIsAPIRef(stateOrApiRef);
+      const instanceId =
+        instanceIdParam ?? (isAPIRef ? stateOrApiRef.current.instanceId : DEFAULT_INSTANCE_ID);
+      const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
+      const va = a(state, instanceId);
+      return b(va);
+    };
+  } else {
+    throw new Error('Missing arguments');
+  }
+
+  // We use this property to detect if the selector was created with createSelector
+  // or it's only a simple function the receives the state and returns part of it.
+  selector.acceptsApiRef = true;
+
+  return selector;
+}) as unknown as CreateSelectorFunction;
+
+export const createSelectorMemoized: CreateSelectorFunction = (...args: any) => {
   const selector = (...selectorArgs: any[]) => {
     const [stateOrApiRef, instanceId] = selectorArgs;
-    const isApiRef = !!stateOrApiRef.current;
-    const cacheKey = isApiRef ? stateOrApiRef.current.instanceId : instanceId ?? { id: 'default' };
-    const state = isApiRef ? stateOrApiRef.current.state : stateOrApiRef;
+    const isAPIRef = checkIsAPIRef(stateOrApiRef);
+    const cacheKey = isAPIRef
+      ? stateOrApiRef.current.instanceId
+      : instanceId ?? DEFAULT_INSTANCE_ID;
+    const state = isAPIRef ? stateOrApiRef.current.state : stateOrApiRef;
 
     if (process.env.NODE_ENV !== 'production') {
       if (cacheKey.id === 'default') {
