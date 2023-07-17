@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { spy, stub, SinonStub } from 'sinon';
+import { stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
-import { getCell } from 'test/utils/helperFn';
+import { spyApi, getCell } from 'test/utils/helperFn';
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   DataGridPremium,
@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
-describe('<DataGridPremium /> - Cell Selection', () => {
+describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -104,7 +104,8 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'unstable_selectCellRange');
+
       const cell = getCell(0, 0);
       cell.focus();
       userEvent.mousePress(cell);
@@ -155,7 +156,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
   describe('Shift + arrow keys', () => {
     it('should call selectCellRange when ArrowDown is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
       userEvent.mousePress(cell);
@@ -167,7 +168,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange when ArrowUp is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(1, 0);
       cell.focus();
       userEvent.mousePress(cell);
@@ -179,7 +180,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange when ArrowLeft is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 1);
       cell.focus();
       userEvent.mousePress(cell);
@@ -194,7 +195,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
 
     it('should call selectCellRange when ArrowRight is pressed', () => {
       render(<TestDataGridSelection />);
-      const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
+      const spiedSelectCellsBetweenRange = spyApi(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
       userEvent.mousePress(cell);

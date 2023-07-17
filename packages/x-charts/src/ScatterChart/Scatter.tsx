@@ -1,13 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
-import { D3Scale, getValueToPositionMapper } from '../hooks/useScale';
+import { getValueToPositionMapper } from '../hooks/useScale';
 import {
   getIsFaded,
   getIsHighlighted,
   useInteractionItemProps,
 } from '../hooks/useInteractionItemProps';
 import { InteractionContext } from '../context/InteractionProvider';
+import { D3Scale } from '../models/axis';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -88,7 +89,7 @@ Scatter.propTypes = {
   color: PropTypes.string.isRequired,
   markerSize: PropTypes.number.isRequired,
   series: PropTypes.shape({
-    color: PropTypes.string.isRequired,
+    color: PropTypes.string,
     data: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,

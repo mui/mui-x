@@ -93,7 +93,7 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 
-### 🚧 Upcoming features
+### Upcoming features 🚧
 
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 

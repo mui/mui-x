@@ -24,7 +24,7 @@ export interface BarChartProps
   legend?: ChartsLegendProps;
 }
 
-function BarChart(props: BarChartProps) {
+const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -49,6 +49,7 @@ function BarChart(props: BarChartProps) {
 
   return (
     <ResponsiveChartContainer
+      ref={ref}
       series={series.map((s) => ({ type: 'bar', ...s }))}
       width={width}
       height={height}
@@ -88,7 +89,7 @@ function BarChart(props: BarChartProps) {
       {children}
     </ResponsiveChartContainer>
   );
-}
+});
 
 BarChart.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -153,6 +154,7 @@ BarChart.propTypes = {
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
     itemWidth: PropTypes.number,
     markSize: PropTypes.number,
     offset: PropTypes.shape({

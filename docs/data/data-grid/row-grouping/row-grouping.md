@@ -236,7 +236,7 @@ isGroupExpandedByDefault={
 
 {{"demo": "RowGroupingIsGroupExpandedByDefault.js", "bg": "inline", "defaultCodeOpen": false}}
 
-Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row.
+Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row. Changing the expansion of a row emits a `rowExpansionChange` event, listen to it to react to the expansion change.
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
 

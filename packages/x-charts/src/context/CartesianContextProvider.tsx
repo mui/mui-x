@@ -13,14 +13,14 @@ import {
   getExtremumX as getLineExtremumX,
   getExtremumY as getLineExtremumY,
 } from '../LineChart/extremums';
-import { getScale } from '../hooks/useScale';
-import { AxisConfig, AxisDefaultized, ScaleName } from '../models/axis';
+import { AxisConfig, AxisDefaultized, isBandScaleConfig, isPointScaleConfig } from '../models/axis';
+import { getScale } from '../internals/getScale';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import {
+  CartesianChartSeriesType,
   ChartSeries,
-  ChartSeriesType,
   ExtremumGetter,
   ExtremumGetterResult,
 } from '../models/seriesType/config';
@@ -33,14 +33,16 @@ export type CartesianContextProviderProps = {
   children: React.ReactNode;
 };
 
+const DEFAULT_CATEGORY_GAP_RATIO = 0.1;
+
 // TODO: those might be better placed in a distinct file
-const xExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
+const xExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumX,
   scatter: getScatterExtremumX,
   line: getLineExtremumX,
 };
 
-const yExtremumGetters: { [T in ChartSeriesType]: ExtremumGetter<T> } = {
+const yExtremumGetters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> } = {
   bar: getBarExtremumY,
   scatter: getScatterExtremumY,
   line: getLineExtremumY,
@@ -74,7 +76,7 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       acc: ExtremumGetterResult,
       chartType: T,
       axis: AxisConfig,
-      getters: { [T2 in ChartSeriesType]: ExtremumGetter<T2> },
+      getters: { [T2 in CartesianChartSeriesType]: ExtremumGetter<T2> },
       isDefaultAxis: boolean,
     ): ExtremumGetterResult => {
       const getter = getters[chartType];
@@ -101,10 +103,10 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
 
     const getAxisExtremum = (
       axis: AxisConfig,
-      getters: { [T in ChartSeriesType]: ExtremumGetter<T> },
+      getters: { [T in CartesianChartSeriesType]: ExtremumGetter<T> },
       isDefaultAxis: boolean,
     ) => {
-      const charTypes = Object.keys(getters) as ChartSeriesType[];
+      const charTypes = Object.keys(getters) as CartesianChartSeriesType[];
 
       return charTypes.reduce(
         (acc, charType) => axisExtremumCallback(acc, charType, axis, getters, isDefaultAxis),
@@ -125,27 +127,34 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       const isDefaultAxis = axisIndex === 0;
       const [minData, maxData] = getAxisExtremum(axis, xExtremumGetters, isDefaultAxis);
 
-      const scaleType = axis.scaleType ?? 'linear';
       const range = [drawingArea.left, drawingArea.left + drawingArea.width];
 
-      if (scaleType === 'band') {
+      if (isBandScaleConfig(axis)) {
+        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
         completedXAxis[axis.id] = {
+          categoryGapRatio,
+          barGapRatio: 0,
           ...axis,
-          scaleType,
-          scale: scaleBand(axis.data!, range),
+          scale: scaleBand(axis.data!, range)
+            .paddingInner(categoryGapRatio)
+            .paddingOuter(categoryGapRatio / 2),
           ticksNumber: axis.data!.length,
         };
-        return;
       }
-      if (scaleType === 'point') {
+      if (isPointScaleConfig(axis)) {
         completedXAxis[axis.id] = {
           ...axis,
-          scaleType,
           scale: scalePoint(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
+      }
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
+
+      const scaleType = axis.scaleType ?? 'linear';
+
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
@@ -174,25 +183,33 @@ function CartesianContextProvider({ xAxis, yAxis, children }: CartesianContextPr
       const [minData, maxData] = getAxisExtremum(axis, yExtremumGetters, isDefaultAxis);
       const range = [drawingArea.top + drawingArea.height, drawingArea.top];
 
-      const scaleType: ScaleName = axis.scaleType ?? 'linear';
-      if (scaleType === 'band') {
-        completedYAxis[axis.id] = {
+      if (isBandScaleConfig(axis)) {
+        const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
+
+        completedXAxis[axis.id] = {
+          categoryGapRatio,
+          barGapRatio: 0,
           ...axis,
-          scaleType,
-          scale: scaleBand(axis.data!, range),
+          scale: scaleBand(axis.data!, range)
+            .paddingInner(categoryGapRatio)
+            .paddingOuter(categoryGapRatio / 2),
           ticksNumber: axis.data!.length,
         };
-        return;
       }
-      if (scaleType === 'point') {
-        completedYAxis[axis.id] = {
+      if (isPointScaleConfig(axis)) {
+        completedXAxis[axis.id] = {
           ...axis,
-          scaleType,
           scale: scalePoint(axis.data!, range),
           ticksNumber: axis.data!.length,
         };
+      }
+      if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+        // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
         return;
       }
+
+      const scaleType = axis.scaleType ?? 'linear';
+
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
       const ticksNumber = getTicksNumber({ ...axis, range });
 
