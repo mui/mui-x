@@ -24,7 +24,7 @@
     "react-virtualized": "^9.22.5",
     "serve-handler": "^6.1.5",
     "style-loader": "^3.3.3",
-    "webpack": "^5.87.0",
+    "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"
   }
 }
