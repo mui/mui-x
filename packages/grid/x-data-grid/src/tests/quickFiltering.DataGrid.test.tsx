@@ -616,11 +616,11 @@ describe('<DataGrid /> - Quick Filter', () => {
           items: [],
           quickFilterValues: ['adid'],
         }}
-      />
+      />,
     );
 
     setProps({
       rows: [],
     });
-  })
+  });
 });
