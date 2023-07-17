@@ -12,7 +12,7 @@ MUI X is a collection of advanced UI components, including:
 
 - [Data Grid](/x/react-data-grid/)
 - [Date and Time pickers](/x/react-date-pickers/)
-- [Date and Time pickers](/x/react-charts/)
+- [Charts](/x/react-charts/)
 
 These components are significantly more complex than the ones found in the MUI Core libraries.
 They feature advanced functionality for data-rich applications and a wide range of other use cases.
