@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Find Comment
-        uses: peter-evans/find-comment@a54c31d7fa095754bfef525c0c8e5e5674c4b4b1 # v2
+        uses: peter-evans/find-comment@a54c31d7fa095754bfef525c0c8e5e5674c4b4b1 # v2.4.0
         id: findComment
         with:
           issue-number: ${{ github.event.issue.number }}
