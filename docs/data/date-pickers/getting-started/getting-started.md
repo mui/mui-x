@@ -32,11 +32,9 @@ If you are not already using it in your project, you can install it with:
 ```bash npm
 npm install @mui/material @emotion/react @emotion/styled
 ```
-
 ```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
-
 ```bash pnpm
 pnpm add @mui/material @emotion/react @emotion/styled
 ```
@@ -69,7 +67,6 @@ yarn add @mui/styled-engine-sc styled-components
 ```bash pnpm
 pnpm add @mui/styled-engine-sc styled-components
 ```
-
 </codeblock>
 
 Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
