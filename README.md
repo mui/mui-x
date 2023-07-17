@@ -6,6 +6,7 @@
 <h1 align="center">MUI X</h1>
 
 MUI X is a collection of advanced UI components, including:
+
 - [data grid](https://mui.com/x/react-data-grid/)
 - [date and time pickers](https://mui.com/x/react-date-pickers/getting-started/)
 - [charts](https://mui.com/x/react-charts/)

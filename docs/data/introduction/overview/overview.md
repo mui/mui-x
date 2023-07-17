@@ -9,6 +9,7 @@ title: Overview
 ## Introduction
 
 MUI X is a collection of advanced UI components, including:
+
 - [Data Grid](/x/react-data-grid/)
 - [Date and Time pickers](/x/react-date-pickers/)
 - [Date and Time pickers](/x/react-charts/)
