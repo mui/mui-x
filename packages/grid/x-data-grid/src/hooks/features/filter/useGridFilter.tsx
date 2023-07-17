@@ -42,6 +42,7 @@ export const filterStateInitializer: GridStateInitializer<
     ...state,
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
+      filteredRowsLookup: {},
       filteredDescendantCountLookup: {},
     },
     visibleRowsLookup: {},
@@ -496,6 +497,13 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
+  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
+    const filterModel = gridFilterModelSelector(apiRef);
+    if (filterModel.quickFilterValues && filterModel.quickFilterExcludeHiddenColumns) {
+      // re-apply filters because the quick filter results may have changed
+      apiRef.current.unstable_applyFilters();
+    }
+  });
 
   /**
    * 1ST RENDER

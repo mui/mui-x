@@ -91,9 +91,11 @@ export default function ChangeImportance() {
           value={changeImportance}
           exclusive
           fullWidth
-          onChange={(event, newEventImportance) =>
-            setChangeImportance(newEventImportance)
-          }
+          onChange={(event, newEventImportance) => {
+            if (newEventImportance != null) {
+              setChangeImportance(newEventImportance);
+            }
+          }}
         >
           <ToggleButton value="accept">accept</ToggleButton>
           <ToggleButton value="set">set</ToggleButton>

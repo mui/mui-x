@@ -109,15 +109,16 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
     classes,
   } = ownerState;
 
+  const isHiddenDaySpacingFiller = outsideCurrentMonth && !showDaysOutsideCurrentMonth;
   const slots = {
     root: [
       'root',
-      selected && 'selected',
+      selected && !isHiddenDaySpacingFiller && 'selected',
       disabled && 'disabled',
       !disableMargin && 'dayWithMargin',
       !disableHighlightToday && today && 'today',
       outsideCurrentMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
-      outsideCurrentMonth && !showDaysOutsideCurrentMonth && 'hiddenDaySpacingFiller',
+      isHiddenDaySpacingFiller && 'hiddenDaySpacingFiller',
     ],
     hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
   };

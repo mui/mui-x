@@ -37,6 +37,58 @@ As an example, you could override the `ActionBar` and pass additional props to t
 
 To modify components position, have a look at the [custom layout](/x/react-date-pickers/custom-layout/) docs page.
 
+### Recommended usage
+
+:::success
+Remember to pass a reference to the component instead of an inline render function and define it outside of the main component.
+This ensures that the component is not re-rendered on every update.
+:::
+
+This code is buggy because it will render a new input after each keystroke, leading to a loss of focus.
+
+```jsx
+function MyApp() {
+  const [name, setName] = React.useState('');
+
+  // This component gets redefined each time `name` is updated ❌
+  const CustomActionBar = () => (
+    <input value={name} onChange={(event) => setName(event.target.value)} />
+  );
+  return (
+    <DatePicker
+      slots={{
+        actionBar: CustomActionBar,
+        // This component gets re-rendered each time the parent component updates ❌
+        toolbar: () => <input />,
+      }}
+    />
+  );
+}
+```
+
+This one is correct since it's always the same input with different props.
+
+```jsx
+// These components are defined only once ✅
+const CustomActionBar = ({ name, setName }) => (
+  <input value={name} onChange={(event) => setName(event.target.value)} />
+);
+const CustomToolbar = () => <input />;
+
+function MyApp() {
+  const [name, setName] = React.useState('');
+  return (
+    <DatePicker
+      slots={{
+        actionBar: CustomActionBar,
+        toolbar: CustomToolbar,
+      }}
+      slotProps={{ actionBar: { name, setName } }}
+    />
+  );
+}
+```
+
 ## Action bar
 
 ### Component props

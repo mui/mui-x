@@ -25,7 +25,7 @@ export interface LineChartProps
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
 }
-function LineChart(props: LineChartProps) {
+const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -50,6 +50,7 @@ function LineChart(props: LineChartProps) {
 
   return (
     <ResponsiveChartContainer
+      ref={ref}
       series={series.map((s) => ({ type: 'line', ...s }))}
       width={width}
       height={height}
@@ -91,7 +92,7 @@ function LineChart(props: LineChartProps) {
       {children}
     </ResponsiveChartContainer>
   );
-}
+});
 
 LineChart.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -156,6 +157,7 @@ LineChart.propTypes = {
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
     itemWidth: PropTypes.number,
     markSize: PropTypes.number,
     offset: PropTypes.shape({
