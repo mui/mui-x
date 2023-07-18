@@ -610,8 +610,24 @@ describe('<DataGrid /> - Quick Filter', () => {
 
   // https://github.com/mui/mui-x/issues/9666
   it('should not fail when the data changes', () => {
+
+    function getApplyQuickFilterFn(value: any) {
+      if (!value) {
+        return null;
+      }
+      return (params: any) => {
+        return String(params?.value).toLowerCase().includes(String(value).toLowerCase());
+      };
+    }
+
     const { setProps } = render(
       <TestCase
+        columns={[
+          {
+            field: 'brand',
+            getApplyQuickFilterFn,
+          }
+        ]}
         filterModel={{
           items: [],
           quickFilterValues: ['adid'],
