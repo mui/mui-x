@@ -7,6 +7,9 @@
       },
       "default": "xAxisIds[0] The id of the first provided axis"
     },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
+    },
     "leftAxis": {
       "type": {
         "name": "union",

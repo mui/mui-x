@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Settings } from 'luxon';
+import { DateTime, Settings } from 'luxon';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
@@ -22,6 +22,7 @@ describe('<AdapterLuxon />', () => {
     setDefaultTimezone: (timezone) => {
       Settings.defaultZone = timezone ?? 'system';
     },
+    getLocaleFromDate: (value: DateTime) => value.locale!,
     frenchLocale: 'fr',
   });
 

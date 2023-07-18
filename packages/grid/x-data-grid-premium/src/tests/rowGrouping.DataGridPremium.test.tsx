@@ -8,6 +8,7 @@ import {
   waitFor,
 } from '@mui/monorepo/test/utils';
 import {
+  microtasks,
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
@@ -1802,7 +1803,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     clock.withFakeTimers();
 
     describe('prop: rowGroupingColumnMode = "single"', () => {
-      it('should use the top level grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', () => {
+      it('should use the top level grouping criteria for sorting if mainGroupingCriteria and leafField are not defined', async () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
@@ -1810,6 +1811,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             defaultGroupingExpansionDepth={-1}
           />,
         );
+        await microtasks();
 
         expect(getColumnValues(0)).to.deep.equal([
           'Cat B (2)',
@@ -2458,6 +2460,39 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', '', '']);
         expect(getColumnValues(1)).to.deep.equal(['', 'Cat 1 (1)', '', 'Cat 2 (2)', '', '']);
       });
+    });
+
+    it('should not apply filters when the row is expanded', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+        />,
+      );
+
+      const onFilteredRowsSet = spy();
+      apiRef.current.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
+
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
+      expect(onFilteredRowsSet.callCount).to.equal(0);
+    });
+
+    it('should not apply filters when the row is collapsed', () => {
+      render(
+        <Test
+          initialState={{
+            rowGrouping: { model: ['category1'] },
+          }}
+          defaultGroupingExpansionDepth={-1}
+        />,
+      );
+
+      const onFilteredRowsSet = spy();
+      apiRef.current.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
+
+      fireEvent.click(getCell(0, 0).querySelector('button')!);
+      expect(onFilteredRowsSet.callCount).to.equal(0);
     });
   });
 

@@ -46,14 +46,7 @@ export default function CustomSortIcons() {
           columnUnsortedIcon: UnsortedIcon,
         }}
         initialState={{
-          sorting: {
-            sortModel: [
-              {
-                field: 'stars',
-                sort: 'desc',
-              },
-            ],
-          },
+          sorting: { sortModel: [{ field: 'stars', sort: 'desc' }] },
         }}
       />
     </div>

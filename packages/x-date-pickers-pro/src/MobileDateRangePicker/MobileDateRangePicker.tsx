@@ -2,14 +2,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
-import { rangeValueManager } from '../internal/utils/valueManagers';
+import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateRangePickerProps } from './MobileDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
-import { useMobileRangePicker } from '../internal/hooks/useMobileRangePicker';
-import { validateDateRange } from '../internal/utils/validation/validateDateRange';
-import { DateRange } from '../internal/models';
+import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
+import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { DateRange } from '../internals/models';
 
 type MobileDateRangePickerComponent = (<TDate>(
   props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -355,6 +355,14 @@ MobileDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -5,13 +5,13 @@ import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useUtils } from '@mui/x-date-pickers/internals';
-import { PickersDay, pickersDayClasses, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
   dateRangePickerDayClasses,
 } from './dateRangePickerDayClasses';
-import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
@@ -34,11 +34,11 @@ export interface DateRangePickerDayProps<TDate>
    */
   isPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the start of a previewing date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isEndOfPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the end of a previewing date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isStartOfPreviewing: boolean;
   /**
@@ -253,13 +253,6 @@ const DateRangePickerDayDay = styled(PickersDay, {
   '& > *': {
     transform: 'scale(0.9)',
   },
-  ...(!ownerState.selected &&
-    ownerState.isHighlighting && {
-      opacity: 0.7,
-      [`&.${pickersDayClasses.dayOutsideMonth}`]: {
-        opacity: 0.4,
-      },
-    }),
   ...(ownerState.draggable && {
     cursor: 'grab',
   }),
@@ -431,7 +424,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isEndOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the start of a previewing date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isEndOfPreviewing: PropTypes.bool.isRequired,
   /**
@@ -457,7 +450,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isStartOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the end of a previewing date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
   /**

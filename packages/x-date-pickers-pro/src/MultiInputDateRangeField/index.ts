@@ -1,5 +1,5 @@
 export { MultiInputDateRangeField } from './MultiInputDateRangeField';
-export { useMultiInputDateRangeField as unstable_useMultiInputDateRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
+export { useMultiInputDateRangeField as unstable_useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 export type {
   UseMultiInputDateRangeFieldProps,
   UseMultiInputDateRangeFieldComponentProps,

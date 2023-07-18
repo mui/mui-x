@@ -4,8 +4,10 @@ import {
   FieldSection,
   FieldSelectedSections,
   MuiPickersAdapter,
+  TimezoneProps,
   FieldSectionContentType,
   FieldValueType,
+  PickersTimezone,
 } from '../../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../useValidation';
@@ -31,7 +33,8 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError> {
+export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSection, TError>
+  extends TimezoneProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -42,7 +45,7 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    */
   defaultValue?: TValue;
   /**
-   * The date used to generate a part of the date-time that is not present in the format when both `value` and `defaultValue` are not present.
+   * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
@@ -327,8 +330,11 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
 
 export type UseFieldValidationProps<
   TValue,
-  TInternalProps extends { value?: TValue; defaultValue?: TValue },
-> = Omit<TInternalProps, 'value' | 'defaultValue'> & { value: TValue };
+  TInternalProps extends { value?: TValue; defaultValue?: TValue; timezone?: PickersTimezone },
+> = Omit<TInternalProps, 'value' | 'defaultValue' | 'timezone'> & {
+  value: TValue;
+  timezone: PickersTimezone;
+};
 
 export type AvailableAdjustKeyCode =
   | 'ArrowUp'

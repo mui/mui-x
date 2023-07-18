@@ -9,13 +9,15 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 <p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
-
 The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 ## Overview
 
-> Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::info
+Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::
 
 Data tables display information in a grid-like format of rows and columns.
 They organize information in a way that's easy to scan so that users can look for patterns and insights.
@@ -72,7 +74,7 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- [Filtering](/x/react-data-grid/filtering/) and [multi-filtering](/x/react-data-grid/filtering/#multi-filtering) <span class="plan-pro"></span>
+- [Filtering](/x/react-data-grid/filtering/), [multi-filters](/x/react-data-grid/filtering/multi-filters/) <span class="plan-pro"></span>, and [header filters](/x/react-data-grid/filtering/header-filters/) <span class="plan-premium"></span>
 - [Pagination](/x/react-data-grid/pagination/)
 - [Row & Cell editing](/x/react-data-grid/editing/)
 - [Sorting](/x/react-data-grid/sorting/) and [multi-sorting](/x/react-data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
@@ -93,7 +95,7 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 
-### 🚧 Upcoming features
+### Upcoming features 🚧
 
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 

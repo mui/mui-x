@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Time Picker component
 components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker
 githubLabel: 'component: TimePicker'
@@ -77,7 +77,7 @@ Use the `views` prop to change this behavior:
 
 {{"demo": "TimePickerViews.js"}}
 
-By default, the component renders the `hours` view on mount.
+By default, the `MobileTimePicker` component renders the `hours` view on mount.
 Use the `openTo` prop to change this behavior:
 
 {{"demo": "TimePickerOpenTo.js"}}
@@ -94,6 +94,13 @@ By default, the Time Picker component automatically sets the orientation based o
 You can force a specific orientation using the `orientation` prop.
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
+
+## Choose time view renderer
+
+You can use the `viewRenderers` prop to change the view that is used for rendering a view.
+You might be interested in using the [Time Clock](/x/react-date-pickers/time-clock/) instead of the [Digital Clock](/x/react-date-pickers/digital-clock/) on desktop as well as mobile.
+
+{{"demo": "TimePickerViewRenderers.js"}}
 
 ## Validation
 

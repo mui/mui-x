@@ -1,0 +1,12 @@
+<DataGrid
+  columns={columns}
+  rows={rows}
+  slots={{
+    columnSortedDescendingIcon: SortedDescendingIcon,
+    columnSortedAscendingIcon: SortedAscendingIcon,
+    columnUnsortedIcon: UnsortedIcon,
+  }}
+  initialState={{
+    sorting: { sortModel: [{ field: 'stars', sort: 'desc' }] },
+  }}
+/>

@@ -32,6 +32,29 @@ export type ValueOptions = string | number | { value: any; label: string } | Rec
  */
 export type GridKeyValue = string | number | boolean;
 
+export type GridApplyQuickFilterV7<R extends GridValidRowModel = GridValidRowModel, V = any> = (
+  value: V,
+  row: R,
+  column: GridColDef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => boolean;
+
+export type GetApplyQuickFilterFnLegacy<
+  R extends GridValidRowModel = GridValidRowModel,
+  V = any,
+  F = V,
+> = (
+  value: any,
+  colDef: GridStateColDef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => null | ((params: GridCellParams<R, V, F>) => boolean);
+
+export type GetApplyQuickFilterFnV7<R extends GridValidRowModel = GridValidRowModel, V = any> = (
+  value: any,
+  colDef: GridStateColDef,
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+) => null | GridApplyQuickFilterV7<R, V>;
+
 /**
  * Column Definition base interface.
  */
@@ -110,8 +133,9 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   sortComparator?: GridComparatorFn<V>;
   /**
-   * Type allows to merge this object with a default definition [[GridColDef]].
+   * The type of the column.
    * @default 'string'
+   * @see See {@link https://mui.com/x/react-data-grid/column-definition/#column-types column types docs} for more details.
    */
   type?: GridColType;
   /**
@@ -216,11 +240,16 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
    * @returns {null | ((params: GridCellParams) => boolean)} The function to call to check if a row pass this filter value or not.
    */
-  getApplyQuickFilterFn?: (
-    value: any,
-    colDef: GridStateColDef,
-    apiRef: React.MutableRefObject<GridApiCommunity>,
-  ) => null | ((params: GridCellParams<R, V, F>) => boolean);
+  getApplyQuickFilterFn?: GetApplyQuickFilterFnLegacy<R, V, F>;
+  /**
+   * The callback that generates a filtering function for a given quick filter value.
+   * This function can return `null` to skip filtering for this value and column.
+   * @param {any} value The value with which we want to filter the column.
+   * @param {GridStateColDef} colDef The column from which we want to filter the rows.
+   * @param {React.MutableRefObject<GridApiCommunity>} apiRef Deprecated: The API of the grid.
+   * @returns {null | GridApplyQuickFilterV7} The function to call to check if a row pass this filter value or not.
+   */
+  getApplyQuickFilterFnV7?: GetApplyQuickFilterFnV7<R, V>;
   /**
    * If `true`, this column cannot be reordered.
    * @default false
@@ -246,7 +275,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
   extends GridBaseColDef<R, V, F> {
   /**
-   * Type allows to merge this object with a default definition [[GridColDef]].
+   * The type of the column.
    * @default 'actions'
    */
   type: 'actions';
@@ -266,7 +295,7 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
 export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
   extends GridBaseColDef<R, V, F> {
   /**
-   * Type allows to merge this object with a default definition [[GridColDef]].
+   * The type of the column.
    * @default 'singleSelect'
    */
   type: 'singleSelect';

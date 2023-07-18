@@ -16,7 +16,7 @@ export interface GridExceljsProcessInput {
 }
 
 export interface ColumnsStylesInterface {
-  [field: string]: Excel.Style;
+  [field: string]: Partial<Excel.Style>;
 }
 
 /**

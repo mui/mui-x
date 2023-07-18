@@ -316,6 +316,7 @@ DataGridPremiumRaw.propTypes = {
       }),
     ).isRequired,
     logicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterExcludeHiddenColumns: PropTypes.bool,
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
@@ -773,7 +774,15 @@ DataGridPremiumRaw.propTypes = {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  pageSizeOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -986,7 +995,7 @@ DataGridPremiumRaw.propTypes = {
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(text) => text.split(/\r\n|\n|\r/).map((row) => row.split('\t'))`
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
    */
   unstable_splitClipboardPastedText: PropTypes.func,
 } as any;

@@ -91,7 +91,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "clipboardCopy",
-    "description": "Fired when the data is copied to the clipboard",
+    "description": "Fired when the data is copied to the clipboard.",
     "params": "string",
     "event": "MuiEvent<{}>",
     "componentProp": "onClipboardCopy"
@@ -227,7 +227,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "headerSelectionCheckboxChange",
-    "description": "Fired when the value of the selection checkbox of the header is changed",
+    "description": "Fired when the value of the selection checkbox of the header is changed.",
     "params": "GridHeaderSelectionCheckboxParams",
     "event": "MuiEvent<{}>"
   },
@@ -325,6 +325,13 @@
     "componentProp": "onRowEditStop"
   },
   {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowExpansionChange",
+    "description": "Fired when the expansion of a row is changed. Called with a GridGroupNode object.",
+    "params": "GridGroupNode",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid-premium"],
     "name": "rowGroupingModelChange",
     "description": "Fired when the row grouping model changes.",
@@ -370,7 +377,7 @@
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowSelectionCheckboxChange",
-    "description": "Fired when the value of the selection checkbox of a row is changed",
+    "description": "Fired when the value of the selection checkbox of a row is changed.",
     "params": "GridRowSelectionCheckboxParams",
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
   },

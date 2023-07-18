@@ -64,6 +64,18 @@ type DataType<ComponentProps> = {
    * If `false`, the prop does not display in the code block.
    */
   codeBlockDisplay?: boolean;
+  /**
+   * Option for knobs: `number`
+   */
+  step?: number;
+  /**
+   * Option for knobs: `number`
+   */
+  min?: number;
+  /**
+   * Option for knobs: `number`
+   */
+  max?: number;
 }[];
 
 interface ChartDemoPropsFormProps<ComponentProps> {
@@ -181,7 +193,7 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
           },
         }}
       >
-        {data.map(({ propName, knob, options = [], defaultValue, labels }) => {
+        {data.map(({ propName, knob, options = [], defaultValue, labels, step, min, max }) => {
           const resolvedValue = props[propName] ?? defaultValue;
           if (!knob) {
             return null;
@@ -289,10 +301,10 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                 <Select
                   placeholder="Select a variant..."
                   value={(resolvedValue || 'none') as string}
-                  onChange={(event, val) =>
+                  onChange={(event) =>
                     setProps((latestProps) => ({
                       ...latestProps,
-                      [propName]: val,
+                      [propName]: event.target.value,
                     }))
                   }
                 >
@@ -345,13 +357,20 @@ export default function ChartDemoPropsForm<T extends { [k: string]: any } = {}>(
                       ...latestProps,
                       [propName]: Number.isNaN(event.target.value)
                         ? undefined
-                        : Number.parseInt(event.target.value, 10),
+                        : Number.parseFloat(event.target.value),
                     }))
                   }
                   sx={{
                     textTransform: 'capitalize',
                     [`& .${inputClasses.root}`]: {
                       bgcolor: 'background.body',
+                    },
+                  }}
+                  slotProps={{
+                    input: {
+                      step,
+                      min,
+                      max,
                     },
                   }}
                 />

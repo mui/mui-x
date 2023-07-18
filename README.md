@@ -19,6 +19,7 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
+- [Charts](https://mui.com/x/react-charts/)
 
 ## Installation
 
@@ -29,6 +30,10 @@ Read the Data Grid [Installation instructions](https://mui.com/x/react-data-grid
 ### Date and Time Pickers
 
 Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation) in the MUI X docs.
+
+### Charts
+
+Read the Charts [Installation instructions](https://mui.com/x/react-charts/#getting-started) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 
@@ -54,6 +59,7 @@ MIT licensed packages:
 
 - [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid)
 - [`@mui/x-date-pickers`](https://www.npmjs.com/package/@mui/x-date-pickers)
+- [`@mui/x-charts`](https://www.npmjs.com/package/@mui/x-charts)
 
 ### Pro Plan
 
@@ -90,7 +96,7 @@ You can search through existing issues and pull requests to see if someone has r
 
 Visit Stack Overflow to ask questions and read crowdsourced answers from expert developers in the MUI community, as well as MUI maintainers.
 
-[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow using the "mui" tag.
+[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
 
 ### Bugs and feature requests
 
