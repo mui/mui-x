@@ -22,8 +22,8 @@ const { version: transformRuntimeVersion } = fse.readJSONSync(
   require.resolve('@babel/runtime-corejs2/package.json'),
 );
 
-module.exports = function getBabelConfig() {
-  const baseConfig = getBaseConfig();
+module.exports = function getBabelConfig(api) {
+  const baseConfig = getBaseConfig(api);
 
   return {
     assumptions: baseConfig.assumptions,
