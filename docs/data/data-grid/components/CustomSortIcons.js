@@ -40,13 +40,13 @@ export default function CustomSortIcons() {
       <DataGrid
         columns={columns}
         rows={rows}
+        initialState={{
+          sorting: { sortModel: [{ field: 'stars', sort: 'desc' }] },
+        }}
         slots={{
           columnSortedDescendingIcon: SortedDescendingIcon,
           columnSortedAscendingIcon: SortedAscendingIcon,
           columnUnsortedIcon: UnsortedIcon,
-        }}
-        initialState={{
-          sorting: { sortModel: [{ field: 'stars', sort: 'desc' }] },
         }}
       />
     </div>
