@@ -187,7 +187,7 @@ DataGridRaw.propTypes = {
   }),
   /**
    * The milliseconds delay to wait after a keystroke before triggering filtering.
-   * @default 50
+   * @default 150
    */
   filterDebounceMs: PropTypes.number,
   /**

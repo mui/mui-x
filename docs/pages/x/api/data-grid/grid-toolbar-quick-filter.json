@@ -1,6 +1,6 @@
 {
   "props": {
-    "debounceMs": { "type": { "name": "number" }, "default": "150" },
+    "debounceMs": { "type": { "name": "number" }, "default": "50" },
     "quickFilterFormatter": { "type": { "name": "func" } },
     "quickFilterParser": { "type": { "name": "func" } }
   },

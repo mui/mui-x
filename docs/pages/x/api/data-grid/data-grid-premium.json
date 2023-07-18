@@ -82,7 +82,7 @@
         "description": "{ clipboardPaste?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
-    "filterDebounceMs": { "type": { "name": "number" }, "default": "50" },
+    "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
       "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
