@@ -216,6 +216,8 @@ const getFilterCallbackFromItem = (
   };
 };
 
+let filterItemsApplierId = 1;
+
 /**
  * Generates a method to easily check if a row is matching the current filter model.
  * @param {GridRowIdGetter | undefined} getRowId The getter for row's id.
@@ -238,20 +240,60 @@ export const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
-  return (row, shouldApplyFilter) => {
-    const resultPerItemId: GridFilterItemResult = {};
+  // Original logic:
+  // return (row, shouldApplyFilter) => {
+  //   const resultPerItemId: GridFilterItemResult = {};
+  //
+  //   for (let i = 0; i < appliers.length; i += 1) {
+  //     const applier = appliers[i];
+  //     if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
+  //       resultPerItemId[applier.item.id!] = applier.v7
+  //         ? applier.fn(row)
+  //         : applier.fn(getRowId ? getRowId(row) : row.id);
+  //     }
+  //   }
+  //
+  //   return resultPerItemId;
+  // };
 
-    for (let i = 0; i < appliers.length; i += 1) {
-      const applier = appliers[i];
-      if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
-        resultPerItemId[applier.item.id!] = applier.v7
-          ? applier.fn(row)
-          : applier.fn(getRowId ? getRowId(row) : row.id);
-      }
-    }
+  // We generate a new function with `eval()` to avoid expensive patterns for JS engines
+  // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
+  const filterItemTemplate = `(function filterItem$$(row, shouldApplyFilter) {
+      ${appliers
+        .map(
+          (applier, i) =>
+            `const shouldApply${i} = !shouldApplyFilter || shouldApplyFilter(${JSON.stringify(
+              applier.item.field,
+            )});`,
+        )
+        .join('\n')}
 
-    return resultPerItemId;
-  };
+      const result$$ = {
+      ${appliers
+        .map(
+          (applier, i) =>
+            `${JSON.stringify(String(applier.item.id))}:
+          !shouldApply${i} ?
+            false :
+            ${
+              applier.v7
+                ? `appliers[${i}].fn(row)`
+                : `appliers[${i}].fn(${getRowId ? 'getRowId(row)' : 'row.id'})`
+            },
+      `,
+        )
+        .join('\n')}};
+
+      return result$$;
+    })`;
+
+  // eslint-disable-next-line no-eval
+  const filterItem = eval(
+    filterItemTemplate.replaceAll('$$', String(filterItemsApplierId)),
+  ) as GridFilterItemApplierNotAggregated;
+  filterItemsApplierId += 1;
+
+  return filterItem;
 };
 
 /**

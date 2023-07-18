@@ -146,14 +146,8 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={columns}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Samsung 24" (inches)',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Samsung 24" (inches)' },
               ]}
             />
           </div>
@@ -162,7 +156,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
-        ['id,Brand', '0,Nike', '1,Samsung 24"" (inches)'].join('\r\n'),
+        ['id,Brand', '0,Nike', '1,"Samsung 24"" (inches)"'].join('\r\n'),
       );
     });
 

@@ -64,7 +64,8 @@
     "release:build": "lerna run --parallel --no-private --scope \"@mui/*\" build",
     "release:publish": "lerna publish from-package --no-private --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
-    "release:tag": "node scripts/releaseTag.mjs"
+    "release:tag": "node scripts/releaseTag.mjs",
+    "validate": "concurrently \"yarn prettier && yarn eslint\" \"yarn docs:typescript:formatted\" \"yarn docs:api\""
   },
   "devDependencies": {
     "@argos-ci/core": "^0.9.0",
@@ -94,7 +95,7 @@
     "@mui/utils": "^5.13.7",
     "@octokit/plugin-retry": "^6.0.0",
     "@octokit/rest": "^19.0.13",
-    "@playwright/test": "1.35.1",
+    "@playwright/test": "1.36.1",
     "@testing-library/react": "^14.0.0",
     "@types/babel__core": "^7.20.1",
     "@types/chai": "^4.3.5",
