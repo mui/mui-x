@@ -35,7 +35,9 @@ export default function CustomSortIcons() {
       <DataGrid
         columns={columns}
         rows={rows}
-        sortModel={[{ field: 'name', sort: 'asc' }]}
+        initialState={{
+          sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
+        }}
         slots={{
           columnSortedDescendingIcon: SortedDescendingIcon,
           columnSortedAscendingIcon: SortedAscendingIcon,
