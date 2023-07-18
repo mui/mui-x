@@ -150,17 +150,6 @@ describe('e2e', () => {
       });
     });
 
-    it('should focus the first cell when navigating between pages with keyboard', async () => {
-      await renderFixture('DataGrid/Pagination');
-
-      await page.locator('text=Nike').click();
-      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
-
-      await page.keyboard.press('Tab');
-      await page.keyboard.press('Enter');
-      expect(await page.evaluate(() => document.activeElement?.tagName)).to.equal('INPUT');
-    });
-
     it('should display the rows', async () => {
       await renderFixture('DataGrid/ConcurrentReactUpdate');
       const cells = page.locator('[role="cell"]');

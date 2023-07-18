@@ -453,7 +453,18 @@ export const useGridFocus = (
     }
 
     const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-    apiRef.current.setCellFocus(currentPage.rows[0].id, visibleColumns[0].field);
+
+    apiRef.current.setState((state) => {
+      return {
+        ...state,
+        tabIndex: {
+          cell: { id: currentPage.rows[0].id, field: visibleColumns[0].field },
+          columnGroupHeader: null,
+          columnHeader: null,
+          columnHeaderFilter: null,
+        },
+      };
+    });
   });
 
   const focusApi: GridFocusApi = {
