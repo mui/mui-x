@@ -2,10 +2,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
+import { useTimeout } from '../../../hooks/utils/useTimeout';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-
-export const SUBMIT_FILTER_STROKE_TIME = 500;
 
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
@@ -32,7 +31,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     InputProps,
     ...others
   } = props;
-  const filterTimeout = React.useRef<any>();
+  const filterTimeout = useTimeout();
   const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
@@ -41,23 +40,16 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = event.target;
-      clearTimeout(filterTimeout.current);
       setFilterValueState(String(value));
 
       setIsApplying(true);
-      filterTimeout.current = setTimeout(() => {
+      filterTimeout.start(rootProps.filterDebounceDelay, () => {
         applyValue({ ...item, value });
         setIsApplying(false);
-      }, SUBMIT_FILTER_STROKE_TIME);
+      });
     },
-    [applyValue, item],
+    [applyValue, item, rootProps.filterDebounceDelay],
   );
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(filterTimeout.current);
-    };
-  }, []);
 
   React.useEffect(() => {
     const itemValue = item.value ?? '';
