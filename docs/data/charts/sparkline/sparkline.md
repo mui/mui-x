@@ -13,6 +13,13 @@ You can also choose between spark ann line plot with `plotType="bar"`.
 
 {{"demo": "BasicSparkLine.js"}}
 
+## Line customization
+
+You can fill the area below the sparkline curve with `area` props.
+You can also modify the interpolation with `curve` props, as explained in the [line charts docs](/x/react-charts/lines/#interpolation).
+
+{{"demo": "AreaSparkLine.js"}}
+
 ## Interaction
 
 Compared to line and bar charts, the spark-line chart has some additional props to simplify interaction configuration.
