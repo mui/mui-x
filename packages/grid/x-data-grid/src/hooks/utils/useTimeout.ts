@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { useLazyRef } from './useLazyRef';
+import { useOnMount } from './useOnMount';
 
 class Timeout {
   static create() {
@@ -25,13 +25,10 @@ class Timeout {
   };
 }
 
-const EMPTY = [] as any[];
-
 export function useTimeout() {
   const timeout = useLazyRef(Timeout.create).current;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(timeout.disposeEffect, EMPTY);
+  useOnMount(timeout.disposeEffect);
 
   return timeout;
 }
