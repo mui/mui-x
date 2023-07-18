@@ -165,7 +165,7 @@ GridToolbarQuickFilter.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The debounce time in milliseconds.
-   * @default 500
+   * @default 50
    */
   debounceMs: PropTypes.number,
   /**
