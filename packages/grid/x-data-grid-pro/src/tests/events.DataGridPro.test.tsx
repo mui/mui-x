@@ -329,7 +329,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
   });
 
-  describe.only('infnite loading', () => {
+  describe('infnite loading', () => {
     function IntersectionObserverMock(callback: (entries: IntersectionObserverEntry[]) => void) {
       return {
         observe: (element: HTMLElement) => {
