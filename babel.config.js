@@ -22,6 +22,31 @@ const defaultAlias = {
   packages: resolveAliasPath('./packages'),
 };
 
+const basePlugins = [
+  'babel-plugin-optimize-clsx',
+  // Need the following 3 proposals for all targets in .browserslistrc.
+  // With our usage the transpiled loose mode is equivalent to spec mode.
+  ['@babel/plugin-proposal-class-properties', { loose: true }],
+  ['@babel/plugin-proposal-private-methods', { loose: true }],
+  ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
+  ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
+  [
+    '@babel/plugin-transform-runtime',
+    {
+      useESModules,
+      // any package needs to declare 7.4.4 as a runtime dependency. default is ^7.0.0
+      version: '^7.4.4',
+    },
+  ],
+  [
+    'babel-plugin-transform-react-remove-prop-types',
+    {
+      mode: 'unsafe-wrap',
+      ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
+    },
+  ],
+];
+
 const productionPlugins = [
   ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
 ];
@@ -49,30 +74,7 @@ module.exports = function getBabelConfig(api) {
     '@babel/preset-typescript',
   ];
 
-  const plugins = [
-    'babel-plugin-optimize-clsx',
-    // Need the following 3 proposals for all targets in .browserslistrc.
-    // With our usage the transpiled loose mode is equivalent to spec mode.
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ['@babel/plugin-proposal-private-methods', { loose: true }],
-    ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
-    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-    [
-      '@babel/plugin-transform-runtime',
-      {
-        useESModules,
-        // any package needs to declare 7.4.4 as a runtime dependency. default is ^7.0.0
-        version: '^7.4.4',
-      },
-    ],
-    [
-      'babel-plugin-transform-react-remove-prop-types',
-      {
-        mode: 'unsafe-wrap',
-        ignoreFilenames: ['DataGrid.tsx', 'DataGridPro.tsx'],
-      },
-    ],
-  ];
+  const plugins = basePlugins.slice();
 
   if (process.env.NODE_ENV === 'production') {
     plugins.push(...productionPlugins);
@@ -91,19 +93,14 @@ module.exports = function getBabelConfig(api) {
       ]);
     }
   }
-  if (process.env.NODE_ENV === 'test') {
-    plugins.push([
-      'babel-plugin-module-resolver',
-      {
-        alias: defaultAlias,
-        root: ['./'],
-      },
-    ]);
-  }
 
   return {
     assumptions: {
       noDocumentAll: true,
+      setPublicClassFields: true,
+      privateFieldsAsProperties: true,
+      objectRestNoSymbols: true,
+      setSpreadProperties: true,
     },
     presets,
     plugins,

@@ -1,3 +1,4 @@
+const getBaseConfig = require('../babel.config');
 const fse = require('fs-extra');
 
 const alias = {
@@ -21,45 +22,47 @@ const { version: transformRuntimeVersion } = fse.readJSONSync(
   require.resolve('@babel/runtime-corejs2/package.json'),
 );
 
-module.exports = {
-  presets: [
-    // backport of https://github.com/zeit/next.js/pull/9511
-    ['next/babel', { 'transform-runtime': { corejs: 2, version: transformRuntimeVersion } }],
-  ],
-  plugins: [
-    [
-      'babel-plugin-transform-rename-import',
-      {
-        replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
-      },
+module.exports = function getBabelConfig() {
+  const baseConfig = getBaseConfig();
+
+  return {
+    assumptions: baseConfig.assumptions,
+    presets: [
+      // backport of https://github.com/zeit/next.js/pull/9511
+      ['next/babel', { 'transform-runtime': { corejs: 2, version: transformRuntimeVersion } }],
     ],
-    'babel-plugin-optimize-clsx',
-    // for IE 11 support
-    '@babel/plugin-transform-object-assign',
-    'babel-plugin-preval',
-    [
-      'babel-plugin-module-resolver',
-      {
-        alias,
-        transformFunctions: ['require', 'require.context'],
-      },
-    ],
-  ],
-  ignore: [
-    // Fix a Windows issue.
-    /@babel[\\|/]runtime/,
-    // Fix const foo = /{{(.+?)}}/gs; crashing.
-    /prettier/,
-    /@mui[\\|/]docs[\\|/]markdown/,
-  ],
-  env: {
-    production: {
-      plugins: [
-        // TODO fix useGridSelector side effect and enable back.
-        // '@babel/plugin-transform-react-constant-elements',
-        ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
-        ['babel-plugin-transform-react-remove-prop-types', { mode: 'remove' }],
+    plugins: [
+      ...baseConfig.plugins,
+      [
+        'babel-plugin-transform-rename-import',
+        {
+          replacements: [{ original: '@mui/utils/macros/MuiError.macro', replacement: 'react' }],
+        },
       ],
+      // for IE 11 support
+      '@babel/plugin-transform-object-assign',
+      'babel-plugin-preval',
+      [
+        'babel-plugin-module-resolver',
+        {
+          alias,
+          transformFunctions: ['require', 'require.context'],
+        },
+      ],
+    ],
+    ignore: [
+      ...baseConfig.ignore,
+      /@mui[\\|/]docs[\\|/]markdown/,
+    ],
+    env: {
+      production: {
+        plugins: [
+          // TODO fix useGridSelector side effect and enable back.
+          // '@babel/plugin-transform-react-constant-elements',
+          ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
+          ['babel-plugin-transform-react-remove-prop-types', { mode: 'remove' }],
+        ],
+      },
     },
-  },
+  }
 };
