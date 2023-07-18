@@ -610,7 +610,6 @@ describe('<DataGrid /> - Quick Filter', () => {
 
   // https://github.com/mui/mui-x/issues/9666
   it('should not fail when the data changes', () => {
-
     function getApplyQuickFilterFn(value: any) {
       if (!value) {
         return null;
@@ -626,7 +625,7 @@ describe('<DataGrid /> - Quick Filter', () => {
           {
             field: 'brand',
             getApplyQuickFilterFn,
-          }
+          },
         ]}
         filterModel={{
           items: [],
