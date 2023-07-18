@@ -9,13 +9,19 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 const MAX_ROW_LENGTH = 500;
 
-function sleep(duration) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
+function sleep(time) {
+  return new Promise((res) => {
+    setTimeout(res, time);
   });
 }
+
+const fetchData = async (rowLength) => {
+  // Simulate network throttle
+  await sleep(Math.random() * 500 + 100);
+  return getRealGridData(rowLength, columns);
+};
+
+const columns = getCommodityColumns().slice(0, 6);
 
 export default function InfiniteLoadingGrid() {
   const [loading, setLoading] = React.useState(false);
@@ -27,17 +33,20 @@ export default function InfiniteLoadingGrid() {
     maxColumns: 6,
   });
 
-  const loadServerRows = async (newRowLength) => {
+  const loadServerRows = React.useCallback((newRowLength) => {
     setLoading(true);
-    const newData = await getRealGridData(newRowLength, getCommodityColumns());
-    // Simulate network throttle
-    await sleep(Math.random() * 500 + 100);
-
-    if (mounted.current) {
+    let isActive = true;
+    fetchData(newRowLength).then(async (newData) => {
+      if (!isActive) {
+        return;
+      }
       setLoading(false);
-      setLoadedRows(loadedRows.concat(newData.rows));
-    }
-  };
+      setLoadedRows((prevRows) => prevRows.concat(newData.rows));
+    });
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   const handleOnRowsScrollEnd = (params) => {
     if (loadedRows.length <= MAX_ROW_LENGTH) {
@@ -51,11 +60,17 @@ export default function InfiniteLoadingGrid() {
     };
   }, []);
 
+  React.useEffect(() => {
+    // fetch first 20 rows on mount
+    const cancel = loadServerRows(20);
+    return cancel;
+  }, [loadServerRows]);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        rows={data.rows.concat(loadedRows)}
+        rows={loadedRows}
         loading={loading}
         hideFooterPagination
         onRowsScrollEnd={handleOnRowsScrollEnd}

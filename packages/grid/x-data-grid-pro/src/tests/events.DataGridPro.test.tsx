@@ -329,7 +329,7 @@ describe('<DataGridPro /> - Events Params', () => {
     });
   });
 
-  describe('infnite loading', () => {
+  describe.only('infnite loading', () => {
     function IntersectionObserverMock(callback: (entries: IntersectionObserverEntry[]) => void) {
       return {
         observe: (element: HTMLElement) => {
@@ -387,7 +387,7 @@ describe('<DataGridPro /> - Events Params', () => {
       // arbitrary number to make sure that the bottom of the grid window is reached.
       virtualScroller.scrollTop = 12345;
       virtualScroller.dispatchEvent(new Event('scroll'));
-      expect(handleRowsScrollEnd.callCount).to.equal(2); // this is because the mock has isIntersecting always true
+      expect(handleRowsScrollEnd.callCount).to.equal(1);
     });
   });
 

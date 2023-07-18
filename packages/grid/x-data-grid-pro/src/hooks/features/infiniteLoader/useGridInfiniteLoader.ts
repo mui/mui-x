@@ -32,6 +32,7 @@ export const useGridInfiniteLoader = (
   const observer = React.useRef<IntersectionObserver>();
   const previousY = React.useRef(0);
   const previousRatio = React.useRef(0);
+  const previousNode = React.useRef<HTMLElement>();
 
   const handleLoadMoreRows = React.useCallback(
     ([entry]: IntersectionObserverEntry[]) => {
@@ -73,7 +74,8 @@ export const useGridInfiniteLoader = (
         threshold: props.lastVisibleRowThreshold,
       });
 
-      if (node) {
+      if (node && node !== previousNode.current) {
+        previousNode.current = node;
         observer.current.observe(node);
       }
     },

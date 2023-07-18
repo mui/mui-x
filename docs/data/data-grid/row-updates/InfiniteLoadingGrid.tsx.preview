@@ -1,6 +1,6 @@
 <DataGridPro
   {...data}
-  rows={data.rows.concat(loadedRows)}
+  rows={loadedRows}
   loading={loading}
   hideFooterPagination
   onRowsScrollEnd={handleOnRowsScrollEnd}
