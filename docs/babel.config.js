@@ -1,5 +1,5 @@
-const getBaseConfig = require('../babel.config');
 const fse = require('fs-extra');
+const getBaseConfig = require('../babel.config');
 
 const alias = {
   '@mui/x-data-grid': '../packages/grid/x-data-grid/src',
@@ -50,10 +50,7 @@ module.exports = function getBabelConfig(api) {
         },
       ],
     ],
-    ignore: [
-      ...baseConfig.ignore,
-      /@mui[\\|/]docs[\\|/]markdown/,
-    ],
+    ignore: [...baseConfig.ignore, /@mui[\\|/]docs[\\|/]markdown/],
     env: {
       production: {
         plugins: [
@@ -64,5 +61,5 @@ module.exports = function getBabelConfig(api) {
         ],
       },
     },
-  }
+  };
 };
