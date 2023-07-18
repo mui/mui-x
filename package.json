@@ -64,7 +64,8 @@
     "release:build": "lerna run --parallel --no-private --scope \"@mui/*\" build",
     "release:publish": "lerna publish from-package --no-private --dist-tag latest --contents build",
     "release:publish:dry-run": "lerna publish from-package --dist-tag latest --contents build --registry=\"http://localhost:4873/\"",
-    "release:tag": "node scripts/releaseTag.mjs"
+    "release:tag": "node scripts/releaseTag.mjs",
+    "validate": "concurrently \"yarn prettier && yarn eslint\" \"yarn docs:typescript:formatted\" \"yarn docs:api\""
   },
   "devDependencies": {
     "@argos-ci/core": "^0.9.0",
