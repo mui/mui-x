@@ -3,7 +3,7 @@ import LicenseInfoContext from './LicenseInfoContext';
 import { MuiLicenseInfo } from '../utils/licenseInfo';
 
 /**
- * @ignore
+ * @ignore - do not document.
  */
 export interface LicenseInfoProviderProps {
   info: MuiLicenseInfo;
@@ -11,7 +11,7 @@ export interface LicenseInfoProviderProps {
 }
 
 /**
- * @ignore
+ * @ignore - do not document.
  */
 export function LicenseInfoProvider({ info, children }: LicenseInfoProviderProps) {
   return <LicenseInfoContext.Provider value={info}>{children}</LicenseInfoContext.Provider>;
