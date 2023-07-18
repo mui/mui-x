@@ -48,7 +48,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         setIsApplying(false);
       });
     },
-    [applyValue, item, rootProps.filterDebounceMs],
+    [applyValue, item, rootProps.filterDebounceMs, filterTimeout],
   );
 
   React.useEffect(() => {
