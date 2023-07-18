@@ -41,7 +41,7 @@ export default function CustomSortIcons() {
         columns={columns}
         rows={rows}
         initialState={{
-          sorting: { sortModel: [{ field: 'stars', sort: 'desc' }] },
+          sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
         }}
         slots={{
           columnSortedDescendingIcon: SortedDescendingIcon,
