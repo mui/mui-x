@@ -62,7 +62,7 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
   quickFilterFormatter?: (values: NonNullable<GridFilterModel['quickFilterValues']>) => string;
   /**
    * The debounce time in milliseconds.
-   * @default 500
+   * @default 50
    */
   debounceMs?: number;
 };
@@ -71,7 +71,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   const {
     quickFilterParser = defaultSearchValueParser,
     quickFilterFormatter = defaultSearchValueFormatter,
-    debounceMs = 500,
+    debounceMs = 50,
     ...other
   } = props;
 
