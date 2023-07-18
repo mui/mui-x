@@ -94,7 +94,7 @@
     "@mui/utils": "^5.13.7",
     "@octokit/plugin-retry": "^6.0.0",
     "@octokit/rest": "^19.0.13",
-    "@playwright/test": "1.35.1",
+    "@playwright/test": "1.36.1",
     "@testing-library/react": "^14.0.0",
     "@types/babel__core": "^7.20.1",
     "@types/chai": "^4.3.5",
