@@ -12,6 +12,7 @@ import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { AxisConfig } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
+import { LineSeriesType } from '../models/seriesType/line';
 
 const SparkLineMarkPlot = styled(MarkPlot)({
   [`& .${markElementClasses.root}`]: {
@@ -56,6 +57,16 @@ export interface SparkLineChartProps
    * @default false
    */
   showHighlight?: boolean;
+  /**
+   * Set to `true` to fill spark line area.
+   * Has no effect if plotType='bar'.
+   * @default false
+   */
+  area?: LineSeriesType['area'];
+  /**
+   * @default 'linear'
+   */
+  curve?: LineSeriesType['curve'];
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -81,6 +92,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     data,
     plotType = 'line',
     valueFormatter = (v: number) => v.toString(),
+    area,
+    curve = 'linear',
   } = props;
 
   const defaultXHighlight: { x: 'band' | 'none' } =
@@ -93,7 +106,9 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
   return (
     <ResponsiveChartContainer
       ref={ref}
-      series={[{ type: plotType, data, valueFormatter }]}
+      series={[
+        { type: plotType, data, valueFormatter, ...(plotType === 'bar' ? {} : { area, curve }) },
+      ]}
       width={width}
       height={height}
       margin={margin}
