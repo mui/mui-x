@@ -68,16 +68,16 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
-  const {
-    quickFilterParser = defaultSearchValueParser,
-    quickFilterFormatter = defaultSearchValueFormatter,
-    debounceMs = 50,
-    ...other
-  } = props;
-
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
+
+  const {
+    quickFilterParser = defaultSearchValueParser,
+    quickFilterFormatter = defaultSearchValueFormatter,
+    debounceMs = rootProps.filterDebounceMs,
+    ...other
+  } = props;
 
   const [searchValue, setSearchValue] = React.useState(() =>
     quickFilterFormatter(quickFilterValues ?? []),

@@ -5,6 +5,7 @@ import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../DataGrid';
 
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
   TextFieldProps & {
@@ -16,6 +17,12 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
   };
+
+/**
+ * Remove at v7
+ * @deprecated
+ */
+export const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
