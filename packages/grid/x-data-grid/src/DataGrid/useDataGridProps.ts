@@ -55,7 +55,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableVirtualization: false,
   editMode: GridEditModes.Cell,
   filterMode: 'client',
-  filterDebounceDelay: 50,
+  filterDebounceMs: 50,
   columnHeaderHeight: 56,
   hideFooter: false,
   hideFooterPagination: false,

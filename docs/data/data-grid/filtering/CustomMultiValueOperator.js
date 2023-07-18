@@ -32,7 +32,7 @@ function InputNumberInterval(props) {
     filterTimeout.current = setTimeout(() => {
       setIsApplying(false);
       applyValue({ ...item, value: [lowerBound, upperBound] });
-    }, rootProps.filterDebounceDelay);
+    }, rootProps.filterDebounceMs);
   };
 
   const handleUpperFilterChange = (event) => {

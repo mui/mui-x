@@ -41,7 +41,7 @@ function InputNumberInterval(props: GridFilterInputValueProps) {
     filterTimeout.current = setTimeout(() => {
       setIsApplying(false);
       applyValue({ ...item, value: [lowerBound, upperBound] });
-    }, rootProps.filterDebounceDelay);
+    }, rootProps.filterDebounceMs);
   };
 
   const handleUpperFilterChange: TextFieldProps['onChange'] = (event) => {

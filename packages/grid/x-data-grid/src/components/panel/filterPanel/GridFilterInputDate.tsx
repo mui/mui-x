@@ -44,12 +44,12 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       setFilterValueState(String(value));
 
       setIsApplying(true);
-      filterTimeout.start(rootProps.filterDebounceDelay, () => {
+      filterTimeout.start(rootProps.filterDebounceMs, () => {
         applyValue({ ...item, value });
         setIsApplying(false);
       });
     },
-    [applyValue, item, rootProps.filterDebounceDelay],
+    [applyValue, item, rootProps.filterDebounceMs],
   );
 
   React.useEffect(() => {
