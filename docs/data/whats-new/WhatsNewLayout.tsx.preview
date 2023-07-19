@@ -1,0 +1,3 @@
+{blogs.map((blog) => (
+  <BlogCard blog={blog} />
+))}
