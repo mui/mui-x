@@ -3,13 +3,15 @@ import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
-  DataGrid,
-  DataGridProps,
+  DataGridPremium as DataGrid,
+  DataGridPremiumProps as DataGridProps,
+  GridApi,
   GridFilterModel,
   GridLogicOperator,
   GridToolbar,
   getGridStringQuickFilterFn,
-} from '@mui/x-data-grid';
+  useGridApiRef,
+} from '@mui/x-data-grid-premium';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -37,11 +39,16 @@ describe('<DataGrid /> - Quick Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
+  let apiRef: React.MutableRefObject<GridApi>;
+
   function TestCase(props: Partial<DataGridProps>) {
+    apiRef = useGridApiRef();
+
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           {...baselineProps}
+          apiRef={apiRef}
           slots={{ toolbar: GridToolbar }}
           disableColumnSelector
           disableDensitySelector
@@ -637,5 +644,49 @@ describe('<DataGrid /> - Quick Filter', () => {
     setProps({
       rows: [],
     });
+  });
+
+  // https://github.com/mui/mui-x/issues/9677
+  it('should not fail when adding a grouping criterion', () => {
+    const { setProps } = render(
+      <TestCase
+        rows={[
+          {
+            id: 1,
+            company: '20th Century Fox',
+            director: 'James Cameron',
+            year: 1999,
+            title: 'Titanic',
+          }
+        ]}
+        columns={[
+          { field: 'company' },
+          { field: 'director' },
+          { field: 'year' },
+          { field: 'title' },
+        ]}
+        initialState={{
+          rowGrouping: {
+            model: ['company']
+          },
+          aggregation: {
+            model: {
+              director: 'size',
+            },
+          },
+        }}
+      />,
+    );
+
+    apiRef.current.addRowGroupingCriteria('year');
+
+    setProps({
+      filterModel: {
+        items: [],
+        quickFilterValues: ['Cameron'],
+      }
+    })
+
+    expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
   });
 });
