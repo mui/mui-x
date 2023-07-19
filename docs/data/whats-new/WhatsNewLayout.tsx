@@ -57,7 +57,9 @@ function BlogCard(props: { blog: Blog }) {
                 }}
               >
                 <Typography sx={{ pl: 1 }} variant="body2">
-                  <Link sx={{ cursor: 'pointer', color: '#818181' }}>{item}</Link>
+                  <Link sx={{ cursor: 'pointer' /*, color: '#818181'*/ }}>
+                    {item}
+                  </Link>
                 </Typography>
               </ListItem>
             ))}
