@@ -6,7 +6,6 @@ import ListItem from '@mui/material/ListItem';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -21,11 +20,6 @@ function BlogCard(props) {
         boxShadow: '0px 1px 3px 0px rgba(0,0,0,0.25)',
       }}
     >
-      {/*<CardMedia
-         sx={{ height: 100 }}
-         image={props.blog.cardUrl}
-         title={props.blog.title}
-        />*/}
       <CardContent sx={{ p: 0 }}>
         <Box sx={{ borderBottom: '1px solid #eee', marginBottom: 1, px: 1 }}>
           <Typography variant="caption" color="text.secondary">
