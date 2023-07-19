@@ -657,7 +657,7 @@ describe('<DataGrid /> - Quick Filter', () => {
             director: 'James Cameron',
             year: 1999,
             title: 'Titanic',
-          }
+          },
         ]}
         columns={[
           { field: 'company' },
@@ -667,7 +667,7 @@ describe('<DataGrid /> - Quick Filter', () => {
         ]}
         initialState={{
           rowGrouping: {
-            model: ['company']
+            model: ['company'],
           },
           aggregation: {
             model: {
@@ -684,8 +684,8 @@ describe('<DataGrid /> - Quick Filter', () => {
       filterModel: {
         items: [],
         quickFilterValues: ['Cameron'],
-      }
-    })
+      },
+    });
 
     expect(getColumnValues(0)).to.deep.equal(['20th Century Fox (1)', '']);
   });
