@@ -99,7 +99,9 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
-## 🚧 Month Range Picker
+## Month Range Picker 🚧
+
+The Month Range Picker allows setting a range of months.
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -108,5 +110,3 @@ This feature isn't implemented yet. It's coming.
 
 Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
-
-The Month Range Picker allows setting a range of months.
