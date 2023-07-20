@@ -21,8 +21,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGrid] Filtering performance: compile filter applier with `eval` (#9635) @romgrk
 - [DataGrid] Fix CSV export for values containing double quotes (#9667) @cherniavskii
 - [DataGrid] Fix column type change not working correctly (#9594) @cherniavskii
-- [DataGrid] Fix quick filter undefined row error (#9708) @romgrk
-- [DataGrid] Fix sorting in `CustomSortIcons` demo (#9656) @MBilalShafi
+- [DataGrid] Fix quick filter `undefined` row error (#9708) @romgrk
 - [DataGrid] Prevent `viewportOuterSize.height` going negative (#9664) @gitstart
 - [DataGrid] Update focused cell on page change via keyboard (#9203) @m4theushw
 - [DataGrid] Wait for remote stylesheets to load before print (#9665) @cherniavskii
@@ -62,6 +61,7 @@ Same changes as in `@mui/x-date-pickers@v6.10.1`.
 - [docs] Disable ad for onboarding pages (#9700) @oliviertassinari
 - [docs] Disabling ads without toolbar has no effect @oliviertassinari
 - [docs] Fix Date Pickers usage to Title Case (#9680) @richbustos
+- [docs] Fix sorting in `CustomSortIcons` demo (#9656) @MBilalShafi
 - [docs] Improve the UI for pickers introduction (#9644) @alexfauquette
 - [docs] Improve the demo design @oliviertassinari
 - [docs] Localization progress, polish (#9672) @oliviertassinari
