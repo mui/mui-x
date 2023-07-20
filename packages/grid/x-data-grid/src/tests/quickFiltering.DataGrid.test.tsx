@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -678,7 +678,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       />,
     );
 
-    apiRef.current.addRowGroupingCriteria('year');
+    act(() => apiRef.current.addRowGroupingCriteria('year'));
 
     setProps({
       filterModel: {
