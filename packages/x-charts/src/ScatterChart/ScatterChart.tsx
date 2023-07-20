@@ -21,7 +21,7 @@ export interface ScatterChartProps
   legend?: ChartsLegendProps;
 }
 
-function ScatterChart(props: ScatterChartProps) {
+const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -43,6 +43,7 @@ function ScatterChart(props: ScatterChartProps) {
 
   return (
     <ResponsiveChartContainer
+      ref={ref}
       series={series.map((s) => ({ type: 'scatter', ...s }))}
       width={width}
       height={height}
@@ -65,7 +66,7 @@ function ScatterChart(props: ScatterChartProps) {
       {children}
     </ResponsiveChartContainer>
   );
-}
+});
 
 ScatterChart.propTypes = {
   // ----------------------------- Warning --------------------------------

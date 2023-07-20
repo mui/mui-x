@@ -2,19 +2,6 @@ import { expect } from 'chai';
 import { generateLicense } from './generateLicense';
 
 describe('License: generateLicense', () => {
-  // TODO: Remove
-  it('should generate pro license properly when "scope" is not provided', () => {
-    expect(
-      generateLicense({
-        expiryDate: new Date(1591723879062),
-        orderNumber: 'MUI-123',
-        licensingModel: 'subscription',
-      }),
-    ).to.equal(
-      'b2b2ea9c6fd846e11770da3c795d6f63Tz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1zdWJzY3JpcHRpb24sS1Y9Mg==',
-    );
-  });
-
   it('should generate pro license properly when `scope: "pro"`', () => {
     expect(
       generateLicense({
@@ -41,20 +28,7 @@ describe('License: generateLicense', () => {
     );
   });
 
-  // TODO: Remove
-  it('should generate perpetual license when "licensingModel" is not provided', () => {
-    expect(
-      generateLicense({
-        expiryDate: new Date(1591723879062),
-        orderNumber: 'MUI-123',
-        scope: 'pro',
-      }),
-    ).to.equal(
-      'b16edd8e6bc83293a723779a259f520cTz1NVUktMTIzLEU9MTU5MTcyMzg3OTA2MixTPXBybyxMTT1wZXJwZXR1YWwsS1Y9Mg==',
-    );
-  });
-
-  it('should generate subscription license when `licensingModel: "subscription"`', () => {
+  it('should generate annual license when `licensingModel: "subscription"`', () => {
     expect(
       generateLicense({
         expiryDate: new Date(1591723879062),
