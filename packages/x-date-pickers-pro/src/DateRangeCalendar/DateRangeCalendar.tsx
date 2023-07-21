@@ -31,7 +31,7 @@ import {
   buildWarning,
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
-import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
   getDateRangeCalendarUtilityClass,
@@ -47,13 +47,13 @@ import {
   isRangeValid,
   isStartOfRange,
   isWithinRange,
-} from '../internal/utils/date-utils';
-import { calculateRangeChange, calculateRangePreview } from '../internal/utils/date-range-manager';
-import { DateRange } from '../internal/models';
+} from '../internals/utils/date-utils';
+import { calculateRangeChange, calculateRangePreview } from '../internals/utils/date-range-manager';
+import { DateRange } from '../internals/models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
-import { rangeValueManager } from '../internal/utils/valueManagers';
+import { rangeValueManager } from '../internals/utils/valueManagers';
 import { useDragRange } from './useDragRange';
-import { useRangePosition } from '../internal/hooks/useRangePosition';
+import { useRangePosition } from '../internals/hooks/useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 

@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Range Field components
 components: MultiInputDateRangeField, SingleInputDateRangeField
 githubLabel: 'component: pickers'
