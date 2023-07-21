@@ -6,10 +6,6 @@ import {
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
 
-const groupingColDef = {
-  offsetMultiplier: 6,
-};
-
 export default function RowGroupingCustomCellIndent() {
   const data = useMovieData();
   const apiRef = useGridApiRef();
@@ -27,9 +23,11 @@ export default function RowGroupingCustomCellIndent() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
+        sx={{
+          '--DataGrid-cellOffsetMultiplier': 6,
+        }}
         apiRef={apiRef}
         initialState={initialState}
-        groupingColDef={groupingColDef}
       />
     </div>
   );

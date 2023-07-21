@@ -242,14 +242,15 @@ Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the
 
 ### Customize grouping cell indent
 
-To change the default cell indent you can use the `offsetMultiplier` property of `groupingColDef`:
+To change the default cell indent, you can use the `--DataGrid-cellOffsetMultiplier` CSS variable:
 
 ```tsx
-const groupingColDef = {
-  offsetMultiplier: 6,
-};
-
-<DataGridPremium groupingColDef={groupingColDef} />;
+<DataGridPremium
+  sx={{
+    // default value is 2
+    '--DataGrid-cellOffsetMultiplier': 6,
+  }}
+/>
 ```
 
 {{"demo": "RowGroupingCustomCellIndent.js", "bg": "inline", "defaultCodeOpen": false}}

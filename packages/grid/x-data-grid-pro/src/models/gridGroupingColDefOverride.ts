@@ -30,11 +30,6 @@ export interface GridGroupingColDefOverride<R extends GridValidRowModel = any>
    * @default: false
    */
   hideDescendantCount?: boolean;
-  /**
-   * The cell offset multiplier used for calculating cell offset (`rowNode.depth * offsetMultiplier` px).
-   * @default 2
-   */
-  offsetMultiplier?: number;
 }
 
 export interface GridGroupingColDefOverrideParams {

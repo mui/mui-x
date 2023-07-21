@@ -71,8 +71,7 @@ export const useGridTreeDataPreProcessors = (
       colDefOverride = groupingColDefProp;
     }
 
-    const { hideDescendantCount, offsetMultiplier, ...colDefOverrideProperties } =
-      colDefOverride ?? {};
+    const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
 
     const commonProperties: Omit<GridColDef, 'field' | 'editable'> = {
       ...GRID_TREE_DATA_GROUPING_COL_DEF,
@@ -80,7 +79,6 @@ export const useGridTreeDataPreProcessors = (
         <GridTreeDataGroupingCell
           {...(params as GridRenderCellParams<any, any, any, GridGroupNode>)}
           hideDescendantCount={hideDescendantCount}
-          offsetMultiplier={offsetMultiplier}
         />
       ),
       headerName: privateApiRef.current.getLocaleText('treeDataGroupingHeaderName'),
