@@ -143,7 +143,7 @@ export type AxisConfig<S = ScaleName, V = any> = {
   /**
    * Set to `true` the done show this value in tooltip
    */
-  tooltipHiden?: boolean;
+  tooltipHidden?: boolean;
 } & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   TickParams;
 

@@ -117,7 +117,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
           id: DEFAULT_X_AXIS_KEY,
           scaleType: plotType === 'bar' ? 'band' : 'linear',
           data: Array.from({ length: data.length }, (_, index) => index),
-          tooltipHiden: xAxis === undefined,
+          tooltipHidden: xAxis === undefined,
           ...xAxis,
         },
       ]}

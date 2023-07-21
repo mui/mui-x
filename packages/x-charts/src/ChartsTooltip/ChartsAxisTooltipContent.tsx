@@ -57,7 +57,7 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
   return (
     <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
       <ChartsTooltipTable>
-        {axisValue != null && !axis.tooltipHiden && (
+        {axisValue != null && !axis.tooltipHidden && (
           <thead>
             <ChartsTooltipRow>
               <ChartsTooltipCell colSpan={3}>
