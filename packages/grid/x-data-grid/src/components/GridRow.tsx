@@ -398,14 +398,12 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
     let indexRelativeToAllColumns = firstColumnToRender + i;
 
-    if (
-      focusedCellColumnIndexNotInRange !== undefined &&
-      visibleColumns[focusedCellColumnIndexNotInRange].field === column.field &&
-      focusedCell
-    ) {
-      indexRelativeToAllColumns = focusedCellColumnIndexNotInRange;
-    } else if (focusedCellColumnIndexNotInRange !== undefined && focusedCell) {
-      indexRelativeToAllColumns -= 1;
+    if (focusedCellColumnIndexNotInRange !== undefined && focusedCell) {
+      if (visibleColumns[focusedCellColumnIndexNotInRange].field === column.field) {
+        indexRelativeToAllColumns = focusedCellColumnIndexNotInRange;
+      } else {
+        indexRelativeToAllColumns -= 1;
+      }
     }
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
