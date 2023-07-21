@@ -23,7 +23,7 @@ The component comes in three different versions. One available under MIT license
 
 ### MIT version (Free forever)
 
-The first version is meant as a stronger alternative to [data tables](/material-ui/react-table/#sorting-amp-selecting); It's a clean abstraction with basic features like pagination, sorting and filtering single columns, and column groups.
+The first version is meant as a stronger alternative to [data tables](/material-ui/react-table/#sorting-amp-selecting). It's a clean abstraction with basic features like editing, pagination, sorting and filtering single columns, and column groups.
 
 ```js
 import { DataGrid } from '@mui/x-data-grid';
