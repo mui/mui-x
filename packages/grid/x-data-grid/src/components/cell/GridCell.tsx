@@ -394,7 +394,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );
@@ -729,7 +729,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );

@@ -687,10 +687,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       onTouchMove: handleTouchMove,
       ...inputProps,
       style: inputProps.style ? { ...inputProps.style, ...rootStyle } : rootStyle,
+      role: 'presentation',
     }),
     getContentProps: ({ style }: { style?: object } = {}) => ({
       style: style ? { ...style, ...contentSize } : contentSize,
+      role: 'presentation',
     }),
-    getRenderZoneProps: () => ({ ref: renderZoneRef }),
+    getRenderZoneProps: () => ({ ref: renderZoneRef, role: 'rowgroup' }),
   };
 };
