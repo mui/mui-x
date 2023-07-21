@@ -362,17 +362,29 @@ Once a new value is entered into the input, it must be sent to the data grid.
 To do this, pass the row ID, the column field, and the new cell value to a call to `apiRef.current.setEditCellValue`.
 The new value will be parsed and validated, and the `value` prop will reflect the changes in the next render.
 
+It's important to also handle the [accessibility](/x/react-data-grid/accessibility/) of custom edit components.
+When a cell enters edit mode, an element must be focused to provide access via keyboard and for screen readers.
+Since multiple cells may be in edit mode at the same time, the `hasFocus` prop will be `true` on the cell that should have focus.
+Use this prop to focus the appropriate element.
+
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  const { id, value, field } = props;
+  const { id, value, field, hasFocus } = props;
   const apiRef = useGridApiContext();
+  const ref = React.useRef();
+
+  React.useLayoutEffect(() => {
+    if (hasFocus) {
+      ref.current.focus();
+    }
+  }, [hasFocus]);
 
   const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value; // The new value entered by the user
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onChange={handleValueChange} />;
+  return <input ref={ref} type="text" value={value} onChange={handleValueChange} />;
 }
 ```
 

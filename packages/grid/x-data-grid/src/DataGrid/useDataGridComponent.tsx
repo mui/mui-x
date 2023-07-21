@@ -79,7 +79,7 @@ export const useDataGridComponent = (
   useGridRowSelection(privateApiRef, props);
   useGridColumns(privateApiRef, props);
   useGridRows(privateApiRef, props);
-  useGridParamsApi(privateApiRef);
+  useGridParamsApi(privateApiRef, props);
   useGridColumnSpanning(privateApiRef);
   useGridColumnGrouping(privateApiRef, props);
   useGridEditing(privateApiRef, props);

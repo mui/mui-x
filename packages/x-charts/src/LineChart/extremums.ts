@@ -27,8 +27,8 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
 
         const [seriesMin, seriesMax] = series[seriesId].stackedData.reduce(
           (seriesAcc, stackedValue) => {
-            const [min, max] = getValues(stackedValue);
-            return [Math.min(min, seriesAcc[0]), Math.max(max, seriesAcc[1])];
+            const [base, value] = getValues(stackedValue);
+            return [Math.min(base, value, seriesAcc[0]), Math.max(base, value, seriesAcc[1])];
           },
           getValues(series[seriesId].stackedData[0]),
         );

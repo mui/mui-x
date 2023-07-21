@@ -58,6 +58,20 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       [apiRef],
     );
 
+    const isPageSizeIncludedInPageSizeOptions = (pageSize: number) => {
+      for (let i = 0; i < rootProps.pageSizeOptions.length; i += 1) {
+        const option = rootProps.pageSizeOptions[i];
+        if (typeof option === 'number') {
+          if (option === pageSize) {
+            return true;
+          }
+        } else if (option.value === pageSize) {
+          return true;
+        }
+      }
+      return false;
+    };
+
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const warnedOnceMissingInPageSizeOptions = React.useRef(false);
@@ -66,7 +80,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       if (
         !warnedOnceMissingInPageSizeOptions.current &&
         !rootProps.autoPageSize &&
-        !rootProps.pageSizeOptions.includes(pageSize)
+        !isPageSizeIncludedInPageSizeOptions(pageSize)
       ) {
         console.warn(
           [
@@ -79,17 +93,17 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       }
     }
 
+    const pageSizeOptions = isPageSizeIncludedInPageSizeOptions(paginationModel.pageSize)
+      ? rootProps.pageSizeOptions
+      : [];
+
     return (
       <GridPaginationRoot
         ref={ref}
         component="div"
         count={rowCount}
         page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
-        rowsPerPageOptions={
-          rootProps.pageSizeOptions?.includes(paginationModel.pageSize)
-            ? rootProps.pageSizeOptions
-            : []
-        }
+        rowsPerPageOptions={pageSizeOptions}
         rowsPerPage={paginationModel.pageSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handlePageSizeChange}

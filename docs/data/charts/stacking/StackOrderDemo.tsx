@@ -69,7 +69,7 @@ const xAxis = {
 
 const series = [
   { label: 'Car', data: car, stack: 'total' },
-  { label: 'Common Transportation', data: commonTransportation, stack: 'total' },
+  { label: 'Public T.', data: commonTransportation, stack: 'total' },
   { label: 'Motorcycle', data: motorcycle, stack: 'total' },
   { label: 'Walk', data: walking, stack: 'total' },
   { label: 'Bike', data: biking, stack: 'total' },
@@ -122,6 +122,7 @@ export default function StackOrderDemo() {
               transform: 'translateY(15px)',
             },
           },
+          '--ChartsLegend-itemWidth': '110px',
         }}
       />
     </Box>

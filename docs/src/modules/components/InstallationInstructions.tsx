@@ -1,15 +1,14 @@
 import * as React from 'react';
 // @ts-expect-error
-import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+import HighlightedCodeWithTabs from 'docs/src/modules/components/HighlightedCodeWithTabs';
 import Stack from '@mui/material/Stack';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import ToggleOptions from './ToggleOptions';
 
 const defaultPackageManagers: Record<string, string> = {
-  yarn: 'yarn add',
   npm: 'npm install',
+  yarn: 'yarn add',
+  pnpm: 'pnpm add',
 };
 
 export default function InstallationInstructions(props: {
@@ -23,88 +22,50 @@ export default function InstallationInstructions(props: {
 }) {
   const { packages, packageManagers = defaultPackageManagers, peerDependency = null } = props;
   const packagesTypes = Object.keys(packages);
-  const packageManagersNames = Object.keys(packageManagers);
 
-  const [licenseType, setLicenseType] = React.useState(packagesTypes[0]);
-  const [packageManger, setPackageManger] = React.useState(packageManagersNames[0]);
+  const [licenceType, setLicenceType] = React.useState(packagesTypes[0]);
   const [libraryUsed, setLibraryUsed] = React.useState(
-    peerDependency ? peerDependency.packages[0] : null,
+    peerDependency ? peerDependency.packages[0] : '',
   );
 
-  const handlePackageMangerChange = (
-    event: React.MouseEvent<HTMLElement>,
-    nextPackageManager: string,
-  ) => {
-    if (nextPackageManager !== null) {
-      setPackageManger(nextPackageManager);
-    }
-  };
+  const tabs = Object.entries(packageManagers).map(([packageManger, installInstruction]) => {
+    const code = [`${installInstruction} ${packages[licenceType]}`];
 
-  const handleLicenseTypeChange = (
-    event: React.MouseEvent<HTMLElement>,
-    nextLicenseType: string,
-  ) => {
-    if (nextLicenseType !== null) {
-      setLicenseType(nextLicenseType);
+    if (peerDependency) {
+      code.push('');
+      if (peerDependency.installationComment) {
+        code.push(peerDependency.installationComment);
+      }
+      code.push(`${installInstruction} ${libraryUsed}`);
     }
-  };
-
-  const commands = [`${packageManagers[packageManger]} ${packages[licenseType]}`];
-
-  if (peerDependency) {
-    commands.push('');
-    if (peerDependency.installationComment) {
-      commands.push(peerDependency.installationComment);
-    }
-    commands.push(`${packageManagers[packageManger]} ${libraryUsed}`);
-  }
+    return {
+      code: code.join('\n'),
+      language: 'bash',
+      tab: packageManger,
+    };
+  });
 
   return (
     <Stack sx={{ width: '100%' }} px={{ xs: 3, sm: 0 }}>
-      <Stack direction="row" spacing={2}>
-        <ToggleButtonGroup
-          value={packageManger}
-          exclusive
-          onChange={handlePackageMangerChange}
-          size="small"
-        >
-          {packageManagersNames.map((key) => (
-            <ToggleButton value={key} key={key}>
-              {key}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-        <ToggleButtonGroup
-          value={licenseType}
-          exclusive
-          onChange={handleLicenseTypeChange}
-          size="small"
-        >
-          {packagesTypes.map((key) => (
-            <ToggleButton value={key} key={key}>
-              {key}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-        {peerDependency ? (
-          <TextField
-            size="small"
-            label={peerDependency.label}
-            value={libraryUsed}
-            onChange={(event) => {
-              setLibraryUsed(event.target.value);
-            }}
-            select
-          >
-            {peerDependency.packages.map((packageName) => (
-              <MenuItem key={packageName} value={packageName}>
-                {packageName}
-              </MenuItem>
-            ))}
-          </TextField>
-        ) : null}
-      </Stack>
-      <HighlightedCode sx={{ width: '100%' }} code={commands.join('\n')} language="sh" />
+      <Box sx={{ display: 'flex', gap: 3, width: 'max-content', py: 1, pb: 1.5 }}>
+        <ToggleOptions
+          value={licenceType}
+          setValue={setLicenceType}
+          options={packagesTypes}
+          label="Plan"
+        />
+        {peerDependency && (
+          <ToggleOptions
+            label="Date Library"
+            value={libraryUsed!}
+            setValue={setLibraryUsed}
+            options={peerDependency.packages}
+            autoColapse
+          />
+        )}
+      </Box>
+
+      <HighlightedCodeWithTabs tabs={tabs} storageKey="codeblock-package-manager" />
     </Stack>
   );
 }

@@ -21,7 +21,7 @@ export interface ScatterChartProps
   legend?: ChartsLegendProps;
 }
 
-function ScatterChart(props: ScatterChartProps) {
+const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -43,6 +43,7 @@ function ScatterChart(props: ScatterChartProps) {
 
   return (
     <ResponsiveChartContainer
+      ref={ref}
       series={series.map((s) => ({ type: 'scatter', ...s }))}
       width={width}
       height={height}
@@ -65,7 +66,7 @@ function ScatterChart(props: ScatterChartProps) {
       {children}
     </ResponsiveChartContainer>
   );
-}
+});
 
 ScatterChart.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -77,7 +78,7 @@ ScatterChart.propTypes = {
     y: PropTypes.oneOf(['line', 'none']),
   }),
   /**
-   * Indicate which axis to display the the bottom of the charts.
+   * Indicate which axis to display the bottom of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default xAxisIds[0] The id of the first provided axis
    */
@@ -107,7 +108,7 @@ ScatterChart.propTypes = {
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
   /**
-   * Indicate which axis to display the the left of the charts.
+   * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default yAxisIds[0] The id of the first provided axis
    */
@@ -130,6 +131,7 @@ ScatterChart.propTypes = {
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
     itemWidth: PropTypes.number,
     markSize: PropTypes.number,
     offset: PropTypes.shape({
@@ -149,7 +151,7 @@ ScatterChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
-   * Indicate which axis to display the the right of the charts.
+   * Indicate which axis to display the right of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
    * @default null
    */
@@ -205,7 +207,7 @@ ScatterChart.propTypes = {
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
-   * Indicate which axis to display the the top of the charts.
+   * Indicate which axis to display the top of the charts.
    * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
    * @default null
    */

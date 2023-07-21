@@ -325,6 +325,13 @@
     "componentProp": "onRowEditStop"
   },
   {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "rowExpansionChange",
+    "description": "Fired when the expansion of a row is changed. Called with a GridGroupNode object.",
+    "params": "GridGroupNode",
+    "event": "MuiEvent<{}>"
+  },
+  {
     "projects": ["x-data-grid-premium"],
     "name": "rowGroupingModelChange",
     "description": "Fired when the row grouping model changes.",
