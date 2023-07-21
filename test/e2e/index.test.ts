@@ -62,6 +62,9 @@ async function attemptGoto(page: playwright.Page, url: string): Promise<boolean>
   return didNavigate;
 }
 
+// Pick the new/fake "now" for you test pages.
+const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
+
 describe('e2e', () => {
   const baseUrl = 'http://localhost:5001';
   let browser: playwright.Browser;
@@ -78,6 +81,24 @@ describe('e2e', () => {
       headless: true,
     });
     page = await browser.newPage();
+    // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
+    // Update the Date accordingly in your test pages
+    await page.addInitScript(`{
+      // Extend Date constructor to default to fakeNow
+      Date = class extends Date {
+        constructor(...args) {
+          if (args.length === 0) {
+            super(${fakeNow});
+          } else {
+            super(...args);
+          }
+        }
+      }
+      // Override Date.now() to start from fakeNow
+      const __DateNowOffset = ${fakeNow} - Date.now();
+      const __DateNow = Date.now;
+      Date.now = () => __DateNow() + __DateNowOffset;
+    }`);
     const isServerRunning = await attemptGoto(page, `${baseUrl}#no-dev`);
     if (!isServerRunning) {
       throw new Error(
@@ -386,6 +407,33 @@ describe('e2e', () => {
       expect(await page.locator('[role="cell"][data-field="brand"] input').inputValue()).to.equal(
         'p',
       );
+    });
+  });
+
+  describe('<DatePicker />', () => {
+    describe('<DesktopDatePicker />', () => {
+      it('should allow selecting a value', async () => {
+        await renderFixture('DatePicker/BasicDesktopDatePicker');
+
+        await page.getByRole('button').click();
+        expect(
+          await page.getByRole('gridcell', { name: '17' }).getAttribute('aria-current'),
+        ).to.equal('date');
+        await page.getByRole('gridcell', { name: '11' }).click();
+        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
+      });
+    });
+    // TODO: enable this when https://github.com/mui/material-ui/pull/38072 is merged and the dependency is bumped
+    // eslint-disable-next-line mocha/no-skipped-tests
+    describe('<MobileDatePicker />', () => {
+      it('should open the picker when clicking on the location where label will end up when focused', async () => {
+        await renderFixture('DatePicker/BasicMobileDatePicker');
+
+        // execute the click in the location where the label will transition when input is focused
+        await page.mouse.click(50, 15);
+
+        await page.waitForSelector('[role="dialog"]');
+      });
     });
   });
 });
