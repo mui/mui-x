@@ -23,6 +23,20 @@ export type D3ContinuouseScale =
   | ScaleTime<any, any>
   | ScaleLinear<any, any>;
 
+export interface ChartsAxisSlotsComponent {
+  axisLine?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
+  axisTickLabel?: React.JSXElementConstructor<React.SVGAttributes<SVGTextElement>>;
+  axisLabel?: React.JSXElementConstructor<React.SVGAttributes<SVGTextElement>>;
+}
+
+export interface ChartsAxisSlotComponentProps {
+  axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
+  axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
+  axisTickLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
+  axisLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
+}
+
 export interface ChartsAxisProps {
   /**
    * Id of the axis to render.
@@ -71,6 +85,16 @@ export interface ChartsAxisProps {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsAxisClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: Partial<ChartsAxisSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: Partial<ChartsAxisSlotComponentProps>;
 }
 
 export interface ChartsYAxisProps extends ChartsAxisProps {

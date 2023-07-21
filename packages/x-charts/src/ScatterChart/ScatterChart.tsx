@@ -92,6 +92,8 @@ ScatterChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -122,6 +124,8 @@ ScatterChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -142,6 +146,8 @@ ScatterChart.propTypes = {
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     spacing: PropTypes.number,
   }),
   margin: PropTypes.shape({
@@ -165,6 +171,8 @@ ScatterChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -194,6 +202,16 @@ ScatterChart.propTypes = {
       yAxisKey: PropTypes.string,
     }),
   ).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -221,6 +239,8 @@ ScatterChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -251,6 +271,8 @@ ScatterChart.propTypes = {
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -275,6 +297,8 @@ ScatterChart.propTypes = {
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

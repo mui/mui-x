@@ -1,7 +1,8 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { BarElement } from './BarElement';
+import { BarElement, BarElementProps } from './BarElement';
 import { isBandScaleConfig } from '../models/axis';
 
 /**
@@ -35,7 +36,30 @@ function getBandSize({
     offset,
   };
 }
-export function BarPlot() {
+
+export interface BarPlotSlotsComponent {
+  bar?: React.JSXElementConstructor<BarElementProps>;
+}
+
+export interface BarPlotSlotComponentProps {
+  bar?: Partial<BarElementProps>;
+}
+
+export interface BarPlotProps {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarPlotSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarPlotSlotComponentProps;
+}
+
+function BarPlot(props: BarPlotProps) {
+  const { slots, slotProps } = props;
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
 
@@ -81,11 +105,12 @@ export function BarPlot() {
           // @ts-ignore TODO: fix when adding a correct API for customisation
           const { stackedData, color } = series[seriesId];
 
+          const Bar = slots?.bar ?? BarElement;
           return stackedData.map((values, dataIndex: number) => {
             const baseline = Math.min(...values);
             const value = Math.max(...values);
             return (
-              <BarElement
+              <Bar
                 key={`${seriesId}-${dataIndex}`}
                 id={seriesId}
                 dataIndex={dataIndex}
@@ -95,6 +120,7 @@ export function BarPlot() {
                 width={barWidth}
                 color={color}
                 highlightScope={series[seriesId].highlightScope}
+                {...slotProps?.bar}
               />
             );
           });
@@ -103,3 +129,22 @@ export function BarPlot() {
     </React.Fragment>
   );
 }
+
+BarPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { BarPlot };

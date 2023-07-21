@@ -3,10 +3,18 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
 import { AnchorPosition, SizingParams, getSeriesToDisplay } from './utils';
-import { SeriesContext } from '../context/SeriesContextProvider';
+import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
 import { ChartsLegendClasses, getChartsLegendUtilityClass } from './chartsLegendClasses';
 import { DefaultizedProps } from '../models/helpers';
-import { ChartSeriesDefaultized } from '../models/seriesType/config';
+import { ChartSeriesDefaultized, LegendParams } from '../models/seriesType/config';
+
+export interface ChartsLegendSlotsComponent {
+  legend?: React.JSXElementConstructor<LegendRendererProps>;
+}
+
+export interface ChartsLegendSlotComponentProps {
+  legend?: Partial<LegendRendererProps>;
+}
 
 export type ChartsLegendProps = {
   position?: AnchorPosition;
@@ -19,6 +27,16 @@ export type ChartsLegendProps = {
    * Set to true to hide the legend.
    */
   hidden?: boolean;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ChartsLegendSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ChartsLegendSlotComponentProps;
 } & SizingParams;
 
 type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;
@@ -163,25 +181,16 @@ const defaultProps = {
   spacing: 2,
 } as const;
 
-export function ChartsLegend(inProps: ChartsLegendProps) {
-  const props: DefaultizedChartsLegendProps = useThemeProps({
-    props: { ...defaultProps, ...inProps },
-    name: 'MuiChartsLegend',
-  });
+export interface LegendRendererProps
+  extends Omit<DefaultizedChartsLegendProps, 'hidden' | 'slots' | 'slotProps'> {
+  series: FormattedSeries;
+  seriesToDisplay: LegendParams[];
+  drawingArea: DrawingArea;
+  classes: Record<'label' | 'mark' | 'series' | 'root', string>;
+}
 
-  const { position, direction, offset, hidden } = props;
-  const theme = useTheme();
-  const classes = useUtilityClasses({ ...props, theme });
-
-  const drawingArea = React.useContext(DrawingContext);
-  const series = React.useContext(SeriesContext);
-
-  if (hidden) {
-    return null;
-  }
-
-  const seriesToDisplay = getSeriesToDisplay(series);
-
+function DefaultChartsLegend(props: LegendRendererProps) {
+  const { position, direction, offset, series, seriesToDisplay, drawingArea, classes } = props;
   return (
     <ChartsLegendRoot
       ownerState={{
@@ -205,5 +214,39 @@ export function ChartsLegend(inProps: ChartsLegendProps) {
         </ChartsSeriesLegendGroup>
       ))}
     </ChartsLegendRoot>
+  );
+}
+
+export function ChartsLegend(inProps: ChartsLegendProps) {
+  const props: DefaultizedChartsLegendProps = useThemeProps({
+    props: { ...defaultProps, ...inProps },
+    name: 'MuiChartsLegend',
+  });
+
+  const { position, direction, offset, hidden, slots, slotProps } = props;
+  const theme = useTheme();
+  const classes = useUtilityClasses({ ...props, theme });
+
+  const drawingArea = React.useContext(DrawingContext);
+  const series = React.useContext(SeriesContext);
+
+  if (hidden) {
+    return null;
+  }
+
+  const seriesToDisplay = getSeriesToDisplay(series);
+
+  const ChartLegendRender = slots?.legend ?? DefaultChartsLegend;
+  return (
+    <ChartLegendRender
+      position={position}
+      direction={direction}
+      offset={offset}
+      classes={classes}
+      drawingArea={drawingArea}
+      series={series}
+      seriesToDisplay={seriesToDisplay}
+      {...slotProps?.legend}
+    />
   );
 }
