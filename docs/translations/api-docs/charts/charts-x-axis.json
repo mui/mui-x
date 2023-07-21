@@ -9,6 +9,8 @@
     "label": "The label of the axis.",
     "labelFontSize": "The font size of the axis label.",
     "position": "Position of the axis.",
+    "slotProps": "The props used for each component slot.",
+    "slots": "Overridable component slots.",
     "stroke": "The stroke color of the axis line.",
     "tickFontSize": "The font size of the axis ticks text.",
     "tickSize": "The size of the ticks."
