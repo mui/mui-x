@@ -16,8 +16,13 @@ export const useGridAriaAttributes = () => {
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
+  let role = 'grid';
+  if (rootProps.experimentalFeatures?.ariaV7 && (rootProps as any).treeData) {
+    role = 'treegrid';
+  }
+
   return {
-    role: 'grid',
+    role,
     'aria-colcount': visibleColumns.length,
     'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount,
     'aria-multiselectable': !rootProps.disableMultipleRowSelection,
