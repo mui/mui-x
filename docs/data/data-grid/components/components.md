@@ -184,7 +184,7 @@ For example, for `columnMenu` slot, the interface name would be `ColumnMenuProps
 
 This [file](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
 
-<codeblock storageKey="data-grid-pricing-plan">
+<codeblock storageKey="pricing-plan">
 
 ```tsx Community
 // augment the props for the toolbar slot
