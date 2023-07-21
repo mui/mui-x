@@ -14,12 +14,12 @@ export default function CustomAxis() {
             data: [
               new Date(2022, 5, 1),
               new Date(2022, 5, 2),
-              new Date(2022, 5, 3),
-              new Date(2022, 5, 4),
               new Date(2022, 5, 5),
               new Date(2022, 5, 6),
               new Date(2022, 5, 7),
               new Date(2022, 5, 8),
+              new Date(2022, 5, 11),
+              new Date(2022, 5, 12),
             ],
             valueFormatter: (value) => value.toISOString().slice(0, 10),
           }}
