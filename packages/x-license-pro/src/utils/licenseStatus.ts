@@ -1,4 +1,5 @@
-enum LicenseStatus {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export enum LICENSE_STATUS {
   NotFound = 'NotFound',
   Invalid = 'Invalid',
   ExpiredAnnual = 'ExpiredAnnual',
@@ -8,4 +9,4 @@ enum LicenseStatus {
   OutOfScope = 'OutOfScope',
 }
 
-export { LicenseStatus };
+export type LicenseStatus = keyof typeof LICENSE_STATUS;

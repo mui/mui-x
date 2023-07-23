@@ -59,7 +59,15 @@ export function showExpiredPackageVersionError({ packageName }: { packageName: s
   ]);
 }
 
-export function showExpiredAnnualGraceLicenseKeyError({ plan }: { plan: string }) {
+export function showExpiredAnnualGraceLicenseKeyError({
+  plan,
+  licenseKey,
+  expiryTimestamp,
+}: {
+  plan: string;
+  licenseKey: string;
+  expiryTimestamp: number;
+}) {
   showError([
     'MUI: Expired license key.',
     '',
@@ -71,10 +79,22 @@ export function showExpiredAnnualGraceLicenseKeyError({ plan }: { plan: string }
     `- Stop making changes to code depending directly or indirectly on MUI X ${plan}'s APIs`,
     '',
     'Note that your license is perpetual in production environments with any version released before your license term ends.',
+    '',
+    `- License key expiry timestamp: ${new Date(expiryTimestamp)}`,
+    `- Installed license key: ${licenseKey}`,
+    '',
   ]);
 }
 
-export function showExpiredAnnualLicenseKeyError({ plan }: { plan: string }) {
+export function showExpiredAnnualLicenseKeyError({
+  plan,
+  licenseKey,
+  expiryTimestamp,
+}: {
+  plan: string;
+  licenseKey: string;
+  expiryTimestamp: number;
+}) {
   throw new Error(
     [
       'MUI: Expired license key.',
@@ -87,6 +107,10 @@ export function showExpiredAnnualLicenseKeyError({ plan }: { plan: string }) {
       `- Stop making changes to code depending directly or indirectly on MUI X ${plan}'s APIs`,
       '',
       'Note that your license is perpetual in production environments with any version released before your license term ends.',
+      '',
+      `- License key expiry timestamp: ${new Date(expiryTimestamp)}`,
+      `- Installed license key: ${licenseKey}`,
+      '',
     ].join('\n'),
   );
 }
