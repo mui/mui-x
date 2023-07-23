@@ -10,6 +10,7 @@ import {
 } from '../utils/licenseErrorMessageUtils';
 import { LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
+import LicenseInfoContext from '../Unstable_LicenseInfoProvider/LicenseInfoContext';
 
 export type MuiCommercialPackageName =
   | 'x-data-grid-pro'
@@ -24,8 +25,9 @@ export function useLicenseVerifier(
   packageName: MuiCommercialPackageName,
   releaseInfo: string,
 ): LicenseStatus {
+  const { key: contextKey } = React.useContext(LicenseInfoContext);
   return React.useMemo(() => {
-    const licenseKey = LicenseInfo.getLicenseKey();
+    const licenseKey = contextKey ?? LicenseInfo.getLicenseKey();
     if (
       sharedLicenseStatuses[packageName] &&
       sharedLicenseStatuses[packageName]!.key === licenseKey
@@ -61,5 +63,5 @@ export function useLicenseVerifier(
     }
 
     return licenseStatus;
-  }, [packageName, releaseInfo]);
+  }, [packageName, releaseInfo, contextKey]);
 }
