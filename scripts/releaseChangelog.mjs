@@ -258,10 +258,7 @@ ${logChangelogSection(pickersProCommits)}
 ### Charts / \`@mui/x-charts@v__CHARTS_VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
-${logChangelogSection(
-  codemodCommits,
-  `### \`@mui/x-codemod@v__VERSION__\``,
-)}
+${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@v__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
 ${logChangelogSection(otherCommits, '')}
