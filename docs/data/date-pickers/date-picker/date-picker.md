@@ -104,7 +104,7 @@ You can show a helper text with the date format accepted:
 
 ## Clearing the value
 
-You can enable a clearable behavior:
+You can enable the clearable behavior:
 
 {{"demo": "ClearableProp.js"}}
 

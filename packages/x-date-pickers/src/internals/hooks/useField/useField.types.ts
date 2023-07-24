@@ -119,11 +119,11 @@ export interface UseFieldInternalProps<TValue, TDate, TSection extends FieldSect
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
   /**
-   * Event fired when the clear button is clicked.
+   * Callback fired when the clear button is clicked.
    */
   onClear?: React.MouseEventHandler;
   /**
-   * If `true`, the field will be cleared when the user clicks on the clear button.
+   * If `true`, a clear button will be shown in the field allowing value clearing.
    * @default false
    */
   clearable?: boolean;

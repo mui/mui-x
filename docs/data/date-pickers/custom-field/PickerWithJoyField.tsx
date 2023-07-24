@@ -80,7 +80,6 @@ const JoyField = React.forwardRef(
       startDecorator,
       ...other
     } = props;
-    console.log('props', props);
 
     return (
       <FormControl
