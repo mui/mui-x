@@ -273,6 +273,14 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
+function getDefaultColTypeDef(columnTypes: GridColumnTypesRecord, type: GridColDef['type']) {
+  let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
+  if (type && columnTypes[type]) {
+    colDef = columnTypes[type];
+  }
+  return colDef;
+}
+
 export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
@@ -324,20 +332,23 @@ export const createColumnsState = ({
     let existingState = columnsState.lookup[field];
 
     if (existingState == null) {
-      let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
-
-      if (newColumn.type && columnTypes[newColumn.type]) {
-        colDef = columnTypes[newColumn.type];
-      }
-
       existingState = {
-        ...colDef,
+        ...getDefaultColTypeDef(columnTypes, newColumn.type),
         field,
         hasBeenResized: false,
       };
       columnsState.orderedFields.push(field);
     } else if (keepOnlyColumnsToUpsert) {
       columnsState.orderedFields.push(field);
+    }
+
+    // If the column type has changed - merge the existing state with the default column type definition
+    if (existingState && existingState.type !== newColumn.type) {
+      existingState = {
+        ...existingState,
+        ...getDefaultColTypeDef(columnTypes, newColumn.type),
+        field,
+      };
     }
 
     let hasBeenResized = existingState.hasBeenResized;

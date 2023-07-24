@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
-describe('<DataGridPremium /> - Cell Selection', () => {
+describe('<DataGridPremium /> - Cell selection', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;

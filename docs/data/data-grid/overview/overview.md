@@ -15,7 +15,9 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 ## Overview
 
-> Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::info
+Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::
 
 Data tables display information in a grid-like format of rows and columns.
 They organize information in a way that's easy to scan so that users can look for patterns and insights.
@@ -93,7 +95,7 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 
-### 🚧 Upcoming features
+### Upcoming features 🚧
 
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 

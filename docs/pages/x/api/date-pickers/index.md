@@ -1,6 +1,6 @@
 # Date and Time Pickers - API Reference
 
-<p class="description">This page contains an index to the most important APIs of the date pickers.</p>
+<p class="description">This page contains an index to the most important APIs of the Date and Time Pickers.</p>
 
 ## Components
 
