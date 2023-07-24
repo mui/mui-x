@@ -14,8 +14,8 @@ const releaseDate = new Date(3000, 0, 0, 0, 0, 0, 0);
 const releaseInfo = generateReleaseInfo(releaseDate);
 
 function TestComponent() {
-  const status = useLicenseVerifier('x-date-pickers-pro', releaseInfo);
-  return <div data-testid="status">Status: {status}</div>;
+  const licesenStatus = useLicenseVerifier('x-date-pickers-pro', releaseInfo);
+  return <div data-testid="status">Status: {licesenStatus.status}</div>;
 }
 
 describe('useLicenseVerifier', () => {
