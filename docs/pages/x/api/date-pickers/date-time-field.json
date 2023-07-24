@@ -112,10 +112,7 @@
     }
   },
   "slots": {
-    "clearIcon": {
-      "default": "Clear from '@mui/icons-material'",
-      "type": { "name": "elementType" }
-    },
+    "clearIcon": { "default": "ClearIcon", "type": { "name": "elementType" } },
     "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "DateTimeField",

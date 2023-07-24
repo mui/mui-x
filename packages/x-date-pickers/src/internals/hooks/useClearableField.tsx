@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { useSlotProps } from '@mui/base';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { ClearIcon } from '../../icons';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useField.types';
@@ -50,9 +51,11 @@ export const useClearableField = <
     ...ForwardedInputProps,
     endAdornment: clearable ? (
       <React.Fragment>
-        <IconButton className="clearButton" onClick={onClear} tabIndex={-1}>
-          <EndClearIcon fontSize="small" {...endClearIconProps} />
-        </IconButton>
+        <InputAdornment position="end">
+          <IconButton className="clearButton" onClick={onClear} tabIndex={-1}>
+            <EndClearIcon fontSize="small" {...endClearIconProps} />
+          </IconButton>
+        </InputAdornment>
         {ForwardedInputProps?.endAdornment}
       </React.Fragment>
     ) : (
