@@ -231,6 +231,18 @@ You can pass custom components—to replace the icons, for example—as shown be
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
 
+## Popper
+
+You can customize the popper that wraps the picker views the same way you would customize the [MUI Popper](/material-ui/react-popper/)
+
+:::info
+When the picker views have different heights, there might be a layout shift if there is not enought space in the viewport for one of the views **below** the input field.
+
+You can avoid this by customizing the popper. This will not produce any visual changes, as the popper that wraps the pickers is transparent.
+:::
+
+{{"demo": "PopperComponent.js", "defaultCodeOpen": true}}
+
 ## Shortcuts
 
 You can add shortcuts to every pickers.
