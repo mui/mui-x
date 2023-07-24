@@ -151,77 +151,42 @@ SparkLineChart.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Set to `true` to fill spark line area.
+   * Has no effect if plotType='bar'.
+   * @default false
+   */
+  area: PropTypes.bool,
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['line', 'none']),
   }),
-  /**
-   * Indicate which axis to display the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
-   * @default xAxisIds[0] The id of the first provided axis
-   */
-  bottomAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      position: PropTypes.oneOf(['bottom', 'top']),
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * @default 'linear'
+   */
+  curve: PropTypes.oneOf([
+    'catmullRom',
+    'linear',
+    'monotoneX',
+    'monotoneY',
+    'natural',
+    'step',
+    'stepAfter',
+    'stepBefore',
+  ]),
+  /**
+   * Data to plot
+   */
+  data: PropTypes.arrayOf(PropTypes.number).isRequired,
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
-  /**
-   * Indicate which axis to display the left of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
-   * @default yAxisIds[0] The id of the first provided axis
-   */
-  leftAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      position: PropTypes.oneOf(['left', 'right']),
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
-  legend: PropTypes.shape({
-    classes: PropTypes.object,
-    direction: PropTypes.oneOf(['column', 'row']),
-    hidden: PropTypes.bool,
-    itemWidth: PropTypes.number,
-    markSize: PropTypes.number,
-    offset: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
-    position: PropTypes.shape({
-      horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
-      vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
-    }),
-    spacing: PropTypes.number,
-  }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
     left: PropTypes.number,
@@ -229,52 +194,22 @@ SparkLineChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
-   * Indicate which axis to display the right of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
-   * @default null
+   * Type of plot used.
+   * @default 'line'
    */
-  rightAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      position: PropTypes.oneOf(['left', 'right']),
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
-  series: PropTypes.arrayOf(
-    PropTypes.shape({
-      color: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
-      highlightScope: PropTypes.shape({
-        faded: PropTypes.oneOf(['global', 'none', 'series']),
-        highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-      }),
-      id: PropTypes.string,
-      label: PropTypes.string,
-      stack: PropTypes.string,
-      stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
-      stackOrder: PropTypes.oneOf([
-        'appearance',
-        'ascending',
-        'descending',
-        'insideOut',
-        'none',
-        'reverse',
-      ]),
-      type: PropTypes.oneOf(['bar']),
-      valueFormatter: PropTypes.func,
-      xAxisKey: PropTypes.string,
-      yAxisKey: PropTypes.string,
-    }),
-  ).isRequired,
+  plotType: PropTypes.oneOf(['bar', 'line']),
+  /**
+   * Set to `true` to highlight the value.
+   * With line, it shows a point.
+   * With bar, it shows a highlight band.
+   * @default false
+   */
+  showHighlight: PropTypes.bool,
+  /**
+   * Set to `true` to enable the tooltip in the sparkline
+   * @default false
+   */
+  showTooltip: PropTypes.bool,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -288,26 +223,11 @@ SparkLineChart.propTypes = {
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
-   * Indicate which axis to display the top of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
-   * @default null
+   * Formatter used by the tooltip.
+   * @param {number} value The value to format.
+   * @returns {string} the formatted value.
    */
-  topAxis: PropTypes.oneOfType([
-    PropTypes.shape({
-      axisId: PropTypes.string.isRequired,
-      classes: PropTypes.object,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      position: PropTypes.oneOf(['bottom', 'top']),
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickSize: PropTypes.number,
-    }),
-    PropTypes.string,
-  ]),
+  valueFormatter: PropTypes.func,
   viewBox: PropTypes.shape({
     height: PropTypes.number,
     width: PropTypes.number,
@@ -315,54 +235,33 @@ SparkLineChart.propTypes = {
     y: PropTypes.number,
   }),
   width: PropTypes.number,
-  xAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.string,
-      classes: PropTypes.object,
-      data: PropTypes.array,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      id: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      max: PropTypes.number,
-      maxTicks: PropTypes.number,
-      min: PropTypes.number,
-      minTicks: PropTypes.number,
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
-      valueFormatter: PropTypes.func,
-    }),
-  ),
-  yAxis: PropTypes.arrayOf(
-    PropTypes.shape({
-      axisId: PropTypes.string,
-      classes: PropTypes.object,
-      data: PropTypes.array,
-      disableLine: PropTypes.bool,
-      disableTicks: PropTypes.bool,
-      fill: PropTypes.string,
-      id: PropTypes.string,
-      label: PropTypes.string,
-      labelFontSize: PropTypes.number,
-      max: PropTypes.number,
-      maxTicks: PropTypes.number,
-      min: PropTypes.number,
-      minTicks: PropTypes.number,
-      position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
-      scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
-      stroke: PropTypes.string,
-      tickFontSize: PropTypes.number,
-      tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
-      valueFormatter: PropTypes.func,
-    }),
-  ),
+  /**
+   * The xAxis configuration.
+   * Notice it is a single configuration object, not an array of configuration.
+   */
+  xAxis: PropTypes.shape({
+    axisId: PropTypes.string,
+    classes: PropTypes.object,
+    data: PropTypes.array,
+    disableLine: PropTypes.bool,
+    disableTicks: PropTypes.bool,
+    fill: PropTypes.string,
+    id: PropTypes.string,
+    label: PropTypes.string,
+    labelFontSize: PropTypes.number,
+    max: PropTypes.number,
+    maxTicks: PropTypes.number,
+    min: PropTypes.number,
+    minTicks: PropTypes.number,
+    position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
+    scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+    stroke: PropTypes.string,
+    tickFontSize: PropTypes.number,
+    tickSize: PropTypes.number,
+    tickSpacing: PropTypes.number,
+    tooltipHidden: PropTypes.bool,
+    valueFormatter: PropTypes.func,
+  }),
 } as any;
 
 export { SparkLineChart };
