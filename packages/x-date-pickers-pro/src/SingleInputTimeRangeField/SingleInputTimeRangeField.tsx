@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useClearField } from '@mui/x-date-pickers/internals/hooks/useClearField';
+import { useClearableField } from '@mui/x-date-pickers/internals';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
@@ -56,7 +56,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     inputRef: externalInputRef,
   });
 
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearField<
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
     SingleInputTimeRangeFieldSlotsComponent,

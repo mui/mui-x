@@ -24,7 +24,7 @@ import {
   DateFieldSlotsComponent,
   DateFieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/DateField';
-import { useClearField } from '@mui/x-date-pickers/internals';
+import { useClearableField } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
   DateRange,
@@ -117,8 +117,8 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
     const {
       onClear,
       clearable,
-      slots: rangeSlots,
-      slotProps: rangeSlotProps,
+      slots: inSlots,
+      slotProps: inSlotProps,
       ...fieldProps
     } = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>({
       props: textFieldProps,
@@ -126,7 +126,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
     });
 
     const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-      useClearField<
+      useClearableField<
         {},
         typeof textFieldProps.InputProps,
         DateFieldSlotsComponent,
@@ -143,8 +143,8 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
             </IconButton>
           ),
         },
-        slots: rangeSlots as any,
-        slotProps: rangeSlotProps as any,
+        slots: inSlots as any,
+        slotProps: inSlotProps as any,
       });
 
     return (
@@ -292,7 +292,7 @@ function BrowserDateField(props: BrowserDateFieldProps) {
     inputRef: externalInputRef,
   });
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearField<
+    useClearableField<
       {},
       typeof textFieldProps.InputProps,
       DateFieldSlotsComponent,

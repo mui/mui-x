@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
+import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
 import { DateValidationError, FieldSection } from '../models';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
@@ -12,10 +13,6 @@ import {
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
-import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '../internals/hooks/useField/useField.types';
 
 export interface UseDateFieldParams<TDate, TChildProps extends {}> {
   props: UseDateFieldComponentProps<TDate, TChildProps>;

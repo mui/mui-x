@@ -52,7 +52,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       typeof themeProps,
       keyof Omit<
         UseDateTimeRangeFieldProps<any>,
-        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear' | 'inputHasFocus'
+        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
       >
     >(themeProps, 'date-time');
 

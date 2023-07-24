@@ -7,10 +7,7 @@ import { BaseTimeValidationProps, TimeValidationProps } from '../internals/model
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { FieldSection, TimeValidationError } from '../models';
-import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '../internals/hooks/useField/useField.types';
+import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseTimeFieldComponentProps<TDate, TChildProps>;

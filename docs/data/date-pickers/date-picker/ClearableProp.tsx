@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -31,25 +31,23 @@ export default function ClearableProp() {
           position: 'relative',
         }}
       >
-        <DemoContainer components={['DateField']}>
-          <DemoItem label="DatePicker">
-            <DatePicker
-              sx={{ width: '300px' }}
-              slotProps={{
-                field: { clearable: true, onClear: () => setCleared(true) },
-              }}
-            />
-          </DemoItem>
+        <DemoItem label="DatePicker">
+          <DatePicker
+            sx={{ width: '300px' }}
+            slotProps={{
+              field: { clearable: true, onClear: () => setCleared(true) },
+            }}
+          />
+        </DemoItem>
 
-          {cleared && (
-            <Alert
-              sx={{ position: 'absolute', bottom: 0, right: 0 }}
-              severity="success"
-            >
-              Field cleared!
-            </Alert>
-          )}
-        </DemoContainer>
+        {cleared && (
+          <Alert
+            sx={{ position: 'absolute', bottom: 0, right: 0 }}
+            severity="success"
+          >
+            Field cleared!
+          </Alert>
+        )}
       </Box>
     </LocalizationProvider>
   );

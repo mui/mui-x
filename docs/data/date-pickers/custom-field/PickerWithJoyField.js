@@ -28,7 +28,7 @@ import { unstable_useSingleInputDateRangeField as useSingleInputDateRangeField }
 import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
-import { useClearField } from '@mui/x-date-pickers/internals';
+import { useClearableField } from '@mui/x-date-pickers/internals';
 
 const joyTheme = extendJoyTheme();
 
@@ -43,7 +43,6 @@ const JoyField = React.forwardRef((props, inputRef) => {
     startDecorator,
     ...other
   } = props;
-  console.log('props', props);
 
   return (
     <FormControl
@@ -101,7 +100,7 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   });
 
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearField({
+    useClearableField({
       onClear,
       clearable,
       fieldProps,
@@ -256,7 +255,7 @@ function JoyDateField(props) {
     inputRef: externalInputRef,
   });
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearField({
+    useClearableField({
       onClear,
       clearable,
       fieldProps,

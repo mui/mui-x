@@ -8,6 +8,8 @@ export type {
   FieldChangeHandler,
   FieldChangeHandlerContext,
   FieldRef,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
 } from './useField.types';
 export {
   splitFormatIntoSections,

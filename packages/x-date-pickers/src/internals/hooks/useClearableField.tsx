@@ -7,19 +7,8 @@ import { ClearIcon } from '../../icons';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useField.types';
 import { FieldsTextFieldProps } from '../models';
 
-const excludeClearableProps = <TProps extends {}>(props: TProps, excludedProps: string[]): TProps =>
-  Object.keys(props || {}).reduce((prev, key) => {
-    if (!excludedProps.includes(key)) {
-      return {
-        ...prev,
-        [key as keyof TProps]: props[key as keyof TProps],
-      };
-    }
-    return prev;
-  }, {}) as TProps;
-
 type UseClearFieldProps<
-  TFieldProps extends FieldsTextFieldProps & { inputHasFocus?: boolean },
+  TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlots extends FieldSlotsComponents,
   TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
@@ -32,10 +21,8 @@ type UseClearFieldProps<
   slotProps?: TFieldSlotsComponentsProps;
 };
 
-export const useClearField = <
-  TFieldProps extends FieldsTextFieldProps & {
-    inputHasFocus?: boolean;
-  },
+export const useClearableField = <
+  TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlotsComponents extends FieldSlotsComponents,
   TFieldSlotsComponentsProps extends FieldSlotsComponentsProps,
@@ -74,21 +61,21 @@ export const useClearField = <
   };
 
   const fieldProps = {
-    ...excludeClearableProps<TFieldProps | {}>(forwardedFieldProps, ['inputHasFocus']),
+    ...forwardedFieldProps,
     sx: {
       '& .clearButton': {
         visibility: 'visible',
       },
       '@media (pointer: fine)': {
         '& .clearButton': {
-          visibility: forwardedFieldProps?.inputHasFocus ? 'visible' : 'hidden',
+          visibility: 'hidden',
         },
-
-        '&:hover .clearButton': {
-          visibility: 'visible',
+        '&:hover, &:focus-within': {
+          '.clearButton': {
+            visibility: 'visible',
+          },
         },
       },
-      ...forwardedFieldProps?.sx,
     } as SxProps,
   } as TFieldProps;
 

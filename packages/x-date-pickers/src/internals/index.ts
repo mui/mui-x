@@ -66,6 +66,8 @@ export type {
   FieldValueManager,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
@@ -93,7 +95,7 @@ export {
   useLocaleText,
   useNow,
 } from './hooks/useUtils';
-export { useClearField } from './hooks/useClearField';
+export { useClearableField } from './hooks/useClearableField';
 export type { ExportedUseViewsOptions } from './hooks/useViews';
 export { useValidation } from './hooks/useValidation';
 export type { ValidationProps, Validator, InferError } from './hooks/useValidation';

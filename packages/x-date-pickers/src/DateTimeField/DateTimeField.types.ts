@@ -15,10 +15,7 @@ import {
 } from '../internals/models/validation';
 import { FieldsTextFieldProps } from '../internals/models/fields';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import {
-  FieldSlotsComponents,
-  FieldSlotsComponentsProps,
-} from '../internals/hooks/useField/useField.types';
+import { FieldSlotsComponents, FieldSlotsComponentsProps } from '../internals';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;

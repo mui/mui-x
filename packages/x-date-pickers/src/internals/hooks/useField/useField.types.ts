@@ -388,8 +388,7 @@ export type SectionOrdering = {
 export interface FieldSlotsComponents {
   /**
    * Icon to display inside the clear button.
-   * Receives the same props as `@mui/icons-material/Clear`.
-   * @default Clear from '@mui/icons-material'
+   * @default ClearIcon
    */
   ClearIcon?: React.ElementType;
 }

@@ -39,7 +39,7 @@ import {
   DateFieldSlotsComponent,
   DateFieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/DateField';
-import { useClearField } from '@mui/x-date-pickers/internals';
+import { useClearableField } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
   DateRange,
@@ -154,7 +154,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
     });
 
     const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-      useClearField<
+      useClearableField<
         {},
         typeof textFieldProps.InputProps,
         DateFieldSlotsComponent,
@@ -345,7 +345,7 @@ function JoyDateField(props: JoyDateFieldProps) {
     inputRef: externalInputRef,
   });
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
-    useClearField<
+    useClearableField<
       {},
       typeof textFieldProps.InputProps,
       DateFieldSlotsComponent,

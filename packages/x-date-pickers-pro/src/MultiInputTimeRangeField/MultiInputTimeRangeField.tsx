@@ -52,7 +52,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       typeof themeProps,
       keyof Omit<
         UseTimeRangeFieldProps<any>,
-        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear' | 'inputHasFocus'
+        'unstableFieldRef' | 'disabled' | 'clearable' | 'onClear'
       >
     >(themeProps, 'time');
 

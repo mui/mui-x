@@ -28,7 +28,6 @@ import {
   UseDateRangeFieldProps,
 } from '../models';
 import { UseRangePositionResponse } from './useRangePosition';
-import { excludeClearableProps } from './useMultiInputRangeField/shared';
 
 export interface RangePickerFieldSlotsComponent {
   Field: React.ElementType;
@@ -58,10 +57,7 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
     >,
     {},
     UsePickerProps<DateRange<TDate>, any, RangeFieldSection, any, any, any>
-  > & {
-    clearable?: boolean;
-    onClear?: React.MouseEventHandler<HTMLButtonElement>;
-  };
+  > & {};
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
 
@@ -230,12 +226,10 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   };
 
   /* TODO: remove this when a clearable behavior for multiple input range fields is implemented */
-  const unclearableFieldProps = excludeClearableProps<
-    BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, TError>
-  >(fieldProps, ['clearable', 'onClear', 'inputHasFocus']);
+  const { clearable, onClear, ...restFieldProps } = fieldProps;
 
   const enrichedFieldProps: ReturnType = {
-    ...unclearableFieldProps,
+    ...restFieldProps,
     slots,
     slotProps,
   };

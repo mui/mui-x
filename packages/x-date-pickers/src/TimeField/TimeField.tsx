@@ -9,7 +9,7 @@ import {
   TimeFieldSlotsComponentsProps,
 } from './TimeField.types';
 import { useTimeField } from './useTimeField';
-import { useClearField } from '../internals/hooks/useClearField';
+import { useClearableField } from '../internals/hooks/useClearableField';
 
 type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -55,7 +55,7 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     inputRef: externalInputRef,
   });
 
-  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearField<
+  const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } = useClearableField<
     typeof fieldProps,
     typeof fieldProps.InputProps,
     TimeFieldSlotsComponent,

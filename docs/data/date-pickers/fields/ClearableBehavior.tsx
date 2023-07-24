@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
@@ -33,17 +33,15 @@ export default function ClearableBehavior() {
           position: 'relative',
         }}
       >
-        <DemoContainer components={['DateField']}>
-          <DemoItem label="DateField">
-            <DateField
-              sx={{ width: '300px' }}
-              value={value}
-              onChange={(newValue) => setValue(newValue)}
-              onClear={() => setCleared(true)}
-              clearable
-            />
-          </DemoItem>
-        </DemoContainer>
+        <DemoItem label="DateField">
+          <DateField
+            sx={{ width: '300px' }}
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            onClear={() => setCleared(true)}
+            clearable
+          />
+        </DemoItem>
         {cleared && !value && (
           <Alert
             sx={{ position: 'absolute', bottom: 0, right: 0 }}

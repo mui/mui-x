@@ -536,6 +536,5 @@ export const useField = <
     error: inputError,
     ref: handleRef,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly),
-    inputHasFocus,
   };
 };

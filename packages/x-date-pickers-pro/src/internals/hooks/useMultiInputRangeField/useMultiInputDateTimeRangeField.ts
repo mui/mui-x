@@ -30,7 +30,7 @@ import {
 } from '../../utils/validation/validateDateTimeRange';
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
-import { excludeClearableProps } from './shared';
+import { excludeProps } from './shared';
 
 export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseMultiInputDateTimeRangeFieldProps<TDate>,
@@ -175,15 +175,13 @@ export const useMultiInputDateTimeRangeField = <TDate, TTextFieldSlotProps exten
 
   /* TODO: Undo this change when a clearable behavior for multiple input range fields is implemented */
   return {
-    startDate: excludeClearableProps<UseFieldResponse<TTextFieldSlotProps>>(startDateResponse, [
+    startDate: excludeProps<UseFieldResponse<TTextFieldSlotProps>>(startDateResponse, [
       'clearable',
       'onClear',
-      'inputHasFocus',
     ]),
-    endDate: excludeClearableProps<UseFieldResponse<TTextFieldSlotProps>>(endDateResponse, [
+    endDate: excludeProps<UseFieldResponse<TTextFieldSlotProps>>(endDateResponse, [
       'clearable',
       'onClear',
-      'inputHasFocus',
     ]),
   };
 };
