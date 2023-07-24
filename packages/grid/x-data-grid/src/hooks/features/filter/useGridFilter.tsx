@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { defaultMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -7,6 +8,7 @@ import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId } from '../../../models/gridRows';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { useLazyRef } from '../../utils/useLazyRef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -62,6 +64,10 @@ function getVisibleRowsLookupState(
     tree: state.rows.tree,
     filteredRowsLookup: state.filter.filteredRowsLookup,
   });
+}
+
+function createMemoizedValues() {
+  return defaultMemoize(Object.values);
 }
 
 /**
@@ -389,9 +395,8 @@ export const useGridFilter = (
     [props.slots.filterPanel, props.slotProps?.filterPanel],
   );
 
-  const dataRowIdToIdLookup = apiRef.current.state.rows.dataRowIdToModelLookup;
-  const rows = React.useMemo(() => Object.values(dataRowIdToIdLookup), [dataRowIdToIdLookup]);
   const { getRowId } = props;
+  const getRowsRef = useLazyRef(createMemoizedValues);
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
@@ -412,6 +417,7 @@ export const useGridFilter = (
         passingQuickFilterValues: null,
       };
 
+      const rows = getRowsRef.current(apiRef.current.state.rows.dataRowIdToModelLookup);
       for (let i = 0; i < rows.length; i += 1) {
         const row = rows[i];
         const id = getRowId ? getRowId(row) : row.id;
@@ -440,7 +446,7 @@ export const useGridFilter = (
         filteredDescendantCountLookup: {},
       };
     },
-    [apiRef, rows, props.filterMode, getRowId],
+    [apiRef, props.filterMode, getRowId, getRowsRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
