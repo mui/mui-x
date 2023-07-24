@@ -15,7 +15,7 @@ import {
 import { ChartsColorPalette, blueberryTwilightPalette } from '../colorPalettes';
 
 export type SeriesContextProviderProps = {
-  dataset?: DatasetType<number>;
+  dataset?: DatasetType;
   series: AllSeriesType[];
   /**
    * Color palette used to colorize multiple series.
@@ -90,7 +90,7 @@ export function SeriesContextProvider({
       formatSeries(
         series,
         typeof colors === 'function' ? colors(theme.palette.mode) : colors,
-        dataset,
+        dataset as DatasetType<number>,
       ),
     [series, colors, theme.palette.mode, dataset],
   );
