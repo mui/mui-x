@@ -100,7 +100,7 @@ SingleInputDateTimeRangeField.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * If `true`, the field will be cleared when the user clicks on the clear button.
+   * If `true`, a clear button will be shown in the field allowing value clearing.
    * @default false
    */
   clearable: PropTypes.bool,
@@ -265,7 +265,7 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * Event fired when the clear button is clicked.
+   * Callback fired when the clear button is clicked.
    */
   onClear: PropTypes.func,
   /**
