@@ -33,6 +33,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     height,
     margin,
     colors,
+    dataset,
     sx,
     tooltip,
     axisHighlight,
@@ -60,7 +61,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'band',
             data: Array.from(
-              { length: Math.max(...series.map((s) => s.data.length)) },
+              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
               (_, index) => index,
             ),
           },
@@ -68,6 +69,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       }
       yAxis={yAxis}
       colors={colors}
+      dataset={dataset}
       sx={sx}
       disableAxisListener={
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
@@ -127,6 +129,7 @@ BarChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  dataset: PropTypes.any,
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -197,7 +200,8 @@ BarChart.propTypes = {
   series: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      data: PropTypes.arrayOf(PropTypes.number),
+      dataKey: PropTypes.string,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
