@@ -142,6 +142,10 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   min?: number;
   max?: number;
   data?: V[];
+  /**
+   * The key used to retrive data from the dataset prop.
+   */
+  dataKey?: string;
   valueFormatter?: (value: V) => string;
 } & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &

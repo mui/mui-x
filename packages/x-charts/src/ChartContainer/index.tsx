@@ -44,11 +44,11 @@ export const ChartContainer = React.forwardRef(function ChartContainer(
   } = props;
   const svgRef = React.useRef<SVGSVGElement>(null);
   const handleRef = useForkRef(ref, svgRef);
-  
+
   return (
     <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
       <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
-        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
+        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
           <InteractionProvider>
             <HighlightProvider>
               <ChartsSurface
