@@ -16,6 +16,8 @@ Don't hesitate to leave a comment on the same issue to influence what gets built
 
 Pivoting will allow you to take a columns values and turn them into columns.
 
+{{"demo": "GridPivotingBasic.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
