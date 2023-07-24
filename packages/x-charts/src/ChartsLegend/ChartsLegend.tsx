@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
@@ -182,7 +183,7 @@ const defaultProps = {
 } as const;
 
 export interface LegendRendererProps
-  extends Omit<DefaultizedChartsLegendProps, 'hidden' | 'slots' | 'slotProps'> {
+  extends Omit<DefaultizedChartsLegendProps, 'slots' | 'slotProps'> {
   series: FormattedSeries;
   seriesToDisplay: LegendParams[];
   drawingArea: DrawingArea;
@@ -190,7 +191,12 @@ export interface LegendRendererProps
 }
 
 function DefaultChartsLegend(props: LegendRendererProps) {
-  const { position, direction, offset, series, seriesToDisplay, drawingArea, classes } = props;
+  const { hidden, position, direction, offset, series, seriesToDisplay, drawingArea, classes } =
+    props;
+
+  if (hidden) {
+    return null;
+  }
   return (
     <ChartsLegendRoot
       ownerState={{
@@ -230,23 +236,24 @@ export function ChartsLegend(inProps: ChartsLegendProps) {
   const drawingArea = React.useContext(DrawingContext);
   const series = React.useContext(SeriesContext);
 
-  if (hidden) {
-    return null;
-  }
-
   const seriesToDisplay = getSeriesToDisplay(series);
 
   const ChartLegendRender = slots?.legend ?? DefaultChartsLegend;
-  return (
-    <ChartLegendRender
-      position={position}
-      direction={direction}
-      offset={offset}
-      classes={classes}
-      drawingArea={drawingArea}
-      series={series}
-      seriesToDisplay={seriesToDisplay}
-      {...slotProps?.legend}
-    />
-  );
+  const chartLegendRenderProps = useSlotProps({
+    elementType: ChartLegendRender,
+    externalSlotProps: slotProps?.legend,
+    additionalProps: {
+      position,
+      direction,
+      offset,
+      classes,
+      drawingArea,
+      series,
+      hidden,
+      seriesToDisplay,
+    },
+    ownerState: {},
+  });
+
+  return <ChartLegendRender {...chartLegendRenderProps} />;
 }
