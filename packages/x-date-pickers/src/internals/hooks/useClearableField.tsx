@@ -52,7 +52,7 @@ export const useClearableField = <
     endAdornment: clearable ? (
       <React.Fragment>
         <InputAdornment position="end">
-          <IconButton className="clearButton" onClick={onClear} tabIndex={-1}>
+          <IconButton className="clearButton" onClick={onClear}>
             <EndClearIcon fontSize="small" {...endClearIconProps} />
           </IconButton>
         </InputAdornment>
