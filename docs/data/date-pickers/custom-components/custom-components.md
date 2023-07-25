@@ -233,7 +233,7 @@ You can pass custom components—to replace the icons, for example—as shown be
 
 ## Popper
 
-You can customize the popper that wraps the picker views the same way you would customize the [MUI Popper](/material-ui/react-popper/)
+You can customize the popper that wraps the picker views the same way you would customize the [Material UI Popper](/material-ui/react-popper/)
 
 :::info
 When the picker views have different heights, there might be a layout shift if there is not enought space in the viewport for one of the views **below** the input field.
