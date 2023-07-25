@@ -60,7 +60,7 @@ const getAxisId = (
   return propsValue;
 };
 
-const fusionProps = (
+const mergeProps = (
   axisConfig: undefined | null | string | ChartsXAxisProps | ChartsYAxisProps,
   slots?: Partial<ChartsAxisSlotsComponent>,
   slotProps?: Partial<ChartsAxisSlotComponentProps>,
@@ -98,10 +98,10 @@ function ChartsAxis(props: ChartsAxisProps) {
   if (bottomId !== null && !xAxis[bottomId]) {
     throw Error(`MUI: id used for bottom axis "${bottomId}" is not defined`);
   }
-  const topAxisProps = fusionProps(topAxis, slots, slotProps);
-  const bottomAxisProps = fusionProps(bottomAxis, slots, slotProps);
-  const leftAxisProps = fusionProps(leftAxis, slots, slotProps);
-  const rightAxisProps = fusionProps(rightAxis, slots, slotProps);
+  const topAxisProps = mergeProps(topAxis, slots, slotProps);
+  const bottomAxisProps = mergeProps(bottomAxis, slots, slotProps);
+  const leftAxisProps = mergeProps(leftAxis, slots, slotProps);
+  const rightAxisProps = mergeProps(rightAxis, slots, slotProps);
 
   return (
     <React.Fragment>
