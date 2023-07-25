@@ -1,12 +1,35 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { line as d3Line } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { LineElement } from './LineElement';
+import { LineElement, LineElementProps } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function LinePlot() {
+export interface LinePlotSlotsComponent {
+  line?: React.JSXElementConstructor<LineElementProps>;
+}
+
+export interface LinePlotSlotComponentProps {
+  line?: Partial<LineElementProps>;
+}
+
+export interface LinePlotProps {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: LinePlotSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: LinePlotSlotComponentProps;
+}
+
+function LinePlot(props: LinePlotProps) {
+  const { slots, slotProps } = props;
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -17,6 +40,8 @@ export function LinePlot() {
   const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
+
+  const Line = slots?.line ?? LineElement;
 
   return (
     <g>
@@ -49,12 +74,13 @@ export function LinePlot() {
           const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
           return (
-            <LineElement
+            <Line
               key={seriesId}
               id={seriesId}
               d={linePath.curve(curve)(d3Data) || undefined}
               color={series[seriesId].color}
               highlightScope={series[seriesId].highlightScope}
+              {...slotProps?.line}
             />
           );
         });
@@ -62,3 +88,22 @@ export function LinePlot() {
     </g>
   );
 }
+
+LinePlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { LinePlot };

@@ -1,29 +1,58 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { AreaPlot } from './AreaPlot';
-import { LinePlot } from './LinePlot';
+import { AreaPlot, AreaPlotSlotComponentProps, AreaPlotSlotsComponent } from './AreaPlot';
+import { LinePlot, LinePlotSlotComponentProps, LinePlotSlotsComponent } from './LinePlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { MarkPlot } from './MarkPlot';
+import { MarkPlot, MarkPlotSlotComponentProps, MarkPlotSlotsComponent } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotComponentProps,
+  ChartsLegendSlotsComponent,
+} from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
+import { ChartsAxisSlotComponentProps, ChartsAxisSlotsComponent } from '../models/axis';
+
+export interface LineChartSlotsComponent
+  extends ChartsAxisSlotsComponent,
+    AreaPlotSlotsComponent,
+    LinePlotSlotsComponent,
+    MarkPlotSlotsComponent,
+    ChartsLegendSlotsComponent {}
+export interface LineChartSlotComponentProps
+  extends ChartsAxisSlotComponentProps,
+    AreaPlotSlotComponentProps,
+    LinePlotSlotComponentProps,
+    MarkPlotSlotComponentProps,
+    ChartsLegendSlotComponentProps {}
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    ChartsAxisProps {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: LineChartSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: LineChartSlotComponentProps;
 }
 const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
   const {
@@ -43,6 +72,8 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     rightAxis,
     bottomAxis,
     children,
+    slots,
+    slotProps,
   } = props;
 
   const id = useId();
@@ -75,17 +106,19 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot />
-        <LinePlot />
+        <AreaPlot slots={slots} slotProps={slotProps} />
+        <LinePlot slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
         leftAxis={leftAxis}
         rightAxis={rightAxis}
         bottomAxis={bottomAxis}
+        slots={slots}
+        slotProps={slotProps}
       />
-      <MarkPlot />
-      <ChartsLegend {...legend} />
+      <MarkPlot slots={slots} slotProps={slotProps} />
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />

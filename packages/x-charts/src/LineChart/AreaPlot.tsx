@@ -1,12 +1,36 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { area as d3Area } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { AreaElement } from './AreaElement';
+import { AreaElement, AreaElementProps } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function AreaPlot() {
+export interface AreaPlotSlotsComponent {
+  area?: React.JSXElementConstructor<AreaElementProps>;
+}
+
+export interface AreaPlotSlotComponentProps {
+  area?: Partial<AreaElementProps>;
+}
+
+export interface AreaPlotProps {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: AreaPlotSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: AreaPlotSlotComponentProps;
+}
+
+function AreaPlot(props: AreaPlotProps) {
+  const { slots, slotProps } = props;
+
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -17,6 +41,8 @@ export function AreaPlot() {
   const { xAxis, yAxis, xAxisIds, yAxisIds } = axisData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
+
+  const Area = slots?.area ?? AreaElement;
 
   return (
     <g>
@@ -51,12 +77,13 @@ export function AreaPlot() {
 
           return (
             !!series[seriesId].area && (
-              <AreaElement
+              <Area
                 key={seriesId}
                 id={seriesId}
                 d={areaPath.curve(curve)(d3Data) || undefined}
                 color={series[seriesId].color}
                 highlightScope={series[seriesId].highlightScope}
+                {...slotProps?.area}
               />
             )
           );
@@ -65,3 +92,22 @@ export function AreaPlot() {
     </g>
   );
 }
+
+AreaPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { AreaPlot };
