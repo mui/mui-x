@@ -117,7 +117,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
           id: DEFAULT_X_AXIS_KEY,
           scaleType: plotType === 'bar' ? 'band' : 'linear',
           data: Array.from({ length: data.length }, (_, index) => index),
-          tooltipHidden: xAxis === undefined,
+          hideTooltip: xAxis === undefined,
           ...xAxis,
         },
       ]}
@@ -181,7 +181,7 @@ SparkLineChart.propTypes = {
     'stepBefore',
   ]),
   /**
-   * Data to plot
+   * Data to plot.
    */
   data: PropTypes.arrayOf(PropTypes.number).isRequired,
   desc: PropTypes.string,
@@ -206,7 +206,7 @@ SparkLineChart.propTypes = {
    */
   showHighlight: PropTypes.bool,
   /**
-   * Set to `true` to enable the tooltip in the sparkline
+   * Set to `true` to enable the tooltip in the sparkline.
    * @default false
    */
   showTooltip: PropTypes.bool,
@@ -246,6 +246,7 @@ SparkLineChart.propTypes = {
     disableLine: PropTypes.bool,
     disableTicks: PropTypes.bool,
     fill: PropTypes.string,
+    hideTooltip: PropTypes.bool,
     id: PropTypes.string,
     label: PropTypes.string,
     labelFontSize: PropTypes.number,
@@ -259,7 +260,6 @@ SparkLineChart.propTypes = {
     tickFontSize: PropTypes.number,
     tickSize: PropTypes.number,
     tickSpacing: PropTypes.number,
-    tooltipHidden: PropTypes.bool,
     valueFormatter: PropTypes.func,
   }),
 } as any;

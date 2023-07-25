@@ -69,13 +69,13 @@ Here is a demo with:
 
 ### Hiding values
 
-You can hide the axis value with `tooltipHidden` in the `xAxis` props.
+You can hide the axis value with `hideTooltip` in the `xAxis` props.
 It will remove the header showing the x-axis value from the tooltip.
 
 ```jsx
 <LineChart
   // ...
-  xAxis={[{ data: [ ... ], tooltipHidden: true }]}
+  xAxis={[{ data: [ ... ], hideTooltip: true }]}
 />
 ```
 

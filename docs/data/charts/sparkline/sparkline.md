@@ -33,7 +33,7 @@ If you need more advanced customization, you can provide custom props for `toolt
 
 ## Axis management
 
-By default, the sparkline assigns `xAxis` values as an ascending integer sequence starting from 0 (0, 1, 2,...).  These values are, in this case, hidden in the tooltip.
+By default, the sparkline assigns `xAxis` values as an ascending integer sequence starting from 0 (0, 1, 2,...). These values are, in this case, hidden in the tooltip.
 You can override this behavior if your data are not evenly distributed, or if you need to label them.
 
 To do so, use the `xAxis` prop.
