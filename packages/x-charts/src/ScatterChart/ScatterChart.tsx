@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ScatterPlot } from './ScatterPlot';
+import {
+  ScatterPlot,
+  ScatterPlotSlotComponentProps,
+  ScatterPlotSlotsComponent,
+} from './ScatterPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -9,16 +13,41 @@ import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { MakeOptional } from '../models/helpers';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotComponentProps,
+  ChartsLegendSlotsComponent,
+} from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+
+export interface ScatterChartSlotsComponent
+  extends ChartsAxisSlotsComponent,
+    ScatterPlotSlotsComponent,
+    ChartsLegendSlotsComponent {}
+export interface ScatterChartSlotComponentProps
+  extends ChartsAxisSlotComponentProps,
+    ScatterPlotSlotComponentProps,
+    ChartsLegendSlotComponentProps {}
 
 export interface ScatterChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    ChartsAxisProps {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<ScatterSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ScatterChartSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ScatterChartSlotComponentProps;
 }
 
 const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartProps, ref) {
@@ -39,8 +68,9 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
     rightAxis,
     bottomAxis,
     children,
+    slots,
+    slotProps,
   } = props;
-
   return (
     <ResponsiveChartContainer
       ref={ref}
@@ -58,9 +88,11 @@ const ScatterChart = React.forwardRef(function ScatterChart(props: ScatterChartP
         leftAxis={leftAxis}
         rightAxis={rightAxis}
         bottomAxis={bottomAxis}
+        slots={slots}
+        slotProps={slotProps}
       />
-      <ScatterPlot />
-      <ChartsLegend {...legend} />
+      <ScatterPlot slots={slots} slotProps={slotProps} />
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight x="none" y="none" {...axisHighlight} />
       <ChartsTooltip trigger="item" {...tooltip} />
       {children}
