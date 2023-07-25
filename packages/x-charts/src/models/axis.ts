@@ -144,7 +144,7 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   data?: V[];
   valueFormatter?: (value: V) => string;
   /**
-   * Set to `true` the done show this value in tooltip
+   * If `true`, hide this value in the tooltip
    */
   tooltipHidden?: boolean;
 } & Partial<ChartsXAxisProps | ChartsYAxisProps> &

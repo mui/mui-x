@@ -36,7 +36,7 @@ export interface SparkLineChartProps
    */
   plotType?: 'line' | 'bar';
   /**
-   * Data to plot
+   * Data to plot.
    */
   data: number[];
   /**
@@ -46,7 +46,7 @@ export interface SparkLineChartProps
    */
   valueFormatter?: (value: number) => string;
   /**
-   * Set to `true` to enable the tooltip in the sparkline
+   * Set to `true` to enable the tooltip in the sparkline.
    * @default false
    */
   showTooltip?: boolean;

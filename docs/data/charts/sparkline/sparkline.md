@@ -9,15 +9,15 @@ title: Charts - Sparkline
 ## Basics
 
 A sparkline is a small chart drawn without axes or coordinates, that presents the general shape of a variation in a simplified way.
-The `<SparklineCharts />` requires only the `data` props which is an array of numbers.
+The `<SparklineChart />` requires only the `data` props which is an array of numbers.
 You can also switch from line to a bar plot with `plotType="bar"`.
 
 {{"demo": "BasicSparkLine.js"}}
 
 ## Line customization
 
-You can fill the area below the sparkline curve with `area` props.
-To modify the curve interpolation, use the `curve` props. Read the full documentation for curves in the [line charts page](/x/react-charts/lines/#interpolation).
+You can fill the area below the sparkline curve with the `area` prop.
+To modify the curve interpolation, use the `curve` prop. Read the full documentation for curves in the [line charts page](/x/react-charts/lines/#interpolation).
 
 {{"demo": "AreaSparkLine.js"}}
 
