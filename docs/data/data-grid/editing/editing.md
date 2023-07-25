@@ -333,11 +333,11 @@ Also, removing one field or row ID from the object will not cause the missing ce
 
 Each of the built-in column types provides a component to edit the value of the cells.
 To customize column types, or override the existing components, you can provide a new edit component through the `renderEditCell` property in the column definition.
-This property works like the `renderCell` property, which is rendered while cells are in view mode.
+This property works like the `renderCell` property, with the difference that it is rendered while cells are in edit mode.
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  return <input type="text" value={params.value} onValueChange={...} />;
+  return <input type="text" value={params.value} onChange={...} />;
 }
 
 const columns: GridColDef[] = [
