@@ -24,7 +24,7 @@ const formatter: Formatter<'bar'> = (params, dataset) => {
       throw new Error(
         [
           `MUI: bar series with id='${id}' has no data.`,
-          'Either provide a data property to the series or use dataset props.',
+          'Either provide a data property to the series or use the dataset prop.',
         ].join('\n'),
       );
     }

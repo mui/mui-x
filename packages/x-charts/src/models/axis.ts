@@ -143,7 +143,7 @@ export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   max?: number;
   data?: V[];
   /**
-   * The key used to retrive data from the dataset prop.
+   * The key used to retrieve data from the dataset prop.
    */
   dataKey?: string;
   valueFormatter?: (value: V) => string;
