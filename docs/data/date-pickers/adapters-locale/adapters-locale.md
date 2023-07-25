@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Localized dates
+productId: x-date-pickers
+title: Date and Time Pickers - Date localization
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Localized dates
+# Date localization
 
 <p class="description">Date and Time Pickers support formats from different locales.</p>
 
@@ -250,74 +250,3 @@ This prop is available on all components that render a day calendar, including t
 The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
-
-## Use UTC dates
-
-### With dayjs
-
-To use UTC dates with `dayjs`, you have to:
-
-1. Extend `dayjs` with its `utc` plugin:
-
-   ```tsx
-   import dayjs from 'dayjs';
-   import utc from 'dayjs/plugin/utc';
-
-   dayjs.extend(utc);
-   ```
-
-2. Pass `dayjs.utc` to `LocalizationProvider` `dateLibInstance` prop:
-
-   ```tsx
-   <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
-     {children}
-   </LocalizationProvider>
-   ```
-
-3. Always pass dates created with `dayjs.utc`:
-
-   ```tsx
-   <DateTimePicker
-     // ✅ Valid props
-     value={dayjs.utc()}
-     minDate={dayjs.utc().startOf('month')}
-     // ❌ Invalid props
-     value={dayjs()}
-     minDate={dayjs().startOf('month')}
-   />
-   ```
-
-{{"demo": "UTCDayjs.js", "defaultCodeOpen": false}}
-
-### With moment
-
-To use UTC dates with `moment`, you have to:
-
-1. Pass `moment.utc` to `LocalizationProvider` `dateLibInstance` prop:
-
-   ```tsx
-   <LocalizationProvider dateAdapter={AdapterMoment} dateLibInstance={moment.utc}>
-     {children}
-   </LocalizationProvider>
-   ```
-
-2. Always pass dates created with `moment.utc`:
-
-   ```tsx
-   <DateTimePicker
-     // ✅ Valid props
-     value={moment.utc()}
-     minDate={moment.utc().startOf('month')}
-     // ❌ Invalid props
-     value={moment()}
-     minDate={moment().startOf('month')}
-   />
-   ```
-
-{{"demo": "UTCMoment.js", "defaultCodeOpen": false}}
-
-### Other libraries
-
-UTC support is an ongoing topic.
-
-We will update the documentation with examples using other date libraries once the support for them will be sufficient.

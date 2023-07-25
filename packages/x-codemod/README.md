@@ -38,7 +38,7 @@ Examples:
 
 To pass more options directly to jscodeshift, use `--jscodeshift=...`. For example:
 
-```sh
+```bash
 // single option
 npx @mui/x-codemod --jscodeshift=--run-in-band
 // multiple options
@@ -52,7 +52,7 @@ See all available options [here](https://github.com/facebook/jscodeshift#usage-c
 Options to [recast](https://github.com/benjamn/recast)'s printer can be provided
 through jscodeshift's `printOptions` command line argument
 
-```sh
+```bash
 npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
@@ -64,7 +64,7 @@ npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":
 
 A combination of all important transformers for migrating v5 to v6. ⚠️ This codemod should be run only once. It runs codemods for both Data Grid and Date and Time Pickers packages. To run codemods for a specific package, refer to the respective section.
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
 ```
 
@@ -79,7 +79,7 @@ The corresponding sub-sections are listed below
 
 The `preset-safe` codemods for pickers.
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/preset-safe <path|folder>
 ```
 
@@ -164,7 +164,7 @@ Renames the `locale` prop of the `LocalizationProvider` component into `adapterL
 
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/localization-provider-rename-locale <path>
 ```
 
@@ -181,7 +181,7 @@ Replace props used for localization such as `cancelText` to their corresponding 
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/text-props-to-localeText <path>
 ```
 
@@ -222,7 +222,7 @@ Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` prop
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
 ```
 
@@ -248,7 +248,7 @@ Replace props used to customize the `Toolbar` in pickers by slots properties and
 +  localeText={{ toolbarTitle: "Title" }}
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/replace-toolbar-props-by-slot <path>
 ```
 
@@ -298,7 +298,7 @@ Replace customization props by their equivalent `components` and `componentsProp
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/migrate-to-components-componentsProps <path>
 ```
 
@@ -324,7 +324,7 @@ Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
 ```
 
@@ -339,7 +339,7 @@ Replace `shouldDisableTime` by `shouldDisableClock`.
   />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
 ```
 
@@ -354,7 +354,7 @@ Replace `inputFormat` prop with `format`.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/rename-inputFormat-prop <path>
 ```
 
@@ -377,7 +377,7 @@ Rename toolbar related translation keys, removing `Default` part from them to be
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 ```
 
@@ -396,7 +396,7 @@ This change only affects pickers components.
  />;
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 ```
 
@@ -406,7 +406,7 @@ npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
 
 The `preset-safe` codemods for data grid.
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
 ```
 
@@ -441,7 +441,7 @@ Replace column menu items that have been renamed.
  </CustomColumnMenu>
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
 ```
 
@@ -468,7 +468,7 @@ Data grid props that have been renamed.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
 ```
 
@@ -483,7 +483,7 @@ Rename `rowsPerPageOptions` prop to `pageSizeOptions`.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
 ```
 
@@ -497,7 +497,7 @@ Remove `disableExtendRowFullWidth` prop which is no longer supported.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
 ```
 
@@ -552,7 +552,7 @@ Rename `linkOperators` related props to `logicOperators` and rename classes.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/rename-linkOperators-logicOperators <path>
 ```
 
@@ -593,7 +593,7 @@ Rename filter item props to the new values.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/rename-filter-item-props <path>
 ```
 
@@ -632,7 +632,7 @@ Rename selectors and events.
  }
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/rename-selectors-and-events <path>
 ```
 
@@ -657,7 +657,7 @@ Remove feature flags for stabilized `experimentalFeatures`.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
@@ -676,7 +676,7 @@ Replace `onCellFocusOut` prop with `componentsProps.cell.onBlur`.
  />
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 ```
 
@@ -695,7 +695,7 @@ This change only affects data grid components.
  />;
 ```
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 

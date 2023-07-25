@@ -340,7 +340,7 @@ const generateDocReport = async (
         localeName,
         missingKeysCount: infoPerPackage[packageKey].missingKeys.length,
         totalKeysCount: baseTranslationsNumber[packageKey],
-        githubLink: `${nextConfig.env.SOURCE_CODE_ROOT_URL}/${info.path}`,
+        githubLink: `${nextConfig.env.SOURCE_CODE_REPO}/blob/${nextConfig.env.SOURCE_GITHUB_BRANCH}/${info.path}`,
       });
     });
 

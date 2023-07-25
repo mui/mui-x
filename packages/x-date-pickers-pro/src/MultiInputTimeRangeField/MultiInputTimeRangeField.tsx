@@ -11,8 +11,8 @@ import {
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { MultiInputTimeRangeFieldProps } from './MultiInputTimeRangeField.types';
-import { useMultiInputTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
-import { UseTimeRangeFieldProps } from '../internal/models/timeRange';
+import { useMultiInputTimeRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
+import { UseTimeRangeFieldProps } from '../internals/models/timeRange';
 
 const MultiInputTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
@@ -278,7 +278,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * The date used to generate a part of the date-time that is not present in the format when both `value` and `defaultValue` are not present.
+   * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
    * For example, on time fields it will be used to determine the date to set.
    * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
    */
@@ -370,6 +370,14 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**

@@ -8,10 +8,8 @@ const licenseVersion = '2';
 export interface LicenseDetails {
   orderNumber: string;
   expiryDate: Date;
-  // TODO: to be made required once the store is updated
-  scope?: LicenseScope;
-  // TODO: to be made required once the store is updated
-  licensingModel?: LicensingModel;
+  scope: LicenseScope;
+  licensingModel: LicensingModel;
 }
 
 function getClearLicenseString(details: LicenseDetails) {
@@ -20,12 +18,12 @@ function getClearLicenseString(details: LicenseDetails) {
   }
 
   if (details.licensingModel && !LICENSING_MODELS.includes(details.licensingModel)) {
-    throw new Error('MUI: Invalid sales model');
+    throw new Error('MUI: Invalid licensing model');
   }
 
-  return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${
-    details.scope ?? 'pro'
-  },LM=${details.licensingModel ?? 'perpetual'},KV=${licenseVersion}`;
+  return `O=${details.orderNumber},E=${details.expiryDate.getTime()},S=${details.scope},LM=${
+    details.licensingModel
+  },KV=${licenseVersion}`;
 }
 
 export function generateLicense(details: LicenseDetails) {

@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Range Calendar component
 components: DateRangeCalendar
 githubLabel: 'component: DateRangePicker'
@@ -13,6 +13,8 @@ packageName: '@mui/x-date-pickers-pro'
 ## Basic usage
 
 {{"demo": "BasicDateRangeCalendar.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

@@ -1,6 +1,8 @@
 {
   "props": {
     "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
+    "disableAddFilterButton": { "type": { "name": "bool" } },
+    "disableRemoveAllButton": { "type": { "name": "bool" } },
     "filterFormProps": {
       "type": {
         "name": "shape",

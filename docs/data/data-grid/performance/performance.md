@@ -2,43 +2,55 @@
 
 <p class="description">Improve the performance of the DataGrid using the recommendations from this guide.</p>
 
-## Memoize inner components with `React.memo`
+## Extract static objects and memoize root props
 
-The `DataGrid` component is composed of a central state object where all data is stored.
-When an API method is called, a prop changes, or the user interacts with the UI (e.g. filtering a column), this state object is updated with the changes made.
-To reflect the changes in the interface, the component must re-render.
-Since the state behaves like `React.useState`, the `DataGrid` component will re-render its children, including column headers, rows, and cells.
-With smaller datasets, this is not a problem for concern, but it can become a bottleneck if the number of rows increases, especially if many columns render [custom content](/x/react-data-grid/column-definition/#rendering-cells).
-One way to overcome this issue is using `React.memo` to only re-render the child components when their props have changed.
-To start using memoization, import the inner components, then pass their memoized version to the respective slots, as follow:
+The `DataGrid` component uses `React.memo` to optimize its performance, which means itself and its subcomponents only
+re-render when their props change. But it's very easy to cause unnecessary re-renders if the root props of your
+`DataGrid` aren't memoized. Take the example below, the `slots` and `initialState` objects are re-created on every
+render, which means the `DataGrid` itself has no choice but to re-render as well.
 
 ```tsx
-import {
-  GridRow,
-  GridColumnHeaders,
-  DataGrid, // or DataGridPro, DataGridPremium
-} from '@mui/x-data-grid';
-
-const MemoizedRow = React.memo(GridRow);
-const MemoizedColumnHeaders = React.memo(GridColumnHeaders);
-
-<DataGrid
-  slots={{
-    row: MemoizedRow,
-    columnHeaders: MemoizedColumnHeaders,
-  }}
-/>;
+function Component({ rows }) {
+  return (
+    <DataGrid
+      rows={rows}
+      slots={{
+        row: CustomRow,
+      }}
+      cellModesModel={{ [rows[0].id]: { name: { mode: GridCellModes.Edit } } }}
+    />
+  );
+}
 ```
 
-The following demo show this trick in action.
-It also contains additional logic to highlight the components when they re-render.
+An easy way to prevent re-renders is to extract any object that can be a static object, and to memoize any object that
+depends on another object. This applies to any prop that is an object or a function.
 
-{{"demo": "GridWithReactMemo.js", "bg": "inline", "defaultCodeOpen": false}}
+```tsx
+const slots = {
+  row: CustomRow,
+};
 
-:::warning
-We do not ship the components above already wrapped with `React.memo` because if you have rows whose cells display custom content not derived from the received props, e.g. selectors, these cells may display outdated information.
-If you define a column with a custom cell renderer where content comes from a [selector](/x/react-data-grid/state/#catalog-of-selectors) that changes more often than the props passed to `GridRow`, the row component should not be memoized.
-:::
+function Component({ rows }) {
+  const cellModesModel = React.useMemo(
+    () => ({ [rows[0].id]: { name: { mode: GridCellModes.Edit } } }),
+    [rows],
+  );
+
+  return <DataGrid rows={rows} slots={slots} cellModesModel={cellModesModel} />;
+}
+```
+
+## Visualization
+
+The DataGrid memoizes some of its subcomponents to avoid re-rendering more than needed. Below is a visualization that
+shows you which cells re-render in reaction to your interaction with the grid.
+
+{{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Filtering
+
+For filtering performance, see [the filter customization section](/x/react-data-grid/filtering/customization/#optimize-performance).
 
 ## API
 

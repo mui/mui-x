@@ -1,11 +1,11 @@
-# Data Grid - Components
+# Data Grid - Custom subcomponents
 
 <p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
 
 ## Overriding components
 
 As part of the customization API, the Data Grid allows you to override internal components with the `slots` prop.
-The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
+The prop accepts an object of type [`UncapitalizedGridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `slotProps` prop.
 This prop is of type `GridSlotsComponentsProps`.
@@ -184,8 +184,10 @@ For example, for `columnMenu` slot, the interface name would be `ColumnMenuProps
 
 This [file](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
 
-```tsx
-// augment the props for `toolbar` slot
+<codeblock storageKey="pricing-plan">
+
+```tsx Community
+// augment the props for the toolbar slot
 declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
     someCustomString: string;
@@ -195,18 +197,68 @@ declare module '@mui/x-data-grid' {
 
 <DataGrid
   slots={{
-    // custom component passed to the `toolbar` slot
+    // custom component passed to the toolbar slot
     toolbar: CustomGridToolbar,
   }}
   slotProps={{
     toolbar: {
-      // props required by `CustomGridToolbar`
+      // props required by CustomGridToolbar
       someCustomString: 'Hello',
       someCustomNumber: 42,
     },
   }}
 >
 ```
+
+```tsx Pro
+// augment the props for the toolbar slot
+declare module '@mui/x-data-grid-pro' {
+  interface ToolbarPropsOverrides {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<DataGridPro
+  slots={{
+    // custom component passed to the toolbar slot
+    toolbar: CustomGridToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      // props required by CustomGridToolbar
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+>
+```
+
+```tsx Premium
+// augment the props for the toolbar slot
+declare module '@mui/x-data-grid-premium' {
+  interface ToolbarPropsOverrides {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<DataGridPremium
+  slots={{
+    // custom component passed to the toolbar slot
+    toolbar: CustomGridToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      // props required by CustomGridToolbar
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+>
+```
+
+</codeblock>
 
 This demo below shows how to use the `slotProps` prop and module augmentation to pass a new prop `status` to the `footer` slot.
 

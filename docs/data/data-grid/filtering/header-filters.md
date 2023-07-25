@@ -1,4 +1,8 @@
-# Data Grid - Header filters
+---
+title: Data Grid - Header filters
+---
+
+# Data Grid - Header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Quickly accessible per-column filters on grid header.</p>
 
@@ -37,7 +41,7 @@ You can use the `renderHeaderFilter` method of the `GridColDef` to customize the
 const columns: GridColDef[] = [
   {
     field: 'isAdmin',
-    renderHeaderFilter: (params: GridColumnHeaderParams<R, V, F>) => (
+    renderHeaderFilter: (params: GridHeaderFilterCellProps) => (
       <MyCustomHeaderFilter {...params} />
     ),
   },

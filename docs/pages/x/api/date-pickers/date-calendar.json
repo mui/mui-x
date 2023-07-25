@@ -54,6 +54,10 @@
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`."
+    },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
@@ -69,6 +73,10 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "value": { "type": { "name": "any" } },
     "view": {
@@ -89,13 +97,13 @@
     }
   },
   "slots": {
-    "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
-    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "day": { "default": "PickersDay", "type": { "name": "elementType" } },
+    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "switchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "switchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
   },
   "name": "DateCalendar",
   "styles": {

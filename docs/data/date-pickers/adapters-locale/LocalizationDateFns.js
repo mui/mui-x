@@ -25,7 +25,11 @@ export default function LocalizationDateFns() {
           value={locale}
           exclusive
           fullWidth
-          onChange={(event, newLocale) => setLocale(newLocale)}
+          onChange={(event, newLocale) => {
+            if (newLocale != null) {
+              setLocale(newLocale);
+            }
+          }}
         >
           {Object.keys(locales).map((localeItem) => (
             <ToggleButton key={localeItem} value={localeItem}>

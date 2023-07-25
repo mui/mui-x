@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: Date and Time Picker - Base concepts
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
@@ -9,9 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers - Base concepts
 
-<p class="description">The Date and Time pickers expose a lot of components to fit your every need.</p>
-
-{{"component": "modules/components/ComponentLinkHeader.js"}}
+<p class="description">The Date and Time Pickers expose a lot of components to fit your every need.</p>
 
 ## Controlled value
 
@@ -81,7 +79,7 @@ Each _Picker_ is available in a responsive, desktop and mobile variant:
 
 There are many components available, each fitting specific use cases. Use the form below to find the component you need:
 
-{{"demo": "ComponentExplorerNoSnap.tsx", "hideToolbar": true}}
+{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 
 ## Accessibility
 
