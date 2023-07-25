@@ -35,6 +35,9 @@ npm install @mui/material @emotion/react @emotion/styled
 ```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -59,6 +62,10 @@ npm install @mui/styled-engine-sc styled-components
 
 ```bash yarn
 yarn add @mui/styled-engine-sc styled-components
+```
+
+```bash pnpm
+pnpm add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>
