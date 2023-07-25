@@ -91,6 +91,7 @@ export function BarPlot() {
                 dataIndex={dataIndex}
                 x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * (barWidth + offset)}
                 y={yScale(value)}
+                yOrigine={yScale(0)}
                 height={yScale(baseline) - yScale(value)}
                 width={barWidth}
                 color={color}

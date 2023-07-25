@@ -4,6 +4,7 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import { color as d3Color } from 'd3-color';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { useSpring, animated } from '@react-spring/web';
 import {
   getIsFaded,
   getIsHighlighted,
@@ -32,7 +33,7 @@ export function getBarElementUtilityClass(slot: string) {
   return generateUtilityClass('MuiBarElement', slot);
 }
 
-export const lineElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
+export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiBarElement', [
   'root',
 ]);
 
@@ -45,7 +46,7 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-const BarElementPath = styled('rect', {
+const BarElementPath = styled(animated.rect, {
   name: 'MuiBarElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -62,10 +63,25 @@ const BarElementPath = styled('rect', {
 export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     highlightScope?: Partial<HighlightScope>;
+    yOrigine: number;
   };
 
 export function BarElement(props: BarElementProps) {
-  const { id, dataIndex, classes: innerClasses, color, highlightScope, ...other } = props;
+  const {
+    id,
+    dataIndex,
+    classes: innerClasses,
+    color,
+    highlightScope,
+    //
+    yOrigine,
+    x,
+    y,
+    height,
+    width,
+    //
+    ...other
+  } = props;
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
   const { item } = React.useContext(InteractionContext);
@@ -88,9 +104,28 @@ export function BarElement(props: BarElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
+  const spring = useSpring(
+    {
+      from: {
+        x,
+        y: yOrigine,
+        height: 0,
+        width,
+      },
+      to: {
+        x,
+        y,
+        height,
+        width,
+      },
+    },
+    // [width, height, x, y],
+  );
+
   return (
     <BarElementPath
       {...other}
+      {...spring}
       ownerState={ownerState}
       className={classes.root}
       {...getInteractionItemProps({ type: 'bar', seriesId: id, dataIndex })}
