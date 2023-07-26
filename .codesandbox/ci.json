@@ -10,7 +10,8 @@
     "packages/grid/x-data-grid-generator",
     "packages/x-date-pickers",
     "packages/x-date-pickers-pro",
-    "packages/x-charts"
+    "packages/x-charts",
+    "packages/x-tree-view"
   ],
   "publishDirectory": {
     "@mui/x-license-pro": "packages/x-license-pro/build",
