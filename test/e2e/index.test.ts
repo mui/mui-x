@@ -481,10 +481,31 @@ describe('e2e', () => {
       await page.getByRole('gridcell', { name: '11' }).first().click();
       await page.getByRole('gridcell', { name: '17' }).last().click();
 
+      // assert that the tooltip closes after selection is complete
+      await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
+
       expect(await page.getByRole('textbox', { name: 'Start' }).inputValue()).to.equal(
         '04/11/2022',
       );
       expect(await page.getByRole('textbox', { name: 'End' }).inputValue()).to.equal('05/17/2022');
+    });
+
+    it('should not close the tooltip when the focus switches between inputs', async () => {
+      await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+
+      await page.getByRole('textbox', { name: 'Start' }).click();
+
+      // assert that the tooltip has been opened
+      await page.waitForSelector('[role="tooltip"]', { state: 'attached' });
+
+      await page.getByRole('textbox', { name: 'End' }).click();
+
+      // assert that the tooltip has not been closed after changing the active input
+      await page.waitForSelector('[role="tooltip"]', { state: 'visible' });
+
+      await page.keyboard.press('Escape');
+
+      await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
     });
   });
 });
