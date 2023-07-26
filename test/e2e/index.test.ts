@@ -429,8 +429,6 @@ describe('e2e', () => {
 
         await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
 
-        await page.waitForSelector('[role="dialog"]');
-
         await page.getByRole('gridcell', { name: '11' }).click();
         await page.getByRole('button', { name: 'OK' }).click();
 
@@ -442,13 +440,43 @@ describe('e2e', () => {
       });
     });
   });
+  describe('<DesktopDateTimePicker />', () => {
+    it('should allow selecting a value', async () => {
+      await renderFixture('DatePicker/BasicDesktopDateTimePicker');
+
+      await page.getByRole('button').click();
+
+      await page.getByRole('gridcell', { name: '11' }).click();
+      await page.getByRole('option', { name: '3 hours' }).click();
+      await page.getByRole('option', { name: '30 minutes' }).click();
+      await page.getByRole('option', { name: 'PM' }).click();
+
+      expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022 03:30 PM');
+    });
+    it('should correctly select hours section when there are no time renderers', async () => {
+      await renderFixture('DatePicker/DesktopDateTimePickerNoTimeRenderers');
+
+      await page.getByRole('button').click();
+
+      await page.getByRole('gridcell', { name: '11' }).click();
+
+      await waitFor(async () => {
+        // assert that the hours section has been selected using two APIs
+        expect(await page.evaluate(() => window.getSelection()?.toString())).to.equal('12');
+        expect(
+          await page.evaluate(() => (document.activeElement as HTMLInputElement).selectionStart),
+        ).to.equal(11);
+        expect(
+          await page.evaluate(() => (document.activeElement as HTMLInputElement).selectionEnd),
+        ).to.equal(13);
+      });
+    });
+  });
   describe('<DateRangePicker />', () => {
     it('should allow selecting a range value', async () => {
       await renderFixture('DatePicker/BasicDesktopDateRangePicker');
 
       await page.getByRole('textbox', { name: 'Start' }).click();
-
-      await page.waitForSelector('[role="tooltip"]');
 
       await page.getByRole('gridcell', { name: '11' }).first().click();
       await page.getByRole('gridcell', { name: '17' }).last().click();
