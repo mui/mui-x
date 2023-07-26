@@ -87,12 +87,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       ...other
     } = props;
 
-    const applyFilter = React.useCallback(
-      (item: GridFilterItem) => {
-        apiRef.current.upsertFilterItem(item);
-      },
-      [apiRef],
-    );
+    const applyFilter = apiRef.current.upsertFilterItem;
 
     const applyFilterLogicOperator = React.useCallback(
       (operator: GridLogicOperator) => {
