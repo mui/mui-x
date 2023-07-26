@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as playwright from 'playwright';
+import { chromium, Page, Browser } from '@playwright/test';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -43,7 +43,7 @@ function waitFor(callback: () => Promise<void>): Promise<void> {
  * @param page
  * @param url
  */
-async function attemptGoto(page: playwright.Page, url: string): Promise<boolean> {
+async function attemptGoto(page: Page, url: string): Promise<boolean> {
   const maxAttempts = 10;
   const retryTimeoutMS = 250;
 
@@ -67,8 +67,8 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
 
 describe('e2e', () => {
   const baseUrl = 'http://localhost:5001';
-  let browser: playwright.Browser;
-  let page: playwright.Page;
+  let browser: Browser;
+  let page: Page;
 
   async function renderFixture(fixturePath: string) {
     await page.goto(`${baseUrl}/e2e/${fixturePath}#no-dev`);
@@ -77,7 +77,7 @@ describe('e2e', () => {
   before(async function beforeHook() {
     this.timeout(20000);
 
-    browser = await playwright.chromium.launch({
+    browser = await chromium.launch({
       headless: true,
     });
     page = await browser.newPage();
@@ -423,17 +423,40 @@ describe('e2e', () => {
         expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
       });
     });
-    // TODO: enable this when https://github.com/mui/material-ui/pull/38072 is merged and the dependency is bumped
-    // eslint-disable-next-line mocha/no-skipped-tests
     describe('<MobileDatePicker />', () => {
-      it('should open the picker when clicking on the location where label will end up when focused', async () => {
+      it('should allow selecting a value', async () => {
         await renderFixture('DatePicker/BasicMobileDatePicker');
 
-        // execute the click in the location where the label will transition when input is focused
-        await page.mouse.click(50, 15);
+        await page.getByRole('textbox').click({ position: { x: 10, y: 2 } });
 
         await page.waitForSelector('[role="dialog"]');
+
+        await page.getByRole('gridcell', { name: '11' }).click();
+        await page.getByRole('button', { name: 'OK' }).click();
+
+        await waitFor(async () => {
+          // assert that the dialog has been closed and the focused element is the input
+          expect(await page.evaluate(() => document.activeElement?.nodeName)).to.equal('INPUT');
+        });
+        expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
       });
+    });
+  });
+  describe('<DateRangePicker />', () => {
+    it('should allow selecting a range value', async () => {
+      await renderFixture('DatePicker/BasicDesktopDateRangePicker');
+
+      await page.getByRole('textbox', { name: 'Start' }).click();
+
+      await page.waitForSelector('[role="tooltip"]');
+
+      await page.getByRole('gridcell', { name: '11' }).first().click();
+      await page.getByRole('gridcell', { name: '17' }).last().click();
+
+      expect(await page.getByRole('textbox', { name: 'Start' }).inputValue()).to.equal(
+        '04/11/2022',
+      );
+      expect(await page.getByRole('textbox', { name: 'End' }).inputValue()).to.equal('05/17/2022');
     });
   });
 });
