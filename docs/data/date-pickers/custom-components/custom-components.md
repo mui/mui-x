@@ -236,7 +236,7 @@ You can pass custom components—to replace the icons, for example—as shown be
 You can customize the popper that wraps the desktop picker views the same way you would customize the [Material UI Popper](/material-ui/react-popper/).
 
 :::info
-When the picker views have different heights, there might be a layout shift if there is not enough space in the viewport for one of the views **below** the input field.
+When the picker views have different heights, there might be a layout shift if there is not enough space in the viewport for one of the views **below** the input field. This is particularly noticeable if the selection of allowed years is very limited and there is a significant height difference between the views.
 
 You can avoid this by customizing the popper height. This will not produce any visual changes, as the popper that wraps the pickers is transparent.
 :::
