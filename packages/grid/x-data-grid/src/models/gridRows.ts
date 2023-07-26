@@ -182,7 +182,7 @@ export type GridRowTreeConfig = Record<GridRowId, GridTreeNode>;
 /**
  * The type of Id supported by the grid.
  */
-export type GridRowId = string | number;
+export type GridRowId = string | number | bigint;
 
 export interface GridRowEntry<R extends GridValidRowModel = GridValidRowModel> {
   /**
