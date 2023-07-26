@@ -3,43 +3,36 @@
   "propDescriptions": {
     "columnsSort": {
       "description": "Changes how the options in the columns selector should be ordered. If not specified, the order is derived from the <code>columns</code> prop.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableAddFilterButton": {
       "description": "If <code>true</code>, the <code>Add filter</code> button will not be displayed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableRemoveAllButton": {
       "description": "If <code>true</code>, the <code>Remove all</code> button will be disabled",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "filterFormProps": {
       "description": "Props passed to each filter form.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "getColumnForNewFilter": {
       "description": "Function that returns the next filter item to be picked as default filter.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "args": "Currently configured filters and columns." }
     },
     "logicOperators": {
       "description": "Sets the available logic operators.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     }

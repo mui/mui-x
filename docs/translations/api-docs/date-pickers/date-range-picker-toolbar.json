@@ -3,25 +3,21 @@
   "propDescriptions": {
     "className": {
       "description": "className applied to the root component.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "hidden": {
       "description": "If <code>true</code>, show the toolbar even in desktop mode.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "toolbarFormat": {
       "description": "Toolbar date format.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "toolbarPlaceholder": {
       "description": "Toolbar value placeholder—it is displayed when the value is empty.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     }

@@ -3,79 +3,66 @@
   "propDescriptions": {
     "components": {
       "description": "Overridable components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "componentsProps": {
       "description": "The props used for each component slot.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "defaultValue": {
       "description": "The default value. Use when the component is not controlled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "direction": {
       "description": "Defines the <code>flex-direction</code> style property. It is applied for all screen sizes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disabled": {
       "description": "If <code>true</code>, the component is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "divider": {
       "description": "Add an element between each child.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "format": {
       "description": "Format of the date when rendered in the input(s).",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "formatDensity": {
       "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "maxDate": {
       "description": "Maximal selectable date.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "minDate": {
       "description": "Minimal selectable date.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "value": "The new value.",
@@ -84,7 +71,6 @@
     },
     "onError": {
       "description": "Callback fired when the error associated to the current value changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "error": "The new error.",
@@ -93,31 +79,26 @@
     },
     "onSelectedSectionsChange": {
       "description": "Callback fired when the selected sections change.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "newValue": "The new selected sections." }
     },
     "readOnly": {
       "description": "It prevents the user from changing the value of the field (not from interacting with the field).",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "referenceDate": {
       "description": "The date used to generate a part of the new value that is not present in the format when both <code>value</code> and <code>defaultValue</code> are empty. For example, on time fields it will be used to determine the date to set.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "selectedSections": {
       "description": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>FieldSectionType</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "shouldDisableDate": {
       "description": "Disable specific date.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",
@@ -127,49 +108,41 @@
     },
     "shouldRespectLeadingZeros": {
       "description": "If <code>true</code>, the format will respect the leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>8/16/2018</code>) If <code>false</code>, the format will always add leading zeroes (e.g: on dayjs, the format <code>M/D/YYYY</code> will render <code>08/16/2018</code>)<br>Warning n°1: Luxon is not able to respect the leading zeroes when using macro tokens (e.g: &quot;DD&quot;), so <code>shouldRespectLeadingZeros={true}</code> might lead to inconsistencies when using <code>AdapterLuxon</code>.<br>Warning n°2: When <code>shouldRespectLeadingZeros={true}</code>, the field will add an invisible character on the sections containing a single digit to make sure <code>onChange</code> is fired. If you need to get the clean value from the input, you can remove this character using <code>input.value.replace(/\\u200e/g, &#39;&#39;)</code>.<br>Warning n°3: When used in strict mode, dayjs and moment require to respect the leading zeros. This mean that when using <code>shouldRespectLeadingZeros={false}</code>, if you retrieve the value directly from the input (not listening to <code>onChange</code>) and your format contains tokens without leading zeros, the value will not be parsed by your library.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "slotProps": {
       "description": "The props used for each component slot.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "slots": {
       "description": "Overridable component slots.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "spacing": {
       "description": "Defines the space between immediate children.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sx": {
       "description": "The system prop, which allows defining system overrides as well as additional CSS styles.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "useFlexGap": {
       "description": "If <code>true</code>, the CSS flexbox <code>gap</code> is used instead of applying <code>margin</code> to children.<br>While CSS <code>gap</code> removes the <a href=\"https://mui.com/joy-ui/react-stack/#limitations\">known limitations</a>, it is not fully supported in some browsers. We recommend checking <a href=\"https://caniuse.com/?search=flex%20gap\">https://caniuse.com/?search=flex%20gap</a> before using this flag.<br>To enable this flag globally, follow the <a href=\"https://mui.com/material-ui/customization/theme-components/#default-props\">theme&#39;s default props</a> configuration.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "value": {
       "description": "The selected value. Used when the component is controlled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     }

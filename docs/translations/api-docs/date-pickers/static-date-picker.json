@@ -3,31 +3,26 @@
   "propDescriptions": {
     "autoFocus": {
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "className": {
       "description": "Class name applied to the root element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "components": {
       "description": "Overridable components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "componentsProps": {
       "description": "The props used for each component slot.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "dayOfWeekFormatter": {
       "description": "Formats the day of week displayed in the calendar header.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The day of week provided by the adapter&#39;s method <code>getWeekdays</code>.",
@@ -36,97 +31,81 @@
     },
     "defaultCalendarMonth": {
       "description": "Default calendar month displayed when <code>value</code> and <code>defaultValue</code> are empty.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "defaultValue": {
       "description": "The default value. Used when the component is not controlled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disabled": {
       "description": "If <code>true</code>, the picker and text field are disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableHighlightToday": {
       "description": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "displayStaticWrapperAs": {
       "description": "Force static wrapper inner components to be rendered in mobile or desktop mode.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "displayWeekNumber": {
       "description": "If <code>true</code>, the week number will be display in the calendar.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "fixedWeekNumber": {
       "description": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "loading": {
       "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "localeText": {
       "description": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "maxDate": {
       "description": "Maximal selectable date.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "minDate": {
       "description": "Minimal selectable date.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "monthsPerRow": {
       "description": "Months rendered per row.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "onAccept": {
       "description": "Callback fired when the value is accepted.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "value": "The value that was just accepted." }
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "value": "The new value.",
@@ -135,13 +114,11 @@
     },
     "onClose": {
       "description": "Callback fired when component requests to be closed. Can be fired when selecting (by default on <code>desktop</code> mode) or clearing a value.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "onError": {
       "description": "Callback fired when the error associated to the current value changes. If the error has a non-null value, then the <code>TextField</code> will be rendered in <code>error</code> state.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "error": "The new error describing why the current value is not valid.",
@@ -150,49 +127,41 @@
     },
     "onMonthChange": {
       "description": "Callback fired on month change.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "month": "The new month." }
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "view": "The new view." }
     },
     "onYearChange": {
       "description": "Callback fired on year change.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "year": "The new year." }
     },
     "openTo": {
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "orientation": {
       "description": "Force rendering in particular orientation.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "reduceAnimations": {
       "description": "Disable heavy animations.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "renderLoading": {
       "description": "Component displaying when passed <code>loading</code> true.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "React.ReactNode": "The node to render when loading." }
     },
     "shouldDisableDate": {
       "description": "Disable specific date.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "day": "The date to test.",
@@ -201,7 +170,6 @@
     },
     "shouldDisableMonth": {
       "description": "Disable specific month.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "month": "The month to test.",
@@ -210,7 +178,6 @@
     },
     "shouldDisableYear": {
       "description": "Disable specific year.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "year": "The year to test.",
@@ -219,61 +186,47 @@
     },
     "showDaysOutsideCurrentMonth": {
       "description": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>- ignored if <code>calendars</code> equals more than <code>1</code> on range pickers.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "slotProps": {
       "description": "The props used for each component slot.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "slots": {
       "description": "Overridable component slots.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "value": {
       "description": "The selected value. Used when the component is controlled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "view": {
       "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "viewRenderers": {
       "description": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "views": {
-      "description": "Available views.",
-      "notes": "",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
+    "views": { "description": "Available views.", "deprecated": "", "typeDescriptions": {} },
     "yearsPerRow": {
       "description": "Years rendered per row.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     }

@@ -5,7 +5,7 @@ import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useUtils } from '@mui/x-date-pickers/internals';
-import { PickersDay, pickersDayClasses, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
@@ -253,13 +253,6 @@ const DateRangePickerDayDay = styled(PickersDay, {
   '& > *': {
     transform: 'scale(0.9)',
   },
-  ...(!ownerState.selected &&
-    ownerState.isHighlighting && {
-      opacity: 0.7,
-      [`&.${pickersDayClasses.dayOutsideMonth}`]: {
-        opacity: 0.4,
-      },
-    }),
   ...(ownerState.draggable && {
     cursor: 'grab',
   }),

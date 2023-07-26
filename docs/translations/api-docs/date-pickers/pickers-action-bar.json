@@ -3,19 +3,16 @@
   "propDescriptions": {
     "actions": {
       "description": "Ordered array of actions to display. If empty, does not display that action bar.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableSpacing": {
       "description": "If <code>true</code>, the actions do not have additional margin.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     }

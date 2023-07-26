@@ -3,91 +3,76 @@
   "propDescriptions": {
     "ampm": {
       "description": "12h/24h view for hour selection clock.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "autoFocus": {
       "description": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "classes": {
       "description": "Override or extend the styles applied to the component.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "components": {
       "description": "Overrideable components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "componentsProps": {
       "description": "The props used for each component slot.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "defaultValue": {
       "description": "The default selected value. Used when the component is not controlled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disabled": {
       "description": "If <code>true</code>, the picker views and text field are disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableFuture": {
       "description": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableIgnoringDatePartForTimeValidation": {
       "description": "Do not ignore date part when validating min/max time.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disablePast": {
       "description": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "focusedView": {
       "description": "Controlled focused view.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "maxTime": {
       "description": "Maximal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "minTime": {
       "description": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "minutesStep": {
       "description": "Step over minutes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "onChange": {
       "description": "Callback fired when the value changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "value": "The new value.",
@@ -97,7 +82,6 @@
     },
     "onFocusedViewChange": {
       "description": "Callback fired on focused view change.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "view": "The new view to focus or not.",
@@ -106,31 +90,26 @@
     },
     "onViewChange": {
       "description": "Callback fired on view change.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "view": "The new view." }
     },
     "openTo": {
       "description": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "readOnly": {
       "description": "If <code>true</code>, the picker views and text field are read-only.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "shouldDisableClock": {
       "description": "Disable specific clock time.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "clockValue": "The value to check.",
@@ -140,7 +119,6 @@
     },
     "shouldDisableTime": {
       "description": "Disable specific time.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "value": "The value to check.",
@@ -150,58 +128,45 @@
     },
     "skipDisabled": {
       "description": "If <code>true</code>, disabled digital clock items will not be rendered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "slotProps": {
       "description": "The props used for each component slot.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "slots": {
       "description": "Overrideable component slots.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "timeStep": {
       "description": "The time steps between two time options. For example, if <code>timeStep = 45</code>, then the available time options will be <code>[00:00, 00:45, 01:30, 02:15, 03:00, etc.]</code>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "timezone": {
       "description": "Choose which timezone to use for the value. Example: &quot;default&quot;, &quot;system&quot;, &quot;UTC&quot;, &quot;America/New_York&quot;. If you pass values from other timezones to some props, they will be converted to this timezone before being used.<br>See the <a href=\"https://mui.com/x/react-date-pickers/timezone/\">timezones documention</a> for more details.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "value": {
       "description": "The selected value. Used when the component is controlled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "view": {
       "description": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "views": {
-      "description": "Available views.",
-      "notes": "",
-      "deprecated": "",
-      "typeDescriptions": {}
-    }
+    "views": { "description": "Available views.", "deprecated": "", "typeDescriptions": {} }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },

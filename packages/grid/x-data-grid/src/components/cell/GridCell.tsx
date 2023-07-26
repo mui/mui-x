@@ -18,6 +18,7 @@ import {
   GridCellModes,
   GridRowId,
   GridCellMode,
+  GridEditCellProps,
 } from '../../models';
 import {
   GridRenderEditCellParams,
@@ -26,7 +27,6 @@ import {
 } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
-import { GridEditCellProps } from '../../models/gridEditRowModel';
 import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -45,6 +45,7 @@ type GridCellV7Props = {
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
+  isNotVisible?: boolean;
   editCellState: GridEditCellProps<any> | null;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -267,6 +268,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     row,
     colSpan,
     disableDragEvents,
+    isNotVisible,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -330,12 +332,22 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     [apiRef, field, rowId],
   );
 
-  const style = {
-    minWidth: width,
-    maxWidth: width,
-    minHeight: height,
-    maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
-  };
+  const style = React.useMemo(() => {
+    if (isNotVisible) {
+      return {
+        padding: 0,
+        opacity: 0,
+        width: 0,
+      };
+    }
+    const cellStyle = {
+      minWidth: width,
+      maxWidth: width,
+      minHeight: height,
+      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+    };
+    return cellStyle;
+  }, [width, height, isNotVisible]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -393,6 +405,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   let children: React.ReactNode = childrenProp;
   if (children === undefined) {
     const valueString = valueToRender?.toString();
+
     children = (
       <div className={classes.content} title={valueString}>
         {valueString}
@@ -483,6 +496,7 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
+  isNotVisible: PropTypes.bool,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
@@ -514,6 +528,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
     row,
     colSpan,
     disableDragEvents,
+    isNotVisible,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -637,12 +652,22 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
     [apiRef, field, rowId],
   );
 
-  const style = {
-    minWidth: width,
-    maxWidth: width,
-    minHeight: height,
-    maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
-  };
+  const style = React.useMemo(() => {
+    if (isNotVisible) {
+      return {
+        padding: 0,
+        opacity: 0,
+        width: 0,
+      };
+    }
+    const cellStyle = {
+      minWidth: width,
+      maxWidth: width,
+      minHeight: height,
+      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+    };
+    return cellStyle;
+  }, [width, height, isNotVisible]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -788,6 +813,7 @@ GridCellV7.propTypes = {
     value: PropTypes.any,
   }),
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
+  isNotVisible: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,

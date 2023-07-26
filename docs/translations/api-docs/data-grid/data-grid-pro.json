@@ -3,235 +3,196 @@
   "propDescriptions": {
     "apiRef": {
       "description": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "aria-label": {
       "description": "The label of the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "aria-labelledby": {
       "description": "The id of the element containing a label for the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "autoHeight": {
       "description": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "cellModesModel": {
       "description": "Controls the modes of the cells.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "checkboxSelection": {
       "description": "If <code>true</code>, the grid get a first column with a checkbox that allows to select rows.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "checkboxSelectionVisibleOnly": {
       "description": "If <code>true</code>, the &quot;Select All&quot; header checkbox selects only the rows on the current page. To be used in combination with <code>checkboxSelection</code>. It only works if the pagination is enabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "classes": {
       "description": "Override or extend the styles applied to the component.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "clipboardCopyCellDelimiter": {
       "description": "The character used to separate cell values when copying to the clipboard.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "columnBuffer": {
       "description": "Number of extra columns to be rendered before/after the visible slice.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "columnHeaderHeight": {
       "description": "Sets the height in pixel of the column headers in the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "columns": {
       "description": "Set of columns of type GridColDef[].",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "columnThreshold": {
       "description": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "columnVisibilityModel": {
       "description": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "components": {
       "description": "Overridable components.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "componentsProps": {
       "description": "Overridable components props dynamically passed to the component at rendering.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "defaultGroupingExpansionDepth": {
       "description": "If above 0, the row children will be expanded up to this depth. If equal to -1, all the row children will be expanded.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "density": {
       "description": "Set the density of the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "detailPanelExpandedRowIds": {
       "description": "The row ids to show the detail panel.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableChildrenFiltering": {
       "description": "If <code>true</code>, the filtering will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableChildrenSorting": {
       "description": "If <code>true</code>, the sorting will only be applied to the top level rows when grouping rows with the <code>treeData</code> prop.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableColumnFilter": {
       "description": "If <code>true</code>, column filters are disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableColumnMenu": {
       "description": "If <code>true</code>, the column menu is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableColumnPinning": {
       "description": "If <code>true</code>, the column pinning is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableColumnReorder": {
       "description": "If <code>true</code>, reordering columns is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableColumnResize": {
       "description": "If <code>true</code>, resizing columns is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableColumnSelector": {
       "description": "If <code>true</code>, hiding/showing columns is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableDensitySelector": {
       "description": "If <code>true</code>, the density selector is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableMultipleColumnsFiltering": {
       "description": "If <code>true</code>, filtering with multiple columns is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableMultipleColumnsSorting": {
       "description": "If <code>true</code>, sorting with multiple columns is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl or CMD key is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "disableVirtualization": {
       "description": "If <code>true</code>, the virtualization is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "editMode": {
       "description": "Controls whether to use the cell or row editing.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "experimentalFeatures": {
       "description": "Unstable features, breaking changes might be introduced. For each feature, if the flag is not explicitly set to <code>true</code>, the feature will be fully disabled and any property / method call will not have any effect.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "filterMode": {
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "filterModel": {
       "description": "Set the filter model of the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "getCellClassName": {
       "description": "Function that applies CSS classes dynamically on cells.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
@@ -240,7 +201,6 @@
     },
     "getDetailPanelContent": {
       "description": "Function that returns the element to render in row detail.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
@@ -249,7 +209,6 @@
     },
     "getDetailPanelHeight": {
       "description": "Function that returns the height of the row detail panel.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
@@ -258,7 +217,6 @@
     },
     "getEstimatedRowHeight": {
       "description": "Function that returns the estimated height for a row. Only works if dynamic row height is used. Once the row height is measured this value is discarded.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridRowHeightParams.",
@@ -267,7 +225,6 @@
     },
     "getRowClassName": {
       "description": "Function that applies CSS classes dynamically on rows.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-class-name-params/\">GridRowClassNameParams</a>.",
@@ -276,7 +233,6 @@
     },
     "getRowHeight": {
       "description": "Function that sets the row height per row.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridRowHeightParams.",
@@ -285,13 +241,11 @@
     },
     "getRowId": {
       "description": "Return the id of a given GridRowModel.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "getRowSpacing": {
       "description": "Function that allows to specify the spacing between rows.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-spacing-params/\">GridRowSpacingParams</a>.",
@@ -300,7 +254,6 @@
     },
     "getTreeDataPath": {
       "description": "Determines the path of a row in the tree data. For instance, a row with the path [&quot;A&quot;, &quot;B&quot;] is the child of the row with the path [&quot;A&quot;]. Note that all paths must contain at least one element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "row": "The row from which we want the path.",
@@ -309,43 +262,36 @@
     },
     "groupingColDef": {
       "description": "The grouping column used by the tree data.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "hideFooter": {
       "description": "If <code>true</code>, the footer component is hidden.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "hideFooterPagination": {
       "description": "If <code>true</code>, the pagination component in the footer is hidden.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "hideFooterRowCount": {
       "description": "If <code>true</code>, the row count in the footer is hidden. It has no effect if the pagination is enabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "hideFooterSelectedRowCount": {
       "description": "If <code>true</code>, the selected row count in the footer is hidden.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "initialState": {
       "description": "The initial state of the DataGridPro. The data in it will be set in the state on initialization but will not be controlled. If one of the data in <code>initialState</code> is also being controlled, then the control state wins.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "isCellEditable": {
       "description": "Callback fired when a cell is rendered, returns true if the cell is editable.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
@@ -354,7 +300,6 @@
     },
     "isGroupExpandedByDefault": {
       "description": "Determines if a group should be expanded after its creation. This prop takes priority over the <code>defaultGroupingExpansionDepth</code> prop.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "node": "The node of the group to test.",
@@ -363,7 +308,6 @@
     },
     "isRowSelectable": {
       "description": "Determines if a row can be selected.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
@@ -372,49 +316,41 @@
     },
     "keepColumnPositionIfDraggedOutside": {
       "description": "If <code>true</code>, moving the mouse pointer outside the grid before releasing the mouse button in a column re-order action will not cause the column to jump back to its original position.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "keepNonExistentRowsSelected": {
       "description": "If <code>true</code>, the selection model will retain selected rows that do not exist. Useful when using server side pagination and row selections need to be retained when changing pages.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "loading": {
       "description": "If <code>true</code>, a  loading overlay is displayed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "localeText": {
       "description": "Set the locale text of the grid. You can find all the translation keys supported in <a href=\"https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts\">the source</a> in the GitHub repository.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "logger": {
       "description": "Pass a custom logger in the components that implements the Logger interface.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "logLevel": {
       "description": "Allows to pass the logging level or false to turn off logging.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "nonce": {
       "description": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "onCellClick": {
       "description": "Callback fired when any cell is clicked.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
@@ -424,7 +360,6 @@
     },
     "onCellDoubleClick": {
       "description": "Callback fired when a double click event comes from a cell element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
@@ -434,7 +369,6 @@
     },
     "onCellEditStart": {
       "description": "Callback fired when the cell turns to edit mode.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
@@ -443,7 +377,6 @@
     },
     "onCellEditStop": {
       "description": "Callback fired when the cell turns to view mode.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
@@ -452,7 +385,6 @@
     },
     "onCellKeyDown": {
       "description": "Callback fired when a keydown event comes from a cell element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-cell-params/\">GridCellParams</a>.",
@@ -462,7 +394,6 @@
     },
     "onCellModesModelChange": {
       "description": "Callback fired when the <code>cellModesModel</code> prop changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "cellModesModel": "Object containing which cells are in &quot;edit&quot; mode.",
@@ -471,13 +402,11 @@
     },
     "onClipboardCopy": {
       "description": "Callback called when the data is copied to the clipboard.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "data": "The data copied to the clipboard." }
     },
     "onColumnHeaderClick": {
       "description": "Callback fired when a click event comes from a column header element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnHeaderParams.",
@@ -487,7 +416,6 @@
     },
     "onColumnHeaderDoubleClick": {
       "description": "Callback fired when a double click event comes from a column header element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnHeaderParams.",
@@ -497,7 +425,6 @@
     },
     "onColumnHeaderEnter": {
       "description": "Callback fired when a mouse enter event comes from a column header element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnHeaderParams.",
@@ -507,7 +434,6 @@
     },
     "onColumnHeaderLeave": {
       "description": "Callback fired when a mouse leave event comes from a column header element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnHeaderParams.",
@@ -517,7 +443,6 @@
     },
     "onColumnHeaderOut": {
       "description": "Callback fired when a mouseout event comes from a column header element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnHeaderParams.",
@@ -527,7 +452,6 @@
     },
     "onColumnHeaderOver": {
       "description": "Callback fired when a mouseover event comes from a column header element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnHeaderParams.",
@@ -537,7 +461,6 @@
     },
     "onColumnOrderChange": {
       "description": "Callback fired when a column is reordered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnOrderChangeParams.",
@@ -547,7 +470,6 @@
     },
     "onColumnResize": {
       "description": "Callback fired while a column is being resized.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnResizeParams.",
@@ -557,7 +479,6 @@
     },
     "onColumnVisibilityModelChange": {
       "description": "Callback fired when the column visibility model changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "model": "The new model.",
@@ -566,7 +487,6 @@
     },
     "onColumnWidthChange": {
       "description": "Callback fired when the width of a column is changed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridColumnResizeParams.",
@@ -576,7 +496,6 @@
     },
     "onDetailPanelExpandedRowIdsChange": {
       "description": "Callback fired when the detail panel of a row is opened or closed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "ids": "The ids of the rows which have the detail panel open.",
@@ -585,7 +504,6 @@
     },
     "onFetchRows": {
       "description": "Callback fired when rowCount is set and the next batch of virtualized rows is rendered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridFetchRowsParams.",
@@ -595,7 +513,6 @@
     },
     "onFilterModelChange": {
       "description": "Callback fired when the Filter model changes before the filters are applied.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "model": "With all properties from <a href=\"/x/api/data-grid/grid-filter-model/\">GridFilterModel</a>.",
@@ -604,7 +521,6 @@
     },
     "onMenuClose": {
       "description": "Callback fired when the menu is closed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridMenuParams.",
@@ -614,7 +530,6 @@
     },
     "onMenuOpen": {
       "description": "Callback fired when the menu is opened.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridMenuParams.",
@@ -624,7 +539,6 @@
     },
     "onPaginationModelChange": {
       "description": "Callback fired when the pagination model has changed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "model": "Updated pagination model.",
@@ -633,7 +547,6 @@
     },
     "onPinnedColumnsChange": {
       "description": "Callback fired when the pinned columns have changed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "pinnedColumns": "The changed pinned columns.",
@@ -642,7 +555,6 @@
     },
     "onPreferencePanelClose": {
       "description": "Callback fired when the preferences panel is closed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridPreferencePanelParams.",
@@ -652,7 +564,6 @@
     },
     "onPreferencePanelOpen": {
       "description": "Callback fired when the preferences panel is opened.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridPreferencePanelParams.",
@@ -662,13 +573,11 @@
     },
     "onProcessRowUpdateError": {
       "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "error": "The error thrown." }
     },
     "onResize": {
       "description": "Callback fired when the grid is resized.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "containerSize": "With all properties from ElementSize.",
@@ -678,7 +587,6 @@
     },
     "onRowClick": {
       "description": "Callback fired when a row is clicked. Not called if the target clicked is an interactive element added by the built-in columns.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
@@ -688,7 +596,6 @@
     },
     "onRowDoubleClick": {
       "description": "Callback fired when a double click event comes from a row container element.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from RowParams.",
@@ -698,7 +605,6 @@
     },
     "onRowEditCommit": {
       "description": "Callback fired when the row changes are committed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "id": "The row id.",
@@ -707,7 +613,6 @@
     },
     "onRowEditStart": {
       "description": "Callback fired when the row turns to edit mode.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
@@ -716,7 +621,6 @@
     },
     "onRowEditStop": {
       "description": "Callback fired when the row turns to view mode.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
@@ -725,7 +629,6 @@
     },
     "onRowModesModelChange": {
       "description": "Callback fired when the <code>rowModesModel</code> prop changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "rowModesModel": "Object containing which rows are in &quot;edit&quot; mode.",
@@ -734,7 +637,6 @@
     },
     "onRowOrderChange": {
       "description": "Callback fired when a row is being reordered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridRowOrderChangeParams.",
@@ -744,7 +646,6 @@
     },
     "onRowSelectionModelChange": {
       "description": "Callback fired when the selection state of one or multiple rows changes.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "rowSelectionModel": "With all the row ids GridSelectionModel.",
@@ -753,7 +654,6 @@
     },
     "onRowsScrollEnd": {
       "description": "Callback fired when scrolling to the bottom of the grid viewport.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from GridRowScrollEndParams.",
@@ -763,7 +663,6 @@
     },
     "onSortModelChange": {
       "description": "Callback fired when the sort model changes before a column is sorted.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "model": "With all properties from GridSortModel.",
@@ -772,43 +671,36 @@
     },
     "pageSizeOptions": {
       "description": "Select the pageSize dynamically using the component UI.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "pagination": {
       "description": "If <code>true</code>, pagination is enabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "paginationMode": {
       "description": "Pagination can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle the pagination on the client-side. Set it to &#39;server&#39; if you would like to handle the pagination on the server-side.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "paginationModel": {
       "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "pinnedColumns": {
       "description": "The column fields to display pinned to left or right.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "pinnedRows": {
       "description": "Rows data to pin on top or bottom.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "newRow": "Row object with the new values.",
@@ -818,151 +710,122 @@
     },
     "rowBuffer": {
       "description": "Number of extra rows to be rendered before/after the visible slice.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowCount": {
       "description": "Set the total number of rows, if it is different from the length of the value <code>rows</code> prop. If some rows have children (for instance in the tree data), this number represents the amount of top level rows.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowHeight": {
       "description": "Sets the height in pixel of a row in the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowModesModel": {
       "description": "Controls the modes of the rows.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowReordering": {
       "description": "If <code>true</code>, the reordering of rows is enabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rows": {
       "description": "Set of rows of type GridRowsProp.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowSelection": {
       "description": "If <code>false</code>, the row selection mode is disabled.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowSelectionModel": {
       "description": "Sets the row selection model of the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowsLoadingMode": {
       "description": "Loading rows can be processed on the server or client-side. Set it to &#39;client&#39; if you would like enable infnite loading. Set it to &#39;server&#39; if you would like to enable lazy loading. * @default &quot;client&quot;",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowSpacingType": {
       "description": "Sets the type of space between rows added by <code>getRowSpacing</code>.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "rowThreshold": {
       "description": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "scrollbarSize": {
       "description": "Override the height/width of the grid inner scrollbar.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "scrollEndThreshold": {
       "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, the vertical borders of the cells are displayed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "showColumnVerticalBorder": {
       "description": "If <code>true</code>, the right border of the column headers are displayed.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "slotProps": {
       "description": "Overridable components props dynamically passed to the component at rendering.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "slots": {
-      "description": "Overridable components.",
-      "notes": "",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
+    "slots": { "description": "Overridable components.", "deprecated": "", "typeDescriptions": {} },
     "sortingMode": {
       "description": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sortingOrder": {
       "description": "The order of the sorting sequence.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sortModel": {
       "description": "Set the sort model of the grid.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "throttleRowsMs": {
       "description": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "treeData": {
       "description": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "unstable_headerFilters": {
       "description": "If <code>true</code>, enables the data grid filtering on header feature.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "unstable_ignoreValueFormatterDuringExport": {
       "description": "If <code>true</code>, the grid will not use <code>valueFormatter</code> when exporting to CSV or copying to clipboard. If an object is provided, you can choose to ignore the <code>valueFormatter</code> for CSV export or clipboard export.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     }

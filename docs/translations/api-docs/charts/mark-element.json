@@ -3,16 +3,10 @@
   "propDescriptions": {
     "dataIndex": {
       "description": "The index to the element in the series&#39; data array.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "shape": {
-      "description": "The shape of the marker.",
-      "notes": "",
-      "deprecated": "",
-      "typeDescriptions": {}
-    }
+    "shape": { "description": "The shape of the marker.", "deprecated": "", "typeDescriptions": {} }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },

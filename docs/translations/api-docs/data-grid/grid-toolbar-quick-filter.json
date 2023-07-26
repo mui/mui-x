@@ -3,13 +3,11 @@
   "propDescriptions": {
     "debounceMs": {
       "description": "The debounce time in milliseconds.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "quickFilterFormatter": {
       "description": "Function responsible for formatting values of quick filter in a string when the model is modified",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "values": "The new values passed to the quick filter model",
@@ -18,7 +16,6 @@
     },
     "quickFilterParser": {
       "description": "Function responsible for parsing text input in an array of independent values for quick filtering.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {
         "input": "The value entered by the user",

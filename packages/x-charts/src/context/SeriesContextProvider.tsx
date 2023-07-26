@@ -29,8 +29,8 @@ const seriesTypeFormatter: { [type in ChartSeriesType]?: (series: any) => any } 
   pie: pieSeriesFormatter,
 };
 /**
- * This methods is the interface between what the developper is providing and what compoenents receives
- * To simplify the components behaviors, it groups series by type, such that LinePlots props are not updated if soe line data are modified
+ * This methods is the interface between what the developer is providing and what components receives
+ * To simplify the components behaviors, it groups series by type, such that LinePlots props are not updated if some line data are modified
  * It also add defaultized values such as the ids, colors
  * @param series The array of series provided by devs
  * @param colors The color palette used to defaultize series colors

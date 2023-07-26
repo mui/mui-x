@@ -3,37 +3,23 @@
   "propDescriptions": {
     "classes": {
       "description": "Override or extend the styles applied to the component.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
-    "dateIcon": {
-      "description": "Date tab icon.",
-      "notes": "",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
+    "dateIcon": { "description": "Date tab icon.", "deprecated": "", "typeDescriptions": {} },
     "hidden": {
       "description": "Toggles visibility of the tabs allowing view switching.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     },
     "onViewChange": {
       "description": "Callback called when a tab is clicked",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": { "view": "The view to open" }
     },
-    "timeIcon": {
-      "description": "Time tab icon.",
-      "notes": "",
-      "deprecated": "",
-      "typeDescriptions": {}
-    },
+    "timeIcon": { "description": "Time tab icon.", "deprecated": "", "typeDescriptions": {} },
     "view": {
       "description": "Currently visible picker view.",
-      "notes": "",
       "deprecated": "",
       "typeDescriptions": {}
     }
