@@ -52,11 +52,13 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   );
 
   React.useEffect(() => {
-    const modelItem = rootProps.filterModel?.items.find(i => i.id === item.id && i.field === item.field);
+    const modelItem = rootProps.filterModel?.items.find(
+      (i) => i.id === item.id && i.field === item.field,
+    );
     if (modelItem) {
       setFilterValueState(String(modelItem.value ?? ''));
     }
-  }, [rootProps.filterModel?.items]);
+  }, [rootProps.filterModel?.items, item.id, item.field]);
 
   return (
     <rootProps.slots.baseTextField
