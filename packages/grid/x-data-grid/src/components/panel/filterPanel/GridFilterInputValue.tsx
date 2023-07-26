@@ -51,6 +51,13 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     [applyValue, item, rootProps.filterDebounceMs, filterTimeout],
   );
 
+  React.useEffect(() => {
+    const modelItem = rootProps.filterModel?.items.find(i => i.id === item.id && i.field === item.field);
+    if (modelItem) {
+      setFilterValueState(String(modelItem.value ?? ''));
+    }
+  }, [rootProps.filterModel?.items]);
+
   return (
     <rootProps.slots.baseTextField
       id={id}
