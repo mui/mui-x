@@ -1,114 +1,90 @@
 {
   "props": {
-    "ampm": {
-      "type": { "name": "bool" },
-      "default": "`utils.is12HourCycleInCurrentLocale()`",
-      "additionalPropsInfo": {}
-    },
-    "ampmInClock": {
-      "type": { "name": "bool" },
-      "default": "true on desktop, false on mobile",
-      "additionalPropsInfo": {}
-    },
-    "autoFocus": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
+    "autoFocus": { "type": { "name": "bool" } },
+    "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).",
-      "additionalPropsInfo": {}
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slots</code>."
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
-    "defaultValue": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableIgnoringDatePartForTimeValidation": {
-      "type": { "name": "bool" },
-      "additionalPropsInfo": {}
-    },
-    "disableOpenPicker": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "format": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disableOpenPicker": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "format": { "type": { "name": "string" } },
     "formatDensity": {
       "type": { "name": "enum", "description": "'dense'<br>&#124;&nbsp;'spacious'" },
-      "default": "\"dense\"",
-      "additionalPropsInfo": {}
+      "default": "\"dense\""
     },
     "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" },
-      "additionalPropsInfo": {}
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
-    "label": { "type": { "name": "node" }, "additionalPropsInfo": {} },
-    "localeText": { "type": { "name": "object" }, "additionalPropsInfo": {} },
-    "maxTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "minTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "minutesStep": { "type": { "name": "number" }, "default": "1", "additionalPropsInfo": {} },
+    "label": { "type": { "name": "node" } },
+    "localeText": { "type": { "name": "object" } },
+    "maxTime": { "type": { "name": "any" } },
+    "minTime": { "type": { "name": "any" } },
+    "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onAccept": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] },
-      "additionalPropsInfo": {}
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
     },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
         "describedArgs": ["value", "context"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "onClose": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "onClose": { "type": { "name": "func" } },
     "onError": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(error: TError, value: TValue) => void",
         "describedArgs": ["error", "value"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "onOpen": { "type": { "name": "func" }, "additionalPropsInfo": {} },
+    "onOpen": { "type": { "name": "func" } },
     "onSelectedSectionsChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(newValue: FieldSelectedSections) => void",
         "describedArgs": ["newValue"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "onViewChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] },
-      "additionalPropsInfo": {}
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
     },
-    "open": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "open": { "type": { "name": "bool" } },
     "openTo": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" },
-      "additionalPropsInfo": {}
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
     "selectedSections": {
       "type": {
         "name": "union",
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "shouldDisableClock": {
       "type": { "name": "func" },
@@ -118,8 +94,7 @@
         "type": "function(clockValue: number, view: TimeView) => boolean",
         "describedArgs": ["clockValue", "view"],
         "returned": "boolean"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "shouldDisableTime": {
       "type": { "name": "func" },
@@ -127,11 +102,10 @@
         "type": "function(value: TDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
-    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -141,30 +115,23 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
-      "additionalPropsInfo": {}
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
-    "value": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "value": { "type": { "name": "any" } },
     "view": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "viewRenderers": {
-      "type": {
-        "name": "shape",
-        "description": "{ hours?: func, minutes?: func, seconds?: func }"
-      },
-      "additionalPropsInfo": {}
+      "type": { "name": "shape", "description": "{ hours?: func, minutes?: func, seconds?: func }" }
     },
     "views": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      },
-      "additionalPropsInfo": {}
+      }
     }
   },
   "slots": {

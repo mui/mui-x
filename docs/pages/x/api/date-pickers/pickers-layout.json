@@ -4,22 +4,19 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slots</code>."
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "orientation": {
-      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" },
-      "additionalPropsInfo": {}
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
-    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} }
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
   },
   "slots": {
     "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },

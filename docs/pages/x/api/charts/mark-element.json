@@ -1,13 +1,12 @@
 {
   "props": {
-    "dataIndex": { "type": { "name": "number" }, "required": true, "additionalPropsInfo": {} },
+    "dataIndex": { "type": { "name": "number" }, "required": true },
     "shape": {
       "type": {
         "name": "enum",
         "description": "'circle'<br>&#124;&nbsp;'cross'<br>&#124;&nbsp;'diamond'<br>&#124;&nbsp;'square'<br>&#124;&nbsp;'star'<br>&#124;&nbsp;'triangle'<br>&#124;&nbsp;'wye'"
       },
-      "required": true,
-      "additionalPropsInfo": {}
+      "required": true
     }
   },
   "slots": {},

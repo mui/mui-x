@@ -1,30 +1,26 @@
 {
   "props": {
-    "autoFocus": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "2",
-      "additionalPropsInfo": {}
+      "default": "2"
     },
-    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
+    "className": { "type": { "name": "string" } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slots</code>."
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "currentMonthCalendarPosition": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
-      "default": "1",
-      "additionalPropsInfo": {}
+      "default": "1"
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
@@ -33,88 +29,68 @@
         "type": "function(day: string) => string",
         "describedArgs": ["day"],
         "returned": "string"
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "defaultCalendarMonth": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultRangePosition": {
       "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
-      "default": "'start'",
-      "additionalPropsInfo": {}
+      "default": "'start'"
     },
-    "defaultValue": {
-      "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
-      "additionalPropsInfo": {}
-    },
-    "disableAutoMonthSwitching": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableDragEditing": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableHighlightToday": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "disableAutoMonthSwitching": { "type": { "name": "bool" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableDragEditing": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableHighlightToday": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
-      "default": "\"mobile\"",
-      "additionalPropsInfo": {}
+      "default": "\"mobile\""
     },
-    "displayWeekNumber": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "fixedWeekNumber": {
-      "type": { "name": "number" },
-      "default": "undefined",
-      "additionalPropsInfo": {}
-    },
-    "loading": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "localeText": { "type": { "name": "object" }, "additionalPropsInfo": {} },
-    "maxDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "minDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "displayWeekNumber": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "loading": { "type": { "name": "bool" } },
+    "localeText": { "type": { "name": "object" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
     "onAccept": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] },
-      "additionalPropsInfo": {}
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
     },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
         "describedArgs": ["value", "context"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Please avoid using as it will be removed in next major version.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please avoid using as it will be removed in next major version."
     },
     "onError": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(error: TError, value: TValue) => void",
         "describedArgs": ["error", "value"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "onMonthChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] },
-      "additionalPropsInfo": {}
+      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
     },
     "onRangePositionChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(rangePosition: RangePosition) => void",
         "describedArgs": ["rangePosition"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "rangePosition": {
-      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
-      "additionalPropsInfo": {}
-    },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)",
-      "additionalPropsInfo": {}
+      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -123,8 +99,7 @@
         "type": "function() => React.ReactNode",
         "describedArgs": [],
         "returned": "React.ReactNode"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "shouldDisableDate": {
       "type": { "name": "func" },
@@ -132,12 +107,11 @@
         "type": "function(day: TDate, position: string) => boolean",
         "describedArgs": ["day", "position"],
         "returned": "boolean"
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
-    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -147,17 +121,10 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
-      "additionalPropsInfo": {}
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
-    "value": {
-      "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" },
-      "additionalPropsInfo": {}
-    },
-    "viewRenderers": {
-      "type": { "name": "shape", "description": "{ day?: func }" },
-      "additionalPropsInfo": {}
-    }
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
   "slots": {
     "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },

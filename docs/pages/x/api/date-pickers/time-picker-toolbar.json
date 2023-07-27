@@ -3,29 +3,19 @@
     "onViewChange": {
       "type": { "name": "func" },
       "required": true,
-      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] },
-      "additionalPropsInfo": {}
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
     },
     "view": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       },
-      "required": true,
-      "additionalPropsInfo": {}
+      "required": true
     },
-    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
-    "hidden": {
-      "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile.",
-      "additionalPropsInfo": {}
-    },
-    "toolbarFormat": { "type": { "name": "string" }, "additionalPropsInfo": {} },
-    "toolbarPlaceholder": {
-      "type": { "name": "node" },
-      "default": "\"––\"",
-      "additionalPropsInfo": {}
-    }
+    "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
   "slots": {},
   "name": "TimePickerToolbar",

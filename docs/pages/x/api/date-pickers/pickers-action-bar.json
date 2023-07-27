@@ -5,10 +5,9 @@
         "name": "arrayOf",
         "description": "Array&lt;'accept'<br>&#124;&nbsp;'cancel'<br>&#124;&nbsp;'clear'<br>&#124;&nbsp;'today'&gt;"
       },
-      "default": "`['cancel', 'accept']` for mobile and `[]` for desktop",
-      "additionalPropsInfo": {}
+      "default": "`['cancel', 'accept']` for mobile and `[]` for desktop"
     },
-    "disableSpacing": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "disableSpacing": { "type": { "name": "bool" } },
     "sx": {
       "type": {
         "name": "union",

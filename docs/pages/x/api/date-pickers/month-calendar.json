@@ -1,29 +1,26 @@
 {
   "props": {
     "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
-    "className": { "type": { "name": "string" }, "additionalPropsInfo": {} },
-    "defaultValue": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableHighlightToday": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "maxDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "minDate": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "className": { "type": { "name": "string" } },
+    "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableHighlightToday": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
     "monthsPerRow": {
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
-      "default": "3",
-      "additionalPropsInfo": {}
+      "default": "3"
     },
     "onChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] },
-      "additionalPropsInfo": {}
+      "signature": { "type": "function(value: TDate) => void", "describedArgs": ["value"] }
     },
-    "readOnly": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
       "type": { "name": "any" },
-      "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`.",
-      "additionalPropsInfo": {}
+      "default": "The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`."
     },
     "shouldDisableMonth": {
       "type": { "name": "func" },
@@ -31,8 +28,7 @@
         "type": "function(month: TDate) => boolean",
         "describedArgs": ["month"],
         "returned": "boolean"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "sx": {
       "type": {
@@ -43,10 +39,9 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
-      "additionalPropsInfo": {}
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
-    "value": { "type": { "name": "any" }, "additionalPropsInfo": {} }
+    "value": { "type": { "name": "any" } }
   },
   "slots": {},
   "name": "MonthCalendar",

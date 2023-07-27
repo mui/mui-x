@@ -1,78 +1,63 @@
 {
   "props": {
-    "ampm": {
-      "type": { "name": "bool" },
-      "default": "`utils.is12HourCycleInCurrentLocale()`",
-      "additionalPropsInfo": {}
-    },
-    "ampmInClock": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "autoFocus": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "ampmInClock": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slots</code>."
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotProps</code>.",
-      "additionalPropsInfo": {}
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
-    "defaultValue": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "disabled": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableFuture": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableIgnoringDatePartForTimeValidation": {
-      "type": { "name": "bool" },
-      "additionalPropsInfo": {}
-    },
-    "disablePast": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
     "focusedView": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "maxTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "minTime": { "type": { "name": "any" }, "additionalPropsInfo": {} },
-    "minutesStep": { "type": { "name": "number" }, "default": "1", "additionalPropsInfo": {} },
+    "maxTime": { "type": { "name": "any" } },
+    "minTime": { "type": { "name": "any" } },
+    "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "onChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(value: TDate | null, selectionState: PickerSelectionState | undefined, selectedView: TView | undefined) => void",
         "describedArgs": ["value", "selectionState", "selectedView"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "onFocusedViewChange": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(view: TView, hasFocus: boolean) => void",
         "describedArgs": ["view", "hasFocus"]
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "onViewChange": {
       "type": { "name": "func" },
-      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] },
-      "additionalPropsInfo": {}
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
     },
     "openTo": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "readOnly": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
+    "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
       "type": { "name": "any" },
-      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.",
-      "additionalPropsInfo": {}
+      "default": "The closest valid time using the validation props, except callbacks such as `shouldDisableTime`."
     },
     "shouldDisableClock": {
       "type": { "name": "func" },
@@ -82,8 +67,7 @@
         "type": "function(clockValue: number, view: TimeView) => boolean",
         "describedArgs": ["clockValue", "view"],
         "returned": "boolean"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "shouldDisableTime": {
       "type": { "name": "func" },
@@ -91,11 +75,10 @@
         "type": "function(value: TDate, view: TimeView) => boolean",
         "describedArgs": ["value", "view"],
         "returned": "boolean"
-      },
-      "additionalPropsInfo": {}
+      }
     },
-    "slotProps": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
-    "slots": { "type": { "name": "object" }, "default": "{}", "additionalPropsInfo": {} },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -105,23 +88,20 @@
     },
     "timezone": {
       "type": { "name": "string" },
-      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.",
-      "additionalPropsInfo": {}
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
-    "value": { "type": { "name": "any" }, "additionalPropsInfo": {} },
+    "value": { "type": { "name": "any" } },
     "view": {
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      },
-      "additionalPropsInfo": {}
+      }
     },
     "views": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      },
-      "additionalPropsInfo": {}
+      }
     }
   },
   "slots": {

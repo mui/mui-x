@@ -1,27 +1,16 @@
 {
   "props": {
-    "axisId": { "type": { "name": "string" }, "required": true, "additionalPropsInfo": {} },
+    "axisId": { "type": { "name": "string" }, "required": true },
     "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
-    "disableLine": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "disableTicks": { "type": { "name": "bool" }, "additionalPropsInfo": {} },
-    "fill": {
-      "type": { "name": "string" },
-      "default": "'currentColor'",
-      "additionalPropsInfo": {}
-    },
-    "label": { "type": { "name": "string" }, "additionalPropsInfo": {} },
-    "labelFontSize": { "type": { "name": "number" }, "default": "14", "additionalPropsInfo": {} },
-    "position": {
-      "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" },
-      "additionalPropsInfo": {}
-    },
-    "stroke": {
-      "type": { "name": "string" },
-      "default": "'currentColor'",
-      "additionalPropsInfo": {}
-    },
-    "tickFontSize": { "type": { "name": "number" }, "default": "12", "additionalPropsInfo": {} },
-    "tickSize": { "type": { "name": "number" }, "default": "6", "additionalPropsInfo": {} }
+    "disableLine": { "type": { "name": "bool" } },
+    "disableTicks": { "type": { "name": "bool" } },
+    "fill": { "type": { "name": "string" }, "default": "'currentColor'" },
+    "label": { "type": { "name": "string" } },
+    "labelFontSize": { "type": { "name": "number" }, "default": "14" },
+    "position": { "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" } },
+    "stroke": { "type": { "name": "string" }, "default": "'currentColor'" },
+    "tickFontSize": { "type": { "name": "number" }, "default": "12" },
+    "tickSize": { "type": { "name": "number" }, "default": "6" }
   },
   "slots": {},
   "name": "ChartsXAxis",
