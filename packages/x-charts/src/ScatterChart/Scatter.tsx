@@ -22,61 +22,75 @@ function Scatter(props: ScatterProps) {
   const { series, xScale, yScale, color, markerSize } = props;
 
   const { item } = React.useContext(InteractionContext);
-
-  const getXPosition = getValueToPositionMapper(xScale);
-  const getYPosition = getValueToPositionMapper(yScale);
   const getInteractionItemProps = useInteractionItemProps(series.highlightScope);
 
-  const xRange = xScale.range();
-  const yRange = yScale.range();
+  const cleanData = React.useMemo(() => {
+    const getXPosition = getValueToPositionMapper(xScale);
+    const getYPosition = getValueToPositionMapper(yScale);
+    const xRange = xScale.range();
+    const yRange = yScale.range();
 
-  const isInRange = ({ x, y }: { x: number; y: number }) => {
-    if (x < Math.min(...xRange) || x > Math.max(...xRange)) {
-      return false;
+    const minXRange = Math.min(...xRange);
+    const maxXRange = Math.max(...xRange);
+    const minYRange = Math.min(...yRange);
+    const maxYRange = Math.max(...yRange);
+
+    const temp: {
+      x: number;
+      y: number;
+      id: string | number;
+      isFaded: boolean;
+      interactionProps: ReturnType<typeof getInteractionItemProps>;
+    }[] = [];
+
+    for (let i = 0; i < series.data.length; i += 1) {
+      const scatterPoint = series.data[i];
+
+      const x = getXPosition(scatterPoint.x);
+      const y = getYPosition(scatterPoint.y);
+
+      const isInRange = x >= minXRange && x <= maxXRange && y >= minYRange && y <= maxYRange;
+
+      const pointCtx = { type: 'scatter' as const, seriesId: series.id, dataIndex: i };
+
+      if (isInRange) {
+        temp.push({
+          x,
+          y,
+          isFaded:
+            !getIsHighlighted(item, pointCtx, series.highlightScope) &&
+            getIsFaded(item, pointCtx, series.highlightScope),
+          interactionProps: getInteractionItemProps(pointCtx),
+          id: scatterPoint.id,
+        });
+      }
     }
-    if (y < Math.min(...yRange) || y > Math.max(...yRange)) {
-      return false;
-    }
-    return true;
-  };
+
+    return temp;
+  }, [
+    yScale,
+    xScale,
+    getInteractionItemProps,
+    item,
+    series.data,
+    series.highlightScope,
+    series.id,
+  ]);
+
   return (
     <g>
-      {series.data
-        .map(({ x, y, id }, index) => ({
-          x: getXPosition(x),
-          y: getYPosition(y),
-          id,
-          dataIndex: index,
-        }))
-        .filter(isInRange)
-        .map(({ x, y, id, dataIndex }) => {
-          const isHighlighted = getIsHighlighted(
-            item,
-            { type: 'scatter', seriesId: series.id, dataIndex },
-            series.highlightScope,
-          );
-
-          const isFaded =
-            !isHighlighted &&
-            getIsFaded(
-              item,
-              { type: 'scatter', seriesId: series.id, dataIndex },
-              series.highlightScope,
-            );
-
-          return (
-            <circle
-              key={id}
-              cx={0}
-              cy={0}
-              r={markerSize}
-              transform={`translate(${x}, ${y})`}
-              fill={color}
-              opacity={(isFaded && 0.3) || 1}
-              {...getInteractionItemProps({ type: 'scatter', seriesId: series.id, dataIndex })}
-            />
-          );
-        })}
+      {cleanData.map((dataPoint) => (
+        <circle
+          key={dataPoint.id}
+          cx={0}
+          cy={0}
+          r={markerSize}
+          transform={`translate(${dataPoint.x}, ${dataPoint.y})`}
+          fill={color}
+          opacity={(dataPoint.isFaded && 0.3) || 1}
+          {...dataPoint.interactionProps}
+        />
+      ))}
     </g>
   );
 }
