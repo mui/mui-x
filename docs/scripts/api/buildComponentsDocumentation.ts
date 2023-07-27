@@ -365,15 +365,15 @@ const buildComponentDocumentation = async (options: {
       }
 
       const typeDescriptions: { [t: string]: string } = {};
-      [...(signatureArgs ?? []), ...(signatureReturn ? [signatureReturn] : [])].forEach(
-        ({ name, description: paramDescription }) => {
+      (signatureArgs || [])
+        .concat(signatureReturn || [])
+        .forEach(({ name, description: paramDescription }) => {
           typeDescriptions[name] = linkify(
             renderMarkdownInline(paramDescription),
             documentedInterfaces,
             'html',
           );
-        },
-      );
+        });
 
       componentApi.propDescriptions[propName] = {
         description: linkify(description, documentedInterfaces, 'html'),
