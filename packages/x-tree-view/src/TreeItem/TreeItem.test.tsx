@@ -9,9 +9,9 @@ import {
   createRenderer,
   fireEvent,
   screen,
-} from 'test/utils';
-import TreeView from '@mui/lab/TreeView';
-import TreeItem, { treeItemClasses as classes } from '@mui/lab/TreeItem';
+} from '@mui/monorepo/test/utils';
+import { TreeView } from '@mui/x-tree-view/TreeView';
+import { TreeItem, treeItemClasses as classes } from '@mui/x-tree-view/TreeItem';
 
 describe('<TreeItem />', () => {
   const { render } = createRenderer();
@@ -290,7 +290,7 @@ describe('<TreeItem />', () => {
 
         it('should have the attribute `aria-selected={true}` if selected', () => {
           const { getByTestId } = render(
-            <TreeView multiSelect defaultSelected={'test'}>
+            <TreeView multiSelect defaultSelected={['test']}>
               <TreeItem nodeId="test" label="test" data-testid="test" />
             </TreeView>,
           );
@@ -2226,20 +2226,22 @@ describe('<TreeItem />', () => {
 
   describe('content customisation', () => {
     it('should allow a custom ContentComponent', () => {
-      const mockContent = React.forwardRef((props, ref) => (
+      const mockContent = React.forwardRef((props: {}, ref: React.Ref<HTMLDivElement>) => (
         <div ref={ref}>MOCK CONTENT COMPONENT</div>
       ));
-      const { container } = render(<TreeItem nodeId="one" ContentComponent={mockContent} />);
+      const { container } = render(<TreeItem nodeId="one" ContentComponent={mockContent as any} />);
       expect(container.textContent).to.equal('MOCK CONTENT COMPONENT');
     });
 
     it('should allow props to be passed to a custom ContentComponent', () => {
-      const mockContent = React.forwardRef((props, ref) => <div ref={ref}>{props.customProp}</div>);
+      const mockContent = React.forwardRef((props: any, ref: React.Ref<HTMLDivElement>) => (
+        <div ref={ref}>{props.customProp}</div>
+      ));
       const { container } = render(
         <TreeItem
           nodeId="one"
-          ContentComponent={mockContent}
-          ContentProps={{ customProp: 'ABCDEF' }}
+          ContentComponent={mockContent as any}
+          ContentProps={{ customProp: 'ABCDEF' } as any}
         />,
       );
       expect(container.textContent).to.equal('ABCDEF');
@@ -2266,9 +2268,11 @@ describe('<TreeItem />', () => {
     const keydownEvent = createEvent.keyDown(input, {
       key: 'a',
     });
-    keydownEvent.preventDefault = spy();
+
+    const handlePreventDefault = spy();
+    keydownEvent.preventDefault = handlePreventDefault;
     fireEvent(input, keydownEvent);
-    expect(keydownEvent.preventDefault.callCount).to.equal(0);
+    expect(handlePreventDefault.callCount).to.equal(0);
   });
 
   it('should not focus steal', () => {

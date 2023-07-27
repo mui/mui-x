@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { TreeViewContext } from '../TreeView/TreeViewContext';
+import { useTreeViewContext } from '../TreeView/TreeViewContext';
 
-export function useTreeItem(nodeId) {
+export function useTreeItem(nodeId: string) {
   const {
     focus,
     isExpanded,
@@ -13,7 +13,7 @@ export function useTreeItem(nodeId) {
     selectNode,
     selectRange,
     toggleExpansion,
-  } = React.useContext(TreeViewContext);
+  } = useTreeViewContext();
 
   const expandable = isExpandable ? isExpandable(nodeId) : false;
   const expanded = isExpanded ? isExpanded(nodeId) : false;
@@ -21,7 +21,7 @@ export function useTreeItem(nodeId) {
   const disabled = isDisabled ? isDisabled(nodeId) : false;
   const selected = isSelected ? isSelected(nodeId) : false;
 
-  const handleExpansion = (event) => {
+  const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {
       if (!focused) {
         focus(event, nodeId);
@@ -36,7 +36,7 @@ export function useTreeItem(nodeId) {
     }
   };
 
-  const handleSelection = (event) => {
+  const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {
       if (!focused) {
         focus(event, nodeId);
@@ -56,7 +56,7 @@ export function useTreeItem(nodeId) {
     }
   };
 
-  const preventSelection = (event) => {
+  const preventSelection = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.shiftKey || event.ctrlKey || event.metaKey || disabled) {
       // Prevent text selection
       event.preventDefault();

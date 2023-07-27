@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
@@ -9,8 +10,15 @@ import useId from '@mui/utils/useId';
 import { TreeViewContext } from './TreeViewContext';
 import { DescendantProvider } from './descendants';
 import { getTreeViewUtilityClass } from './treeViewClasses';
+import {
+  MultiSelectTreeViewProps,
+  TreeViewDefaultizedProps,
+  TreeViewItemRange,
+  TreeViewNode,
+  TreeViewProps,
+} from './TreeView.types';
 
-const useUtilityClasses = (ownerState) => {
+const useUtilityClasses = (ownerState: TreeViewDefaultizedProps) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -24,7 +32,7 @@ const TreeViewRoot = styled('ul', {
   name: 'MuiTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})({
+})<{ ownerState: TreeViewDefaultizedProps }>({
   padding: 0,
   margin: 0,
   listStyle: 'none',
@@ -51,22 +59,44 @@ function noopSelection() {
 const defaultDefaultExpanded = [];
 const defaultDefaultSelected = [];
 
-export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
-  const props = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+/**
+ *
+ * Demos:
+ *
+ * - [Tree View](https://mui.com/material-ui/react-tree-view/)
+ *
+ * API:
+ *
+ * - [TreeView API](https://mui.com/material-ui/api/tree-view/)
+ */
+const TreeView = React.forwardRef(function TreeView(
+  inProps: TreeViewProps,
+  ref: React.Ref<HTMLUListElement>,
+) {
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const props: TreeViewDefaultizedProps = {
+    ...themeProps,
+    disabledItemsFocusable: themeProps.disabledItemsFocusable ?? false,
+    disableSelection: themeProps.disableSelection ?? false,
+    multiSelect: themeProps.multiSelect ?? false,
+    defaultExpanded: themeProps.defaultExpanded ?? defaultDefaultExpanded,
+    defaultSelected: themeProps.defaultSelected ?? defaultDefaultSelected,
+  };
+
   const {
     children,
     className,
     defaultCollapseIcon,
     defaultEndIcon,
-    defaultExpanded = defaultDefaultExpanded,
+    defaultExpanded,
     defaultExpandIcon,
     defaultParentIcon,
-    defaultSelected = defaultDefaultSelected,
-    disabledItemsFocusable = false,
-    disableSelection = false,
+    defaultSelected,
+    disabledItemsFocusable,
+    disableSelection,
     expanded: expandedProp,
     id: idProp,
-    multiSelect = false,
+    multiSelect,
     onBlur,
     onFocus,
     onKeyDown,
@@ -79,26 +109,14 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
 
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
-
-  const ownerState = {
-    ...props,
-    defaultExpanded,
-    defaultSelected,
-    disabledItemsFocusable,
-    disableSelection,
-    multiSelect,
-  };
-
-  const classes = useUtilityClasses(ownerState);
-
+  const classes = useUtilityClasses(props);
   const treeId = useId(idProp);
-
   const treeRef = React.useRef(null);
   const handleRef = useForkRef(treeRef, ref);
 
-  const [focusedNodeId, setFocusedNodeId] = React.useState(null);
+  const [focusedNodeId, setFocusedNodeId] = React.useState<string | null>(null);
 
-  const nodeMap = React.useRef({});
+  const nodeMap = React.useRef<{ [nodeId: string]: TreeViewNode }>({});
 
   const firstCharMap = React.useRef({});
 
@@ -120,22 +138,27 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
    * Status Helpers
    */
   const isExpanded = React.useCallback(
-    (id) => (Array.isArray(expanded) ? expanded.indexOf(id) !== -1 : false),
+    (nodeId: string) => (Array.isArray(expanded) ? expanded.indexOf(nodeId) !== -1 : false),
     [expanded],
   );
 
   const isExpandable = React.useCallback(
-    (id) => nodeMap.current[id] && nodeMap.current[id].expandable,
+    (nodeId: string) => nodeMap.current[nodeId] && nodeMap.current[nodeId].expandable,
     [],
   );
 
   const isSelected = React.useCallback(
-    (id) => (Array.isArray(selected) ? selected.indexOf(id) !== -1 : selected === id),
+    (nodeId: string) =>
+      Array.isArray(selected) ? selected.indexOf(nodeId) !== -1 : selected === nodeId,
     [selected],
   );
 
-  const isDisabled = React.useCallback((id) => {
-    let node = nodeMap.current[id];
+  const isDisabled = React.useCallback((nodeId: string | null) => {
+    if (nodeId == null) {
+      return false;
+    }
+
+    let node = nodeMap.current[nodeId];
 
     // This can be called before the node has been added to the node map.
     if (!node) {
@@ -156,24 +179,24 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     return false;
   }, []);
 
-  const isFocused = (id) => focusedNodeId === id;
+  const isFocused = (nodeId: string) => focusedNodeId === nodeId;
 
   /*
    * Child Helpers
    */
 
   // Using Object.keys -> .map to mimic Object.values we should replace with Object.values() once we stop IE11 support.
-  const getChildrenIds = (id) =>
+  const getChildrenIds = (nodeId: string | null) =>
     Object.keys(nodeMap.current)
       .map((key) => {
         return nodeMap.current[key];
       })
-      .filter((node) => node.parentId === id)
+      .filter((node) => node.parentId === nodeId)
       .sort((a, b) => a.index - b.index)
       .map((child) => child.id);
 
-  const getNavigableChildrenIds = (id) => {
-    let childrenIds = getChildrenIds(id);
+  const getNavigableChildrenIds = (nodeId: string | null) => {
+    let childrenIds = getChildrenIds(nodeId);
 
     if (!disabledItemsFocusable) {
       childrenIds = childrenIds.filter((node) => !isDisabled(node));
@@ -185,13 +208,13 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
    * Node Helpers
    */
 
-  const getNextNode = (id) => {
+  const getNextNode = (nodeId: string) => {
     // If expanded get first child
-    if (isExpanded(id) && getNavigableChildrenIds(id).length > 0) {
-      return getNavigableChildrenIds(id)[0];
+    if (isExpanded(nodeId) && getNavigableChildrenIds(nodeId).length > 0) {
+      return getNavigableChildrenIds(nodeId)[0];
     }
 
-    let node = nodeMap.current[id];
+    let node = nodeMap.current[nodeId];
     while (node != null) {
       // Try to get next sibling
       const siblings = getNavigableChildrenIds(node.parentId);
@@ -202,39 +225,39 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
       }
 
       // If the sibling does not exist, go up a level to the parent and try again.
-      node = nodeMap.current[node.parentId];
+      node = nodeMap.current[node.parentId!];
     }
 
     return null;
   };
 
-  const getPreviousNode = (id) => {
-    const node = nodeMap.current[id];
+  const getPreviousNode = (nodeId: string) => {
+    const node = nodeMap.current[nodeId];
     const siblings = getNavigableChildrenIds(node.parentId);
-    const nodeIndex = siblings.indexOf(id);
+    const nodeIndex = siblings.indexOf(nodeId);
 
     if (nodeIndex === 0) {
       return node.parentId;
     }
 
-    let currentNode = siblings[nodeIndex - 1];
+    let currentNode: string = siblings[nodeIndex - 1];
     while (isExpanded(currentNode) && getNavigableChildrenIds(currentNode).length > 0) {
-      currentNode = getNavigableChildrenIds(currentNode).pop();
+      currentNode = getNavigableChildrenIds(currentNode).pop()!;
     }
 
     return currentNode;
   };
 
   const getLastNode = () => {
-    let lastNode = getNavigableChildrenIds(null).pop();
+    let lastNode = getNavigableChildrenIds(null).pop()!;
 
     while (isExpanded(lastNode)) {
-      lastNode = getNavigableChildrenIds(lastNode).pop();
+      lastNode = getNavigableChildrenIds(lastNode).pop()!;
     }
     return lastNode;
   };
   const getFirstNode = () => getNavigableChildrenIds(null)[0];
-  const getParent = (id) => nodeMap.current[id].parentId;
+  const getParent = (nodeId: string) => nodeMap.current[nodeId].parentId;
 
   /**
    * This is used to determine the start and end of a selection range so
@@ -250,7 +273,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
    * Another way to put it is which node is shallower in a trémaux tree
    * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
    */
-  const findOrderInTremauxTree = (nodeAId, nodeBId) => {
+  const findOrderInTremauxTree = (nodeAId: string, nodeBId: string) => {
     if (nodeAId === nodeBId) {
       return [nodeAId, nodeBId];
     }
@@ -262,8 +285,8 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
       return nodeB.parentId === nodeA.id ? [nodeA.id, nodeB.id] : [nodeB.id, nodeA.id];
     }
 
-    const aFamily = [nodeA.id];
-    const bFamily = [nodeB.id];
+    const aFamily: (string | null)[] = [nodeA.id];
+    const bFamily: (string | null)[] = [nodeB.id];
 
     let aAncestor = nodeA.parentId;
     let bAncestor = nodeB.parentId;
@@ -280,7 +303,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
         aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
         continueA = aAncestor !== null;
         if (!aAncestorIsCommon && continueA) {
-          aAncestor = nodeMap.current[aAncestor].parentId;
+          aAncestor = nodeMap.current[aAncestor!].parentId;
         }
       }
 
@@ -289,7 +312,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
         bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
         continueB = bAncestor !== null;
         if (!bAncestorIsCommon && continueB) {
-          bAncestor = nodeMap.current[bAncestor].parentId;
+          bAncestor = nodeMap.current[bAncestor!].parentId;
         }
       }
     }
@@ -300,19 +323,19 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     const aSide = aFamily[aFamily.indexOf(commonAncestor) - 1];
     const bSide = bFamily[bFamily.indexOf(commonAncestor) - 1];
 
-    return ancestorFamily.indexOf(aSide) < ancestorFamily.indexOf(bSide)
+    return ancestorFamily.indexOf(aSide!) < ancestorFamily.indexOf(bSide!)
       ? [nodeAId, nodeBId]
       : [nodeBId, nodeAId];
   };
 
-  const getNodesInRange = (nodeA, nodeB) => {
-    const [first, last] = findOrderInTremauxTree(nodeA, nodeB);
+  const getNodesInRange = (nodeAId: string, nodeBId: string) => {
+    const [first, last] = findOrderInTremauxTree(nodeAId, nodeBId);
     const nodes = [first];
 
     let current = first;
 
     while (current !== last) {
-      current = getNextNode(current);
+      current = getNextNode(current)!;
       nodes.push(current);
     }
 
@@ -323,28 +346,36 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
    * Focus Helpers
    */
 
-  const focus = (event, id) => {
-    if (id) {
-      setFocusedNodeId(id);
+  const focus = (event: React.SyntheticEvent, nodeId: string | null) => {
+    if (nodeId) {
+      setFocusedNodeId(nodeId);
 
       if (onNodeFocus) {
-        onNodeFocus(event, id);
+        onNodeFocus(event, nodeId);
       }
     }
   };
 
-  const focusNextNode = (event, id) => focus(event, getNextNode(id));
-  const focusPreviousNode = (event, id) => focus(event, getPreviousNode(id));
-  const focusFirstNode = (event) => focus(event, getFirstNode());
-  const focusLastNode = (event) => focus(event, getLastNode());
+  const focusNextNode = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) =>
+    focus(event, getNextNode(nodeId));
+  const focusPreviousNode = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) =>
+    focus(event, getPreviousNode(nodeId));
+  const focusFirstNode = (event: React.KeyboardEvent<HTMLUListElement>) =>
+    focus(event, getFirstNode());
+  const focusLastNode = (event: React.KeyboardEvent<HTMLUListElement>) =>
+    focus(event, getLastNode());
 
-  const focusByFirstCharacter = (event, id, char) => {
-    let start;
-    let index;
-    const lowercaseChar = char.toLowerCase();
+  const focusByFirstCharacter = (
+    event: React.KeyboardEvent<HTMLUListElement>,
+    nodeId: string,
+    firstChar: string,
+  ) => {
+    let start: number;
+    let index: number;
+    const lowercaseChar = firstChar.toLowerCase();
 
-    const firstCharIds = [];
-    const firstChars = [];
+    const firstCharIds: string[] = [];
+    const firstChars: string[] = [];
     // This really only works since the ids are strings
     Object.keys(firstCharMap.current).forEach((nodeId) => {
       const firstChar = firstCharMap.current[nodeId];
@@ -359,7 +390,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     });
 
     // Get start index for search based on position of currentItem
-    start = firstCharIds.indexOf(id) + 1;
+    start = firstCharIds.indexOf(nodeId) + 1;
     if (start >= firstCharIds.length) {
       start = 0;
     }
@@ -382,10 +413,14 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
    * Expansion Helpers
    */
 
-  const toggleExpansion = (event, value = focusedNodeId) => {
-    let newExpanded;
+  const toggleExpansion = (event: React.SyntheticEvent, value = focusedNodeId) => {
+    if (value == null) {
+      return;
+    }
 
-    if (expanded.indexOf(value) !== -1) {
+    let newExpanded: string[];
+
+    if (expanded.indexOf(value!) !== -1) {
       newExpanded = expanded.filter((id) => id !== value);
     } else {
       newExpanded = [value].concat(expanded);
@@ -398,8 +433,8 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     setExpandedState(newExpanded);
   };
 
-  const expandAllSiblings = (event, id) => {
-    const map = nodeMap.current[id];
+  const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
+    const map = nodeMap.current[nodeId];
     const siblings = getChildrenIds(map.parentId);
 
     const diff = siblings.filter((child) => isExpandable(child) && !isExpanded(child));
@@ -419,12 +454,12 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
    * Selection Helpers
    */
 
-  const lastSelectedNode = React.useRef(null);
+  const lastSelectedNode = React.useRef<string | null>(null);
   const lastSelectionWasRange = React.useRef(false);
-  const currentRangeSelection = React.useRef([]);
+  const currentRangeSelection = React.useRef<string[]>([]);
 
-  const handleRangeArrowSelect = (event, nodes) => {
-    let base = selected.slice();
+  const handleRangeArrowSelect = (event: React.SyntheticEvent, nodes: TreeViewItemRange) => {
+    let base = (selected as string[]).slice();
     const { start, next, current } = nodes;
 
     if (!next || !current) {
@@ -451,14 +486,17 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     }
 
     if (onNodeSelect) {
-      onNodeSelect(event, base);
+      (onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, base);
     }
 
     setSelectedState(base);
   };
 
-  const handleRangeSelect = (event, nodes) => {
-    let base = selected.slice();
+  const handleRangeSelect = (
+    event: React.SyntheticEvent,
+    nodes: { start: string; end: string },
+  ) => {
+    let base = (selected as string[]).slice();
     const { start, end } = nodes;
     // If last selection was a range selection ignore nodes that were selected.
     if (lastSelectionWasRange.current) {
@@ -472,45 +510,49 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
 
     if (onNodeSelect) {
-      onNodeSelect(event, newSelected);
+      (onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, newSelected);
     }
 
     setSelectedState(newSelected);
   };
 
-  const handleMultipleSelect = (event, value) => {
-    let newSelected;
-    if (selected.indexOf(value) !== -1) {
-      newSelected = selected.filter((id) => id !== value);
+  const handleMultipleSelect = (event: React.SyntheticEvent, nodeId: string) => {
+    if (!Array.isArray(selected)) {
+      return;
+    }
+
+    let newSelected: string[];
+    if (selected.indexOf(nodeId) !== -1) {
+      newSelected = selected.filter((id) => id !== nodeId);
     } else {
-      newSelected = [value].concat(selected);
+      newSelected = [nodeId].concat(selected);
     }
 
     if (onNodeSelect) {
-      onNodeSelect(event, newSelected);
+      (onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, newSelected);
     }
 
     setSelectedState(newSelected);
   };
 
-  const handleSingleSelect = (event, value) => {
-    const newSelected = multiSelect ? [value] : value;
+  const handleSingleSelect = (event: React.SyntheticEvent, nodeId: string) => {
+    const newSelected = multiSelect ? [nodeId] : nodeId;
 
     if (onNodeSelect) {
-      onNodeSelect(event, newSelected);
+      onNodeSelect(event, newSelected as string & string[]);
     }
 
     setSelectedState(newSelected);
   };
 
-  const selectNode = (event, id, multiple = false) => {
-    if (id) {
+  const selectNode = (event: React.SyntheticEvent, nodeId: string, multiple = false) => {
+    if (nodeId) {
       if (multiple) {
-        handleMultipleSelect(event, id);
+        handleMultipleSelect(event, nodeId);
       } else {
-        handleSingleSelect(event, id);
+        handleSingleSelect(event, nodeId);
       }
-      lastSelectedNode.current = id;
+      lastSelectedNode.current = nodeId;
       lastSelectionWasRange.current = false;
       currentRangeSelection.current = [];
 
@@ -519,7 +561,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     return false;
   };
 
-  const selectRange = (event, nodes, stacked = false) => {
+  const selectRange = (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked = false) => {
     const { start = lastSelectedNode.current, end, current } = nodes;
     if (stacked) {
       handleRangeArrowSelect(event, { start, next: end, current });
@@ -529,7 +571,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     lastSelectionWasRange.current = true;
   };
 
-  const rangeSelectToFirst = (event, id) => {
+  const rangeSelectToFirst = (event: React.KeyboardEvent<HTMLUListElement>, id: string) => {
     if (!lastSelectedNode.current) {
       lastSelectedNode.current = id;
     }
@@ -542,7 +584,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     });
   };
 
-  const rangeSelectToLast = (event, id) => {
+  const rangeSelectToLast = (event: React.KeyboardEvent<HTMLUListElement>, id: string) => {
     if (!lastSelectedNode.current) {
       lastSelectedNode.current = id;
     }
@@ -555,7 +597,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     });
   };
 
-  const selectNextNode = (event, id) => {
+  const selectNextNode = (event: React.KeyboardEvent<HTMLUListElement>, id: string) => {
     if (!isDisabled(getNextNode(id))) {
       selectRange(
         event,
@@ -568,12 +610,12 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     }
   };
 
-  const selectPreviousNode = (event, id) => {
+  const selectPreviousNode = (event: React.KeyboardEvent<HTMLUListElement>, id: string) => {
     if (!isDisabled(getPreviousNode(id))) {
       selectRange(
         event,
         {
-          end: getPreviousNode(id),
+          end: getPreviousNode(id)!,
           current: id,
         },
         true,
@@ -581,27 +623,27 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     }
   };
 
-  const selectAllNodes = (event) => {
+  const selectAllNodes = (event: React.KeyboardEvent<HTMLUListElement>) => {
     selectRange(event, { start: getFirstNode(), end: getLastNode() });
   };
 
   /*
    * Mapping Helpers
    */
-  const registerNode = React.useCallback((node) => {
+  const registerNode = React.useCallback((node: TreeViewNode) => {
     const { id, index, parentId, expandable, idAttribute, disabled } = node;
 
     nodeMap.current[id] = { id, index, parentId, expandable, idAttribute, disabled };
   }, []);
 
-  const unregisterNode = React.useCallback((id) => {
+  const unregisterNode = React.useCallback((nodeId: string) => {
     const newMap = { ...nodeMap.current };
-    delete newMap[id];
+    delete newMap[nodeId];
     nodeMap.current = newMap;
 
     setFocusedNodeId((oldFocusedNodeId) => {
       if (
-        oldFocusedNodeId === id &&
+        oldFocusedNodeId === nodeId &&
         treeRef.current === ownerDocument(treeRef.current).activeElement
       ) {
         return getChildrenIds(null)[0];
@@ -610,13 +652,13 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     });
   }, []);
 
-  const mapFirstChar = React.useCallback((id, firstChar) => {
-    firstCharMap.current[id] = firstChar;
+  const mapFirstChar = React.useCallback((nodeId: string, firstChar: string) => {
+    firstCharMap.current[nodeId] = firstChar;
   }, []);
 
-  const unMapFirstChar = React.useCallback((id) => {
+  const unMapFirstChar = React.useCallback((nodeId: string) => {
     const newMap = { ...firstCharMap.current };
-    delete newMap[id];
+    delete newMap[nodeId];
     firstCharMap.current = newMap;
   }, []);
 
@@ -624,8 +666,8 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
    * Event handlers and Navigation
    */
 
-  const handleNextArrow = (event) => {
-    if (isExpandable(focusedNodeId)) {
+  const handleNextArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    if (focusedNodeId != null && isExpandable(focusedNodeId)) {
       if (isExpanded(focusedNodeId)) {
         focusNextNode(event, focusedNodeId);
       } else if (!isDisabled(focusedNodeId)) {
@@ -635,9 +677,13 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     return true;
   };
 
-  const handlePreviousArrow = (event) => {
+  const handlePreviousArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    if (focusedNodeId == null) {
+      return false;
+    }
+
     if (isExpanded(focusedNodeId) && !isDisabled(focusedNodeId)) {
-      toggleExpansion(event, focusedNodeId);
+      toggleExpansion(event, focusedNodeId!);
       return true;
     }
 
@@ -649,7 +695,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     return false;
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
     let flag = false;
     const key = event.key;
 
@@ -661,7 +707,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     const ctrlPressed = event.ctrlKey || event.metaKey;
     switch (key) {
       case ' ':
-        if (!disableSelection && !isDisabled(focusedNodeId)) {
+        if (!disableSelection && focusedNodeId != null && !isDisabled(focusedNodeId)) {
           if (multiSelect && event.shiftKey) {
             selectRange(event, { end: focusedNodeId });
             flag = true;
@@ -763,7 +809,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     }
   };
 
-  const handleFocus = (event) => {
+  const handleFocus = (event: React.FocusEvent<HTMLUListElement>) => {
     // if the event bubbled (which is React specific) we don't want to steal focus
     if (event.target === event.currentTarget) {
       const firstSelected = Array.isArray(selected) ? selected[0] : selected;
@@ -775,7 +821,7 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     }
   };
 
-  const handleBlur = (event) => {
+  const handleBlur = (event: React.FocusEvent<HTMLUListElement>) => {
     setFocusedNodeId(null);
 
     if (onBlur) {
@@ -783,8 +829,8 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     }
   };
 
-  const activeDescendant = nodeMap.current[focusedNodeId]
-    ? nodeMap.current[focusedNodeId].idAttribute
+  const activeDescendant = nodeMap.current[focusedNodeId!]
+    ? nodeMap.current[focusedNodeId!].idAttribute
     : null;
 
   return (
@@ -815,16 +861,16 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
         <TreeViewRoot
           role="tree"
           id={treeId}
-          aria-activedescendant={activeDescendant}
+          aria-activedescendant={activeDescendant ?? undefined}
           aria-multiselectable={multiSelect}
           className={clsx(classes.root, className)}
-          ref={handleRef}
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          ownerState={ownerState}
+          ownerState={props}
           {...other}
+          ref={handleRef}
         >
           {children}
         </TreeViewRoot>
@@ -832,3 +878,106 @@ export const TreeView = React.forwardRef(function TreeView(inProps, ref) {
     </TreeViewContext.Provider>
   );
 });
+
+TreeView.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The content of the component.
+   */
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * The default icon used to collapse the node.
+   */
+  defaultCollapseIcon: PropTypes.node,
+  /**
+   * The default icon displayed next to a end node. This is applied to all
+   * tree nodes and can be overridden by the TreeItem `icon` prop.
+   */
+  defaultEndIcon: PropTypes.node,
+  /**
+   * Expanded node ids. (Uncontrolled)
+   * @default []
+   */
+  defaultExpanded: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * The default icon used to expand the node.
+   */
+  defaultExpandIcon: PropTypes.node,
+  /**
+   * The default icon displayed next to a parent node. This is applied to all
+   * parent nodes and can be overridden by the TreeItem `icon` prop.
+   */
+  defaultParentIcon: PropTypes.node,
+  /**
+   * Selected node ids. (Uncontrolled)
+   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
+   * @default []
+   */
+  defaultSelected: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+  /**
+   * If `true`, will allow focus on disabled items.
+   * @default false
+   */
+  disabledItemsFocusable: PropTypes.bool,
+  /**
+   * If `true` selection is disabled.
+   * @default false
+   */
+  disableSelection: PropTypes.bool,
+  /**
+   * Expanded node ids. (Controlled)
+   */
+  expanded: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * If true `ctrl` and `shift` will trigger multiselect.
+   * @default false
+   */
+  multiSelect: PropTypes.bool,
+  /**
+   * Callback fired when tree items are focused.
+   * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
+   * @param {string} nodeId The id of the node focused.
+   * @param {string} value of the focused node.
+   */
+  onNodeFocus: PropTypes.func,
+  /**
+   * Callback fired when tree items are selected/unselected.
+   * @param {React.SyntheticEvent} event The event source of the callback
+   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
+   * this is an array of strings; when false (default) a string.
+   */
+  onNodeSelect: PropTypes.func,
+  /**
+   * Callback fired when tree items are expanded/collapsed.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeIds The ids of the expanded nodes.
+   */
+  onNodeToggle: PropTypes.func,
+  /**
+   * Selected node ids. (Controlled)
+   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
+   */
+  selected: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { TreeView };

@@ -1,5 +1,6 @@
 const baseline = require('@mui/monorepo/.eslintrc');
 const path = require('path');
+const { useTreeViewDefaultizedProps } = require('@mui/x-tree-view');
 
 const buildPackageRestrictedImports = (packageName, root) => ({
   files: [`packages/${root}/src/**/*{.ts,.tsx,.js}`],

@@ -8,10 +8,10 @@ import {
   fireEvent,
   screen,
   describeConformance,
-} from 'test/utils';
+} from '@mui/monorepo/test/utils';
 import Portal from '@mui/material/Portal';
-import TreeView, { treeViewClasses as classes } from '@mui/lab/TreeView';
-import TreeItem from '@mui/lab/TreeItem';
+import { TreeView, treeViewClasses as classes } from '@mui/x-tree-view/TreeView';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
 describe('<TreeView />', () => {
   const { render } = createRenderer();
@@ -94,7 +94,7 @@ describe('<TreeView />', () => {
     });
 
     it('should not crash when unmounting with duplicate ids', () => {
-      function CustomTreeItem() {
+      function CustomTreeItem(props: any) {
         return <TreeItem nodeId="iojerogj" />;
       }
       function App() {
@@ -115,7 +115,7 @@ describe('<TreeView />', () => {
           </React.Fragment>
         );
       }
-      const errorRef = React.createRef();
+      const errorRef = React.createRef<ErrorBoundary>();
       render(
         <ErrorBoundary ref={errorRef}>
           <App />

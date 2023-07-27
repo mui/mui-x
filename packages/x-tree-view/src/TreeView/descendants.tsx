@@ -7,7 +7,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
  */
 
 // To replace with .findIndex() once we stop IE11 support.
-function findIndex(array, comp) {
+function findIndex<T>(array: T[], comp: (item: T) => boolean) {
   for (let i = 0; i < array.length; i += 1) {
     if (comp(array[i])) {
       return i;
@@ -17,7 +17,7 @@ function findIndex(array, comp) {
   return -1;
 }
 
-function binaryFindElement(array, element) {
+function binaryFindElement(array: TreeItemDescendant[], element: HTMLLIElement) {
   let start = 0;
   let end = array.length - 1;
 
@@ -39,14 +39,14 @@ function binaryFindElement(array, element) {
   return start;
 }
 
-const DescendantContext = React.createContext({});
+const DescendantContext = React.createContext<DescendantContextValue>({});
 
 if (process.env.NODE_ENV !== 'production') {
   DescendantContext.displayName = 'DescendantContext';
 }
 
-function usePrevious(value) {
-  const ref = React.useRef(null);
+function usePrevious<T>(value: T) {
+  const ref = React.useRef<T | null>(null);
   React.useEffect(() => {
     ref.current = value;
   }, [value]);
@@ -75,8 +75,8 @@ const noop = () => {};
  * server for most use-cases, as we are only using it to determine the order of
  * composed descendants for keyboard navigation.
  */
-export function useDescendant(descendant) {
-  const [, forceUpdate] = React.useState();
+export function useDescendant(descendant: TreeItemDescendant) {
+  const [, forceUpdate] = React.useState<{}>();
   const {
     registerDescendant = noop,
     unregisterDescendant = noop,
@@ -86,7 +86,7 @@ export function useDescendant(descendant) {
 
   // This will initially return -1 because we haven't registered the descendant
   // on the first render. After we register, this will then return the correct
-  // index on the following render and we will re-register descendants
+  // index on the following render, and we will re-register descendants
   // so that everything is up-to-date before the user interacts with a
   // collection.
   const index = findIndex(descendants, (item) => item.element === descendant.element);
@@ -113,7 +113,7 @@ export function useDescendant(descendant) {
         index,
       });
       return () => {
-        unregisterDescendant(descendant.element);
+        unregisterDescendant(descendant.element!);
       };
     }
     forceUpdate({});
@@ -127,9 +127,9 @@ export function useDescendant(descendant) {
 export function DescendantProvider(props) {
   const { children, id } = props;
 
-  const [items, set] = React.useState([]);
+  const [items, set] = React.useState<(TreeItemDescendant & { index: number })[]>([]);
 
-  const registerDescendant = React.useCallback(({ element, ...other }) => {
+  const registerDescendant = React.useCallback(({ element, ...other }: TreeItemDescendant) => {
     set((oldItems) => {
       let newItems;
       if (oldItems.length === 0) {
@@ -179,7 +179,7 @@ export function DescendantProvider(props) {
     });
   }, []);
 
-  const unregisterDescendant = React.useCallback((element) => {
+  const unregisterDescendant = React.useCallback((element: HTMLLIElement) => {
     set((oldItems) => oldItems.filter((item) => element !== item.element));
   }, []);
 
@@ -200,3 +200,15 @@ DescendantProvider.propTypes = {
   children: PropTypes.node,
   id: PropTypes.string,
 };
+
+export interface TreeItemDescendant {
+  element: HTMLLIElement;
+  id: string;
+}
+
+interface DescendantContextValue {
+  registerDescendant?: (params: TreeItemDescendant & { index: number }) => void;
+  unregisterDescendant?: (params: HTMLLIElement) => void;
+  descendants?: TreeItemDescendant[];
+  parentId?: string | null;
+}

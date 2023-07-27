@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import { DefaultizedProps, StandardProps } from '../internals/models';
 import { TreeViewClasses } from './treeViewClasses';
-import { StandardProps } from '../internals/models';
 
 export interface TreeViewPropsBase extends StandardProps<React.HTMLAttributes<HTMLUListElement>> {
   /**
@@ -58,7 +58,7 @@ export interface TreeViewPropsBase extends StandardProps<React.HTMLAttributes<HT
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the focused node.
+   * @param {string} nodeId The id of the node focused.
    * @param {string} value of the focused node.
    */
   onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
@@ -93,7 +93,6 @@ export interface MultiSelectTreeViewProps extends TreeViewPropsBase {
   multiSelect?: true;
   /**
    * Callback fired when tree items are selected/unselected.
-   *
    * @param {React.SyntheticEvent} event The event source of the callback
    * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
    * this is an array of strings; when false (default) a string.
@@ -107,12 +106,12 @@ export interface SingleSelectTreeViewProps extends TreeViewPropsBase {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected?: string;
+  defaultSelected?: string | null;
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected?: string;
+  selected?: string | null;
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
@@ -120,7 +119,6 @@ export interface SingleSelectTreeViewProps extends TreeViewPropsBase {
   multiSelect?: false;
   /**
    * Callback fired when tree items are selected/unselected.
-   *
    * @param {React.SyntheticEvent} event The event source of the callback
    * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
    * this is an array of strings; when false (default) a string.
@@ -130,14 +128,52 @@ export interface SingleSelectTreeViewProps extends TreeViewPropsBase {
 
 export type TreeViewProps = SingleSelectTreeViewProps | MultiSelectTreeViewProps;
 
-/**
- *
- * Demos:
- *
- * - [Tree View](https://mui.com/material-ui/react-tree-view/)
- *
- * API:
- *
- * - [TreeView API](https://mui.com/material-ui/api/tree-view/)
- */
-export function TreeView(props: TreeViewProps): JSX.Element;
+export type TreeViewDefaultizedProps = DefaultizedProps<
+  TreeViewProps,
+  | 'defaultExpanded'
+  | 'defaultSelected'
+  | 'disabledItemsFocusable'
+  | 'disableSelection'
+  | 'multiSelect'
+>;
+
+export interface TreeViewNode {
+  id: string;
+  idAttribute: string | undefined;
+  index: number;
+  parentId: string | null;
+  expandable: boolean;
+  disabled: boolean | undefined;
+}
+
+export interface TreeViewItemRange {
+  start?: string | null;
+  end?: string | null;
+  next?: string | null;
+  current?: string;
+}
+
+export interface TreeViewContextValue {
+  registerNode: (node: TreeViewNode) => void;
+  unregisterNode: (nodeId: string) => void;
+  isFocused: (nodeId: string) => boolean;
+  isSelected: (nodeId: string) => boolean;
+  isExpanded: (nodeId: string) => boolean;
+  isExpandable: (nodeId: string) => boolean;
+  isDisabled: (nodeId: string) => boolean;
+  mapFirstChar: (nodeId: string, firstChar: string) => void;
+  unMapFirstChar: (nodeId: string) => void;
+  focus: (event: React.SyntheticEvent, nodeId: string) => void;
+  toggleExpansion: (event: React.SyntheticEvent, value?: string) => void;
+  selectNode: (event: React.SyntheticEvent, nodeId: string, multiple?: boolean) => void;
+  selectRange: (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked?: boolean) => void;
+  multiSelect: boolean;
+  disabledItemsFocusable: boolean;
+  treeId: string | undefined;
+  icons: {
+    defaultCollapseIcon: React.ReactNode;
+    defaultExpandIcon: React.ReactNode;
+    defaultParentIcon: React.ReactNode;
+    defaultEndIcon: React.ReactNode;
+  };
+}

@@ -76,14 +76,9 @@ export interface TreeItemProps
   sx?: SxProps<Theme>;
 }
 
-/**
- *
- * Demos:
- *
- * - [Tree View](https://mui.com/material-ui/react-tree-view/)
- *
- * API:
- *
- * - [TreeItem API](https://mui.com/material-ui/api/tree-item/)
- */
-export function TreeItem(props: TreeItemProps): JSX.Element;
+export interface TreeItemOwnerState extends TreeItemProps {
+  expanded: boolean;
+  focused: boolean;
+  selected: boolean;
+  disabled: boolean;
+}

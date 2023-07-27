@@ -84,7 +84,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
 
   const icon = iconProp || expansionIcon || displayIcon;
 
-  const handleMouseDown = (event) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     preventSelection(event);
 
     if (onMouseDown) {
@@ -92,7 +92,7 @@ const TreeItemContent = React.forwardRef(function TreeItemContent(
     }
   };
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     handleExpansion(event);
     handleSelection(event);
 
