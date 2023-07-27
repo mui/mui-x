@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Areas demonstration
 ---
 
@@ -9,16 +8,16 @@ title: Charts - Areas demonstration
 
 ## SimpleAreaChart
 
-{{"demo": "SimpleAreaChart.js", "bg": "inline"}}
+{{"demo": "SimpleAreaChart.js"}}
 
 ## StackedAreaChart
 
-{{"demo": "StackedAreaChart.js", "bg": "inline"}}
+{{"demo": "StackedAreaChart.js"}}
 
 ## TinyAreaChart
 
-{{"demo": "TinyAreaChart.js", "bg": "inline"}}
+{{"demo": "TinyAreaChart.js"}}
 
 ## PercentAreaChart
 
-{{"demo": "PercentAreaChart.js", "bg": "inline"}}
+{{"demo": "PercentAreaChart.js"}}

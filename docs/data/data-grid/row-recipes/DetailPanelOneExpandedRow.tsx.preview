@@ -1,0 +1,8 @@
+<DataGridPro
+  rows={rows}
+  columns={columns}
+  getDetailPanelContent={getDetailPanelContent}
+  getDetailPanelHeight={getDetailPanelHeight}
+  detailPanelExpandedRowIds={detailPanelExpandedRowIds}
+  onDetailPanelExpandedRowIdsChange={handleDetailPanelExpandedRowIdsChange}
+/>

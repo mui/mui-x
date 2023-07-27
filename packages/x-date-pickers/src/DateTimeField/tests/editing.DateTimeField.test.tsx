@@ -1,6 +1,7 @@
+import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { userEvent } from '@mui/monorepo/test/utils';
+import { userEvent, screen } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
@@ -195,5 +196,16 @@ describe('<DateTimeField /> - Editing', () => {
         expect(onChange.lastCall.firstArg).toEqualDateTime('2012-01-01T00:00');
       });
     });
+  });
+
+  it('should correctly update `value` when both `format` and `value` are changed', () => {
+    const { setProps } = render(<DateTimeField value={null} format="P" />);
+    expect(screen.getByRole<HTMLInputElement>('textbox').value).to.equal('');
+
+    setProps({
+      format: 'Pp',
+      value: adapterToUse.date(new Date(2012, 4, 3, 14, 30)),
+    });
+    expect(screen.getByRole<HTMLInputElement>('textbox').value).to.equal('05/03/2012, 02:30 PM');
   });
 });

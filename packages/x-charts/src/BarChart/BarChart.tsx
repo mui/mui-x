@@ -24,7 +24,7 @@ export interface BarChartProps
   legend?: ChartsLegendProps;
 }
 
-function BarChart(props: BarChartProps) {
+const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -49,6 +49,7 @@ function BarChart(props: BarChartProps) {
 
   return (
     <ResponsiveChartContainer
+      ref={ref}
       series={series.map((s) => ({ type: 'bar', ...s }))}
       width={width}
       height={height}
@@ -58,7 +59,8 @@ function BarChart(props: BarChartProps) {
           {
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'band',
-            data: [...new Array(Math.max(...series.map((s) => s.data.length)))].map(
+            data: Array.from(
+              { length: Math.max(...series.map((s) => s.data.length)) },
               (_, index) => index,
             ),
           },
@@ -87,7 +89,7 @@ function BarChart(props: BarChartProps) {
       {children}
     </ResponsiveChartContainer>
   );
-}
+});
 
 BarChart.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -99,8 +101,8 @@ BarChart.propTypes = {
     y: PropTypes.oneOf(['line', 'none']),
   }),
   /**
-   * Indicate which axis to display the the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
+   * Indicate which axis to display the bottom of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -129,8 +131,8 @@ BarChart.propTypes = {
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
   /**
-   * Indicate which axis to display the the left of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
+   * Indicate which axis to display the left of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -152,6 +154,7 @@ BarChart.propTypes = {
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
     itemWidth: PropTypes.number,
     markSize: PropTypes.number,
     offset: PropTypes.shape({
@@ -171,8 +174,8 @@ BarChart.propTypes = {
     top: PropTypes.number,
   }),
   /**
-   * Indicate which axis to display the the right of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
+   * Indicate which axis to display the right of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -230,8 +233,8 @@ BarChart.propTypes = {
     trigger: PropTypes.oneOf(['axis', 'item', 'none']),
   }),
   /**
-   * Indicate which axis to display the the top of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
+   * Indicate which axis to display the top of the charts.
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
   topAxis: PropTypes.oneOfType([

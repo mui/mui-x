@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { D3Scale, isBandScale } from './useScale';
+import { D3Scale } from '../models/axis';
+import { isBandScale } from '../internals/isBandScale';
 
 export type TickParams = {
   maxTicks?: number;
@@ -29,22 +30,33 @@ function useTicks(options: {
     // band scale
     if (isBandScale(scale)) {
       const domain = scale.domain();
-      return [
-        ...domain.map((value) => ({
-          formattedValue: valueFormatter?.(value) ?? value,
-          offset: scale(value) ?? 0,
-          labelOffset: scale.bandwidth() / 2,
-        })),
-        ...(scale.bandwidth() > 0
-          ? [
-              {
-                formattedValue: undefined,
-                offset: scale.range()[1],
-                labelOffset: 0,
-              },
-            ]
-          : []),
-      ];
+
+      if (scale.bandwidth() > 0) {
+        // scale type = 'band'
+        return [
+          ...domain.map((value, index) => ({
+            formattedValue: valueFormatter?.(value) ?? value,
+            offset:
+              index === 0
+                ? scale.range()[0]
+                : scale(value)! - (scale.step() - scale.bandwidth()) / 2,
+            labelOffset: scale.step() / 2,
+          })),
+
+          {
+            formattedValue: undefined,
+            offset: scale.range()[1],
+            labelOffset: 0,
+          },
+        ];
+      }
+
+      // scale type = 'point'
+      return domain.map((value) => ({
+        formattedValue: valueFormatter?.(value) ?? value,
+        offset: scale(value)!,
+        labelOffset: 0,
+      }));
     }
 
     return scale.ticks(ticksNumber).map((value: any) => ({

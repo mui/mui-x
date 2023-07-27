@@ -9,13 +9,15 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 <p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
-
 The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 ## Overview
 
-> Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::info
+Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::
 
 The `DataGrid` presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
 
@@ -93,7 +95,7 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 
-### 🚧 Upcoming features
+### Upcoming features 🚧
 
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 

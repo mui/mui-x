@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Time Picker component
 components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker
 githubLabel: 'component: TimePicker'
@@ -25,6 +25,8 @@ Check-out their documentation page for more information:
 - [Time Field](/x/react-date-pickers/time-field/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

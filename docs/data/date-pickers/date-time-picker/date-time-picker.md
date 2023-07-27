@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Time Picker component
 components: DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker
 githubLabel: 'component: DateTimePicker'
@@ -26,6 +26,8 @@ Check-out their documentation page for more information:
 - [Date Calendar](/x/react-date-pickers/date-calendar/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
