@@ -337,11 +337,8 @@ const buildComponentDocumentation = async (options: {
       const additionalPropsInfo: CoreReactApiProps['additionalInfo'] & { classes?: boolean } = {};
       if (propName === 'classes') {
         additionalPropsInfo.classes = true;
-        // description += ' See <a href="#css">CSS API</a> below for more details.';
       } else if (propName === 'sx') {
         additionalPropsInfo.sx = true;
-        // description +=
-        //   ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
       }
       // Parse and generate `@see` doc with a {@link}
       const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
@@ -420,6 +417,7 @@ const buildComponentDocumentation = async (options: {
           deprecationInfo:
             renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
           signature,
+          // @ts-expect-error TODO: Rename to `additionalInfo` when https://github.com/mui/material-ui/pull/38183 is merged
           additionalPropsInfo:
             Object.keys(additionalPropsInfo).length === 0 ? undefined : additionalPropsInfo,
         },
