@@ -116,7 +116,7 @@ jobs:
       - install_js
       - run:
           name: Should not have any git not staged
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: Check for duplicated packages
           command: yarn deduplicate
@@ -168,24 +168,24 @@ jobs:
           command: yarn proptypes
       - run:
           name: '`yarn proptypes` changes committed?'
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: Generate the documentation
           command: yarn docs:api
       - run:
           name: '`yarn docs:api` changes committed?'
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: Sync locale files
           command: yarn l10n
       - run:
           name: '`yarn l10n` changes committed?'
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: '`yarn docs:link-check` changes committed?'
           command: |
             yarn docs:link-check
-            git diff --exit-code
+            git add -A && git diff --exit-code --staged
   test_browser:
     <<: *defaults
     docker:

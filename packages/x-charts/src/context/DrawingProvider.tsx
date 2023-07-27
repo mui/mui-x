@@ -9,7 +9,7 @@ export interface DrawingProviderProps extends LayoutConfig {
 }
 
 /**
- * Defines the area in which it is possible to draw the charts
+ * Defines the area in which it is possible to draw the charts.
  */
 export type DrawingArea = {
   left: number;

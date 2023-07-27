@@ -268,7 +268,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
         utils.addMinutes(startOfDay, timeStep * (index + 1)),
       ),
-      utils.endOfDay(valueOrReferenceDate),
     ];
   }, [valueOrReferenceDate, timeStep, utils]);
 
