@@ -67,7 +67,7 @@
     "languageTag": "fi-FI",
     "importName": "fiFI",
     "localeName": "Finnish",
-    "missingKeysCount": 27,
+    "missingKeysCount": 26,
     "totalKeysCount": 119,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/fiFI.ts"
   },
