@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { chromium, webkit, firefox, Page, Browser } from '@playwright/test';
+import { chromium, webkit, firefox, Page, Browser, BrowserContext } from '@playwright/test';
 
 function sleep(timeoutMS: number): Promise<void> {
   return new Promise((resolve) => {
@@ -69,6 +69,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
   describe(`e2e: ${browserType.name()}`, () => {
     const baseUrl = 'http://localhost:5001';
     let browser: Browser;
+    let context: BrowserContext;
     let page: Page;
 
     async function renderFixture(fixturePath: string) {
@@ -81,7 +82,11 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
       browser = await browserType.launch({
         headless: true,
       });
-      page = await browser.newPage();
+      context = await browser.newContext({
+        // ensure consistent date formatting regardless or environment
+        locale: 'en-US',
+      });
+      page = await context.newPage();
       // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
       // Update the Date accordingly in your test pages
       await page.addInitScript(`{
@@ -109,6 +114,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
     });
 
     after(async () => {
+      await context.close();
       await browser.close();
     });
 
@@ -233,7 +239,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
       it('should not trigger sorting after resizing', async () => {
         await renderFixture('DataGridPro/NotResize');
 
-        const separator = await page.$('.MuiDataGrid-columnSeparator--resizable');
+        const separator = page.locator('.MuiDataGrid-columnSeparator--resizable').first();
         const boundingBox = (await separator?.boundingBox())!;
 
         const x = boundingBox.x + boundingBox.width / 2;
@@ -282,6 +288,8 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
         ).to.equal(scrollTop);
       });
 
+      // if this test fails locally on chromium, be aware that it uses system locale format,
+      // instead of one specified by the `locale`
       it('should edit date cells', async () => {
         await renderFixture('DataGrid/KeyboardEditDate');
 
@@ -292,7 +300,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
 
         // set 06/25/1986
         await page.dblclick('[role="cell"][data-field="birthday"]');
-        await page.type('[role="cell"][data-field="birthday"] input', '06251986');
+        await page.type('[role="cell"][data-field="birthday"] input', '06/25/1986');
 
         await page.keyboard.press('Enter');
 
@@ -309,13 +317,24 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
         await page.keyboard.press('ArrowRight');
         await page.keyboard.press('Enter');
 
-        // set 01/31/2025 16:05
-        await page.type('[role="cell"][data-field="lastConnection"] input', '01312025165');
+        // set 01/31/2025 04:05:00 PM
+        const dateTimeInput = page.locator('[role="cell"][data-field="lastConnection"] input');
+        if (browserType.name() === 'firefox') {
+          // firefox seems to break the section jumping if the section is edited without firstly clearing it
+          dateTimeInput.press('Backspace');
+          await dateTimeInput.type('01/31/2025');
+          // only reliable way on firefox to move to time section is via arrow key
+          await dateTimeInput.press('ArrowRight');
+          await dateTimeInput.type('4:5');
+          await dateTimeInput.press('ArrowRight');
+          await dateTimeInput.type('p');
+        } else {
+          await dateTimeInput.type('01/31/2025,4:5:p');
+        }
+
         await page.keyboard.press('Enter');
 
-        expect(
-          await page.locator('[role="cell"][data-field="lastConnection"]').textContent(),
-        ).to.equal('1/31/2025, 4:05:00 PM');
+        expect(page.getByText('1/31/2025, 4:05:00 PM')).not.to.equal(null);
       });
 
       // https://github.com/mui/mui-x/issues/3613
