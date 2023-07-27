@@ -1,7 +1,7 @@
 {
   "props": {
     "axisContent": { "type": { "name": "elementType" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
     "itemContent": { "type": { "name": "elementType" } },
     "trigger": {
       "type": {
