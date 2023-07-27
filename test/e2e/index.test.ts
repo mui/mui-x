@@ -203,55 +203,29 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
 
       it('should reorder columns by dropping into the header', async () => {
         await renderFixture('DataGrid/ColumnReorder');
+
         expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
-        const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
-        const brandBoundingBox = await brand?.boundingBox();
-        const year = await page.$('[role="columnheader"][aria-colindex="2"] > [draggable]');
-        const yearBoundingBox = await year?.boundingBox();
-        if (brandBoundingBox && yearBoundingBox) {
-          // Based on https://stackoverflow.com/a/64746679/2801714
-          await page.mouse.move(
-            brandBoundingBox.x + brandBoundingBox.width / 2,
-            brandBoundingBox.y + brandBoundingBox.height / 2,
-            { steps: 5 },
-          );
-          await page.mouse.down();
-          await page.mouse.move(
-            yearBoundingBox.x + yearBoundingBox.width / 2,
-            yearBoundingBox.y + yearBoundingBox.height / 2,
-            { steps: 5 },
-          );
-          await page.mouse.up();
-        }
+
+        const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
+        const year = page.locator('[role="columnheader"][aria-colindex="2"] > [draggable]');
+        await brand.dragTo(year);
+
         expect(
           await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
         ).to.equal('yearbrand');
       });
 
-      it('should reorder columns by dropping into the body', async () => {
+      it('should reorder columns by dropping into the grid row column', async () => {
         await renderFixture('DataGrid/ColumnReorder');
+
         expect(await page.locator('[role="row"]').first().textContent()).to.equal('brandyear');
-        const brand = await page.$('[role="columnheader"][aria-colindex="1"] > [draggable]');
-        const brandBoundingBox = await brand?.boundingBox();
-        const cell = await page.$(
+
+        const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
+        const rowColumn1990 = page.locator(
           '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]',
         );
-        const cellBoundingBox = await cell?.boundingBox();
-        if (brandBoundingBox && cellBoundingBox) {
-          // Based on https://stackoverflow.com/a/64746679/2801714
-          await page.mouse.move(
-            brandBoundingBox.x + brandBoundingBox.width / 2,
-            brandBoundingBox.y + brandBoundingBox.height / 2,
-            { steps: 5 },
-          );
-          await page.mouse.down();
-          await page.mouse.move(
-            cellBoundingBox.x + cellBoundingBox.width / 2,
-            cellBoundingBox.y + cellBoundingBox.height / 2,
-            { steps: 5 },
-          );
-          await page.mouse.up();
-        }
+        await brand.dragTo(rowColumn1990);
+
         expect(await page.locator('[role="row"]').first().textContent()).to.equal('yearbrand');
       });
 
