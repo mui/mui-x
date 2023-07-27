@@ -25,6 +25,7 @@ import {
 } from '@mui/monorepo/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
+import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
 import {
   DocumentedInterfaces,
   getJsdocDefaultValue,
@@ -293,19 +294,7 @@ const buildComponentDocumentation = async (options: {
     // Display the imports from the pro packages above imports from the community packages
     .sort((a, b) => b.packageName.length - a.packageName.length);
 
-  const componentApi: {
-    componentDescription: string;
-    propDescriptions: {
-      [key: string]: {
-        description: string;
-        requiresRef?: string;
-        deprecated?: string;
-        typeDescriptions?: { [t: string]: string };
-      };
-    };
-    classDescriptions: { [key: string]: { description: string; conditions?: string } };
-    slotDescriptions: { [key: string]: string | undefined };
-  } = {
+  const componentApi: CoreReactApi['translations'] = {
     componentDescription: reactApi.description,
     propDescriptions: {},
     classDescriptions: {},
@@ -409,7 +398,7 @@ const buildComponentDocumentation = async (options: {
 
       const deprecation = (propDescriptor.description || '').match(/@deprecated(\s+(?<info>.*))?/);
 
-      let signature;
+      let signature: CoreReactApi['propsTable'][string]['signature'];
       if (signatureType !== undefined) {
         signature = {
           type: signatureType,
@@ -467,7 +456,7 @@ const buildComponentDocumentation = async (options: {
     });
 
     Object.entries(slots).forEach(([slot, descriptor]) => {
-      componentApi.slotDescriptions[slot] = descriptor.description;
+      componentApi.slotDescriptions![slot] = descriptor.description;
       reactApi.slots[slot] = { default: descriptor.default, type: { name: descriptor.type } };
     });
   }
