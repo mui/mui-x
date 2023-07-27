@@ -73,7 +73,13 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
     let page: Page;
 
     async function renderFixture(fixturePath: string) {
-      await page.goto(`${baseUrl}/e2e/${fixturePath}#no-dev`);
+      if (page.url().includes(fixturePath)) {
+        // ensure that the page is reloaded if the it's the same fixture
+        // ensures that page is reset on firefox
+        await page.reload();
+      } else {
+        await page.goto(`${baseUrl}/e2e/${fixturePath}#no-dev`);
+      }
     }
 
     before(async function beforeHook() {
