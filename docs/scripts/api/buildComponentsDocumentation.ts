@@ -432,7 +432,7 @@ const buildComponentDocumentation = async (options: {
           deprecationInfo:
             renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
           signature,
-          additionalPropsInfo,
+          ...(Object.keys(additionalPropsInfo).length === 0 ? null : { additionalPropsInfo }),
         },
       ];
     }),
