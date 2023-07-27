@@ -8,34 +8,45 @@ const releaseDate = new Date(2018, 0, 0, 0, 0, 0, 0);
 const RELEASE_INFO = generateReleaseInfo(releaseDate);
 
 describe('License: verifyLicense', () => {
+  let env: any;
+  beforeEach(() => {
+    env = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'test';
+  });
+
+  afterEach(() => {
+    process.env.NODE_ENV = env;
+  });
+
   describe('key version: 1', () => {
     const licenseKey =
       '0f94d8b65161817ca5d7f7af8ac2f042T1JERVI6TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY1NDg1ODc1MzU1MCxLRVlWRVJTSU9OPTE=';
 
     it('should log an error when ReleaseInfo is not valid', () => {
+      process.env.NODE_ENV = 'production';
       expect(
         () =>
           verifyLicense({
             releaseInfo: '__RELEASE_INFO__',
             licenseKey,
             acceptedScopes: ['pro', 'premium'],
-            isProduction: true,
           }).status,
       ).to.throw('MUI: The release information is invalid. Not able to validate license.');
     });
 
     it('should verify License properly', () => {
+      process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
           licenseKey,
           acceptedScopes: ['pro', 'premium'],
-          isProduction: true,
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
 
     it('should check expired license properly', () => {
+      process.env.NODE_ENV = 'production';
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(releaseDate.getTime() - oneDayInMS),
         scope: 'pro',
@@ -48,19 +59,18 @@ describe('License: verifyLicense', () => {
           releaseInfo: RELEASE_INFO,
           licenseKey: expiredLicenseKey,
           acceptedScopes: ['pro', 'premium'],
-          isProduction: true,
         }).status,
       ).to.equal(LICENSE_STATUS.ExpiredVersion);
     });
 
     it('should return Invalid for invalid license', () => {
+      process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
           licenseKey:
             'b43ff5f9ac93f021855ff59ff0ba5220TkFNRTpNYC1VSSBTQVMsREVWRUxPUEVSX0NPVU5UPTEwLEVYUElSWT0xNTkxNzIzMDY3MDQyLFZFUlNJT049MS4yLjM',
           acceptedScopes: ['pro', 'premium'],
-          isProduction: true,
         }).status,
       ).to.equal(LICENSE_STATUS.Invalid);
     });
@@ -82,47 +92,47 @@ describe('License: verifyLicense', () => {
     });
 
     it('should log an error when ReleaseInfo is not valid', () => {
+      process.env.NODE_ENV = 'production';
       expect(
         () =>
           verifyLicense({
             releaseInfo: '__RELEASE_INFO__',
             licenseKey: licenseKeyPro,
             acceptedScopes: ['pro', 'premium'],
-            isProduction: true,
           }).status,
       ).to.throw('MUI: The release information is invalid. Not able to validate license.');
     });
 
     describe('scope', () => {
       it('should accept pro license for pro features', () => {
+        process.env.NODE_ENV = 'production';
         expect(
           verifyLicense({
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPro,
             acceptedScopes: ['pro', 'premium'],
-            isProduction: true,
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
 
       it('should accept premium license for premium features', () => {
+        process.env.NODE_ENV = 'production';
         expect(
           verifyLicense({
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPremium,
             acceptedScopes: ['premium'],
-            isProduction: true,
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
 
       it('should not accept pro license for premium feature', () => {
+        process.env.NODE_ENV = 'production';
         expect(
           verifyLicense({
             releaseInfo: RELEASE_INFO,
             licenseKey: licenseKeyPro,
             acceptedScopes: ['premium'],
-            isProduction: true,
           }).status,
         ).to.equal(LICENSE_STATUS.OutOfScope);
       });
@@ -130,6 +140,7 @@ describe('License: verifyLicense', () => {
 
     describe('expiry date', () => {
       it('should validate subscription license in prod if current date is after expiry date but release date is before expiry date', () => {
+        process.env.NODE_ENV = 'production';
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(releaseDate.getTime() + oneDayInMS),
           orderNumber: 'MUI-123',
@@ -142,7 +153,6 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            isProduction: true,
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
@@ -160,12 +170,12 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            isProduction: false,
           }).status,
         ).to.equal(LICENSE_STATUS.ExpiredAnnualGrace);
       });
 
       it('should throw if the license is expired by more than a 30 days', () => {
+        process.env.NODE_ENV = 'development';
         const expiredLicenseKey = generateLicense({
           expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
           orderNumber: 'MUI-123',
@@ -178,7 +188,6 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            isProduction: false,
           }).status,
         ).to.equal(LICENSE_STATUS.ExpiredAnnual);
       });
@@ -196,20 +205,19 @@ describe('License: verifyLicense', () => {
             releaseInfo: RELEASE_INFO,
             licenseKey: expiredLicenseKey,
             acceptedScopes: ['pro', 'premium'],
-            isProduction: false,
           }).status,
         ).to.equal(LICENSE_STATUS.Valid);
       });
     });
 
     it('should return Invalid for invalid license', () => {
+      process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
           licenseKey:
             'b43ff5f9ac93f021855ff59ff0ba5220TkFNRTpNYC1VSSBTQVMsREVWRUxPUEVSX0NPVU5UPTEwLEVYUElSWT0xNTkxNzIzMDY3MDQyLFZFUlNJT049MS4yLjM',
           acceptedScopes: ['pro', 'premium'],
-          isProduction: true,
         }).status,
       ).to.equal(LICENSE_STATUS.Invalid);
     });
@@ -224,12 +232,12 @@ describe('License: verifyLicense', () => {
     });
 
     it('should accept licensingModel="annual"', () => {
+      process.env.NODE_ENV = 'production';
       expect(
         verifyLicense({
           releaseInfo: RELEASE_INFO,
           licenseKey: licenseKeyPro,
           acceptedScopes: ['pro', 'premium'],
-          isProduction: true,
         }).status,
       ).to.equal(LICENSE_STATUS.Valid);
     });
