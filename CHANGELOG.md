@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jul 27, 2023_
 
-We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Improve scatter charts performance
 - 📚 Redesigned component API documentation and side navigation
@@ -57,12 +57,14 @@ Same changes as in `@mui/x-date-pickers@v6.10.2`.
 - [docs] Fix charts width in axis pages (#9801) @alexfauquette
 - [docs] Fix wrong prop name in the Editing page (#9753) @m4theushw
 - [docs] New component API page and side nav design (#9187) @alexfauquette
+- [docs] Update overview page with up to date information about the plans (#9512) @joserodolfofreitas
 
 ### Core
 
 - [core] Use PR charts version in preview (#9787) @alexfauquette
 - [license] Allow overriding the license on specific parts of the page (#9717) @Janpot
 - [license] Throw in dev mode after 30 days (#9701) @oliviertassinari
+- [license] Only throw in dev mode (#9803) @oliviertassinari
 - [test] Fail the CI when new unexpected files are created (#9728) @oliviertassinari
 
 ## 6.10.1
