@@ -519,9 +519,15 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
         expect(await page.getByRole('textbox', { name: 'Start' }).inputValue()).to.equal(
           '04/11/2022',
         );
+        if (browserType.name() === 'firefox') {
+          console.log('Completed the first assertion');
+        }
         expect(await page.getByRole('textbox', { name: 'End' }).inputValue()).to.equal(
           '05/17/2022',
         );
+        if (browserType.name() === 'firefox') {
+          console.log('Completed the second assertion');
+        }
       });
 
       it('should not close the tooltip when the focus switches between inputs', async () => {
