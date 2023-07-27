@@ -36,6 +36,8 @@ import {
 import { Project, Projects } from '../getTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
+type CoreReactApiProps = CoreReactApi['propsTable'][string];
+
 export interface ReactApi extends ReactDocgenApi {
   /**
    * list of page pathnames
@@ -302,12 +304,9 @@ const buildComponentDocumentation = async (options: {
   };
 
   const propErrors: Array<[propName: string, error: Error]> = [];
-  const componentProps = fromPairs<{
-    default: string | undefined;
-    required: boolean | undefined;
-    type: { name: string | undefined; description: string | undefined };
-  }>(
-    Object.entries(reactApi.props || []).map(([propName, propDescriptor]) => {
+  type Pair = [string, CoreReactApiProps];
+  const componentProps = fromPairs(
+    Object.entries(reactApi.props || []).map(([propName, propDescriptor]): Pair => {
       // TODO remove `pagination` from DataGrid's allowed props
       if (propName === 'pagination' && reactApi.name === 'DataGrid') {
         return [] as any;
@@ -335,7 +334,7 @@ const buildComponentDocumentation = async (options: {
       } = generatePropDescription(prop, propName);
       let description = renderMarkdownInline(jsDocText);
 
-      const additionalPropsInfo: { sx?: boolean; classes?: boolean } = {};
+      const additionalPropsInfo: CoreReactApiProps['additionalInfo'] & { classes?: boolean } = {};
       if (propName === 'classes') {
         additionalPropsInfo.classes = true;
         // description += ' See <a href="#css">CSS API</a> below for more details.';
@@ -398,7 +397,7 @@ const buildComponentDocumentation = async (options: {
 
       const deprecation = (propDescriptor.description || '').match(/@deprecated(\s+(?<info>.*))?/);
 
-      let signature: CoreReactApi['propsTable'][string]['signature'];
+      let signature: CoreReactApiProps['signature'];
       if (signatureType !== undefined) {
         signature = {
           type: signatureType,
@@ -421,7 +420,8 @@ const buildComponentDocumentation = async (options: {
           deprecationInfo:
             renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
           signature,
-          ...(Object.keys(additionalPropsInfo).length === 0 ? null : { additionalPropsInfo }),
+          additionalPropsInfo:
+            Object.keys(additionalPropsInfo).length === 0 ? undefined : additionalPropsInfo,
         },
       ];
     }),
