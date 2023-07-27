@@ -89,6 +89,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
       browser = await browserType.launch({
         headless: true,
       });
+      console.log(`Running on: ${browserType.name()}, version: ${browser.version()}.`);
       context = await browser.newContext({
         // ensure consistent date formatting regardless or environment
         locale: 'en-US',
