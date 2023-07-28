@@ -80,9 +80,12 @@ const CustomContent = React.forwardRef(function CustomContent(
   );
 });
 
-function CustomTreeItem(props: TreeItemProps) {
-  return <TreeItem ContentComponent={CustomContent} {...props} />;
-}
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(
+  props: TreeItemProps,
+  ref: React.Ref<HTMLLIElement>,
+) {
+  return <TreeItem ContentComponent={CustomContent} {...props} ref={ref} />;
+});
 
 export default function IconExpansionTreeView() {
   return (

@@ -39,11 +39,11 @@ const TreeViewRoot = styled('ul', {
   outline: 0,
 });
 
-function isPrintableCharacter(string) {
+function isPrintableCharacter(string: string) {
   return string && string.length === 1 && string.match(/\S/);
 }
 
-function findNextFirstChar(firstChars, startIndex, char) {
+function findNextFirstChar(firstChars: string[], startIndex: number, char: string) {
   for (let i = startIndex; i < firstChars.length; i += 1) {
     if (char === firstChars[i]) {
       return i;
@@ -56,8 +56,8 @@ function noopSelection() {
   return false;
 }
 
-const defaultDefaultExpanded = [];
-const defaultDefaultSelected = [];
+const defaultDefaultExpanded: string[] = [];
+const defaultDefaultSelected: string[] = [];
 
 /**
  *
@@ -118,7 +118,7 @@ const TreeView = React.forwardRef(function TreeView(
 
   const nodeMap = React.useRef<{ [nodeId: string]: TreeViewNode }>({});
 
-  const firstCharMap = React.useRef({});
+  const firstCharMap = React.useRef<{ [nodeId: string]: string }>({});
 
   const [expanded, setExpandedState] = useControlled({
     controlled: expandedProp,

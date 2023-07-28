@@ -287,7 +287,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   function handleFocus(event: React.FocusEvent<HTMLLIElement>) {
     // DOM focus stays on the tree which manages focus with aria-activedescendant
     if (event.target === event.currentTarget) {
-      let rootElement;
+      let rootElement: any;
 
       if (typeof event.target.getRootNode === 'function') {
         rootElement = event.target.getRootNode();

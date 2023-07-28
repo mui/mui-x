@@ -58,9 +58,11 @@ function TransitionComponent(props) {
   );
 }
 
-const StyledTreeItem = styled((props) => (
-  <TreeItem {...props} TransitionComponent={TransitionComponent} />
-))(({ theme }) => ({
+const CustomTreeItem = React.forwardRef((props, ref) => (
+  <TreeItem {...props} TransitionComponent={TransitionComponent} ref={ref} />
+));
+
+const StyledTreeItem = styled(CustomTreeItem)(({ theme }) => ({
   [`& .${treeItemClasses.iconContainer}`]: {
     '& .close': {
       opacity: 0.3,

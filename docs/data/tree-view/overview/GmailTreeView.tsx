@@ -61,9 +61,12 @@ const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
       paddingLeft: theme.spacing(2),
     },
   },
-}));
+})) as unknown as typeof TreeItem;
 
-function StyledTreeItem(props: StyledTreeItemProps) {
+const StyledTreeItem = React.forwardRef(function StyledTreeItem(
+  props: StyledTreeItemProps,
+  ref: React.Ref<HTMLLIElement>,
+) {
   const theme = useTheme();
   const {
     bgColor,
@@ -104,9 +107,10 @@ function StyledTreeItem(props: StyledTreeItemProps) {
       }
       style={styleProps}
       {...other}
+      ref={ref}
     />
   );
-}
+});
 
 export default function GmailTreeView() {
   return (
