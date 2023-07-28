@@ -14,7 +14,7 @@ import {
   DayCalendar,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
-  defaultReduceAnimations,
+  useDefaultReduceAnimations,
   PickersArrowSwitcher,
   PickersCalendarHeader,
   useCalendarState,
@@ -119,6 +119,7 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
 ): DateRangeCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
+  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,

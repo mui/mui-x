@@ -21,6 +21,8 @@ or two inputs using `MultiInputTimeRangeField` as show below.
 
 {{"demo": "BasicTimeRangeField.js"}}
 
+## Uncontrolled vs. controlled value
+
 The value of the component can be uncontrolled or controlled.
 
 {{"demo": "TimeRangeFieldValue.js"}}

@@ -25,6 +25,7 @@ import {
 } from '@mui/monorepo/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
+import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
 import {
   DocumentedInterfaces,
   getJsdocDefaultValue,
@@ -34,6 +35,8 @@ import {
 } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
+
+type CoreReactApiProps = CoreReactApi['propsTable'][string];
 
 export interface ReactApi extends ReactDocgenApi {
   /**
@@ -293,12 +296,7 @@ const buildComponentDocumentation = async (options: {
     // Display the imports from the pro packages above imports from the community packages
     .sort((a, b) => b.packageName.length - a.packageName.length);
 
-  const componentApi: {
-    componentDescription: string;
-    propDescriptions: { [key: string]: string | undefined };
-    classDescriptions: { [key: string]: { description: string; conditions?: string } };
-    slotDescriptions: { [key: string]: string | undefined };
-  } = {
+  const componentApi: CoreReactApi['translations'] = {
     componentDescription: reactApi.description,
     propDescriptions: {},
     classDescriptions: {},
@@ -306,12 +304,9 @@ const buildComponentDocumentation = async (options: {
   };
 
   const propErrors: Array<[propName: string, error: Error]> = [];
-  const componentProps = fromPairs<{
-    default: string | undefined;
-    required: boolean | undefined;
-    type: { name: string | undefined; description: string | undefined };
-  }>(
-    Object.entries(reactApi.props || []).map(([propName, propDescriptor]) => {
+  type Pair = [string, CoreReactApiProps];
+  const componentProps = fromPairs(
+    Object.entries(reactApi.props || []).map(([propName, propDescriptor]): Pair => {
       // TODO remove `pagination` from DataGrid's allowed props
       if (propName === 'pagination' && reactApi.name === 'DataGrid') {
         return [] as any;
@@ -329,24 +324,48 @@ const buildComponentDocumentation = async (options: {
         return [] as any;
       }
 
-      let description = generatePropDescription(prop, propName);
-      description = renderMarkdownInline(description);
+      const {
+        deprecated,
+        jsDocText,
+        signature: signatureType,
+        signatureArgs,
+        signatureReturn,
+        requiresRef,
+      } = generatePropDescription(prop, propName);
+      let description = renderMarkdownInline(jsDocText);
 
+      const additionalPropsInfo: CoreReactApiProps['additionalInfo'] & { classes?: boolean } = {};
       if (propName === 'classes') {
-        description += ' See <a href="#css">CSS API</a> below for more details.';
+        additionalPropsInfo.classes = true;
       } else if (propName === 'sx') {
-        description +=
-          ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
+        additionalPropsInfo.sx = true;
       }
       // Parse and generate `@see` doc with a {@link}
       const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
       if (seeTag && seeTag.description) {
-        description += ` ${seeTag.description.replace(
+        description += `<br>${seeTag.description.replace(
           /{@link ([^|| ]*)[|| ]([^}]*)}/,
           '<a href="$1">$2</a>',
         )}`;
       }
-      componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
+
+      const typeDescriptions: { [t: string]: string } = {};
+      (signatureArgs || [])
+        .concat(signatureReturn || [])
+        .forEach(({ name, description: paramDescription }) => {
+          typeDescriptions[name] = linkify(
+            renderMarkdownInline(paramDescription),
+            documentedInterfaces,
+            'html',
+          );
+        });
+
+      componentApi.propDescriptions[propName] = {
+        description: linkify(description, documentedInterfaces, 'html'),
+        requiresRef,
+        deprecated,
+        typeDescriptions,
+      };
 
       const jsdocDefaultValue = getJsdocDefaultValue(
         parseDoctrine(propDescriptor.description || '', {
@@ -375,6 +394,14 @@ const buildComponentDocumentation = async (options: {
 
       const deprecation = (propDescriptor.description || '').match(/@deprecated(\s+(?<info>.*))?/);
 
+      let signature: CoreReactApiProps['signature'];
+      if (signatureType !== undefined) {
+        signature = {
+          type: signatureType,
+          describedArgs: signatureArgs?.map((arg) => arg.name),
+          returned: signatureReturn?.name,
+        };
+      }
       return [
         propName,
         {
@@ -389,6 +416,10 @@ const buildComponentDocumentation = async (options: {
           deprecated: !!deprecation || undefined,
           deprecationInfo:
             renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
+          signature,
+          // @ts-expect-error TODO: Rename to `additionalInfo` when https://github.com/mui/material-ui/pull/38183 is merged
+          additionalPropsInfo:
+            Object.keys(additionalPropsInfo).length === 0 ? undefined : additionalPropsInfo,
         },
       ];
     }),
@@ -423,7 +454,7 @@ const buildComponentDocumentation = async (options: {
     });
 
     Object.entries(slots).forEach(([slot, descriptor]) => {
-      componentApi.slotDescriptions[slot] = descriptor.description;
+      componentApi.slotDescriptions![slot] = descriptor.description;
       reactApi.slots[slot] = { default: descriptor.default, type: { name: descriptor.type } };
     });
   }
@@ -518,7 +549,7 @@ const buildComponentDocumentation = async (options: {
   writePrettifiedFile(
     path.resolve(apiPagesFolder, project.documentationFolderName, `${kebabCase(reactApi.name)}.js`),
     `import * as React from 'react';
-import ApiPage from 'docsx/src/modules/components/ApiPage';
+import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
 import jsonPageContent from './${kebabCase(reactApi.name)}.json';
 

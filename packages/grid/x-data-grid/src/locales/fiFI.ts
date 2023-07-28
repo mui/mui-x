@@ -107,7 +107,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Valikko',
   columnMenuShowColumns: 'Näytä sarakkeet',
-  // columnMenuManageColumns: 'Manage columns',
+  columnMenuManageColumns: 'Hallitse sarakkeita',
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
   columnMenuUnsort: 'Poista järjestys',

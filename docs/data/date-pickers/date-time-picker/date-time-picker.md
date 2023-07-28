@@ -27,6 +27,8 @@ Check-out their documentation page for more information:
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
 - [Time Clock](/x/react-date-pickers/time-clock/)
 
+## Uncontrolled vs. controlled value
+
 The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateTimePickerValue.js"}}

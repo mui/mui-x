@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -32,24 +33,25 @@ export default function AxisCustomizationNoSnap() {
         { propName: 'tickSize', knob: 'number', defaultValue: 6 },
       ]}
       renderDemo={(props) => (
-        <ScatterChart
-          series={[
-            {
-              type: 'scatter',
-              id: 'linear',
-              data,
-            },
-          ]}
-          leftAxis={null}
-          bottomAxis={{
-            axisId: DEFAULT_X_AXIS_KEY,
-            ...defaultXAxis,
-            ...props,
-          }}
-          width={400}
-          height={300}
-          margin={{ top: 10, left: 20, right: 20 }}
-        />
+        <Box sx={{ width: '100%', maxWidth: 400 }}>
+          <ScatterChart
+            series={[
+              {
+                type: 'scatter',
+                id: 'linear',
+                data,
+              },
+            ]}
+            leftAxis={null}
+            bottomAxis={{
+              axisId: DEFAULT_X_AXIS_KEY,
+              ...defaultXAxis,
+              ...props,
+            }}
+            height={300}
+            margin={{ top: 10, left: 20, right: 20 }}
+          />
+        </Box>
       )}
       getCode={({ props }) =>
         [
