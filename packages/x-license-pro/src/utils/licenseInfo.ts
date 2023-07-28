@@ -1,6 +1,9 @@
 import { ponyfillGlobal } from '@mui/utils';
 
-interface MuiLicenseInfo {
+/**
+ * @ignore - do not document.
+ */
+export interface MuiLicenseInfo {
   key: string | undefined;
 }
 

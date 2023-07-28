@@ -1,6 +1,6 @@
 ---
 productId: x-date-pickers
-title: Date and Time pickers - Custom subcomponents
+title: Date and Time Pickers - Custom subcomponents
 components: DateTimePickerTabs
 ---
 

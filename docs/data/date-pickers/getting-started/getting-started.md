@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers - Getting Started
 
-<p class="description">Get started with the Date and Time pickers. Install the package, configure your application and start using the components.</p>
+<p class="description">Get started with the Date and Time Pickers. Install the package, configure your application and start using the components.</p>
 
 ## Installation
 
@@ -35,6 +35,9 @@ npm install @mui/material @emotion/react @emotion/styled
 ```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
+```
 </codeblock>
 
 <!-- #react-peer-version -->
@@ -59,6 +62,10 @@ npm install @mui/styled-engine-sc styled-components
 
 ```bash yarn
 yarn add @mui/styled-engine-sc styled-components
+```
+
+```bash pnpm
+pnpm add @mui/styled-engine-sc styled-components
 ```
 
 </codeblock>

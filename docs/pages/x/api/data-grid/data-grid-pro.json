@@ -19,7 +19,7 @@
       "type": { "name": "custom", "description": "bool" },
       "default": "false"
     },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
@@ -80,15 +80,72 @@
         "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterExcludeHiddenColumns?: bool, quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
-    "getCellClassName": { "type": { "name": "func" } },
-    "getDetailPanelContent": { "type": { "name": "func" } },
-    "getDetailPanelHeight": { "type": { "name": "func" }, "default": "\"() => 500\"" },
-    "getEstimatedRowHeight": { "type": { "name": "func" } },
-    "getRowClassName": { "type": { "name": "func" } },
-    "getRowHeight": { "type": { "name": "func" } },
+    "getCellClassName": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams) => string",
+        "describedArgs": ["params"],
+        "returned": "string"
+      }
+    },
+    "getDetailPanelContent": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams) => JSX.Element",
+        "describedArgs": ["params"],
+        "returned": "JSX.Element"
+      }
+    },
+    "getDetailPanelHeight": {
+      "type": { "name": "func" },
+      "default": "\"() => 500\"",
+      "signature": {
+        "type": "function(params: GridRowParams) => number | string",
+        "describedArgs": ["params"],
+        "returned": "number | string"
+      }
+    },
+    "getEstimatedRowHeight": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowHeightParams) => number | null",
+        "describedArgs": ["params"],
+        "returned": "number | null"
+      }
+    },
+    "getRowClassName": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowClassNameParams) => string",
+        "describedArgs": ["params"],
+        "returned": "string"
+      }
+    },
+    "getRowHeight": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowHeightParams) => GridRowHeightReturnValue",
+        "describedArgs": ["params"],
+        "returned": "GridRowHeightReturnValue"
+      }
+    },
     "getRowId": { "type": { "name": "func" } },
-    "getRowSpacing": { "type": { "name": "func" } },
-    "getTreeDataPath": { "type": { "name": "func" } },
+    "getRowSpacing": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowSpacingParams) => GridRowSpacing",
+        "describedArgs": ["params"],
+        "returned": "GridRowSpacing"
+      }
+    },
+    "getTreeDataPath": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(row: R) => Array<string>",
+        "describedArgs": ["row"],
+        "returned": "Array<string>"
+      }
+    },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
@@ -98,9 +155,30 @@
     },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
     "initialState": { "type": { "name": "object" } },
-    "isCellEditable": { "type": { "name": "func" } },
-    "isGroupExpandedByDefault": { "type": { "name": "func" } },
-    "isRowSelectable": { "type": { "name": "func" } },
+    "isCellEditable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams) => boolean",
+        "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
+    "isGroupExpandedByDefault": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(node: GridGroupNode) => boolean",
+        "describedArgs": ["node"],
+        "returned": "boolean"
+      }
+    },
+    "isRowSelectable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams) => boolean",
+        "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
     "keepColumnPositionIfDraggedOutside": { "type": { "name": "bool" } },
     "keepNonExistentRowsSelected": { "type": { "name": "bool" } },
     "loading": { "type": { "name": "bool" } },
@@ -120,44 +198,266 @@
       "default": "\"error\" (\"warn\" in dev mode)"
     },
     "nonce": { "type": { "name": "string" } },
-    "onCellClick": { "type": { "name": "func" } },
-    "onCellDoubleClick": { "type": { "name": "func" } },
-    "onCellEditStart": { "type": { "name": "func" } },
-    "onCellEditStop": { "type": { "name": "func" } },
-    "onCellKeyDown": { "type": { "name": "func" } },
-    "onCellModesModelChange": { "type": { "name": "func" } },
-    "onClipboardCopy": { "type": { "name": "func" } },
-    "onColumnHeaderClick": { "type": { "name": "func" } },
-    "onColumnHeaderDoubleClick": { "type": { "name": "func" } },
-    "onColumnHeaderEnter": { "type": { "name": "func" } },
-    "onColumnHeaderLeave": { "type": { "name": "func" } },
-    "onColumnHeaderOut": { "type": { "name": "func" } },
-    "onColumnHeaderOver": { "type": { "name": "func" } },
-    "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnResize": { "type": { "name": "func" } },
-    "onColumnVisibilityModelChange": { "type": { "name": "func" } },
-    "onColumnWidthChange": { "type": { "name": "func" } },
-    "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
-    "onFetchRows": { "type": { "name": "func" } },
-    "onFilterModelChange": { "type": { "name": "func" } },
-    "onMenuClose": { "type": { "name": "func" } },
-    "onMenuOpen": { "type": { "name": "func" } },
-    "onPaginationModelChange": { "type": { "name": "func" } },
-    "onPinnedColumnsChange": { "type": { "name": "func" } },
-    "onPreferencePanelClose": { "type": { "name": "func" } },
-    "onPreferencePanelOpen": { "type": { "name": "func" } },
-    "onProcessRowUpdateError": { "type": { "name": "func" } },
-    "onResize": { "type": { "name": "func" } },
-    "onRowClick": { "type": { "name": "func" } },
-    "onRowDoubleClick": { "type": { "name": "func" } },
-    "onRowEditCommit": { "type": { "name": "func" } },
-    "onRowEditStart": { "type": { "name": "func" } },
-    "onRowEditStop": { "type": { "name": "func" } },
-    "onRowModesModelChange": { "type": { "name": "func" } },
-    "onRowOrderChange": { "type": { "name": "func" } },
-    "onRowSelectionModelChange": { "type": { "name": "func" } },
-    "onRowsScrollEnd": { "type": { "name": "func" } },
-    "onSortModelChange": { "type": { "name": "func" } },
+    "onCellClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onCellDoubleClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onCellEditStart": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      }
+    },
+    "onCellEditStop": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<MuiBaseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      }
+    },
+    "onCellKeyDown": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridCellParams, event: MuiEvent<React.KeyboardEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onCellModesModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(cellModesModel: GridCellModesModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["cellModesModel", "details"]
+      }
+    },
+    "onClipboardCopy": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(data: string) => void", "describedArgs": ["data"] }
+    },
+    "onColumnHeaderClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderDoubleClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderEnter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderLeave": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderOut": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnHeaderOver": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnHeaderParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnOrderChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnOrderChangeParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnResize": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnResizeParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onColumnVisibilityModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridColumnVisibilityModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      }
+    },
+    "onColumnWidthChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridColumnResizeParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onDetailPanelExpandedRowIdsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(ids: Array<GridRowId>, details: GridCallbackDetails) => void",
+        "describedArgs": ["ids", "details"]
+      }
+    },
+    "onFetchRows": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridFetchRowsParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onFilterModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridFilterModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      }
+    },
+    "onMenuClose": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridMenuParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onMenuOpen": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridMenuParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onPaginationModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridPaginationModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      }
+    },
+    "onPinnedColumnsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(pinnedColumns: GridPinnedColumns, details: GridCallbackDetails) => void",
+        "describedArgs": ["pinnedColumns", "details"]
+      }
+    },
+    "onPreferencePanelClose": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridPreferencePanelParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onPreferencePanelOpen": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridPreferencePanelParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onProcessRowUpdateError": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(error: any) => void", "describedArgs": ["error"] }
+    },
+    "onResize": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(containerSize: ElementSize, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["containerSize", "event", "details"]
+      }
+    },
+    "onRowClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onRowDoubleClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<React.MouseEvent>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onRowEditCommit": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(id: GridRowId, event: MuiEvent<MuiBaseEvent>) => void",
+        "describedArgs": ["id", "event"]
+      }
+    },
+    "onRowEditStart": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<React.KeyboardEvent | React.MouseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      }
+    },
+    "onRowEditStop": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowParams, event: MuiEvent<MuiBaseEvent>) => void",
+        "describedArgs": ["params", "event"]
+      }
+    },
+    "onRowModesModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["rowModesModel", "details"]
+      }
+    },
+    "onRowOrderChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowOrderChangeParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onRowSelectionModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["rowSelectionModel", "details"]
+      }
+    },
+    "onRowsScrollEnd": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: GridRowScrollEndParams, event: MuiEvent<{}>, details: GridCallbackDetails) => void",
+        "describedArgs": ["params", "event", "details"]
+      }
+    },
+    "onSortModelChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(model: GridSortModel, details: GridCallbackDetails) => void",
+        "describedArgs": ["model", "details"]
+      }
+    },
     "pageSizeOptions": {
       "type": {
         "name": "arrayOf",
@@ -185,7 +485,14 @@
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
     },
-    "processRowUpdate": { "type": { "name": "func" } },
+    "processRowUpdate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newRow: R, oldRow: R) => Promise<R> | R",
+        "describedArgs": ["newRow", "oldRow"],
+        "returned": "Promise<R> | R"
+      }
+    },
     "rowBuffer": { "type": { "name": "number" }, "default": "3" },
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
@@ -230,7 +537,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" } },

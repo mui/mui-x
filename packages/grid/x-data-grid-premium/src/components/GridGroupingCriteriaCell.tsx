@@ -61,8 +61,6 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     event.stopPropagation();
   };
 
-  const marginLeft = rootProps.rowGroupingColumnMode === 'multiple' ? 0 : rowNode.depth * 2;
-
   let cellContent: React.ReactNode;
 
   const colDef = apiRef.current.getColumn(rowNode.groupingField!);
@@ -75,7 +73,16 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   }
 
   return (
-    <Box className={classes.root} sx={{ ml: marginLeft }}>
+    <Box
+      className={classes.root}
+      sx={{
+        ml:
+          rootProps.rowGroupingColumnMode === 'multiple'
+            ? 0
+            : (theme) =>
+                `calc(var(--DataGrid-cellOffsetMultiplier) * ${theme.spacing(rowNode.depth)})`,
+      }}
+    >
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
           <rootProps.slots.baseIconButton

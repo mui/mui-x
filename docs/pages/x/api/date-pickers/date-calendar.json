@@ -15,7 +15,12 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()"
+      "default": "(day) => day.charAt(0).toUpperCase()",
+      "signature": {
+        "type": "function(day: string) => string",
+        "describedArgs": ["day"],
+        "returned": "string"
+      }
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultValue": { "type": { "name": "any" } },
@@ -38,11 +43,32 @@
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
     },
-    "onChange": { "type": { "name": "func" } },
-    "onFocusedViewChange": { "type": { "name": "func" } },
-    "onMonthChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
-    "onYearChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate | null, selectionState: PickerSelectionState | undefined) => void",
+        "describedArgs": ["value", "selectionState"]
+      }
+    },
+    "onFocusedViewChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(view: TView, hasFocus: boolean) => void",
+        "describedArgs": ["view", "hasFocus"]
+      }
+    },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "onYearChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] }
+    },
     "openTo": {
       "type": {
         "name": "enum",
@@ -60,11 +86,37 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
+      "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
+      "signature": {
+        "type": "function() => React.ReactNode",
+        "describedArgs": [],
+        "returned": "React.ReactNode"
+      }
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
-    "shouldDisableYear": { "type": { "name": "func" } },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate) => boolean",
+        "describedArgs": ["day"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableMonth": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(month: TDate) => boolean",
+        "describedArgs": ["month"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableYear": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(year: TDate) => boolean",
+        "describedArgs": ["year"],
+        "returned": "boolean"
+      }
+    },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
@@ -72,7 +124,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
