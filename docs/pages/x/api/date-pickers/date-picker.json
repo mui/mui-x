@@ -20,7 +20,12 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()"
+      "default": "(day) => day.charAt(0).toUpperCase()",
+      "signature": {
+        "type": "function(day: string) => string",
+        "describedArgs": ["day"],
+        "returned": "string"
+      }
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultValue": { "type": { "name": "any" } },
@@ -52,15 +57,45 @@
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
     },
-    "onAccept": { "type": { "name": "func" } },
-    "onChange": { "type": { "name": "func" } },
+    "onAccept": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
+    },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
     "onClose": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onMonthChange": { "type": { "name": "func" } },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+    },
     "onOpen": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
-    "onYearChange": { "type": { "name": "func" } },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      }
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "onYearChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] }
+    },
     "open": { "type": { "name": "bool" } },
     "openTo": {
       "type": {
@@ -77,7 +112,12 @@
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
+      "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
+      "signature": {
+        "type": "function() => React.ReactNode",
+        "describedArgs": [],
+        "returned": "React.ReactNode"
+      }
     },
     "selectedSections": {
       "type": {
@@ -85,9 +125,30 @@
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
-    "shouldDisableYear": { "type": { "name": "func" } },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate) => boolean",
+        "describedArgs": ["day"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableMonth": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(month: TDate) => boolean",
+        "describedArgs": ["month"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableYear": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(year: TDate) => boolean",
+        "describedArgs": ["year"],
+        "returned": "boolean"
+      }
+    },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
@@ -95,7 +156,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },

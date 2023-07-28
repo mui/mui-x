@@ -31,9 +31,27 @@
     },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
-    "onChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      }
+    },
     "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
       "type": { "name": "any" },
@@ -45,7 +63,14 @@
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate, position: string) => boolean",
+        "describedArgs": ["day", "position"],
+        "returned": "boolean"
+      }
+    },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
@@ -60,7 +85,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },

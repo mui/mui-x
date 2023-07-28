@@ -99,12 +99,10 @@ export function verifyLicense({
   releaseInfo,
   licenseKey,
   acceptedScopes,
-  isProduction,
 }: {
   releaseInfo: string;
   licenseKey: string | undefined;
   acceptedScopes: LicenseScope[];
-  isProduction: boolean;
 }): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI: The release information is missing. Not able to validate license.');
@@ -138,7 +136,7 @@ export function verifyLicense({
     return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.licensingModel === 'perpetual' || isProduction) {
+  if (license.licensingModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
       throw new Error('MUI: The release information is invalid. Not able to validate license.');
@@ -149,8 +147,11 @@ export function verifyLicense({
     }
   } else if (license.licensingModel === 'subscription' || license.licensingModel === 'annual') {
     if (new Date().getTime() > license.expiryTimestamp) {
-      // 30 days grace
-      if (new Date().getTime() < license.expiryTimestamp + 1000 * 3600 * 24 * 30) {
+      if (
+        // 30 days grace
+        new Date().getTime() < license.expiryTimestamp + 1000 * 3600 * 24 * 30 ||
+        process.env.NODE_ENV !== 'development'
+      ) {
         return {
           status: LICENSE_STATUS.ExpiredAnnualGrace,
           meta: { expiryTimestamp: license.expiryTimestamp, licenseKey },
