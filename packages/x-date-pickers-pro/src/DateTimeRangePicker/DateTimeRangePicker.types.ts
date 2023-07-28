@@ -4,24 +4,23 @@ import {
   DesktopDateTimeRangePickerSlotsComponent,
   DesktopDateTimeRangePickerSlotsComponentsProps,
 } from '../DesktopDateTimeRangePicker';
-// import {
-//   MobileDateRangePickerProps,
-//   MobileDateRangePickerSlotsComponent,
-//   MobileDateRangePickerSlotsComponentsProps,
-// } from '../MobileDateRangePicker';
+import {
+  MobileDateTimeRangePickerProps,
+  MobileDateTimeRangePickerSlotsComponent,
+  MobileDateTimeRangePickerSlotsComponentsProps,
+} from '../MobileDateTimeRangePicker';
 
 export interface DateTimeRangePickerSlotsComponents<TDate>
-  extends DesktopDateTimeRangePickerSlotsComponent<TDate> {
-  // ,MobileDateRangePickerSlotsComponent<TDate>
-}
+  extends DesktopDateTimeRangePickerSlotsComponent<TDate>,
+    MobileDateTimeRangePickerSlotsComponent<TDate> {}
 
 export interface DateTimeRangePickerSlotsComponentsProps<TDate>
-  extends DesktopDateTimeRangePickerSlotsComponentsProps<TDate> {
-  // ,MobileDateRangePickerSlotsComponentsProps<TDate>
-}
+  extends DesktopDateTimeRangePickerSlotsComponentsProps<TDate>,
+    MobileDateTimeRangePickerSlotsComponentsProps<TDate> {}
 
-export interface DateTimeRangePickerProps<TDate> extends DesktopDateTimeRangePickerProps<TDate> {
-  // ,MobileDateRangePickerProps<TDate>
+export interface DateTimeRangePickerProps<TDate>
+  extends DesktopDateTimeRangePickerProps<TDate>,
+    MobileDateTimeRangePickerProps<TDate> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'

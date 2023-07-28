@@ -1,34 +1,112 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useThemeProps } from '@mui/material/styles';
-import { DateTimeRangePickerProps } from './DateTimeRangePicker.types';
-import { DesktopDateTimeRangePicker } from '../DesktopDateTimeRangePicker';
-import { MobileDateTimeRangePicker } from '../MobileDateTimeRangePicker';
+import {
+  extractValidationProps,
+  isInternalTimeView,
+  PickerViewRendererLookup,
+} from '@mui/x-date-pickers/internals';
+import { resolveComponentProps } from '@mui/base/utils';
+import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
+import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';
+import { rangeValueManager } from '../internals/utils/valueManagers';
+import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
+import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
+import { useMobileRangePicker } from '../internals/hooks/useMobileRangePicker';
+import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { DateRange, DateTimeRangePickerViews } from '../internals/models';
+import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
+import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
+import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 
-type DateTimeRangePickerComponent = (<TDate>(
-  props: DateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
+type MobileDateRangePickerComponent = (<TDate>(
+  props: MobileDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-const DateTimeRangePicker = React.forwardRef(function DateTimeRangePicker<TDate>(
-  inProps: DateTimeRangePickerProps<TDate>,
+const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangePicker<TDate>(
+  inProps: MobileDateTimeRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiDateTimeRangePicker' });
+  // Props with the default values common to all date time range pickers
+  const defaultizedProps = useDateTimeRangePickerDefaultizedProps<
+    TDate,
+    MobileDateTimeRangePickerProps<TDate>
+  >(inProps, 'MuiMobileDateTimeRangePicker');
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  const viewRenderers: PickerViewRendererLookup<
+    DateRange<TDate>,
+    DateTimeRangePickerViews,
+    any,
+    {}
+  > = {
+    day: renderDateRangeViewCalendar,
+    hours: renderMultiSectionDigitalClockTimeView,
+    minutes: renderMultiSectionDigitalClockTimeView,
+    seconds: renderMultiSectionDigitalClockTimeView,
+    meridiem: renderMultiSectionDigitalClockTimeView,
+    ...defaultizedProps.viewRenderers,
+  };
 
-  // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
-  const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
+  const props = {
+    ...defaultizedProps,
+    viewRenderers,
+    calendars: 1,
+    slots: {
+      field: MultiInputDateTimeRangeField,
+      tabs: DateTimePickerTabs,
+      ...defaultizedProps.slots,
+    },
+    slotProps: {
+      ...defaultizedProps.slotProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
+        ref,
+      }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+      tabs: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.tabs,
+      },
+    },
+  };
 
-  if (isDesktop) {
-    return <DesktopDateTimeRangePicker ref={ref} {...other} />;
-  }
+  const { renderPicker } = useMobileRangePicker<TDate, DateTimeRangePickerViews, typeof props>({
+    props,
+    valueManager: rangeValueManager,
+    valueType: 'date-time',
+    validator: validateDateRange,
+    rendererInterceptor(inViewRenderers, popperView, rendererProps) {
+      const finalProps = {
+        ...rendererProps,
+        focusedView: null,
+        // sx: {
+        //   borderBottom: 0,
+        //   width: 'auto',
+        //   [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+        //     // subtract time range position controls height with it's border
+        //     maxHeight: VIEW_HEIGHT - 33,
+        //   },
+        //   ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        // },
+      };
+      return isInternalTimeView(popperView) ? (
+        <DateTimeRangePickerTimeWrapper
+          {...finalProps}
+          viewRenderer={inViewRenderers[popperView]}
+        />
+      ) : (
+        inViewRenderers[popperView]?.(finalProps)
+      );
+    },
+  });
 
-  return <MobileDateTimeRangePicker ref={ref} {...other} />;
-}) as DateTimeRangePickerComponent;
+  return renderPicker();
+}) as MobileDateRangePickerComponent;
 
-DateTimeRangePicker.propTypes = {
+MobileDateTimeRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -41,7 +119,7 @@ DateTimeRangePicker.propTypes = {
    */
   autoFocus: PropTypes.bool,
   /**
-   * The number of calendars to render on **desktop**.
+   * The number of calendars to render on **Mobile**.
    * @default 2
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
@@ -51,7 +129,7 @@ DateTimeRangePicker.propTypes = {
   className: PropTypes.string,
   /**
    * If `true`, the popover or modal will close after submitting the full date.
-   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * @default `true` for Mobile, `false` for mobile (based on the chosen wrapper and `MobileModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -93,12 +171,6 @@ DateTimeRangePicker.propTypes = {
    * Used when the component is not controlled.
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
-  /**
-   * CSS media query when `Mobile` mode will be changed to `Desktop`.
-   * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
-   */
-  desktopModeMediaQuery: PropTypes.string,
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -348,4 +420,4 @@ DateTimeRangePicker.propTypes = {
   }),
 } as any;
 
-export { DateTimeRangePicker };
+export { MobileDateTimeRangePicker };
