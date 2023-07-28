@@ -186,8 +186,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     treeId,
   } = useTreeViewContext();
 
-  let id: string | undefined = undefined;
-
+  let id: string | undefined;
   if (idProp != null) {
     id = idProp;
   } else if (treeId && nodeId) {

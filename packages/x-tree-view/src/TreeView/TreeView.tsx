@@ -377,14 +377,14 @@ const TreeView = React.forwardRef(function TreeView(
     const firstCharIds: string[] = [];
     const firstChars: string[] = [];
     // This really only works since the ids are strings
-    Object.keys(firstCharMap.current).forEach((nodeId) => {
-      const firstChar = firstCharMap.current[nodeId];
-      const map = nodeMap.current[nodeId];
+    Object.keys(firstCharMap.current).forEach((mapNodeId) => {
+      const map = nodeMap.current[mapNodeId];
       const visible = map.parentId ? isExpanded(map.parentId) : true;
-      const shouldBeSkipped = disabledItemsFocusable ? false : isDisabled(nodeId);
+      const shouldBeSkipped = disabledItemsFocusable ? false : isDisabled(mapNodeId);
 
       if (visible && !shouldBeSkipped) {
-        firstCharIds.push(nodeId);
+        const mapFirstChar = firstCharMap.current[mapNodeId];
+        firstCharIds.push(mapNodeId);
         firstChars.push(firstChar);
       }
     });

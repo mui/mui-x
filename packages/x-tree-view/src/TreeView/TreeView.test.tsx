@@ -94,6 +94,7 @@ describe('<TreeView />', () => {
     });
 
     it('should not crash when unmounting with duplicate ids', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       function CustomTreeItem(props: any) {
         return <TreeItem nodeId="iojerogj" />;
       }
