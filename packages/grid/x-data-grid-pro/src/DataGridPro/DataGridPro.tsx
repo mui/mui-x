@@ -283,6 +283,7 @@ DataGridProRaw.propTypes = {
       }),
     ).isRequired,
     logicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterExcludeHiddenColumns: PropTypes.bool,
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),

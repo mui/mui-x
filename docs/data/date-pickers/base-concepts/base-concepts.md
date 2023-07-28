@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers - Base concepts
 
-<p class="description">The Date and Time pickers expose a lot of components to fit your every need.</p>
+<p class="description">The Date and Time Pickers expose a lot of components to fit your every need.</p>
 
 ## Controlled value
 

@@ -27,11 +27,11 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
     <React.Fragment>
       {xAxisHighlight === 'band' && axis.x !== null && isBandScale(xScale) && (
         <path
-          d={`M ${xScale(axis.x.value)!} ${yScale.range()[0]} L ${
-            xScale(axis.x.value)! + xScale.bandwidth()
-          } ${yScale.range()[0]} L ${xScale(axis.x.value)! + xScale.bandwidth()} ${
-            yScale.range()[1]
-          } L ${xScale(axis.x.value)!} ${yScale.range()[1]} Z`}
+          d={`M ${xScale(axis.x.value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
+            yScale.range()[0]
+          } l ${xScale.step()} 0 l 0 ${
+            yScale.range()[1] - yScale.range()[0]
+          } l ${-xScale.step()} 0 Z`}
           fill="gray"
           fillOpacity={0.1}
           style={{ pointerEvents: 'none' }}
