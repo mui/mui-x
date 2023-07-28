@@ -164,36 +164,28 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
             'cell',
           );
         });
-        // Firefox insists on focusing the pagination wrapper first before the input.
-        // This might need looking into in more depth.
-        // Maybe it's a bug?
-        if (browserType.name() !== 'firefox') {
-          await page.keyboard.press('Tab');
-          await waitFor(async () => {
-            expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
-            expect(
-              await page.evaluate(() => document.activeElement?.getAttribute('role')),
-            ).to.equal('button');
-          });
-          await page.keyboard.press('Shift+Tab');
-          await waitFor(async () => {
-            expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal(
-              'Adidas',
-            );
-            expect(
-              await page.evaluate(() => document.activeElement?.getAttribute('role')),
-            ).to.equal('cell');
-          });
-          // WebKit does not want to return focus back to the button for some reason...
-          if (browserType.name() !== 'webkit') {
-            await page.keyboard.press('Shift+Tab');
-            await waitFor(async () => {
-              expect(
-                await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
-              ).to.equal('initial-focus');
-            });
-          }
-        }
+        await page.keyboard.press('Tab');
+        await waitFor(async () => {
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
+          expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+            'button',
+          );
+        });
+        await page.keyboard.press('Shift+Tab');
+        await waitFor(async () => {
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
+          expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+            'cell',
+          );
+        });
+        // WebKit does not focus on buttons by default when pressing tab.
+        // https://github.com/microsoft/playwright/issues/5609#issuecomment-832684772
+        await page.keyboard.press(browserType.name() === 'webkit' ? 'Alt+Shift+Tab' : 'Shift+Tab');
+        await waitFor(async () => {
+          expect(
+            await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
+          ).to.equal('initial-focus');
+        });
       });
 
       it('should display the rows', async () => {
