@@ -125,8 +125,8 @@ export function useDescendant(descendant: TreeItemDescendant) {
 }
 
 interface DescendantProviderProps {
-  id?: string
-  children: React.ReactNode
+  id?: string;
+  children: React.ReactNode;
 }
 
 export function DescendantProvider(props: DescendantProviderProps) {
