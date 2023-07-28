@@ -1,5 +1,9 @@
 {
   "props": {
+    "changeImportance": {
+      "type": { "name": "enum", "description": "'accept'<br>&#124;&nbsp;'set'" },
+      "default": "\"accept\""
+    },
     "dense": { "type": { "name": "bool" } },
     "disablePadding": { "type": { "name": "bool" } },
     "items": {
@@ -14,7 +18,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     }
   },
   "slots": {},

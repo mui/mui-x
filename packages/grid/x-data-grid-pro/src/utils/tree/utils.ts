@@ -1,10 +1,12 @@
 import {
   GRID_ROOT_GROUP_ID,
   GridChildrenFromPathLookup,
+  GridFilterState,
   GridGroupNode,
   GridLeafNode,
   GridRowId,
   GridRowTreeConfig,
+  GridRowsState,
   GridTreeNode,
 } from '@mui/x-data-grid';
 import {
@@ -35,25 +37,23 @@ export const getNodePathInTree = ({
 
   while (node.id !== GRID_ROOT_GROUP_ID) {
     path.push({
-      field: (node as GridGroupNode).groupingField,
+      field: node.type === 'leaf' ? null : node.groupingField,
       key: node.groupingKey,
     });
 
     node = tree[node.parent!] as GridGroupNode | GridLeafNode;
   }
 
+  path.reverse();
+
   return path;
 };
 
-export const addGroupDefaultExpansion = ({
-  node,
-  isGroupExpandedByDefault,
-  defaultGroupingExpansionDepth,
-}: {
-  node: GridGroupNode;
-  isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
-  defaultGroupingExpansionDepth: number;
-}) => {
+export const updateGroupDefaultExpansion = (
+  node: GridGroupNode,
+  defaultGroupingExpansionDepth: number,
+  isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'],
+) => {
   let childrenExpanded: boolean;
   if (node.id === GRID_ROOT_GROUP_ID) {
     childrenExpanded = true;
@@ -64,24 +64,20 @@ export const addGroupDefaultExpansion = ({
       defaultGroupingExpansionDepth === -1 || defaultGroupingExpansionDepth > node.depth;
   }
 
-  return {
-    ...node,
-    childrenExpanded,
-  };
+  node.childrenExpanded = childrenExpanded;
+
+  return node;
 };
 
 /**
  * Insert a node in the tree
  */
-export const insertNodeInTree = ({
-  node,
-  tree,
-  treeDepths,
-}: {
-  node: GridTreeNode;
-  tree: GridRowTreeConfig;
-  treeDepths: GridTreeDepths;
-}) => {
+export const insertNodeInTree = (
+  node: GridTreeNode,
+  tree: GridRowTreeConfig,
+  treeDepths: GridTreeDepths,
+  previousTree: GridRowTreeConfig | null,
+) => {
   // 1. Insert node in the tree.
   tree[node.id] = node;
 
@@ -90,30 +86,30 @@ export const insertNodeInTree = ({
 
   // 3. Register the new node in its parent.
   const parentNode = tree[node.parent!] as GridGroupNode;
-  if (node.type === 'footer') {
-    // For footers,
-    // Register the node from its parent `footerId` property.
-    tree[node.parent] = {
-      ...parentNode,
-      footerId: node.id,
-    };
-  } else if (node.type === 'group' || node.type === 'leaf') {
+  if (node.type === 'group' || node.type === 'leaf') {
     // For groups and leaves,
     // Register the node from its parents `children` and `childrenFromPath` properties.
-    const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
-    const groupingKey = (node as GridGroupNode).groupingKey ?? '__no_key__';
+    const groupingFieldName = (node as GridGroupNode).groupingField ?? '__no_field__';
+    const groupingKeyName = (node as GridGroupNode).groupingKey ?? '__no_key__';
+    const groupingField = parentNode.childrenFromPath?.[groupingFieldName];
 
-    tree[node.parent!] = {
-      ...parentNode,
-      childrenFromPath: {
-        ...parentNode.childrenFromPath,
-        [groupingField]: {
-          ...parentNode.childrenFromPath?.[groupingField],
-          [groupingKey.toString()]: node.id,
-        },
-      },
-      children: [...parentNode.children, node.id],
-    };
+    if (previousTree !== null && previousTree[parentNode.id] === tree[parentNode.id]) {
+      parentNode.children = [...parentNode.children, node.id];
+    } else {
+      parentNode.children.push(node.id);
+    }
+
+    if (groupingField == null) {
+      parentNode.childrenFromPath[groupingFieldName] = {
+        [groupingKeyName.toString()]: node.id,
+      };
+    } else {
+      groupingField[groupingKeyName.toString()] = node.id;
+    }
+  } else if (node.type === 'footer') {
+    // For footers,
+    // Register the node from its parent `footerId` property.
+    parentNode.footerId = node.id;
   }
 };
 
@@ -156,17 +152,11 @@ export const removeNodeFromTree = ({
   else {
     const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
     const groupingKey = (node as GridGroupNode).groupingKey ?? '__no_key__';
-    const { [groupingKey.toString()]: childrenToRemove, ...newChildrenFromPathWithField } =
-      parentNode.childrenFromPath?.[groupingField] ?? {};
 
     // TODO rows v6: Can we avoid this linear complexity ?
     const children = parentNode.children.filter((childId) => childId !== node.id);
-    const childrenFromPath: GridChildrenFromPathLookup = { ...parentNode.childrenFromPath };
-    if (Object.keys(newChildrenFromPathWithField).length === 0) {
-      delete childrenFromPath[groupingField];
-    } else {
-      childrenFromPath[groupingField] = newChildrenFromPathWithField;
-    }
+    const childrenFromPath: GridChildrenFromPathLookup = parentNode.childrenFromPath;
+    delete childrenFromPath[groupingField][groupingKey.toString()];
 
     tree[parentNode.id] = {
       ...parentNode,
@@ -182,9 +172,11 @@ export const removeNodeFromTree = ({
 export const updateGroupNodeIdAndAutoGenerated = ({
   node,
   updatedNode,
+  previousTree,
   tree,
   treeDepths,
 }: {
+  previousTree: GridRowTreeConfig | null;
   node: GridGroupNode;
   updatedNode: Pick<GridGroupNode, 'id' | 'isAutoGenerated'>;
   tree: GridRowTreeConfig;
@@ -211,11 +203,7 @@ export const updateGroupNodeIdAndAutoGenerated = ({
     ...updatedNode,
   };
 
-  insertNodeInTree({
-    node: groupNode,
-    tree,
-    treeDepths,
-  });
+  insertNodeInTree(groupNode, tree, treeDepths, previousTree);
 };
 
 export const createUpdatedGroupsManager = (): GridRowTreeUpdatedGroupsManager => ({
@@ -228,3 +216,45 @@ export const createUpdatedGroupsManager = (): GridRowTreeUpdatedGroupsManager =>
     this.value[groupId][action] = true;
   },
 });
+
+export const getVisibleRowsLookup = ({
+  tree,
+  filteredRowsLookup,
+}: {
+  tree: GridRowsState['tree'];
+  filteredRowsLookup: GridFilterState['filteredRowsLookup'];
+}) => {
+  if (!filteredRowsLookup) {
+    return {};
+  }
+
+  const visibleRowsLookup: Record<GridRowId, boolean> = {};
+
+  const handleTreeNode = (node: GridTreeNode, areAncestorsExpanded: boolean) => {
+    const isPassingFiltering = filteredRowsLookup[node.id];
+
+    if (node.type === 'group') {
+      node.children.forEach((childId) => {
+        const childNode = tree[childId];
+        handleTreeNode(childNode, areAncestorsExpanded && !!node.childrenExpanded);
+      });
+    }
+
+    visibleRowsLookup[node.id] = isPassingFiltering && areAncestorsExpanded;
+
+    // TODO rows v6: Should we keep storing the visibility status of footer independently or rely on the group visibility in the selector ?
+    if (node.type === 'group' && node.footerId != null) {
+      visibleRowsLookup[node.footerId] =
+        isPassingFiltering && areAncestorsExpanded && !!node.childrenExpanded;
+    }
+  };
+
+  const nodes = Object.values(tree);
+  for (let i = 0; i < nodes.length; i += 1) {
+    const node = nodes[i];
+    if (node.depth === 0) {
+      handleTreeNode(node, true);
+    }
+  }
+  return visibleRowsLookup;
+};

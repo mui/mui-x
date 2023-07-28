@@ -9,10 +9,14 @@ export const getExtremumX: ExtremumGetter<'line'> = (params) => {
 };
 
 export const getExtremumY: ExtremumGetter<'line'> = (params) => {
-  const { series, axis } = params;
+  const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
-    .filter((seriesId) => series[seriesId].yAxisKey === axis.id)
+    .filter(
+      (seriesId) =>
+        series[seriesId].yAxisKey === axis.id ||
+        (isDefaultAxis && series[seriesId].yAxisKey === undefined),
+    )
     .reduce(
       (acc: ExtremumGetterResult, seriesId) => {
         const isArea = series[seriesId].area !== undefined;
@@ -23,8 +27,8 @@ export const getExtremumY: ExtremumGetter<'line'> = (params) => {
 
         const [seriesMin, seriesMax] = series[seriesId].stackedData.reduce(
           (seriesAcc, stackedValue) => {
-            const [min, max] = getValues(stackedValue);
-            return [Math.min(min, seriesAcc[0]), Math.max(max, seriesAcc[1])];
+            const [base, value] = getValues(stackedValue);
+            return [Math.min(base, value, seriesAcc[0]), Math.max(base, value, seriesAcc[1])];
           },
           getValues(series[seriesId].stackedData[0]),
         );

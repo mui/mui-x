@@ -92,8 +92,13 @@ export const useGridColumnPinning = (
         return;
       }
 
+      const rowContainer = apiRef.current.virtualScrollerRef!.current!;
+      if (!rowContainer) {
+        return;
+      }
+
       const index = event.currentTarget.dataset.rowindex;
-      const rowElements = apiRef.current.virtualScrollerRef!.current!.querySelectorAll(
+      const rowElements = rowContainer.querySelectorAll(
         `.${gridClasses.row}[data-rowindex="${index}"]`,
       );
       rowElements.forEach((row) => {

@@ -9,7 +9,6 @@ import {
   wrapPickerMount,
   adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
   getTextbox,
   expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
@@ -17,7 +16,12 @@ import {
 describe('<DateField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateField });
+  describeValidation(DateField, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    componentFamily: 'field',
+  }));
 
   describeConformance(<DateField />, () => ({
     classes: {} as any,
@@ -37,13 +41,6 @@ describe('<DateField /> - Describes', () => {
     ],
   }));
 
-  describeValidation(DateField, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'field',
-  }));
-
   describeValue(DateField, () => ({
     render,
     componentFamily: 'field',
@@ -58,13 +55,12 @@ describe('<DateField /> - Describes', () => {
       expectInputValue(
         input,
         expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
-        true,
       );
     },
-    setNewValue: (value) => {
+    setNewValue: (value, { selectSection }) => {
       const newValue = adapterToUse.addDays(value, 1);
+      selectSection('day');
       const input = getTextbox();
-      clickOnInput(input, 9); // Update the day
       userEvent.keyPress(input, { key: 'ArrowUp' });
       return newValue;
     },

@@ -7,7 +7,7 @@ It's part of MUI X, an open core extension of MUI, with advanced components.
 
 Install the package in your project directory with:
 
-```sh
+```bash
 // with npm
 npm install @mui/x-data-grid
 
@@ -21,8 +21,8 @@ This component has the following peer dependencies that you will need to install
 "peerDependencies": {
   "@mui/material": "^5.4.1",
   "@mui/system": "^5.4.1",
-  "react": "^17.0.2 || ^18.0.0",
-  "react-dom": "^17.0.2 || ^18.0.0"
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
 },
 ```
 

@@ -9,7 +9,6 @@ export * from './panel';
 export * from './toolbar';
 
 export * from './GridApiContext';
-export * from './GridAutoSizer';
 export * from './GridFooter';
 export * from './GridHeader';
 export * from './GridLoadingOverlay';
@@ -18,4 +17,3 @@ export * from './GridPagination';
 export * from './GridRowCount';
 export * from './GridRow';
 export * from './GridSelectedRowCount';
-export * from './GridScrollArea';

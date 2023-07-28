@@ -46,7 +46,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
-  // filterPanelRemoveAll: 'Remove all',
+  filterPanelRemoveAll: 'すべて削除',
   filterPanelDeleteIconLabel: '削除',
   filterPanelLogicOperator: '論理演算子',
   filterPanelOperator: '演算子',
@@ -70,6 +70,33 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '...空である',
   filterOperatorIsNotEmpty: '...空でない',
   filterOperatorIsAnyOf: '...のいずれか',
+  // 'filterOperator=': '=',
+  // 'filterOperator!=': '!=',
+  // 'filterOperator>': '>',
+  // 'filterOperator>=': '>=',
+  // 'filterOperator<': '<',
+  // 'filterOperator<=': '<=',
+
+  // Header filter operators text
+  // headerFilterOperatorContains: 'Contains',
+  // headerFilterOperatorEquals: 'Equals',
+  // headerFilterOperatorStartsWith: 'Starts with',
+  // headerFilterOperatorEndsWith: 'Ends with',
+  // headerFilterOperatorIs: 'Is',
+  // headerFilterOperatorNot: 'Is not',
+  // headerFilterOperatorAfter: 'Is after',
+  // headerFilterOperatorOnOrAfter: 'Is on or after',
+  // headerFilterOperatorBefore: 'Is before',
+  // headerFilterOperatorOnOrBefore: 'Is on or before',
+  // headerFilterOperatorIsEmpty: 'Is empty',
+  // headerFilterOperatorIsNotEmpty: 'Is not empty',
+  // headerFilterOperatorIsAnyOf: 'Is any of',
+  // 'headerFilterOperator=': 'Equals',
+  // 'headerFilterOperator!=': 'Not equals',
+  // 'headerFilterOperator>': 'Greater than',
+  // 'headerFilterOperator>=': 'Greater than or equal to',
+  // 'headerFilterOperator<': 'Less than',
+  // 'headerFilterOperator<=': 'Less than or equal to',
 
   // Filter values text
   filterValueAny: 'いずれか',

@@ -14,39 +14,30 @@ export default function TestLinesTime() {
             new Date(2012, 2, 10),
             new Date(2012, 2, 15),
           ],
-          scaleName: 'time',
+          scaleType: 'time',
         },
       ]}
       yAxis={[
         {
           id: 'lineCategoriesY',
-          scaleName: 'linear',
+          scaleType: 'linear',
         },
       ]}
       series={[
         {
-          type: 'line',
           id: 's1',
           stack: '1',
-          area: { color: 'red' },
-          xAxisKey: 'lineCategories',
-          yAxisKey: 'lineCategoriesY',
+          area: true,
           data: [2, 5, 3, 4, 1],
         },
         {
-          type: 'line',
           id: 's2',
-          xAxisKey: 'lineCategories',
-          yAxisKey: 'lineCategoriesY',
           data: [10, 3, 1, 2, 10],
         },
         {
-          type: 'line',
           id: 's3',
-          xAxisKey: 'lineCategories',
-          yAxisKey: 'lineCategoriesY',
           stack: '1',
-          area: { color: 'blue' },
+          area: true,
           data: [10, 3, 1, 2, 10],
         },
       ]}

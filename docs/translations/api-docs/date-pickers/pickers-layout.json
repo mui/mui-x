@@ -1,11 +1,31 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "components": "Overridable components.",
-    "componentsProps": "The props used for each component slot.",
-    "orientation": "Force rendering in particular orientation.",
-    "slotProps": "The props used for each component slot.",
-    "slots": "Overridable component slots."
+    "components": {
+      "description": "Overridable components.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "componentsProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "orientation": {
+      "description": "Force rendering in particular orientation.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
@@ -26,10 +46,10 @@
     }
   },
   "slotDescriptions": {
-    "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
-    "Shortcuts": "Custom component for the shortcuts.",
-    "Tabs": "Tabs enabling toggling between views.",
-    "Toolbar": "Custom component for the toolbar.\nIt is placed above the picker views."
+    "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "shortcuts": "Custom component for the shortcuts.",
+    "tabs": "Tabs enabling toggling between views.",
+    "toolbar": "Custom component for the toolbar.\nIt is placed above the picker views."
   }
 }

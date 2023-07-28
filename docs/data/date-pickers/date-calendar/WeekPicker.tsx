@@ -63,7 +63,7 @@ function Day(
     <CustomPickersDay
       {...other}
       day={day}
-      disableMargin
+      sx={dayIsBetween ? { px: 2.5, mx: 0 } : {}}
       selected={false}
       isSelected={isInSameWeek(day, selectedDay)}
       isHovered={isInSameWeek(day, hoveredDay)}

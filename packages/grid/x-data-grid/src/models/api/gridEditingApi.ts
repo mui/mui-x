@@ -19,6 +19,10 @@ export type GridRowModesModel = Record<GridRowId, GridRowModesModelProps>;
 
 export interface GridEditCellMeta {
   changeReason?: 'debouncedSetEditCellValue' | 'setEditCellValue';
+  /**
+   * Determines if `setEditCellValue` should be called on the first render to sync the value.
+   */
+  unstable_updateValueOnRender?: boolean;
 }
 
 export interface GridEditingSharedApi {
@@ -53,7 +57,7 @@ export interface GridEditingSharedApi {
    * @param {string} field The field being edited.
    * @ignore - do not document.
    */
-  unstable_getEditCellMeta: (id: GridRowId, field: string) => GridEditCellMeta;
+  unstable_getEditCellMeta: (id: GridRowId, field: string) => GridEditCellMeta | null;
 }
 
 export interface GridEditingSharedPrivateApi {

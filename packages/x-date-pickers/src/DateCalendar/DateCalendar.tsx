@@ -6,7 +6,6 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_useEventCallback as useEventCallback,
-  unstable_useControlled as useControlled,
 } from '@mui/utils';
 import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
@@ -17,12 +16,17 @@ import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
 import { PickersCalendarHeader } from './PickersCalendarHeader';
-import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
+import {
+  findClosestEnabledDate,
+  applyDefaultDate,
+  mergeDateAndTime,
+} from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
-import { BaseDateValidationProps } from '../internals/hooks/validation/models';
-import type { PickerSelectionState } from '../internals/hooks/usePicker';
+import { BaseDateValidationProps } from '../internals/models/validation';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -101,6 +105,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     onViewChange,
     value: valueProp,
     defaultValue,
+    referenceDate: referenceDateProp,
     disableFuture,
     disablePast,
     defaultCalendarMonth,
@@ -134,22 +139,18 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     displayWeekNumber,
     yearsPerRow,
     monthsPerRow,
+    timezone: timezoneProp,
     ...other
   } = props;
 
-  const [value, setValue] = useControlled({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'DateCalendar',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager: singleItemValueManager,
   });
-
-  const handleValueChange = useEventCallback(
-    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
-      setValue(newValue);
-      onChange?.(newValue, selectionState);
-    },
-  );
 
   const { view, setView, focusedView, setFocusedView, goToNextView, setValueAndGoToNextView } =
     useViews({
@@ -164,6 +165,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     });
 
   const {
+    referenceDate,
     calendarState,
     changeFocusedDay,
     changeMonth,
@@ -173,6 +175,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   } = useCalendarState({
     value,
     defaultCalendarMonth,
+    referenceDate: referenceDateProp,
     reduceAnimations,
     onMonthChange,
     minDate,
@@ -180,6 +183,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     shouldDisableDate,
     disablePast,
     disableFuture,
+    timezone,
   });
 
   const handleDateMonthChange = useEventCallback((newDate: TDate) => {
@@ -195,6 +199,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
           disablePast,
           disableFuture,
           isDateDisabled,
+          timezone,
         })
       : newDate;
 
@@ -222,6 +227,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
           disablePast,
           disableFuture,
           isDateDisabled,
+          timezone,
         })
       : newDate;
 
@@ -237,12 +243,12 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   });
 
   const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
-    if (value && day) {
+    if (day) {
       // If there is a date already selected, then we want to keep its time
-      return setValueAndGoToNextView(utils.mergeDateAndTime(day, value), 'finish');
+      return handleValueChange(mergeDateAndTime(utils, day, value ?? referenceDate), 'finish');
     }
 
-    return setValueAndGoToNextView(day, 'finish');
+    return handleValueChange(day, 'finish');
   });
 
   React.useEffect(() => {
@@ -269,6 +275,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     disableHighlightToday,
     readOnly,
     disabled,
+    timezone,
   };
 
   const gridLabelId = `${id}-grid-label`;
@@ -310,10 +317,9 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
-        components={components}
-        componentsProps={componentsProps}
         slots={slots}
         slotProps={slotProps}
+        timezone={timezone}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -332,6 +338,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
               yearsPerRow={yearsPerRow}
+              referenceDate={referenceDate}
             />
           )}
 
@@ -346,6 +353,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
               monthsPerRow={monthsPerRow}
+              referenceDate={referenceDate}
             />
           )}
 
@@ -417,7 +425,7 @@ DateCalendar.propTypes = {
    */
   dayOfWeekFormatter: PropTypes.func,
   /**
-   * Default calendar month displayed when `value={null}`.
+   * Default calendar month displayed when `value` and `defaultValue` are empty.
    */
   defaultCalendarMonth: PropTypes.any,
   /**
@@ -527,6 +535,11 @@ DateCalendar.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => <span data-mui-test="loading-progress">...</span>
@@ -582,6 +595,14 @@ DateCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

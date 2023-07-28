@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
@@ -54,22 +53,13 @@ function Day(props) {
     <CustomPickersDay
       {...other}
       day={day}
-      disableMargin
+      sx={dayIsBetween ? { px: 2.5, mx: 0 } : {}}
       selected={false}
       isSelected={isInSameWeek(day, selectedDay)}
       isHovered={isInSameWeek(day, hoveredDay)}
     />
   );
 }
-
-Day.propTypes = {
-  /**
-   * The date to show.
-   */
-  day: PropTypes.object.isRequired,
-  hoveredDay: PropTypes.object,
-  selectedDay: PropTypes.object,
-};
 
 export default function WeekPicker() {
   const [hoveredDay, setHoveredDay] = React.useState(null);

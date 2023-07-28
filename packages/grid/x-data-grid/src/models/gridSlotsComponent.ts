@@ -1,16 +1,23 @@
 import * as React from 'react';
-import { UncapitalizeObjectKeys } from '../internals/utils';
-import { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import type { UncapitalizeObjectKeys } from '../internals/utils';
+import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
-/**
- * Grid components React prop interface containing all the overridable components.
- */
-export interface GridSlotsComponent extends GridIconSlotsComponent {
+export interface GridBaseSlots {
   /**
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
   BaseCheckbox: React.JSXElementConstructor<any>;
+  /**
+   * The custom Chip component used in the grid.
+   * @default Chip
+   */
+  BaseChip: React.JSXElementConstructor<any>;
+  /**
+   * The custom InputAdornment component used in the grid.
+   * @default InputAdornment
+   */
+  BaseInputAdornment: React.JSXElementConstructor<any>;
   /**
    * The custom TextField component used in the grid.
    * @default TextField
@@ -61,6 +68,19 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default MenuItem
    */
   BaseSelectOption: React.JSXElementConstructor<any>;
+}
+
+// TODO v7: camelCase GridSlotsComponent, the `componenets` prop is going away.
+
+/**
+ * Grid components React prop interface containing all the overridable components.
+ */
+export interface GridSlotsComponent extends GridBaseSlots, GridIconSlotsComponent {
+  /**
+   * The custom Chip component used in the grid.
+   * @default Chip
+   */
+  BaseChip: React.JSXElementConstructor<any>;
   /**
    * Component rendered for each cell.
    * @default GridCell

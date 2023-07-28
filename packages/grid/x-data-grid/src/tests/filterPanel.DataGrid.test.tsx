@@ -4,6 +4,7 @@ import { spy } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
+  GridCellParams,
   GridFilterInputValue,
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
@@ -102,7 +103,8 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return ({ value }): boolean => {
+              return (params: GridCellParams): boolean => {
+                const value = params.value!;
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },
@@ -512,6 +514,35 @@ describe('<DataGrid /> - Filter panel', () => {
     );
     expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
       'isEmpty',
+    );
+  });
+
+  // See https://github.com/mui/mui-x/issues/7901#issuecomment-1427058922
+  it('should remove `isAnyOf` filter from the model when filter panel is opened through column menu', () => {
+    render(
+      <TestCase
+        initialState={{
+          filter: {
+            filterModel: {
+              items: [{ field: 'country', operator: 'isAnyOf', value: [] }],
+            },
+          },
+        }}
+      />,
+    );
+
+    // open filter panel
+    const columnCell = getColumnHeaderCell(3);
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
+    fireEvent.click(menuIconButton);
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
+
+    // check that the filter is changed to default one (`is`)
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
+      'country',
+    );
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'is',
     );
   });
 });

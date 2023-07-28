@@ -1,52 +1,33 @@
-import {
-  scaleBand,
-  scaleLog,
-  scalePoint,
-  scalePow,
-  scaleSqrt,
-  scaleTime,
-  scaleUtc,
-  scaleLinear,
-} from 'd3-scale';
-import type {
-  ScaleBand,
-  ScaleLogarithmic,
-  ScalePoint,
-  ScalePower,
-  ScaleTime,
-  ScaleLinear,
-} from 'd3-scale';
-import { ScaleName } from '../models/axis';
+import * as React from 'react';
+import { CartesianContext } from '../context/CartesianContextProvider';
+import { isBandScale } from '../internals/isBandScale';
+import { D3Scale } from '../models/axis';
 
-export type D3Scale =
-  | ScaleBand<any>
-  | ScaleLogarithmic<any, any>
-  | ScalePoint<any>
-  | ScalePower<any, any>
-  | ScaleTime<any, any>
-  | ScaleLinear<any, any>;
-
-export function getScale(scaleName: ScaleName | undefined): D3Scale {
-  switch (scaleName) {
-    case 'band':
-      return scaleBand();
-    case 'log':
-      return scaleLog();
-    case 'point':
-      return scalePoint();
-    case 'pow':
-      return scalePow();
-    case 'sqrt':
-      return scaleSqrt();
-    case 'time':
-      return scaleTime();
-    case 'utc':
-      return scaleUtc();
-    default:
-      return scaleLinear();
+/**
+ * For a given scale return a function that map value to their position.
+ * Usefull when dealing with specific scale such as band.
+ * @param scale The scale to use
+ * @returns (value: any) => number
+ */
+export function getValueToPositionMapper(scale: D3Scale) {
+  if (isBandScale(scale)) {
+    return (value: any) => scale(value)! + scale.bandwidth() / 2;
   }
+  return (value: any) => scale(value) as number;
 }
 
-export function isBandScale(scale: D3Scale): scale is ScaleBand<any> | ScalePoint<any> {
-  return (scale as ScaleBand<any> | ScalePoint<any>).bandwidth !== undefined;
+export function useXScale(identifier?: number | string) {
+  const { xAxis, xAxisIds } = React.useContext(CartesianContext);
+
+  const id = typeof identifier === 'string' ? identifier : xAxisIds[identifier ?? 0];
+
+  return xAxis[id].scale;
+}
+
+export function useYScale(identifier?: number | string) {
+  const { yAxis, yAxisIds } = React.useContext(CartesianContext);
+
+  const id = typeof identifier === 'string' ? identifier : yAxisIds[identifier ?? 0];
+
+  return yAxis[id].scale;
 }

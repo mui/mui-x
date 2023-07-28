@@ -457,26 +457,12 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
-  describe('Component slots: Day', () => {
+  describe('Component slot: Day', () => {
     it('should render custom day component', () => {
       render(
         <DateRangeCalendar
           components={{
             Day: (day) => <div key={String(day)} data-testid="slot used" />,
-          }}
-        />,
-      );
-
-      expect(screen.getAllByTestId('slot used')).not.to.have.length(0);
-    });
-  });
-
-  describe('Slots: day', () => {
-    it('should render custom day component', () => {
-      render(
-        <DateRangeCalendar
-          slots={{
-            day: (day) => <div key={String(day)} data-testid="slot used" />,
           }}
         />,
       );

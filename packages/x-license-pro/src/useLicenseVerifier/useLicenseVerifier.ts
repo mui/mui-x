@@ -2,14 +2,16 @@ import * as React from 'react';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
 import { LicenseInfo } from '../utils/licenseInfo';
 import {
-  showExpiredLicenseKeyError,
+  showExpiredAnnualGraceLicenseKeyError,
+  showExpiredAnnualLicenseKeyError,
   showInvalidLicenseKeyError,
   showMissingLicenseKeyError,
   showLicenseKeyPlanMismatchError,
   showExpiredPackageVersionError,
 } from '../utils/licenseErrorMessageUtils';
-import { LicenseStatus } from '../utils/licenseStatus';
+import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope } from '../utils/licenseScope';
+import LicenseInfoContext from '../Unstable_LicenseInfoProvider/LicenseInfoContext';
 
 export type MuiCommercialPackageName =
   | 'x-data-grid-pro'
@@ -17,20 +19,30 @@ export type MuiCommercialPackageName =
   | 'x-date-pickers-pro';
 
 export const sharedLicenseStatuses: {
-  [packageName in MuiCommercialPackageName]?: { key: string | undefined; status: LicenseStatus };
+  [packageName in MuiCommercialPackageName]?: {
+    key: string | undefined;
+    licenseVerifier: {
+      status: LicenseStatus;
+    };
+  };
 } = {};
 
 export function useLicenseVerifier(
   packageName: MuiCommercialPackageName,
   releaseInfo: string,
-): LicenseStatus {
+): {
+  status: LicenseStatus;
+} {
+  const { key: contextKey } = React.useContext(LicenseInfoContext);
   return React.useMemo(() => {
-    const licenseKey = LicenseInfo.getLicenseKey();
+    const licenseKey = contextKey ?? LicenseInfo.getLicenseKey();
+
+    // Cache the response to not trigger the error twice.
     if (
       sharedLicenseStatuses[packageName] &&
       sharedLicenseStatuses[packageName]!.key === licenseKey
     ) {
-      return sharedLicenseStatuses[packageName]!.status;
+      return sharedLicenseStatuses[packageName]!.licenseVerifier;
     }
 
     const acceptedScopes: LicenseScope[] = packageName.includes('premium')
@@ -42,24 +54,29 @@ export function useLicenseVerifier(
       releaseInfo,
       licenseKey,
       acceptedScopes,
-      isProduction: process.env.NODE_ENV === 'production',
     });
 
-    sharedLicenseStatuses[packageName] = { key: licenseKey, status: licenseStatus };
+    sharedLicenseStatuses[packageName] = { key: licenseKey, licenseVerifier: licenseStatus };
     const fullPackageName = `@mui/${packageName}`;
 
-    if (licenseStatus === LicenseStatus.Invalid) {
+    if (licenseStatus.status === LICENSE_STATUS.Valid) {
+      // Skip
+    } else if (licenseStatus.status === LICENSE_STATUS.Invalid) {
       showInvalidLicenseKeyError();
-    } else if (licenseStatus === LicenseStatus.OutOfScope) {
+    } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
       showLicenseKeyPlanMismatchError();
-    } else if (licenseStatus === LicenseStatus.NotFound) {
+    } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {
       showMissingLicenseKeyError({ plan, packageName: fullPackageName });
-    } else if (licenseStatus === LicenseStatus.Expired) {
-      showExpiredLicenseKeyError();
-    } else if (licenseStatus === LicenseStatus.ExpiredVersion) {
+    } else if (licenseStatus.status === LICENSE_STATUS.ExpiredAnnualGrace) {
+      showExpiredAnnualGraceLicenseKeyError({ plan, ...licenseStatus.meta });
+    } else if (licenseStatus.status === LICENSE_STATUS.ExpiredAnnual) {
+      showExpiredAnnualLicenseKeyError({ plan, ...licenseStatus.meta });
+    } else if (licenseStatus.status === LICENSE_STATUS.ExpiredVersion) {
       showExpiredPackageVersionError({ packageName: fullPackageName });
+    } else if (process.env.NODE_ENV !== 'production') {
+      throw new Error('missing status handler');
     }
 
     return licenseStatus;
-  }, [packageName, releaseInfo]);
+  }, [packageName, releaseInfo, contextKey]);
 }

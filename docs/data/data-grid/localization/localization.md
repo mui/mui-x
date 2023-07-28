@@ -6,6 +6,8 @@ The default locale of MUI is English (United States). If you want to use other l
 
 ## Translation keys
 
+<!-- #default-branch-switch -->
+
 You can use the `localeText` prop to pass in your own text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts)
 in the GitHub repository.
@@ -99,7 +101,7 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data Grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
-## 🚧 RTL Support
+## RTL Support 🚧
 
 :::warning
 RTL is not fully supported in the Data Grid.

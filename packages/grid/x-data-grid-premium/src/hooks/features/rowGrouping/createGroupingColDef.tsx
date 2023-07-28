@@ -67,19 +67,7 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   sortable: leafColDef.sortable,
   filterable: leafColDef.filterable,
   valueOptions: isSingleSelectColDef(leafColDef) ? leafColDef.valueOptions : undefined,
-  filterOperators: leafColDef.filterOperators?.map((operator) => ({
-    ...operator,
-    getApplyFilterFn: (filterItem, column) => {
-      const originalFn = operator.getApplyFilterFn(filterItem, column);
-      if (!originalFn) {
-        return null;
-      }
-
-      return (params) => {
-        return originalFn(params);
-      };
-    },
-  })),
+  filterOperators: leafColDef.filterOperators,
   sortComparator: (v1, v2, cellParams1, cellParams2) => {
     // We only want to sort the leaves
     if (cellParams1.rowNode.type === 'leaf' && cellParams2.rowNode.type === 'leaf') {
@@ -108,19 +96,7 @@ const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderN
 
       return groupingFieldIndexComparator(v1, v2, cellParams1, cellParams2);
     },
-    filterOperators: groupedByColDef.filterOperators?.map((operator) => ({
-      ...operator,
-      getApplyFilterFn: (filterItem, column) => {
-        const originalFn = operator.getApplyFilterFn(filterItem, column);
-        if (!originalFn) {
-          return null;
-        }
-
-        return (params) => {
-          return originalFn(params);
-        };
-      },
-    })),
+    filterOperators: groupedByColDef.filterOperators,
   };
 
   if (applyHeaderName) {

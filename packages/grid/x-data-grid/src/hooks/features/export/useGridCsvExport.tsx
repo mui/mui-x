@@ -12,6 +12,7 @@ import {
   GridExportDisplayOptions,
   GridCsvExportMenuItem,
 } from '../../../components/toolbar/GridToolbarExport';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 /**
  * @requires useGridColumns (state)
@@ -20,11 +21,20 @@ import {
  * @requires useGridSelection (state)
  * @requires useGridParamsApi (method)
  */
-export const useGridCsvExport = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
+export const useGridCsvExport = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'unstable_ignoreValueFormatterDuringExport'>,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
 
-  const getDataAsCsv = React.useCallback(
-    (options: GridCsvExportOptions = {}): string => {
+  const ignoreValueFormatterProp = props.unstable_ignoreValueFormatterDuringExport;
+  const ignoreValueFormatter =
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.csvExport
+      : ignoreValueFormatterProp) || false;
+
+  const getDataAsCsv = React.useCallback<GridCsvExportApi['getDataAsCsv']>(
+    (options = {}) => {
       logger.debug(`Get data as CSV`);
 
       const exportedColumns = getColumnsToExport({
@@ -38,12 +48,14 @@ export const useGridCsvExport = (apiRef: React.MutableRefObject<GridPrivateApiCo
       return buildCSV({
         columns: exportedColumns,
         rowIds: exportedRowIds,
-        getCellParams: apiRef.current.getCellParams,
         delimiterCharacter: options.delimiter || ',',
         includeHeaders: options.includeHeaders ?? true,
+        includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
+        ignoreValueFormatter,
+        apiRef,
       });
     },
-    [logger, apiRef],
+    [logger, apiRef, ignoreValueFormatter],
   );
 
   const exportDataAsCsv = React.useCallback<GridCsvExportApi['exportDataAsCsv']>(

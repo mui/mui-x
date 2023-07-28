@@ -3,66 +3,60 @@ import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 
-import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
-import { XAxis } from '@mui/x-charts/XAxis';
-import { YAxis } from '@mui/x-charts/YAxis';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 
 const series = [
   {
     type: 'bar',
-    id: 'Eco-1',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
-    color: 'red',
     data: [2, 5, 3, 4, 1],
   },
   {
     type: 'bar',
-    id: 'Eco-2',
     stack: '',
-    xAxisKey: 'years',
     yAxisKey: 'eco',
-    color: 'blue',
     data: [5, 6, 2, 8, 9],
   },
   {
     type: 'line',
-    id: 'pib',
-    xAxisKey: 'years',
     yAxisKey: 'pib',
+    color: 'red',
     data: [1000, 1500, 3000, 5000, 10000],
   },
 ];
 
 export default function Combining() {
   return (
-    <ChartContainer series={series} width={500} height={500}>
-      <CartesianContextProvider
-        xAxis={[
-          {
-            id: 'years',
-            data: [2010, 2011, 2012, 2013, 2014],
-            scaleName: 'band',
-          },
-        ]}
-        yAxis={[
-          {
-            id: 'eco',
-            scaleName: 'linear',
-          },
-          {
-            id: 'pib',
-            scaleName: 'log',
-          },
-        ]}
-      >
-        <BarPlot />
-        <LinePlot />
-        <XAxis label="Years" position="bottom" axisId="years" />
-        <YAxis label="Results" position="left" axisId="eco" />
-        <YAxis label="PIB" position="right" axisId="pib" />
-      </CartesianContextProvider>
+    <ChartContainer
+      series={series}
+      width={500}
+      height={400}
+      xAxis={[
+        {
+          id: 'years',
+          data: [2010, 2011, 2012, 2013, 2014],
+          scaleType: 'band',
+          valueFormatter: (value) => value.toString(),
+        },
+      ]}
+      yAxis={[
+        {
+          id: 'eco',
+          scaleType: 'linear',
+        },
+        {
+          id: 'pib',
+          scaleType: 'log',
+        },
+      ]}
+    >
+      <BarPlot />
+      <LinePlot />
+      <ChartsXAxis label="Years" position="bottom" axisId="years" />
+      <ChartsYAxis label="Results" position="left" axisId="eco" />
+      <ChartsYAxis label="PIB" position="right" axisId="pib" />
     </ChartContainer>
   );
 }

@@ -14,7 +14,7 @@ import {
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/monorepo/test/utils';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { getCell, getRow, spyApi } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Row Editing', () => {
   const { render, clock } = createRenderer();
@@ -168,7 +168,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: ' usdgbp ' }),
         );
         await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 100 }));
-        expect(renderEditCell1.lastCall.args[0].row).to.deep.equal({
+        expect(renderEditCell2.lastCall.args[0].row).to.deep.equal({
           ...defaultData.rows[0],
           currencyPair: 'usdgbp',
           price1M: 100,
@@ -233,6 +233,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           error: false,
           isProcessingProps: true,
           changeReason: 'setEditCellValue',
+          unstable_updateValueOnRender: false,
         });
 
         const args2 = column2Props.preProcessEditCellProps.lastCall.args[0];
@@ -243,6 +244,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           value: 1,
           error: false,
           isProcessingProps: true,
+          unstable_updateValueOnRender: false,
         });
       });
 
@@ -758,7 +760,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call startRowEditMode', () => {
         render(<TestCase />);
-        const spiedStartRowEditMode = spy(apiRef.current, 'startRowEditMode');
+        const spiedStartRowEditMode = spyApi(apiRef.current, 'startRowEditMode');
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         expect(spiedStartRowEditMode.callCount).to.equal(1);
@@ -788,7 +790,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call startRowEditMode passing fieldToFocus', () => {
         render(<TestCase />);
-        const spiedStartRowEditMode = spy(apiRef.current, 'startRowEditMode');
+        const spiedStartRowEditMode = spyApi(apiRef.current, 'startRowEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
@@ -823,7 +825,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call startRowEditMode passing fieldToFocus and deleteValue', () => {
         render(<TestCase />);
-        const spiedStartRowEditMode = spy(apiRef.current, 'startRowEditMode');
+        const spiedStartRowEditMode = spyApi(apiRef.current, 'startRowEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
@@ -901,7 +903,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call startRowEditMode passing fieldToFocus and deleteValue', () => {
         render(<TestCase />);
-        const spiedStartRowEditMode = spy(apiRef.current, 'startRowEditMode');
+        const spiedStartRowEditMode = spyApi(apiRef.current, 'startRowEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
@@ -957,16 +959,16 @@ describe('<DataGridPro /> - Row Editing', () => {
         apiRef.current.subscribeEvent('rowEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
         expect(listener.callCount).to.equal(0);
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(listener.lastCall.args[0].reason).to.equal('rowFocusOut');
       });
 
       it('should call stopRowEditMode with ignoreModifications=false and no cellToFocusAfter', () => {
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         fireEvent.doubleClick(getCell(0, 1));
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
@@ -980,12 +982,12 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         column1Props.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         fireEvent.doubleClick(getCell(0, 1));
         act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         });
-        fireEvent.click(getCell(1, 1));
+        userEvent.mousePress(getCell(1, 1));
         clock.runToLast();
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
@@ -1007,7 +1009,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call stopRowEditMode with ignoreModifications=true', () => {
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1037,7 +1039,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1054,7 +1056,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         column1Props.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1094,7 +1096,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=right', () => {
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 2);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1110,7 +1112,7 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should call stopRowEditMode with ignoreModifications=false and cellToFocusAfter=left if Shift is pressed', () => {
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1127,7 +1129,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should call stopRowEditMode with ignoreModifications=false if the props are being processed', async () => {
         column1Props.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
-        const spiedStopRowEditMode = spy(apiRef.current, 'stopRowEditMode');
+        const spiedStopRowEditMode = spyApi(apiRef.current, 'stopRowEditMode');
         const cell = getCell(0, 2);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);

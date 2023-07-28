@@ -109,15 +109,16 @@ const useUtilityClasses = (ownerState: PickersDayProps<any>) => {
     classes,
   } = ownerState;
 
+  const isHiddenDaySpacingFiller = outsideCurrentMonth && !showDaysOutsideCurrentMonth;
   const slots = {
     root: [
       'root',
-      selected && 'selected',
+      selected && !isHiddenDaySpacingFiller && 'selected',
       disabled && 'disabled',
       !disableMargin && 'dayWithMargin',
       !disableHighlightToday && today && 'today',
       outsideCurrentMonth && showDaysOutsideCurrentMonth && 'dayOutsideMonth',
-      outsideCurrentMonth && !showDaysOutsideCurrentMonth && 'hiddenDaySpacingFiller',
+      isHiddenDaySpacingFiller && 'hiddenDaySpacingFiller',
     ],
     hiddenDaySpacingFiller: ['hiddenDaySpacingFiller'],
   };
@@ -162,8 +163,11 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
       backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
-  [`&.${pickersDayClasses.disabled}`]: {
+  [`&.${pickersDayClasses.disabled}:not(.${pickersDayClasses.selected})`]: {
     color: (theme.vars || theme).palette.text.disabled,
+  },
+  [`&.${pickersDayClasses.disabled}&.${pickersDayClasses.selected}`]: {
+    opacity: 0.6,
   },
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,

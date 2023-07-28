@@ -176,8 +176,15 @@ export const useGridPrintExport = (
         printDoc.body.classList.add(...normalizeOptions.bodyClassName.split(' '));
       }
 
+      const stylesheetLoadPromises: Promise<void>[] = [];
+
       if (normalizeOptions.copyStyles) {
-        const headStyleElements = doc.current!.querySelectorAll("style, link[rel='stylesheet']");
+        const rootCandidate = gridRootElement!.getRootNode();
+        const root =
+          rootCandidate.constructor.name === 'ShadowRoot'
+            ? (rootCandidate as ShadowRoot)
+            : doc.current;
+        const headStyleElements = root!.querySelectorAll("style, link[rel='stylesheet']");
 
         for (let i = 0; i < headStyleElements.length; i += 1) {
           const node = headStyleElements[i];
@@ -208,6 +215,12 @@ export const useGridPrintExport = (
               }
             }
 
+            stylesheetLoadPromises.push(
+              new Promise((resolve) => {
+                newHeadStyleElements.addEventListener('load', () => resolve());
+              }),
+            );
+
             printDoc.head.appendChild(newHeadStyleElements);
           }
         }
@@ -215,7 +228,10 @@ export const useGridPrintExport = (
 
       // Trigger print
       if (process.env.NODE_ENV !== 'test') {
-        printWindow.contentWindow!.print();
+        // wait for remote stylesheets to load
+        Promise.all(stylesheetLoadPromises).then(() => {
+          printWindow.contentWindow!.print();
+        });
       }
     },
     [apiRef, doc, props.columnHeaderHeight],

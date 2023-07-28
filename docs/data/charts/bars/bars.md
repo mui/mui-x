@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Bars
 ---
 
@@ -7,36 +6,40 @@ title: Charts - Bars
 
 <p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #7885](https://github.com/mui/mui-x/issues/7885) if you want to see it land faster.
->
-> 💬 To have a solution that meets your needs, leave a comment on the [same issue](https://github.com/mui/mui-x/issues/7885).
-> If you already have a use case for this component, or if you are facing a pain-point with your current solution.
+## Basics
 
-{{"demo": "TestBars.js", "bg": "inline"}}
+Bar charts series should contain a `data` property containing an array of values.
 
-## Use composition
+You can customize bar ticks with the `xAxis`.
+This axis might have `scaleType='band'` and its `data` should have the same length as your series.
 
-You can mix all charts together by using composition. The basic structure should be
+{{"demo": "BasicBars.js"}}
 
-```jsx
-// Provide data and layout
-<ChartContainer series={series} width={500} height={500}>
-  // If plots are in cartesian coordinates, provide the axis
-  <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
-    // Add the components to render (even your custom ones)
-    <BarPlot />
-    <LinePlot />
-    <XAxis />
-  </CartesianContextProvider>
-</ChartContainer>
-```
+## Bar size
 
-{{"demo": "Composition.js", "bg": "inline"}}
+You can define bar dimensions with `categoryGapRatio` and `barGapRatio` properties.
 
-## Use responsive container
+The `categoryGapRatio` defines the gap between two categories.
+The ratio is obtained by dividing the size of the gap by the size of the category (the space used by bars).
 
-If you do not want to provide `width` or `height` you can use `<ResponsiveChartContainer />`
+The `barGapRatio` defines the gap between two bars of the same category.
+It's the size of the gap divided by the size of the bar.
+So a value of `1` will result in a gap between bars equal to the bar width.
+And a value of `-1` will make bars overlap on top of each over.
 
-{{"demo": "CompositionResponsive.js", "bg": "inline"}}
+{{"demo": "BarGapNoSnap.js"}}
+
+## Stacking
+
+Each bar series can get a `stack` property expecting a string value.
+Series with the same `stack` will be stacked on top of each other.
+
+{{"demo": "StackBars.js"}}
+
+### Stacking strategy
+
+You can use the `stackOffset` and `stackOrder` properties to define how the series will be stacked.
+
+By default, they are stacked in the order you defined them, with positive values stacked above 0 and negative values stacked below 0.
+
+For more information, see [stacking docs](/x/react-charts/stacking/).

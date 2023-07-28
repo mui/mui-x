@@ -1,41 +1,33 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { DataGrid, useGridApiContext } from '@mui/x-data-grid';
 
 function renderRating(params) {
   return <Rating readOnly value={params.value} />;
 }
 
-renderRating.propTypes = {
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.number,
-};
-
 function RatingEditInputCell(props) {
-  const { id, value, field } = props;
+  const { id, value, field, hasFocus } = props;
   const apiRef = useGridApiContext();
+  const ref = React.useRef();
 
   const handleChange = (event, newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  const handleRef = (element) => {
-    if (element) {
-      const input = element.querySelector(`input[value="${value}"]`);
-
+  useEnhancedEffect(() => {
+    if (hasFocus && ref.current) {
+      const input = ref.current.querySelector(`input[value="${value}"]`);
       input?.focus();
     }
-  };
+  }, [hasFocus, value]);
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
       <Rating
-        ref={handleRef}
+        ref={ref}
         name="rating"
         precision={1}
         value={value}
@@ -44,22 +36,6 @@ function RatingEditInputCell(props) {
     </Box>
   );
 }
-
-RatingEditInputCell.propTypes = {
-  /**
-   * The column field of the cell that triggered the event.
-   */
-  field: PropTypes.string.isRequired,
-  /**
-   * The grid row id.
-   */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  /**
-   * The cell value.
-   * If the column has `valueGetter`, use `params.row` to directly access the fields.
-   */
-  value: PropTypes.number,
-};
 
 const renderRatingEditInputCell = (params) => {
   return <RatingEditInputCell {...params} />;
