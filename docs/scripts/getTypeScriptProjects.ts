@@ -167,127 +167,127 @@ const getComponentPaths =
 export const getTypeScriptProjects = () => {
   const projects: Projects = new Map();
 
-  // projects.set(
-  //   'x-license-pro',
-  //   createProject({
-  //     name: 'x-license-pro',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
-  //     documentationFolderName: 'license',
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-data-grid',
-  //   createProject({
-  //     name: 'x-data-grid',
-  //     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
-  //     documentationFolderName: 'data-grid',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src/components'],
-  //       files: ['src/DataGrid/DataGrid.tsx'],
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       files: [
-  //         'src/DataGrid/DataGrid.tsx',
-  //         'src/components/panel/filterPanel/GridFilterForm.tsx',
-  //         'src/components/panel/filterPanel/GridFilterPanel.tsx',
-  //         'src/components/toolbar/GridToolbarQuickFilter.tsx',
-  //       ],
-  //     }),
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-data-grid-pro',
-  //   createProject({
-  //     name: 'x-data-grid-pro',
-  //     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
-  //     documentationFolderName: 'data-grid',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src/components'],
-  //       files: ['src/DataGridPro/DataGridPro.tsx'],
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       files: ['src/DataGridPro/DataGridPro.tsx'],
-  //     }),
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-data-grid-premium',
-  //   createProject({
-  //     name: 'x-data-grid-premium',
-  //     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-premium'),
-  //     documentationFolderName: 'data-grid',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src/components'],
-  //       files: ['src/DataGridPremium/DataGridPremium.tsx'],
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       files: ['src/DataGridPremium/DataGridPremium.tsx'],
-  //     }),
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-data-grid-generator',
-  //   createProject({
-  //     name: 'x-data-grid-generator',
-  //     rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
-  //     documentationFolderName: 'data-grid',
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-date-pickers',
-  //   createProject({
-  //     name: 'x-date-pickers',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
-  //     documentationFolderName: 'date-pickers',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-date-pickers-pro',
-  //   createProject({
-  //     name: 'x-date-pickers-pro',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
-  //     documentationFolderName: 'date-pickers',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //   }),
-  // );
-  //
-  // projects.set(
-  //   'x-charts',
-  //   createProject({
-  //     name: 'x-charts',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-charts'),
-  //     documentationFolderName: 'charts',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //   }),
-  // );
+  projects.set(
+    'x-license-pro',
+    createProject({
+      name: 'x-license-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-license-pro'),
+      documentationFolderName: 'license',
+    }),
+  );
+
+  projects.set(
+    'x-data-grid',
+    createProject({
+      name: 'x-data-grid',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid'),
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGrid/DataGrid.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: [
+          'src/DataGrid/DataGrid.tsx',
+          'src/components/panel/filterPanel/GridFilterForm.tsx',
+          'src/components/panel/filterPanel/GridFilterPanel.tsx',
+          'src/components/toolbar/GridToolbarQuickFilter.tsx',
+        ],
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-data-grid-pro',
+    createProject({
+      name: 'x-data-grid-pro',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-pro'),
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGridPro/DataGridPro.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataGridPro/DataGridPro.tsx'],
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-data-grid-premium',
+    createProject({
+      name: 'x-data-grid-premium',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-premium'),
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-data-grid-generator',
+    createProject({
+      name: 'x-data-grid-generator',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
+      documentationFolderName: 'data-grid',
+    }),
+  );
+
+  projects.set(
+    'x-date-pickers',
+    createProject({
+      name: 'x-date-pickers',
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers'),
+      documentationFolderName: 'date-pickers',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-date-pickers-pro',
+    createProject({
+      name: 'x-date-pickers-pro',
+      rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
+      documentationFolderName: 'date-pickers',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-charts',
+    createProject({
+      name: 'x-charts',
+      rootPath: path.join(workspaceRoot, 'packages/x-charts'),
+      documentationFolderName: 'charts',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
 
   projects.set(
     'x-tree-view',
