@@ -10,9 +10,6 @@ const config: PlaywrightTestConfig<TestFixture> = {
   use: {
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'https://mui.com',
   },
-  // as recommended in https://playwright.dev/docs/ci#workers
-  // Opt out of parallel tests on CI.
-  workers: process.env.CI ? 1 : undefined,
 };
 
 export default config;
