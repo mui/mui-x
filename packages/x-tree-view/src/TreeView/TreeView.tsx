@@ -383,9 +383,8 @@ const TreeView = React.forwardRef(function TreeView(
       const shouldBeSkipped = disabledItemsFocusable ? false : isDisabled(mapNodeId);
 
       if (visible && !shouldBeSkipped) {
-        const mapFirstChar = firstCharMap.current[mapNodeId];
         firstCharIds.push(mapNodeId);
-        firstChars.push(firstChar);
+        firstChars.push(firstCharMap.current[mapNodeId]);
       }
     });
 

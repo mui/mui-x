@@ -8,7 +8,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { useTreeViewContext } from '../TreeView/TreeViewContext';
+import { TreeViewContext } from '../TreeView/TreeViewContext';
 import { DescendantProvider, TreeItemDescendant, useDescendant } from '../TreeView/descendants';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
@@ -184,7 +184,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     registerNode,
     unregisterNode,
     treeId,
-  } = useTreeViewContext();
+  } = React.useContext(TreeViewContext);
 
   let id: string | undefined;
   if (idProp != null) {

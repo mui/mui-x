@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTreeViewContext } from '../TreeView/TreeViewContext';
+import { TreeViewContext } from '../TreeView/TreeViewContext';
 
 export function useTreeItem(nodeId: string) {
   const {
@@ -13,7 +13,7 @@ export function useTreeItem(nodeId: string) {
     selectNode,
     selectRange,
     toggleExpansion,
-  } = useTreeViewContext();
+  } = React.useContext(TreeViewContext);
 
   const expandable = isExpandable ? isExpandable(nodeId) : false;
   const expanded = isExpanded ? isExpanded(nodeId) : false;
