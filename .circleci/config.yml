@@ -95,7 +95,7 @@ commands:
           steps:
             - run:
                 name: Install playwright
-                command: npx playwright install --with-deps chromium
+                command: npx playwright install --with-deps
       - save_cache:
           name: Save yarn cache
           key: v8-yarn-{{ checksum "yarn.lock" }}
