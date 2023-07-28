@@ -178,15 +178,14 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
             'cell',
           );
         });
-        // WebKit does not want to return focus back to the button for some reason...
-        if (browserType.name() !== 'webkit') {
-          await page.keyboard.press('Shift+Tab');
-          await waitFor(async () => {
-            expect(
-              await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
-            ).to.equal('initial-focus');
-          });
-        }
+        // WebKit does not focus on buttons by default when pressing tab.
+        // https://github.com/microsoft/playwright/issues/5609#issuecomment-832684772
+        await page.keyboard.press(browserType.name() === 'webkit' ? 'Alt+Shift+Tab' : 'Shift+Tab');
+        await waitFor(async () => {
+          expect(
+            await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
+          ).to.equal('initial-focus');
+        });
       });
 
       it('should display the rows', async () => {
