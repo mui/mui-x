@@ -59,7 +59,7 @@ describe('<DesktopDatePicker /> - Field', () => {
   });
 
   describeAdapters('Timezone', DesktopDatePicker, ({ adapter, render, clickOnInput }) => {
-    it.only('should clear the selected section when all sections are completed when using timezones', () => {
+    it('should clear the selected section when all sections are completed when using timezones', () => {
       function WrappedDesktopDatePicker() {
         const [value, setValue] = React.useState(adapter.date()!);
         return (
