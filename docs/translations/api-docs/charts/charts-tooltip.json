@@ -1,10 +1,26 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "axisContent": "Component to override the tooltip content when triger is set to &#39;axis&#39;.",
-    "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
-    "itemContent": "Component to override the tooltip content when triger is set to &#39;item&#39;.",
-    "trigger": "Select the kind of tooltip to display - &#39;item&#39;: Shows data about the item below the mouse. - &#39;axis&#39;: Shows values associated with the hovered x value - &#39;none&#39;: Does not display tooltip"
+    "axisContent": {
+      "description": "Component to override the tooltip content when triger is set to &#39;axis&#39;.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "classes": {
+      "description": "Override or extend the styles applied to the component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "itemContent": {
+      "description": "Component to override the tooltip content when triger is set to &#39;item&#39;.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "trigger": {
+      "description": "Select the kind of tooltip to display - &#39;item&#39;: Shows data about the item below the mouse. - &#39;axis&#39;: Shows values associated with the hovered x value - &#39;none&#39;: Does not display tooltip",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
