@@ -59,6 +59,16 @@ function Day(
 ) {
   const { day, selectedDay, hoveredDay, ...other } = props;
 
+  const dayIsBetween =
+    selectedDay == null
+      ? false
+      : day.isBetween(
+          selectedDay.startOf('week'),
+          selectedDay.endOf('week'),
+          null,
+          '[]',
+        );
+
   return (
     <CustomPickersDay
       {...other}
