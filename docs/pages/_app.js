@@ -244,9 +244,7 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: [
-          { text: `v${process.env.CHARTS_VERSION}`, current: true },
-        ],
+        versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
       };
     }
 
