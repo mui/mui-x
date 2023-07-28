@@ -228,11 +228,11 @@ function findXDemos(
 
       if (page.pathname.includes('tree-view')) {
         const pathnameMatches = /\/tree-view\/([^/]+)\/([^/]+)/.exec(page.pathname);
-        const path = pathnameMatches![1] === 'overview' ? '' : `${pathnameMatches![1]}/`;
+        const pageId = pathnameMatches![1] === 'overview' ? '' : `${pathnameMatches![1]}/`;
 
         return {
           name: page.title,
-          demoPathname: `/x/react-tree-view/${path}`,
+          demoPathname: `/x/react-tree-view/${pageId}`,
         };
       }
 
