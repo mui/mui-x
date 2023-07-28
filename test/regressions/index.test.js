@@ -111,6 +111,7 @@ async function main() {
           '/docs-data-grid-filtering/QuickFilteringInitialize', // No content rendered
           '/docs-data-grid-sorting/FullyCustomSortComparator', // No flag column
           '/docs-data-grid-sorting/ServerSortingGrid', // No flag column
+          '/docs-data-grid-filtering/QuickFilteringExcludeHiddenColumns', // No flag column
         ];
 
         if (
@@ -196,7 +197,7 @@ async function main() {
 
       return new Promise((resolve, reject) => {
         // See https://ffmpeg.org/ffmpeg-devices.html#x11grab
-        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,81 -vframes 1 ${screenshotPath}`;
+        const args = `-y -f x11grab -framerate 1 -video_size 460x400 -i :99.0+90,85 -vframes 1 ${screenshotPath}`;
         const ffmpeg = childProcess.spawn('ffmpeg', args.split(' '));
 
         ffmpeg.on('close', (code) => {

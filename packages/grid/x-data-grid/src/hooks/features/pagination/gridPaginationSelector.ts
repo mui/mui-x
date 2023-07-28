@@ -103,14 +103,18 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
       topLevelRowAdded <= topLevelRowsInCurrentPageCount
     ) {
       const row = visibleSortedRowEntries[lastRowIndex];
-      const depth = rowTree[row.id].depth;
+      const depth = rowTree[row.id]?.depth;
 
-      if (topLevelRowAdded < topLevelRowsInCurrentPageCount || depth > 0) {
+      if (depth === undefined) {
         lastRowIndex += 1;
-      }
+      } else {
+        if (topLevelRowAdded < topLevelRowsInCurrentPageCount || depth > 0) {
+          lastRowIndex += 1;
+        }
 
-      if (depth === 0) {
-        topLevelRowAdded += 1;
+        if (depth === 0) {
+          topLevelRowAdded += 1;
+        }
       }
     }
 

@@ -22,10 +22,10 @@ export const ChartsTooltipRow = styled('tr', {
   name: 'MuiChartsTooltip',
   slot: 'Row',
 })(({ theme }) => ({
-  '&:first-child td': {
+  'tr:first-of-type& td': {
     paddingTop: theme.spacing(1),
   },
-  '&:last-child td': {
+  'tr:last-of-type& td': {
     paddingBottom: theme.spacing(1),
   },
 }));
@@ -37,18 +37,19 @@ export const ChartsTooltipCell = styled('td', {
   verticalAlign: 'middle',
   color: theme.palette.text.secondary,
 
-  '&:first-child': {
-    paddingLeft: theme.spacing(2),
-  },
-  '&:last-child': {
-    paddingRight: theme.spacing(2),
-  },
   [`&.${tooltipClasses.labelCell}`]: {
     paddingLeft: theme.spacing(1),
   },
   [`&.${tooltipClasses.valueCell}`]: {
     paddingLeft: theme.spacing(4),
     color: theme.palette.text.primary,
+  },
+
+  'td:first-of-type&': {
+    paddingLeft: theme.spacing(2),
+  },
+  'td:last-of-type&': {
+    paddingRight: theme.spacing(2),
   },
 }));
 

@@ -5,7 +5,6 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
-import { pickersToolbarClasses } from '../internals/components/pickersToolbarClasses';
 import { arrayIncludes } from '../internals/utils/utils';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
@@ -53,11 +52,7 @@ const TimePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (props, styles) => styles.root,
 })<{
   ownerState: TimePickerToolbarProps<any>;
-}>({
-  [`& .${pickersToolbarClasses.penIconButtonLandscape}`]: {
-    marginTop: 'auto',
-  },
-});
+}>({});
 
 const TimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiTimePickerToolbar',

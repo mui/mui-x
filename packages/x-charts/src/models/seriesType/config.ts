@@ -1,8 +1,9 @@
 import { ScatterSeriesType, DefaultizedScatterSeriesType, ScatterItemIdentifier } from './scatter';
 import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
 import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import { PieSeriesType, DefaultizedPieSeriesType, PieItemIdentifier, PieValueType } from './pie';
 import { AxisConfig } from '../axis';
-import { DefaultizedProps } from '../helpers';
+import { DefaultizedProps, MakeOptional } from '../helpers';
 import { StackingGroupsType } from '../../internals/stackSeries';
 
 interface ChartsSeriesConfig {
@@ -23,9 +24,17 @@ interface ChartsSeriesConfig {
     series: DefaultizedScatterSeriesType;
     itemIdentifier: ScatterItemIdentifier;
   };
+  pie: {
+    seriesInput: Omit<DefaultizedProps<PieSeriesType, 'id'>, 'data'> & {
+      data: (MakeOptional<PieValueType, 'id'> & { color: string })[];
+    };
+    series: DefaultizedPieSeriesType;
+    itemIdentifier: PieItemIdentifier;
+  };
 }
 
-export type ChartSeriesType = 'bar' | 'line' | 'scatter';
+export type CartesianChartSeriesType = 'bar' | 'line' | 'scatter';
+export type ChartSeriesType = 'bar' | 'line' | 'scatter' | 'pie';
 
 export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;
@@ -68,3 +77,23 @@ export type FormatterResult<T extends ChartSeriesType> = {
 export type Formatter<T extends ChartSeriesType> = (
   params: FormatterParams<T>,
 ) => FormatterResult<T>;
+
+export type LegendParams = {
+  /**
+   * The color used in the legend
+   */
+  color: string;
+  /**
+   * The label displayed in the legend
+   */
+  label: string;
+  /**
+   * The identifier of the legend element.
+   * Used for internal purpose such as `key` props
+   */
+  id: string;
+};
+
+export type LegendGetter<T extends ChartSeriesType> = (
+  series: FormatterResult<T>,
+) => LegendParams[];
