@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: React Date Range Field components
 components: MultiInputDateRangeField, SingleInputDateRangeField
 githubLabel: 'component: pickers'
@@ -19,6 +20,8 @@ All the topics covered below are applicable to both `SingleInputDateRangeField` 
 :::
 
 {{"demo": "BasicDateRangeField.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

@@ -1,5 +1,6 @@
 ---
-title: Date and Time pickers - Shortcuts
+productId: x-date-pickers
+title: Date and Time Pickers - Shortcuts
 components: PickersShortcuts
 ---
 

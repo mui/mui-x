@@ -1,0 +1,13 @@
+[
+  { "name": "getTreeItemUtilityClass", "kind": "Function" },
+  { "name": "getTreeViewUtilityClass", "kind": "Function" },
+  { "name": "TreeItem", "kind": "Variable" },
+  { "name": "treeItemClasses", "kind": "Variable" },
+  { "name": "TreeItemClasses", "kind": "Interface" },
+  { "name": "TreeItemClassKey", "kind": "TypeAlias" },
+  { "name": "TreeView", "kind": "Variable" },
+  { "name": "treeViewClasses", "kind": "Variable" },
+  { "name": "TreeViewClasses", "kind": "Interface" },
+  { "name": "TreeViewClassKey", "kind": "TypeAlias" },
+  { "name": "useTreeItem", "kind": "Function" }
+]

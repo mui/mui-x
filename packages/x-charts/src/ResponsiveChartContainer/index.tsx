@@ -26,8 +26,8 @@ const useChartDimensions = (
     const win = ownerWindow(mainEl);
     const computedStyle = win.getComputedStyle(mainEl);
 
-    const newHeight = parseFloat(computedStyle.height) || 0;
-    const newWidth = parseFloat(computedStyle.width) || 0;
+    const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
+    const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
     setWidth(newWidth);
     setHeight(newHeight);
@@ -105,17 +105,22 @@ const ResizableContainer = styled('div', {
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
+  '&>svg': {
+    width: '100%',
+    height: '100%',
+  },
 }));
 
-export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
-  const [containerRef, width, height] = useChartDimensions(props.width, props.height);
+export const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
+  props: ResponsiveChartContainerProps,
+  ref,
+) {
+  const { width: inWidth, height: inHeight, ...other } = props;
+  const [containerRef, width, height] = useChartDimensions(inWidth, inHeight);
 
   return (
-    <ResizableContainer
-      ref={containerRef}
-      ownerState={{ width: props.width, height: props.height }}
-    >
-      <ChartContainer {...props} width={width} height={height} />
+    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
+      <ChartContainer {...other} width={width} height={height} ref={ref} />
     </ResizableContainer>
   );
-}
+});

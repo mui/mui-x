@@ -15,6 +15,10 @@ export type ChartsLegendProps = {
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsLegendClasses>;
+  /**
+   * Set to true to hide the legend.
+   */
+  hidden?: boolean;
 } & SizingParams;
 
 type DefaultizedChartsLegendProps = DefaultizedProps<ChartsLegendProps, 'direction' | 'position'>;
@@ -165,12 +169,16 @@ export function ChartsLegend(inProps: ChartsLegendProps) {
     name: 'MuiChartsLegend',
   });
 
-  const { position, direction, offset } = props;
+  const { position, direction, offset, hidden } = props;
   const theme = useTheme();
   const classes = useUtilityClasses({ ...props, theme });
 
   const drawingArea = React.useContext(DrawingContext);
   const series = React.useContext(SeriesContext);
+
+  if (hidden) {
+    return null;
+  }
 
   const seriesToDisplay = getSeriesToDisplay(series);
 

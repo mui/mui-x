@@ -1,5 +1,6 @@
 ---
-title: Date and Time pickers - UTC and timezones
+productId: x-date-pickers
+title: Date and Time Pickers - UTC and timezones
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'

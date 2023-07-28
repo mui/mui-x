@@ -1,37 +1,73 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "axisId": "Id of the axis to render.",
-    "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
-    "disableLine": "If true, the axis line is disabled.",
-    "disableTicks": "If true, the ticks are disabled.",
-    "fill": "The fill color of the axis text.",
-    "label": "The label of the axis.",
-    "labelFontSize": "The font size of the axis label.",
-    "position": "Position of the axis.",
-    "stroke": "The stroke color of the axis line.",
-    "tickFontSize": "The font size of the axis ticks text.",
-    "tickSize": "The size of the ticks."
-  },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
-    "line": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the main line element"
+    "axisId": {
+      "description": "Id of the axis to render.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
     },
-    "tickContainer": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "group ingruding the tick and its label"
+    "classes": {
+      "description": "Override or extend the styles applied to the component.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
     },
-    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
-    "tickLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks label" },
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the axis label" },
-    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x axes" },
-    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y axes" },
-    "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" },
-    "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
-    "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
-    "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" }
+    "disableLine": {
+      "description": "If true, the axis line is disabled.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "disableTicks": {
+      "description": "If true, the ticks are disabled.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "fill": {
+      "description": "The fill color of the axis text.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "label": {
+      "description": "The label of the axis.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "labelFontSize": {
+      "description": "The font size of the axis label.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "position": {
+      "description": "Position of the axis.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "stroke": {
+      "description": "The stroke color of the axis line.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickFontSize": {
+      "description": "The font size of the axis ticks text.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickSize": {
+      "description": "The size of the ticks.",
+      "notes": "",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
   },
+  "classDescriptions": {},
   "slotDescriptions": {}
 }

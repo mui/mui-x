@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: React Time Clock component
 components: TimeClock
 githubLabel: 'component: TimePicker'
@@ -12,6 +13,8 @@ packageName: '@mui/x-date-pickers'
 ## Basic usage
 
 {{"demo": "BasicTimeClock.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: React Date Time Range Field components
 components: MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
@@ -19,6 +20,8 @@ You can render your Date Time Range Field with either one input using `SingleInp
 or two inputs using `MultiInputDateTimeRangeField` as show below.
 
 {{"demo": "BasicDateTimeRangeField.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

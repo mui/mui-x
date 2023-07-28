@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: React Date Time Range Picker component
 components: DateTimeRangePicker, DesktopDateTimeRangePicker, DateRangeCalendar, DateRangePickerDay, DigitalClock, MultiSectionDigitalClock
 githubLabel: 'component: DateTimeRangePicker'

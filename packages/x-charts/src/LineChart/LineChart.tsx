@@ -25,7 +25,7 @@ export interface LineChartProps
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
 }
-function LineChart(props: LineChartProps) {
+const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
   const {
     xAxis,
     yAxis,
@@ -50,6 +50,7 @@ function LineChart(props: LineChartProps) {
 
   return (
     <ResponsiveChartContainer
+      ref={ref}
       series={series.map((s) => ({ type: 'line', ...s }))}
       width={width}
       height={height}
@@ -91,7 +92,7 @@ function LineChart(props: LineChartProps) {
       {children}
     </ResponsiveChartContainer>
   );
-}
+});
 
 LineChart.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -104,7 +105,7 @@ LineChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -134,7 +135,7 @@ LineChart.propTypes = {
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -156,6 +157,7 @@ LineChart.propTypes = {
   legend: PropTypes.shape({
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
+    hidden: PropTypes.bool,
     itemWidth: PropTypes.number,
     markSize: PropTypes.number,
     offset: PropTypes.shape({
@@ -176,7 +178,7 @@ LineChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the right of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -246,7 +248,7 @@ LineChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the top of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
   topAxis: PropTypes.oneOfType([

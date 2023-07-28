@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
-import { getCell } from 'test/utils/helperFn';
+import { getCell, spyApi } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Cell Editing', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -718,7 +718,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
         expect(spiedStartCellEditMode.callCount).to.equal(1);
@@ -782,7 +782,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
@@ -813,7 +813,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
@@ -822,7 +822,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should empty the cell', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
@@ -838,7 +838,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     describe('by pressing a printable character', () => {
       it('should call startCellEditMode', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' }); // A
@@ -909,7 +909,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should empty the cell', () => {
         render(<TestCase />);
-        const spiedStartCellEditMode = spy(apiRef.current, 'startCellEditMode');
+        const spiedStartCellEditMode = spyApi(apiRef.current, 'startCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
@@ -969,7 +969,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=undefined', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
         userEvent.mousePress(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
@@ -984,7 +984,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
         columnProps.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
         await act(
           () =>
@@ -1014,7 +1014,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should call stopCellEditMode with ignoreModifications=true and cellToFocusAfter=undefined', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1044,7 +1044,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=below', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1061,7 +1061,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
         columnProps.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1093,7 +1093,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should call stopCellEditMode with ignoreModifications=false and cellToFocusAfter=right', () => {
         render(<TestCase />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
@@ -1110,7 +1110,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
         columnProps.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
+        const spiedStopCellEditMode = spyApi(apiRef.current, 'stopCellEditMode');
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);

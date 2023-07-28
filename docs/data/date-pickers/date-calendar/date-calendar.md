@@ -1,4 +1,5 @@
 ---
+productId: x-date-pickers
 title: React Date Calendar component
 components: DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
 githubLabel: 'component: DatePicker'
@@ -12,6 +13,8 @@ packageName: '@mui/x-date-pickers'
 ## Basic usage
 
 {{"demo": "BasicDateCalendar.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

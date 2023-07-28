@@ -1,0 +1,9 @@
+{
+  "props": {},
+  "slots": {},
+  "name": "PiePlot",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPiePlot" },
+  "filename": "/packages/x-charts/src/PieChart/PiePlot.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "PiePlot" }]
+}
