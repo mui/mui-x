@@ -45,7 +45,7 @@ export interface GridExperimentalFeatures {
   warnIfFocusStateIsNotSynced: boolean;
   /**
    * Enables accessibility improvements that will be enabled by default in V7.
-   * If you rely on the v6 ARIA attributes, this might break your application.
+   * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
    * @default false
    */
   ariaV7: boolean;
