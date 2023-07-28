@@ -1,14 +1,14 @@
 {
-  "name": "@mui/x-date-pickers",
-  "version": "6.10.2",
-  "description": "The community edition of the date picker components (MUI X).",
+  "name": "@mui/x-tree-view",
+  "version": "6.0.0-alpha.0",
+  "description": "The community edition of the tree view components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
   },
-  "homepage": "https://mui.com/x/react-date-pickers/",
+  "homepage": "https://mui.com/x/react-tree-view/",
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/mui"
@@ -23,9 +23,7 @@
     "mui",
     "material-ui",
     "material design",
-    "datepicker",
-    "timepicker",
-    "datetimepicker"
+    "treeview"
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
@@ -41,11 +39,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mui/mui-x.git",
-    "directory": "packages/x-date-pickers"
+    "directory": "packages/x-tree-view"
   },
   "dependencies": {
     "@babel/runtime": "^7.22.6",
-    "@mui/utils": "^5.14.1",
+    "@mui/utils": "^5.13.7",
     "@types/react-transition-group": "^4.4.6",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
@@ -57,55 +55,8 @@
     "@mui/base": "^5.0.0-alpha.87",
     "@mui/material": "^5.8.6",
     "@mui/system": "^5.8.0",
-    "date-fns": "^2.25.0",
-    "date-fns-jalali": "^2.13.0-0",
-    "dayjs": "^1.10.7",
-    "luxon": "^3.0.2",
-    "moment": "^2.29.4",
-    "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@emotion/react": {
-      "optional": true
-    },
-    "@emotion/styled": {
-      "optional": true
-    },
-    "date-fns": {
-      "optional": true
-    },
-    "date-fns-jalali": {
-      "optional": true
-    },
-    "dayjs": {
-      "optional": true
-    },
-    "luxon": {
-      "optional": true
-    },
-    "moment": {
-      "optional": true
-    },
-    "moment-hijri": {
-      "optional": true
-    },
-    "moment-jalaali": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "@types/luxon": "^3.3.0",
-    "@types/moment-jalaali": "^0.7.6",
-    "date-fns": "^2.30.0",
-    "date-fns-jalali": "^2.13.0-0",
-    "dayjs": "^1.11.9",
-    "luxon": "^3.3.0",
-    "moment": "^2.29.4",
-    "moment-hijri": "^2.1.2",
-    "moment-jalaali": "^0.10.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

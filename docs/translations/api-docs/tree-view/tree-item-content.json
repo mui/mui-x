@@ -1,0 +1,41 @@
+{
+  "componentDescription": "@ignore - internal component.",
+  "propDescriptions": {
+    "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
+    "className": "className applied to the root element.",
+    "displayIcon": "The icon to display next to the tree node&#39;s label. Either a parent or end icon.",
+    "expansionIcon": "The icon to display next to the tree node&#39;s label. Either an expansion or collapse icon.",
+    "icon": "The icon to display next to the tree node&#39;s label.",
+    "label": "The tree node label.",
+    "nodeId": "The id of the node."
+  },
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "expanded": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "expanded"
+    },
+    "selected": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "selected"
+    },
+    "focused": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the content element",
+      "conditions": "focused"
+    },
+    "disabled": {
+      "description": "State class applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the element",
+      "conditions": "disabled"
+    },
+    "iconContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the tree node icon and collapse/expand icon"
+    },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" }
+  },
+  "slotDescriptions": {}
+}
