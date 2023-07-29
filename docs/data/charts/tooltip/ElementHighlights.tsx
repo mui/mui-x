@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
@@ -104,7 +103,7 @@ export default function ElementHighlights() {
 
   return (
     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-      <Box>
+      <div>
         <ToggleButtonGroup
           value={chartType}
           exclusive
@@ -167,7 +166,7 @@ export default function ElementHighlights() {
             }))}
           />
         )}
-      </Box>
+      </div>
       <Stack
         direction={{ xs: 'row', sm: 'column' }}
         justifyContent="center"

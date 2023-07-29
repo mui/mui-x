@@ -113,11 +113,11 @@ function DetailPanelContent({ row: rowProp }) {
               </Typography>
             </Grid>
           </Grid>
-          <Box>
+          <div>
             <Button variant="outlined" size="small" onClick={addProduct}>
               Add Product
             </Button>
-          </Box>
+          </div>
           <DataGridPro
             density="compact"
             autoHeight

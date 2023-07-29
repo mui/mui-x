@@ -6,7 +6,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Chance } from 'chance';
@@ -100,7 +99,7 @@ export default function MuiColorTemplate() {
             {...legendPlacement}
           />
           <Stack direction="row" alignItems="center" justifyContent="space-evenly">
-            <Box>
+            <div>
               <Button
                 sx={{ ml: 1 }}
                 onClick={() =>
@@ -113,7 +112,7 @@ export default function MuiColorTemplate() {
               >
                 {colorMode} mode
               </Button>
-            </Box>
+            </div>
             <TextField
               select
               value={colorScheme}

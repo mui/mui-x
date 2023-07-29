@@ -3,7 +3,6 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 export default function ToggleOptions(props: {
@@ -16,7 +15,7 @@ export default function ToggleOptions(props: {
   const { options, label, value, setValue, autoColapse } = props;
 
   return (
-    <Box>
+    <div>
       <Typography
         role="presentation"
         sx={{
@@ -95,6 +94,6 @@ export default function ToggleOptions(props: {
           );
         })}
       </Select>
-    </Box>
+    </div>
   );
 }
