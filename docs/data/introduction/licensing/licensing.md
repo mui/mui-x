@@ -161,9 +161,9 @@ The bundle size of `setLicenseKey()` is relatively small, it should be small eno
 
 ## Next.js integration
 
-### Next.js app
+### Next.js App Router
 
-When using Next.js app, you have multiple options to install the license key.
+When using Next.js App Router, you have multiple options to install the license key.
 
 1. If your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) is using `'use client'`, you can set the license key in it:
 
