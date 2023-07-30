@@ -104,6 +104,7 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid-group-pivot',
         title: 'Group & Pivot',
+        plan: 'pro',
         children: [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
@@ -125,7 +126,11 @@ const pages: MuiPage[] = [
         pathname: '/x/react-data-grid/recipes',
         children: [
           { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
-          { pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' },
+          {
+            pathname: '/x/react-data-grid/recipes-row-grouping',
+            title: 'Row grouping',
+            plan: 'premium',
+          },
         ],
       },
       {
