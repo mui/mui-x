@@ -248,8 +248,9 @@ function AppWrapper(props) {
       pages,
       productIdentifier,
       productId,
+      productCategoryId,
     };
-  }, [productId, pageProps.userLanguage, router.pathname]);
+  }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
