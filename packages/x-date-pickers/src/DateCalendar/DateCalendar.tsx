@@ -22,7 +22,7 @@ import {
   mergeDateAndTime,
 } from '../internals/utils/date-utils';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
+import { useDefaultReduceAnimations } from '../internals/hooks/useDefaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/models/validation';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
@@ -44,20 +44,22 @@ function useDateCalendarDefaultizedProps<TDate>(
 ): DateCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
+  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
   });
 
   return {
-    loading: false,
-    disablePast: false,
-    disableFuture: false,
-    openTo: 'day',
-    views: ['year', 'day'],
-    reduceAnimations: defaultReduceAnimations,
-    renderLoading: () => <span data-mui-test="loading-progress">...</span>,
     ...themeProps,
+    loading: themeProps.loading ?? false,
+    disablePast: themeProps.disablePast ?? false,
+    disableFuture: themeProps.disableFuture ?? false,
+    openTo: themeProps.openTo ?? 'day',
+    views: themeProps.views ?? ['year', 'day'],
+    reduceAnimations: themeProps.reduceAnimations ?? defaultReduceAnimations,
+    renderLoading:
+      themeProps.renderLoading ?? (() => <span data-mui-test="loading-progress">...</span>),
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
   };

@@ -1787,7 +1787,7 @@
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
   version "5.14.2"
-  resolved "https://github.com/mui/material-ui.git#f502467eef7d13658c80e86726c820d7fa9cb3bd"
+  resolved "https://github.com/mui/material-ui.git#5bac8b3c66ae144c35609129e8391c1653bf0aae"
 
 "@mui/private-theming@^5.13.7":
   version "5.13.7"
