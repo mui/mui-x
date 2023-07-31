@@ -20,7 +20,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
   ref: React.Ref<HTMLDivElement>,
 ) {
   // Props with the default values common to all date time pickers
-  const { className, sx, ...defaultizedProps } = useDateRangePickerDefaultizedProps<
+  const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
     MobileDateRangePickerProps<TDate>
   >(inProps, 'MuiMobileDateRangePicker');
