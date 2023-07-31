@@ -214,15 +214,29 @@ function findXDemos(
   return pagesMarkdown
     .filter((page) => page.components.includes(componentName))
     .map((page) => {
-      let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
-      name = name.replace(/\[(.*)]\((.*)\)/g, '');
+      if (page.pathname.includes('date-pickers')) {
+        let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
+        name = name.replace(/\[(.*)]\((.*)\)/g, '');
 
-      const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
+        const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
 
-      return {
-        name,
-        demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}/`,
-      };
+        return {
+          name,
+          demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}/`,
+        };
+      }
+
+      if (page.pathname.includes('tree-view')) {
+        const pathnameMatches = /\/tree-view\/([^/]+)\/([^/]+)/.exec(page.pathname);
+        const pageId = pathnameMatches![1] === 'overview' ? '' : `${pathnameMatches![1]}/`;
+
+        return {
+          name: page.title,
+          demoPathname: `/x/react-tree-view/${pageId}`,
+        };
+      }
+
+      throw new Error('Invalid page');
     });
 }
 
