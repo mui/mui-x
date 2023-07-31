@@ -20,7 +20,8 @@ This axis might have `scaleType='band'` and its `data` should have the same leng
 If your data is stored in an array of objects, you can use the `dataset` helper prop.
 It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
 
-You can reuse this data when defining the series and axis thanks to the `dataKey` property.
+You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
+
 For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
 
 {{"demo": "BarsDataset.js"}}
