@@ -92,12 +92,12 @@ const itITGrid: Partial<GridLocaleText> = {
   headerFilterOperatorIsEmpty: 'è vuoto',
   headerFilterOperatorIsNotEmpty: 'non è vuoto',
   headerFilterOperatorIsAnyOf: 'è uno tra',
-  'headerFilterOperator=': '=',
-  'headerFilterOperator!=': '!=',
-  'headerFilterOperator>': '>',
-  'headerFilterOperator>=': '>=',
-  'headerFilterOperator<': '<',
-  'headerFilterOperator<=': '<=',
+  'headerFilterOperator=': 'uguale a',
+  'headerFilterOperator!=': 'diverso da',
+  'headerFilterOperator>': 'maggiore di',
+  'headerFilterOperator>=': 'maggiore o uguale a',
+  'headerFilterOperator<': 'minore di',
+  'headerFilterOperator<=': 'minore o uguale a',
 
   // Filter values text
   filterValueAny: 'qualunque',
