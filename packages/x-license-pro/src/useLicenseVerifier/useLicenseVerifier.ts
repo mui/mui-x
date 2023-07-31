@@ -54,7 +54,6 @@ export function useLicenseVerifier(
       releaseInfo,
       licenseKey,
       acceptedScopes,
-      isProduction: process.env.NODE_ENV === 'production',
     });
 
     sharedLicenseStatuses[packageName] = { key: licenseKey, licenseVerifier: licenseStatus };

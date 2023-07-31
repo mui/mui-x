@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.10.2
+
+_Jul 27, 2023_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Improve scatter charts performance
+- 📚 Redesigned component API documentation and side navigation
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.10.2`
+
+- [DataGrid] Fix quick filter & aggregation error (#9729) @romgrk
+- [DataGrid] Fix row click propagation causing error in nested grid (#9741) @cherniavskii
+- [DataGrid] Keep focused cell in the DOM (#7357) @yaredtsy
+- [l10n] Improve Finnish (fi-FI) locale (#9746) @sambbaahh
+
+#### `@mui/x-data-grid-pro@v6.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@v6.10.2`.
+
+#### `@mui/x-data-grid-premium@v6.10.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@v6.10.2`, plus:
+
+- [DataGridPremium] Allow to customize grouping cell offset (#9417) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.10.2`
+
+- [pickers] Remove the `endOfDate` from `DigitalClock` timeOptions (#9800) @noraleonte
+
+#### `@mui/x-date-pickers-pro@v6.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@v6.10.2`.
+
+### Charts / `@mui/x-charts@v6.0.0-alpha.5`
+
+- [charts] Improve JSDoc for axis-related props (#9779) @flaviendelangle
+- [charts] Improve performances of Scatter component (#9527) @flaviendelangle
+
+### Docs
+
+- [docs] Add `pnpm` in more places @oliviertassinari
+- [docs] Add `pnpm` installation instructions for MUI X (#9707) @richbustos
+- [docs] Align pickers "uncontrolled vs controlled" sections (#9772) @LukasTy
+- [docs] Apply style guide to the data grid Layout page (#9673) @richbustos
+- [docs] Differentiate between packages in `slotProps` docs (#9668) @cherniavskii
+- [docs] Fix charts width in axis pages (#9801) @alexfauquette
+- [docs] Fix wrong prop name in the Editing page (#9753) @m4theushw
+- [docs] New component API page and side nav design (#9187) @alexfauquette
+- [docs] Update overview page with up to date information about the plans (#9512) @joserodolfofreitas
+
+### Core
+
+- [core] Use PR charts version in preview (#9787) @alexfauquette
+- [license] Allow overriding the license on specific parts of the page (#9717) @Janpot
+- [license] Throw in dev mode after 30 days (#9701) @oliviertassinari
+- [license] Only throw in dev mode (#9803) @oliviertassinari
+- [test] Fail the CI when new unexpected files are created (#9728) @oliviertassinari
+
 ## 6.10.1
 
 _Jul 20, 2023_
