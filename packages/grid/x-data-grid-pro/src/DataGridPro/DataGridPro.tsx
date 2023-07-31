@@ -55,7 +55,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
 interface DataGridProComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
@@ -302,7 +302,7 @@ DataGridProRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**

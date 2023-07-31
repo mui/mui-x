@@ -101,7 +101,7 @@ export function GridOverlays() {
   const showNoRowsOverlay = !loading && totalRowCount === 0;
   const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
 
-  let overlay: JSX.Element | null = null;
+  let overlay: React.JSX.Element | null = null;
 
   if (showNoRowsOverlay) {
     overlay = <rootProps.slots.noRowsOverlay {...rootProps.slotProps?.noRowsOverlay} />;

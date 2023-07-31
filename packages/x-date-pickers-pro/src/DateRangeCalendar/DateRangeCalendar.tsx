@@ -153,7 +153,7 @@ const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
 
 type DateRangeCalendarComponent = (<TDate>(
   props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   inProps: DateRangeCalendarProps<TDate>,

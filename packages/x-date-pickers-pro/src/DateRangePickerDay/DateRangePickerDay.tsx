@@ -261,11 +261,11 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
-) => JSX.Element;
+) => React.JSX.Element;
 
 type DateRangePickerDayComponent = <TDate>(
   props: DateRangePickerDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => JSX.Element;
+) => React.JSX.Element;
 
 const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate>(
   inProps: DateRangePickerDayProps<TDate>,

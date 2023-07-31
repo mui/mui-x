@@ -632,7 +632,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       rowStyleCache.current = Object.create(null);
     }
 
-    const rows: JSX.Element[] = [];
+    const rows: React.JSX.Element[] = [];
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];

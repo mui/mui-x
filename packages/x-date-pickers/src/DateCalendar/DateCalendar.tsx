@@ -82,7 +82,7 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
 
 type DateCalendarComponent = (<TDate>(
   props: DateCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 /**
  *
