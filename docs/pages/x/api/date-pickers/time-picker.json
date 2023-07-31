@@ -84,6 +84,10 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "reduceAnimations": {
+      "type": { "name": "bool" },
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+    },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -154,7 +158,7 @@
     "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "desktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
     "desktopTransition": {
-      "default": "Grow from @mui/material",
+      "default": "Grow from `@mui/material` or Fade from `@mui/material` when `reduceAnimations` is on.",
       "type": { "name": "elementType" }
     },
     "desktopTrapFocus": {

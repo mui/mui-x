@@ -122,6 +122,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "reduceAnimations": {
+      "description": "If <code>true</code>, disable heavy animations.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "shouldDisableClock": {
       "description": "Disable specific clock time.",
       "deprecated": "",

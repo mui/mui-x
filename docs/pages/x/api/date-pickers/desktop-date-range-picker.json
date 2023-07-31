@@ -105,7 +105,7 @@
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -152,7 +152,7 @@
     "day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
     "desktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
     "desktopTransition": {
-      "default": "Grow from @mui/material",
+      "default": "Grow from `@mui/material` or Fade from `@mui/material` when `reduceAnimations` is on.",
       "type": { "name": "elementType" }
     },
     "desktopTrapFocus": {
