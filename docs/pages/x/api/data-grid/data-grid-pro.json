@@ -67,7 +67,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ ariaV7?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
