@@ -240,6 +240,12 @@ function AppWrapper(props) {
           },
         ],
       };
+    } else if (productId === 'x-charts') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Charts',
+        versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
+      };
     }
 
     return {
