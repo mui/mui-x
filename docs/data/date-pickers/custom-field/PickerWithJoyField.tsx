@@ -63,7 +63,7 @@ interface JoyFieldProps extends InputProps {
 
 type JoyFieldComponent = ((
   props: JoyFieldProps & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const JoyField = React.forwardRef(
   (props: JoyFieldProps, inputRef: React.Ref<HTMLInputElement>) => {
@@ -108,7 +108,7 @@ interface JoySingleInputDateRangeFieldProps
 
 type JoySingleInputDateRangeFieldComponent = ((
   props: JoySingleInputDateRangeFieldProps & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { fieldType?: string };
+) => React.JSX.Element) & { fieldType?: string };
 
 const JoySingleInputDateRangeField = React.forwardRef(
   (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLInputElement>) => {
@@ -215,7 +215,7 @@ interface JoyMultiInputDateRangeFieldProps
 
 type JoyMultiInputDateRangeFieldComponent = ((
   props: JoyMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const JoyMultiInputDateRangeField = React.forwardRef(
   (props: JoyMultiInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {

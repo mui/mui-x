@@ -81,7 +81,7 @@ const DigitalClockItem = styled(MenuItem, {
 
 type DigitalClockComponent = (<TDate>(
   props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends unknown>(
   inProps: DigitalClockProps<TDate>,

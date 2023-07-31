@@ -185,7 +185,7 @@ const Switch = React.forwardRef<
         input: {
           ...inputProps,
           name,
-          onClick: onClick as JSX.IntrinsicElements['input']['onClick'],
+          onClick: onClick as React.JSX.IntrinsicElements['input']['onClick'],
           ref: inputRef,
         },
         thumb: {
