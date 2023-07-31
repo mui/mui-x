@@ -48,7 +48,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ ariaV7?: bool, columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -72,9 +72,9 @@
     "getDetailPanelContent": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: GridRowParams) => JSX.Element",
+        "type": "function(params: GridRowParams) => React.JSX.Element",
         "describedArgs": ["params"],
-        "returned": "JSX.Element"
+        "returned": "React.JSX.Element"
       }
     },
     "getEstimatedRowHeight": {
