@@ -25,6 +25,13 @@ import {
   gridVisibleColumnFieldsSelector,
 } from '../columns';
 
+let hasEval: boolean;
+try {
+  hasEval = eval('true');
+} catch (_: unknown) {
+  hasEval = false;
+}
+
 type GridFilterItemApplier =
   | {
       v7: false;
@@ -240,21 +247,23 @@ export const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
-  // Original logic:
-  // return (row, shouldApplyFilter) => {
-  //   const resultPerItemId: GridFilterItemResult = {};
-  //
-  //   for (let i = 0; i < appliers.length; i += 1) {
-  //     const applier = appliers[i];
-  //     if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
-  //       resultPerItemId[applier.item.id!] = applier.v7
-  //         ? applier.fn(row)
-  //         : applier.fn(getRowId ? getRowId(row) : row.id);
-  //     }
-  //   }
-  //
-  //   return resultPerItemId;
-  // };
+  if (!hasEval) {
+    // This is the original logic, which is used if `eval()` is not supported (aka prevented by CSP).
+    return (row, shouldApplyFilter) => {
+      const resultPerItemId: GridFilterItemResult = {};
+
+      for (let i = 0; i < appliers.length; i += 1) {
+        const applier = appliers[i];
+        if (!shouldApplyFilter || shouldApplyFilter(applier.item.field)) {
+          resultPerItemId[applier.item.id!] = applier.v7
+            ? applier.fn(row)
+            : applier.fn(getRowId ? getRowId(row) : row.id);
+        }
+      }
+
+      return resultPerItemId;
+    };
+  }
 
   // We generate a new function with `eval()` to avoid expensive patterns for JS engines
   // such as a dynamic object assignment, e.g. `{ [dynamicKey]: value }`.
