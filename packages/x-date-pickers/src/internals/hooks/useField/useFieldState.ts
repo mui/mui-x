@@ -21,6 +21,11 @@ import {
 } from './useField.utils';
 import { InferError } from '../useValidation';
 import { FieldSection, FieldSelectedSections } from '../../../models';
+import { useValueWithTimezone } from '../useValueWithTimezone';
+import {
+  GetDefaultReferenceDateProps,
+  getSectionTypeGranularity,
+} from '../../utils/getDefaultReferenceDate';
 
 export interface UpdateSectionValueParams<TSection extends FieldSection> {
   /**
@@ -42,7 +47,7 @@ export const useFieldState = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ) => {
@@ -61,25 +66,40 @@ export const useFieldState = <
     internalProps: {
       value: valueProp,
       defaultValue,
+      referenceDate: referenceDateProp,
       onChange,
       format,
       formatDensity = 'dense',
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
       shouldRespectLeadingZeros = false,
+      timezone: timezoneProp,
     },
   } = params;
 
-  const firstDefaultValue = React.useRef(defaultValue);
-  const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
+  const {
+    timezone,
+    value: valueFromTheOutside,
+    handleValueChange,
+  } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
 
-  const sectionsValueBoundaries = React.useMemo(() => getSectionsBoundaries<TDate>(utils), [utils]);
+  const sectionsValueBoundaries = React.useMemo(
+    () => getSectionsBoundaries<TDate>(utils, timezone),
+    [utils, timezone],
+  );
 
   const getSectionsFromValue = React.useCallback(
     (value: TValue, fallbackSections: TSection[] | null = null) =>
       fieldValueManager.getSectionsFromValue(utils, value, fallbackSections, isRTL, (date) =>
         splitFormatIntoSections(
           utils,
+          timezone,
           localeText,
           format,
           date,
@@ -88,7 +108,16 @@ export const useFieldState = <
           isRTL,
         ),
       ),
-    [fieldValueManager, format, localeText, isRTL, shouldRespectLeadingZeros, utils, formatDensity],
+    [
+      fieldValueManager,
+      format,
+      localeText,
+      isRTL,
+      shouldRespectLeadingZeros,
+      utils,
+      formatDensity,
+      timezone,
+    ],
   );
 
   const placeholder = React.useMemo(
@@ -104,15 +133,26 @@ export const useFieldState = <
     const sections = getSectionsFromValue(valueFromTheOutside);
     validateSections(sections, valueType);
 
-    return {
+    const stateWithoutReferenceDate: UseFieldState<TValue, TSection> = {
       sections,
       value: valueFromTheOutside,
-      referenceValue: fieldValueManager.updateReferenceValue(
-        utils,
-        valueFromTheOutside,
-        valueManager.getTodayValue(utils, valueType),
-      ),
+      referenceValue: valueManager.emptyValue,
       tempValueStrAndroid: null,
+    };
+
+    const granularity = getSectionTypeGranularity(sections);
+    const referenceValue = valueManager.getInitialReferenceValue({
+      referenceDate: referenceDateProp,
+      value: valueFromTheOutside,
+      utils,
+      props: internalProps as GetDefaultReferenceDateProps<TDate>,
+      granularity,
+      timezone,
+    });
+
+    return {
+      ...stateWithoutReferenceDate,
+      referenceValue,
     };
   });
 
@@ -174,13 +214,15 @@ export const useFieldState = <
       tempValueStrAndroid: null,
     }));
 
-    if (onChange) {
-      const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
-        validationError: validator({ adapter, value, props: { ...internalProps, value } }),
-      };
+    const context: FieldChangeHandlerContext<InferError<TInternalProps>> = {
+      validationError: validator({
+        adapter,
+        value,
+        props: { ...internalProps, value, timezone },
+      }),
+    };
 
-      onChange(value, context);
-    }
+    handleValueChange(value, context);
   };
 
   const setSectionValue = (sectionIndex: number, newSectionValue: string) => {
@@ -253,6 +295,7 @@ export const useFieldState = <
 
       const sections = splitFormatIntoSections(
         utils,
+        timezone,
         localeText,
         format,
         date,
@@ -260,7 +303,7 @@ export const useFieldState = <
         shouldRespectLeadingZeros,
         isRTL,
       );
-      return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
+      return mergeDateIntoReferenceDate(utils, timezone, date, sections, referenceDate, false);
     };
 
     const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
@@ -316,6 +359,7 @@ export const useFieldState = <
     if (!utils.isValid(newActiveDate)) {
       const clampedSections = clampDaySectionIfPossible(
         utils,
+        timezone,
         newActiveDateSections,
         sectionsValueBoundaries,
       );
@@ -336,6 +380,7 @@ export const useFieldState = <
     if (newActiveDate != null && utils.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
+        timezone,
         newActiveDate,
         newActiveDateSections,
         activeDateManager.referenceDate,
@@ -378,7 +423,25 @@ export const useFieldState = <
     setState((prev) => ({ ...prev, tempValueStrAndroid }));
 
   React.useEffect(() => {
+    const sections = getSectionsFromValue(state.value);
+    validateSections(sections, valueType);
+    setState((prevState) => ({
+      ...prevState,
+      sections,
+    }));
+  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    let shouldUpdate = false;
     if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
+      shouldUpdate = true;
+    } else {
+      shouldUpdate =
+        valueManager.getTimezone(utils, state.value) !==
+        valueManager.getTimezone(utils, valueFromTheOutside);
+    }
+
+    if (shouldUpdate) {
       setState((prevState) => ({
         ...prevState,
         value: valueFromTheOutside,
@@ -392,15 +455,6 @@ export const useFieldState = <
     }
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  React.useEffect(() => {
-    const sections = getSectionsFromValue(state.value);
-    validateSections(sections, valueType);
-    setState((prevState) => ({
-      ...prevState,
-      sections,
-    }));
-  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
-
   return {
     state,
     selectedSectionIndexes,
@@ -412,5 +466,6 @@ export const useFieldState = <
     setTempAndroidValueStr,
     sectionsValueBoundaries,
     placeholder,
+    timezone,
   };
 };

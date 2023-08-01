@@ -1,6 +1,6 @@
 import { base64Decode, base64Encode } from '../encoding/base64';
 import { md5 } from '../encoding/md5';
-import { LicenseStatus } from '../utils/licenseStatus';
+import { LICENSE_STATUS, LicenseStatus } from '../utils/licenseStatus';
 import { LicenseScope, LICENSE_SCOPES } from '../utils/licenseScope';
 import { LicensingModel, LICENSING_MODELS } from '../utils/licensingModel';
 
@@ -99,68 +99,79 @@ export function verifyLicense({
   releaseInfo,
   licenseKey,
   acceptedScopes,
-  isProduction,
 }: {
   releaseInfo: string;
   licenseKey: string | undefined;
   acceptedScopes: LicenseScope[];
-  isProduction: boolean;
-}) {
+}): { status: LicenseStatus; meta?: any } {
   if (!releaseInfo) {
     throw new Error('MUI: The release information is missing. Not able to validate license.');
   }
 
   if (!licenseKey) {
-    return LicenseStatus.NotFound;
+    return { status: LICENSE_STATUS.NotFound };
   }
 
   const hash = licenseKey.substr(0, 32);
   const encoded = licenseKey.substr(32);
 
   if (hash !== md5(encoded)) {
-    return LicenseStatus.Invalid;
+    return { status: LICENSE_STATUS.Invalid };
   }
 
   const license = decodeLicense(encoded);
 
   if (license == null) {
     console.error('Error checking license. Key version not found!');
-    return LicenseStatus.Invalid;
+    return { status: LICENSE_STATUS.Invalid };
   }
 
   if (license.licensingModel == null || !LICENSING_MODELS.includes(license.licensingModel)) {
-    console.error('Error checking license. Sales model not found or invalid!');
-    return LicenseStatus.Invalid;
+    console.error('Error checking license. Licensing model not found or invalid!');
+    return { status: LICENSE_STATUS.Invalid };
   }
 
   if (license.expiryTimestamp == null) {
     console.error('Error checking license. Expiry timestamp not found or invalid!');
-    return LicenseStatus.Invalid;
+    return { status: LICENSE_STATUS.Invalid };
   }
 
-  if (license.licensingModel === 'perpetual' || isProduction) {
+  if (license.licensingModel === 'perpetual' || process.env.NODE_ENV === 'production') {
     const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
     if (Number.isNaN(pkgTimestamp)) {
       throw new Error('MUI: The release information is invalid. Not able to validate license.');
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {
-      return LicenseStatus.ExpiredVersion;
+      return { status: LICENSE_STATUS.ExpiredVersion };
     }
-  } else if (license.licensingModel === 'subscription') {
-    if (license.expiryTimestamp < new Date().getTime()) {
-      return LicenseStatus.Expired;
+  } else if (license.licensingModel === 'subscription' || license.licensingModel === 'annual') {
+    if (new Date().getTime() > license.expiryTimestamp) {
+      if (
+        // 30 days grace
+        new Date().getTime() < license.expiryTimestamp + 1000 * 3600 * 24 * 30 ||
+        process.env.NODE_ENV !== 'development'
+      ) {
+        return {
+          status: LICENSE_STATUS.ExpiredAnnualGrace,
+          meta: { expiryTimestamp: license.expiryTimestamp, licenseKey },
+        };
+      }
+      return {
+        status: LICENSE_STATUS.ExpiredAnnual,
+        meta: { expiryTimestamp: license.expiryTimestamp, licenseKey },
+      };
     }
   }
 
   if (license.scope == null || !LICENSE_SCOPES.includes(license.scope)) {
     console.error('Error checking license. scope not found or invalid!');
-    return LicenseStatus.Invalid;
+    return { status: LICENSE_STATUS.Invalid };
   }
 
   if (!acceptedScopes.includes(license.scope)) {
-    return LicenseStatus.OutOfScope;
+    return { status: LICENSE_STATUS.OutOfScope };
   }
 
-  return LicenseStatus.Valid;
+  return { status: LICENSE_STATUS.Valid };
 }

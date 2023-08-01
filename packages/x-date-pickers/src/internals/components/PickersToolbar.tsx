@@ -64,7 +64,7 @@ const PickersToolbarContent = styled(Grid, {
 type PickersToolbarComponent = (<TValue, TView extends DateOrTimeViewWithMeridiem>(
   props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
     React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const PickersToolbar = React.forwardRef(function PickersToolbar<
   TValue,

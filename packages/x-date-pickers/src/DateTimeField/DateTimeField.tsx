@@ -8,7 +8,7 @@ import { useDateTimeField } from './useDateTimeField';
 
 type DateTimeFieldComponent = (<TDate>(
   props: DateTimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   inProps: DateTimeFieldProps<TDate>,
@@ -35,12 +35,13 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   );
 
   // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
-  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
+  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
+  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const {
     ref: inputRef,
     onPaste,
+    onKeyDown,
     inputMode,
     readOnly,
     ...fieldProps
@@ -54,7 +55,7 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
       ref={ref}
       {...fieldProps}
       InputProps={{ ...fieldProps.InputProps, readOnly }}
-      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
+      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
     />
   );
 }) as DateTimeFieldComponent;
@@ -260,6 +261,12 @@ DateTimeField.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
+   * For example, on time fields it will be used to determine the date to set.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
    */
@@ -366,6 +373,14 @@ DateTimeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The ref object used to imperatively interact with the field.
    */

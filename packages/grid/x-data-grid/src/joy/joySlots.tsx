@@ -12,6 +12,8 @@ import JoySelect, { SelectProps as JoySelectProps } from '@mui/joy/Select';
 import JoyOption, { OptionProps as JoyOptionProps } from '@mui/joy/Option';
 import JoyBox from '@mui/joy/Box';
 import JoyTypography from '@mui/joy/Typography';
+import JoyCircularProgress from '@mui/joy/CircularProgress';
+import JoyTooltip from '@mui/joy/Tooltip';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import joyIconSlots, { GridKeyboardArrowRight, GridKeyboardArrowLeft } from './icons';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
@@ -19,6 +21,7 @@ import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridFilteredTopLevelRowCountSelector, gridPaginationModelSelector } from '../hooks';
+import { GridOverlay } from '../components/containers/GridOverlay';
 
 function convertColor<
   T extends
@@ -182,7 +185,7 @@ const Switch = React.forwardRef<
         input: {
           ...inputProps,
           name,
-          onClick: onClick as JSX.IntrinsicElements['input']['onClick'],
+          onClick: onClick as React.JSX.IntrinsicElements['input']['onClick'],
           ref: inputRef,
         },
         thumb: {
@@ -341,9 +344,21 @@ const Pagination = React.forwardRef<
   const page = paginationModel.page <= lastPage ? paginationModel.page : lastPage;
   const pageSize = paginationModel.pageSize;
 
-  const pageSizeOptions = rootProps.pageSizeOptions?.includes(pageSize)
-    ? rootProps.pageSizeOptions
-    : [];
+  const isPageSizeIncludedInPageSizeOptions = () => {
+    for (let i = 0; i < rootProps.pageSizeOptions.length; i += 1) {
+      const option = rootProps.pageSizeOptions[i];
+      if (typeof option === 'number') {
+        if (option === pageSize) {
+          return true;
+        }
+      } else if (option.value === pageSize) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const pageSizeOptions = isPageSizeIncludedInPageSizeOptions() ? rootProps.pageSizeOptions : [];
 
   const handleChangeRowsPerPage: JoySelectProps<number>['onChange'] = (event, newValue) => {
     const newPageSize = Number(newValue);
@@ -363,10 +378,13 @@ const Pagination = React.forwardRef<
       <JoyFormControl orientation="horizontal" size="sm">
         <JoyFormLabel>Rows per page:</JoyFormLabel>
         <JoySelect<number> onChange={handleChangeRowsPerPage} value={pageSize}>
-          {pageSizeOptions.map((option) => {
+          {pageSizeOptions.map((option: number | { label: string; value: number }) => {
             return (
-              <Option value={option} key={option}>
-                {option}
+              <Option
+                value={typeof option !== 'number' && option.value ? option.value : option}
+                key={typeof option !== 'number' && option.label ? option.label : `${option}`}
+              >
+                {typeof option !== 'number' && option.label ? option.label : `${option}`}
               </Option>
             );
           })}
@@ -405,6 +423,17 @@ const Pagination = React.forwardRef<
   );
 });
 
+const LoadingOverlay = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['loadingOverlay']>
+>((props, ref) => {
+  return (
+    <GridOverlay {...props} ref={ref}>
+      <JoyCircularProgress />
+    </GridOverlay>
+  );
+});
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   ...joyIconSlots,
   baseCheckbox: Checkbox,
@@ -416,9 +445,9 @@ const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseSelectOption: Option,
   baseInputLabel: InputLabel,
   baseFormControl: JoyFormControl,
-  // BaseTooltip: MUITooltip,
-  // BasePopper: MUIPopper,
+  baseTooltip: JoyTooltip,
   pagination: Pagination,
+  loadingOverlay: LoadingOverlay,
 };
 
 export default joySlots;

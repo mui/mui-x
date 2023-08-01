@@ -1,0 +1,16 @@
+<DateTimePicker
+  label="With Time Clock"
+  viewRenderers={{
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+    seconds: renderTimeViewClock,
+  }}
+/>
+<DateTimePicker
+  label="Without view renderers"
+  viewRenderers={{
+    hours: null,
+    minutes: null,
+    seconds: null,
+  }}
+/>

@@ -4,6 +4,7 @@ import {
   useGridSelector,
   gridFilterModelSelector,
   unstable_gridTabIndexColumnHeaderFilterSelector,
+  getDataGridUtilityClass,
 } from '@mui/x-data-grid';
 import { styled } from '@mui/system';
 import {
@@ -14,10 +15,22 @@ import {
   useGridPrivateApiContext,
   getGridFilter,
 } from '@mui/x-data-grid/internals';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+  return React.useMemo(() => {
+    const slots = {
+      headerFilterRow: ['headerFilterRow'],
+    };
+
+    return composeClasses(slots, getDataGridUtilityClass, classes);
+  }, [classes]);
+};
 
 const GridHeaderFilterRow = styled('div', {
   name: 'MuiDataGrid',
@@ -25,12 +38,10 @@ const GridHeaderFilterRow = styled('div', {
   overridesResolver: (props, styles) => styles.headerFilterRow,
 })<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
-  borderTop: '1px solid rgba(224, 224, 224, 1)',
 }));
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const apiRef = useGridPrivateApiContext();
-
   const { headerGroupingMaxDepth, hasOtherElementInTabSequence } = props;
   const columnHeaderFilterTabIndexState = useGridSelector(
     apiRef,
@@ -47,6 +58,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   });
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const rootProps = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.unstable_headerFilters;
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * props.densityFactor);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
@@ -72,7 +84,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const { renderedColumns, firstColumnToRender } = columnsToRender;
 
-    const filters: JSX.Element[] = [];
+    const filters: React.JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
       const colDef = renderedColumns[i];
       const columnIndex = firstColumnToRender + i;
@@ -83,13 +95,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         tabIndexField === colDef.field || (isFirstColumn && !props.hasOtherElementInTabSequence)
           ? 0
           : -1;
-
-      let headerFilterComponent: React.ReactNode;
-      if (colDef.renderHeaderFilter) {
-        headerFilterComponent = colDef.renderHeaderFilter(
-          apiRef.current.getColumnHeaderParams(colDef.field),
-        );
-      }
 
       const headerClassName =
         typeof colDef.headerClassName === 'function'
@@ -114,7 +119,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           headerFilterMenuRef={headerFilterMenuRef}
-          headerFilterComponent={headerFilterComponent}
           headerClassName={headerClassName}
           filterOperators={filterOperators}
           data-field={colDef.field}
@@ -129,6 +133,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <GridHeaderFilterRow
         ref={headerFiltersRef}
         ownerState={rootProps}
+        className={classes.headerFilterRow}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
       >

@@ -1,6 +1,6 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Shortcuts
+productId: x-date-pickers
+title: Date and Time Pickers - Shortcuts
 components: PickersShortcuts
 ---
 
@@ -59,6 +59,15 @@ You can use it to test if a value is valid or not based on the [validation props
 In the following demonstration, it is used to get the next available week and weekend.
 
 {{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}
+
+## Behavior when selecting a shortcut
+
+You can change the behavior when selecting a shortcut using the `changeImportance` property:
+
+- `"accept"` (_default value_): fires `onChange`, fires `onAccept` and closes the picker.
+- `"set"`: fires `onChange` but do not fire `onAccept` and does not close the picker.
+
+{{"demo": "ChangeImportance.js", "bg": "inline"}}
 
 ## Customization
 

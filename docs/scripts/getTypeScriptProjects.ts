@@ -36,7 +36,9 @@ export type ProjectNames =
   | 'x-data-grid-premium'
   | 'x-data-grid-generator'
   | 'x-date-pickers'
-  | 'x-date-pickers-pro';
+  | 'x-date-pickers-pro'
+  | 'x-charts'
+  | 'x-tree-view';
 
 export type Projects = Map<ProjectNames, Project>;
 
@@ -189,6 +191,7 @@ export const getTypeScriptProjects = () => {
           'src/DataGrid/DataGrid.tsx',
           'src/components/panel/filterPanel/GridFilterForm.tsx',
           'src/components/panel/filterPanel/GridFilterPanel.tsx',
+          'src/components/toolbar/GridToolbarQuickFilter.tsx',
         ],
       }),
     }),
@@ -258,6 +261,40 @@ export const getTypeScriptProjects = () => {
       name: 'x-date-pickers-pro',
       rootPath: path.join(workspaceRoot, 'packages/x-date-pickers-pro'),
       documentationFolderName: 'date-pickers',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-charts',
+    createProject({
+      name: 'x-charts',
+      rootPath: path.join(workspaceRoot, 'packages/x-charts'),
+      documentationFolderName: 'charts',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
+
+  projects.set(
+    'x-tree-view',
+    createProject({
+      name: 'x-tree-view',
+      rootPath: path.join(workspaceRoot, 'packages/x-tree-view'),
+      documentationFolderName: 'tree-view',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
         includeUnstableComponents: true,

@@ -8,7 +8,7 @@ import { useSingleInputTimeRangeField } from './useSingleInputTimeRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any; fieldType?: string };
+) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRangeField<TDate>(
   inProps: SingleInputTimeRangeFieldProps<TDate>,
@@ -34,12 +34,13 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     });
 
   // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
-  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
+  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
+  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const {
     ref: inputRef,
     onPaste,
+    onKeyDown,
     inputMode,
     readOnly,
     ...fieldProps
@@ -53,7 +54,7 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
       ref={ref}
       {...fieldProps}
       InputProps={{ ...fieldProps.InputProps, readOnly }}
-      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
+      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
     />
   );
 }) as DateRangeFieldComponent;
@@ -245,6 +246,12 @@ SingleInputTimeRangeField.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * The date used to generate a part of the new value that is not present in the format when both `value` and `defaultValue` are empty.
+   * For example, on time fields it will be used to determine the date to set.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * If `true`, the label is displayed as required and the `input` element is required.
    * @default false
    */
@@ -330,6 +337,14 @@ SingleInputTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The ref object used to imperatively interact with the field.
    */

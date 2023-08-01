@@ -53,7 +53,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
@@ -66,10 +66,25 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.value`', () => {
       const onChange = spy();
 
-      const { selectSection } = renderWithProps({ defaultValue: values[0], onChange });
+      const useControlledElement = (props) => {
+        const [value, setValue] = React.useState(props?.value || null);
+        const handleChange = React.useCallback(
+          (newValue) => {
+            setValue(newValue);
+            props?.onChange(newValue);
+          },
+          [props],
+        );
+        return { value, onChange: handleChange };
+      };
+
+      const { selectSection } = renderWithProps(
+        { value: values[0], onChange },
+        useControlledElement,
+      );
       const newValue = setNewValue(values[0], { selectSection });
 
-      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily));
+      expect(onChange.callCount).to.equal(getExpectedOnChangeCount(componentFamily, params));
       if (Array.isArray(newValue)) {
         newValue.forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);

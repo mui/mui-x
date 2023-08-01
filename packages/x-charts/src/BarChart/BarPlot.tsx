@@ -1,13 +1,43 @@
 import * as React from 'react';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { isBandScale } from '../hooks/useScale';
-import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
+import { BarElement } from './BarElement';
+import { isBandScaleConfig } from '../models/axis';
 
+/**
+ * Solution of the equations
+ * W = barWidth * N + offset * (N-1)
+ * offset / (offset + barWidth) = r
+ * @param bandWidth The width available to place bars.
+ * @param numberOfGroups The number of bars to place in that space.
+ * @param gapRatio The ratio of the gap between bars over the bar width.
+ * @returns The bar width and the offset between bars.
+ */
+function getBandSize({
+  bandWidth: W,
+  numberOfGroups: N,
+  gapRatio: r,
+}: {
+  bandWidth: number;
+  numberOfGroups: number;
+  gapRatio: number;
+}) {
+  if (r === 0) {
+    return {
+      barWidth: W / N,
+      offset: 0,
+    };
+  }
+  const barWidth = W / (N + (N - 1) * r);
+  const offset = r * barWidth;
+  return {
+    barWidth,
+    offset,
+  };
+}
 export function BarPlot() {
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
-  const getInteractionItemProps = useInteractionItemProps();
 
   if (seriesData === undefined) {
     return null;
@@ -19,17 +49,16 @@ export function BarPlot() {
 
   return (
     <React.Fragment>
-      {stackingGroups.flatMap((groupIds, groupIndex) => {
+      {stackingGroups.flatMap(({ ids: groupIds }, groupIndex) => {
         return groupIds.flatMap((seriesId) => {
           const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
           const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
 
-          const xScale = xAxis[xAxisKey].scale;
-          const yScale = yAxis[yAxisKey].scale;
-
-          if (!isBandScale(xScale)) {
+          const xAxisConfig = xAxis[xAxisKey];
+          const yAxisConfig = yAxis[yAxisKey];
+          if (!isBandScaleConfig(xAxisConfig)) {
             throw new Error(
-              `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series ${stackingGroups}`,
+              `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
             );
           }
 
@@ -37,10 +66,17 @@ export function BarPlot() {
             throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
           }
 
+          const xScale = xAxisConfig.scale;
+          const yScale = yAxisConfig.scale;
+
           // Currently assuming all bars are vertical
           const bandWidth = xScale.bandwidth();
-          const barWidth = (0.9 * bandWidth) / stackingGroups.length;
-          const offset = 0.05 * bandWidth;
+
+          const { barWidth, offset } = getBandSize({
+            bandWidth,
+            numberOfGroups: stackingGroups.length,
+            gapRatio: xAxisConfig.barGapRatio,
+          });
 
           // @ts-ignore TODO: fix when adding a correct API for customisation
           const { stackedData, color } = series[seriesId];
@@ -49,15 +85,16 @@ export function BarPlot() {
             const baseline = Math.min(...values);
             const value = Math.max(...values);
             return (
-              <rect
+              <BarElement
                 key={`${seriesId}-${dataIndex}`}
-                x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * barWidth + offset}
+                id={seriesId}
+                dataIndex={dataIndex}
+                x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * (barWidth + offset)}
                 y={yScale(value)}
                 height={yScale(baseline) - yScale(value)}
                 width={barWidth}
-                fill={color}
-                shapeRendering="crispEdges"
-                {...getInteractionItemProps({ type: 'bar', seriesId, dataIndex })}
+                color={color}
+                highlightScope={series[seriesId].highlightScope}
               />
             );
           });

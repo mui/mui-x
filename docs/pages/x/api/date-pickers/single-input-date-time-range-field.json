@@ -59,10 +59,32 @@
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
-    "onChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      }
+    },
     "readOnly": { "type": { "name": "bool" } },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`. Value is rounded to the most granular section used."
+    },
     "required": { "type": { "name": "bool" } },
     "selectedSections": {
       "type": {
@@ -73,10 +95,29 @@
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
+      "signature": {
+        "type": "function(clockValue: number, view: TimeView) => boolean",
+        "describedArgs": ["clockValue", "view"],
+        "returned": "boolean"
+      }
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate, position: string) => boolean",
+        "describedArgs": ["day", "position"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -85,7 +126,12 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
+    },
+    "timezone": {
+      "type": { "name": "string" },
+      "default": "The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise."
     },
     "unstableFieldRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" }
@@ -100,7 +146,7 @@
     }
   },
   "slots": {
-    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "SingleInputDateTimeRangeField",
   "styles": {
@@ -112,7 +158,7 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/SingleInputDateTimeRangeField/SingleInputDateTimeRangeField.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "SingleInputDateTimeRangeField" }
   ]

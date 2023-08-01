@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Support for other calendar systems
+productId: x-date-pickers
+title: Date and Time Pickers - Calendar systems
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Support for other calendar systems
+# Calendar systems
 
 <p class="description">Use the Date and Time Pickers with non-Gregorian calendars.</p>
 

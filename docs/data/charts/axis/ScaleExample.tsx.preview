@@ -1,8 +1,8 @@
 <LineChart
   xAxis={[{ data: sample }]}
   yAxis={[
-    { id: 'linearAxis', scaleType: 'linear', max: 110 },
-    { id: 'logAxis', scaleType: 'log', max: 110 },
+    { id: 'linearAxis', scaleType: 'linear' },
+    { id: 'logAxis', scaleType: 'log' },
   ]}
   series={[
     { yAxisKey: 'linearAxis', data: sample, label: 'linear' },
@@ -10,6 +10,5 @@
   ]}
   leftAxis="linearAxis"
   rightAxis="logAxis"
-  width={600}
-  height={500}
+  height={400}
 />

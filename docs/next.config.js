@@ -5,6 +5,7 @@ const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
 const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
+const chartsPkg = require('../packages/x-charts/package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./config');
 
@@ -18,10 +19,11 @@ module.exports = withDocsInfra({
     LIB_VERSION: pkg.version,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
+    CHARTS_VERSION: chartsPkg.version,
     FEEDBACK_URL: process.env.FEEDBACK_URL,
     CONTEXT: process.env.CONTEXT,
     // #default-branch-switch
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
+    SOURCE_GITHUB_BRANCH: 'master',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },

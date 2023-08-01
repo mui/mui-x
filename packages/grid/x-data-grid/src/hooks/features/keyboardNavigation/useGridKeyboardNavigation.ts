@@ -18,7 +18,6 @@ import { GridRowEntry, GridRowId } from '../../../models';
 import { gridPinnedRowsSelector } from '../rows/gridRowsSelector';
 import { unstable_gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
-import { useGridSelector } from '../../utils/useGridSelector';
 import {
   unstable_gridHeaderFilteringEditFieldSelector,
   unstable_gridHeaderFilteringMenuSelector,
@@ -421,7 +420,6 @@ export const useGridKeyboardNavigation = (
     ],
   );
 
-  const focusedColumnGroup = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);
   const handleColumnGroupHeaderKeyDown = React.useCallback<
     GridEventListener<'columnGroupHeaderKeyDown'>
   >(
@@ -431,6 +429,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
       if (focusedColumnGroup === null) {
         return;
       }
@@ -517,15 +516,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [
-      apiRef,
-      focusedColumnGroup,
-      currentPageRows.length,
-      goToHeader,
-      goToGroupHeader,
-      goToCell,
-      getRowIdFromIndex,
-    ],
+    [apiRef, currentPageRows.length, goToHeader, goToGroupHeader, goToCell, getRowIdFromIndex],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(

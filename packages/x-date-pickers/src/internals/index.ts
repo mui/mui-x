@@ -51,6 +51,7 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
+export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
@@ -116,15 +117,21 @@ export type {
   DateTimeValidationProps,
 } from './models/validation';
 
-export { applyDefaultDate, replaceInvalidDateByNull, areDatesEqual } from './utils/date-utils';
+export {
+  applyDefaultDate,
+  replaceInvalidDateByNull,
+  areDatesEqual,
+  getTodayDate,
+} from './utils/date-utils';
 export { splitFieldInternalAndForwardedProps } from './utils/fields';
+export { getDefaultReferenceDate } from './utils/getDefaultReferenceDate';
 export {
   executeInTheNextEventLoopTick,
   getActiveElement,
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
-export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { extractValidationProps } from './utils/validation/extractValidationProps';
 export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';

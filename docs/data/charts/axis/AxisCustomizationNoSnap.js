@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { DEFAULT_X_AXIS_KEY } from '@mui/x-charts/constants';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
@@ -14,11 +15,9 @@ const data = Array.from({ length: 200 }, () => ({
 const defaultXAxis = {
   disableLine: false,
   disableTicks: false,
-  fill: 'currentColor',
   fontSize: 12,
   label: 'my axis',
   labelFontSize: 14,
-  stroke: 'currentColor',
   tickSize: 6,
 };
 export default function AxisCustomizationNoSnap() {
@@ -28,41 +27,31 @@ export default function AxisCustomizationNoSnap() {
       data={[
         { propName: 'disableLine', knob: 'switch', defaultValue: false },
         { propName: 'disableTicks', knob: 'switch', defaultValue: false },
-        {
-          propName: 'fill',
-          knob: 'color',
-          defaultValue: 'currentColor',
-          options: ['red', 'blue', 'currentColor'],
-        },
         { propName: 'fontSize', knom: 'number', defaultValue: 12 },
         { propName: 'label', knob: 'input', defaultValue: 'my axis' },
         { propName: 'labelFontSize', knom: 'number', defaultValue: 14 },
-        {
-          propName: 'stroke',
-          knob: 'color',
-          defaultValue: 'currentColor',
-          options: ['red', 'blue', 'currentColor'],
-        },
         { propName: 'tickSize', knob: 'number', defaultValue: 6 },
       ]}
       renderDemo={(props) => (
-        <ScatterChart
-          series={[
-            {
-              type: 'scatter',
-              id: 'linear',
-              data,
-            },
-          ]}
-          leftAxis={null}
-          bottomAxis={{
-            axisId: DEFAULT_X_AXIS_KEY,
-            ...defaultXAxis,
-            ...props,
-          }}
-          width={400}
-          height={300}
-        />
+        <Box sx={{ width: '100%', maxWidth: 400 }}>
+          <ScatterChart
+            series={[
+              {
+                type: 'scatter',
+                id: 'linear',
+                data,
+              },
+            ]}
+            leftAxis={null}
+            bottomAxis={{
+              axisId: DEFAULT_X_AXIS_KEY,
+              ...defaultXAxis,
+              ...props,
+            }}
+            height={300}
+            margin={{ top: 10, left: 20, right: 20 }}
+          />
+        </Box>
       )}
       getCode={({ props }) =>
         [

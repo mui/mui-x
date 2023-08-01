@@ -1,7 +1,7 @@
 import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../validation';
 import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue.types';
-import { TimeStepOptions } from '../../../models';
+import { TimeStepOptions, TimezoneProps } from '../../../models';
 import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 import type { ExportedMultiSectionDigitalClockProps } from '../../../MultiSectionDigitalClock/MultiSectionDigitalClock.types';
 import type { ExportedUseViewsOptions } from '../../hooks/useViews';
@@ -9,7 +9,8 @@ import { TimeViewWithMeridiem } from '../common';
 
 export interface ExportedBaseClockProps<TDate>
   extends TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
+    BaseTimeValidationProps,
+    TimezoneProps {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
@@ -37,7 +38,7 @@ export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem>
   defaultValue?: TDate | null;
   /**
    * Callback fired when the value changes.
-   * @template TDate
+   * @template TDate, TView
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
@@ -57,6 +58,11 @@ export interface BaseClockProps<TDate, TView extends TimeViewWithMeridiem>
    * @default false
    */
   readOnly?: boolean;
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
+   */
+  referenceDate?: TDate;
 }
 
 export interface DesktopOnlyTimePickerProps<TDate>

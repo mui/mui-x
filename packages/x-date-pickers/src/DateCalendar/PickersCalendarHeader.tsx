@@ -9,7 +9,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { ArrowDropDown } from '../internals/components/icons';
+import { ArrowDropDownIcon } from '../icons';
 import {
   PickersArrowSwitcher,
   ExportedPickersArrowSwitcherProps,
@@ -170,7 +170,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   }),
 }));
 
-const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
+const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   name: 'MuiPickersCalendarHeader',
   slot: 'SwitchViewIcon',
   overridesResolver: (_, styles) => styles.switchViewIcon,
@@ -212,6 +212,7 @@ export const PickersCalendarHeader = React.forwardRef(function PickersCalendarHe
     views,
     labelId,
     className,
+    timezone,
     ...other
   } = props;
 
@@ -246,10 +247,12 @@ export const PickersCalendarHeader = React.forwardRef(function PickersCalendarHe
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
     maxDate,
+    timezone,
   });
   const isPreviousMonthDisabled = usePreviousMonthDisabled(month, {
     disablePast,
     minDate,
+    timezone,
   });
 
   const handleToggleView = () => {

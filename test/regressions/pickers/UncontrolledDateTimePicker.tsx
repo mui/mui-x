@@ -39,10 +39,10 @@ export default function UncontrolledDateTimePicker() {
         // Simulating what would happen if the media query matches/not matches
         // Simpler to implement than mocking window.matchMedia
         desktopModeMediaQuery={mode === 'desktop' ? desktopMediaQuery : `not(${desktopMediaQuery})`}
-        components={{
-          DesktopTransition: NoTransition,
+        slots={{
+          desktopTransition: NoTransition,
         }}
-        componentsProps={{
+        slotProps={{
           popper: {
             // @ts-expect-error
             'data-testid': 'screenshot-target',

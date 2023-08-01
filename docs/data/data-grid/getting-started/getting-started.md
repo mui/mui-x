@@ -8,32 +8,55 @@ Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-d
 
 {{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
-The grid package has a peer dependency on `@mui/material`.
+The Data Grid package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
 
-```sh
-// with npm
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/material @emotion/react @emotion/styled
+```
 
-// with yarn
+```bash yarn
 yarn add @mui/material @emotion/react @emotion/styled
 ```
 
-<!-- #react-peer-version -->
-
-Please note that [react](https://www.npmjs.com/package/react) >= 17.0.2 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.2 are peer dependencies.
-
-MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
-
-```sh
-// with npm
-npm install @mui/material @mui/styled-engine-sc styled-components
-
-// with yarn
-yarn add @mui/material @mui/styled-engine-sc styled-components
+```bash pnpm
+pnpm add @mui/material @emotion/react @emotion/styled
 ```
 
-> 💡 Take a look at the [Styled Engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
+</codeblock>
+
+<!-- #react-peer-version -->
+
+Please note that [react](https://www.npmjs.com/package/react) and [react-dom](https://www.npmjs.com/package/react-dom) are peer dependencies too:
+
+```json
+"peerDependencies": {
+  "react": "^17.0.0 || ^18.0.0",
+  "react-dom": "^17.0.0 || ^18.0.0"
+},
+```
+
+### Style engine
+
+Material UI is using [Emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+
+<codeblock storageKey="package-manager">
+```bash npm
+npm install @mui/styled-engine-sc styled-components
+```
+
+```bash yarn
+yarn add @mui/styled-engine-sc styled-components
+```
+
+```bash pnpm
+pnpm add @mui/styled-engine-sc styled-components
+```
+
+</codeblock>
+
+Take a look at the [Styled engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
 
 ## Quickstart
 
@@ -168,10 +191,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Multiple row selection](/x/react-data-grid/row-selection/#multiple-row-selection)     |    ❌     |                 ✅                 |                     ✅                     |
 | [Cell range selection](/x/react-data-grid/cell-selection/)                             |    ❌     |                 ❌                 |                     ✅                     |
 | **Filtering**                                                                          |           |                                    |                                            |
-| [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    ✅     |                 ✅                 |                     ✅                     |
-| [Column filters](/x/react-data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column filtering](/x/react-data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
-| [Header filtering](/x/react-data-grid/filtering/#header-filters)                       |    ❌     |                 ✅                 |                     ✅                     |
+| [Quick filter](/x/react-data-grid/filtering/quick-filter/)                             |    ✅     |                 ✅                 |                     ✅                     |
+| [Column filters](/x/react-data-grid/filtering/#single-and-multi-filters)               |    ✅     |                 ✅                 |                     ✅                     |
+| [Multi-column filtering](/x/react-data-grid/filtering/multi-filters/)                  |    ❌     |                 ✅                 |                     ✅                     |
+| [Header filtering](/x/react-data-grid/filtering/header-filters/)                       |    ❌     |                 ✅                 |                     ✅                     |
 | **Sorting**                                                                            |           |                                    |                                            |
 | [Column sorting](/x/react-data-grid/sorting/)                                          |    ✅     |                 ✅                 |                     ✅                     |
 | [Multi-column sorting](/x/react-data-grid/sorting/#multi-sorting)                      |    ❌     |                 ✅                 |                     ✅                     |

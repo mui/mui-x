@@ -20,3 +20,7 @@ The installation [instructions](/x/react-data-grid/getting-started/#installation
 ### Date and Time Pickers
 
 The installation [instructions](/x/react-date-pickers/getting-started/#installation).
+
+### Charts
+
+The installation [instructions](/x/react-charts/#getting-started).

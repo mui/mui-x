@@ -1,9 +1,8 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { unstable_capitalize as capitalize } from '@mui/utils';
+import { unstable_capitalize as capitalize, HTMLElementType } from '@mui/utils';
 import {
   useGridApiContext,
   GridMenu,
@@ -11,7 +10,6 @@ import {
   GridFilterItem,
   GridColDef,
 } from '@mui/x-data-grid';
-import { OPERATOR_SYMBOL_MAPPING } from './constants';
 
 interface GridHeaderFilterMenuProps {
   field: GridColDef['field'];
@@ -21,13 +19,13 @@ interface GridHeaderFilterMenuProps {
   open: boolean;
   id: string;
   labelledBy: string;
-  targetRef: React.MutableRefObject<HTMLElement | null>;
+  target: HTMLElement | null;
 }
 
 function GridHeaderFilterMenu({
   open,
   field,
-  targetRef,
+  target,
   applyFilterChanges,
   operators,
   item,
@@ -52,15 +50,15 @@ function GridHeaderFilterMenu({
     [hideMenu],
   );
 
-  if (!targetRef.current) {
+  if (!target) {
     return null;
   }
 
   return (
     <GridMenu
-      placement="bottom-start"
+      placement="bottom-end"
       open={open}
-      target={targetRef.current}
+      target={target as HTMLElement}
       onClickAway={hideMenu}
       onExited={hideMenu}
     >
@@ -82,8 +80,7 @@ function GridHeaderFilterMenu({
               selected={op.value === item.operator}
               key={`${field}-${op.value}`}
             >
-              <ListItemIcon>{OPERATOR_SYMBOL_MAPPING[op.value]}</ListItemIcon>
-              <ListItemText>{label}</ListItemText>
+              {label}
             </MenuItem>
           );
         })}
@@ -91,5 +88,37 @@ function GridHeaderFilterMenu({
     </GridMenu>
   );
 }
+
+GridHeaderFilterMenu.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  applyFilterChanges: PropTypes.func.isRequired,
+  field: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  item: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    operator: PropTypes.string.isRequired,
+    value: PropTypes.any,
+  }).isRequired,
+  labelledBy: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  operators: PropTypes.arrayOf(
+    PropTypes.shape({
+      getApplyFilterFn: PropTypes.func.isRequired,
+      getApplyFilterFnV7: PropTypes.func,
+      getValueAsString: PropTypes.func,
+      headerLabel: PropTypes.string,
+      InputComponent: PropTypes.elementType,
+      InputComponentProps: PropTypes.object,
+      label: PropTypes.string,
+      requiresFilterValue: PropTypes.bool,
+      value: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+  target: HTMLElementType,
+} as any;
 
 export { GridHeaderFilterMenu };

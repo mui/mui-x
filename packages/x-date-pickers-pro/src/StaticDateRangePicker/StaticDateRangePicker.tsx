@@ -1,17 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
-import { useStaticRangePicker } from '../internal/hooks/useStaticRangePicker';
+import { useStaticRangePicker } from '../internals/hooks/useStaticRangePicker';
 import { StaticDateRangePickerProps } from './StaticDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { rangeValueManager } from '../internal/utils/valueManagers';
-import { validateDateRange } from '../internal/utils/validation/validateDateRange';
-import { DateRange } from '../internal/models';
+import { rangeValueManager } from '../internals/utils/valueManagers';
+import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { DateRange } from '../internals/models';
 
 type StaticDateRangePickerComponent = (<TDate>(
   props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TDate>(
   inProps: StaticDateRangePickerProps<TDate>,
@@ -276,6 +276,14 @@ StaticDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

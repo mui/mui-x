@@ -25,6 +25,8 @@ import {
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
+import Dialog from '@mui/material/Dialog';
+
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -122,6 +124,43 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
+  // https://github.com/mui/mui-x/issues/8042
+  it('should not throw when clicking the cell in the nested grid in a portal', () => {
+    const rows = [
+      { id: 1, firstName: 'Jon', age: 35 },
+      { id: 2, firstName: 'Cersei', age: 42 },
+      { id: 3, firstName: 'Jaime', age: 45 },
+    ];
+
+    function NestedGridDialog() {
+      return (
+        <Dialog open>
+          <div style={{ height: 300, width: '100%' }}>
+            <DataGrid rows={rows} columns={[{ field: 'id' }, { field: 'age' }]} />
+          </div>
+        </Dialog>
+      );
+    }
+
+    expect(() => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            columns={[
+              { field: 'id' },
+              { field: 'firstName', renderCell: () => <NestedGridDialog /> },
+            ]}
+            rows={rows}
+          />
+        </div>,
+      );
+
+      // click on the cell in the nested grid in the column that is not defined in the parent grid
+      const cell = document.querySelector('[data-rowindex="0"] [role="cell"][data-field="age"]')!;
+      fireEvent.click(cell);
+    }).not.toErrorDev();
+  });
+
   describe('prop: getRowClassName', () => {
     it('should apply the CSS class returned by getRowClassName', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
@@ -167,7 +206,7 @@ describe('<DataGrid /> - Rows', () => {
     function TestCase({
       getActions,
       ...other
-    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) {
+    }: { getActions?: () => React.JSX.Element[] } & Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid

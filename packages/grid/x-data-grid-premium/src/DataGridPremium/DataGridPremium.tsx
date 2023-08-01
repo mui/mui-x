@@ -33,7 +33,13 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
-      <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
+      <GridRoot
+        className={props.className}
+        style={props.style}
+        sx={props.sx}
+        ref={ref}
+        {...props.forwardedProps}
+      >
         <GridHeader />
         <GridBody
           VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -50,7 +56,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 interface DataGridPremiumComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridPremiumProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
@@ -279,6 +285,7 @@ DataGridPremiumRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV7: PropTypes.bool,
     clipboardPaste: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
@@ -310,9 +317,15 @@ DataGridPremiumRaw.propTypes = {
       }),
     ).isRequired,
     logicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterExcludeHiddenColumns: PropTypes.bool,
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Forwarded props for the grid root element.
+   * @ignore - do not document.
+   */
+  forwardedProps: PropTypes.object,
   /**
    * Determines the position of an aggregated value.
    * @param {GridGroupNode} groupNode The current group.
@@ -329,7 +342,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**
@@ -762,7 +775,15 @@ DataGridPremiumRaw.propTypes = {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  pageSizeOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -975,7 +996,7 @@ DataGridPremiumRaw.propTypes = {
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
    * @returns {string[][] | null} A 2D array of strings. The first dimension is the rows, the second dimension is the columns.
-   * @default `(text) => text.split(/\r\n|\n|\r/).map((row) => row.split('\t'))`
+   * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
    */
   unstable_splitClipboardPastedText: PropTypes.func,
 } as any;
