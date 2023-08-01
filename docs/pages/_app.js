@@ -57,6 +57,8 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
+      '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
+      '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       'date-fns': 'latest',
       dayjs: 'latest',
       exceljs: 'latest',
@@ -239,6 +241,12 @@ function AppWrapper(props) {
           },
         ],
       };
+    } else if (productId === 'x-charts') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Charts',
+        versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
+      };
     }
 
     return {
@@ -247,8 +255,9 @@ function AppWrapper(props) {
       pages,
       productIdentifier,
       productId,
+      productCategoryId,
     };
-  }, [productId, pageProps.userLanguage, router.pathname]);
+  }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.

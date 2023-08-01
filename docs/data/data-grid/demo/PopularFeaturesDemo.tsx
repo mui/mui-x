@@ -45,7 +45,7 @@ type Row = {
   description: string;
   plan: string;
   detailPage: string;
-  demo: JSX.Element;
+  demo: React.JSX.Element;
   newBadge?: boolean;
 };
 

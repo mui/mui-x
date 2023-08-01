@@ -2,7 +2,7 @@ import * as fse from 'fs-extra';
 import { expect } from 'chai';
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import * as playwright from 'playwright';
+import { chromium } from '@playwright/test';
 
 function sleep(timeoutMS) {
   return new Promise((resolve) => {
@@ -14,7 +14,7 @@ async function main() {
   const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(__dirname, './screenshots/chrome');
 
-  const browser = await playwright.chromium.launch({
+  const browser = await chromium.launch({
     args: ['--font-render-hinting=none'],
     // otherwise the loaded google Roboto font isn't applied
     headless: false,

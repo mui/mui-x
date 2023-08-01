@@ -13,7 +13,7 @@ export type CommonSeriesType<TValue> = {
   highlightScope?: Partial<HighlightScope>;
 };
 
-export type CommonDefaultizedProps = 'id' | 'valueFormatter';
+export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 
 export type CartesianSeriesType = {
   xAxisKey?: string;

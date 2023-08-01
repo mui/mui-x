@@ -95,7 +95,7 @@ PieChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default xAxisIds[0] The id of the first provided axis
    */
   bottomAxis: PropTypes.oneOfType([
@@ -120,12 +120,13 @@ PieChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default yAxisIds[0] The id of the first provided axis
    */
   leftAxis: PropTypes.oneOfType([
@@ -168,7 +169,7 @@ PieChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the right of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
    * @default null
    */
   rightAxis: PropTypes.oneOfType([
@@ -250,7 +251,7 @@ PieChart.propTypes = {
   }),
   /**
    * Indicate which axis to display the top of the charts.
-   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`
+   * Can be a string (the id of the axis) or an object `ChartsXAxisProps`.
    * @default null
    */
   topAxis: PropTypes.oneOfType([
@@ -281,15 +282,16 @@ PieChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
@@ -305,15 +307,16 @@ PieChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),

@@ -55,7 +55,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
 interface DataGridProComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridProProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
@@ -253,6 +253,7 @@ DataGridProRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV7: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
@@ -306,7 +307,7 @@ DataGridProRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**

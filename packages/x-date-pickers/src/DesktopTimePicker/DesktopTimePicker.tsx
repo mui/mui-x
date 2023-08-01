@@ -21,7 +21,7 @@ import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   inProps: DesktopTimePickerProps<TDate>,

@@ -25,6 +25,8 @@ Check-out their documentation page for more information:
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
+## Uncontrolled vs. controlled value
+
 The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateRangePickerValue.js"}}

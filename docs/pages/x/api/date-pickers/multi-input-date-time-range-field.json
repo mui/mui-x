@@ -38,9 +38,27 @@
     "minDateTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
-    "onChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      }
+    },
     "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
       "type": { "name": "any" },
@@ -55,10 +73,29 @@
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
+      "signature": {
+        "type": "function(clockValue: number, view: TimeView) => boolean",
+        "describedArgs": ["clockValue", "view"],
+        "returned": "boolean"
+      }
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate, position: string) => boolean",
+        "describedArgs": ["day", "position"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
@@ -73,7 +110,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalPropsInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },

@@ -25,7 +25,7 @@ export default function KeyboardNavigationFocus() {
       <button type="button" autoFocus data-testid="initial-focus">
         initial focus
       </button>
-      <div style={{ width: 300, height: 300 }}>
+      <div style={{ width: 400, height: 300 }}>
         <DataGrid {...baselineProps} />
       </div>
     </React.Fragment>
