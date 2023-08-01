@@ -27,6 +27,7 @@ import {
 
 let hasEval: boolean;
 try {
+  // eslint-disable-next-line no-eval
   hasEval = eval('true');
 } catch (_: unknown) {
   hasEval = false;
