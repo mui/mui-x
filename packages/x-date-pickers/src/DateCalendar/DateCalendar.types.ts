@@ -58,7 +58,7 @@ export interface ExportedDateCalendarProps<TDate>
   readOnly?: boolean;
   /**
    * If `true`, disable heavy animations.
-   * @default true when `navigator.userAgent` matches Android <10 or iOS <15
+   * @default true when `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations?: boolean;
   /**
