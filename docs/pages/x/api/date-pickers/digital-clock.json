@@ -85,12 +85,14 @@
     "view": { "type": { "name": "enum", "description": "'hours'" } },
     "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }
   },
-  "slots": {
-    "digitalClockItem": {
-      "default": "MenuItem from '@mui/material'",
-      "type": { "name": "elementType" }
+  "slots": [
+    {
+      "class": null,
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'"
     }
-  },
+  ],
   "name": "DigitalClock",
   "styles": { "classes": ["root", "list", "item"], "globalClasses": {}, "name": "MuiDigitalClock" },
   "spread": false,

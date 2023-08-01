@@ -38,7 +38,7 @@
       }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "PickersDay",
   "styles": {
     "classes": [

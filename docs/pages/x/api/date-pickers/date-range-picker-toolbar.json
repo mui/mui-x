@@ -5,7 +5,7 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DateRangePickerToolbar",
   "styles": {
     "classes": ["root", "container"],
