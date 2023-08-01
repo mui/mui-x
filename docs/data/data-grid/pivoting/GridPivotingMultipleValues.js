@@ -20,7 +20,7 @@ const initialColumns = [
   { field: 'quantity' },
 ];
 
-export default function GridPivotingBasic() {
+export default function GridPivotingMultipleValues() {
   const apiRef = useGridApiRef();
 
   const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
@@ -29,7 +29,10 @@ export default function GridPivotingBasic() {
     pivotModel: {
       rows: ['type'],
       columns: ['product'],
-      values: [{ field: 'price', aggFunc: 'sum' }],
+      values: [
+        { field: 'price', aggFunc: 'sum' },
+        { field: 'quantity', aggFunc: 'avg' },
+      ],
     },
   });
 
@@ -45,7 +48,12 @@ export default function GridPivotingBasic() {
       />
       <label htmlFor={inputId}>Pivot</label>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPremium key={isPivot.toString()} {...props} apiRef={apiRef} />
+        <DataGridPremium
+          key={isPivot.toString()}
+          {...props}
+          apiRef={apiRef}
+          experimentalFeatures={{ columnGrouping: true }}
+        />
       </div>
     </div>
   );
