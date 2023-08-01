@@ -1,11 +1,6 @@
 {
   "props": {
-<<<<<<< HEAD
     "debounceMs": { "type": { "name": "number" }, "default": "150" },
-    "quickFilterFormatter": { "type": { "name": "func" } },
-    "quickFilterParser": { "type": { "name": "func" } }
-=======
-    "debounceMs": { "type": { "name": "number" }, "default": "500" },
     "quickFilterFormatter": {
       "type": { "name": "func" },
       "signature": {
@@ -22,7 +17,6 @@
         "returned": "Array<any>"
       }
     }
->>>>>>> master
   },
   "slots": {},
   "name": "GridToolbarQuickFilter",
