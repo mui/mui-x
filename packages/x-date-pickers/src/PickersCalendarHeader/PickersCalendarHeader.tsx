@@ -185,9 +185,9 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDownIcon, {
   transform: 'rotate(0deg)',
 }));
 
-type PickersCalendarHeaderComponent = <TDate>(
+type PickersCalendarHeaderComponent = (<TDate>(
   props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => JSX.Element;
+) => React.JSX.Element) & { propTypes?: any };
 
 /**
  * @ignore - do not document.
