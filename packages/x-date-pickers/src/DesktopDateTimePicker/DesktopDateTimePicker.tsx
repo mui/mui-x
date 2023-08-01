@@ -361,7 +361,7 @@ DesktopDateTimePicker.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
-   * @default true when `navigator.userAgent` matches Android <10 or iOS <15
+   * @default true when `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
   /**
