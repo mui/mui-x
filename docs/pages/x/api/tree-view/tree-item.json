@@ -3,6 +3,7 @@
     "nodeId": { "type": { "name": "string" }, "required": true },
     "children": { "type": { "name": "node" } },
     "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "className": { "type": { "name": "string" } },
     "collapseIcon": { "type": { "name": "node" } },
     "ContentComponent": {
       "type": { "name": "custom", "description": "element type" },
