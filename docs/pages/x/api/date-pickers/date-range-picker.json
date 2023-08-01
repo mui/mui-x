@@ -109,7 +109,7 @@
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "true when `navigator.userAgent` matches Android <10 or iOS <15"
     },
     "renderLoading": {
       "type": { "name": "func" },
