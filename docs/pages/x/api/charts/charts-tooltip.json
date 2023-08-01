@@ -11,7 +11,7 @@
       "default": "'item'"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "ChartsTooltip",
   "styles": {
     "classes": ["root", "markCell", "labelCell", "valueCell"],

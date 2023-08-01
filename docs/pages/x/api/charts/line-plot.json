@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "LinePlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },
   "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",

@@ -17,7 +17,7 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": {},
+  "slots": [],
   "name": "TimePickerToolbar",
   "styles": {
     "classes": [

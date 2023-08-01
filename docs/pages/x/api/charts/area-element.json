@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "AreaElement",
   "styles": {
     "classes": ["root", "highlighted", "faded"],

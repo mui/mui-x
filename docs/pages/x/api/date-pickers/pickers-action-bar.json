@@ -16,7 +16,7 @@
       "additionalPropsInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "PickersActionBar",
   "styles": { "classes": ["root", "spacing"], "globalClasses": {}, "name": "MuiPickersActionBar" },
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
