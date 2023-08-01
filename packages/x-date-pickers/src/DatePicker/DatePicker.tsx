@@ -241,8 +241,8 @@ DatePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default true when `navigator.userAgent` matches Android <10 or iOS <15
    */
   reduceAnimations: PropTypes.bool,
   /**

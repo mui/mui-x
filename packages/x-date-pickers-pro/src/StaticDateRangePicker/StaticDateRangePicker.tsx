@@ -230,7 +230,7 @@ StaticDateRangePicker.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * @default true when `navigator.userAgent` matches Android <10 or iOS <15
    */
   reduceAnimations: PropTypes.bool,
   /**
