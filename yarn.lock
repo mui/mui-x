@@ -10946,10 +10946,10 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==
 
-patch-package@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-7.0.0.tgz#5c646b6b4b4bf37e5184a6950777b21dea6bb66e"
-  integrity sha512-eYunHbnnB2ghjTNc5iL1Uo7TsGMuXk0vibX3RFcE/CdVdXzmdbMsG/4K4IgoSuIkLTI5oHrMQk4+NkFqSed0BQ==
+patch-package@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-7.0.2.tgz#c01589bb6964854b5210506a5845d47900641f5a"
+  integrity sha512-PMYfL8LXxGIRmxXLqlEaBxzKPu7/SdP13ld6GSfAUJUZRmBDPp8chZs0dpzaAFn9TSPnFiMwkC6PJt6pBiAl8Q==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     chalk "^4.1.2"
@@ -10961,7 +10961,7 @@ patch-package@^7.0.0:
     minimist "^1.2.6"
     open "^7.4.2"
     rimraf "^2.6.3"
-    semver "^5.6.0"
+    semver "^7.5.3"
     slash "^2.0.0"
     tmp "^0.0.33"
     yaml "^2.2.2"
@@ -12150,7 +12150,7 @@ semver@^6.0.0, semver@^6.3.0, semver@^6.3.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
-semver@^7.0.0, semver@^7.1.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.0, semver@^7.5.4:
+semver@^7.0.0, semver@^7.1.1, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.0, semver@^7.5.3, semver@^7.5.4:
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
