@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { DataGridPremium, useGridApiRef } from '@mui/x-data-grid-premium';
+import {
+  DataGridPremium,
+  useGridApiRef,
+  unstable_useGridPivoting,
+} from '@mui/x-data-grid-premium';
 
 const initialRows = [
   { id: 1, product: 'Product 1', type: 'Type A', price: 10 },
@@ -10,81 +14,10 @@ const initialRows = [
 
 const initialColumns = [{ field: 'product' }, { field: 'type' }, { field: 'price' }];
 
-const getPivotedData = ({
-  rows,
-  // columns,
-  pivotModel,
-}) => {
-  const pivotColumns = new Map();
-  const columnVisibilityModel = {};
-
-  pivotModel.rows.forEach((field) => {
-    pivotColumns.set(field, {
-      field,
-      groupable: true,
-    });
-    columnVisibilityModel[field] = false;
-  });
-
-  const aggregationModel = {};
-
-  const valueField = pivotModel.value;
-  const newRows = [];
-  rows.forEach((row) => {
-    const newRow = { ...row };
-    pivotModel.columns.forEach((field) => {
-      const colValue = row[field];
-      const mapKey = `${field}-${colValue}`;
-      if (!pivotColumns.has(mapKey)) {
-        pivotColumns.set(mapKey, {
-          field: colValue,
-          aggregable: true,
-          availableAggregationFunctions: [pivotModel.aggFunc],
-        });
-        aggregationModel[colValue] = pivotModel.aggFunc;
-      }
-      delete newRow[field];
-      newRow[colValue] = newRow[valueField];
-    });
-
-    newRows.push(newRow);
-  });
-
-  return {
-    rows: newRows,
-    columns: Array.from(pivotColumns, ([, value]) => value),
-    rowGroupingModel: pivotModel.rows,
-    aggregationModel,
-    getAggregationPosition: () => 'inline',
-    columnVisibilityModel,
-  };
-};
-
-const useGridPivoting = ({ columns, rows, pivotModel }) => {
-  const [isPivot, setIsPivot] = React.useState(false);
-
-  const props = React.useMemo(() => {
-    if (isPivot) {
-      return getPivotedData({
-        rows,
-        columns,
-        pivotModel,
-      });
-    }
-    return { rows, columns };
-  }, [isPivot, columns, rows, pivotModel]);
-
-  return {
-    isPivot,
-    setIsPivot,
-    props,
-  };
-};
-
 export default function GridPivotingBasic() {
   const apiRef = useGridApiRef();
 
-  const { isPivot, setIsPivot, props } = useGridPivoting({
+  const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
     rows: initialRows,
     columns: initialColumns,
     pivotModel: {

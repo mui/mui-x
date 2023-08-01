@@ -4,8 +4,7 @@ import {
   useGridApiRef,
   GridColDef,
   GridRowModel,
-  GridAggregationModel,
-  DataGridPremiumProps,
+  unstable_useGridPivoting,
 } from '@mui/x-data-grid-premium';
 
 const initialRows: GridRowModel[] = [
@@ -21,109 +20,10 @@ const initialColumns: GridColDef[] = [
   { field: 'price' },
 ];
 
-interface PivotModel {
-  columns: GridColDef['field'][];
-  rows: GridColDef['field'][];
-  value: GridColDef['field'];
-  aggFunc: string;
-}
-
-const getPivotedData = ({
-  rows,
-  // columns,
-  pivotModel,
-}: {
-  rows: GridRowModel[];
-  columns: GridColDef[];
-  pivotModel: PivotModel;
-}): {
-  rows: DataGridPremiumProps['rows'];
-  columns: DataGridPremiumProps['columns'];
-  rowGroupingModel: NonNullable<DataGridPremiumProps['rowGroupingModel']>;
-  aggregationModel: NonNullable<DataGridPremiumProps['aggregationModel']>;
-  getAggregationPosition: NonNullable<
-    DataGridPremiumProps['getAggregationPosition']
-  >;
-  columnVisibilityModel: NonNullable<DataGridPremiumProps['columnVisibilityModel']>;
-} => {
-  const pivotColumns: Map<string, GridColDef> = new Map();
-  const columnVisibilityModel: DataGridPremiumProps['columnVisibilityModel'] = {};
-
-  pivotModel.rows.forEach((field) => {
-    pivotColumns.set(field, {
-      field,
-      groupable: true,
-    });
-    columnVisibilityModel[field] = false;
-  });
-
-  const aggregationModel: GridAggregationModel = {};
-
-  const valueField = pivotModel.value;
-  const newRows: GridRowModel[] = [];
-  rows.forEach((row) => {
-    const newRow = { ...row };
-    pivotModel.columns.forEach((field) => {
-      const colValue = row[field];
-      const mapKey = `${field}-${colValue}`;
-      if (!pivotColumns.has(mapKey)) {
-        pivotColumns.set(mapKey, {
-          field: colValue,
-          aggregable: true,
-          availableAggregationFunctions: [pivotModel.aggFunc],
-        });
-        aggregationModel[colValue] = pivotModel.aggFunc;
-      }
-      delete newRow[field];
-      newRow[colValue] = newRow[valueField];
-    });
-
-    newRows.push(newRow);
-  });
-
-  return {
-    rows: newRows,
-    columns: Array.from(pivotColumns, ([, value]) => value),
-    rowGroupingModel: pivotModel.rows,
-    aggregationModel,
-    getAggregationPosition: () => 'inline',
-    columnVisibilityModel,
-  };
-};
-
-const useGridPivoting = ({
-  columns,
-  rows,
-  pivotModel,
-}: {
-  rows: GridRowModel[];
-  columns: GridColDef[];
-  pivotModel: PivotModel;
-}) => {
-  const [isPivot, setIsPivot] = React.useState(false);
-
-  const props = React.useMemo(() => {
-    if (isPivot) {
-      return getPivotedData({
-        rows,
-        columns,
-        pivotModel,
-      });
-    }
-    return { rows, columns };
-  }, [isPivot, columns, rows, pivotModel]);
-
-  return {
-    isPivot,
-    setIsPivot,
-    props,
-  };
-};
-
 export default function GridPivotingBasic() {
   const apiRef = useGridApiRef();
 
-  const { isPivot, setIsPivot, props } = useGridPivoting({
+  const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
     rows: initialRows,
     columns: initialColumns,
     pivotModel: {

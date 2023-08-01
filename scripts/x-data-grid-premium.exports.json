@@ -636,6 +636,7 @@
   { "name": "useGridApiRef", "kind": "Variable" },
   { "name": "useGridLogger", "kind": "Function" },
   { "name": "useGridNativeEventListener", "kind": "Variable" },
+  { "name": "useGridPivoting", "kind": "Variable" },
   { "name": "useGridRootProps", "kind": "Variable" },
   { "name": "useGridSelector", "kind": "Variable" },
   { "name": "useKeepGroupedColumnsHidden", "kind": "Variable" },
