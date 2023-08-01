@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import yargs from 'yargs';
-import playwright from 'playwright';
+import { selectors, chromium } from '@playwright/test';
 import capitalize from 'lodash/capitalize.js';
 import path from 'path';
 import fse from 'fs-extra';
@@ -116,9 +116,9 @@ async function testDeselect100kRows(page) {
 }
 
 async function run() {
-  await playwright.selectors.register('label', createLabelNameEngine);
+  await selectors.register('label', createLabelNameEngine);
 
-  browser = await playwright.chromium.launch({
+  browser = await chromium.launch({
     args: ['--font-render-hinting=none'],
     headless: false,
   });

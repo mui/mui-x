@@ -16,7 +16,7 @@ import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
   inProps: DesktopDatePickerProps<TDate>,
