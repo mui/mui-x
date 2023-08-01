@@ -45,7 +45,7 @@ const MultiSectionDigitalClockRoot = styled(PickerViewRoot, {
 
 type MultiSectionDigitalClockComponent = (<TDate>(
   props: MultiSectionDigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDigitalClock<
   TDate extends unknown,

@@ -206,7 +206,7 @@ describe('<DataGrid /> - Rows', () => {
     function TestCase({
       getActions,
       ...other
-    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) {
+    }: { getActions?: () => React.JSX.Element[] } & Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid

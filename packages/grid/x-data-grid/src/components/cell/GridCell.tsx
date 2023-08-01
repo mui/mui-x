@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -407,7 +406,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     const valueString = valueToRender?.toString();
 
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );
@@ -424,11 +423,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
+  const ariaV7 = rootProps.experimentalFeatures?.ariaV7;
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classes.root)}
-      role="cell"
+      role={ariaV7 ? 'gridcell' : 'cell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
@@ -751,7 +753,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );
@@ -768,11 +770,14 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
+  const ariaV7 = rootProps.experimentalFeatures?.ariaV7;
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classNames, classes.root)}
-      role="cell"
+      role={ariaV7 ? 'gridcell' : 'cell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}

@@ -14,7 +14,7 @@ import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
   inProps: MobileDatePickerProps<TDate>,
