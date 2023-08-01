@@ -2,7 +2,7 @@ import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
-import parseStyles, { Styles } from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
+import parseStyles from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
 import createDescribeableProp, {
   DescribeablePropDescriptor,
@@ -17,7 +17,7 @@ import kebabCase from 'lodash/kebabCase';
 import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
-import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
+import { defaultHandlers, parse as docgenParse } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
   getHeaders,
@@ -26,7 +26,6 @@ import {
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
-import { Slot } from '@mui/monorepo/packages/api-docs-builder/utils/parseSlotsAndClasses';
 import {
   DocumentedInterfaces,
   getJsdocDefaultValue,
@@ -39,22 +38,8 @@ import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
 type CoreReactApiProps = CoreReactApi['propsTable'][string];
 
-export interface ReactApi extends ReactDocgenApi {
-  /**
-   * list of page pathnames
-   * @example ['/components/Accordion']
-   */
-  demos: Array<{ name: string; demoPathname: string }>;
-  EOL: string;
-  filename: string;
-  forwardsRefTo: string | undefined;
-  inheritance: { component: string; pathname: string } | null;
-  name: string;
-  spread: boolean | undefined;
-  src: string;
-  styles: Styles;
+export interface ReactApi extends Omit<CoreReactApi, 'propsTable' | 'translations' | 'classes'> {
   displayName: string;
-  slots?: Slot[];
   packages: { packageName: string; componentName: string }[];
 }
 
@@ -197,14 +182,17 @@ function findXDemos(
   if (componentName.startsWith('Grid') || componentName.startsWith('DataGrid')) {
     const demos: ReactApi['demos'] = [];
     if (componentName === 'DataGrid' || componentName.startsWith('Grid')) {
-      demos.push({ name: 'DataGrid', demoPathname: '/x/react-data-grid/#mit-version' });
+      demos.push({ demoPageTitle: 'DataGrid', demoPathname: '/x/react-data-grid/#mit-version' });
     }
     if (componentName === 'DataGridPro' || componentName.startsWith('Grid')) {
-      demos.push({ name: 'DataGridPro', demoPathname: '/x/react-data-grid/#commercial-version' });
+      demos.push({
+        demoPageTitle: 'DataGridPro',
+        demoPathname: '/x/react-data-grid/#commercial-version',
+      });
     }
     if (componentName === 'DataGridPremium' || componentName.startsWith('Grid')) {
       demos.push({
-        name: 'DataGridPremium',
+        demoPageTitle: 'DataGridPremium',
         demoPathname: '/x/react-data-grid/#commercial-version',
       });
     }
@@ -215,13 +203,13 @@ function findXDemos(
   return pagesMarkdown
     .filter((page) => page.components.includes(componentName))
     .map((page) => {
-      let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
-      name = name.replace(/\[(.*)]\((.*)\)/g, '');
+      let demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
+      demoPageTitle = demoPageTitle.replace(/\[(.*)]\((.*)\)/g, '');
 
       const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
 
       return {
-        name,
+        demoPageTitle,
         demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}/`,
       };
     });
@@ -531,7 +519,7 @@ const buildComponentDocumentation = async (options: {
     filename: toGithubPath(reactApi.filename, project.workspaceRoot),
     inheritance: reactApi.inheritance,
     demos: `<ul>${reactApi.demos
-      .map((item) => `<li><a href="${item.demoPathname}">${item.name}</a></li>`)
+      .map((item) => `<li><a href="${item.demoPathname}">${item.demoPageTitle}</a></li>`)
       .join('\n')}</ul>`,
     packages: reactApi.packages,
   };
