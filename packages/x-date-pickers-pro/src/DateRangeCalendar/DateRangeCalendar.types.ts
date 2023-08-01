@@ -4,6 +4,10 @@ import { SlotComponentProps } from '@mui/base';
 import { Theme } from '@mui/material/styles';
 import { TimezoneProps } from '@mui/x-date-pickers/models';
 import {
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersCalendarHeader';
+import {
   BaseDateValidationProps,
   DefaultizedProps,
   ExportedDayCalendarProps,
@@ -12,8 +16,6 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
   UncapitalizeObjectKeys,

@@ -16,7 +16,7 @@ import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
-import { PickersCalendarHeader, PickersCalendarHeaderProps } from './PickersCalendarHeader';
+import { PickersCalendarHeader, PickersCalendarHeaderProps } from '../PickersCalendarHeader';
 import {
   findClosestEnabledDate,
   applyDefaultDate,

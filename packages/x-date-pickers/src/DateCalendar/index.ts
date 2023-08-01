@@ -9,11 +9,6 @@ export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendar
 export type { DateCalendarClassKey, DateCalendarClasses } from './dateCalendarClasses';
 export { dayPickerClasses } from './dayCalendarClasses';
 export type { DayCalendarClassKey, DayCalendarClasses } from './dayCalendarClasses';
-export { pickersCalendarHeaderClasses } from './pickersCalendarHeaderClasses';
-export type {
-  PickersCalendarHeaderClassKey,
-  PickersCalendarHeaderClasses,
-} from './pickersCalendarHeaderClasses';
 export type { PickersFadeTransitionGroupProps } from './PickersFadeTransitionGroup';
 export { pickersFadeTransitionGroupClasses } from './pickersFadeTransitionGroupClasses';
 export type {
@@ -27,4 +22,5 @@ export type {
 } from './pickersSlideTransitionClasses';
 export type { ExportedSlideTransitionProps } from './PickersSlideTransition';
 
-export type { PickersCalendarHeaderProps } from './PickersCalendarHeader';
+// TODO v7: Remove and export the `PickersCalendarHeader` folder from the root instead.
+export * from '../PickersCalendarHeader';

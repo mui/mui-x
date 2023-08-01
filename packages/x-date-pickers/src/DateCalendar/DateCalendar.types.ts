@@ -7,7 +7,7 @@ import {
   PickersCalendarHeaderProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
-} from './PickersCalendarHeader';
+} from '../PickersCalendarHeader/PickersCalendarHeader';
 import {
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
@@ -31,6 +31,10 @@ import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
     DayCalendarSlotsComponent<TDate> {
+  /**
+   * Custom component for calendar header.
+   * Check the [Pickers]
+   */
   CalendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
 }
 
