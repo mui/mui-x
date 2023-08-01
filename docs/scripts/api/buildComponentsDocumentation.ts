@@ -26,6 +26,7 @@ import {
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import type { ReactApi as CoreReactApi } from '@mui/monorepo/packages/api-docs-builder/ApiBuilders/ComponentApiBuilder';
+import { Slot } from '@mui/monorepo/packages/api-docs-builder/utils/parseSlotsAndClasses';
 import {
   DocumentedInterfaces,
   getJsdocDefaultValue,
@@ -53,7 +54,7 @@ export interface ReactApi extends ReactDocgenApi {
   src: string;
   styles: Styles;
   displayName: string;
-  slots: Record<string, { default: string | undefined; type: { name: string | undefined } }>;
+  slots?: Slot[];
   packages: { packageName: string; componentName: string }[];
 }
 
@@ -242,7 +243,7 @@ const buildComponentDocumentation = async (options: {
   reactApi.filename = filename; // Some components don't have props
   reactApi.name = path.parse(filename).name;
   reactApi.EOL = getLineFeed(src);
-  reactApi.slots = {};
+  reactApi.slots = [];
 
   try {
     const testInfo = await parseTest(reactApi.filename);
@@ -455,7 +456,12 @@ const buildComponentDocumentation = async (options: {
 
     Object.entries(slots).forEach(([slot, descriptor]) => {
       componentApi.slotDescriptions![slot] = descriptor.description;
-      reactApi.slots[slot] = { default: descriptor.default, type: { name: descriptor.type } };
+      reactApi.slots?.push({
+        class: null,
+        name: slot,
+        description: descriptor.description,
+        default: descriptor.default,
+      });
     });
   }
 
@@ -508,11 +514,7 @@ const buildComponentDocumentation = async (options: {
         return 1;
       }),
     ),
-    slots: fromPairs(
-      Object.entries(reactApi.slots).sort(([aName], [bName]) => {
-        return aName.localeCompare(bName);
-      }),
-    ),
+    slots: reactApi.slots.sort((slotA, slotB) => (slotA.name > slotB.name ? 1 : -1)),
     name: reactApi.name,
     styles: {
       classes: reactApi.styles.classes,
