@@ -222,11 +222,11 @@
     "day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "desktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
     "desktopTransition": {
-      "default": "Grow from @mui/material",
+      "default": "Grow from `@mui/material`.",
       "type": { "name": "elementType" }
     },
     "desktopTrapFocus": {
-      "default": "TrapFocus from @mui/material",
+      "default": "TrapFocus from `@mui/material`.",
       "type": { "name": "elementType" }
     },
     "digitalClockSectionItem": {
@@ -240,7 +240,7 @@
     "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "openPickerButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "openPickerIcon": { "type": { "name": "elementType" } },
-    "popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
+    "popper": { "default": "Popper from `@mui/material`.", "type": { "name": "elementType" } },
     "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },

@@ -156,8 +156,11 @@
     "fieldSeparator": { "type": { "name": "elementType" } },
     "layout": { "type": { "name": "elementType" } },
     "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "mobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
-    "mobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
+    "mobilePaper": { "default": "Paper from `@mui/material`.", "type": { "name": "elementType" } },
+    "mobileTransition": {
+      "default": "Fade from `@mui/material`.",
+      "type": { "name": "elementType" }
+    },
     "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
