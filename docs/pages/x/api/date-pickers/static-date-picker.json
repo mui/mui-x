@@ -161,6 +161,7 @@
   },
   "slots": {
     "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "calendarHeader": { "type": { "name": "elementType" } },
     "day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "layout": { "type": { "name": "elementType" } },
     "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },

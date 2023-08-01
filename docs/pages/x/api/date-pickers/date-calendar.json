@@ -150,6 +150,7 @@
     }
   },
   "slots": {
+    "calendarHeader": { "type": { "name": "elementType" } },
     "day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
