@@ -26,7 +26,7 @@
     "TransitionComponent": { "type": { "name": "elementType" }, "default": "Collapse" },
     "TransitionProps": { "type": { "name": "object" } }
   },
-  "slots": {},
+  "slots": [],
   "name": "TreeItem",
   "styles": {
     "classes": [

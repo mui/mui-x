@@ -52,7 +52,7 @@
       "additionalPropsInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "TreeView",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiTreeView" },
   "spread": true,

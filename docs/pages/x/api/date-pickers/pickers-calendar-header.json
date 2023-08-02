@@ -12,7 +12,7 @@
       "additionalPropsInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "PickersCalendarHeader",
   "styles": {
     "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],

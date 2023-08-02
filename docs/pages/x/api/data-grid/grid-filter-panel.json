@@ -28,7 +28,7 @@
       "additionalPropsInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "GridFilterPanel",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",

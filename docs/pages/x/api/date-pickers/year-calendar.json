@@ -43,7 +43,7 @@
       "default": "3"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "YearCalendar",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
   "spread": true,

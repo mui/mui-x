@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "BarPlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarPlot" },
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",

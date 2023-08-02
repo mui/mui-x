@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "LineElement",
   "styles": {
     "classes": ["root", "highlighted", "faded"],

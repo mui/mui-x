@@ -22,7 +22,7 @@
       "additionalPropsInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "PickersShortcuts",
   "styles": {
     "classes": ["root", "padding", "dense", "subheader"],

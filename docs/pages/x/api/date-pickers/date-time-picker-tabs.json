@@ -20,7 +20,7 @@
     },
     "timeIcon": { "type": { "name": "node" }, "default": "Time" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DateTimePickerTabs",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
