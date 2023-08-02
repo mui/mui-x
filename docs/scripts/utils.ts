@@ -9,7 +9,7 @@ export const getComponentFilesInFolder = (folderPath: string): string[] => {
       return [...acc, ...filesInFolder];
     }
     if (/[A-Z]+.*\.tsx/.test(file.name)) {
-      return [...acc, path.join(folderPath, file.name)];
+      return [...acc, path.join(folderPath, file.name).replace(/\\/g, '/')];
     }
     return acc;
   }, [] as string[]);
