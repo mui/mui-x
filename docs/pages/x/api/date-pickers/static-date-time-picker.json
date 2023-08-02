@@ -198,7 +198,8 @@
     {
       "class": null,
       "name": "calendarHeader",
-      "description": "Custom component for calendar header.\nCheck the [Pickers]"
+      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
     },
     {
       "class": null,

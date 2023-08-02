@@ -32,7 +32,7 @@ import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export type ExportedPickersCalendarHeaderProps<TDate> = Pick<
   PickersCalendarHeaderProps<TDate>,
-  'classes'
+  'classes' | 'slots' | 'slotProps'
 >;
 
 export interface PickersCalendarHeaderSlotsComponent extends PickersArrowSwitcherSlotsComponent {
@@ -189,9 +189,6 @@ type PickersCalendarHeaderComponent = (<TDate>(
   props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-/**
- * @ignore - do not document.
- */
 const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TDate>(
   inProps: PickersCalendarHeaderProps<TDate>,
   ref: React.Ref<HTMLDivElement>,

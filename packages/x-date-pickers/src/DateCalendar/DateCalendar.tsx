@@ -217,7 +217,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       labelId: gridLabelId,
       slots,
       slotProps,
-    } as PickersCalendarHeaderProps<TDate>,
+    },
     ownerState: props,
   });
 
