@@ -68,10 +68,12 @@
   },
   "exports": {
     ".": {
+      "types": "./index.d.ts",
       "require": "./index.js",
       "import": "./esm/index.js"
     },
     "./*": {
+      "types": "./*/index.d.ts",
       "require": "./*",
       "import": "./esm/*"
     }
