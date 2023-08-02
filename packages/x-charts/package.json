@@ -68,12 +68,21 @@
   },
   "exports": {
     ".": {
-      "require": "./index.js",
-      "import": "./esm/index.js"
+      "require": [
+        "./index.js",
+        "./index.d.ts"
+      ],
+      "import": [
+        "./esm/index.js",
+        "./index.d.ts"
+      ]
     },
     "./*": {
       "require": "./*",
-      "import": "./esm/*"
+      "import": [
+        "./esm/*",
+        "./index.d.ts"
+      ]
     }
   },
   "setupFiles": [
