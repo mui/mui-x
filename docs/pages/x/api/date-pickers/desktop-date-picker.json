@@ -203,13 +203,13 @@
       "class": null,
       "name": "desktopTransition",
       "description": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Grow from @mui/material"
+      "default": "Grow from '@mui/material'."
     },
     {
       "class": null,
       "name": "desktopTrapFocus",
       "description": "Custom component for trapping the focus inside the views on desktop.",
-      "default": "TrapFocus from @mui/material"
+      "default": "TrapFocus from '@mui/material'."
     },
     {
       "class": null,
@@ -254,7 +254,7 @@
       "class": null,
       "name": "popper",
       "description": "Custom component for the popper inside which the views are rendered on desktop.",
-      "default": "Popper from @mui/material"
+      "default": "Popper from '@mui/material'."
     },
     {
       "class": null,
