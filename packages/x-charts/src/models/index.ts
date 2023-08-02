@@ -1,6 +1,6 @@
 export * from './seriesType';
 export * from './layout';
-export {
+export type {
   AxisConfig,
   ChartsYAxisProps,
   ChartsXAxisProps,
