@@ -32,7 +32,7 @@ export interface PickersPopperSlotsComponent {
   DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
-   * @default Grow from `@mui/material` or Fade from `@mui/material` when `reduceAnimations` is on.
+   * @default Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.
    */
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
