@@ -45,21 +45,9 @@ export interface BarPlotSlotComponentProps {
   bar?: Partial<BarElementProps>;
 }
 
-export interface BarPlotProps {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: BarPlotSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: BarPlotSlotComponentProps;
-}
+export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {}
 
 function BarPlot(props: BarPlotProps) {
-  const { slots, slotProps } = props;
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
 
@@ -105,12 +93,11 @@ function BarPlot(props: BarPlotProps) {
           // @ts-ignore TODO: fix when adding a correct API for customisation
           const { stackedData, color } = series[seriesId];
 
-          const Bar = slots?.bar ?? BarElement;
           return stackedData.map((values, dataIndex: number) => {
             const baseline = Math.min(...values);
             const value = Math.max(...values);
             return (
-              <Bar
+              <BarElement
                 key={`${seriesId}-${dataIndex}`}
                 id={seriesId}
                 dataIndex={dataIndex}
@@ -120,7 +107,7 @@ function BarPlot(props: BarPlotProps) {
                 width={barWidth}
                 color={color}
                 highlightScope={series[seriesId].highlightScope}
-                {...slotProps?.bar}
+                {...props}
               />
             );
           });
