@@ -63,6 +63,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     height,
     margin,
     colors,
+    dataset,
     sx,
     tooltip,
     axisHighlight = { x: 'line' },
@@ -92,7 +93,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'point',
             data: Array.from(
-              { length: Math.max(...series.map((s) => s.data.length)) },
+              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
               (_, index) => index,
             ),
           },
@@ -100,6 +101,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       }
       yAxis={yAxis}
       colors={colors}
+      dataset={dataset}
       sx={sx}
       disableAxisListener={
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
@@ -165,6 +167,7 @@ LineChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -252,7 +255,8 @@ LineChart.propTypes = {
         'stepAfter',
         'stepBefore',
       ]),
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      data: PropTypes.arrayOf(PropTypes.number),
+      dataKey: PropTypes.string,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
@@ -332,15 +336,16 @@ LineChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
@@ -358,15 +363,16 @@ LineChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),

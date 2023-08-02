@@ -3,9 +3,11 @@ import standardNavIcons from '@mui/monorepo/docs/src/modules/components/AppNavIc
 import ChartIcon from '@mui/icons-material/BarChartRounded';
 import TableViewIcon from '@mui/icons-material/TableViewRounded';
 import DatePickerIcon from '@mui/icons-material/DateRangeRounded';
+import TreeViewIcon from '@mui/icons-material/AccountTree';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
+import treeViewComponentApi from './tree-view-component-api-pages';
 
 // const isPreview =
 //   process.env.NODE_ENV === 'development' ||
@@ -376,6 +378,20 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
       { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧' },
       { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
+    ],
+  },
+  {
+    pathname: '/x/react-tree-view-group',
+    title: 'Tree View',
+    newFeature: true,
+    icon: TreeViewIcon,
+    children: [
+      { pathname: '/x/react-tree-view', title: 'Overview' },
+      {
+        pathname: '/x/api/tree-view-group',
+        title: 'API Reference',
+        children: [...treeViewComponentApi],
+      },
     ],
   },
   {

@@ -632,7 +632,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       rowStyleCache.current = Object.create(null);
     }
 
-    const rows: JSX.Element[] = [];
+    const rows: React.JSX.Element[] = [];
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
@@ -786,10 +786,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       onTouchMove: handleTouchMove,
       ...inputProps,
       style: inputProps.style ? { ...inputProps.style, ...rootStyle } : rootStyle,
+      role: 'presentation',
     }),
     getContentProps: ({ style }: { style?: object } = {}) => ({
       style: style ? { ...style, ...contentSize } : contentSize,
+      role: 'presentation',
     }),
-    getRenderZoneProps: () => ({ ref: renderZoneRef }),
+    getRenderZoneProps: () => ({ ref: renderZoneRef, role: 'rowgroup' }),
   };
 };

@@ -40,6 +40,11 @@ export default function DataGridPremiumDemo() {
       sorting: {
         sortModel: [{ field: '__row_group_by_columns_group__', sort: 'asc' }],
       },
+      aggregation: {
+        model: {
+          quantity: 'sum',
+        },
+      },
     },
   });
 

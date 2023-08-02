@@ -40,17 +40,26 @@ npm install @mui/x-date-pickers
 yarn add @mui/x-date-pickers
 ```
 
+```bash pnpm
+pnpm add @mui/x-date-pickers
+```
+
 </codeblock>
 
 #### Pro Plan
 
 <codeblock storageKey="package-manager">
+
 ```bash npm
 npm install @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
 ```bash yarn
 yarn add @mui/x-date-pickers-pro @mui/x-license-pro
+```
+
+```bash pnpm
+pnpm add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
 
 </codeblock>

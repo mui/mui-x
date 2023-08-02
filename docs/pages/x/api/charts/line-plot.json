@@ -3,7 +3,7 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": {},
+  "slots": [],
   "name": "LinePlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },
   "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",

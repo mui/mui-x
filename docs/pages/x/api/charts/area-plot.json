@@ -3,7 +3,7 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": {},
+  "slots": [],
   "name": "AreaPlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",

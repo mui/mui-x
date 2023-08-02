@@ -391,7 +391,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }
 
   const rowType = rowNode.type;
-  const cells: JSX.Element[] = [];
+  const cells: React.JSX.Element[] = [];
 
   for (let i = 0; i < renderedColumns.length; i += 1) {
     const column = renderedColumns[i];

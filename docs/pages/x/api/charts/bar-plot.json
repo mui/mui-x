@@ -3,7 +3,7 @@
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" }
   },
-  "slots": {},
+  "slots": [],
   "name": "BarPlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarPlot" },
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",

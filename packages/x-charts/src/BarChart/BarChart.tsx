@@ -58,6 +58,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     height,
     margin,
     colors,
+    dataset,
     sx,
     tooltip,
     axisHighlight,
@@ -87,7 +88,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'band',
             data: Array.from(
-              { length: Math.max(...series.map((s) => s.data.length)) },
+              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
               (_, index) => index,
             ),
           },
@@ -95,6 +96,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       }
       yAxis={yAxis}
       colors={colors}
+      dataset={dataset}
       sx={sx}
       disableAxisListener={
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
@@ -158,6 +160,7 @@ BarChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -234,7 +237,8 @@ BarChart.propTypes = {
   series: PropTypes.arrayOf(
     PropTypes.shape({
       color: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      data: PropTypes.arrayOf(PropTypes.number),
+      dataKey: PropTypes.string,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
@@ -314,15 +318,16 @@ BarChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
@@ -340,15 +345,16 @@ BarChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),

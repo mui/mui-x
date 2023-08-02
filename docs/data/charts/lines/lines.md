@@ -18,6 +18,19 @@ To modify the x values, you should provide a `xAxis` with data property.
 
 {{"demo": "BasicLineChart.js"}}
 
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
+
+You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
+
+For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+
+Here is a plot of the evolution of world electricity production by source.
+
+{{"demo": "LineDataset.js"}}
+
 ### Area
 
 You can fill the area of the line by setting the series' `area` property to `true`.
