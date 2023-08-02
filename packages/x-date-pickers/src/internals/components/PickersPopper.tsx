@@ -37,12 +37,12 @@ export interface PickersPopperSlotsComponent {
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
-   * @default TrapFocus from @mui/material
+   * @default TrapFocus from '@mui/material'.
    */
   DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
-   * @default Popper from @mui/material
+   * @default Popper from '@mui/material'.
    */
   Popper?: React.ElementType<MuiPopperProps>;
 }
