@@ -1,0 +1,15 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "area": "Set to <code>true</code> to fill spark line area. Has no effect if plotType=&#39;bar&#39;.",
+    "colors": "Color palette used to colorize multiple series.",
+    "data": "Data to plot.",
+    "plotType": "Type of plot used.",
+    "showHighlight": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band.",
+    "showTooltip": "Set to <code>true</code> to enable the tooltip in the sparkline.",
+    "valueFormatter": "Formatter used by the tooltip.<br><br><strong>Signature:</strong><br><code>function(value: number) =&gt; string</code><br><em>value:</em> The value to format.<br> <em>returns</em> (string): the formatted value.",
+    "xAxis": "The xAxis configuration. Notice it is a single configuration object, not an array of configuration."
+  },
+  "classDescriptions": {},
+  "slotDescriptions": {}
+}

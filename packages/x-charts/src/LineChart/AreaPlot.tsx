@@ -6,7 +6,7 @@ import { AreaElement } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function AreaPlot() {
+export function AreaPlot(props: React.SVGAttributes<SVGSVGElement>) {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -19,7 +19,7 @@ export function AreaPlot() {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g>
+    <g {...props}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {

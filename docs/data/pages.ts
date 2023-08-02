@@ -361,6 +361,10 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
         ],
       },
+      {
+        pathname: '/x/react-charts/sparkline',
+        title: 'Sparkline',
+      },
       { pathname: '/x/react-charts/axis', title: 'Axis' },
       { pathname: '/x/react-charts/components', title: 'Custom components' },
       { pathname: '/x/react-charts/legend', title: 'Legend' },

@@ -109,6 +109,7 @@
   { "name": "ScatterSeriesType", "kind": "Interface" },
   { "name": "ScatterValueType", "kind": "TypeAlias" },
   { "name": "SeriesItemIdentifier", "kind": "TypeAlias" },
+  { "name": "SparkLineChart", "kind": "Variable" },
   { "name": "StackableSeriesType", "kind": "TypeAlias" },
   { "name": "StackOffsetType", "kind": "TypeAlias" },
   { "name": "StackOrderType", "kind": "TypeAlias" },
