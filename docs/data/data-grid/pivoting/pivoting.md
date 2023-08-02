@@ -20,6 +20,8 @@ Pivoting will allow you to take a columns values and turn them into columns.
 
 {{"demo": "GridPivotingMultipleValues.js", "bg": "inline", "defaultCodeOpen": false}}
 
+{{"demo": "GridPivotingMovies.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

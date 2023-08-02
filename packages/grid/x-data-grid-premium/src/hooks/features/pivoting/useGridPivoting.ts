@@ -12,6 +12,11 @@ interface PivotModel {
   }[];
 }
 
+function getFieldValue(row: GridRowModel, field: GridColDef['field']) {
+  // TODO: valueGetter
+  return row[field];
+}
+
 const getPivotedData = ({
   rows,
   // columns,
@@ -42,7 +47,7 @@ const getPivotedData = ({
 
   const aggregationModel: GridAggregationModel = {};
 
-  const columnGroupingModel: GridColumnGroupingModel = [];
+  const columnGroupingModel: Map<string, GridColumnGroupingModel[number]> = new Map();
 
   const newRows: GridRowModel[] = [];
   rows.forEach((row) => {
@@ -50,7 +55,7 @@ const getPivotedData = ({
     if (pivotModel.values.length === 1) {
       const pivotValue = pivotModel.values[0];
       pivotModel.columns.forEach((field) => {
-        const colValue = row[field];
+        const colValue = String(getFieldValue(row, field));
         const mapKey = `${field}-${colValue}`;
         if (!pivotColumns.has(mapKey)) {
           pivotColumns.set(mapKey, {
@@ -65,29 +70,34 @@ const getPivotedData = ({
       });
     } else {
       pivotModel.columns.forEach((colGroupField) => {
-        const colValue = row[colGroupField];
+        const colValue = getFieldValue(row, colGroupField);
         const mapKey = `${colGroupField}-${colValue}`;
 
-        const columnGroup: GridColumnGroupingModel[number] = {
-          groupId: mapKey,
-          headerName: colValue,
-          children: [],
-        };
-
         if (!pivotColumns.has(mapKey)) {
-          columnGroupingModel.push(columnGroup);
+          let columnGroup: GridColumnGroupingModel[number];
+          if (!columnGroupingModel.has(mapKey)) {
+            columnGroup = {
+              groupId: mapKey,
+              headerName: String(colValue),
+              children: [],
+            };
+
+            columnGroupingModel.set(mapKey, columnGroup);
+          }
 
           pivotModel.values.forEach((pivotValue) => {
             const valueField = pivotValue.field;
             const mapValueKey = `${mapKey}-${valueField}`;
             pivotColumns.set(mapValueKey, {
               field: mapValueKey,
-              headerName: valueField,
+              headerName: String(valueField),
               aggregable: true,
               availableAggregationFunctions: [pivotValue.aggFunc],
             });
             aggregationModel[mapValueKey] = pivotValue.aggFunc;
-            columnGroup.children.push({ field: mapValueKey });
+            if (columnGroup) {
+              columnGroup.children.push({ field: mapValueKey });
+            }
             newRow[mapValueKey] = newRow[valueField];
             delete newRow[valueField];
           });
@@ -105,7 +115,7 @@ const getPivotedData = ({
     aggregationModel,
     getAggregationPosition: () => 'inline',
     columnVisibilityModel,
-    columnGroupingModel,
+    columnGroupingModel: Array.from(columnGroupingModel, ([, value]) => value),
   };
 };
 
