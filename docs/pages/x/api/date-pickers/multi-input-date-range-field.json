@@ -95,14 +95,26 @@
     "useFlexGap": { "type": { "name": "bool" } },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
-  "slots": {
-    "root": { "default": "MultiInputDateRangeFieldRoot", "type": { "name": "elementType" } },
-    "separator": {
-      "default": "MultiInputDateRangeFieldSeparator",
-      "type": { "name": "elementType" }
+  "slots": [
+    {
+      "class": null,
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "MultiInputDateRangeFieldRoot"
     },
-    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
-  },
+    {
+      "class": null,
+      "name": "separator",
+      "description": "Element rendered between the two inputs.",
+      "default": "MultiInputDateRangeFieldSeparator"
+    },
+    {
+      "class": null,
+      "name": "textField",
+      "description": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "default": "TextField from '@mui/material'"
+    }
+  ],
   "name": "MultiInputDateRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateRangeField" },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",

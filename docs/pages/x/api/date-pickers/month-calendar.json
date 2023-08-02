@@ -43,7 +43,7 @@
     },
     "value": { "type": { "name": "any" } }
   },
-  "slots": {},
+  "slots": [],
   "name": "MonthCalendar",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthCalendar" },
   "spread": true,

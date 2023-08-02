@@ -11,6 +11,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "className": {
+      "description": "className applied to the root element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "collapseIcon": {
       "description": "The icon used to collapse the node.",
       "deprecated": "",
@@ -23,7 +28,7 @@
       "typeDescriptions": {}
     },
     "ContentProps": {
-      "description": "Props applied to ContentComponent",
+      "description": "Props applied to ContentComponent.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -33,7 +38,7 @@
       "typeDescriptions": {}
     },
     "endIcon": {
-      "description": "The icon displayed next to a end node.",
+      "description": "The icon displayed next to an end node.",
       "deprecated": "",
       "typeDescriptions": {}
     },

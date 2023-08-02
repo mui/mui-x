@@ -11,6 +11,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "className": {
+      "description": "className applied to the root element.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "defaultCollapseIcon": {
       "description": "The default icon used to collapse the node.",
       "deprecated": "",
@@ -22,7 +27,7 @@
       "typeDescriptions": {}
     },
     "defaultExpanded": {
-      "description": "Expanded node ids. (Uncontrolled)",
+      "description": "Expanded node ids. Used when the item&#39;s expansion are not controlled.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -52,7 +57,7 @@
       "typeDescriptions": {}
     },
     "expanded": {
-      "description": "Expanded node ids. (Controlled)",
+      "description": "Expanded node ids. Used when the item&#39;s expansion are controlled.",
       "deprecated": "",
       "typeDescriptions": {}
     },

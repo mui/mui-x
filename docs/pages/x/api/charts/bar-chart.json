@@ -32,7 +32,7 @@
       "default": "null"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "BarChart",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarChart" },
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",

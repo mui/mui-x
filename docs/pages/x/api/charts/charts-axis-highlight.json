@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "ChartsAxisHighlight",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxisHighlight" },
   "filename": "/packages/x-charts/src/ChartsAxisHighlight/ChartsAxisHighlight.tsx",
