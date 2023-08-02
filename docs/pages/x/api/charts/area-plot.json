@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "AreaPlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",

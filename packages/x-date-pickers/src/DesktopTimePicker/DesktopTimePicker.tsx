@@ -105,7 +105,8 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: localeText.openTimePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
     validator: validateTime,
   });
 

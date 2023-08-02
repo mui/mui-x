@@ -32,7 +32,7 @@
       "default": "null"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "ScatterChart",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatterChart" },
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",

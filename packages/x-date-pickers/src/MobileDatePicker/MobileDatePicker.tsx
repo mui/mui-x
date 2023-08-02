@@ -63,7 +63,8 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
-    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
     validator: validateDate,
   });
 

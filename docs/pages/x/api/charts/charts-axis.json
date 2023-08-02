@@ -29,7 +29,7 @@
       "default": "null"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "ChartsAxis",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxis" },
   "filename": "/packages/x-charts/src/ChartsAxis/ChartsAxis.tsx",

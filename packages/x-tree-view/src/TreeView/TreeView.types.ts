@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { DefaultizedProps, StandardProps } from '../internals/models';
+import { DefaultizedProps } from '../internals/models';
 import { TreeViewClasses } from './treeViewClasses';
 
-export interface TreeViewPropsBase extends StandardProps<React.HTMLAttributes<HTMLUListElement>> {
+export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   /**
    * The content of the component.
    */
   children?: React.ReactNode;
+  /**
+   * className applied to the root element.
+   */
+  className?: string;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -23,7 +27,8 @@ export interface TreeViewPropsBase extends StandardProps<React.HTMLAttributes<HT
    */
   defaultEndIcon?: React.ReactNode;
   /**
-   * Expanded node ids. (Uncontrolled)
+   * Expanded node ids.
+   * Used when the item's expansion are not controlled.
    * @default []
    */
   defaultExpanded?: string[];
@@ -47,7 +52,8 @@ export interface TreeViewPropsBase extends StandardProps<React.HTMLAttributes<HT
    */
   disableSelection?: boolean;
   /**
-   * Expanded node ids. (Controlled)
+   * Expanded node ids.
+   * Used when the item's expansion are controlled.
    */
   expanded?: string[];
   /**

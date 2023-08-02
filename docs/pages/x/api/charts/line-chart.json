@@ -32,7 +32,7 @@
       "default": "null"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "LineChart",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLineChart" },
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",

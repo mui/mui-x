@@ -12,7 +12,7 @@
     "tickFontSize": { "type": { "name": "number" }, "default": "12" },
     "tickSize": { "type": { "name": "number" }, "default": "6" }
   },
-  "slots": {},
+  "slots": [],
   "name": "ChartsYAxis",
   "styles": {
     "classes": [

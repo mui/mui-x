@@ -32,7 +32,7 @@
       "default": "null"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "PieChart",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieChart" },
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",

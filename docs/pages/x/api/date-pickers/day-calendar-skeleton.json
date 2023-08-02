@@ -9,7 +9,7 @@
       "additionalPropsInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "DayCalendarSkeleton",
   "styles": {
     "classes": ["root", "week", "daySkeleton"],

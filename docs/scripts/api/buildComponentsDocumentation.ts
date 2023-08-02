@@ -2,7 +2,7 @@ import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
-import parseStyles, { Styles } from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
+import parseStyles from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
 import createDescribeableProp, {
   DescribeablePropDescriptor,
@@ -17,7 +17,7 @@ import kebabCase from 'lodash/kebabCase';
 import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
-import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
+import { defaultHandlers, parse as docgenParse } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
   getHeaders,
@@ -38,22 +38,8 @@ import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
 type CoreReactApiProps = CoreReactApi['propsTable'][string];
 
-export interface ReactApi extends ReactDocgenApi {
-  /**
-   * list of page pathnames
-   * @example ['/components/Accordion']
-   */
-  demos: Array<{ name: string; demoPathname: string }>;
-  EOL: string;
-  filename: string;
-  forwardsRefTo: string | undefined;
-  inheritance: { component: string; pathname: string } | null;
-  name: string;
-  spread: boolean | undefined;
-  src: string;
-  styles: Styles;
+export interface ReactApi extends Omit<CoreReactApi, 'propsTable' | 'translations' | 'classes'> {
   displayName: string;
-  slots: Record<string, { default: string | undefined; type: { name: string | undefined } }>;
   packages: { packageName: string; componentName: string }[];
 }
 
@@ -196,14 +182,17 @@ function findXDemos(
   if (componentName.startsWith('Grid') || componentName.startsWith('DataGrid')) {
     const demos: ReactApi['demos'] = [];
     if (componentName === 'DataGrid' || componentName.startsWith('Grid')) {
-      demos.push({ name: 'DataGrid', demoPathname: '/x/react-data-grid/#mit-version' });
+      demos.push({ demoPageTitle: 'DataGrid', demoPathname: '/x/react-data-grid/#mit-version' });
     }
     if (componentName === 'DataGridPro' || componentName.startsWith('Grid')) {
-      demos.push({ name: 'DataGridPro', demoPathname: '/x/react-data-grid/#commercial-version' });
+      demos.push({
+        demoPageTitle: 'DataGridPro',
+        demoPathname: '/x/react-data-grid/#commercial-version',
+      });
     }
     if (componentName === 'DataGridPremium' || componentName.startsWith('Grid')) {
       demos.push({
-        name: 'DataGridPremium',
+        demoPageTitle: 'DataGridPremium',
         demoPathname: '/x/react-data-grid/#commercial-version',
       });
     }
@@ -215,13 +204,13 @@ function findXDemos(
     .filter((page) => page.components.includes(componentName))
     .map((page) => {
       if (page.pathname.includes('date-pickers')) {
-        let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
-        name = name.replace(/\[(.*)]\((.*)\)/g, '');
+        let demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
+        demoPageTitle = demoPageTitle.replace(/\[(.*)]\((.*)\)/g, '');
 
         const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
 
         return {
-          name,
+          demoPageTitle,
           demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}/`,
         };
       }
@@ -231,7 +220,7 @@ function findXDemos(
         const pageId = pathnameMatches![1] === 'overview' ? '' : `${pathnameMatches![1]}/`;
 
         return {
-          name: page.title,
+          demoPageTitle: page.title,
           demoPathname: `/x/react-tree-view/${pageId}`,
         };
       }
@@ -256,7 +245,7 @@ const buildComponentDocumentation = async (options: {
   reactApi.filename = filename; // Some components don't have props
   reactApi.name = path.parse(filename).name;
   reactApi.EOL = getLineFeed(src);
-  reactApi.slots = {};
+  reactApi.slots = [];
 
   try {
     const testInfo = await parseTest(reactApi.filename);
@@ -469,7 +458,12 @@ const buildComponentDocumentation = async (options: {
 
     Object.entries(slots).forEach(([slot, descriptor]) => {
       componentApi.slotDescriptions![slot] = descriptor.description;
-      reactApi.slots[slot] = { default: descriptor.default, type: { name: descriptor.type } };
+      reactApi.slots?.push({
+        class: null,
+        name: slot,
+        description: descriptor.description,
+        default: descriptor.default,
+      });
     });
   }
 
@@ -522,11 +516,7 @@ const buildComponentDocumentation = async (options: {
         return 1;
       }),
     ),
-    slots: fromPairs(
-      Object.entries(reactApi.slots).sort(([aName], [bName]) => {
-        return aName.localeCompare(bName);
-      }),
-    ),
+    slots: reactApi.slots.sort((slotA, slotB) => (slotA.name > slotB.name ? 1 : -1)),
     name: reactApi.name,
     styles: {
       classes: reactApi.styles.classes,
@@ -543,7 +533,7 @@ const buildComponentDocumentation = async (options: {
     filename: toGithubPath(reactApi.filename, project.workspaceRoot),
     inheritance: reactApi.inheritance,
     demos: `<ul>${reactApi.demos
-      .map((item) => `<li><a href="${item.demoPathname}">${item.name}</a></li>`)
+      .map((item) => `<li><a href="${item.demoPathname}">${item.demoPageTitle}</a></li>`)
       .join('\n')}</ul>`,
     packages: reactApi.packages,
   };
