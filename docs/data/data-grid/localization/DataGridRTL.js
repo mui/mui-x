@@ -1,16 +1,7 @@
 import * as React from 'react';
 import { DataGrid, arSD } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-const theme = createTheme(
-  {
-    direction: 'rtl',
-    palette: {
-      primary: { main: '#1976d2' },
-    },
-  },
-  arSD,
-);
+import useTheme from '@mui/system/useTheme';
 
 const columns = [
   {
@@ -50,6 +41,11 @@ const rows = [
 ];
 
 export default function DataGridRTL() {
+  const existingTheme = useTheme();
+  const theme = React.useMemo(
+    () => createTheme({ direction: 'rtl' }, arSD, existingTheme),
+    [existingTheme],
+  );
   return (
     <ThemeProvider theme={theme}>
       <div dir="rtl" style={{ height: 400, width: '100%' }}>
