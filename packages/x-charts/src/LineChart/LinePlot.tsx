@@ -15,21 +15,12 @@ export interface LinePlotSlotComponentProps {
   line?: Partial<LineElementProps>;
 }
 
-export interface LinePlotProps extends React.SVGAttributes<SVGSVGElement> {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: LinePlotSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: LinePlotSlotComponentProps;
-}
+export interface LinePlotProps
+  extends React.SVGAttributes<SVGSVGElement>,
+    Pick<LineElementProps, 'slots' | 'slotProps'> {}
 
 function LinePlot(props: LinePlotProps) {
-  const { slots, slotProps } = props;
+  const {slots, slotProps, ...other} = props
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -41,10 +32,8 @@ function LinePlot(props: LinePlotProps) {
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
-  const Line = slots?.line ?? LineElement;
-
   return (
-    <g {...props}>
+    <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
@@ -74,13 +63,14 @@ function LinePlot(props: LinePlotProps) {
           const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
           return (
-            <Line
+            <LineElement
               key={seriesId}
               id={seriesId}
               d={linePath.curve(curve)(d3Data) || undefined}
               color={series[seriesId].color}
               highlightScope={series[seriesId].highlightScope}
-              {...slotProps?.line}
+              slots={slots}
+              slotProps={slotProps}
             />
           );
         });

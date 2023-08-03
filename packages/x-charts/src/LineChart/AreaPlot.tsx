@@ -15,21 +15,12 @@ export interface AreaPlotSlotComponentProps {
   area?: Partial<AreaElementProps>;
 }
 
-export interface AreaPlotProps extends React.SVGAttributes<SVGSVGElement> {
-  /**
-   * Overridable component slots.
-   * @default {}
-   */
-  slots?: AreaPlotSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotProps?: AreaPlotSlotComponentProps;
-}
+export interface AreaPlotProps
+  extends React.SVGAttributes<SVGSVGElement>,
+    Pick<AreaElementProps, 'slots' | 'slotProps'> {}
 
 function AreaPlot(props: AreaPlotProps) {
-  const { slots, slotProps } = props;
+  const { slots, slotProps, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
@@ -42,10 +33,8 @@ function AreaPlot(props: AreaPlotProps) {
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
-  const Area = slots?.area ?? AreaElement;
-
   return (
-    <g {...props}>
+    <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
@@ -77,13 +66,14 @@ function AreaPlot(props: AreaPlotProps) {
 
           return (
             !!series[seriesId].area && (
-              <Area
+              <AreaElement
                 key={seriesId}
                 id={seriesId}
                 d={areaPath.curve(curve)(d3Data) || undefined}
                 color={series[seriesId].color}
                 highlightScope={series[seriesId].highlightScope}
-                {...slotProps?.area}
+                slots={slots}
+                slotProps={slotProps}
               />
             )
           );
