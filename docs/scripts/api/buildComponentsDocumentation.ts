@@ -337,9 +337,9 @@ const buildComponentDocumentation = async (options: {
       } = generatePropDescription(prop, propName);
       let description = renderMarkdownInline(jsDocText);
 
-      const additionalInfo: CoreReactApiProps['additionalInfo'] & { classes?: boolean } = {};
+      const additionalInfo: CoreReactApiProps['additionalInfo'] = {};
       if (propName === 'classes') {
-        additionalInfo.classes = true;
+        additionalInfo.cssApi = true;
       } else if (propName === 'sx') {
         additionalInfo.sx = true;
       }
