@@ -6,7 +6,7 @@ import { LineElement } from './LineElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function LinePlot() {
+export function LinePlot(props: React.SVGAttributes<SVGSVGElement>) {
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -19,7 +19,7 @@ export function LinePlot() {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g>
+    <g {...props}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {

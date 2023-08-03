@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base/utils';
 import {
+  PickersCalendarHeader,
+  PickersCalendarHeaderProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
-} from './PickersCalendarHeader';
+} from '../PickersCalendarHeader';
 import {
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
@@ -27,11 +30,20 @@ import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
-    DayCalendarSlotsComponent<TDate> {}
+    DayCalendarSlotsComponent<TDate> {
+  /**
+   * Custom component for calendar header.
+   * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
+   * @default PickersCalendarHeader
+   */
+  CalendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+}
 
 export interface DateCalendarSlotsComponentsProps<TDate>
   extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
-    DayCalendarSlotsComponentsProps<TDate> {}
+    DayCalendarSlotsComponentsProps<TDate> {
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
+}
 
 export interface ExportedDateCalendarProps<TDate>
   extends ExportedDayCalendarProps,

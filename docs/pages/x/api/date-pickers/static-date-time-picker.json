@@ -158,7 +158,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -194,6 +194,12 @@
       "name": "actionBar",
       "description": "Custom component for the action bar, it is placed below the picker views.",
       "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
     },
     {
       "class": null,

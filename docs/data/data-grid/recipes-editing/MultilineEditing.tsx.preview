@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGrid
   rows={rows}
   columns={columns}
   onCellEditStop={(params, event) => {
