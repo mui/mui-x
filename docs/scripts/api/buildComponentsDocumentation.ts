@@ -420,8 +420,7 @@ const buildComponentDocumentation = async (options: {
           deprecationInfo:
             renderMarkdownInline(deprecation?.groups?.info || '').trim() || undefined,
           signature,
-          additionalInfo:
-            Object.keys(additionalInfo).length === 0 ? undefined : additionalInfo,
+          additionalInfo: Object.keys(additionalInfo).length === 0 ? undefined : additionalInfo,
         },
       ];
     }),
