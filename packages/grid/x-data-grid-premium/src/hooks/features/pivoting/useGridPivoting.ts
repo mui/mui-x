@@ -3,7 +3,7 @@ import { GridColDef, GridColumnGroupingModel, GridRowModel } from '@mui/x-data-g
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
 
-interface PivotModel {
+export interface PivotModel {
   columns: GridColDef['field'][];
   rows: GridColDef['field'][];
   values: {
