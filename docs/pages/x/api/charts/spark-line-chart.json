@@ -14,6 +14,8 @@
     },
     "showHighlight": { "type": { "name": "bool" } },
     "showTooltip": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "valueFormatter": {
       "type": { "name": "func" },
       "signature": {
