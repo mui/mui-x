@@ -5,7 +5,7 @@ import {
   GridColDef,
   GridRowModel,
   unstable_useGridPivoting,
-  PivotModel,
+  Unstable_GridPivotModel as PivotModel,
 } from '@mui/x-data-grid-premium';
 import { unstable_useId as useId } from '@mui/utils';
 import {
