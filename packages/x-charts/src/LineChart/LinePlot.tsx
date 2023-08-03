@@ -20,7 +20,7 @@ export interface LinePlotProps
     Pick<LineElementProps, 'slots' | 'slotProps'> {}
 
 function LinePlot(props: LinePlotProps) {
-  const {slots, slotProps, ...other} = props
+  const { slots, slotProps, ...other } = props;
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
