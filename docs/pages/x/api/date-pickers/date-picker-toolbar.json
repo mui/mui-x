@@ -19,6 +19,11 @@
   },
   "slots": [],
   "name": "DatePickerToolbar",
+  "import": [
+    "import { DatePickerToolbar } from '@mui/x-date-pickers/DatePickerToolbar';",
+    "import { DatePickerToolbar } from '@mui/x-date-pickers';",
+    "import { DatePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",
   "demos": "<ul></ul>",

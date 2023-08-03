@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "MarkPlot",
+  "import": [
+    "import { MarkPlot } from '@mui/x-charts/MarkPlot';",
+    "import { MarkPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkPlot" },
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",
   "demos": "<ul></ul>",

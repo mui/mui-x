@@ -11,6 +11,10 @@
   },
   "slots": [],
   "name": "MarkElement",
+  "import": [
+    "import { MarkElement } from '@mui/x-charts/MarkElement';",
+    "import { MarkElement } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "highlighted", "faded"],
     "globalClasses": {},

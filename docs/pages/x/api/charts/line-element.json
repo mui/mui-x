@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "LineElement",
+  "import": [
+    "import { LineElement } from '@mui/x-charts/LineElement';",
+    "import { LineElement } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "highlighted", "faded"],
     "globalClasses": {},

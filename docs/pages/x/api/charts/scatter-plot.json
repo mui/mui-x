@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "ScatterPlot",
+  "import": [
+    "import { ScatterPlot } from '@mui/x-charts/ScatterPlot';",
+    "import { ScatterPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatterPlot" },
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",
   "demos": "<ul></ul>",

@@ -149,6 +149,10 @@
     }
   ],
   "name": "DateRangeCalendar",
+  "import": [
+    "import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';",
+    "import { DateRangeCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "monthContainer", "dayDragging"],
     "globalClasses": {},

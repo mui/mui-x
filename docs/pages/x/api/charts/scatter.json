@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "Scatter",
+  "import": [
+    "import { Scatter } from '@mui/x-charts/Scatter';",
+    "import { Scatter } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatter" },
   "filename": "/packages/x-charts/src/ScatterChart/Scatter.tsx",
   "demos": "<ul></ul>",

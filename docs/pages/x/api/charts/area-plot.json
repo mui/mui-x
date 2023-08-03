@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "AreaPlot",
+  "import": [
+    "import { AreaPlot } from '@mui/x-charts/AreaPlot';",
+    "import { AreaPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",
   "demos": "<ul></ul>",

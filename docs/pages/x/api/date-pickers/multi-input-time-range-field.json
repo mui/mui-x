@@ -129,6 +129,10 @@
     }
   ],
   "name": "MultiInputTimeRangeField",
+  "import": [
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';",
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputTimeRangeField" },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputTimeRangeField/MultiInputTimeRangeField.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field </a></li></ul>",

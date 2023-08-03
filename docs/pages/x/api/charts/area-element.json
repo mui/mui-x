@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "AreaElement",
+  "import": [
+    "import { AreaElement } from '@mui/x-charts/AreaElement';",
+    "import { AreaElement } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "highlighted", "faded"],
     "globalClasses": {},

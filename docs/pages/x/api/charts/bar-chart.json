@@ -34,6 +34,10 @@
   },
   "slots": [],
   "name": "BarChart",
+  "import": [
+    "import { BarChart } from '@mui/x-charts/BarChart';",
+    "import { BarChart } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarChart" },
   "filename": "/packages/x-charts/src/BarChart/BarChart.tsx",
   "demos": "<ul></ul>",

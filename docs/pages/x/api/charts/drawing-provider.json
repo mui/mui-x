@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "DrawingProvider",
+  "import": [
+    "import { DrawingProvider } from '@mui/x-charts/DrawingProvider';",
+    "import { DrawingProvider } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDrawingProvider" },
   "filename": "/packages/x-charts/src/context/DrawingProvider.tsx",
   "demos": "<ul></ul>",

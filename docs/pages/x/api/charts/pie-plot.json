@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "PiePlot",
+  "import": [
+    "import { PiePlot } from '@mui/x-charts/PiePlot';",
+    "import { PiePlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiPiePlot" },
   "filename": "/packages/x-charts/src/PieChart/PiePlot.tsx",
   "demos": "<ul></ul>",

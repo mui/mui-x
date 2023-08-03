@@ -2,6 +2,10 @@
   "props": {},
   "slots": [],
   "name": "LinePlot",
+  "import": [
+    "import { LinePlot } from '@mui/x-charts/LinePlot';",
+    "import { LinePlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },
   "filename": "/packages/x-charts/src/LineChart/LinePlot.tsx",
   "demos": "<ul></ul>",
