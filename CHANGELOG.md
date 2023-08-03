@@ -9,7 +9,11 @@ _Aug 3, 2023_
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Add new package `@mui/x-tree-view` containing the tree view component
+- ⌚️ Move the tree view component from `@mui/lab` package
+
+  The `<TreeView />` component has been moved to the MUI X repository.
+  It is now accessible from its own package: `@mui/x-tree-view`.
+
 - 🌍 Improve Hebrew (he-IL), Finnish (fi-FI), and Italian (it-IT) locales on the data grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
