@@ -1,6 +1,6 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "sx": {
       "type": {
         "name": "union",

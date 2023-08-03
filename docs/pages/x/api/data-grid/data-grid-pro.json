@@ -19,7 +19,7 @@
       "type": { "name": "custom", "description": "bool" },
       "default": "false"
     },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },

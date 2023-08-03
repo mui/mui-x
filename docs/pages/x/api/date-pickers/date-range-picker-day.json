@@ -17,7 +17,7 @@
       }
     },
     "centerRipple": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMargin": { "type": { "name": "bool" } },

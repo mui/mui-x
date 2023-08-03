@@ -12,7 +12,7 @@
     "autoPageSize": { "type": { "name": "bool" } },
     "cellModesModel": { "type": { "name": "object" } },
     "checkboxSelection": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "clipboardCopyCellDelimiter": { "type": { "name": "string" }, "default": "'\\t'" },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
