@@ -1,9 +1,4 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
-import standardNavIcons from '@mui/monorepo/docs/src/modules/components/AppNavIcons';
-import ChartIcon from '@mui/icons-material/BarChartRounded';
-import TableViewIcon from '@mui/icons-material/TableViewRounded';
-import DatePickerIcon from '@mui/icons-material/DateRangeRounded';
-import TreeViewIcon from '@mui/icons-material/AccountTree';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
@@ -18,12 +13,11 @@ const pages: MuiPage[] = [
   {
     pathname: '/blog/mui-x-v6/',
     title: "✨ What's new in v6? ✨",
-    icon: standardNavIcons.VisibilityIcon,
   },
   {
     pathname: '/x/introduction-group',
     title: 'Introduction',
-    icon: standardNavIcons.DescriptionIcon,
+
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
@@ -35,7 +29,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-data-grid-group',
     title: 'Data Grid',
-    icon: TableViewIcon,
+
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
@@ -199,7 +193,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers-group',
     title: 'Date and Time Pickers',
-    icon: DatePickerIcon,
     children: [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
@@ -330,7 +323,6 @@ const pages: MuiPage[] = [
     pathname: '/x/react-charts-group',
     title: 'Charts 🧪',
     newFeature: true,
-    icon: ChartIcon,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       {
@@ -393,7 +385,6 @@ const pages: MuiPage[] = [
     pathname: '/x/react-tree-view-group',
     title: 'Tree View',
     newFeature: true,
-    icon: TreeViewIcon,
     children: [
       { pathname: '/x/react-tree-view', title: 'Overview' },
       {
@@ -406,7 +397,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/migration-group',
     title: 'Migration',
-    icon: standardNavIcons.BookIcon,
     children: [
       {
         pathname: '/x/migration-v6',
