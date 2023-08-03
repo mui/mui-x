@@ -47,7 +47,7 @@ const useUtilityClasses = (ownerState: BarElementOwnerState) => {
   return composeClasses(slots, getBarElementUtilityClass, classes);
 };
 
-const BarElementPath = styled('rect', {
+export const BarElementPath = styled('rect', {
   name: 'MuiBarElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
@@ -78,7 +78,7 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     slots?: {
       /**
        * The component that renders the root.
-       * @default BarElement
+       * @default BarElementPath
        */
       bar?: React.ElementType;
     };
