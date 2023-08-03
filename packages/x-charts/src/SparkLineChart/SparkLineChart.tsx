@@ -184,6 +184,7 @@ SparkLineChart.propTypes = {
    * Data to plot.
    */
   data: PropTypes.arrayOf(PropTypes.number).isRequired,
+  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -243,6 +244,7 @@ SparkLineChart.propTypes = {
     axisId: PropTypes.string,
     classes: PropTypes.object,
     data: PropTypes.array,
+    dataKey: PropTypes.string,
     disableLine: PropTypes.bool,
     disableTicks: PropTypes.bool,
     fill: PropTypes.string,
@@ -250,9 +252,9 @@ SparkLineChart.propTypes = {
     id: PropTypes.string,
     label: PropTypes.string,
     labelFontSize: PropTypes.number,
-    max: PropTypes.number,
+    max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     maxTicks: PropTypes.number,
-    min: PropTypes.number,
+    min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
     minTicks: PropTypes.number,
     position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
