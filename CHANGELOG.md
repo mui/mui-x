@@ -41,12 +41,14 @@ Same changes as in `@mui/x-data-grid-pro@v6.11.0`.
 #### `@mui/x-date-pickers@v6.11.0`
 
 - [fields] Correctly handle events with a complete value insertion (#9896) @LukasTy
+- [fields] Fix hours editing on dayjs with timezone and DST (#9901) @flaviendelangle
 - [fields] Fix section clearing with timezone (#9819) @flaviendelangle
 - [pickers] Add `CalendarHeader` slot (#7784) @flaviendelangle
 - [pickers] Allow to override the `InputProps` of the `TextField` using the `slotProps` (#9849) @flaviendelangle
 - [pickers] Allow to override the opening aria text using the `localeText` prop on the pickers (#9870) @flaviendelangle
 - [pickers] Fix `sx` and `className` props on `MobileDateRangePicker` (#9853) @flaviendelangle
 - [pickers] Fix default descriptions (#9887) @LukasTy
+- [pickers] Fix offset management on dayjs adapter (#9884) @flaviendelangle
 - [pickers] Use device motion reduction preference (#9823) @LukasTy
 
 #### `@mui/x-date-pickers-pro@v6.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
