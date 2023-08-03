@@ -6,7 +6,7 @@ import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregori
 
 /**
  * To check if the date has the right offset even after changing it's date parts,
- * we convert it to a different timezone that always have the same offset,
+ * we convert it to a different timezone that always has the same offset,
  * then we check that both dates have the same hour value.
  */
 // We change to
