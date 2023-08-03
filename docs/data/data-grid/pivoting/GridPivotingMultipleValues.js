@@ -3,8 +3,10 @@ import {
   DataGridPremium,
   useGridApiRef,
   unstable_useGridPivoting,
+  Unstable_GridPivotModelEditor as GridPivotModelEditor,
 } from '@mui/x-data-grid-premium';
-import { unstable_useId as useId } from '@mui/utils';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 const initialRows = [
   { id: 1, product: 'Product 1', type: 'Type A', price: 10, quantity: 2 },
@@ -23,30 +25,37 @@ const initialColumns = [
 export default function GridPivotingMultipleValues() {
   const apiRef = useGridApiRef();
 
+  const [pivotModel, setPivotModel] = React.useState({
+    rows: ['type'],
+    columns: ['product'],
+    values: [
+      { field: 'price', aggFunc: 'sum' },
+      { field: 'quantity', aggFunc: 'avg' },
+    ],
+  });
+
   const { isPivot, setIsPivot, props } = unstable_useGridPivoting({
     rows: initialRows,
     columns: initialColumns,
-    pivotModel: {
-      rows: ['type'],
-      columns: ['product'],
-      values: [
-        { field: 'price', aggFunc: 'sum' },
-        { field: 'quantity', aggFunc: 'avg' },
-      ],
-    },
+    pivotModel,
   });
-
-  const inputId = useId();
 
   return (
     <div style={{ width: '100%' }}>
-      <input
-        id={inputId}
-        type="checkbox"
-        checked={isPivot}
-        onChange={(e) => setIsPivot(e.target.checked)}
+      <FormControlLabel
+        control={
+          <Switch checked={isPivot} onChange={(e) => setIsPivot(e.target.checked)} />
+        }
+        label="Pivot"
       />
-      <label htmlFor={inputId}>Pivot</label>
+      {isPivot && (
+        <GridPivotModelEditor
+          columns={initialColumns}
+          pivotModel={pivotModel}
+          onPivotModelChange={setPivotModel}
+        />
+      )}
+
       <div style={{ height: 400, width: '100%' }}>
         <DataGridPremium
           key={isPivot.toString()}

@@ -625,6 +625,7 @@
   { "name": "unstable_gridHeaderFilteringMenuSelector", "kind": "Variable" },
   { "name": "unstable_gridHeaderFilteringStateSelector", "kind": "Variable" },
   { "name": "Unstable_GridPivotModel", "kind": "Interface" },
+  { "name": "Unstable_GridPivotModelEditor", "kind": "Function" },
   { "name": "unstable_gridTabIndexColumnGroupHeaderSelector", "kind": "Variable" },
   { "name": "unstable_gridTabIndexColumnHeaderFilterSelector", "kind": "Variable" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },

@@ -37,3 +37,4 @@ export {
 
 export { useGridPivoting as unstable_useGridPivoting } from './hooks/features/pivoting/useGridPivoting';
 export type { PivotModel as Unstable_GridPivotModel } from './hooks/features/pivoting/useGridPivoting';
+export { default as Unstable_GridPivotModelEditor } from './hooks/features/pivoting/GridPivotModelEditor';
