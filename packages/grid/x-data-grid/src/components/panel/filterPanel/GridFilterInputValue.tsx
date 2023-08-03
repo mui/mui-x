@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
+import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -16,6 +17,8 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
      */
     isFilterActive?: boolean;
   };
+
+type ItemPlusTag = GridFilterItem & { fromInput?: boolean };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
@@ -44,7 +47,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        applyValue({ ...item, value });
+        const newItem = { ...item, value, fromInput: true };
+        applyValue(newItem);
         setIsApplying(false);
       });
     },
@@ -52,13 +56,11 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   );
 
   React.useEffect(() => {
-    const modelItem = rootProps.filterModel?.items.find(
-      (i) => i.id === item.id && i.field === item.field,
-    );
-    if (modelItem) {
-      setFilterValueState(String(modelItem.value ?? ''));
+    const itemPlusTag = item as ItemPlusTag;
+    if (!itemPlusTag.fromInput) {
+      setFilterValueState(String(item.value ?? ''));
     }
-  }, [rootProps.filterModel?.items, item.id, item.field]);
+  }, [item]);
 
   return (
     <rootProps.slots.baseTextField
