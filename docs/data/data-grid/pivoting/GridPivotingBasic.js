@@ -28,7 +28,7 @@ export default function GridPivotingBasic() {
     columns: initialColumns,
     pivotModel: {
       rows: ['type'],
-      columns: ['product'],
+      columns: [],
       values: [{ field: 'price', aggFunc: 'sum' }],
     },
   });
@@ -45,7 +45,12 @@ export default function GridPivotingBasic() {
       />
       <label htmlFor={inputId}>Pivot</label>
       <div style={{ height: 400, width: '100%' }}>
-        <DataGridPremium key={isPivot.toString()} {...props} apiRef={apiRef} />
+        <DataGridPremium
+          key={isPivot.toString()}
+          {...props}
+          apiRef={apiRef}
+          experimentalFeatures={{ columnGrouping: true }}
+        />
       </div>
     </div>
   );

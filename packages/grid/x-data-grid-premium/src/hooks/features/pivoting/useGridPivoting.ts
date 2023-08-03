@@ -34,11 +34,11 @@ const getPivotedData = ({
   columnVisibilityModel: NonNullable<DataGridPremiumProcessedProps['columnVisibilityModel']>;
   columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
 } => {
-  const pivotColumns: Map<string, GridColDef> = new Map();
+  const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
 
   pivotModel.rows.forEach((field) => {
-    pivotColumns.set(field, {
+    pivotColumns.push({
       field,
       groupable: true,
     });
@@ -49,46 +49,41 @@ const getPivotedData = ({
 
   const columnGroupingModel: Map<string, GridColumnGroupingModel[number]> = new Map();
 
-  const newRows: GridRowModel[] = [];
-  rows.forEach((row) => {
-    const newRow = { ...row };
-    if (pivotModel.values.length === 1) {
-      const pivotValue = pivotModel.values[0];
-      pivotModel.columns.forEach((field) => {
-        const colValue = String(getFieldValue(row, field));
-        const mapKey = `${field}-${colValue}`;
-        if (!pivotColumns.has(mapKey)) {
-          pivotColumns.set(mapKey, {
-            field: colValue,
-            aggregable: true,
-            availableAggregationFunctions: [pivotValue.aggFunc],
-          });
-          aggregationModel[colValue] = pivotValue.aggFunc;
-        }
-        delete newRow[field];
-        newRow[colValue] = newRow[pivotValue.field];
+  let newRows: GridRowModel[] = [];
+
+  if (pivotModel.columns.length === 0) {
+    newRows = rows;
+
+    pivotModel.values.forEach((pivotValue) => {
+      pivotColumns.push({
+        field: pivotValue.field,
+        aggregable: true,
+        availableAggregationFunctions: [pivotValue.aggFunc],
       });
-    } else {
+      aggregationModel[pivotValue.field] = pivotValue.aggFunc;
+    });
+  } else {
+    rows.forEach((row) => {
+      const newRow = { ...row };
       pivotModel.columns.forEach((colGroupField) => {
         const colValue = getFieldValue(row, colGroupField);
         const mapKey = `${colGroupField}-${colValue}`;
 
-        if (!pivotColumns.has(mapKey)) {
-          let columnGroup: GridColumnGroupingModel[number];
-          if (!columnGroupingModel.has(mapKey)) {
-            columnGroup = {
-              groupId: mapKey,
-              headerName: String(colValue),
-              children: [],
-            };
+        let columnGroup: GridColumnGroupingModel[number];
 
-            columnGroupingModel.set(mapKey, columnGroup);
-          }
+        if (!columnGroupingModel.has(mapKey)) {
+          columnGroup = {
+            groupId: mapKey,
+            headerName: String(colValue),
+            children: [],
+          };
+
+          columnGroupingModel.set(mapKey, columnGroup);
 
           pivotModel.values.forEach((pivotValue) => {
             const valueField = pivotValue.field;
             const mapValueKey = `${mapKey}-${valueField}`;
-            pivotColumns.set(mapValueKey, {
+            pivotColumns.push({
               field: mapValueKey,
               headerName: String(valueField),
               aggregable: true,
@@ -103,14 +98,14 @@ const getPivotedData = ({
           });
         }
       });
-    }
 
-    newRows.push(newRow);
-  });
+      newRows.push(newRow);
+    });
+  }
 
   return {
     rows: newRows,
-    columns: Array.from(pivotColumns, ([, value]) => value),
+    columns: pivotColumns,
     rowGroupingModel: pivotModel.rows,
     aggregationModel,
     getAggregationPosition: () => 'inline',
