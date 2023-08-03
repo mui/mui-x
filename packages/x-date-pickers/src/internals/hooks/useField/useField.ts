@@ -197,14 +197,14 @@ export const useField = <
     const eventData = (event.nativeEvent as InputEvent).data;
     // Calling `.fill(04/11/2022)` in playwright will trigger a change event with the requested content to insert in `event.nativeEvent.data`
     // usual changes have only the currently typed character in the `event.nativeEvent.data`
-    const useEventData = eventData && eventData.length > 1;
-    const valueStr = useEventData ? eventData : targetValue;
+    const shouldUseEventData = eventData && eventData.length > 1;
+    const valueStr = shouldUseEventData ? eventData : targetValue;
     const cleanValueStr = cleanString(valueStr);
 
     // If no section is selected or eventData should be used, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.
-    if (selectedSectionIndexes == null || useEventData) {
-      updateValueFromValueStr(useEventData ? eventData : cleanValueStr);
+    if (selectedSectionIndexes == null || shouldUseEventData) {
+      updateValueFromValueStr(shouldUseEventData ? eventData : cleanValueStr);
       return;
     }
 
