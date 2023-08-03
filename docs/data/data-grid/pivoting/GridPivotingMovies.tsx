@@ -20,7 +20,7 @@ export default function GridPivotingMovies() {
       columns: ['year'],
       values: [
         { field: 'gross', aggFunc: 'sum' },
-        { field: 'rating', aggFunc: 'avg' },
+        { field: 'imdbRating', aggFunc: 'avg' },
       ],
     },
   });
