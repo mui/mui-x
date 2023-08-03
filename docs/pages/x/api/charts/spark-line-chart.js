@@ -1,7 +1,7 @@
 import * as React from 'react';
-import ApiPage from 'docsx/src/modules/components/ApiPage';
+import ApiPage from 'docs/src/modules/components/ApiPage';
 import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslations';
-import jsonPageContent from './tree-item-content.json';
+import jsonPageContent from './spark-line-chart.json';
 
 export default function Page(props) {
   const { descriptions, pageContent } = props;
@@ -10,9 +10,9 @@ export default function Page(props) {
 
 Page.getInitialProps = () => {
   const req = require.context(
-    'docsx/translations/api-docs/tree-view',
+    'docsx/translations/api-docs/charts',
     false,
-    /\.\/tree-item-content(-[a-z]{2})?\.json$/,
+    /\.\/spark-line-chart(-[a-z]{2})?\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

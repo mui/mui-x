@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "MarkPlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkPlot" },
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",

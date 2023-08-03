@@ -139,10 +139,18 @@ interface AxisScaleConfig {
 
 export type AxisConfig<S extends ScaleName = ScaleName, V = any> = {
   id: string;
-  min?: number;
-  max?: number;
+  min?: number | Date;
+  max?: number | Date;
   data?: V[];
+  /**
+   * The key used to retrieve data from the dataset prop.
+   */
+  dataKey?: string;
   valueFormatter?: (value: V) => string;
+  /**
+   * If `true`, hide this value in the tooltip
+   */
+  hideTooltip?: boolean;
 } & Partial<ChartsXAxisProps | ChartsYAxisProps> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   TickParams;

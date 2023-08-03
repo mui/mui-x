@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "DrawingProvider",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDrawingProvider" },
   "filename": "/packages/x-charts/src/context/DrawingProvider.tsx",

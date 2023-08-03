@@ -13,7 +13,7 @@ import { DateRange } from '../internals/models';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<TDate>(
   inProps: DesktopDateRangePickerProps<TDate>,

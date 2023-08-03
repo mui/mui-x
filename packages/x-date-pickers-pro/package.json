@@ -95,7 +95,7 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.0",
+    "@types/luxon": "^3.3.1",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
     "luxon": "^3.3.0",

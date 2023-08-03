@@ -23,4 +23,5 @@ export default [
   { pathname: '/x/api/charts/scatter', title: 'Scatter' },
   { pathname: '/x/api/charts/scatter-chart', title: 'ScatterChart' },
   { pathname: '/x/api/charts/scatter-plot', title: 'ScatterPlot' },
+  { pathname: '/x/api/charts/spark-line-chart', title: 'SparkLineChart' },
 ] as MuiPage[];

@@ -30,17 +30,17 @@ export interface PickersPopperSlotsComponent {
   DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
-   * @default Grow from @mui/material
+   * @default Grow from '@mui/material'.
    */
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
-   * @default TrapFocus from @mui/material
+   * @default TrapFocus from '@mui/material'.
    */
   DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
-   * @default Popper from @mui/material
+   * @default Popper from '@mui/material'.
    */
   Popper?: React.ElementType<MuiPopperProps>;
 }

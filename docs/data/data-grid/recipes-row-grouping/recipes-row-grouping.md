@@ -1,4 +1,8 @@
-# Data Grid - Row grouping recipes
+---
+title: Data Grid - Row grouping recipes
+---
+
+# Data Grid - Row grouping recipes [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Advanced grid customization recipes.</p>
 

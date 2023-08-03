@@ -17,7 +17,7 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DatePickerToolbar",
   "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",

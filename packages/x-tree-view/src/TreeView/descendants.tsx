@@ -124,14 +124,18 @@ export function useDescendant(descendant: TreeItemDescendant) {
   return { parentId, index };
 }
 
-export function DescendantProvider(props) {
+interface DescendantProviderProps {
+  id?: string;
+  children: React.ReactNode;
+}
+
+export function DescendantProvider(props: DescendantProviderProps) {
   const { children, id } = props;
 
   const [items, set] = React.useState<(TreeItemDescendant & { index: number })[]>([]);
 
   const registerDescendant = React.useCallback(({ element, ...other }: TreeItemDescendant) => {
     set((oldItems) => {
-      let newItems;
       if (oldItems.length === 0) {
         // If there are no items, register at index 0 and bail.
         return [
@@ -144,6 +148,7 @@ export function DescendantProvider(props) {
       }
 
       const index = binaryFindElement(oldItems, element);
+      let newItems: typeof oldItems;
 
       if (oldItems[index] && oldItems[index].element === element) {
         // If the element is already registered, just use the same array
