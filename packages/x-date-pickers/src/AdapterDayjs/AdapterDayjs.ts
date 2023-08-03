@@ -190,7 +190,7 @@ export class AdapterDayjs implements MuiPickersAdapter<Dayjs, string> {
   };
 
   /**
-   * Replaces "default" by undefined and "system" by the system timezone before passing it to `dayjs.
+   * Replaces "default" by undefined and "system" by the system timezone before passing it to `dayjs`.
    */
   private cleanTimezone = (timezone: string) => {
     switch (timezone) {
