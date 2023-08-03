@@ -7,6 +7,7 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Watermark } from '@mui/x-license-pro';
+import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
@@ -16,7 +17,6 @@ import {
   DayCalendarSlotsComponentsProps,
   useDefaultReduceAnimations,
   PickersArrowSwitcher,
-  PickersCalendarHeader,
   useCalendarState,
   useDefaultDates,
   useLocaleText,

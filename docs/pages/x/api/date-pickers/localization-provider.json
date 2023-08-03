@@ -11,7 +11,7 @@
     "dateLibInstance": { "type": { "name": "any" } },
     "localeText": { "type": { "name": "object" } }
   },
-  "slots": {},
+  "slots": [],
   "name": "LocalizationProvider",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
