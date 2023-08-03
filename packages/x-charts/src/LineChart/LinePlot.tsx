@@ -15,7 +15,7 @@ export interface LinePlotSlotComponentProps {
   line?: Partial<LineElementProps>;
 }
 
-export interface LinePlotProps {
+export interface LinePlotProps extends React.SVGAttributes<SVGSVGElement> {
   /**
    * Overridable component slots.
    * @default {}
@@ -44,7 +44,7 @@ function LinePlot(props: LinePlotProps) {
   const Line = slots?.line ?? LineElement;
 
   return (
-    <g>
+    <g {...props}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {

@@ -179,7 +179,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -218,6 +218,12 @@
     },
     {
       "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
+    },
+    {
+      "class": null,
       "name": "day",
       "description": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
       "default": "PickersDay"
@@ -248,13 +254,13 @@
       "class": null,
       "name": "mobilePaper",
       "description": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
-      "default": "Paper from @mui/material"
+      "default": "Paper from '@mui/material'."
     },
     {
       "class": null,
       "name": "mobileTransition",
       "description": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Fade from @mui/material"
+      "default": "Fade from '@mui/material'."
     },
     {
       "class": null,

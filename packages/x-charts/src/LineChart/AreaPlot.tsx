@@ -15,7 +15,7 @@ export interface AreaPlotSlotComponentProps {
   area?: Partial<AreaElementProps>;
 }
 
-export interface AreaPlotProps {
+export interface AreaPlotProps extends React.SVGAttributes<SVGSVGElement> {
   /**
    * Overridable component slots.
    * @default {}
@@ -45,7 +45,7 @@ function AreaPlot(props: AreaPlotProps) {
   const Area = slots?.area ?? AreaElement;
 
   return (
-    <g>
+    <g {...props}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {

@@ -13,7 +13,7 @@ export interface MarkPlotSlotComponentProps {
   mark?: Partial<MarkElementProps>;
 }
 
-export interface MarkPlotProps {
+export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
   /**
    * Overridable component slots.
    * @default {}
@@ -43,7 +43,7 @@ function MarkPlot(props: MarkPlotProps) {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g>
+    <g {...props}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
