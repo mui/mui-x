@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
+  DIALOG_WIDTH,
   extractValidationProps,
   isInternalTimeView,
   PickerViewRendererLookup,
@@ -84,6 +85,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
         ...rendererProps,
         focusedView: null,
         sx: {
+          width: DIALOG_WIDTH,
           [`.${multiSectionDigitalClockSectionClasses.root}`]: {
             flex: 1,
             [`.${multiSectionDigitalClockSectionClasses.item}`]: {
