@@ -61,6 +61,7 @@ export default [
     title: 'MultiSectionDigitalClock',
   },
   { pathname: '/x/api/date-pickers/pickers-action-bar', title: 'PickersActionBar' },
+  { pathname: '/x/api/date-pickers/pickers-calendar-header', title: 'PickersCalendarHeader' },
   { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
   { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
   { pathname: '/x/api/date-pickers/pickers-shortcuts', title: 'PickersShortcuts' },
