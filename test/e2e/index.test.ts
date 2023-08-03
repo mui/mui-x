@@ -455,7 +455,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
           await renderFixture('DatePicker/BasicDesktopDatePicker');
           const input = page.getByRole('textbox');
 
-          await input.focus()
+          await input.focus();
           await input.type('04/11/2022');
 
           expect(await input.inputValue()).to.equal('04/11/2022');
