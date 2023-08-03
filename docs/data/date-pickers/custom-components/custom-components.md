@@ -44,7 +44,7 @@ Remember to pass a reference to the component instead of an inline render functi
 This ensures that the component is not remounted on every update.
 :::
 
-Both slots in the example below are buggy because they will remount after each keystroke, leading to a loss of focus.
+The first two examples below are buggy because the toolbar will remount after each keystroke, leading to a loss of focus.
 
 ```jsx
 // ❌ The `toolbar` slot is re-defined each time the parent component renders,
@@ -73,13 +73,7 @@ function MyApp() {
     [name],
   );
 
-  return (
-    <DatePicker
-      slots={{
-        toolbar: CustomToolbar,
-      }}
-    />
-  );
+  return <DatePicker slots={{ toolbar: CustomToolbar }} />;
 }
 ```
 
@@ -93,9 +87,7 @@ function MyApp() {
   const [name, setName] = React.useState('');
   return (
     <DatePicker
-      slots={{
-        toolbar: CustomToolbar,
-      }}
+      slots={{ toolbar: CustomToolbar }}
       slotProps={{ toolbar: { name, setName } }}
     />
   );
