@@ -229,6 +229,61 @@ function findXDemos(
     });
 }
 
+function getPackages(filename: string): { exportPackage: string; reExportPackages: string[] } {
+  // Data Grid
+  if (filename.includes('packages/grid/x-data-grid-premium')) {
+    return { exportPackage: 'x-data-grid-premium', reExportPackages: ['x-data-grid-premium'] };
+  }
+  if (filename.includes('packages/grid/x-data-grid-pro')) {
+    return {
+      exportPackage: 'x-data-grid-pro',
+      reExportPackages: ['x-data-grid-pro', 'x-data-grid-premium'],
+    };
+  }
+  if (filename.includes('packages/grid/x-data-grid')) {
+    return {
+      exportPackage: 'x-data-grid',
+      reExportPackages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'],
+    };
+  }
+  // Pickers
+  if (filename.includes('packages/x-date-pickers-pro')) {
+    return { exportPackage: 'x-date-pickers-pro', reExportPackages: ['x-date-pickers-pro'] };
+  }
+  if (filename.includes('packages/x-date-pickers')) {
+    return {
+      exportPackage: 'x-date-pickers',
+      reExportPackages: ['x-date-pickers', 'x-date-pickers-pro'],
+    };
+  }
+  // Charts
+  if (filename.includes('packages/x-charts-pro')) {
+    return { exportPackage: 'x-charts-pro', reExportPackages: ['x-charts', 'x-charts-pro'] };
+  }
+  if (filename.includes('packages/x-charts')) {
+    return { exportPackage: 'x-charts', reExportPackages: ['x-charts'] };
+  }
+  // Tree View
+  if (filename.includes('packages/x-tree-view-pro')) {
+    return { exportPackage: 'x-tree-view-pro', reExportPackages: ['x-tree-view-pro'] };
+  }
+  if (filename.includes('packages/x-tree-view')) {
+    return { exportPackage: 'x-tree-view', reExportPackages: ['x-tree-view'] };
+  }
+
+  throw new Error(`No package associated to the filename ${filename}`);
+}
+
+function getComponentImports(name: string, filename: string) {
+  const { exportPackage, reExportPackages } = getPackages(filename);
+  return [
+    `import { ${name} } from '@mui/${exportPackage}/${name}';`,
+    ...reExportPackages.map(
+      (reExportPackage) => `import { ${name} } from '@mui/${reExportPackage}';`,
+    ),
+  ];
+}
+
 const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
@@ -244,6 +299,7 @@ const buildComponentDocumentation = async (options: {
   const reactApi = parseComponentSource(src, { filename });
   reactApi.filename = filename; // Some components don't have props
   reactApi.name = path.parse(filename).name;
+  reactApi.imports = getComponentImports(reactApi.name, filename);
   reactApi.EOL = getLineFeed(src);
   reactApi.slots = [];
 
@@ -516,6 +572,7 @@ const buildComponentDocumentation = async (options: {
     ),
     slots: reactApi.slots.sort((slotA, slotB) => (slotA.name > slotB.name ? 1 : -1)),
     name: reactApi.name,
+    import: reactApi.imports,
     styles: {
       classes: reactApi.styles.classes,
       globalClasses: fromPairs(
