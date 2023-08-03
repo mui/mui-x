@@ -8,6 +8,7 @@ import {
 import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';
+import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -82,15 +83,15 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
       const finalProps = {
         ...rendererProps,
         focusedView: null,
-        // sx: {
-        //   borderBottom: 0,
-        //   width: 'auto',
-        //   [`.${multiSectionDigitalClockSectionClasses.root}`]: {
-        //     // subtract time range position controls height with it's border
-        //     maxHeight: VIEW_HEIGHT - 33,
-        //   },
-        //   ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-        // },
+        sx: {
+          [`.${multiSectionDigitalClockSectionClasses.root}`]: {
+            flex: 1,
+            [`.${multiSectionDigitalClockSectionClasses.item}`]: {
+              width: 'auto',
+            },
+          },
+          ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        },
       };
       return isInternalTimeView(popperView) ? (
         <DateTimeRangePickerTimeWrapper
