@@ -436,6 +436,20 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
           await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
           expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
         });
+
+        it('should allow filling in a value and clearing a value', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+          const input = page.getByRole('textbox');
+
+          await input.fill('04/11/2022');
+
+          expect(await input.inputValue()).to.equal('04/11/2022');
+
+          await input.blur();
+          await input.fill('');
+
+          expect(await input.inputValue()).to.equal('MM/DD/YYYY');
+        });
       });
       describe('<MobileDatePicker />', () => {
         it('should allow selecting a value', async () => {
