@@ -31,6 +31,10 @@
   },
   "slots": [],
   "name": "SparkLineChart",
+  "import": [
+    "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
+    "import { SparkLineChart } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiSparkLineChart" },
   "filename": "/packages/x-charts/src/SparkLineChart/SparkLineChart.tsx",
   "demos": "<ul></ul>",
