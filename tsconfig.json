@@ -5,7 +5,7 @@
     // Already tested with eslint
     "noUnusedLocals": false,
     // TODO, turn to true
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "baseUrl": "./",
     "allowJs": true,
     "paths": {
