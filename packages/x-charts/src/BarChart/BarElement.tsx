@@ -92,7 +92,7 @@ export function BarElement(props: BarElementProps) {
     dataIndex,
     classes: innerClasses,
     color,
-    highlightScope,  
+    highlightScope,
     yOrigine,
     x,
     y,
@@ -124,23 +124,20 @@ export function BarElement(props: BarElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  const spring = useSpring(
-    {
-      from: {
-        x,
-        y: yOrigine,
-        height: 0,
-        width,
-      },
-      to: {
-        x,
-        y,
-        height,
-        width,
-      },
+  const spring = useSpring({
+    from: {
+      x,
+      y: yOrigine,
+      height: 0,
+      width,
     },
-    [width, height, x, y],
-  );
+    to: {
+      x,
+      y,
+      height,
+      width,
+    },
+  });
 
   const Bar = slots?.bar ?? BarElementPath;
   const barProps = useSlotProps({
