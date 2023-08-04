@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "types": ["react", "node"],
     "incremental": true,
-    "noImplicitAny": true
+    "strict": true
   },
   "include": [
     "pages/**/*.ts*",

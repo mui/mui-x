@@ -2,7 +2,7 @@
   "extends": "../../tsconfig",
   "compilerOptions": {
     "types": ["react", "mocha", "node"],
-    "noImplicitAny": true
+    "strict": true
   },
   "include": [
     "src/**/*",
