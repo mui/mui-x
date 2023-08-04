@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { BarPlot } from './BarPlot';
+import { BarPlot, BarPlotSlotComponentProps, BarPlotSlotsComponent } from './BarPlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -11,17 +11,42 @@ import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotsComponent,
+  ChartsLegendSlotComponentProps,
+} from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
+import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+
+export interface BarChartSlotsComponent
+  extends ChartsAxisSlotsComponent,
+    BarPlotSlotsComponent,
+    ChartsLegendSlotsComponent {}
+export interface BarChartSlotComponentProps
+  extends ChartsAxisSlotComponentProps,
+    BarPlotSlotComponentProps,
+    ChartsLegendSlotComponentProps {}
 
 export interface BarChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    ChartsAxisProps {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<BarSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarChartSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarChartSlotComponentProps;
 }
 
 const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
@@ -43,6 +68,8 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     rightAxis,
     bottomAxis,
     children,
+    slots,
+    slotProps,
   } = props;
 
   const id = useId();
@@ -76,17 +103,19 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <BarPlot />
+        <BarPlot slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
         leftAxis={leftAxis}
         rightAxis={rightAxis}
         bottomAxis={bottomAxis}
+        slots={slots}
+        slotProps={slotProps}
       />
-      <ChartsLegend {...legend} />
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight x="band" {...axisHighlight} />
-      <ChartsTooltip {...tooltip} />
+      <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
       <ChartsClipPath id={clipPathId} />
       {children}
     </ResponsiveChartContainer>
@@ -117,6 +146,8 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -148,6 +179,8 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -168,6 +201,8 @@ BarChart.propTypes = {
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     spacing: PropTypes.number,
   }),
   margin: PropTypes.shape({
@@ -191,6 +226,8 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -224,6 +261,16 @@ BarChart.propTypes = {
       yAxisKey: PropTypes.string,
     }),
   ).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -251,6 +298,8 @@ BarChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -283,6 +332,8 @@ BarChart.propTypes = {
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -309,6 +360,8 @@ BarChart.propTypes = {
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

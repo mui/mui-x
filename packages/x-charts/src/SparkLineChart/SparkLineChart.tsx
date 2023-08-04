@@ -13,6 +13,10 @@ import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHigh
 import { AxisConfig } from '../models/axis';
 import { MakeOptional } from '../models/helpers';
 import { LineSeriesType } from '../models/seriesType/line';
+import { AreaPlotSlotsComponent, AreaPlotSlotComponentProps } from '../LineChart/AreaPlot';
+import { LinePlotSlotsComponent, LinePlotSlotComponentProps } from '../LineChart/LinePlot';
+import { MarkPlotSlotsComponent, MarkPlotSlotComponentProps } from '../LineChart/MarkPlot';
+import { BarPlotSlotsComponent, BarPlotSlotComponentProps } from '../BarChart/BarPlot';
 
 const SparkLineMarkPlot = styled(MarkPlot)({
   [`& .${markElementClasses.root}`]: {
@@ -20,6 +24,17 @@ const SparkLineMarkPlot = styled(MarkPlot)({
     [`&.${markElementClasses.highlighted}`]: { display: 'inherit' },
   },
 });
+
+export interface SparkLineChartSlotsComponent
+  extends AreaPlotSlotsComponent,
+    LinePlotSlotsComponent,
+    MarkPlotSlotsComponent,
+    BarPlotSlotsComponent {}
+export interface SparkLineChartSlotComponentProps
+  extends AreaPlotSlotComponentProps,
+    LinePlotSlotComponentProps,
+    MarkPlotSlotComponentProps,
+    BarPlotSlotComponentProps {}
 
 export interface SparkLineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series' | 'xAxis' | 'yAxis'> {
@@ -67,6 +82,16 @@ export interface SparkLineChartProps
    * @default 'linear'
    */
   curve?: LineSeriesType['curve'];
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: SparkLineChartSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: SparkLineChartSlotComponentProps;
 }
 
 const SPARKLINE_DEFAULT_MARGIN = {
@@ -89,6 +114,8 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     showHighlight,
     axisHighlight: inAxisHighlight,
     children,
+    slots,
+    slotProps,
     data,
     plotType = 'line',
     valueFormatter = (v: number) => v.toString(),
@@ -129,11 +156,11 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
         axisHighlight?.y === 'none'
       }
     >
-      {plotType === 'bar' && <BarPlot />}
+      {plotType === 'bar' && <BarPlot slots={slots} slotProps={slotProps} />}
       {plotType === 'line' && (
         <React.Fragment>
-          <AreaPlot />
-          <LinePlot />
+          <AreaPlot slots={slots} slotProps={slotProps} />
+          <LinePlot slots={slots} slotProps={slotProps} />
           {showHighlight && <SparkLineMarkPlot />}
         </React.Fragment>
       )}
@@ -211,6 +238,16 @@ SparkLineChart.propTypes = {
    * @default false
    */
   showTooltip: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -258,6 +295,8 @@ SparkLineChart.propTypes = {
     minTicks: PropTypes.number,
     position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
     scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     stroke: PropTypes.string,
     tickFontSize: PropTypes.number,
     tickSize: PropTypes.number,

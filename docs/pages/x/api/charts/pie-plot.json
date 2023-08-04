@@ -1,5 +1,8 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
   "slots": [],
   "name": "PiePlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiPiePlot" },
