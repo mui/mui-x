@@ -1,3 +1,8 @@
+/*
+ * NOTE: This test requires that a CSP preventing `eval()` be present to be useful.
+ * See ../template.html for the CSP meta tag.
+ */
+
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 

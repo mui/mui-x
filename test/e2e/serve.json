@@ -1,15 +1,4 @@
 {
   "public": "build",
-  "headers": [
-    {
-      "source": "**",
-      "headers": [
-        {
-          "key": "content-security-policy",
-          "value": "default-src none"
-        }
-      ]
-    }
-  ],
   "rewrites": [{ "source": "**", "destination": "index.html" }]
 }
