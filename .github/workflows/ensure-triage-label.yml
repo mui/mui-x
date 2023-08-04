@@ -1,4 +1,4 @@
-name: Ensure triage label
+name: Ensure triage label is present
 on:
   issues:
     types:
