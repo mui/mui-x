@@ -199,7 +199,7 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
 
       const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
       const niceDomain = niceScale.domain();
@@ -254,7 +254,7 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
 
       const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
       const niceDomain = niceScale.domain();

@@ -2,21 +2,40 @@ import * as React from 'react';
 import { D3Scale } from '../models/axis';
 import { isBandScale } from '../internals/isBandScale';
 
-export type TickParams = {
-  maxTicks?: number;
-  minTicks?: number;
-  tickSpacing?: number;
-};
+export interface TickParams {
+  /**
+   * Maximal step between two ticks. For time axis, value should be provided in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMaxStep?: number;
+  /**
+   * Maximal step between two ticks. For time axis, value should be provided in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMinStep?: number;
+  /**
+   * The number of ticks. This number is not guaranted.
+   * Not supported by categorical axis (band, points).
+   */
+  tickNumber?: number;
+}
 
 export function getTicksNumber(
   params: TickParams & {
     range: any[];
+    domain: any[];
   },
 ) {
-  const { maxTicks = 999, minTicks = 2, tickSpacing = 50, range } = params;
+  const { tickMaxStep, tickMinStep, tickNumber, range, domain } = params;
 
-  const estimatedTickNumber = Math.floor(Math.abs(range[1] - range[0]) / tickSpacing);
-  return Math.min(maxTicks, Math.max(minTicks, estimatedTickNumber));
+  const maxTicks =
+    tickMinStep !== undefined ? Math.floor(Math.abs(domain[1] - domain[0]) / tickMinStep) : 999;
+  const minTicks =
+    tickMaxStep !== undefined ? Math.ceil(Math.abs(domain[1] - domain[0]) / tickMaxStep) : 2;
+
+  const defaultizedTickNumber = tickNumber ?? Math.round(Math.abs(range[1] - range[0]) / 50);
+
+  return Math.min(maxTicks, Math.max(minTicks, defaultizedTickNumber));
 }
 
 function useTicks(options: {
