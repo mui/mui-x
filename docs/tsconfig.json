@@ -8,8 +8,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "types": ["react", "node"],
-    "incremental": true,
-    "strict": true
+    "incremental": true
   },
   "include": [
     "pages/**/*.ts*",
