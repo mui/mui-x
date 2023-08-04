@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { BaseClockProps } from '@mui/x-date-pickers/internals/models/props/clock';
 import {
@@ -43,18 +44,6 @@ const DateTimeRangePickerTimeWrapperRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })({});
-
-const DateTimeRangePickerTimeWrapperContainer = styled('div', {
-  name: 'DateTimeRangePickerTimeWrapper',
-  slot: 'Container',
-  overridesResolver: (_, styles) => styles.root,
-})({
-  display: 'flex',
-  flexDirection: 'row',
-  padding: '0 6px',
-  justifyContent: 'space-between',
-  height: 32,
-});
 
 const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePickerTimeWrapper<
   TDate extends unknown,
@@ -108,26 +97,15 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
 
   return (
     <DateTimeRangePickerTimeWrapperRoot ref={ref}>
-      <DateTimeRangePickerTimeWrapperContainer>
-        <Button
-          variant="text"
-          color={rangePosition === 'start' ? 'primary' : 'inherit'}
-          onClick={() => onRangePositionChange('start')}
-          size="small"
-          sx={{ minWidth: 0 }}
-        >
-          Start
-        </Button>
-        <Button
-          variant="text"
-          color={rangePosition === 'end' ? 'primary' : 'inherit'}
-          onClick={() => onRangePositionChange('end')}
-          size="small"
-          sx={{ minWidth: 0 }}
-        >
-          End
-        </Button>
-      </DateTimeRangePickerTimeWrapperContainer>
+      <Tabs
+        value={rangePosition}
+        onChange={(_, rangeValue) => onRangePositionChange(rangeValue)}
+        variant="fullWidth"
+        aria-label="time range position selection"
+      >
+        <Tab value="start" label="Start" sx={{ minWidth: 0 }} />
+        <Tab value="end" label="End" sx={{ minWidth: 0 }} />
+      </Tabs>
       <Divider />
       {viewRenderer({
         ...other,
