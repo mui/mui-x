@@ -29,11 +29,11 @@ export function getTicksNumber(
   const { tickMaxStep, tickMinStep, tickNumber, range, domain } = params;
 
   const maxTicks =
-    tickMinStep !== undefined ? Math.floor(Math.abs(domain[1] - domain[0]) / tickMinStep) : 999;
+    tickMinStep === undefined ? 999 : Math.floor(Math.abs(domain[1] - domain[0]) / tickMinStep);
   const minTicks =
-    tickMaxStep !== undefined ? Math.ceil(Math.abs(domain[1] - domain[0]) / tickMaxStep) : 2;
+    tickMaxStep === undefined ? 2 : Math.ceil(Math.abs(domain[1] - domain[0]) / tickMaxStep);
 
-  const defaultizedTickNumber = tickNumber ?? Math.round(Math.abs(range[1] - range[0]) / 50);
+  const defaultizedTickNumber = tickNumber ?? Math.floor(Math.abs(range[1] - range[0]) / 50);
 
   return Math.min(maxTicks, Math.max(minTicks, defaultizedTickNumber));
 }

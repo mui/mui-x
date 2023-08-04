@@ -47,10 +47,11 @@ export default function TickNumber() {
             ...xAxisCommon,
             tickMinStep: 3600 * 1000 * 24, // min step: 24h
           },
-          { ...xAxisCommon,
-             id: 'half days', 
-             tickMinStep: 3600 * 1000 * 12 // min step: 12hu
-            },
+          {
+            ...xAxisCommon,
+            id: 'half days',
+            tickMinStep: 3600 * 1000 * 12, // min step: 12hu
+          },
         ]}
         {...config}
       />
