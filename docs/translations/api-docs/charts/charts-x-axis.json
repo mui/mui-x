@@ -57,6 +57,21 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "tickMaxStep": {
+      "description": "Maximal step between two ticks. For time axis, value should be provided in ms. Not supported by categorical axis (band, points).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickMinStep": {
+      "description": "Maximal step between two ticks. For time axis, value should be provided in ms. Not supported by categorical axis (band, points).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickNumber": {
+      "description": "The number of ticks. This number is not guaranted. Not supported by categorical axis (band, points).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "tickSize": {
       "description": "The size of the ticks.",
       "deprecated": "",
