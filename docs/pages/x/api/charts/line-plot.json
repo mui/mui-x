@@ -1,5 +1,8 @@
 {
-  "props": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
   "slots": [],
   "name": "LinePlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },

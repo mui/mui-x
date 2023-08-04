@@ -37,6 +37,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "stroke": {
       "description": "The stroke color of the axis line.",
       "deprecated": "",
