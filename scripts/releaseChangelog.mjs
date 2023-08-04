@@ -136,6 +136,7 @@ async function main(argv) {
   const pickersCommits = [];
   const pickersProCommits = [];
   const chartsCommits = [];
+  const treeViewCommits = [];
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -167,6 +168,9 @@ async function main(argv) {
         break;
       case 'charts':
         chartsCommits.push(commitItem);
+        break;
+      case 'TreeView':
+        treeViewCommits.push(commitItem);
         break;
       case 'docs':
         docsCommits.push(commitItem);
@@ -258,6 +262,10 @@ ${logChangelogSection(pickersProCommits)}
 ### Charts / \`@mui/x-charts@v__CHARTS_VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
+
+### Tree View / \`@mui/x-tree-view@v__TREE_VIEW_VERSION__\`
+
+${logChangelogSection(treeViewCommits)}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@v__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}

@@ -1,29 +1,58 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import PropTypes from 'prop-types';
-import { AreaPlot } from './AreaPlot';
-import { LinePlot } from './LinePlot';
+import { AreaPlot, AreaPlotSlotComponentProps, AreaPlotSlotsComponent } from './AreaPlot';
+import { LinePlot, LinePlotSlotComponentProps, LinePlotSlotsComponent } from './LinePlot';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
 } from '../ResponsiveChartContainer';
-import { MarkPlot } from './MarkPlot';
+import { MarkPlot, MarkPlotSlotComponentProps, MarkPlotSlotsComponent } from './MarkPlot';
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { LineSeriesType } from '../models/seriesType/line';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotComponentProps,
+  ChartsLegendSlotsComponent,
+} from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
+import { ChartsAxisSlotComponentProps, ChartsAxisSlotsComponent } from '../models/axis';
+
+export interface LineChartSlotsComponent
+  extends ChartsAxisSlotsComponent,
+    AreaPlotSlotsComponent,
+    LinePlotSlotsComponent,
+    MarkPlotSlotsComponent,
+    ChartsLegendSlotsComponent {}
+export interface LineChartSlotComponentProps
+  extends ChartsAxisSlotComponentProps,
+    AreaPlotSlotComponentProps,
+    LinePlotSlotComponentProps,
+    MarkPlotSlotComponentProps,
+    ChartsLegendSlotComponentProps {}
 
 export interface LineChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    ChartsAxisProps {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<LineSeriesType, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: LineChartSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: LineChartSlotComponentProps;
 }
 const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref) {
   const {
@@ -34,6 +63,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     height,
     margin,
     colors,
+    dataset,
     sx,
     tooltip,
     axisHighlight = { x: 'line' },
@@ -43,6 +73,8 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     rightAxis,
     bottomAxis,
     children,
+    slots,
+    slotProps,
   } = props;
 
   const id = useId();
@@ -61,7 +93,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
             id: DEFAULT_X_AXIS_KEY,
             scaleType: 'point',
             data: Array.from(
-              { length: Math.max(...series.map((s) => s.data.length)) },
+              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
               (_, index) => index,
             ),
           },
@@ -69,23 +101,26 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
       }
       yAxis={yAxis}
       colors={colors}
+      dataset={dataset}
       sx={sx}
       disableAxisListener={
         tooltip?.trigger !== 'axis' && axisHighlight?.x === 'none' && axisHighlight?.y === 'none'
       }
     >
       <g clipPath={`url(#${clipPathId})`}>
-        <AreaPlot />
-        <LinePlot />
+        <AreaPlot slots={slots} slotProps={slotProps} />
+        <LinePlot slots={slots} slotProps={slotProps} />
       </g>
       <ChartsAxis
         topAxis={topAxis}
         leftAxis={leftAxis}
         rightAxis={rightAxis}
         bottomAxis={bottomAxis}
+        slots={slots}
+        slotProps={slotProps}
       />
-      <MarkPlot />
-      <ChartsLegend {...legend} />
+      <MarkPlot slots={slots} slotProps={slotProps} />
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />
@@ -118,6 +153,8 @@ LineChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -130,6 +167,7 @@ LineChart.propTypes = {
    * Color palette used to colorize multiple series.
    */
   colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
@@ -148,6 +186,8 @@ LineChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -168,6 +208,8 @@ LineChart.propTypes = {
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     spacing: PropTypes.number,
   }),
   margin: PropTypes.shape({
@@ -191,6 +233,8 @@ LineChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -211,7 +255,8 @@ LineChart.propTypes = {
         'stepAfter',
         'stepBefore',
       ]),
-      data: PropTypes.arrayOf(PropTypes.number).isRequired,
+      data: PropTypes.arrayOf(PropTypes.number),
+      dataKey: PropTypes.string,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
@@ -234,6 +279,16 @@ LineChart.propTypes = {
       yAxisKey: PropTypes.string,
     }),
   ).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -261,6 +316,8 @@ LineChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -279,18 +336,22 @@ LineChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -303,18 +364,22 @@ LineChart.propTypes = {
       axisId: PropTypes.string,
       classes: PropTypes.object,
       data: PropTypes.array,
+      dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       fill: PropTypes.string,
+      hideTooltip: PropTypes.bool,
       id: PropTypes.string,
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
-      max: PropTypes.number,
+      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       maxTicks: PropTypes.number,
-      min: PropTypes.number,
+      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,

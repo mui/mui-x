@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "CartesianContextProvider",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiCartesianContextProvider" },
   "filename": "/packages/x-charts/src/context/CartesianContextProvider.tsx",

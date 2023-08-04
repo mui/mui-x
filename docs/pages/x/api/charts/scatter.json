@@ -1,6 +1,6 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "Scatter",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatter" },
   "filename": "/packages/x-charts/src/ScatterChart/Scatter.tsx",

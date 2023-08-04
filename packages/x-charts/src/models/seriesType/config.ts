@@ -74,8 +74,13 @@ export type FormatterResult<T extends ChartSeriesType> = {
   ? { stackingGroups: StackingGroupsType }
   : {});
 
+export type DatasetType<T extends number | string | Date = number | string | Date> = {
+  [key: string]: T;
+}[];
+
 export type Formatter<T extends ChartSeriesType> = (
   params: FormatterParams<T>,
+  dataset?: DatasetType<number>,
 ) => FormatterResult<T>;
 
 export type LegendParams = {

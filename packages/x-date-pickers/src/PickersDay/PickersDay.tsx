@@ -223,7 +223,7 @@ const noop = () => {};
 
 type PickersDayComponent = (<TDate>(
   props: PickersDayProps<TDate> & React.RefAttributes<HTMLButtonElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   inProps: PickersDayProps<TDate>,
