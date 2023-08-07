@@ -45,7 +45,7 @@
     "@mui/utils": "^5.14.3",
     "@mui/x-date-pickers": "6.11.0",
     "@mui/x-license-pro": "6.10.2",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5"
   },

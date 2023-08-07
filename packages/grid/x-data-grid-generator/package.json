@@ -34,7 +34,7 @@
     "@mui/base": "^5.0.0-beta.9",
     "@mui/x-data-grid-premium": "6.11.0",
     "chance": "^1.1.11",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "lru-cache": "^7.18.3"
   },
   "devDependencies": {
