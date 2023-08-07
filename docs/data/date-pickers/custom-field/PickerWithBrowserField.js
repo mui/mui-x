@@ -63,6 +63,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     inputRef: externalInputRef,
   });
 
+  /* If you don't need a clear button, you can skip the use of this hook */
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
     useClearableField({
       onClear,
@@ -193,6 +194,8 @@ function BrowserDateField(props) {
     props: textFieldProps,
     inputRef: externalInputRef,
   });
+
+  /* If you don't need a clear button, you can skip the use of this hook */
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
     useClearableField({
       onClear,

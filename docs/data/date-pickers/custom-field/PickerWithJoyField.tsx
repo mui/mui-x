@@ -153,6 +153,7 @@ const JoySingleInputDateRangeField = React.forwardRef(
       inputRef: externalInputRef,
     });
 
+    /* If you don't need a clear button, you can skip the use of this hook */
     const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
       useClearableField<
         {},
@@ -344,6 +345,8 @@ function JoyDateField(props: JoyDateFieldProps) {
     props: textFieldProps,
     inputRef: externalInputRef,
   });
+
+  /* If you don't need a clear button, you can skip the use of this hook */
   const { InputProps: ProcessedInputProps, fieldProps: processedFieldProps } =
     useClearableField<
       {},
