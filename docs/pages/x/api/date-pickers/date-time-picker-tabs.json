@@ -12,7 +12,7 @@
       },
       "required": true
     },
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "dateIcon": { "type": { "name": "node" }, "default": "DateRange" },
     "hidden": {
       "type": { "name": "bool" },
@@ -20,7 +20,7 @@
     },
     "timeIcon": { "type": { "name": "node" }, "default": "Time" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DateTimePickerTabs",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",

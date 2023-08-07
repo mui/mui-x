@@ -30,7 +30,7 @@ export const AxisRoot = styled('g', {
   },
 });
 
-export const Line = styled('line', {
+export const ChartsLine = styled('line', {
   name: 'MuiChartsAxis',
   slot: 'Line',
   overridesResolver: (props, styles) => styles.line,
@@ -40,7 +40,7 @@ export const Line = styled('line', {
   strokeWidth: 1,
 }));
 
-export const Tick = styled('line', {
+export const ChartsTick = styled('line', {
   name: 'MuiChartsAxis',
   slot: 'Tick',
   overridesResolver: (props, styles) => styles.tick,
@@ -49,7 +49,7 @@ export const Tick = styled('line', {
   shapeRendering: 'crispEdges',
 }));
 
-export const TickLabel = styled('text', {
+export const ChartsTickLabel = styled('text', {
   name: 'MuiChartsAxis',
   slot: 'TickLabel',
   overridesResolver: (props, styles) => styles.tickLabel,
@@ -58,7 +58,7 @@ export const TickLabel = styled('text', {
   fill: theme.palette.text.primary,
 }));
 
-export const Label = styled('text', {
+export const ChartsLabel = styled('text', {
   name: 'MuiChartsAxis',
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,

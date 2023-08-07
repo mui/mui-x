@@ -17,7 +17,6 @@ import {
   PickerPopperProps,
   PickersToolbarButtonProps,
   PickersToolbarProps,
-  ExportedCalendarHeaderProps,
   ExportedPickersToolbarTextProps,
 } from '../internals';
 import { DateOrTimeView } from '../models';
@@ -45,6 +44,7 @@ import {
   ExportedMultiSectionDigitalClockSectionProps,
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
+import { ExportedPickersCalendarHeaderProps } from '../PickersCalendarHeader';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps<unknown>;
@@ -63,7 +63,7 @@ export interface PickersComponentsPropsList {
   MuiMultiSectionDigitalClock: MultiSectionDigitalClockProps<unknown>;
   MuiMultiSectionDigitalClockSection: ExportedMultiSectionDigitalClockSectionProps;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
-  MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
+  MuiPickersCalendarHeader: ExportedPickersCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersMonth: ExportedPickersMonthProps;

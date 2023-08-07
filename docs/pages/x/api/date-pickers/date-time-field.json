@@ -145,7 +145,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -163,10 +163,20 @@
       "default": "'outlined'"
     }
   },
-  "slots": {
-    "clearIcon": { "default": "ClearIcon", "type": { "name": "elementType" } },
-    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
-  },
+  "slots": [
+    {
+      "class": null,
+      "name": "clearIcon",
+      "description": "Icon to display inside the clear button.",
+      "default": "ClearIcon"
+    },
+    {
+      "class": null,
+      "name": "textField",
+      "description": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "default": "TextField from '@mui/material'"
+    }
+  ],
   "name": "DateTimeField",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimeField" },
   "spread": true,

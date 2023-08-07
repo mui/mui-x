@@ -172,6 +172,7 @@ MultiInputDateRangeField.propTypes = {
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * Overridable components.
    * @default {}

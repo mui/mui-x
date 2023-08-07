@@ -1,12 +1,27 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { area as d3Area } from 'd3-shape';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { AreaElement } from './AreaElement';
+import { AreaElement, AreaElementProps } from './AreaElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import getCurveFactory from '../internals/getCurve';
 
-export function AreaPlot() {
+export interface AreaPlotSlotsComponent {
+  area?: React.JSXElementConstructor<AreaElementProps>;
+}
+
+export interface AreaPlotSlotComponentProps {
+  area?: Partial<AreaElementProps>;
+}
+
+export interface AreaPlotProps
+  extends React.SVGAttributes<SVGSVGElement>,
+    Pick<AreaElementProps, 'slots' | 'slotProps'> {}
+
+function AreaPlot(props: AreaPlotProps) {
+  const { slots, slotProps, ...other } = props;
+
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
 
@@ -19,7 +34,7 @@ export function AreaPlot() {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g>
+    <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
@@ -57,6 +72,8 @@ export function AreaPlot() {
                 d={areaPath.curve(curve)(d3Data) || undefined}
                 color={series[seriesId].color}
                 highlightScope={series[seriesId].highlightScope}
+                slots={slots}
+                slotProps={slotProps}
               />
             )
           );
@@ -65,3 +82,22 @@ export function AreaPlot() {
     </g>
   );
 }
+
+AreaPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { AreaPlot };

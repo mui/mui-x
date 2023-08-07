@@ -110,6 +110,7 @@ SingleInputTimeRangeField.propTypes = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
+  component: PropTypes.elementType,
   /**
    * Overridable components.
    * @default {}
