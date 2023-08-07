@@ -57,7 +57,7 @@ export default function AxisWithComposition() {
         <LinePlot />
         <ChartsXAxis axisId="quarters" label="2021 quarters" labelFontSize={18} />
         <ChartsYAxis axisId="quantities" label="# units sold" />
-        <ChartsYAxis axisId="money" position="right" label="revenu" />
+        <ChartsYAxis axisId="money" position="right" label="revenue" />
       </ResponsiveChartContainer>
     </Box>
   );

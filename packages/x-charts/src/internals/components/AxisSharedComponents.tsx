@@ -7,24 +7,24 @@ export const AxisRoot = styled('g', {
   overridesResolver: (props, styles) => styles.root,
 })({
   [`&.${axisClasses.directionY}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'middle' },
-    [`.${axisClasses.label}`]: { alignmentBaseline: 'baseline', textAnchor: 'middle' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'middle' },
+    [`.${axisClasses.label}`]: { dominantBaseline: 'auto', textAnchor: 'middle' },
   },
   [`&.${axisClasses.left}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'end' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'central', textAnchor: 'end' },
   },
   [`&.${axisClasses.right}`]: {
-    [`.${axisClasses.tickLabel}`]: { alignmentBaseline: 'central', textAnchor: 'start' },
+    [`.${axisClasses.tickLabel}`]: { dominantBaseline: 'central', textAnchor: 'start' },
   },
   [`&.${axisClasses.bottom}`]: {
     [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
-      alignmentBaseline: 'hanging',
+      dominantBaseline: 'hanging',
       textAnchor: 'middle',
     },
   },
   [`&.${axisClasses.top}`]: {
     [`.${axisClasses.tickLabel}, .${axisClasses.label}`]: {
-      alignmentBaseline: 'baseline',
+      dominantBaseline: 'baseline',
       textAnchor: 'middle',
     },
   },
