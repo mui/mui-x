@@ -171,7 +171,7 @@ export const ChartsLegendLabel = styled('text', {
       calc(0.5 * var(--ChartsLegend-itemMarkSize))
       )`,
   fill: theme.palette.text.primary,
-  alignmentBaseline: 'central',
+  dominantBaseline: 'central',
 }));
 
 const defaultProps = {
