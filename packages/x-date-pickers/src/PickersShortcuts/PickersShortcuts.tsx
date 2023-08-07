@@ -94,6 +94,7 @@ PickersShortcuts.propTypes = {
    */
   changeImportance: PropTypes.oneOf(['accept', 'set']),
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * If `true`, compact vertical padding designed for keyboard and mouse input is used for
    * the list and list items.
