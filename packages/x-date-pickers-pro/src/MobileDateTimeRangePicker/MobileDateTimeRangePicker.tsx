@@ -66,6 +66,7 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
       }),
       toolbar: {
         hidden: false,
+        toolbarVariant: 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {

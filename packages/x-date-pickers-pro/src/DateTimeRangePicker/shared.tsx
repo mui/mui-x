@@ -126,6 +126,7 @@ export function useDateTimeRangePickerDefaultizedProps<
   }, [themeProps.localeText]);
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const slotProps = themeProps.slotProps ?? componentsProps;
 
   return {
     ...themeProps,
@@ -147,6 +148,12 @@ export function useDateTimeRangePickerDefaultizedProps<
       toolbar: DateTimeRangePickerToolbar,
       ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
     },
-    slotProps: themeProps.slotProps ?? componentsProps,
+    slotProps: {
+      ...slotProps,
+      toolbar: {
+        ...slotProps?.toolbar,
+        ampm,
+      },
+    },
   };
 }
