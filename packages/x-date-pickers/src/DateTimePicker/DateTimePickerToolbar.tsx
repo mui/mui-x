@@ -30,6 +30,7 @@ export interface DateTimePickerToolbarProps<TDate>
   classes?: Partial<DateTimePickerToolbarClasses>;
   toolbarVariant?: WrapperVariant;
   markSelected?: boolean;
+  toolbarTitle: React.ReactNode;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
@@ -202,6 +203,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
     readOnly,
     toolbarVariant = 'mobile',
     markSelected = true,
+    toolbarTitle: inToolbarTitle,
     ...other
   } = props;
   const ownerState = props;
@@ -214,6 +216,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
   const localeText = useLocaleText<TDate>();
   const theme = useTheme();
   const classes = useUtilityClasses({ ...ownerState, theme });
+  const toolbarTitle = inToolbarTitle ?? localeText.dateTimePickerToolbarTitle;
 
   const formatHours = (time: TDate) =>
     ampm ? utils.format(time, 'hours12h') : utils.format(time, 'hours24h');
@@ -232,9 +235,9 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
 
   return (
     <DateTimePickerToolbarRoot
-      toolbarTitle={localeText.dateTimePickerToolbarTitle}
       isLandscape={isLandscape}
       className={classes.root}
+      toolbarTitle={toolbarTitle}
       {...other}
       ownerState={ownerState}
     >
