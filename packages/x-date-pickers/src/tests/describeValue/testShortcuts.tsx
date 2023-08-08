@@ -2,9 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers/assertions';
-import { userEvent } from '@mui/monorepo/test/utils';
-import { chipClasses } from '@mui/material/Chip';
-import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
+import { userEvent, screen } from '@mui/monorepo/test/utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTest, options) => {
@@ -49,9 +47,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
         />,
       );
 
-      const shortcut = document.querySelector(
-        `.${pickersLayoutClasses.shortcuts} .${chipClasses.root}`,
-      )!;
+      const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
       userEvent.mousePress(shortcut);
 
       expect(onChange.callCount).to.equal(1);
@@ -88,9 +84,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
         />,
       );
 
-      const shortcut = document.querySelector(
-        `.${pickersLayoutClasses.shortcuts} .${chipClasses.root}`,
-      )!;
+      const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
       userEvent.mousePress(shortcut);
 
       expect(onChange.callCount).to.equal(1);
@@ -127,9 +121,7 @@ export const testShortcuts: DescribeValueTestSuite<any, 'picker'> = (ElementToTe
         />,
       );
 
-      const shortcut = document.querySelector(
-        `.${pickersLayoutClasses.shortcuts} .${chipClasses.root}`,
-      )!;
+      const shortcut = screen.getByRole('button', { name: 'Test shortcut' });
       userEvent.mousePress(shortcut);
 
       expect(onChange.callCount).to.equal(1);
