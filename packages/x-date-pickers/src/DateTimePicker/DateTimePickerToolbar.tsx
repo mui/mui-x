@@ -29,6 +29,7 @@ export interface DateTimePickerToolbarProps<TDate>
    */
   classes?: Partial<DateTimePickerToolbarClasses>;
   toolbarVariant?: WrapperVariant;
+  markSelected?: boolean;
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
@@ -200,6 +201,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
     disabled,
     readOnly,
     toolbarVariant = 'mobile',
+    markSelected = true,
     ...other
   } = props;
   const ownerState = props;
@@ -243,7 +245,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             variant="subtitle1"
             data-mui-test="datetimepicker-toolbar-year"
             onClick={() => onViewChange('year')}
-            selected={view === 'year'}
+            selected={markSelected && view === 'year'}
             value={value ? utils.format(value, 'year') : '–'}
           />
         )}
@@ -254,7 +256,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             variant={isDesktop ? 'h5' : 'h4'}
             data-mui-test="datetimepicker-toolbar-day"
             onClick={() => onViewChange('day')}
-            selected={view === 'day'}
+            selected={markSelected && view === 'day'}
             value={dateText}
           />
         )}
@@ -270,7 +272,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
               data-mui-test="hours"
               onClick={() => onViewChange('hours')}
-              selected={view === 'hours'}
+              selected={markSelected && view === 'hours'}
               value={value ? formatHours(value) : '--'}
             />
           )}
@@ -288,7 +290,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="minutes"
                 onClick={() => onViewChange('minutes')}
-                selected={view === 'minutes'}
+                selected={markSelected && view === 'minutes'}
                 value={value ? utils.format(value, 'minutes') : '--'}
               />
             </React.Fragment>
@@ -307,7 +309,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
                 width={isDesktop && !isLandscape ? MULTI_SECTION_CLOCK_SECTION_WIDTH : undefined}
                 data-mui-test="seconds"
                 onClick={() => onViewChange('seconds')}
-                selected={view === 'seconds'}
+                selected={markSelected && view === 'seconds'}
                 value={value ? utils.format(value, 'seconds') : '--'}
               />
             </React.Fragment>
@@ -320,7 +322,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
           >
             <PickersToolbarButton
               variant="subtitle2"
-              selected={meridiemMode === 'am'}
+              selected={markSelected && meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
               value={utils.getMeridiemText('am')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
@@ -328,7 +330,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             />
             <PickersToolbarButton
               variant="subtitle2"
-              selected={meridiemMode === 'pm'}
+              selected={markSelected && meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
               value={utils.getMeridiemText('pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
@@ -342,7 +344,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             variant="h5"
             data-mui-test="am-pm-view-button"
             onClick={() => onViewChange('meridiem')}
-            selected={view === 'meridiem'}
+            selected={markSelected && view === 'meridiem'}
             value={value && meridiemMode ? utils.getMeridiemText(meridiemMode) : '--'}
             width={MULTI_SECTION_CLOCK_SECTION_WIDTH}
           />

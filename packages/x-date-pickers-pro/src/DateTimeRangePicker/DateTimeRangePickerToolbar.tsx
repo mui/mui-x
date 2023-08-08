@@ -130,6 +130,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         toolbarTitle={localeText.start}
         ownerState={ownerState}
         toolbarVariant="desktop"
+        markSelected={rangePosition === 'start'}
       />
       <DateTimeRangePickerToolbarEnd
         {...other}
@@ -138,6 +139,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         toolbarTitle={localeText.end}
         ownerState={ownerState}
         toolbarVariant="desktop"
+        markSelected={rangePosition === 'end'}
       />
     </DateTimeRangePickerToolbarRoot>
   );
