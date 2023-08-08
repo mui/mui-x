@@ -4,12 +4,14 @@ import { isBandScale } from '../internals/isBandScale';
 
 export interface TickParams {
   /**
-   * Maximal step between two ticks. For time axis, value should be provided in ms.
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */
   tickMaxStep?: number;
   /**
-   * Maximal step between two ticks. For time axis, value should be provided in ms.
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
    * Not supported by categorical axis (band, points).
    */
   tickMinStep?: number;
