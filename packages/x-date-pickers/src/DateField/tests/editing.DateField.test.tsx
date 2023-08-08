@@ -68,6 +68,15 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
+    it('should decrement the month and keep the day when the new month has fewer days', () => {
+      testFieldKeyPress({
+        format: adapter.formats.monthAndDate,
+        defaultValue: adapter.date(new Date(2022, 4, 31)),
+        key: 'ArrowDown',
+        expectedValue: 'April 31',
+      });
+    });
+
     it('should go to the last day of the current month when a value in the first day of the month is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndDate,
@@ -156,6 +165,15 @@ describe('<DateField /> - Editing', () => {
         defaultValue: adapter.date(),
         key: 'ArrowUp',
         expectedValue: '16',
+      });
+    });
+
+    it('should increment the month and keep the day when the new month has fewer days', () => {
+      testFieldKeyPress({
+        format: adapter.formats.monthAndDate,
+        defaultValue: adapter.date(new Date(2022, 4, 31)),
+        key: 'ArrowUp',
+        expectedValue: 'June 31',
       });
     });
 
@@ -497,6 +515,21 @@ describe('<DateField /> - Editing', () => {
           { value: '1', expected: '01' },
           { value: '2', expected: '12' },
           { value: '2', expected: '02' },
+        ],
+      });
+    });
+
+    it('should allow to type the date 29th of February for leap years', () => {
+      testFieldChange({
+        format: adapter.formats.keyboardDate,
+        keyStrokes: [
+          { value: '2/DD/YYYY', expected: '02/DD/YYYY' },
+          { value: '02/2/YYYY', expected: '02/02/YYYY' },
+          { value: '02/9/YYYY', expected: '02/29/YYYY' },
+          { value: '02/29/1', expected: '02/29/0001' },
+          { value: '02/29/9', expected: '02/29/0019' },
+          { value: '02/29/8', expected: '02/29/0198' },
+          { value: '02/29/8', expected: '02/29/1988' },
         ],
       });
     });
