@@ -13,7 +13,6 @@ import {
 import {
   addPositionPropertiesToSections,
   splitFormatIntoSections,
-  clampDaySectionIfPossible,
   mergeDateIntoReferenceDate,
   getSectionsBoundaries,
   validateSections,
@@ -348,26 +347,7 @@ export const useFieldState = <
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const newActiveDateSections = activeDateManager.getSections(newSections);
-    let newActiveDate = getDateFromDateSections(utils, newActiveDateSections);
-    let shouldRegenSections = false;
-
-    /**
-     * If the date is invalid,
-     * Then we can try to clamp the day section to see if that produces a valid date.
-     * This can be useful if the month has fewer days than the day value currently provided.
-     */
-    if (!utils.isValid(newActiveDate)) {
-      const clampedSections = clampDaySectionIfPossible(
-        utils,
-        timezone,
-        newActiveDateSections,
-        sectionsValueBoundaries,
-      );
-      if (clampedSections != null) {
-        shouldRegenSections = true;
-        newActiveDate = getDateFromDateSections(utils, clampedSections);
-      }
-    }
+    const newActiveDate = getDateFromDateSections(utils, newActiveDateSections);
 
     let values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
     let shouldPublish: boolean;
@@ -397,24 +377,16 @@ export const useFieldState = <
     }
 
     /**
-     * If the value has been modified (to clamp the day).
-     * Then we need to re-generate the sections to make sure they also have this change.
-     */
-    const sections = shouldRegenSections
-      ? getSectionsFromValue(values.value, state.sections)
-      : newSections;
-
-    /**
      * Publish or update the internal state with the new value and sections.
      */
     if (shouldPublish) {
-      return publishValue({ ...values, sections });
+      return publishValue({ ...values, sections: newSections });
     }
 
     return setState((prevState) => ({
       ...prevState,
       ...values,
-      sections,
+      sections: newSections,
       tempValueStrAndroid: null,
     }));
   };

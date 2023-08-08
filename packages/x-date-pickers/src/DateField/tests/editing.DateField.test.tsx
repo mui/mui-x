@@ -51,11 +51,11 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it("should set the day to the last day of today's month when no value is provided", () => {
+    it('should set the day to 31 when no value is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.dayOfMonth,
         key: 'ArrowDown',
-        expectedValue: '30',
+        expectedValue: '31',
       });
     });
 
@@ -605,44 +605,6 @@ describe('<DateField /> - Editing', () => {
       });
     },
   );
-
-  describeAdapters('Full editing scenarios', DateField, ({ adapter, renderWithProps }) => {
-    it('should move to the last day of the month when the current day exceeds it', () => {
-      const onChange = spy();
-
-      const { input, selectSection } = renderWithProps({ onChange });
-      selectSection('month');
-
-      fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
-      expectInputValue(input, '01/DD/YYYY');
-
-      fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
-      expectInputValue(input, '11/DD/YYYY');
-
-      fireEvent.change(input, { target: { value: '11/3/YYYY' } }); // Press "3"
-      expectInputValue(input, '11/03/YYYY');
-
-      fireEvent.change(input, { target: { value: '11/31/YYYY' } }); // Press "1"
-      expectInputValue(input, '11/31/YYYY');
-
-      // TODO: Fix this behavior on day.js (`clampDaySection` generates an invalid date for the start of the month).
-      if (adapter.lib === 'dayjs') {
-        return;
-      }
-
-      fireEvent.change(input, { target: { value: '11/31/2' } }); // Press "2"
-      expectInputValue(input, '11/30/0002'); // Has moved to the last day of the November
-
-      fireEvent.change(input, { target: { value: '11/30/0' } }); // Press "0"
-      expectInputValue(input, '11/30/0020');
-
-      fireEvent.change(input, { target: { value: '11/30/2' } }); // Press "2"
-      expectInputValue(input, '11/30/0202');
-
-      fireEvent.change(input, { target: { value: '11/30/2' } }); // Press "2"
-      expectInputValue(input, '11/30/2022');
-    });
-  });
 
   describeAdapters('Pasting', DateField, ({ adapter, render, renderWithProps, clickOnInput }) => {
     const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
