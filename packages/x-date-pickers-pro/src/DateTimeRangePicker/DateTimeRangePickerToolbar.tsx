@@ -21,7 +21,8 @@ const useUtilityClasses = (ownerState: DateTimeRangePickerToolbarProps<any>) => 
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
-    container: ['container'],
+    startToolbar: ['startToolbar'],
+    endToolbar: ['endToolbar'],
   };
 
   return composeClasses(slots, getDateTimeRangePickerToolbarUtilityClass, classes);
@@ -137,6 +138,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         ownerState={ownerState}
         toolbarVariant="desktop"
         markSelected={rangePosition === 'start'}
+        className={classes.startToolbar}
       />
       <DateTimeRangePickerToolbarEnd
         {...other}
@@ -146,6 +148,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
         ownerState={ownerState}
         toolbarVariant="desktop"
         markSelected={rangePosition === 'end'}
+        className={classes.endToolbar}
       />
     </DateTimeRangePickerToolbarRoot>
   );
