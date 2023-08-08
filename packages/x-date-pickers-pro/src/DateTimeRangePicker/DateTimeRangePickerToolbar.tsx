@@ -98,7 +98,10 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   const classes = useUtilityClasses(ownerState);
 
   const handleStartRangeViewChange = React.useCallback(
-    (newView: DateTimeRangeViews) => {
+    (newView: DateOrTimeViewWithMeridiem) => {
+      if (newView === 'year' || newView === 'month') {
+        return;
+      }
       if (rangePosition !== 'start') {
         onRangePositionChange('start');
       }
@@ -108,7 +111,10 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
   );
 
   const handleEndRangeViewChange = React.useCallback(
-    (newView: DateTimeRangeViews) => {
+    (newView: DateOrTimeViewWithMeridiem) => {
+      if (newView === 'year' || newView === 'month') {
+        return;
+      }
       if (rangePosition !== 'end') {
         onRangePositionChange('end');
       }
