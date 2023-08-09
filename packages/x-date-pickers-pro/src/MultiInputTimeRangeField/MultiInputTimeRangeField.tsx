@@ -203,6 +203,10 @@ MultiInputTimeRangeField.propTypes = {
    */
   ampm: PropTypes.bool,
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
   /**
