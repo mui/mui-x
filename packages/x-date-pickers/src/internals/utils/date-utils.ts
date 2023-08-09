@@ -133,6 +133,11 @@ export const getTodayDate = <TDate>(
     ? utils.startOfDay(utils.dateWithTimezone(undefined, timezone)!)
     : utils.dateWithTimezone(undefined, timezone)!;
 
+export const formatMeridiem = <TDate>(utils: MuiPickersAdapter<TDate>, meridiem: 'am' | 'pm') => {
+  const date = utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14);
+  return utils.format(date, 'meridiem');
+};
+
 const dateViews = ['year', 'month', 'day'];
 export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>
   dateViews.includes(view);
