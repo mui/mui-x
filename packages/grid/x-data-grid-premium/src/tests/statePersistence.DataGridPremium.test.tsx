@@ -10,7 +10,7 @@ import {
 } from '@mui/x-data-grid-premium';
 import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getColumnValues } from '../../../../../test/utils/helperFn';
+import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
