@@ -12,17 +12,6 @@ export interface PickersProComponentNameToClassKey {
   MuiMultiInputDateRangeField: never;
   MuiMultiInputDateTimeRangeField: never;
   MuiMultiInputTimeRangeField: never;
-
-  // Single input range fields
-  MuiSingleInputDateRangeField: never;
-  MuiSingleInputDateTimeRangeField: never;
-  MuiSingleInputTimeRangeField: never;
-  
-  // Date Range Pickers
-  MuiDateRangePicker: never;
-  MuiDesktopDateRangePicker: never;
-  MuiMobileDateRangePicker: never;
-  MuiStaticDateRangePicker: never;
 }
 
 declare module '@mui/material/styles' {
