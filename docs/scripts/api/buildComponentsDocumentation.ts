@@ -156,8 +156,8 @@ function extractSlots(options: {
  * @example toGithubPath('/home/user/material-ui/packages/Accordion') === '/packages/Accordion'
  * @example toGithubPath('C:\\Development\material-ui\packages\Accordion') === '/packages/Accordion'
  */
-function toGithubPath(filepath: string, workspaceRoot: string): string {
-  return `/${path.relative(workspaceRoot, filepath).replace(/\\/g, '/')}`;
+function toGithubPath(filepath: string): string {
+  return `/${path.relative(process.cwd(), filepath).replace(/\\/g, '/')}`;
 }
 
 function parseComponentSource(src: string, componentObject: { filename: string }): ReactApi {
@@ -229,59 +229,57 @@ function findXDemos(
     });
 }
 
-function getPackages(filename: string): { exportPackage: string; reExportPackages: string[] } {
+/**
+ * Helper to get the import options
+ * @param name The name of the component
+ * @param filename The filename where its defined (to infer the package)
+ * @returns an array of import command
+ */
+function getComponentImports(name: string, filename: string): string[] {
+  const githubPath = toGithubPath(filename);
+
+  const rootImportPath = githubPath.replace(
+    /\/packages\/(grid\/|)(.+?)?\/src\/.*/,
+    (match, dash, pkg) => `@mui/${pkg}`,
+  );
+
+  const subdirectoryImportPath = githubPath.replace(
+    /\/packages\/(grid\/|)(.+?)?\/src\/([^\\/]+)\/.*/,
+    (match, dash, pkg, directory) => `@mui/${pkg}/${directory}`,
+  );
+
+  const reExportPackage = [rootImportPath];
+
   // Data Grid
-  if (filename.includes('packages/grid/x-data-grid-premium')) {
-    return { exportPackage: 'x-data-grid-premium', reExportPackages: ['x-data-grid-premium'] };
+  if (rootImportPath === '@mui/x-data-grid-pro') {
+    reExportPackage.push('@mui/x-data-grid-premium');
   }
-  if (filename.includes('packages/grid/x-data-grid-pro')) {
-    return {
-      exportPackage: 'x-data-grid-pro',
-      reExportPackages: ['x-data-grid-pro', 'x-data-grid-premium'],
-    };
+  if (rootImportPath === '@mui/x-data-grid') {
+    reExportPackage.push('@mui/x-data-grid-pro');
+    reExportPackage.push('@mui/x-data-grid-premium');
   }
-  if (filename.includes('packages/grid/x-data-grid')) {
-    return {
-      exportPackage: 'x-data-grid',
-      reExportPackages: ['x-data-grid', 'x-data-grid-pro', 'x-data-grid-premium'],
-    };
-  }
+
   // Pickers
-  if (filename.includes('packages/x-date-pickers-pro')) {
-    return { exportPackage: 'x-date-pickers-pro', reExportPackages: ['x-date-pickers-pro'] };
+  if (rootImportPath === '@mui/x-date-pickers') {
+    reExportPackage.push('@mui/x-date-pickers-pro');
   }
-  if (filename.includes('packages/x-date-pickers')) {
-    return {
-      exportPackage: 'x-date-pickers',
-      reExportPackages: ['x-date-pickers', 'x-date-pickers-pro'],
-    };
-  }
+
   // Charts
-  if (filename.includes('packages/x-charts-pro')) {
-    return { exportPackage: 'x-charts-pro', reExportPackages: ['x-charts', 'x-charts-pro'] };
-  }
-  if (filename.includes('packages/x-charts')) {
-    return { exportPackage: 'x-charts', reExportPackages: ['x-charts'] };
-  }
+  // if (rootImportPath === '@mui/x-charts') {
+  //   reExportPackage.push('@mui/x-charts-pro');
+  // }
+
   // Tree View
-  if (filename.includes('packages/x-tree-view-pro')) {
-    return { exportPackage: 'x-tree-view-pro', reExportPackages: ['x-tree-view-pro'] };
-  }
-  if (filename.includes('packages/x-tree-view')) {
-    return { exportPackage: 'x-tree-view', reExportPackages: ['x-tree-view'] };
-  }
+  // if (rootImportPath === '@mui/x-tree-view') {
+  //   reExportPackage.push('@mui/x-tree-view-pro');
+  // }
 
-  throw new Error(`No package associated to the filename ${filename}`);
-}
-
-function getComponentImports(name: string, filename: string) {
-  const { exportPackage, reExportPackages } = getPackages(filename);
-  return [
-    `import { ${name} } from '@mui/${exportPackage}/${name}';`,
-    ...reExportPackages.map(
-      (reExportPackage) => `import { ${name} } from '@mui/${reExportPackage}';`,
-    ),
+  const imports = [
+    `import { ${name} } from '${subdirectoryImportPath}';`,
+    ...reExportPackage.map((importPath) => `import { ${name} } from '${importPath}';`),
   ];
+
+  return imports;
 }
 
 const buildComponentDocumentation = async (options: {
@@ -585,7 +583,7 @@ const buildComponentDocumentation = async (options: {
     },
     spread: reactApi.spread,
     forwardsRefTo: reactApi.forwardsRefTo,
-    filename: toGithubPath(reactApi.filename, project.workspaceRoot),
+    filename: toGithubPath(reactApi.filename),
     inheritance: reactApi.inheritance,
     demos: `<ul>${reactApi.demos
       .map((item) => `<li><a href="${item.demoPathname}">${item.demoPageTitle}</a></li>`)
