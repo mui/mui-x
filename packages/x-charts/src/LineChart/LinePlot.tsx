@@ -59,8 +59,15 @@ function LinePlot(props: LinePlotProps) {
             .x((d) => xScale(d.x))
             .y((d) => yScale(d.y[1]));
 
+          if (process.env.NODE_ENV !== 'production') {
+            if (xData.length !== stackedData.length) {
+              throw new Error(
+                `MUI: data length of the x axis (${xData.length} items) does not match length of series (${stackedData.length} items)`,
+              );
+            }
+          }
           const curve = getCurveFactory(series[seriesId].curve);
-          const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
+          const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] ?? [0, 0] }));
 
           return (
             <LineElement

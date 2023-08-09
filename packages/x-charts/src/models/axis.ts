@@ -37,7 +37,7 @@ export interface ChartsAxisSlotComponentProps {
   axisLabel?: Partial<React.SVGAttributes<SVGTextElement>>;
 }
 
-export interface ChartsAxisProps {
+export interface ChartsAxisProps extends TickParams {
   /**
    * Id of the axis to render.
    */
