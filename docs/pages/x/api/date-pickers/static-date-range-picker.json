@@ -194,7 +194,7 @@
     }
   ],
   "name": "StaticDateRangePicker",
-  "import": [
+  "imports": [
     "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';",
     "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro';"
   ],

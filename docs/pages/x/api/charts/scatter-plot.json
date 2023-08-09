@@ -5,7 +5,7 @@
   },
   "slots": [],
   "name": "ScatterPlot",
-  "import": [
+  "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
     "import { ScatterPlot } from '@mui/x-charts';"
   ],

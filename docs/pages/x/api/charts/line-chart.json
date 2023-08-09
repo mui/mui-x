@@ -36,7 +36,7 @@
   },
   "slots": [],
   "name": "LineChart",
-  "import": [
+  "imports": [
     "import { LineChart } from '@mui/x-charts/LineChart';",
     "import { LineChart } from '@mui/x-charts';"
   ],

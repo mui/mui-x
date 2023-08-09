@@ -170,7 +170,7 @@
     }
   ],
   "name": "DateTimeField",
-  "import": [
+  "imports": [
     "import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';",
     "import { DateTimeField } from '@mui/x-date-pickers';",
     "import { DateTimeField } from '@mui/x-date-pickers-pro';"

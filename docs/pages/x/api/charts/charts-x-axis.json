@@ -16,7 +16,7 @@
   },
   "slots": [],
   "name": "ChartsXAxis",
-  "import": [
+  "imports": [
     "import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';",
     "import { ChartsXAxis } from '@mui/x-charts';"
   ],

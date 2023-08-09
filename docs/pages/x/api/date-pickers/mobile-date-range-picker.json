@@ -250,7 +250,7 @@
     }
   ],
   "name": "MobileDateRangePicker",
-  "import": [
+  "imports": [
     "import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';",
     "import { MobileDateRangePicker } from '@mui/x-date-pickers-pro';"
   ],

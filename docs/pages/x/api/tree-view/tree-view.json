@@ -54,7 +54,7 @@
   },
   "slots": [],
   "name": "TreeView",
-  "import": [
+  "imports": [
     "import { TreeView } from '@mui/x-tree-view/TreeView';",
     "import { TreeView } from '@mui/x-tree-view';"
   ],

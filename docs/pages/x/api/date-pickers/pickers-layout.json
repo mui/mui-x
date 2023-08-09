@@ -44,7 +44,7 @@
     }
   ],
   "name": "PickersLayout",
-  "import": [
+  "imports": [
     "import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';",
     "import { PickersLayout } from '@mui/x-date-pickers';",
     "import { PickersLayout } from '@mui/x-date-pickers-pro';"

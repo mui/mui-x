@@ -24,7 +24,7 @@
   },
   "slots": [],
   "name": "PickersShortcuts",
-  "import": [
+  "imports": [
     "import { PickersShortcuts } from '@mui/x-date-pickers/PickersShortcuts';",
     "import { PickersShortcuts } from '@mui/x-date-pickers';",
     "import { PickersShortcuts } from '@mui/x-date-pickers-pro';"

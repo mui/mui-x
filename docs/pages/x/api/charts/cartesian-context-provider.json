@@ -2,7 +2,7 @@
   "props": {},
   "slots": [],
   "name": "CartesianContextProvider",
-  "import": [
+  "imports": [
     "import { CartesianContextProvider } from '@mui/x-charts/context';",
     "import { CartesianContextProvider } from '@mui/x-charts';"
   ],

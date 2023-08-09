@@ -200,7 +200,7 @@
     }
   ],
   "name": "DateCalendar",
-  "import": [
+  "imports": [
     "import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';",
     "import { DateCalendar } from '@mui/x-date-pickers';",
     "import { DateCalendar } from '@mui/x-date-pickers-pro';"

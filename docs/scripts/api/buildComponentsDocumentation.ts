@@ -570,7 +570,7 @@ const buildComponentDocumentation = async (options: {
     ),
     slots: reactApi.slots.sort((slotA, slotB) => (slotA.name > slotB.name ? 1 : -1)),
     name: reactApi.name,
-    import: reactApi.imports,
+    imports: reactApi.imports,
     styles: {
       classes: reactApi.styles.classes,
       globalClasses: fromPairs(

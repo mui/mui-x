@@ -5,7 +5,7 @@
   },
   "slots": [],
   "name": "AreaPlot",
-  "import": [
+  "imports": [
     "import { AreaPlot } from '@mui/x-charts/LineChart';",
     "import { AreaPlot } from '@mui/x-charts';"
   ],

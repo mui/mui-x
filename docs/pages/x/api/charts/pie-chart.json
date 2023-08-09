@@ -35,7 +35,7 @@
   },
   "slots": [],
   "name": "PieChart",
-  "import": [
+  "imports": [
     "import { PieChart } from '@mui/x-charts/PieChart';",
     "import { PieChart } from '@mui/x-charts';"
   ],

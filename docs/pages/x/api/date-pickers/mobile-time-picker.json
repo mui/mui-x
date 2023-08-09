@@ -213,7 +213,7 @@
     }
   ],
   "name": "MobileTimePicker",
-  "import": [
+  "imports": [
     "import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';",
     "import { MobileTimePicker } from '@mui/x-date-pickers';",
     "import { MobileTimePicker } from '@mui/x-date-pickers-pro';"

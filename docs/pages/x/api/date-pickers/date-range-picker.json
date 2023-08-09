@@ -278,7 +278,7 @@
     }
   ],
   "name": "DateRangePicker",
-  "import": [
+  "imports": [
     "import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';",
     "import { DateRangePicker } from '@mui/x-date-pickers-pro';"
   ],

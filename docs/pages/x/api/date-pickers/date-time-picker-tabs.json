@@ -22,7 +22,7 @@
   },
   "slots": [],
   "name": "DateTimePickerTabs",
-  "import": [
+  "imports": [
     "import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';",
     "import { DateTimePickerTabs } from '@mui/x-date-pickers';",
     "import { DateTimePickerTabs } from '@mui/x-date-pickers-pro';"

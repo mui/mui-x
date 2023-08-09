@@ -131,7 +131,7 @@
     }
   ],
   "name": "TimeClock",
-  "import": [
+  "imports": [
     "import { TimeClock } from '@mui/x-date-pickers/TimeClock';",
     "import { TimeClock } from '@mui/x-date-pickers';",
     "import { TimeClock } from '@mui/x-date-pickers-pro';"

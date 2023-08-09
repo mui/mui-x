@@ -11,7 +11,7 @@
   },
   "slots": [],
   "name": "MarkElement",
-  "import": [
+  "imports": [
     "import { MarkElement } from '@mui/x-charts/LineChart';",
     "import { MarkElement } from '@mui/x-charts';"
   ],

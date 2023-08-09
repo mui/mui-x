@@ -5,7 +5,7 @@
   },
   "slots": [],
   "name": "LineElement",
-  "import": [
+  "imports": [
     "import { LineElement } from '@mui/x-charts/LineChart';",
     "import { LineElement } from '@mui/x-charts';"
   ],

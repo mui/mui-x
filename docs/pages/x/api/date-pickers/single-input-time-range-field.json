@@ -142,7 +142,7 @@
     }
   ],
   "name": "SingleInputTimeRangeField",
-  "import": [
+  "imports": [
     "import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';",
     "import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro';"
   ],

@@ -818,7 +818,7 @@
     }
   ],
   "name": "DataGrid",
-  "import": [
+  "imports": [
     "import { DataGrid } from '@mui/x-data-grid/DataGrid';",
     "import { DataGrid } from '@mui/x-data-grid';",
     "import { DataGrid } from '@mui/x-data-grid-pro';",

@@ -355,7 +355,7 @@
     }
   ],
   "name": "DesktopDateTimePicker",
-  "import": [
+  "imports": [
     "import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';",
     "import { DesktopDateTimePicker } from '@mui/x-date-pickers';",
     "import { DesktopDateTimePicker } from '@mui/x-date-pickers-pro';"

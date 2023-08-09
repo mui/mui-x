@@ -2,7 +2,7 @@
   "props": {},
   "slots": [],
   "name": "Scatter",
-  "import": [
+  "imports": [
     "import { Scatter } from '@mui/x-charts/ScatterChart';",
     "import { Scatter } from '@mui/x-charts';"
   ],

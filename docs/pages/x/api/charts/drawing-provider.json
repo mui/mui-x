@@ -2,7 +2,7 @@
   "props": {},
   "slots": [],
   "name": "DrawingProvider",
-  "import": [
+  "imports": [
     "import { DrawingProvider } from '@mui/x-charts/context';",
     "import { DrawingProvider } from '@mui/x-charts';"
   ],

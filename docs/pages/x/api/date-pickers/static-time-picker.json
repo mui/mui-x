@@ -163,7 +163,7 @@
     }
   ],
   "name": "StaticTimePicker",
-  "import": [
+  "imports": [
     "import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';",
     "import { StaticTimePicker } from '@mui/x-date-pickers';",
     "import { StaticTimePicker } from '@mui/x-date-pickers-pro';"

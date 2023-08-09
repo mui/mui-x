@@ -28,7 +28,7 @@
   },
   "slots": [],
   "name": "TreeItem",
-  "import": [
+  "imports": [
     "import { TreeItem } from '@mui/x-tree-view/TreeItem';",
     "import { TreeItem } from '@mui/x-tree-view';"
   ],

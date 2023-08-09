@@ -7,7 +7,7 @@
   },
   "slots": [],
   "name": "DateRangePickerToolbar",
-  "import": [
+  "imports": [
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro/DateRangePicker';",
     "import { DateRangePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],

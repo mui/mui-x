@@ -40,7 +40,7 @@
   },
   "slots": [],
   "name": "PickersDay",
-  "import": [
+  "imports": [
     "import { PickersDay } from '@mui/x-date-pickers/PickersDay';",
     "import { PickersDay } from '@mui/x-date-pickers';",
     "import { PickersDay } from '@mui/x-date-pickers-pro';"

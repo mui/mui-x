@@ -149,7 +149,7 @@
     }
   ],
   "name": "DateRangeCalendar",
-  "import": [
+  "imports": [
     "import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';",
     "import { DateRangeCalendar } from '@mui/x-date-pickers-pro';"
   ],

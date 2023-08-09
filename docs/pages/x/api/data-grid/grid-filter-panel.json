@@ -30,7 +30,7 @@
   },
   "slots": [],
   "name": "GridFilterPanel",
-  "import": [
+  "imports": [
     "import { GridFilterPanel } from '@mui/x-data-grid/components';",
     "import { GridFilterPanel } from '@mui/x-data-grid';",
     "import { GridFilterPanel } from '@mui/x-data-grid-pro';",

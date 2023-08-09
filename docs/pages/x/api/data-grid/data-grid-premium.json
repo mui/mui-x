@@ -1042,7 +1042,7 @@
     }
   ],
   "name": "DataGridPremium",
-  "import": [
+  "imports": [
     "import { DataGridPremium } from '@mui/x-data-grid-premium/DataGridPremium';",
     "import { DataGridPremium } from '@mui/x-data-grid-premium';"
   ],

@@ -45,7 +45,7 @@
   },
   "slots": [],
   "name": "MonthCalendar",
-  "import": [
+  "imports": [
     "import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';",
     "import { MonthCalendar } from '@mui/x-date-pickers';",
     "import { MonthCalendar } from '@mui/x-date-pickers-pro';"

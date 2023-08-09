@@ -20,7 +20,7 @@
   },
   "slots": [],
   "name": "GridToolbarQuickFilter",
-  "import": [
+  "imports": [
     "import { GridToolbarQuickFilter } from '@mui/x-data-grid/components';",
     "import { GridToolbarQuickFilter } from '@mui/x-data-grid';",
     "import { GridToolbarQuickFilter } from '@mui/x-data-grid-pro';",

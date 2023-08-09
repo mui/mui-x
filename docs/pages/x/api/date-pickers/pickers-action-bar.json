@@ -18,7 +18,7 @@
   },
   "slots": [],
   "name": "PickersActionBar",
-  "import": [
+  "imports": [
     "import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';",
     "import { PickersActionBar } from '@mui/x-date-pickers';",
     "import { PickersActionBar } from '@mui/x-date-pickers-pro';"

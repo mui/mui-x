@@ -256,7 +256,7 @@
     }
   ],
   "name": "DesktopDateRangePicker",
-  "import": [
+  "imports": [
     "import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';",
     "import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro';"
   ],

@@ -5,7 +5,7 @@
   },
   "slots": [],
   "name": "MarkPlot",
-  "import": [
+  "imports": [
     "import { MarkPlot } from '@mui/x-charts/LineChart';",
     "import { MarkPlot } from '@mui/x-charts';"
   ],

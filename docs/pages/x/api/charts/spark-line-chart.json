@@ -33,7 +33,7 @@
   },
   "slots": [],
   "name": "SparkLineChart",
-  "import": [
+  "imports": [
     "import { SparkLineChart } from '@mui/x-charts/SparkLineChart';",
     "import { SparkLineChart } from '@mui/x-charts';"
   ],

@@ -52,7 +52,7 @@
   },
   "slots": [],
   "name": "GridFilterForm",
-  "import": [
+  "imports": [
     "import { GridFilterForm } from '@mui/x-data-grid/components';",
     "import { GridFilterForm } from '@mui/x-data-grid';",
     "import { GridFilterForm } from '@mui/x-data-grid-pro';",

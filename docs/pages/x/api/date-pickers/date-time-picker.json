@@ -377,7 +377,7 @@
     }
   ],
   "name": "DateTimePicker",
-  "import": [
+  "imports": [
     "import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';",
     "import { DateTimePicker } from '@mui/x-date-pickers';",
     "import { DateTimePicker } from '@mui/x-date-pickers-pro';"

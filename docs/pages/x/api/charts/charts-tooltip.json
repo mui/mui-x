@@ -13,7 +13,7 @@
   },
   "slots": [],
   "name": "ChartsTooltip",
-  "import": [
+  "imports": [
     "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
     "import { ChartsTooltip } from '@mui/x-charts';"
   ],

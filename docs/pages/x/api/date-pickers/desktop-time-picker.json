@@ -260,7 +260,7 @@
     }
   ],
   "name": "DesktopTimePicker",
-  "import": [
+  "imports": [
     "import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';",
     "import { DesktopTimePicker } from '@mui/x-date-pickers';",
     "import { DesktopTimePicker } from '@mui/x-date-pickers-pro';"

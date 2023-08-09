@@ -141,7 +141,7 @@
     }
   ],
   "name": "MultiInputDateTimeRangeField",
-  "import": [
+  "imports": [
     "import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';",
     "import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro';"
   ],

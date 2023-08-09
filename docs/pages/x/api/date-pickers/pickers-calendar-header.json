@@ -14,7 +14,7 @@
   },
   "slots": [],
   "name": "PickersCalendarHeader",
-  "import": [
+  "imports": [
     "import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';",
     "import { PickersCalendarHeader } from '@mui/x-date-pickers';",
     "import { PickersCalendarHeader } from '@mui/x-date-pickers-pro';"

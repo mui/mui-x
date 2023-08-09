@@ -142,7 +142,7 @@
     }
   ],
   "name": "TimeField",
-  "import": [
+  "imports": [
     "import { TimeField } from '@mui/x-date-pickers/TimeField';",
     "import { TimeField } from '@mui/x-date-pickers';",
     "import { TimeField } from '@mui/x-date-pickers-pro';"
