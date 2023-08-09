@@ -3,7 +3,7 @@
   "slots": [],
   "name": "DrawingProvider",
   "import": [
-    "import { DrawingProvider } from '@mui/x-charts/DrawingProvider';",
+    "import { DrawingProvider } from '@mui/x-charts/context';",
     "import { DrawingProvider } from '@mui/x-charts';"
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDrawingProvider" },

@@ -20,7 +20,7 @@
   "slots": [],
   "name": "TimePickerToolbar",
   "import": [
-    "import { TimePickerToolbar } from '@mui/x-date-pickers/TimePickerToolbar';",
+    "import { TimePickerToolbar } from '@mui/x-date-pickers/TimePicker';",
     "import { TimePickerToolbar } from '@mui/x-date-pickers';",
     "import { TimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],

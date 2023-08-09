@@ -3,7 +3,7 @@
   "slots": [],
   "name": "Scatter",
   "import": [
-    "import { Scatter } from '@mui/x-charts/Scatter';",
+    "import { Scatter } from '@mui/x-charts/ScatterChart';",
     "import { Scatter } from '@mui/x-charts';"
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatter" },

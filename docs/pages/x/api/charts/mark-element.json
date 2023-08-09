@@ -12,7 +12,7 @@
   "slots": [],
   "name": "MarkElement",
   "import": [
-    "import { MarkElement } from '@mui/x-charts/MarkElement';",
+    "import { MarkElement } from '@mui/x-charts/LineChart';",
     "import { MarkElement } from '@mui/x-charts';"
   ],
   "styles": {

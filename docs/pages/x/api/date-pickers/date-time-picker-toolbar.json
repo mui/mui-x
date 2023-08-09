@@ -21,7 +21,7 @@
   "slots": [],
   "name": "DateTimePickerToolbar",
   "import": [
-    "import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePickerToolbar';",
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';",
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers';",
     "import { DateTimePickerToolbar } from '@mui/x-date-pickers-pro';"
   ],

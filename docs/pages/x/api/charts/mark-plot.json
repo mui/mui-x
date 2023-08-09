@@ -3,7 +3,7 @@
   "slots": [],
   "name": "MarkPlot",
   "import": [
-    "import { MarkPlot } from '@mui/x-charts/MarkPlot';",
+    "import { MarkPlot } from '@mui/x-charts/LineChart';",
     "import { MarkPlot } from '@mui/x-charts';"
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkPlot" },

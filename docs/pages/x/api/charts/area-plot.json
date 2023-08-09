@@ -3,7 +3,7 @@
   "slots": [],
   "name": "AreaPlot",
   "import": [
-    "import { AreaPlot } from '@mui/x-charts/AreaPlot';",
+    "import { AreaPlot } from '@mui/x-charts/LineChart';",
     "import { AreaPlot } from '@mui/x-charts';"
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },

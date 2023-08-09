@@ -3,7 +3,7 @@
   "slots": [],
   "name": "PiePlot",
   "import": [
-    "import { PiePlot } from '@mui/x-charts/PiePlot';",
+    "import { PiePlot } from '@mui/x-charts/PieChart';",
     "import { PiePlot } from '@mui/x-charts';"
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiPiePlot" },

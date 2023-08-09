@@ -3,7 +3,7 @@
   "slots": [],
   "name": "LinePlot",
   "import": [
-    "import { LinePlot } from '@mui/x-charts/LinePlot';",
+    "import { LinePlot } from '@mui/x-charts/LineChart';",
     "import { LinePlot } from '@mui/x-charts';"
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLinePlot" },

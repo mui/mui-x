@@ -3,7 +3,7 @@
   "slots": [],
   "name": "LineElement",
   "import": [
-    "import { LineElement } from '@mui/x-charts/LineElement';",
+    "import { LineElement } from '@mui/x-charts/LineChart';",
     "import { LineElement } from '@mui/x-charts';"
   ],
   "styles": {

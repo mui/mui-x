@@ -3,7 +3,7 @@
   "slots": [],
   "name": "BarPlot",
   "import": [
-    "import { BarPlot } from '@mui/x-charts/BarPlot';",
+    "import { BarPlot } from '@mui/x-charts/BarChart';",
     "import { BarPlot } from '@mui/x-charts';"
   ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarPlot" },

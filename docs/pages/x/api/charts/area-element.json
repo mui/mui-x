@@ -3,7 +3,7 @@
   "slots": [],
   "name": "AreaElement",
   "import": [
-    "import { AreaElement } from '@mui/x-charts/AreaElement';",
+    "import { AreaElement } from '@mui/x-charts/LineChart';",
     "import { AreaElement } from '@mui/x-charts';"
   ],
   "styles": {
