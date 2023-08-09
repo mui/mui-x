@@ -110,6 +110,7 @@ export interface DayCalendarProps<TDate>
 const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
   const { classes } = ownerState;
   const slots = {
+    root: ['root'],
     header: ['header'],
     weekDayLabel: ['weekDayLabel'],
     loadingContainer: ['loadingContainer'],
@@ -541,7 +542,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   }, [currentMonth, fixedWeekNumber, utils, timezone]);
 
   return (
-    <div role="grid" aria-labelledby={gridLabelId}>
+    <div role="grid" aria-labelledby={gridLabelId} className={classes.root}>
       <PickersCalendarDayHeader role="row" className={classes.header}>
         {displayWeekNumber && (
           <PickersCalendarWeekNumberLabel

@@ -1,7 +1,5 @@
-import * as React from 'react';
 import { deepPurple } from '@mui/material/colors';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { createTheme } from '@mui/material/styles';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 
 const newTheme = createTheme({
@@ -13,8 +11,20 @@ const newTheme = createTheme({
     },
   },
   components: {
-    MuiDateCalendar: {
-      styleOverrides: { root: { '& *': { fontFamily: 'Arial' } } },
+    MuiDayCalendar: {
+      styleOverrides: {
+        weekDayLabel: { color: deepPurple[700], fontWeight: 700 },
+        weekContainer: {
+          backgroundColor: deepPurple[50],
+          borderRadius: 12,
+        },
+        weekNumberLabel: {
+          border: `1px solid red`,
+          color: deepPurple[700],
+          fontWeight: 700,
+        },
+        weekNumber: { color: deepPurple[700], fontWeight: 700 },
+      },
     },
     MuiPickersDay: {
       styleOverrides: {
@@ -30,10 +40,4 @@ const newTheme = createTheme({
   },
 });
 
-export default function StyledStaticDatedPicker() {
-  return (
-    <ThemeProvider theme={newTheme}>
-      <StaticDatePicker />
-    </ThemeProvider>
-  );
-}
+export default newTheme;

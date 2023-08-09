@@ -52,13 +52,19 @@ export function useCustomizationPlayground({
     string | null
   >(null);
 
-  const selectDemo = (interactionTarget: string) => {
-    // set the selected subcomponent name
-    setSelectedDemo(interactionTarget);
-    // set the array of customization options to the available options for the selected subcomponent
-    setCustomizationOptions(pick(customizationLabels, Object.keys(examples[interactionTarget])));
-    // set the selected customization option to the first available option for the selected subcomponent
-    setSelectedCustomizationOption(Object.keys(examples[interactionTarget])[0] as string);
+  const selectDemo = (interactionTarget: string | null) => {
+    if (interactionTarget) {
+      // set the selected subcomponent name
+      setSelectedDemo(interactionTarget);
+      // set the array of customization options to the available options for the selected subcomponent
+      setCustomizationOptions(pick(customizationLabels, Object.keys(examples[interactionTarget])));
+      // set the selected customization option to the first available option for the selected subcomponent
+      setSelectedCustomizationOption(Object.keys(examples[interactionTarget])[0] as string);
+    } else {
+      setSelectedDemo(null);
+      setCustomizationOptions(null);
+      setSelectedCustomizationOption(null);
+    }
   };
   const handleDemoClick = (event: React.MouseEvent<HTMLElement>) => {
     const clickTarget = getInteractionTarget(event.target as HTMLElement, demoRef, examples);

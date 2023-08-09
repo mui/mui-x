@@ -7,6 +7,7 @@ import { styled, Theme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { blue, grey } from '@mui/material/colors';
 import clsx from 'clsx';
@@ -30,12 +31,17 @@ interface CustomizationPlaygroundProps {
   codeExample: string;
 }
 
-const Nav = styled(Box)(({ theme }) => ({ minWidth: theme.spacing(20) }));
+const Nav = styled(Box)(({ theme }) => ({
+  minWidth: theme.spacing(24),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: theme.spacing(1),
+}));
 
 const NavLabel = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(1),
-  paddingLeft: theme.spacing(1.4),
   fontWeight: theme.typography.fontWeightBold,
   fontSize: theme.typography.pxToRem(11),
   textTransform: 'uppercase',
@@ -43,25 +49,13 @@ const NavLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[400],
 }));
 
-const NavItem = styled(Typography)(({ theme }) => {
+const NavItem = styled(Button)(({ theme }) => {
   return {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    padding: `${theme.spacing(0.4)} ${theme.spacing(1.4)}`,
     color: theme.palette.grey[700],
-    fontSize: theme.typography.pxToRem(12),
-    fontWeight: theme.typography.fontWeightBold,
-    cursor: 'pointer',
-    borderLeft: '2px solid transparent',
-    borderRadius: `0 ${theme.spacing(0.5)} ${theme.spacing(0.5)} 0`,
-    '&.selected': {
-      color: theme.palette.primary.main,
-      borderLeftColor: (theme.vars || theme).palette.primary.main,
-      background: blue[50],
-    },
+    borderRadius: theme.spacing(2),
+    textTransform: 'none',
     '&:hover, &.hovered': {
       color: theme.palette.primary.main,
-      borderLeftColor: (theme.vars || theme).palette.primary.main,
     },
   };
 });
@@ -159,9 +153,6 @@ const CustomizationPlayground = React.forwardRef(function CustomizationPlaygroun
     <Box sx={{ flexGrow: 1 }}>
       <HighlightedDemo
         subComponents={Object.keys(examples)}
-        onClick={(e) => handleDemoClick(e)}
-        onMouseOver={(e) => handleDemoHover(e)}
-        onMouseLeave={() => setHoveredDemo(null)}
         selected={selectedDemo}
         hovered={hoveredDemo}
         ref={ref}
@@ -170,20 +161,28 @@ const CustomizationPlayground = React.forwardRef(function CustomizationPlaygroun
           <NavLabel gutterBottom>Components</NavLabel>
           {Object.keys(examples).map((item) => (
             <NavItem
+              size="small"
               onClick={() => selectDemo(item)}
               onMouseOver={() => setHoveredDemo(item)}
-              onMouseLeave={() => setHoveredDemo(null)}
+              onMouseLeave={() => {
+                setHoveredDemo(null);
+              }}
               key={item}
-              className={clsx(
-                `${hoveredDemo === item ? 'hovered' : ''}`,
-                `${selectedDemo === item ? 'selected' : ''}`,
-              )}
+              variant={selectedDemo === item ? 'outlined' : 'text'}
+              className={clsx(`${hoveredDemo === item ? 'hovered' : ''}`)}
             >
               {item}
             </NavItem>
           ))}
         </Nav>
-        <Box sx={{ width: 'fit-content' }}> {children}</Box>
+        <Box
+          sx={{ width: 'fit-content' }}
+          onClick={(e) => handleDemoClick(e)}
+          onMouseOver={(e) => handleDemoHover(e)}
+          onMouseLeave={() => setHoveredDemo(null)}
+        >
+          {children}
+        </Box>
       </HighlightedDemo>
       <BrandingProvider>
         {selectedDemo && customizationOptions && (
