@@ -1,10 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import Stack, { StackProps } from '@mui/material/Stack';
 import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 import {
   splitFieldInternalAndForwardedProps,
   FieldsTextFieldProps,
@@ -13,6 +19,25 @@ import {
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internals/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 import { UseDateRangeFieldProps } from '../internals/models/dateRange';
+import { MultiInputRangeFieldClasses } from '../models';
+
+export const multiInputDateRangeFieldClasses: MultiInputRangeFieldClasses = generateUtilityClasses(
+  'MuiMultiInputDateRangeField',
+  ['root', 'separator'],
+);
+
+export const getMultiInputDateRangeFieldUtilityClass = (slot: string) =>
+  generateUtilityClass('MuiMultiInputDateRangeField', slot);
+
+const useUtilityClasses = (ownerState: MultiInputDateRangeFieldProps<any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    separator: ['separator'],
+  };
+
+  return composeClasses(slots, getMultiInputDateRangeFieldUtilityClass, classes);
+};
 
 const MultiInputDateRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
@@ -62,6 +87,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     autoFocus,
     unstableStartFieldRef,
     unstableEndFieldRef,
+    className,
     ...otherForwardedProps
   } = forwardedProps;
 
@@ -69,6 +95,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const slotProps = innerSlotProps ?? componentsProps;
 
   const ownerState = themeProps;
+  const classes = useUtilityClasses(ownerState);
 
   const Root = slots?.root ?? MultiInputDateRangeFieldRoot;
   const rootProps = useSlotProps({
@@ -79,6 +106,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       ref,
     },
     ownerState,
+    className: clsx(className, classes.root),
   });
 
   const TextField = slots?.textField ?? MuiTextField;
@@ -99,6 +127,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     elementType: Separator,
     externalSlotProps: slotProps?.separator ?? componentsProps?.separator,
     ownerState,
+    className: classes.separator,
   });
 
   const {
@@ -168,6 +197,10 @@ MultiInputDateRangeField.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   className: PropTypes.string,
   component: PropTypes.elementType,
   /**
