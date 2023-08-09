@@ -6,7 +6,8 @@ import {
   YearCalendar,
   yearCalendarClasses as classes,
 } from '@mui/x-date-pickers/YearCalendar';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse } from 'test/utils/pickers/adapters';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 

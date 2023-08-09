@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
-import {
-  createPickerRenderer,
-  getTextbox,
-  expectInputPlaceholder,
-  adapterToUse,
-  expectInputValue,
-  buildFieldInteractions,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { buildFieldInteractions, getTextbox } from 'test/utils/pickers/fields';
+import { expectInputValue, expectInputPlaceholder } from 'test/utils/pickers/assertions';
+import { adapterToUse } from 'test/utils/pickers/adapters';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<DesktopDatePicker /> - Field', () => {

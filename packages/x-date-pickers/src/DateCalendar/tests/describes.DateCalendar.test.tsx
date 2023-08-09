@@ -3,7 +3,8 @@ import { expect } from 'chai';
 import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
 import { pickersDayClasses } from '@mui/x-date-pickers/PickersDay';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers/adapters';
+import { wrapPickerMount, createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 

@@ -3,7 +3,8 @@ import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse } from 'test/utils/pickers/adapters';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 
 describe('<StaticDateRangePicker />', () => {

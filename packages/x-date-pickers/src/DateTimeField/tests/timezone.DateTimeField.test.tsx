@@ -3,7 +3,9 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { userEvent } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { createPickerRenderer, expectInputValue, getTextbox } from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { expectInputValue } from 'test/utils/pickers/assertions';
+import { getTextbox } from 'test/utils/pickers/fields';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];

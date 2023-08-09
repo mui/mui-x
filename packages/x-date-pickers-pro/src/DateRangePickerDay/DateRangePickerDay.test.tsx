@@ -4,7 +4,8 @@ import {
   DateRangePickerDay,
   dateRangePickerDayClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse } from 'test/utils/pickers/adapters';
 
 describe('<DateRangePickerDay />', () => {
   const { render } = createPickerRenderer();

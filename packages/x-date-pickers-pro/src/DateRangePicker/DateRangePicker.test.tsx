@@ -2,7 +2,8 @@ import * as React from 'react';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { stubMatchMedia } from 'test/utils/pickers/misc';
 
 describe('<DateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({

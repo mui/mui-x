@@ -7,16 +7,12 @@ import {
 } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import {
-  createPickerRenderer,
-  adapterToUse,
-  expectInputValue,
-  openPicker,
-  wrapPickerMount,
-  getClockTouchEvent,
-  expectInputPlaceholder,
-  getTextbox,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse } from 'test/utils/pickers/adapters';
+import { expectInputValue, expectInputPlaceholder } from 'test/utils/pickers/assertions';
+import { openPicker } from 'test/utils/pickers/openPicker';
+import { getClockTouchEvent } from 'test/utils/pickers/clock';
+import { getTextbox } from 'test/utils/pickers/fields';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 

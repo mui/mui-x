@@ -3,7 +3,9 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers/adapters';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { openPicker } from 'test/utils/pickers/openPicker';
 
 describe('<DesktopDateTimePicker />', () => {
   const { render } = createPickerRenderer({

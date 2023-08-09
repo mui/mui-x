@@ -6,11 +6,11 @@ import { userEvent } from '@mui/monorepo/test/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   buildFieldInteractions,
-  createPickerRenderer,
-  expectInputValue,
   getCleanedSelectedContent,
   getTextbox,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers/fields';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { expectInputValue } from 'test/utils/pickers/assertions';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { FieldSectionType, MuiPickersAdapter } from '@mui/x-date-pickers/models';
 import {

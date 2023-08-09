@@ -1,12 +1,9 @@
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { userEvent } from '@mui/monorepo/test/utils';
-import {
-  adapterToUse,
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-  getTextbox,
-} from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers/adapters';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { expectInputPlaceholder, expectInputValue } from 'test/utils/pickers/assertions';
+import { getTextbox } from 'test/utils/pickers/fields';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 

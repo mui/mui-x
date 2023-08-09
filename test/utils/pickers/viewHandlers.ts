@@ -1,5 +1,5 @@
 import { fireTouchChangedEvent, userEvent, screen } from '@mui/monorepo/test/utils';
-import { getClockTouchEvent } from 'test/utils/pickers-utils';
+import { getClockTouchEvent } from 'test/utils/pickers/clock';
 import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
 
 type TDate = any;

@@ -5,12 +5,9 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import {
-  cleanText,
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { cleanText } from 'test/utils/pickers/fields';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { expectInputPlaceholder, expectInputValue } from 'test/utils/pickers/assertions';
 import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,

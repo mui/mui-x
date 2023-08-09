@@ -8,7 +8,8 @@ import {
   getAllByRole,
   fireEvent,
 } from '@mui/monorepo/test/utils';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers/adapters';
+import { wrapPickerMount, createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 

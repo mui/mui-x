@@ -5,12 +5,9 @@ import { screen, fireEvent, userEvent, act, getByRole } from '@mui/monorepo/test
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { DateRange, LocalizationProvider } from '@mui/x-date-pickers-pro';
-import {
-  createPickerRenderer,
-  adapterToUse,
-  AdapterClassToUse,
-  openPicker,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse, AdapterClassToUse } from 'test/utils/pickers/adapters';
+import { openPicker } from 'test/utils/pickers/openPicker';
 
 const getPickerDay = (name: string, picker = 'January 2018'): HTMLButtonElement =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });

@@ -2,7 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { adapterToUse, getExpectedOnChangeCount } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers/adapters';
+import { getExpectedOnChangeCount } from 'test/utils/pickers/misc';
 import { expectPickerChangeHandlerValue } from 'test/utils/pickers/assertions';
 import { DescribeValueTestSuite } from './describeValue.types';
 

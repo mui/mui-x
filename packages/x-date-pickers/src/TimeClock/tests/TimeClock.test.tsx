@@ -9,7 +9,8 @@ import {
   getAllByRole,
 } from '@mui/monorepo/test/utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
-import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse } from 'test/utils/pickers/adapters';
 import { timeClockHandler } from 'test/utils/pickers/viewHandlers';
 
 describe('<TimeClock />', () => {

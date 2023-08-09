@@ -2,7 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
-import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers/adapters';
+import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
 import { digitalClockHandler } from 'test/utils/pickers/viewHandlers';
 
 describe('<DigitalClock />', () => {
