@@ -47,6 +47,10 @@
   },
   "slots": [],
   "name": "DateRangePickerDay",
+  "imports": [
+    "import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';",
+    "import { DateRangePickerDay } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": [
       "root",

@@ -33,6 +33,10 @@
   },
   "slots": [],
   "name": "ChartsAxis",
+  "imports": [
+    "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
+    "import { ChartsAxis } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxis" },
   "filename": "/packages/x-charts/src/ChartsAxis/ChartsAxis.tsx",
   "demos": "<ul></ul>",

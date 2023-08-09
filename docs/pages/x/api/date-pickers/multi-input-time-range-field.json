@@ -130,6 +130,10 @@
     }
   ],
   "name": "MultiInputTimeRangeField",
+  "imports": [
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';",
+    "import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "separator"],
     "globalClasses": {},

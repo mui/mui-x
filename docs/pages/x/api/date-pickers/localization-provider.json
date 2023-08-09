@@ -13,6 +13,11 @@
   },
   "slots": [],
   "name": "LocalizationProvider",
+  "imports": [
+    "import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';",
+    "import { LocalizationProvider } from '@mui/x-date-pickers';",
+    "import { LocalizationProvider } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "inheritance": null,

@@ -268,6 +268,11 @@
     }
   ],
   "name": "StaticDateTimePicker",
+  "imports": [
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';",
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers';",
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/StaticDateTimePicker/StaticDateTimePicker.tsx",
   "inheritance": null,

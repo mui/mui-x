@@ -117,6 +117,10 @@
     }
   ],
   "name": "MultiInputDateRangeField",
+  "imports": [
+    "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';",
+    "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "separator"],
     "globalClasses": {},

@@ -35,6 +35,10 @@
   },
   "slots": [],
   "name": "PieChart",
+  "imports": [
+    "import { PieChart } from '@mui/x-charts/PieChart';",
+    "import { PieChart } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieChart" },
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",
   "demos": "<ul></ul>",

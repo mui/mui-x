@@ -14,6 +14,11 @@
   },
   "slots": [],
   "name": "PickersCalendarHeader",
+  "imports": [
+    "import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';",
+    "import { PickersCalendarHeader } from '@mui/x-date-pickers';",
+    "import { PickersCalendarHeader } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
     "globalClasses": {},
