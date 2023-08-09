@@ -11,7 +11,7 @@ import {
   getDayCalendarSkeletonUtilityClass,
 } from './dayCalendarSkeletonClasses';
 
-type HTMLDivProps = JSX.IntrinsicElements['div'];
+type HTMLDivProps = React.JSX.IntrinsicElements['div'];
 
 export interface DayCalendarSkeletonProps extends HTMLDivProps {
   /**

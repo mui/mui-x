@@ -1,6 +1,9 @@
 {
-  "props": {},
-  "slots": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [],
   "name": "ScatterPlot",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatterPlot" },
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",

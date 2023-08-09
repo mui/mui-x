@@ -43,6 +43,12 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Enables accessibility improvements that will be enabled by default in v7.
+   * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
+   * @default false
+   */
+  ariaV7: boolean;
 }
 
 /**
@@ -424,7 +430,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**

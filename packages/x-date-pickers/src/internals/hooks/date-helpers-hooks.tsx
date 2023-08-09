@@ -5,7 +5,7 @@ import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
 import { PickerSelectionState } from './usePicker';
 import { PickersTimezone } from '../../models';
 
-interface MonthValidationOptions<TDate> {
+export interface MonthValidationOptions<TDate> {
   disablePast?: boolean;
   disableFuture?: boolean;
   minDate: TDate;

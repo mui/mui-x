@@ -16,7 +16,7 @@ import { resolveTimeFormat } from '../internals/utils/time-utils';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
   inProps: MobileTimePickerProps<TDate>,
@@ -69,7 +69,8 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     props,
     valueManager: singleItemValueManager,
     valueType: 'time',
-    getOpenDialogAriaText: localeText.openTimePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openTimePickerDialogue ?? localeText.openTimePickerDialogue,
     validator: validateTime,
   });
 

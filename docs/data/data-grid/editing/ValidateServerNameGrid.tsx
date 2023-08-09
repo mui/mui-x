@@ -5,11 +5,11 @@ import Tooltip, { tooltipClasses, TooltipProps } from '@mui/material/Tooltip';
 import {
   GridColDef,
   GridRowsProp,
-  DataGridPro,
+  DataGrid,
   GridPreProcessEditCellProps,
   GridEditInputCell,
   GridRenderEditCellParams,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   height: 400,
@@ -86,7 +86,7 @@ export default function ValidateServerNameGrid() {
 
   return (
     <StyledBox>
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.id === 5}

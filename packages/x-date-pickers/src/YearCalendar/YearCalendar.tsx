@@ -67,7 +67,7 @@ const YearCalendarRoot = styled('div', {
   maxHeight: 304,
 });
 
-type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
+type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
   propTypes?: any;
 };
 

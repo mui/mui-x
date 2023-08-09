@@ -8,7 +8,7 @@ import { useDateField } from './useDateField';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DateField = React.forwardRef(function DateField<TDate>(
   inProps: DateFieldProps<TDate>,
@@ -33,8 +33,8 @@ const DateField = React.forwardRef(function DateField<TDate>(
   });
 
   // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
-  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
+  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
+  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const {
     ref: inputRef,
@@ -76,6 +76,7 @@ DateField.propTypes = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
+  component: PropTypes.elementType,
   /**
    * Overridable components.
    * @default {}

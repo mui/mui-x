@@ -164,36 +164,28 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
             'cell',
           );
         });
-        // Firefox insists on focusing the pagination wrapper first before the input.
-        // This might need looking into in more depth.
-        // Maybe it's a bug?
-        if (browserType.name() !== 'firefox') {
-          await page.keyboard.press('Tab');
-          await waitFor(async () => {
-            expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
-            expect(
-              await page.evaluate(() => document.activeElement?.getAttribute('role')),
-            ).to.equal('button');
-          });
-          await page.keyboard.press('Shift+Tab');
-          await waitFor(async () => {
-            expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal(
-              'Adidas',
-            );
-            expect(
-              await page.evaluate(() => document.activeElement?.getAttribute('role')),
-            ).to.equal('cell');
-          });
-          // WebKit does not want to return focus back to the button for some reason...
-          if (browserType.name() !== 'webkit') {
-            await page.keyboard.press('Shift+Tab');
-            await waitFor(async () => {
-              expect(
-                await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
-              ).to.equal('initial-focus');
-            });
-          }
-        }
+        await page.keyboard.press('Tab');
+        await waitFor(async () => {
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
+          expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+            'button',
+          );
+        });
+        await page.keyboard.press('Shift+Tab');
+        await waitFor(async () => {
+          expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
+          expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
+            'cell',
+          );
+        });
+        // WebKit does not focus on buttons by default when pressing tab.
+        // https://github.com/microsoft/playwright/issues/5609#issuecomment-832684772
+        await page.keyboard.press(browserType.name() === 'webkit' ? 'Alt+Shift+Tab' : 'Shift+Tab');
+        await waitFor(async () => {
+          expect(
+            await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
+          ).to.equal('initial-focus');
+        });
       });
 
       it('should display the rows', async () => {
@@ -222,7 +214,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
 
         const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
         const year = page.locator('[role="columnheader"][aria-colindex="2"] > [draggable]');
-        await brand.dragTo(year);
+        await brand.dragTo(year, { timeout: 1000 });
 
         expect(
           await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
@@ -238,7 +230,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
         const rowColumn1990 = page.locator(
           '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]',
         );
-        await brand.dragTo(rowColumn1990);
+        await brand.dragTo(rowColumn1990, { timeout: 1000 });
 
         expect(await page.locator('[role="row"]').first().textContent()).to.equal('yearbrand');
       });
@@ -443,6 +435,30 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
           // could run into race condition otherwise
           await page.waitForSelector('[role="tooltip"]', { state: 'detached' });
           expect(await page.getByRole('textbox').inputValue()).to.equal('04/11/2022');
+        });
+
+        it('should allow filling in a value and clearing a value', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+          const input = page.getByRole('textbox');
+
+          await input.fill('04/11/2022');
+
+          expect(await input.inputValue()).to.equal('04/11/2022');
+
+          await input.blur();
+          await input.fill('');
+
+          expect(await input.inputValue()).to.equal('MM/DD/YYYY');
+        });
+
+        it('should allow typing in a value', async () => {
+          await renderFixture('DatePicker/BasicDesktopDatePicker');
+          const input = page.getByRole('textbox');
+
+          await input.focus();
+          await input.type('04/11/2022');
+
+          expect(await input.inputValue()).to.equal('04/11/2022');
         });
       });
       describe('<MobileDatePicker />', () => {
