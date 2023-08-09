@@ -115,7 +115,7 @@ export default function StackOrderDemo() {
           [`.${axisClasses.bottom}`]: {
             [`.${axisClasses.tickLabel}`]: {
               transform: 'rotate(45deg)',
-              alignmentBaseline: 'hanging',
+              dominantBaseline: 'hanging',
               textAnchor: 'start',
             },
             [`.${axisClasses.label}`]: {

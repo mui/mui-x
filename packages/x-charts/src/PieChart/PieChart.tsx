@@ -9,18 +9,40 @@ import { PieSeriesType } from '../models/seriesType';
 import { MakeOptional } from '../models/helpers';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsLegend, ChartsLegendProps } from '../ChartsLegend';
+import {
+  ChartsLegend,
+  ChartsLegendProps,
+  ChartsLegendSlotComponentProps,
+  ChartsLegendSlotsComponent,
+} from '../ChartsLegend';
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { PiePlot } from './PiePlot';
+import { PiePlot, PiePlotSlotComponentProps, PiePlotSlotsComponent } from './PiePlot';
 import { PieValueType } from '../models/seriesType/pie';
+import { ChartsAxisSlotsComponent, ChartsAxisSlotComponentProps } from '../models/axis';
+
+export interface PieChartSlotsComponent
+  extends ChartsAxisSlotsComponent,
+    PiePlotSlotsComponent,
+    ChartsLegendSlotsComponent {}
+export interface PieChartSlotComponentProps
+  extends ChartsAxisSlotComponentProps,
+    PiePlotSlotComponentProps,
+    ChartsLegendSlotComponentProps {}
 
 export interface PieChartProps
   extends Omit<ResponsiveChartContainerProps, 'series'>,
-    ChartsAxisProps {
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'> {
   series: MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>[];
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+
+  slots?: PieChartSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: PieChartSlotComponentProps;
 }
 
 const defaultMargin = { top: 5, bottom: 5, left: 5, right: 100 };
@@ -42,6 +64,8 @@ function PieChart(props: PieChartProps) {
     rightAxis = null,
     bottomAxis = null,
     children,
+    slots,
+    slotProps,
   } = props;
 
   const margin = { ...defaultMargin, ...marginProps };
@@ -74,9 +98,11 @@ function PieChart(props: PieChartProps) {
         leftAxis={leftAxis}
         rightAxis={rightAxis}
         bottomAxis={bottomAxis}
+        slots={slots}
+        slotProps={slotProps}
       />
-      <PiePlot />
-      <ChartsLegend {...legend} />
+      <PiePlot slots={slots} slotProps={slotProps} />
+      <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
       <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
       {children}
@@ -108,6 +134,8 @@ PieChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -139,6 +167,8 @@ PieChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -159,6 +189,8 @@ PieChart.propTypes = {
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
+    slotProps: PropTypes.object,
+    slots: PropTypes.object,
     spacing: PropTypes.number,
   }),
   margin: PropTypes.shape({
@@ -182,6 +214,8 @@ PieChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['left', 'right']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -237,6 +271,12 @@ PieChart.propTypes = {
       valueFormatter: PropTypes.func,
     }),
   ).isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
@@ -264,6 +304,8 @@ PieChart.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'top']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -296,6 +338,8 @@ PieChart.propTypes = {
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
@@ -322,6 +366,8 @@ PieChart.propTypes = {
       minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
+      slotProps: PropTypes.object,
+      slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
       tickSize: PropTypes.number,
