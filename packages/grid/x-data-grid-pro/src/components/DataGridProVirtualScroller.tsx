@@ -387,7 +387,6 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   return (
     <GridVirtualScroller {...getRootProps(other)}>
-      <GridOverlays />
       {topPinnedRowsData.length > 0 ? (
         <VirtualScrollerPinnedRows
           className={classes.topPinnedRows}
@@ -465,6 +464,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           </VirtualScrollerPinnedColumns>
         )}
         <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
+          <GridOverlays />
           {mainRows}
         </GridVirtualScrollerRenderZone>
         {rightRenderContext && (
