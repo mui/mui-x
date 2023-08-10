@@ -145,18 +145,9 @@ export const useField = <
     });
   });
 
-  const handleInputBlur = useEventCallback((event: React.FocusEvent<HTMLInputElement>, ...args) => {
-    const { relatedTarget } = event;
-
-    const shouldBlur =
-      !relatedTarget &&
-      relatedTarget !== inputRef.current &&
-      !inputRef.current.contains(relatedTarget);
-
-    if (shouldBlur) {
-      onBlur?.(event, ...(args as []));
-      setSelectedSections(null);
-    }
+  const handleInputBlur = useEventCallback((...args) => {
+    onBlur?.(...(args as []));
+    setSelectedSections(null);
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {

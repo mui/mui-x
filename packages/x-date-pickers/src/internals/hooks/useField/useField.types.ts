@@ -155,7 +155,7 @@ export interface UseFieldForwardedProps {
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
   onClick?: () => void;
   onFocus?: () => void;
-  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: () => void;
   error?: boolean;
   onClear?: React.MouseEventHandler;
   clearable?: boolean;
