@@ -105,14 +105,14 @@ function BrowserSingleInputDateRangePicker(props) {
 
   return (
     <DateRangePicker
+      {...props}
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
       slots={{ field: BrowserSingleInputDateRangeField }}
       slotProps={{
-        field: { onAdornmentClick: toggleOpen },
+        field: { onAdornmentClick: toggleOpen, ...props?.slotProps?.field },
       }}
-      {...props}
     />
   );
 }
