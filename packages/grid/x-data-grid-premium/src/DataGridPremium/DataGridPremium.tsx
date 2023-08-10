@@ -35,7 +35,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot
         className={props.className}
-        style={props.style}
+        style={{ cursor: 'default', ...props.style }}
         sx={props.sx}
         ref={ref}
         {...props.forwardedProps}
