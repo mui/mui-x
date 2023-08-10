@@ -4,7 +4,7 @@ productId: x-date-pickers
 
 # Migration from the lab
 
-<p class="description">MUI date and time pickers are now available on MUI X!</p>
+<p class="description">MUI Date and Time Pickers are now available on MUI X!</p>
 
 ## Introduction
 
