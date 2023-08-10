@@ -1,6 +1,6 @@
 import { ExtremumGetter, ExtremumGetterResult } from '../models/seriesType/config';
 
-export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
+const getBaseExtremum: ExtremumGetter<'bar'> = (params) => {
   const { axis } = params;
 
   const minX = Math.min(...(axis.data ?? []));
@@ -8,7 +8,7 @@ export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
   return [minX, maxX];
 };
 
-export const getExtremumY: ExtremumGetter<'bar'> = (params) => {
+const getValueExtremum: ExtremumGetter<'bar'> = (params) => {
   const { series, axis, isDefaultAxis } = params;
 
   return Object.keys(series)
@@ -34,4 +34,26 @@ export const getExtremumY: ExtremumGetter<'bar'> = (params) => {
       },
       [null, null],
     );
+};
+
+export const getExtremumX: ExtremumGetter<'bar'> = (params) => {
+  // Notice that bar should be all horizontal or all vertical.
+  // Don't think it's a problem for now
+  const isHorizontal = Object.keys(params.series).some(
+    (seriesId) => params.series[seriesId].layout === 'horizontal',
+  );
+  if (isHorizontal) {
+    return getValueExtremum(params);
+  }
+  return getBaseExtremum(params);
+};
+
+export const getExtremumY: ExtremumGetter<'bar'> = (params) => {
+  const isHorizontal = Object.keys(params.series).some(
+    (seriesId) => params.series[seriesId].layout === 'horizontal',
+  );
+  if (isHorizontal) {
+    return getBaseExtremum(params);
+  }
+  return getValueExtremum(params);
 };

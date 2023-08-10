@@ -9,7 +9,7 @@ import {
 import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
 import { BarSeriesType } from '../models/seriesType/bar';
 import { MakeOptional } from '../models/helpers';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
 import {
   ChartsLegend,
@@ -47,6 +47,7 @@ export interface BarChartProps
    * @default {}
    */
   slotProps?: BarChartSlotComponentProps;
+  layout?: BarSeriesType['layout'];
 }
 
 const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
@@ -60,6 +61,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
     colors,
     dataset,
     sx,
+    layout,
     tooltip,
     axisHighlight,
     legend,
@@ -75,26 +77,41 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
+  const hasHorizontalSeries =
+    layout === 'horizontal' ||
+    (layout === undefined && series.some((item) => item.layout === 'horizontal'));
+
+  const defaultAxisConfig = {
+    scaleType: 'band',
+    data: Array.from(
+      { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
+      (_, index) => index,
+    ),
+  } as const;
+
+  const defaultizedAxisHighlight = {
+    ...(hasHorizontalSeries ? ({ y: 'band' } as const) : ({ x: 'band' } as const)),
+    ...axisHighlight,
+  };
   return (
     <ResponsiveChartContainer
       ref={ref}
-      series={series.map((s) => ({ type: 'bar', ...s }))}
+      series={series.map((s) => ({
+        type: 'bar',
+        ...s,
+        layout: hasHorizontalSeries ? 'horizontal' : 'vertical',
+      }))}
       width={width}
       height={height}
       margin={margin}
       xAxis={
-        xAxis ?? [
-          {
-            id: DEFAULT_X_AXIS_KEY,
-            scaleType: 'band',
-            data: Array.from(
-              { length: Math.max(...series.map((s) => (s.data ?? dataset ?? []).length)) },
-              (_, index) => index,
-            ),
-          },
-        ]
+        xAxis ??
+        (hasHorizontalSeries ? undefined : [{ id: DEFAULT_X_AXIS_KEY, ...defaultAxisConfig }])
       }
-      yAxis={yAxis}
+      yAxis={
+        yAxis ??
+        (hasHorizontalSeries ? [{ id: DEFAULT_Y_AXIS_KEY, ...defaultAxisConfig }] : undefined)
+      }
       colors={colors}
       dataset={dataset}
       sx={sx}
@@ -114,7 +131,7 @@ const BarChart = React.forwardRef(function BarChart(props: BarChartProps, ref) {
         slotProps={slotProps}
       />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsAxisHighlight x="band" {...axisHighlight} />
+      <ChartsAxisHighlight {...defaultizedAxisHighlight} />
       <ChartsTooltip {...tooltip} slots={slots} slotProps={slotProps} />
       <ChartsClipPath id={clipPathId} />
       {children}

@@ -55,12 +55,9 @@ function useTicks(options: {
       if (scale.bandwidth() > 0) {
         // scale type = 'band'
         return [
-          ...domain.map((value, index) => ({
+          ...domain.map((value) => ({
             formattedValue: valueFormatter?.(value) ?? value,
-            offset:
-              index === 0
-                ? scale.range()[0]
-                : scale(value)! - (scale.step() - scale.bandwidth()) / 2,
+            offset: scale(value)! - (scale.step() - scale.bandwidth()) / 2,
             labelOffset: scale.step() / 2,
           })),
 
