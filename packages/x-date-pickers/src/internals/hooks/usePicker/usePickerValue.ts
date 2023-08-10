@@ -62,7 +62,7 @@ const shouldPublishValue = <TValue, TError>(
     return hasChanged(dateState.lastPublishedValue);
   }
 
-  if (action.name === 'setValueFromShortcut' && action.changeImportance === 'accept') {
+  if (action.name === 'setValueFromShortcut') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {

@@ -1042,6 +1042,10 @@
     }
   ],
   "name": "DataGridPremium",
+  "imports": [
+    "import { DataGridPremium } from '@mui/x-data-grid-premium/DataGridPremium';",
+    "import { DataGridPremium } from '@mui/x-data-grid-premium';"
+  ],
   "styles": {
     "classes": [
       "actionsCell",

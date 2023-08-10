@@ -28,6 +28,10 @@
   },
   "slots": [],
   "name": "TreeItem",
+  "imports": [
+    "import { TreeItem } from '@mui/x-tree-view/TreeItem';",
+    "import { TreeItem } from '@mui/x-tree-view';"
+  ],
   "styles": {
     "classes": [
       "root",

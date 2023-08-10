@@ -206,6 +206,23 @@ ChartsYAxis.propTypes = {
    */
   tickFontSize: PropTypes.number,
   /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMaxStep: PropTypes.number,
+  /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMinStep: PropTypes.number,
+  /**
+   * The number of ticks. This number is not guaranted.
+   * Not supported by categorical axis (band, points).
+   */
+  tickNumber: PropTypes.number,
+  /**
    * The size of the ticks.
    * @default 6
    */
