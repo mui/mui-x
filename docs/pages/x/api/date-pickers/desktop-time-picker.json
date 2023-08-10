@@ -260,6 +260,11 @@
     }
   ],
   "name": "DesktopTimePicker",
+  "imports": [
+    "import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';",
+    "import { DesktopTimePicker } from '@mui/x-date-pickers';",
+    "import { DesktopTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopTimePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

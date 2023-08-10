@@ -37,6 +37,16 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "slotProps": {
+      "description": "The props used for each component slot.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "slots": {
+      "description": "Overridable component slots.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "stroke": {
       "description": "The stroke color of the axis line.",
       "deprecated": "",
@@ -44,6 +54,21 @@
     },
     "tickFontSize": {
       "description": "The font size of the axis ticks text.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickMaxStep": {
+      "description": "Maximal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickMinStep": {
+      "description": "Maximal step between two ticks. When using time data, the value is assumed to be in ms. Not supported by categorical axis (band, points).",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "tickNumber": {
+      "description": "The number of ticks. This number is not guaranted. Not supported by categorical axis (band, points).",
       "deprecated": "",
       "typeDescriptions": {}
     },

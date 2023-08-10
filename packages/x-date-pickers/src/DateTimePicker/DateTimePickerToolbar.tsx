@@ -15,6 +15,7 @@ import {
 import { DateOrTimeViewWithMeridiem, WrapperVariant } from '../internals/models';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { MULTI_SECTION_CLOCK_SECTION_WIDTH } from '../internals/constants/dimensions';
+import { formatMeridiem } from '../internals/utils/date-utils';
 
 export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarProps {
   ampm?: boolean;
@@ -327,7 +328,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               variant="subtitle2"
               selected={markSelected && meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
-              value={utils.getMeridiemText('am')}
+              value={formatMeridiem(utils, 'am')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
               disabled={disabled}
             />
@@ -335,7 +336,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               variant="subtitle2"
               selected={markSelected && meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
-              value={utils.getMeridiemText('pm')}
+              value={formatMeridiem(utils, 'pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
               disabled={disabled}
             />
@@ -348,7 +349,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             data-mui-test="am-pm-view-button"
             onClick={() => onViewChange('meridiem')}
             selected={markSelected && view === 'meridiem'}
-            value={value && meridiemMode ? utils.getMeridiemText(meridiemMode) : '--'}
+            value={value && meridiemMode ? formatMeridiem(utils, meridiemMode) : '--'}
             width={MULTI_SECTION_CLOCK_SECTION_WIDTH}
           />
         )}

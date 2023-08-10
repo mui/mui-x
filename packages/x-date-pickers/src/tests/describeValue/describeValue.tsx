@@ -8,11 +8,13 @@ import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.ty
 import { testControlledUnControlled } from './testControlledUnControlled';
 import { testPickerOpenCloseLifeCycle } from './testPickerOpenCloseLifeCycle';
 import { testPickerActionBar } from './testPickerActionBar';
+import { testShortcuts } from './testShortcuts';
 
 const TEST_SUITES: DescribeValueTestSuite<any, any>[] = [
   testControlledUnControlled,
   testPickerOpenCloseLifeCycle,
   testPickerActionBar,
+  testShortcuts,
 ];
 
 function innerDescribeValue<TValue, C extends PickerComponentFamily>(

@@ -278,6 +278,10 @@
     }
   ],
   "name": "DateRangePicker",
+  "imports": [
+    "import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';",
+    "import { DateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

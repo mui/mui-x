@@ -7,10 +7,10 @@ import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsYAxisProps } from '../models/axis';
 import {
-  Line,
-  Tick,
-  TickLabel,
-  Label,
+  ChartsLine,
+  ChartsTick,
+  ChartsTickLabel,
+  ChartsLabel,
   AxisRoot,
 } from '../internals/components/AxisSharedComponents';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
@@ -56,6 +56,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     labelFontSize,
     tickSize: tickSizeProp,
     valueFormatter,
+    slots,
+    slotProps,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -73,13 +75,24 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     x: positionSigne * (tickFontSize + tickSize + 10),
     y: top + height / 2,
   };
+
+  const Line = slots?.axisLine ?? ChartsLine;
+  const Tick = slots?.axisTick ?? ChartsTick;
+  const TickLabel = slots?.axisTickLabel ?? ChartsTickLabel;
+  const Label = slots?.axisLabel ?? ChartsLabel;
+
   return (
     <AxisRoot
       transform={`translate(${position === 'right' ? left + width : left}, 0)`}
       className={classes.root}
     >
       {!disableLine && (
-        <Line y1={yScale.range()[0]} y2={yScale.range()[1]} className={classes.line} />
+        <Line
+          y1={yScale.range()[0]}
+          y2={yScale.range()[1]}
+          className={classes.line}
+          {...slotProps?.axisLine}
+        />
       )}
 
       {yTicks.map(({ formattedValue, offset, labelOffset }, index) => {
@@ -87,7 +100,14 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
         const yTickLabel = labelOffset;
         return (
           <g key={index} transform={`translate(0, ${offset})`} className={classes.tickContainer}>
-            {!disableTicks && <Tick x2={positionSigne * tickSize} className={classes.tick} />}
+            {!disableTicks && (
+              <Tick
+                x2={positionSigne * tickSize}
+                className={classes.tick}
+                {...slotProps?.axisTick}
+              />
+            )}
+
             {formattedValue !== undefined && (
               <TickLabel
                 x={xTickLabel}
@@ -97,6 +117,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
                   fontSize: tickFontSize,
                 }}
                 className={classes.tickLabel}
+                {...slotProps?.axisTickLabel}
               >
                 {formattedValue.toLocaleString()}
               </TickLabel>
@@ -114,6 +135,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
             transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
           }}
           className={classes.label}
+          {...slotProps?.axisLabel}
         >
           {label}
         </Label>
@@ -164,6 +186,16 @@ ChartsYAxis.propTypes = {
    */
   position: PropTypes.oneOf(['left', 'right']),
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
    * The stroke color of the axis line.
    * @default 'currentColor'
    */
@@ -173,6 +205,23 @@ ChartsYAxis.propTypes = {
    * @default 12
    */
   tickFontSize: PropTypes.number,
+  /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMaxStep: PropTypes.number,
+  /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMinStep: PropTypes.number,
+  /**
+   * The number of ticks. This number is not guaranted.
+   * Not supported by categorical axis (band, points).
+   */
+  tickNumber: PropTypes.number,
   /**
    * The size of the ticks.
    * @default 6

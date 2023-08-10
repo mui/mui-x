@@ -22,6 +22,7 @@ import { TimeViewWithMeridiem } from '../internals/models';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
+import { formatMeridiem } from '../internals/utils/date-utils';
 
 const useUtilityClasses = (ownerState: MultiSectionDigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -330,8 +331,8 @@ export const MultiSectionDigitalClock = React.forwardRef(function MultiSectionDi
         }
 
         case 'meridiem': {
-          const amLabel = utils.getMeridiemText('am');
-          const pmLabel = utils.getMeridiemText('pm');
+          const amLabel = formatMeridiem(utils, 'am');
+          const pmLabel = formatMeridiem(utils, 'pm');
           return {
             onChange: handleMeridiemChange,
             items: [

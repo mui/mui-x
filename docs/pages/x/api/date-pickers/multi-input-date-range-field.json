@@ -1,5 +1,6 @@
 {
   "props": {
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -116,7 +117,15 @@
     }
   ],
   "name": "MultiInputDateRangeField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateRangeField" },
+  "imports": [
+    "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';",
+    "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": ["root", "separator"],
+    "globalClasses": {},
+    "name": "MuiMultiInputDateRangeField"
+  },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
   "packages": [

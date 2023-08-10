@@ -163,6 +163,11 @@
     }
   ],
   "name": "StaticTimePicker",
+  "imports": [
+    "import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';",
+    "import { StaticTimePicker } from '@mui/x-date-pickers';",
+    "import { StaticTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticTimePicker" },
   "spread": false,
   "forwardsRefTo": "undefined",
