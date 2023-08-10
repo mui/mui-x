@@ -1,12 +1,10 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
   // Helper to find for example the 3rd monday in Jun
@@ -70,33 +68,33 @@ const shortcutsItems = [
   },
 ];
 
-export default function ChangeImportance() {
-  const [changeImportance, setChangeImportance] = React.useState('accept');
+export default function OnChangeShortcutLabel() {
+  const [value, setValue] = React.useState(null);
+  const [lastShortcutSelected, setLastShortcutSelected] = React.useState(null);
+
+  const handleChange = (newValue, ctx) => {
+    setValue(newValue);
+    if (ctx.shortcutLabel != null) {
+      setLastShortcutSelected(ctx.shortcutLabel);
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3} sx={{ width: 300 }}>
-        <ToggleButtonGroup
-          value={changeImportance}
-          exclusive
-          fullWidth
-          onChange={(event, newEventImportance) => {
-            if (newEventImportance != null) {
-              setChangeImportance(newEventImportance);
-            }
-          }}
-        >
-          <ToggleButton value="accept">accept</ToggleButton>
-          <ToggleButton value="set">set</ToggleButton>
-        </ToggleButtonGroup>
-        <DatePicker
+      <Stack spacing={2}>
+        <StaticDatePicker
+          value={value}
+          onChange={handleChange}
           slotProps={{
             shortcuts: {
               items: shortcutsItems,
-              changeImportance,
             },
           }}
         />
+        <Typography>
+          Last shortcut selected:{' '}
+          {lastShortcutSelected == null ? 'none' : lastShortcutSelected}
+        </Typography>
       </Stack>
     </LocalizationProvider>
   );

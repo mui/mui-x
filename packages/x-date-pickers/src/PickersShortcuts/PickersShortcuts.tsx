@@ -34,7 +34,12 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
 
 export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
+  // TODO v7: Make changeImportance and label mandatory.
+  onChange: (
+    newValue: TValue,
+    changeImportance?: PickerShortcutChangeImportance,
+    label?: string,
+  ) => void;
   isValid: (value: TValue) => boolean;
 }
 
@@ -51,7 +56,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue, changeImportance);
+        onChange(newValue, changeImportance, item.label);
       },
       disabled: !isValid(newValue),
     };
