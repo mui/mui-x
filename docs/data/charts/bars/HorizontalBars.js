@@ -110,7 +110,7 @@ export default function HorizontalBars() {
     <BarChart
       dataset={dataset}
       yAxis={[{ scaleType: 'band', dataKey: 'month' }]}
-      series={[{ dataKey: 'seoul', label: 'Seoul', valueFormatter }]}
+      series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
       layout="horizontal"
       {...chartSetting}
     />
