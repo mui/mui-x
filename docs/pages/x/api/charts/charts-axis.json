@@ -37,7 +37,24 @@
     "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
     "import { ChartsAxis } from '@mui/x-charts';"
   ],
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxis" },
+  "styles": {
+    "classes": [
+      "root",
+      "line",
+      "tickContainer",
+      "tick",
+      "tickLabel",
+      "label",
+      "directionX",
+      "directionY",
+      "top",
+      "bottom",
+      "left",
+      "right"
+    ],
+    "globalClasses": {},
+    "name": "MuiChartsAxis"
+  },
   "filename": "/packages/x-charts/src/ChartsAxis/ChartsAxis.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsAxis" }]
