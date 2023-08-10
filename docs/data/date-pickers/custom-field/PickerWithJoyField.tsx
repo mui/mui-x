@@ -200,14 +200,14 @@ function JoySingleInputDateRangePicker(props: DateRangePickerProps<Dayjs>) {
 
   return (
     <DateRangePicker
+      {...props}
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
       slots={{ field: JoySingleInputDateRangeField }}
       slotProps={{
-        field: { onAdornmentClick: toggleOpen } as any,
+        field: { onAdornmentClick: toggleOpen, ...props?.slotProps?.field } as any,
       }}
-      {...props}
     />
   );
 }
