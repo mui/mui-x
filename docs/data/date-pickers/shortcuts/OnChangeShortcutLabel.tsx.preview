@@ -9,5 +9,5 @@
 />
 <Typography>
   Last shortcut selected:{' '}
-  {lastShortcutSelected == null ? 'none' : lastShortcutSelected}
+  {lastShortcutSelected == null ? 'none' : lastShortcutSelected.label}
 </Typography>

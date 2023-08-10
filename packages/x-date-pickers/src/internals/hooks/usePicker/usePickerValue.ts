@@ -6,7 +6,7 @@ import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
 import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
-import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
+import { PickerShortcutChangeImportance, PickersShortcutsItem } from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -283,11 +283,11 @@ export const usePickerValue = <
               props: { ...props, value: action.value, timezone },
             });
 
-      const shortcutLabel = action.name === 'setValueFromShortcut' ? action.label ?? null : null;
+      const shortcut = action.name === 'setValueFromShortcut' ? action.shortcut ?? null : null;
 
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
-        shortcutLabel,
+        shortcut,
       };
 
       handleValueChange(action.value, context);
@@ -374,12 +374,16 @@ export const usePickerValue = <
 
   // TODO v7: Make changeImportance and label mandatory.
   const handleSelectShortcut = useEventCallback(
-    (newValue: TValue, changeImportance?: PickerShortcutChangeImportance, label?: string) =>
+    (
+      newValue: TValue,
+      changeImportance?: PickerShortcutChangeImportance,
+      shortcut?: Omit<PickersShortcutsItem<unknown>, 'getValue'>,
+    ) =>
       updateDate({
         name: 'setValueFromShortcut',
         value: newValue,
         changeImportance: changeImportance ?? 'accept',
-        label,
+        shortcut,
       }),
   );
 

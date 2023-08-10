@@ -12,7 +12,7 @@ import {
   PickerChangeHandlerContext,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
-import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
+import { PickerShortcutChangeImportance, PickersShortcutsItem } from '../../../PickersShortcuts';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -198,8 +198,8 @@ export type PickerValueUpdateAction<TValue, TError> =
       name: 'setValueFromShortcut';
       value: TValue;
       changeImportance: PickerShortcutChangeImportance;
-      // TODO v7: Make label mandatory.
-      label?: string;
+      // TODO v7: Make shortcut mandatory.
+      shortcut?: Omit<PickersShortcutsItem<unknown>, 'getValue'>;
     };
 
 /**

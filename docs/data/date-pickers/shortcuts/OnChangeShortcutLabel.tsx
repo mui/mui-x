@@ -79,17 +79,18 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
 
 export default function OnChangeShortcutLabel() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
-  const [lastShortcutSelected, setLastShortcutSelected] = React.useState<
-    string | null
-  >(null);
+  const [lastShortcutSelected, setLastShortcutSelected] = React.useState<Omit<
+    PickersShortcutsItem<unknown>,
+    'getValue'
+  > | null>(null);
 
   const handleChange = (
     newValue: Dayjs | null,
     ctx: PickerChangeHandlerContext<DateValidationError>,
   ) => {
     setValue(newValue);
-    if (ctx.shortcutLabel != null) {
-      setLastShortcutSelected(ctx.shortcutLabel);
+    if (ctx.shortcut != null) {
+      setLastShortcutSelected(ctx.shortcut);
     }
   };
 
@@ -107,7 +108,7 @@ export default function OnChangeShortcutLabel() {
         />
         <Typography>
           Last shortcut selected:{' '}
-          {lastShortcutSelected == null ? 'none' : lastShortcutSelected}
+          {lastShortcutSelected == null ? 'none' : lastShortcutSelected.label}
         </Typography>
       </Stack>
     </LocalizationProvider>

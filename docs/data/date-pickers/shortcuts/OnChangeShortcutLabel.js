@@ -74,8 +74,8 @@ export default function OnChangeShortcutLabel() {
 
   const handleChange = (newValue, ctx) => {
     setValue(newValue);
-    if (ctx.shortcutLabel != null) {
-      setLastShortcutSelected(ctx.shortcutLabel);
+    if (ctx.shortcut != null) {
+      setLastShortcutSelected(ctx.shortcut);
     }
   };
 
@@ -93,7 +93,7 @@ export default function OnChangeShortcutLabel() {
         />
         <Typography>
           Last shortcut selected:{' '}
-          {lastShortcutSelected == null ? 'none' : lastShortcutSelected}
+          {lastShortcutSelected == null ? 'none' : lastShortcutSelected.label}
         </Typography>
       </Stack>
     </LocalizationProvider>
