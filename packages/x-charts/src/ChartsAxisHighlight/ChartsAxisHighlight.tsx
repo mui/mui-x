@@ -85,7 +85,7 @@ ChartsAxisHighlight.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   x: PropTypes.oneOf(['band', 'line', 'none']),
-  y: PropTypes.oneOf(['line', 'none']),
+  y: PropTypes.oneOf(['band', 'line', 'none']),
 } as any;
 
 export { ChartsAxisHighlight };

@@ -136,7 +136,7 @@ LineChart.propTypes = {
   // ----------------------------------------------------------------------
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Indicate which axis to display the bottom of the charts.

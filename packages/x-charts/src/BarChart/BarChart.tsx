@@ -146,7 +146,7 @@ BarChart.propTypes = {
   // ----------------------------------------------------------------------
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   /**
    * Indicate which axis to display the bottom of the charts.
@@ -184,6 +184,7 @@ BarChart.propTypes = {
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   height: PropTypes.number,
+  layout: PropTypes.oneOf(['horizontal', 'vertical']),
   /**
    * Indicate which axis to display the left of the charts.
    * Can be a string (the id of the axis) or an object `ChartsYAxisProps`.
@@ -271,6 +272,7 @@ BarChart.propTypes = {
       }),
       id: PropTypes.string,
       label: PropTypes.string,
+      layout: PropTypes.oneOf(['horizontal', 'vertical']),
       stack: PropTypes.string,
       stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
       stackOrder: PropTypes.oneOf([
