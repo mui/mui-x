@@ -377,6 +377,11 @@
     }
   ],
   "name": "DateTimePicker",
+  "imports": [
+    "import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';",
+    "import { DateTimePicker } from '@mui/x-date-pickers';",
+    "import { DateTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePicker.tsx",
   "inheritance": null,

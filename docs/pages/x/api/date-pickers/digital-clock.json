@@ -94,6 +94,11 @@
     }
   ],
   "name": "DigitalClock",
+  "imports": [
+    "import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';",
+    "import { DigitalClock } from '@mui/x-date-pickers';",
+    "import { DigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "list", "item"], "globalClasses": {}, "name": "MuiDigitalClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

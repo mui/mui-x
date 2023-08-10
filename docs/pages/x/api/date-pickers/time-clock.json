@@ -131,6 +131,11 @@
     }
   ],
   "name": "TimeClock",
+  "imports": [
+    "import { TimeClock } from '@mui/x-date-pickers/TimeClock';",
+    "import { TimeClock } from '@mui/x-date-pickers';",
+    "import { TimeClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiTimeClock" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",

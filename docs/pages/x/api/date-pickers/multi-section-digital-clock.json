@@ -120,6 +120,11 @@
     }
   ],
   "name": "MultiSectionDigitalClock",
+  "imports": [
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMultiSectionDigitalClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

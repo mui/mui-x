@@ -194,6 +194,10 @@
     }
   ],
   "name": "StaticDateRangePicker",
+  "imports": [
+    "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';",
+    "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "undefined",

@@ -44,6 +44,11 @@
     }
   ],
   "name": "PickersLayout",
+  "imports": [
+    "import { PickersLayout } from '@mui/x-date-pickers/PickersLayout';",
+    "import { PickersLayout } from '@mui/x-date-pickers';",
+    "import { PickersLayout } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs", "shortcuts"],
     "globalClasses": {},

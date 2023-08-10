@@ -282,6 +282,11 @@
     }
   ],
   "name": "TimePicker",
+  "imports": [
+    "import { TimePicker } from '@mui/x-date-pickers/TimePicker';",
+    "import { TimePicker } from '@mui/x-date-pickers';",
+    "import { TimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePicker" },
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePicker.tsx",
   "inheritance": null,

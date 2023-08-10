@@ -5,6 +5,10 @@
   },
   "slots": [],
   "name": "AreaPlot",
+  "imports": [
+    "import { AreaPlot } from '@mui/x-charts/LineChart';",
+    "import { AreaPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiAreaPlot" },
   "filename": "/packages/x-charts/src/LineChart/AreaPlot.tsx",
   "demos": "<ul></ul>",
