@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { useSlotProps } from '@mui/base';
 import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
+import MuiInputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
 import { ClearIcon } from '../../icons';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useField.types';
@@ -47,17 +47,22 @@ export const useClearableField = <
     ownerState: {},
   });
 
+  const InputAdornment = slots?.inputAdornment ?? MuiInputAdornment;
+  const inputAdornmentProps = useSlotProps({
+    elementType: MuiInputAdornment,
+    externalSlotProps: slotProps?.inputAdornment,
+    ownerState: {},
+  });
+
   const InputProps = {
     ...ForwardedInputProps,
     endAdornment: clearable ? (
-      <React.Fragment>
-        <InputAdornment position="end">
-          <IconButton className="clearButton" onClick={onClear}>
-            <EndClearIcon fontSize="small" {...endClearIconProps} />
-          </IconButton>
-        </InputAdornment>
+      <InputAdornment {...inputAdornmentProps} position="end">
+        <IconButton className="clearButton" onClick={onClear}>
+          <EndClearIcon fontSize="small" {...endClearIconProps} />
+        </IconButton>
         {ForwardedInputProps?.endAdornment}
-      </React.Fragment>
+      </InputAdornment>
     ) : (
       ForwardedInputProps?.endAdornment
     ),
