@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { screen, describeConformance } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { createPickerRenderer, adapterToUse, wrapPickerMount } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  wrapPickerMount,
+  adapterToUse,
+  multiSectionDigitalClockHandler,
+} from 'test/utils/pickers';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { expect } from 'chai';
-import { multiSectionDigitalClockHandler } from 'test/utils/pickers/viewHandlers';
 import { formatMeridiem } from '@mui/x-date-pickers/internals/utils/date-utils';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {

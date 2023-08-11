@@ -8,7 +8,7 @@ import {
   adapterToUse,
   openPicker,
   getClockTouchEvent,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 
 describe('<MobileTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
