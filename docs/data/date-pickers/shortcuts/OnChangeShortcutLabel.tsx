@@ -1,14 +1,24 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import {
+  PickersShortcutsItem,
+  PickersShortcutsItemContext,
+} from '@mui/x-date-pickers/PickersShortcuts';
+import {
+  DateValidationError,
+  PickerChangeHandlerContext,
+} from '@mui/x-date-pickers/models';
 
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-
-const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
+const getMonthWeekday = (
+  monthIndex: number,
+  weekdayIndex: number,
+  dayRank: number,
+) => {
   // Helper to find for example the 3rd monday in Jun
   const today = dayjs();
   const firstDayOfMonth = today.month(monthIndex).startOf('month');
@@ -22,7 +32,7 @@ const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
   );
 };
 
-const shortcutsItems = [
+const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: "New Year's Day",
     getValue: () => {
@@ -70,33 +80,36 @@ const shortcutsItems = [
   },
 ];
 
-export default function ChangeImportance() {
-  const [changeImportance, setChangeImportance] = React.useState('accept');
+export default function OnChangeShortcutLabel() {
+  const [value, setValue] = React.useState<Dayjs | null>(null);
+  const [lastShortcutSelected, setLastShortcutSelected] = React.useState<
+    PickersShortcutsItemContext | undefined
+  >(undefined);
+
+  const handleChange = (
+    newValue: Dayjs | null,
+    ctx: PickerChangeHandlerContext<DateValidationError>,
+  ) => {
+    setValue(newValue);
+    setLastShortcutSelected(ctx.shortcut);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3} sx={{ width: 300 }}>
-        <ToggleButtonGroup
-          value={changeImportance}
-          exclusive
-          fullWidth
-          onChange={(event, newEventImportance) => {
-            if (newEventImportance != null) {
-              setChangeImportance(newEventImportance);
-            }
-          }}
-        >
-          <ToggleButton value="accept">accept</ToggleButton>
-          <ToggleButton value="set">set</ToggleButton>
-        </ToggleButtonGroup>
-        <DatePicker
+      <Stack spacing={2}>
+        <StaticDatePicker
+          value={value}
+          onChange={handleChange}
           slotProps={{
             shortcuts: {
               items: shortcutsItems,
-              changeImportance,
             },
           }}
         />
+        <Typography>
+          Selected shortcut on last onChange call:{' '}
+          {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
+        </Typography>
       </Stack>
     </LocalizationProvider>
   );
