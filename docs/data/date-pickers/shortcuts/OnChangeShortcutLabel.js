@@ -90,7 +90,7 @@ export default function OnChangeShortcutLabel() {
           }}
         />
         <Typography>
-          Selected shortcut on last <code>onChange</code> call:{' '}
+          Selected shortcut on last onChange call:{' '}
           {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
         </Typography>
       </Stack>
