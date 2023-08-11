@@ -4,10 +4,14 @@ import TextField from '@mui/material/TextField';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers/createPickerRenderer';
-import { expectInputValue, expectInputPlaceholder } from 'test/utils/pickers/assertions';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { getTextbox } from 'test/utils/pickers/fields';
+import {
+  createPickerRenderer,
+  wrapPickerMount,
+  expectInputValue,
+  expectInputPlaceholder,
+  adapterToUse,
+  getTextbox,
+} from 'test/utils/pickers';
 
 describe('<DateField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

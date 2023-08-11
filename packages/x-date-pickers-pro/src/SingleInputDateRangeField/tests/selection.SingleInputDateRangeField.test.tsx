@@ -2,14 +2,14 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import { act, userEvent } from '@mui/monorepo/test/utils';
-import { adapterToUse } from 'test/utils/pickers/adapters';
 import {
+  adapterToUse,
   buildFieldInteractions,
   getCleanedSelectedContent,
   getTextbox,
-} from 'test/utils/pickers/fields';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { expectInputValue } from 'test/utils/pickers/assertions';
+  createPickerRenderer,
+  expectInputValue,
+} from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

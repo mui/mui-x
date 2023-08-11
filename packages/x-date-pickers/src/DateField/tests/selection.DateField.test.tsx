@@ -2,14 +2,14 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, userEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { expectInputValue } from 'test/utils/pickers/assertions';
 import {
+  createPickerRenderer,
+  expectInputValue,
   getCleanedSelectedContent,
   getTextbox,
   buildFieldInteractions,
-} from 'test/utils/pickers/fields';
-import { adapterToUse } from 'test/utils/pickers/adapters';
+  adapterToUse,
+} from 'test/utils/pickers';
 
 describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

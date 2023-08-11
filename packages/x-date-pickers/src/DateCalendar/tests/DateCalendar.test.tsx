@@ -5,8 +5,7 @@ import { fireEvent, userEvent, screen } from '@mui/monorepo/test/utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { AdapterClassToUse, adapterToUse } from 'test/utils/pickers/adapters';
+import { createPickerRenderer, AdapterClassToUse, adapterToUse } from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { createRenderer, MuiRenderResult } from '@mui/monorepo/test/utils/createRenderer';
-import { BuildFieldInteractionsResponse, FieldSectionSelector } from 'test/utils/pickers/fields';
-import { OpenPickerParams } from 'test/utils/pickers/openPicker';
+import {
+  BuildFieldInteractionsResponse,
+  FieldSectionSelector,
+  OpenPickerParams,
+} from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 
 interface DescribeValueBaseOptions<TValue, C extends PickerComponentFamily> {

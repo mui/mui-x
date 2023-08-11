@@ -9,10 +9,14 @@ import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePi
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers/createPickerRenderer';
-import { openPicker } from 'test/utils/pickers/openPicker';
-import { expectInputPlaceholder, expectInputValue } from 'test/utils/pickers/assertions';
+import {
+  adapterToUse,
+  createPickerRenderer,
+  wrapPickerMount,
+  openPicker,
+  expectInputPlaceholder,
+  expectInputValue,
+} from 'test/utils/pickers';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

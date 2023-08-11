@@ -2,8 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DateCalendar /> keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

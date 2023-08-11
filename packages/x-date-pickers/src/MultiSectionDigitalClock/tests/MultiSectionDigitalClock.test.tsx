@@ -5,9 +5,11 @@ import {
   MultiSectionDigitalClock,
   MultiSectionDigitalClockProps,
 } from '@mui/x-date-pickers/MultiSectionDigitalClock';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { multiSectionDigitalClockHandler } from 'test/utils/pickers/viewHandlers';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  multiSectionDigitalClockHandler,
+} from 'test/utils/pickers';
 
 describe('<MultiSectionDigitalClock />', () => {
   const { render } = createPickerRenderer();

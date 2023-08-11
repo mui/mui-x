@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { SinonSpy } from 'sinon';
-import { cleanText } from 'test/utils/pickers/fields';
+import { cleanText } from 'test/utils/pickers';
 
 export const expectInputValue = (
   input: HTMLInputElement,

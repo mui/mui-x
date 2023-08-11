@@ -1,12 +1,15 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { screen, describeConformance } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers/createPickerRenderer';
-import { adapterToUse } from 'test/utils/pickers/adapters';
+import {
+  createPickerRenderer,
+  wrapPickerMount,
+  adapterToUse,
+  digitalClockHandler,
+} from 'test/utils/pickers';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
-import { expect } from 'chai';
-import { digitalClockHandler } from 'test/utils/pickers/viewHandlers';
 
 describe('<DigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { getTextbox } from 'test/utils/pickers/fields';
-import { expectInputPlaceholder } from 'test/utils/pickers/assertions';
+import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
 describe('<MobileTimePicker /> - Field', () => {

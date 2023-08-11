@@ -3,8 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue } from 'test/utils/pickers/assertions';
-import { getTextbox } from 'test/utils/pickers/fields';
+import { expectInputValue, getTextbox } from 'test/utils/pickers';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<DateField /> - Editing', () => {

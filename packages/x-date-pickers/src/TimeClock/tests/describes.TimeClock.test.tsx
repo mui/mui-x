@@ -7,9 +7,12 @@ import {
   TimeClock,
   timeClockClasses as classes,
 } from '@mui/x-date-pickers/TimeClock';
-import { wrapPickerMount, createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { timeClockHandler } from 'test/utils/pickers/viewHandlers';
+import {
+  wrapPickerMount,
+  createPickerRenderer,
+  adapterToUse,
+  timeClockHandler,
+} from 'test/utils/pickers';
 
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();

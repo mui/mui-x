@@ -2,9 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { getExpectedOnChangeCount } from 'test/utils/pickers/misc';
-import { getTextbox } from 'test/utils/pickers/fields';
-import { openPicker } from 'test/utils/pickers/openPicker';
+import { getExpectedOnChangeCount, getTextbox, openPicker } from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (

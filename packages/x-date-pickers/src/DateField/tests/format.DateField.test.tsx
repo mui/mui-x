@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { expectInputPlaceholder, expectInputValue } from 'test/utils/pickers/assertions';
-import { getTextbox } from 'test/utils/pickers/fields';
+import { expectInputPlaceholder, expectInputValue, getTextbox } from 'test/utils/pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 

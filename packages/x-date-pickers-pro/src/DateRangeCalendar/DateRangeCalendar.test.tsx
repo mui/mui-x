@@ -9,13 +9,14 @@ import {
   fireTouchChangedEvent,
   userEvent,
 } from '@mui/monorepo/test/utils';
-import { adapterToUse } from 'test/utils/pickers/adapters';
 import {
+  adapterToUse,
   buildPickerDragInteractions,
   MockedDataTransfer,
   rangeCalendarDayTouches,
-} from 'test/utils/pickers/calendar';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers/createPickerRenderer';
+  createPickerRenderer,
+  wrapPickerMount,
+} from 'test/utils/pickers';
 import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,

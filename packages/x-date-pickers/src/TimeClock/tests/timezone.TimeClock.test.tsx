@@ -4,8 +4,7 @@ import { expect } from 'chai';
 import { screen, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
-import { getClockTouchEvent, getTimeClockValue } from 'test/utils/pickers/clock';
-import { getDateOffset } from 'test/utils/pickers/misc';
+import { getClockTouchEvent, getTimeClockValue, getDateOffset } from 'test/utils/pickers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

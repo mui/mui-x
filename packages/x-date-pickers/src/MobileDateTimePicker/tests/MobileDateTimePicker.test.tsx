@@ -4,10 +4,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireTouchChangedEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { openPicker } from 'test/utils/pickers/openPicker';
-import { getClockTouchEvent } from 'test/utils/pickers/clock';
+import {
+  adapterToUse,
+  createPickerRenderer,
+  openPicker,
+  getClockTouchEvent,
+} from 'test/utils/pickers';
 
 describe('<MobileDateTimePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });

@@ -3,9 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { openPicker } from 'test/utils/pickers/openPicker';
+import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
 describe('<MobileDateRangePicker />', () => {

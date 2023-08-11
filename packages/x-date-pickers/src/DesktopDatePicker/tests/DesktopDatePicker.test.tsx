@@ -5,11 +5,13 @@ import { TransitionProps } from '@mui/material/transitions';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { openPicker } from 'test/utils/pickers/openPicker';
-import { expectInputValue } from 'test/utils/pickers/assertions';
-import { getTextbox } from 'test/utils/pickers/fields';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  openPicker,
+  expectInputValue,
+  getTextbox,
+} from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

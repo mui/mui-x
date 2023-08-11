@@ -3,10 +3,14 @@ import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation
 import TextField from '@mui/material/TextField';
 import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers/createPickerRenderer';
-import { expectInputValue, expectInputPlaceholder } from 'test/utils/pickers/assertions';
-import { getTextbox } from 'test/utils/pickers/fields';
+import {
+  adapterToUse,
+  createPickerRenderer,
+  wrapPickerMount,
+  expectInputValue,
+  expectInputPlaceholder,
+  getTextbox,
+} from 'test/utils/pickers';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
 describe('<DateTimeField /> - Describes', () => {

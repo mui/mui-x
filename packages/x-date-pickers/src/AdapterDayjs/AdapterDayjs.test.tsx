@@ -7,9 +7,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { buildPickerDragInteractions, MockedDataTransfer } from 'test/utils/pickers/calendar';
-import { expectInputPlaceholder, expectInputValue } from 'test/utils/pickers/assertions';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import {
+  buildPickerDragInteractions,
+  MockedDataTransfer,
+  expectInputPlaceholder,
+  expectInputValue,
+  createPickerRenderer,
+} from 'test/utils/pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import {

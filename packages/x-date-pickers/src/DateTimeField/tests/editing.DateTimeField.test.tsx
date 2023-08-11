@@ -3,9 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { userEvent, screen } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { adapterToUse } from 'test/utils/pickers/adapters';
-import { buildFieldInteractions } from 'test/utils/pickers/fields';
-import { createPickerRenderer } from 'test/utils/pickers/createPickerRenderer';
+import { adapterToUse, buildFieldInteractions, createPickerRenderer } from 'test/utils/pickers';
 
 describe('<DateTimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
