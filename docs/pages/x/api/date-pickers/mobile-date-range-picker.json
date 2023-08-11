@@ -250,6 +250,10 @@
     }
   ],
   "name": "MobileDateRangePicker",
+  "imports": [
+    "import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';",
+    "import { MobileDateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

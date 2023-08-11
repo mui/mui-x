@@ -306,6 +306,11 @@
     }
   ],
   "name": "DesktopDatePicker",
+  "imports": [
+    "import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';",
+    "import { DesktopDatePicker } from '@mui/x-date-pickers';",
+    "import { DesktopDatePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker/DesktopDatePicker.tsx",
   "inheritance": null,

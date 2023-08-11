@@ -256,6 +256,10 @@
     }
   ],
   "name": "DesktopDateRangePicker",
+  "imports": [
+    "import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';",
+    "import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

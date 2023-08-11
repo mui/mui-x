@@ -200,6 +200,11 @@
     }
   ],
   "name": "DateCalendar",
+  "imports": [
+    "import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';",
+    "import { DateCalendar } from '@mui/x-date-pickers';",
+    "import { DateCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "viewTransitionContainer"],
     "globalClasses": {},

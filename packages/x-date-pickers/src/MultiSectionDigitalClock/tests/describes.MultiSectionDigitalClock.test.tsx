@@ -7,6 +7,7 @@ import { adapterToUse } from 'test/utils/pickers/adapters';
 import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { expect } from 'chai';
 import { multiSectionDigitalClockHandler } from 'test/utils/pickers/viewHandlers';
+import { formatMeridiem } from '@mui/x-date-pickers/internals/utils/date-utils';
 
 describe('<MultiSectionDigitalClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -64,7 +65,7 @@ describe('<MultiSectionDigitalClock /> - Describes', () => {
         expect(selectedItems[1]).to.have.text(minutesLabel);
         if (hasMeridiem) {
           expect(selectedItems[2]).to.have.text(
-            adapterToUse.getMeridiemText(adapterToUse.getHours(expectedValue) >= 12 ? 'pm' : 'am'),
+            formatMeridiem(adapterToUse, adapterToUse.getHours(expectedValue) >= 12 ? 'pm' : 'am'),
           );
         }
       }

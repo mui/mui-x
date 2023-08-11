@@ -54,6 +54,10 @@
   },
   "slots": [],
   "name": "TreeView",
+  "imports": [
+    "import { TreeView } from '@mui/x-tree-view/TreeView';",
+    "import { TreeView } from '@mui/x-tree-view';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiTreeView" },
   "spread": true,
   "forwardsRefTo": "HTMLUListElement",

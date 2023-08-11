@@ -199,7 +199,7 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
 
       const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
       const niceDomain = niceScale.domain();
@@ -254,7 +254,7 @@ function CartesianContextProvider({
       const scaleType = axis.scaleType ?? 'linear';
 
       const extremums = [axis.min ?? minData, axis.max ?? maxData];
-      const ticksNumber = getTicksNumber({ ...axis, range });
+      const ticksNumber = getTicksNumber({ ...axis, range, domain: extremums });
 
       const niceScale = getScale(scaleType, extremums, range).nice(ticksNumber);
       const niceDomain = niceScale.domain();
@@ -309,17 +309,17 @@ CartesianContextProvider.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
@@ -337,17 +337,17 @@ CartesianContextProvider.propTypes = {
       label: PropTypes.string,
       labelFontSize: PropTypes.number,
       max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      maxTicks: PropTypes.number,
       min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-      minTicks: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'left', 'right', 'top']),
       scaleType: PropTypes.oneOf(['band', 'linear', 'log', 'point', 'pow', 'sqrt', 'time', 'utc']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
       stroke: PropTypes.string,
       tickFontSize: PropTypes.number,
+      tickMaxStep: PropTypes.number,
+      tickMinStep: PropTypes.number,
+      tickNumber: PropTypes.number,
       tickSize: PropTypes.number,
-      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),

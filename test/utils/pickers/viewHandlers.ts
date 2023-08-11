@@ -1,6 +1,7 @@
 import { fireTouchChangedEvent, userEvent, screen } from '@mui/monorepo/test/utils';
 import { getClockTouchEvent } from 'test/utils/pickers/clock';
 import { MuiPickersAdapter, TimeView } from '@mui/x-date-pickers/models';
+import { formatMeridiem } from '@mui/x-date-pickers/internals/utils/date-utils';
 
 type TDate = any;
 
@@ -50,7 +51,7 @@ export const multiSectionDigitalClockHandler: ViewHandler<TimeView> = {
     if (hasMeridiem) {
       userEvent.mousePress(
         screen.getByRole('option', {
-          name: adapter.getMeridiemText(adapter.getHours(value) >= 12 ? 'pm' : 'am'),
+          name: formatMeridiem(adapter, adapter.getHours(value) >= 12 ? 'pm' : 'am'),
         }),
       );
     }

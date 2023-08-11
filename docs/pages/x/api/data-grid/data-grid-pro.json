@@ -962,6 +962,11 @@
     }
   ],
   "name": "DataGridPro",
+  "imports": [
+    "import { DataGridPro } from '@mui/x-data-grid-pro/DataGridPro';",
+    "import { DataGridPro } from '@mui/x-data-grid-pro';",
+    "import { DataGridPro } from '@mui/x-data-grid-premium';"
+  ],
   "styles": {
     "classes": [
       "actionsCell",

@@ -318,6 +318,11 @@
     }
   ],
   "name": "MobileDateTimePicker",
+  "imports": [
+    "import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';",
+    "import { MobileDateTimePicker } from '@mui/x-date-pickers';",
+    "import { MobileDateTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/MobileDateTimePicker/MobileDateTimePicker.tsx",
   "inheritance": null,
