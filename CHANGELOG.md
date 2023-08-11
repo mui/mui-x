@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.11.1
+
+_Aug 11, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Add theme augmentation to `@mui/x-tree-view`
+- 📈 Enable charts customization using `slot` and `slotProps` props
+- 🌍 Improve Finnish (fi-FI) and Icelandic (is-IS) locales on the pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.11.1`
+
+- [DataGrid] `getCellAggregationResult`: Handle `null` `rowNode` case (#9915) @romgrk
+
+#### `@mui/x-data-grid-pro@6.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@6.11.1`.
+
+#### `@mui/x-data-grid-premium@6.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.11.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.11.1`
+
+- [fields] Use `numeric` `inputmode` instead of `tel` (#9918) @LukasTy
+- [pickers] Always respect locale when formatting meridiem (#9979) @flaviendelangle
+- [pickers] Call `onChange` when selecting a shortcut with `changeImportance="set"` (#9974) @flaviendelangle
+- [pickers] Refactor `themeAugmentation` `styleOverrides` (#9978) @LukasTy
+- [l10n] Improve Finnish (fi-FI) locale (#9795) @kurkle
+- [l10n] Improve Icelandic (is-IS) locale (#9639) @magnimarels
+
+#### `@mui/x-date-pickers-pro@6.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.11.1`.
+
+### Charts / `@mui/x-charts@v6.0.0-alpha.7`
+
+- [charts] Fix label and tick alignment (#9952) @LukasTy
+- [charts] Remove not functional component `styleOverrides` (#9996) @LukasTy
+- [charts] Set custom ticks number (#9922) @alexfauquette
+- [charts] Use `slot`/`slotProps` for customization (#9744) @alexfauquette
+- [charts] Extend cheerful fiesta palette (#9980) @noraleonte
+
+### Tree View / `@mui/x-tree-view@v6.0.0-alpha.1`
+
+- [TreeView] Add theme augmentation (#9967) @flaviendelangle
+
+### Docs
+
+- [docs] Clarify the `shouldDisableClock` migration code options (#9920) @LukasTy
+
+### Core
+
+- [core] Port GitHub workflow for ensuring triage label is present (#9924) @DanailH
+- [docs-infra] Fix the import samples in Api pages (#9898) @alexfauquette
+
 ## 6.11.0
 
 _Aug 4, 2023_
