@@ -8,7 +8,7 @@ import { InferError, useValidation } from '../useValidation';
 import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
 import {
   PickerShortcutChangeImportance,
-  PickersShortcutsItemWithoutValue,
+  PickersShortcutsItemContext,
 } from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
@@ -380,7 +380,7 @@ export const usePickerValue = <
     (
       newValue: TValue,
       changeImportance?: PickerShortcutChangeImportance,
-      shortcut?: PickersShortcutsItemWithoutValue,
+      shortcut?: PickersShortcutsItemContext,
     ) =>
       updateDate({
         name: 'setValueFromShortcut',

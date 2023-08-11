@@ -1,4 +1,4 @@
-import type { PickersShortcutsItemWithoutValue } from '../PickersShortcuts';
+import type { PickersShortcutsItemContext } from '../PickersShortcuts';
 
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
@@ -6,5 +6,5 @@ export interface PickerChangeHandlerContext<TError> {
    * Shortcut causing this `onChange` call.
    * If the call has not been caused by a shortcut selection, it will equal `null`.
    */
-  shortcut: PickersShortcutsItemWithoutValue | null;
+  shortcut: PickersShortcutsItemContext | null;
 }

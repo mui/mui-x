@@ -2,6 +2,6 @@ export { PickersShortcuts } from './PickersShortcuts';
 export type {
   PickersShortcutsProps,
   PickersShortcutsItem,
-  PickersShortcutsItemWithoutValue,
+  PickersShortcutsItemContext,
   PickerShortcutChangeImportance,
 } from './PickersShortcuts';

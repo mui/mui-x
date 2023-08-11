@@ -256,7 +256,7 @@
   { "name": "PickersMonthClassKey", "kind": "TypeAlias" },
   { "name": "PickersShortcuts", "kind": "Function" },
   { "name": "PickersShortcutsItem", "kind": "Interface" },
-  { "name": "PickersShortcutsItemWithoutValue", "kind": "TypeAlias" },
+  { "name": "PickersShortcutsItemContext", "kind": "TypeAlias" },
   { "name": "PickersShortcutsProps", "kind": "Interface" },
   { "name": "pickersSlideTransitionClasses", "kind": "Variable" },
   { "name": "PickersSlideTransitionClasses", "kind": "Interface" },
