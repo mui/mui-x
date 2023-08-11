@@ -9,7 +9,7 @@ _Aug 11, 2023_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 💫 Add theme automentation for the Tree View component
+- 💫 Add theme augmentation to `@mui/x-tree-view`
 - 📈 Enable charts customization using `slot` and `slotProps` props
 - 🌍 Improve Finnish (fi-FI) and Icelandic (is-IS) locales on the pickers
 - 🐞 Bugfixes
