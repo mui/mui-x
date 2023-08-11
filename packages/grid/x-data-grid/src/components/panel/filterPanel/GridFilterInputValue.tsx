@@ -18,7 +18,7 @@ export type GridTypeFilterInputValueProps = GridFilterInputValueProps &
     isFilterActive?: boolean;
   };
 
-type ItemPlusTag = GridFilterItem & { fromInput?: boolean };
+type ItemPlusTag = GridFilterItem & { fromInput?: string };
 
 function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   const {
@@ -47,7 +47,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
       setIsApplying(true);
       filterTimeout.start(rootProps.filterDebounceMs, () => {
-        const newItem = { ...item, value, fromInput: true };
+        const newItem = { ...item, value, fromInput: id! };
         applyValue(newItem);
         setIsApplying(false);
       });
@@ -57,7 +57,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   React.useEffect(() => {
     const itemPlusTag = item as ItemPlusTag;
-    if (!itemPlusTag.fromInput) {
+    if (itemPlusTag.fromInput !== id) {
       setFilterValueState(String(item.value ?? ''));
     }
   }, [item]);
