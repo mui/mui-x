@@ -10,8 +10,8 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
 import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { VIEW_HEIGHT } from '@mui/x-date-pickers/internals/constants/dimensions';
-import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
+import { styled } from '@mui/material/styles';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateTimeRangePickerProps } from './DesktopDateTimeRangePicker.types';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
@@ -21,6 +21,20 @@ import { DateRange, DateTimeRangePickerViews } from '../internals/models';
 import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/shared';
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
+
+const DesktopDateTimeRangeContainer = styled('div')<{ isTimeActive: boolean }>(
+  ({ isTimeActive }) => ({
+    display: 'flex',
+    margin: '0 auto',
+    ...(isTimeActive
+      ? {
+          '> :first-child': {
+            opacity: 0.4,
+          },
+        }
+      : { '> :nth-child(3)': { opacity: 0.4 } }),
+  }),
+);
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -94,9 +108,10 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
           ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         },
       };
+      const isTimeViewActive = isInternalTimeView(popperView);
       return (
-        <Box sx={{ display: 'flex', margin: '0 auto' }}>
-          {isInternalTimeView(popperView) ? (
+        <DesktopDateTimeRangeContainer isTimeActive={isTimeViewActive}>
+          {isTimeViewActive ? (
             <React.Fragment>
               {inViewRenderers.day?.({
                 ...rendererProps,
@@ -105,7 +120,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
               <Divider orientation="vertical" />
             </React.Fragment>
           ) : null}
-          {isInternalTimeView(popperView) ? (
+          {isTimeViewActive ? (
             <DateTimeRangePickerTimeWrapper
               {...finalProps}
               viewRenderer={inViewRenderers[popperView]}
@@ -113,17 +128,17 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
           ) : (
             inViewRenderers[popperView]?.(finalProps)
           )}
-          {isDatePickerView(popperView) ? (
+          {!isTimeViewActive ? (
             <React.Fragment>
               <Divider orientation="vertical" />
               <DateTimeRangePickerTimeWrapper
                 {...finalProps}
-                view={isInternalTimeView(popperView) ? popperView : 'hours'}
+                view="hours"
                 viewRenderer={inViewRenderers.hours}
               />
             </React.Fragment>
           ) : null}
-        </Box>
+        </DesktopDateTimeRangeContainer>
       );
     },
   });
