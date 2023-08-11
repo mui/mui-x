@@ -36,7 +36,7 @@ Same changes as in `@mui/x-data-grid-pro@6.11.1`.
 
 - [fields] Use `numeric` `inputmode` instead of `tel` (#9918) @LukasTy
 - [pickers] Always respect locale when formatting meridiem (#9979) @flaviendelangle
-- [pickers] Call `onChange` when selecting a picker with `changeImportance="set"` (#9974) @flaviendelangle
+- [pickers] Call `onChange` when selecting a shortcut with `changeImportance="set"` (#9974) @flaviendelangle
 - [pickers] Refactor `themeAugmentation` `styleOverrides` (#9978) @LukasTy
 - [l10n] Improve Finnish (fi-FI) locale (#9795) @kurkle
 - [l10n] Improve Icelandic (is-IS) locale (#9639) @magnimarels
