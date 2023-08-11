@@ -4,7 +4,7 @@ export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
   /**
    * Shortcut causing this `onChange` call.
-   * If the call has not been caused by a shortcut selection, this property is not defined.
+   * If the call has not been caused by a shortcut selection, this property will be `undefined`.
    */
   shortcut?: PickersShortcutsItemContext;
 }
