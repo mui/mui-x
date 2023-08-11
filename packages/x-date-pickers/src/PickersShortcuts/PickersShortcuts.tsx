@@ -14,6 +14,8 @@ export interface PickersShortcutsItem<TValue> {
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
 }
 
+export type PickersShortcutsItemWithoutValue = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
+
 export type PickerShortcutChangeImportance = 'set' | 'accept';
 
 export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
@@ -38,7 +40,7 @@ export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutPr
   onChange: (
     newValue: TValue,
     changeImportance?: PickerShortcutChangeImportance,
-    shortcut?: Omit<PickersShortcutsItem<unknown>, 'getValue'>,
+    shortcut?: PickersShortcutsItemWithoutValue,
   ) => void;
   isValid: (value: TValue) => boolean;
 }

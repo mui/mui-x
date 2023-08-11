@@ -65,7 +65,7 @@ In the following demonstration, it is used to get the next available week and we
 ### Know which shortcut has been selected
 
 The `onChange` callback receives the shortcut as a property of it's second argument.
-You can use it to apply some logic based on the label of the shortcut:
+You can use it to know, which shortcut has been chosen:
 
 {{"demo": "OnChangeShortcutLabel.js", "bg": "inline"}}
 

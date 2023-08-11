@@ -6,7 +6,10 @@ import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
 import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
-import { PickerShortcutChangeImportance, PickersShortcutsItem } from '../../../PickersShortcuts';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemWithoutValue,
+} from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -283,7 +286,7 @@ export const usePickerValue = <
               props: { ...props, value: action.value, timezone },
             });
 
-      const shortcut = action.name === 'setValueFromShortcut' ? action.shortcut ?? null : null;
+      const shortcut = (action.name === 'setValueFromShortcut' && action.shortcut) || null;
 
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
@@ -377,7 +380,7 @@ export const usePickerValue = <
     (
       newValue: TValue,
       changeImportance?: PickerShortcutChangeImportance,
-      shortcut?: Omit<PickersShortcutsItem<unknown>, 'getValue'>,
+      shortcut?: PickersShortcutsItemWithoutValue,
     ) =>
       updateDate({
         name: 'setValueFromShortcut',
