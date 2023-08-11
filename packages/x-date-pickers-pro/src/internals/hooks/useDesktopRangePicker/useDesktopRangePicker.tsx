@@ -55,6 +55,7 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
+    onViewChange,
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
@@ -66,6 +67,7 @@ export const useDesktopRangePicker = <
   const endInputRef = React.useRef<HTMLInputElement>(null);
   const startFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
   const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
+  const [currentView, setCurrentView] = React.useState<TView | null>(props.view ?? null);
 
   const slotProps = {
     ...inSlotProps,
@@ -74,6 +76,14 @@ export const useDesktopRangePicker = <
       inputRef: ownerState.position === 'start' ? startInputRef : endInputRef,
     }),
   };
+
+  const handleViewChange = React.useCallback(
+    (newView: TView) => {
+      onViewChange?.(newView);
+      setCurrentView(newView);
+    },
+    [onViewChange],
+  );
 
   const {
     open,
@@ -91,7 +101,10 @@ export const useDesktopRangePicker = <
     DesktopRangePickerAdditionalViewProps
   >({
     ...pickerParams,
-    props,
+    props: {
+      ...props,
+      onViewChange: handleViewChange,
+    },
     wrapperVariant: 'desktop',
     autoFocusView: false,
     additionalViewProps: {
@@ -101,16 +114,15 @@ export const useDesktopRangePicker = <
   });
 
   React.useEffect(() => {
-    const view = layoutProps.view;
-    if (!view || !open) {
+    if (!open) {
       return;
     }
     // handle field re-focusing and section selection after view and/or range position change
     const inputToFocus = rangePosition === 'start' ? startInputRef.current : endInputRef.current;
     const currentFieldRef = rangePosition === 'start' ? startFieldRef.current : endFieldRef.current;
     inputToFocus?.focus();
-    currentFieldRef?.setSelectedSections(view);
-  }, [layoutProps.view, onRangePositionChange, open, rangePosition]);
+    currentFieldRef?.setSelectedSections(currentView ?? 0);
+  }, [currentView, open, rangePosition]);
 
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {

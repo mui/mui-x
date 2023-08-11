@@ -54,9 +54,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
-    TimezoneProps,
-    // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
-    Pick<ExportedUseViewsOptions<'day'>, 'autoFocus'> {
+    TimezoneProps {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -106,7 +104,8 @@ export interface ExportedDateRangeCalendarProps<TDate>
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDateRangeCalendarProps<TDate>,
-    UseRangePositionProps {
+    UseRangePositionProps,
+    ExportedUseViewsOptions<'day'> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -160,5 +159,10 @@ export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarPro
 
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
-  'reduceAnimations' | 'calendars' | 'disableDragEditing' | keyof BaseDateValidationProps<TDate>
+  | 'views'
+  | 'openTo'
+  | 'reduceAnimations'
+  | 'calendars'
+  | 'disableDragEditing'
+  | keyof BaseDateValidationProps<TDate>
 >;

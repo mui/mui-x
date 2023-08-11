@@ -31,6 +31,7 @@ import {
   buildWarning,
   useControlledValueWithTimezone,
 } from '@mui/x-date-pickers/internals';
+import { useViews } from '@mui/x-date-pickers/internals/hooks/useViews';
 import { getReleaseInfo } from '../internals/utils/releaseInfo';
 import {
   dateRangeCalendarClasses,
@@ -133,6 +134,8 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
     loading: props.loading ?? false,
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
+    openTo: themeProps.openTo ?? 'day',
+    views: themeProps.views ?? ['day'],
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     calendars: themeProps.calendars ?? 2,
@@ -199,6 +202,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     disableDragEditing,
     displayWeekNumber,
     timezone: timezoneProp,
+    sequentialViewOrder,
+    views,
+    view: inView,
+    openTo,
+    onViewChange,
     ...other
   } = props;
 
@@ -209,6 +217,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     defaultValue,
     onChange,
     valueManager: rangeValueManager,
+  });
+
+  const { setValueAndGoToNextView } = useViews({
+    view: inView,
+    views,
+    openTo,
+    onChange: handleValueChange,
+    onViewChange,
+    autoFocus,
   });
 
   const utils = useUtils<TDate>();
@@ -244,10 +261,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         allowRangeFlip,
       });
 
-      onRangePositionChange(nextSelection);
+      if (!sequentialViewOrder) {
+        onRangePositionChange(nextSelection);
+      }
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
-      handleValueChange(newRange, isFullRangeSelected ? 'finish' : 'partial');
+      setValueAndGoToNextView(
+        newRange,
+        isFullRangeSelected || sequentialViewOrder ? 'finish' : 'partial',
+      );
     },
   );
 

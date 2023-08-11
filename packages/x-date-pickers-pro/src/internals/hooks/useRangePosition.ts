@@ -22,6 +22,11 @@ export interface UseRangePositionProps {
    * @param {RangePosition} rangePosition The new range position.
    */
   onRangePositionChange?: (rangePosition: RangePosition) => void;
+  /**
+   * If `true`, the following view order will be used: "start date" -> "start time" -> "end date" -> "end time".
+   * @default false
+   */
+  sequentialViewOrder?: boolean;
 }
 
 export interface UseRangePositionResponse {
