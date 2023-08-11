@@ -12,7 +12,10 @@ import {
   PickerChangeHandlerContext,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
-import { PickerShortcutChangeImportance, PickersShortcutsItemContext } from '../../../PickersShortcuts';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemContext,
+} from '../../../PickersShortcuts';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**

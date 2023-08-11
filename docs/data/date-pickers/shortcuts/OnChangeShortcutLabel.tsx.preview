@@ -8,6 +8,6 @@
   }}
 />
 <Typography>
-  Last shortcut selected:{' '}
-  {lastShortcutSelected == null ? 'none' : lastShortcutSelected.label}
+  Selected shortcut on last <code>onChange</code> call:{' '}
+  {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
 </Typography>

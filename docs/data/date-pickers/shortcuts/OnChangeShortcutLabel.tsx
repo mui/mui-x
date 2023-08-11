@@ -5,7 +5,10 @@ import Typography from '@mui/material/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
+import {
+  PickersShortcutsItem,
+  PickersShortcutsItemContext,
+} from '@mui/x-date-pickers/PickersShortcuts';
 import {
   DateValidationError,
   PickerChangeHandlerContext,
@@ -79,19 +82,16 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
 
 export default function OnChangeShortcutLabel() {
   const [value, setValue] = React.useState<Dayjs | null>(null);
-  const [lastShortcutSelected, setLastShortcutSelected] = React.useState<Omit<
-    PickersShortcutsItem<unknown>,
-    'getValue'
-  > | null>(null);
+  const [lastShortcutSelected, setLastShortcutSelected] = React.useState<
+    PickersShortcutsItemContext | undefined
+  >(undefined);
 
   const handleChange = (
     newValue: Dayjs | null,
     ctx: PickerChangeHandlerContext<DateValidationError>,
   ) => {
     setValue(newValue);
-    if (ctx.shortcut != null) {
-      setLastShortcutSelected(ctx.shortcut);
-    }
+    setLastShortcutSelected(ctx.shortcut);
   };
 
   return (
@@ -107,8 +107,8 @@ export default function OnChangeShortcutLabel() {
           }}
         />
         <Typography>
-          Last shortcut selected:{' '}
-          {lastShortcutSelected == null ? 'none' : lastShortcutSelected.label}
+          Selected shortcut on last onChange call:{' '}
+          {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
         </Typography>
       </Stack>
     </LocalizationProvider>

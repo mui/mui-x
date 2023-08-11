@@ -286,12 +286,14 @@ export const usePickerValue = <
               props: { ...props, value: action.value, timezone },
             });
 
-      const shortcut = (action.name === 'setValueFromShortcut' && action.shortcut) || null;
-
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
-        shortcut,
       };
+
+      // TODO v7: Remove 2nd condition
+      if (action.name === 'setValueFromShortcut' && action.shortcut != null) {
+        context.shortcut = action.shortcut;
+      }
 
       handleValueChange(action.value, context);
     }

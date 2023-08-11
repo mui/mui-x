@@ -70,13 +70,11 @@ const shortcutsItems = [
 
 export default function OnChangeShortcutLabel() {
   const [value, setValue] = React.useState(null);
-  const [lastShortcutSelected, setLastShortcutSelected] = React.useState(null);
+  const [lastShortcutSelected, setLastShortcutSelected] = React.useState(undefined);
 
   const handleChange = (newValue, ctx) => {
     setValue(newValue);
-    if (ctx.shortcut != null) {
-      setLastShortcutSelected(ctx.shortcut);
-    }
+    setLastShortcutSelected(ctx.shortcut);
   };
 
   return (
@@ -92,8 +90,8 @@ export default function OnChangeShortcutLabel() {
           }}
         />
         <Typography>
-          Last shortcut selected:{' '}
-          {lastShortcutSelected == null ? 'none' : lastShortcutSelected.label}
+          Selected shortcut on last <code>onChange</code> call:{' '}
+          {lastShortcutSelected === undefined ? 'none' : lastShortcutSelected.label}
         </Typography>
       </Stack>
     </LocalizationProvider>
