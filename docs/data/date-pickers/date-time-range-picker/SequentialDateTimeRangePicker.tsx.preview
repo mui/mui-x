@@ -1,0 +1,4 @@
+<DateTimeRangePicker
+  localeText={{ start: 'Check-in', end: 'Check-out' }}
+  sequentialViewOrder
+/>
