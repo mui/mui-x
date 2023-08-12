@@ -2872,7 +2872,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Changes
 
-- [DateRangePicker] Fix input focused style and mobile behaviour (#6645) @LukasTy
+- [DateRangePicker] Fix input focused style and mobile behavior (#6645) @LukasTy
 - [fields] Update sections when the locale changes (#6649) @flaviendelangle
 - [pickers] Add Ukrainian (uk-UA) locale (#6661) @Dufran
 - [pickers] Allow non-controlled usage of the calendar components (#6643) @flaviendelangle
