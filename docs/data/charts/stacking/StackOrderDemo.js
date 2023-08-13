@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -93,7 +92,7 @@ export default function StackOrderDemo() {
 
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
-    <Box>
+    <div>
       <Stack direction="row">
         <TextField
           sx={{ minWidth: 150, mr: 5 }}
@@ -130,6 +129,6 @@ export default function StackOrderDemo() {
           '--ChartsLegend-itemWidth': '110px',
         }}
       />
-    </Box>
+    </div>
   );
 }
