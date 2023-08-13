@@ -2,7 +2,7 @@
 title: Data Grid - Tree data
 ---
 
-# Data Grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Tree data <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
 
 <p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 

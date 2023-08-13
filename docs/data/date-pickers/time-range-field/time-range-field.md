@@ -6,7 +6,7 @@ githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Time Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Time Range Field <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
 
 <p class="description">The Time Range Field let the user select a range of time with the keyboard.</p>
 

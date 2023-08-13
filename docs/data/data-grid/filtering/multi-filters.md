@@ -2,7 +2,7 @@
 title: Data Grid - Multi filters
 ---
 
-# Data Grid - Multi filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Multi filters <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
 
 <p class="description">Apply multiple filters at the same time.</p>
 

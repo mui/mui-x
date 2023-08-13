@@ -21,7 +21,7 @@ They feature advanced functionality for data-rich applications and a wide range 
 MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See [Licensing](/x/introduction/licensing/) for details.
 
-Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan) and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan) icons, respectively.
+Throughout the documentation, Pro- and Premium-only features are denoted with the <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a> and <a title="Premium plan" href="/x/introduction/licensing/#premium-plan"><span class="plan-premium"></span></a> icons, respectively.
 :::
 
 ## Advantages of MUI X

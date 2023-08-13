@@ -45,7 +45,7 @@ Here is an example where `minDate` is set to the middle of the year.
 
 {{"demo": "DisabledDatesShortcuts.js", "bg": "inline"}}
 
-## Range shortcuts [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Range shortcuts <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
 
 Shortcuts on range pickers require `getValue` property to return an array with two values.
 

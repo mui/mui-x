@@ -2,7 +2,7 @@
 title: Data Grid - Header filters
 ---
 
-# Data Grid - Header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Header filters <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
 
 <p class="description">Quickly accessible per-column filters on grid header.</p>
 

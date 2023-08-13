@@ -2,7 +2,7 @@
 title: Data Grid - Aggregation
 ---
 
-# Data Grid - Aggregation [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+# Data Grid - Aggregation <a title="Premium plan" href="/x/introduction/licensing/#premium-plan"><span class="plan-premium"></span></a>
 
 <p class="description">Add aggregation functions to the Data Grid so users can combine row values.</p>
 

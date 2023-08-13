@@ -7,7 +7,7 @@ This is a built-in feature of the rendering engine and greatly improves renderin
 
 _\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
-## Row virtualization [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Row virtualization <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
 
 Row virtualization is the insertion and removal of rows as the data grid scrolls vertically.
 
