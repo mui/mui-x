@@ -203,9 +203,12 @@ function findXDemos(
   return pagesMarkdown
     .filter((page) => page.components.includes(componentName))
     .map((page) => {
+      // Remove link if it exists as the demo title will already be rendered inside a link.
+      // A link can be present when the Pro or Premium icon is added to the h1 of the demo page.
+      let demoPageTitle = page.title.replace(/<a\b[^>]*>/i, '').replace(/<\/a>/i, '');
+
       if (page.pathname.includes('date-pickers')) {
-        let demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
-        demoPageTitle = demoPageTitle.replace(/\[(.*)]\((.*)\)/g, '');
+        demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(demoPageTitle)?.[1] ?? demoPageTitle;
 
         const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
 
