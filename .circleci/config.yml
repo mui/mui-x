@@ -195,7 +195,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.36.2-focal
+      - image: mcr.microsoft.com/playwright:v1.37.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -228,7 +228,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.36.2-focal
+      - image: mcr.microsoft.com/playwright:v1.37.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -241,7 +241,7 @@ jobs:
   test_e2e_website:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.36.2-focal
+      - image: mcr.microsoft.com/playwright:v1.37.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -256,7 +256,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.36.2-focal
+      - image: mcr.microsoft.com/playwright:v1.37.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -272,7 +272,7 @@ jobs:
   test_performance:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.36.2-focal
+      - image: mcr.microsoft.com/playwright:v1.37.0-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
