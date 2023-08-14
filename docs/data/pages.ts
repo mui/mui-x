@@ -41,6 +41,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
           { pathname: '/x/react-data-grid/column-visibility' },
+          { pathname: '/x/react-data-grid/column-custom', title: 'Custom columns' },
           { pathname: '/x/react-data-grid/column-header' },
           { pathname: '/x/react-data-grid/column-menu' },
           { pathname: '/x/react-data-grid/column-spanning' },
