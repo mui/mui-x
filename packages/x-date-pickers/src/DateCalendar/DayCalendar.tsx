@@ -128,6 +128,12 @@ const defaultDayOfWeekFormatter = (day: string) => day.charAt(0).toUpperCase();
 
 const weeksContainerHeight = (DAY_SIZE + DAY_MARGIN * 2) * 6;
 
+const PickersCalendarDayRoot = styled('div', {
+  name: 'MuiDayCalendar',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({});
+
 const PickersCalendarDayHeader = styled('div', {
   name: 'MuiDayCalendar',
   slot: 'Header',
@@ -542,7 +548,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   }, [currentMonth, fixedWeekNumber, utils, timezone]);
 
   return (
-    <div role="grid" aria-labelledby={gridLabelId} className={classes.root}>
+    <PickersCalendarDayRoot role="grid" aria-labelledby={gridLabelId} className={classes.root}>
       <PickersCalendarDayHeader role="row" className={classes.header}>
         {displayWeekNumber && (
           <PickersCalendarWeekNumberLabel
@@ -630,6 +636,6 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
           </PickersCalendarWeekContainer>
         </PickersCalendarSlideTransition>
       )}
-    </div>
+    </PickersCalendarDayRoot>
   );
 }
