@@ -52,7 +52,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         setIsApplying(false);
       });
     },
-    [applyValue, item, rootProps.filterDebounceMs, filterTimeout],
+    [id, applyValue, item, rootProps.filterDebounceMs, filterTimeout],
   );
 
   React.useEffect(() => {
@@ -60,7 +60,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     if (itemPlusTag.fromInput !== id) {
       setFilterValueState(String(item.value ?? ''));
     }
-  }, [item]);
+  }, [id, item]);
 
   return (
     <rootProps.slots.baseTextField
