@@ -196,6 +196,11 @@ StaticTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
    * @param {TimeView} view The clock type of the timeValue.

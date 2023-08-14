@@ -28,6 +28,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
   views,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -60,6 +61,7 @@ export const renderTimeViewClock = <TDate extends unknown>({
     views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}
@@ -94,6 +96,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
   views,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -129,6 +132,7 @@ export const renderDigitalClockTimeView = <TDate extends unknown>({
     views={views.filter(isTimeView)}
     value={value}
     defaultValue={defaultValue}
+    referenceDate={referenceDate}
     onChange={onChange}
     className={className}
     classes={classes}

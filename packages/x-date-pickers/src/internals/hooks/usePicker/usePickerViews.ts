@@ -10,7 +10,7 @@ import { DateOrTimeViewWithMeridiem } from '../../models';
 import { TimezoneProps } from '../../../models';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeViewWithMeridiem>
-  extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
+  extends Omit<UsePickerViewsProps<any, any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
 
 export type PickerViewsRendererProps<
   TValue,
@@ -49,8 +49,9 @@ export type PickerViewRendererLookup<
  */
 export interface UsePickerViewsBaseProps<
   TValue,
+  TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
 > extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'>,
     TimezoneProps {
@@ -64,6 +65,11 @@ export interface UsePickerViewsBaseProps<
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
 }
 
 /**
@@ -82,10 +88,11 @@ export interface UsePickerViewsNonStaticProps {
  */
 export interface UsePickerViewsProps<
   TValue,
+  TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
+> extends UsePickerViewsBaseProps<TValue, TDate, TView, TExternalProps, TAdditionalProps>,
     UsePickerViewsNonStaticProps {
   className?: string;
   sx?: SxProps<Theme>;
@@ -93,8 +100,15 @@ export interface UsePickerViewsProps<
 
 export interface UsePickerViewParams<
   TValue,
+  TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
+  TExternalProps extends UsePickerViewsProps<
+    TValue,
+    TDate,
+    TView,
+    TExternalProps,
+    TAdditionalProps
+  >,
   TAdditionalProps extends {},
 > {
   props: TExternalProps;
@@ -129,8 +143,9 @@ export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeViewWithMe
  */
 export const usePickerViews = <
   TValue,
+  TDate,
   TView extends DateOrTimeViewWithMeridiem,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
 >({
   props,
@@ -140,6 +155,7 @@ export const usePickerViews = <
   autoFocusView,
 }: UsePickerViewParams<
   TValue,
+  TDate,
   TView,
   TExternalProps,
   TAdditionalProps

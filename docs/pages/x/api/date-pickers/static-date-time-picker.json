@@ -99,6 +99,10 @@
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date-time using the validation props, except callbacks such as `shouldDisableDate`."
+    },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
