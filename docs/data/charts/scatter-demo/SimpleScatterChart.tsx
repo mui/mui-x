@@ -15,7 +15,7 @@ export default function SimpleScatterChart() {
     <ScatterChart
       width={500}
       height={300}
-      series={[{ data, label: 'pv', id: 'pvId', color: '#8884d8' }]}
+      series={[{ data, label: 'pv', id: 'pvId' }]}
       xAxis={[{ min: 0 }]}
     />
   );

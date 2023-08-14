@@ -14,6 +14,8 @@ const defaultAlias = {
   '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
+  '@mui/x-charts': resolveAliasPath('./packages/x-charts/src'),
+  '@mui/x-tree-view': resolveAliasPath('./packages/x-tree-view/src'),
   '@mui/markdown': '@mui/monorepo/packages/markdown',
   '@mui-internal/docs-utilities': '@mui/monorepo/packages/docs-utilities',
   'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
@@ -150,17 +152,6 @@ module.exports = function getBabelConfig(api) {
             'babel-plugin-module-resolver',
             {
               root: ['./'],
-              alias: defaultAlias,
-            },
-          ],
-        ],
-      },
-      benchmark: {
-        plugins: [
-          ...productionPlugins,
-          [
-            'babel-plugin-module-resolver',
-            {
               alias: defaultAlias,
             },
           ],

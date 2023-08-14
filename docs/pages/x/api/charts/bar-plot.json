@@ -1,7 +1,14 @@
 {
-  "props": {},
-  "slots": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [],
   "name": "BarPlot",
+  "imports": [
+    "import { BarPlot } from '@mui/x-charts/BarChart';",
+    "import { BarPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiBarPlot" },
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",
   "demos": "<ul></ul>",

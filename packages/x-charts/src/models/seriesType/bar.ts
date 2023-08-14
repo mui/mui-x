@@ -11,7 +11,14 @@ export interface BarSeriesType
     CartesianSeriesType,
     StackableSeriesType {
   type: 'bar';
-  data: number[];
+  /**
+   * Data associated to each bar.
+   */
+  data?: number[];
+  /**
+   * The key used to retrive data from the dataset.
+   */
+  dataKey?: string;
   label?: string;
 }
 
@@ -26,4 +33,4 @@ export type BarItemIdentifier = {
 };
 
 export interface DefaultizedBarSeriesType
-  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps> {}
+  extends DefaultizedProps<BarSeriesType, CommonDefaultizedProps | 'color'> {}

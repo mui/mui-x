@@ -108,7 +108,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 
 type MultiSectionDigitalClockSectionComponent = <TValue>(
   props: MultiSectionDigitalClockSectionProps<TValue> & React.RefAttributes<HTMLUListElement>,
-) => JSX.Element & { propTypes?: any };
+) => React.JSX.Element & { propTypes?: any };
 
 /**
  * @ignore - internal component.
@@ -120,6 +120,7 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
   ) {
     const containerRef = React.useRef<HTMLUListElement>(null);
     const handleRef = useForkRef(ref, containerRef);
+    const previousSelected = React.useRef<HTMLElement | null>(null);
 
     const props = useThemeProps({
       props: inProps,
@@ -155,9 +156,14 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       const selectedItem = containerRef.current.querySelector<HTMLElement>(
         '[role="option"][aria-selected="true"]',
       );
-      if (!selectedItem) {
+      if (!selectedItem || previousSelected.current === selectedItem) {
+        // Handle setting the ref to null if the selected item is ever reset via UI
+        if (previousSelected.current !== selectedItem) {
+          previousSelected.current = selectedItem;
+        }
         return;
       }
+      previousSelected.current = selectedItem;
       if (active && autoFocus) {
         selectedItem.focus();
       }

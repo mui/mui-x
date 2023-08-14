@@ -7,45 +7,14 @@ import {
   GridRenderCellParams,
   GRID_STRING_COL_DEF,
 } from '@mui/x-data-grid';
-import { LineChart } from '@mui/x-charts/LineChart';
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
-interface SparklineProps {
-  data: number[];
-  width: number;
-}
-
-function Sparkline(props: SparklineProps) {
-  const { data, width } = props;
-
-  return (
-    <LineChart
-      margin={{ left: 6, right: 6, top: 4, bottom: 4 }}
-      leftAxis={null}
-      bottomAxis={null}
-      tooltip={{ trigger: 'none' }}
-      axisHighlight={{ x: 'none', y: 'none' }}
-      series={[
-        {
-          data,
-        },
-      ]}
-      width={width}
-      height={40}
-      sx={{
-        '& .MuiMarkElement-root': {
-          display: 'none',
-        },
-      }}
-    />
-  );
-}
-
-function GridSparklineCell(props: GridRenderCellParams<any, number[]>) {
+function GridSparklineCell(props: GridRenderCellParams) {
   if (props.value == null) {
     return null;
   }
 
-  return <Sparkline data={props.value} width={props.colDef.computedWidth} />;
+  return <SparkLineChart data={props.value} width={props.colDef.computedWidth} />;
 }
 
 const sparklineColumnType: GridColTypeDef<number[]> = {

@@ -233,7 +233,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * If a `value` parameter is provided, pass it to the date library to try to parse it.
    * @template TDate
    * @param {string | null | undefined} value The optional value to parse.
-   * @param {string} timezone The timezone of the date.
+   * @param {PickersTimezone} timezone The timezone of the date.
    * @returns {TDate | null} The parsed date.
    */
   dateWithTimezone(value: string | null | undefined, timezone: PickersTimezone): TDate | null;
@@ -247,7 +247,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * Convert a date to another timezone.
    * @template TDate
    * @param {TDate} value The date to convert.
-   * @param {string} timezone The timezone to convert the date to.
+   * @param {PickersTimezone} timezone The timezone to convert the date to.
    * @returns {TDate} The converted date.
    */
   setTimezone(value: TDate, timezone: PickersTimezone): TDate;
@@ -742,6 +742,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   getYearRange(start: TDate, end: TDate): TDate[];
   /**
    * Allow to customize how the "am"` and "pm" strings are rendered.
+   * @deprecated Use `utils.format(utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14), 'meridiem')` instead.
    * @param {"am" | "pm"} meridiem The string to render.
    * @return {string} The formatted string.
    */

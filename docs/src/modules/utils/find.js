@@ -21,7 +21,11 @@ function findPages(
       .replace(/^\/index$/, '/') // Replace `index` by `/`.
       .replace(/\/index$/, '');
 
-    if (pathname.indexOf('.eslintrc') !== -1) {
+    if (
+      pathname.indexOf('.eslintrc') !== -1 ||
+      // skip playground pages
+      pathname.startsWith('/playground')
+    ) {
       return;
     }
 

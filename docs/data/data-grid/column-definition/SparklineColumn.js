@@ -1,39 +1,13 @@
 import * as React from 'react';
 import { DataGrid, GRID_STRING_COL_DEF } from '@mui/x-data-grid';
-import { LineChart } from '@mui/x-charts/LineChart';
-
-function Sparkline(props) {
-  const { data, width } = props;
-
-  return (
-    <LineChart
-      margin={{ left: 6, right: 6, top: 4, bottom: 4 }}
-      leftAxis={null}
-      bottomAxis={null}
-      tooltip={{ trigger: 'none' }}
-      axisHighlight={{ x: 'none', y: 'none' }}
-      series={[
-        {
-          data,
-        },
-      ]}
-      width={width}
-      height={40}
-      sx={{
-        '& .MuiMarkElement-root': {
-          display: 'none',
-        },
-      }}
-    />
-  );
-}
+import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 
 function GridSparklineCell(props) {
   if (props.value == null) {
     return null;
   }
 
-  return <Sparkline data={props.value} width={props.colDef.computedWidth} />;
+  return <SparkLineChart data={props.value} width={props.colDef.computedWidth} />;
 }
 
 const sparklineColumnType = {

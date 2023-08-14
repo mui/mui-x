@@ -34,13 +34,13 @@ export default function MultipleYAxesScatterChart() {
         {
           data: data1,
           yAxisKey: 'leftAxis',
-          color: '#8884d8',
+
           valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
         },
         {
           data: data2,
           yAxisKey: 'rightAxis',
-          color: '#82ca9d',
+
           valueFormatter: ({ x, y }) => `${x}cm, ${y}kg`,
         },
       ]}

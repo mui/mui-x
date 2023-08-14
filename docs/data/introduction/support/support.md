@@ -14,7 +14,7 @@ You can search through existing issues and pull requests to see if someone has r
 
 Visit Stack Overflow to ask questions and read crowdsourced answers from expert developers in the MUI community, as well as MUI maintainers.
 
-[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui) on Stack Overflow.
+[Post a question about MUI X](https://stackoverflow.com/questions/tagged/mui-x) on Stack Overflow using the "mui-x" tag.
 
 ## Technical support
 

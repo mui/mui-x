@@ -1,4 +1,10 @@
-import { GridColDef, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
+import {
+  GridColDef,
+  useGridApiRef,
+  DataGridPro,
+  GridApi,
+  DataGridProProps,
+} from '@mui/x-data-grid-pro';
 import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -140,14 +146,8 @@ describe('<DataGridPro /> - Export', () => {
               apiRef={apiRef}
               columns={columns}
               rows={[
-                {
-                  id: 0,
-                  brand: 'Nike',
-                },
-                {
-                  id: 1,
-                  brand: 'Samsung 24" (inches)',
-                },
+                { id: 0, brand: 'Nike' },
+                { id: 1, brand: 'Samsung 24" (inches)' },
               ]}
             />
           </div>
@@ -156,7 +156,7 @@ describe('<DataGridPro /> - Export', () => {
 
       render(<TestCaseCSVExport />);
       expect(apiRef.current.getDataAsCsv()).to.equal(
-        ['id,Brand', '0,Nike', '1,Samsung 24"" (inches)'].join('\r\n'),
+        ['id,Brand', '0,Nike', '1,"Samsung 24"" (inches)"'].join('\r\n'),
       );
     });
 
@@ -521,6 +521,63 @@ describe('<DataGridPro /> - Export', () => {
           'You can provide a `valueFormatter` with a string representation to be used.',
         ].join('\n'),
       );
+    });
+
+    describe('includeColumnGroupsHeaders', () => {
+      const defaultProps: DataGridProProps = {
+        rows: [{ id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 }],
+        columns: [
+          { field: 'id', headerName: 'ID', width: 90 },
+          { field: 'firstName', headerName: 'First name' },
+          { field: 'lastName', headerName: 'Last name' },
+          { field: 'age', headerName: 'Age', type: 'number' },
+        ],
+        columnGroupingModel: [
+          { groupId: 'Internal', children: [{ field: 'id' }] },
+          {
+            groupId: 'basic_info',
+            headerName: 'Basic info',
+            children: [
+              { groupId: 'Full name', children: [{ field: 'lastName' }, { field: 'firstName' }] },
+              { field: 'age' },
+            ],
+          },
+        ],
+      };
+
+      function TestCaseCSVExport(props: Partial<DataGridProProps>) {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300 }}>
+            <DataGridPro
+              apiRef={apiRef}
+              autoHeight
+              {...defaultProps}
+              experimentalFeatures={{ columnGrouping: true }}
+              {...props}
+            />
+          </div>
+        );
+      }
+
+      it('should include column groups by default', () => {
+        render(<TestCaseCSVExport />);
+        expect(apiRef.current.getDataAsCsv()).to.equal(
+          [
+            'Internal,Basic info,Basic info,Basic info',
+            ',Full name,Full name,',
+            'ID,First name,Last name,Age',
+            '1,Jon,Snow,35',
+          ].join('\r\n'),
+        );
+      });
+
+      it('should not include column groups if disabled', () => {
+        render(<TestCaseCSVExport />);
+        expect(apiRef.current.getDataAsCsv({ includeColumnGroupsHeaders: false })).to.equal(
+          ['ID,First name,Last name,Age', '1,Jon,Snow,35'].join('\r\n'),
+        );
+      });
     });
   });
 });

@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base';
+import { SlotComponentProps } from '@mui/base/utils';
 import { Theme } from '@mui/material/styles';
+import { TimezoneProps } from '@mui/x-date-pickers/models';
+import {
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   BaseDateValidationProps,
   DefaultizedProps,
@@ -11,16 +16,14 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DayRangeValidationProps } from '../internal/models';
+import { DateRange, DayRangeValidationProps } from '../internals/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
-import { UseRangePositionProps } from '../internal/hooks/useRangePosition';
+import { UseRangePositionProps } from '../internals/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
@@ -51,6 +54,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
+    TimezoneProps,
     // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
     Pick<ExportedUseViewsOptions<'day'>, 'autoFocus'> {
   /**

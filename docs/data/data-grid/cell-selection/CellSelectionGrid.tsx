@@ -14,7 +14,7 @@ export default function CellSelectionGrid() {
 
   return (
     <div style={{ width: '100%' }}>
-      <Button sx={{ mb: 2 }} onClick={() => setRowSelection(!rowSelection)}>
+      <Button sx={{ mb: 1 }} onClick={() => setRowSelection(!rowSelection)}>
         Toggle row selection
       </Button>
       <div style={{ height: 400 }}>

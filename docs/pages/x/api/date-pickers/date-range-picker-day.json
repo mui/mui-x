@@ -17,7 +17,7 @@
       }
     },
     "centerRipple": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMargin": { "type": { "name": "bool" } },
@@ -33,7 +33,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     },
     "today": { "type": { "name": "bool" } },
     "TouchRippleProps": { "type": { "name": "object" } },
@@ -44,8 +45,12 @@
       }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "DateRangePickerDay",
+  "imports": [
+    "import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';",
+    "import { DateRangePickerDay } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": [
       "root",

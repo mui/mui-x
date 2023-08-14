@@ -19,8 +19,8 @@ export default function StackedBarChart() {
       width={500}
       height={300}
       series={[
-        { data: pData, label: 'pv', id: 'pvId', color: '#8884d8', stack: 'total' },
-        { data: uData, label: 'uv', id: 'uvId', color: '#82ca9d', stack: 'total' },
+        { data: pData, label: 'pv', id: 'pvId', stack: 'total' },
+        { data: uData, label: 'uv', id: 'uvId', stack: 'total' },
       ]}
       xAxis={[{ data: xLabels, scaleType: 'band' }]}
     />

@@ -311,7 +311,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const { renderedColumns, firstColumnToRender } = columnsToRender;
 
-    const columns: JSX.Element[] = [];
+    const columns: React.JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
       const colDef = renderedColumns[i];
 
@@ -368,7 +368,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const { firstColumnToRender, lastColumnToRender } = columnsToRender;
 
-    const columns: JSX.Element[] = [];
+    const columns: React.JSX.Element[] = [];
 
     const headerToRender: {
       leftOverflow: number;

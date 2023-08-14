@@ -5,8 +5,11 @@ import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { FieldChangeHandlerContext } from '../useField';
 import { InferError, useValidation } from '../useValidation';
-import { FieldSection, FieldSelectedSections } from '../../../models';
-import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
+import { FieldSection, FieldSelectedSections, PickerChangeHandlerContext } from '../../../models';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemContext,
+} from '../../../PickersShortcuts';
 import {
   UsePickerValueProps,
   UsePickerValueParams,
@@ -19,8 +22,8 @@ import {
   UsePickerValueActions,
   PickerSelectionState,
   PickerValueUpdaterParams,
-  PickerChangeHandlerContext,
 } from './usePickerValue.types';
+import { useValueWithTimezone } from '../useValueWithTimezone';
 
 /**
  * Decide if the new value should be published
@@ -61,7 +64,7 @@ const shouldPublishValue = <TValue, TError>(
     return hasChanged(dateState.lastPublishedValue);
   }
 
-  if (action.name === 'setValueFromShortcut' && action.changeImportance === 'accept') {
+  if (action.name === 'setValueFromShortcut') {
     // On the first view,
     // If the value is not controlled, then clicking on any value (including the one equal to `defaultValue`) should call `onChange`
     if (isCurrentValueTheDefaultValue) {
@@ -168,6 +171,7 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
+    timezone: timezoneProp,
   } = props;
 
   const { current: defaultValue } = React.useRef(inDefaultValue);
@@ -236,8 +240,16 @@ export const usePickerValue = <
     };
   });
 
+  const { timezone, handleValueChange } = useValueWithTimezone({
+    timezone: timezoneProp,
+    value: inValue,
+    defaultValue,
+    onChange,
+    valueManager,
+  });
+
   useValidation(
-    { ...props, value: dateState.draft },
+    { ...props, value: dateState.draft, timezone },
     validator,
     valueManager.isSameError,
     valueManager.defaultErrorState,
@@ -264,21 +276,26 @@ export const usePickerValue = <
       hasBeenModifiedSinceMount: true,
     }));
 
-    if (shouldPublish && onChange) {
+    if (shouldPublish) {
       const validationError =
         action.name === 'setValueFromField'
           ? action.context.validationError
           : validator({
               adapter,
               value: action.value,
-              props: { ...props, value: action.value },
+              props: { ...props, value: action.value, timezone },
             });
 
       const context: PickerChangeHandlerContext<TError> = {
         validationError,
       };
 
-      onChange(action.value, context);
+      // TODO v7: Remove 2nd condition
+      if (action.name === 'setValueFromShortcut' && action.shortcut != null) {
+        context.shortcut = action.shortcut;
+      }
+
+      handleValueChange(action.value, context);
     }
 
     if (shouldCommit && onAccept) {
@@ -296,6 +313,7 @@ export const usePickerValue = <
       !valueManager.areValuesEqual(utils, dateState.lastControlledValue, inValue))
   ) {
     const isUpdateComingFromPicker = valueManager.areValuesEqual(utils, dateState.draft, inValue);
+
     setDateState((prev) => ({
       ...prev,
       lastControlledValue: inValue,
@@ -344,7 +362,7 @@ export const usePickerValue = <
 
   const handleSetToday = useEventCallback(() => {
     updateDate({
-      value: valueManager.getTodayValue(utils, valueType),
+      value: valueManager.getTodayValue(utils, timezone, valueType),
       name: 'setValueFromAction',
       pickerAction: 'today',
     });
@@ -359,12 +377,18 @@ export const usePickerValue = <
       updateDate({ name: 'setValueFromView', value: newValue, selectionState }),
   );
 
+  // TODO v7: Make changeImportance and label mandatory.
   const handleSelectShortcut = useEventCallback(
-    (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) =>
+    (
+      newValue: TValue,
+      changeImportance?: PickerShortcutChangeImportance,
+      shortcut?: PickersShortcutsItemContext,
+    ) =>
       updateDate({
         name: 'setValueFromShortcut',
         value: newValue,
         changeImportance: changeImportance ?? 'accept',
+        shortcut,
       }),
   );
 
@@ -414,7 +438,7 @@ export const usePickerValue = <
     const error = validator({
       adapter,
       value: testedValue,
-      props: { ...props, value: testedValue },
+      props: { ...props, value: testedValue, timezone },
     });
 
     return !valueManager.hasError(error);

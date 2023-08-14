@@ -157,6 +157,12 @@ Notice that the toggle column is pinned to make sure that it will always be visi
 
 {{"demo": "FullWidthDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Recipes
+
+More examples of how to customize the detail panel:
+
+- [One expanded detail panel at a time](/x/react-data-grid/row-recipes/#one-expanded-detail-panel-at-a-time)
+
 ## apiRef
 
 The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.

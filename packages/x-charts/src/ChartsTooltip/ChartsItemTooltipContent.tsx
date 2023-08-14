@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SxProps, Theme } from '@mui/material/styles';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
@@ -7,7 +8,9 @@ import {
   ChartsTooltipCell,
   ChartsTooltipMark,
   ChartsTooltipPaper,
+  ChartsTooltipRow,
 } from './ChartsTooltipTable';
+import { ChartsTooltipClasses } from './tooltipClasses';
 
 export type ChartsItemContentProps<T extends ChartSeriesType> = {
   /**
@@ -18,35 +21,48 @@ export type ChartsItemContentProps<T extends ChartSeriesType> = {
    * The series linked to the triggered axis.
    */
   series: ChartSeriesDefaultized<T>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: ChartsTooltipClasses;
+  sx?: SxProps<Theme>;
 };
 
 export function DefaultChartsItemContent<T extends ChartSeriesType>(
   props: ChartsItemContentProps<T>,
 ) {
-  const { series, itemData } = props;
+  const { series, itemData, sx, classes } = props;
 
   if (itemData.dataIndex === undefined) {
     return null;
   }
+  const { displayedLabel, color } =
+    series.type === 'pie'
+      ? {
+          color: series.data[itemData.dataIndex].color,
+          displayedLabel: series.data[itemData.dataIndex].label,
+        }
+      : {
+          color: series.color,
+          displayedLabel: series.label,
+        };
 
-  const displayedLabel = series.label ?? null;
-  const color = series.color;
   // TODO: Manage to let TS understand series.data and series.valueFormatter are coherent
   // @ts-ignore
   const formattedValue = series.valueFormatter(series.data[itemData.dataIndex]);
   return (
-    <ChartsTooltipPaper>
+    <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
       <ChartsTooltipTable>
         <tbody>
-          <tr>
-            <ChartsTooltipCell>
+          <ChartsTooltipRow>
+            <ChartsTooltipCell className={classes.markCell}>
               <ChartsTooltipMark ownerState={{ color }} />
             </ChartsTooltipCell>
 
-            <ChartsTooltipCell>{displayedLabel}</ChartsTooltipCell>
+            <ChartsTooltipCell className={classes.labelCell}>{displayedLabel}</ChartsTooltipCell>
 
-            <ChartsTooltipCell>{formattedValue}</ChartsTooltipCell>
-          </tr>
+            <ChartsTooltipCell className={classes.valueCell}>{formattedValue}</ChartsTooltipCell>
+          </ChartsTooltipRow>
         </tbody>
       </ChartsTooltipTable>
     </ChartsTooltipPaper>
@@ -56,8 +72,10 @@ export function DefaultChartsItemContent<T extends ChartSeriesType>(
 export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
   itemData: ItemInteractionData<T>;
   content?: React.ElementType<ChartsItemContentProps<T>>;
+  sx?: SxProps<Theme>;
+  classes: ChartsItemContentProps<T>['classes'];
 }) {
-  const { content, itemData } = props;
+  const { content, itemData, sx, classes } = props;
 
   const series = React.useContext(SeriesContext)[itemData.type]!.series[
     itemData.seriesId
@@ -65,5 +83,5 @@ export function ChartsItemTooltipContent<T extends ChartSeriesType>(props: {
 
   const Content = content ?? DefaultChartsItemContent<T>;
 
-  return <Content itemData={itemData} series={series} />;
+  return <Content itemData={itemData} series={series} sx={sx} classes={classes} />;
 }

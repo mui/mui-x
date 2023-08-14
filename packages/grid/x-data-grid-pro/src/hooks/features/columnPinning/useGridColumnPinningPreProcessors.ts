@@ -25,7 +25,7 @@ export const useGridColumnPinningPreProcessors = (
     pinnedColumns = gridPinnedColumnsSelector(initializedState);
   }
 
-  const prevAllPinnedColumns = React.useRef<string[]>();
+  const prevAllPinnedColumns = React.useRef<string[]>([]);
 
   const reorderPinnedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
@@ -53,7 +53,7 @@ export const useGridColumnPinningPreProcessors = (
 
         // First, we check if the column was unpinned since the last processing.
         // If yes and it still exists, we move it back to the same position it was before pinning
-        prevAllPinnedColumns.current!.forEach((field) => {
+        prevAllPinnedColumns.current.forEach((field) => {
           if (!allPinnedColumns.includes(field) && columnsState.lookup[field]) {
             // Get the position before pinning
             const index = orderedFieldsBeforePinningColumns.indexOf(field);

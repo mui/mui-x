@@ -1,10 +1,10 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Custom components
+productId: x-date-pickers
+title: Date and Time Pickers - Custom subcomponents
 components: DateTimePickerTabs
 ---
 
-# Custom components
+# Custom subcomponents
 
 <p class="description">The date picker lets you customize subcomponents.</p>
 
@@ -36,6 +36,63 @@ As an example, you could override the `ActionBar` and pass additional props to t
 ```
 
 To modify components position, have a look at the [custom layout](/x/react-date-pickers/custom-layout/) docs page.
+
+### Recommended usage
+
+:::success
+Remember to pass a reference to the component instead of an inline render function and define it outside the main component.
+This ensures that the component is not remounted on every update.
+:::
+
+The first two examples below are buggy because the toolbar will remount after each keystroke, leading to a loss of focus.
+
+```jsx
+// ❌ The `toolbar` slot is re-defined each time the parent component renders,
+// causing the component to remount.
+function MyApp() {
+  return (
+    <DatePicker
+      slots={{
+        toolbar: () => (
+          <input value={name} onChange={(event) => setName(event.target.value)} />
+        ),
+      }}
+    />
+  );
+}
+```
+
+```jsx
+// ❌ The `toolbar` slot is re-defined each time `name` is updated,
+// causing the component to remount.
+function MyApp() {
+  const [name, setName] = React.useState('');
+
+  const CustomToolbar = React.useCallback(
+    () => <input value={name} onChange={(event) => setName(event.target.value)} />,
+    [name],
+  );
+
+  return <DatePicker slots={{ toolbar: CustomToolbar }} />;
+}
+```
+
+```jsx
+// ✅ The `toolbar` slot is defined only once, it will never remount.
+const CustomActionBar = ({ name, setName }) => (
+  <input value={name} onChange={(event) => setName(event.target.value)} />
+);
+
+function MyApp() {
+  const [name, setName] = React.useState('');
+  return (
+    <DatePicker
+      slots={{ toolbar: CustomToolbar }}
+      slotProps={{ toolbar: { name, setName } }}
+    />
+  );
+}
+```
 
 ## Action bar
 
@@ -178,6 +235,18 @@ You can pass props to the icons and buttons as shown below:
 You can pass custom components—to replace the icons, for example—as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
+
+## Popper
+
+You can customize the popper that wraps the desktop picker views the same way you would customize the [Material UI Popper](/material-ui/react-popper/).
+
+:::info
+When the picker views have different heights, there might be a layout shift if there is not enough space in the viewport for one of the views **below** the input field. This is particularly noticeable if the selection of allowed years is very limited and there is a significant height difference between the views. You can refer to issues [#5490](https://github.com/mui/mui-x/issues/5490) and [#9288](https://github.com/mui/mui-x/issues/9288) for more examples.
+
+You can avoid this by customizing the popper height. This will not produce any visual changes, as the popper that wraps the pickers is transparent.
+:::
+
+{{"demo": "PopperComponent.js", "defaultCodeOpen": true}}
 
 ## Shortcuts
 

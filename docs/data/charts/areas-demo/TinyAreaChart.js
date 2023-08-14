@@ -24,7 +24,6 @@ export default function TinyAreaChart() {
           label: 'uv',
           area: true,
           stack: 'total',
-          color: '#8884d8',
         },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}

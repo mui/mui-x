@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Lines
 ---
 
@@ -13,22 +12,37 @@ title: Charts - Lines
 
 To plot lines, a series must have a `data` property containing an array of numbers.
 This `data` array corresponds to y values.
-To modify the x value, you should provide a `xAxis` with data properties.
 
-{{"demo": "BasicLineChart.js", "bg": "inline"}}
+By default, those y values will be associated with integers starting from 0 (0, 1, 2, 3, ...).
+To modify the x values, you should provide a `xAxis` with data property.
+
+{{"demo": "BasicLineChart.js"}}
+
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
+
+You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
+
+For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+
+Here is a plot of the evolution of world electricity production by source.
+
+{{"demo": "LineDataset.js"}}
 
 ### Area
 
 You can fill the area of the line by setting the series' `area` property to `true`.
 
-{{"demo": "BasicArea.js", "bg": "inline"}}
+{{"demo": "BasicArea.js"}}
 
 ## Stacking
 
 Each line series can get a `stack` property which expects a string value.
 Series with the same `stack` will be stacked on top of each other.
 
-{{"demo": "StackedAreas.js", "bg": "inline"}}
+{{"demo": "StackedAreas.js"}}
 
 ### Stacking strategy
 
@@ -45,7 +59,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
-{{"demo": "InterpolationDemo.js", "bg": "inline"}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline"}}
 
 ### CSS
 
@@ -73,4 +87,4 @@ sx={{
 }}
 ```
 
-{{"demo": "CSSCustomization.js", "bg": "inline"}}
+{{"demo": "CSSCustomization.js"}}

@@ -1,6 +1,5 @@
 ---
-product: date-pickers
-title: Date and Time Pickers - Validation
+productId: x-date-pickers
 components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'

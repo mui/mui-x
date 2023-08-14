@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { FieldSectionType, FieldSection } from '../../../models';
+import { FieldSectionType, FieldSection, PickersTimezone } from '../../../models';
 import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries } from './useField.types';
 import {
@@ -29,6 +29,7 @@ interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
   updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
   setTempAndroidValueStr: (newValue: string | null) => void;
+  timezone: PickersTimezone;
 }
 
 /**
@@ -78,6 +79,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   updateSectionValue,
   sectionsValueBoundaries,
   setTempAndroidValueStr,
+  timezone,
 }: UseFieldEditingParams<TDate, TSection>) => {
   const utils = useUtils<TDate>();
 
@@ -180,7 +182,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
       const getOptions = (format: string) =>
-        getLetterEditingOptions(utils, activeSection.type, format);
+        getLetterEditingOptions(utils, timezone, activeSection.type, format);
 
       if (activeSection.contentType === 'letter') {
         return findMatchingOptions(
@@ -297,6 +299,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
       const newSectionValue = cleanDigitSectionValue(
         utils,
+        timezone,
         queryValueNumber,
         sectionBoundaries,
         section,
@@ -321,6 +324,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       if (activeSection.type === 'month') {
         const hasLeadingZerosInFormat = doesSectionFormatHaveLeadingZeros(
           utils,
+          timezone,
           'digit',
           'month',
           'MM',
@@ -359,7 +363,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           return response;
         }
 
-        const formattedValue = getDaysInWeekStr(utils, activeSection.format)[
+        const formattedValue = getDaysInWeekStr(utils, timezone, activeSection.format)[
           Number(response.sectionValue) - 1
         ];
         return {

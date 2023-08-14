@@ -26,7 +26,7 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       // required by enzyme > cheerio > parse5 > util
-      process: 'process/browser',
+      process: 'process/browser.js',
     }),
   ],
   module: {

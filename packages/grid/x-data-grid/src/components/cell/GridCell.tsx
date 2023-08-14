@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -18,6 +17,7 @@ import {
   GridCellModes,
   GridRowId,
   GridCellMode,
+  GridEditCellProps,
 } from '../../models';
 import {
   GridRenderEditCellParams,
@@ -26,7 +26,6 @@ import {
 } from '../../models/params/gridCellParams';
 import { GridColDef, GridAlignment } from '../../models/colDef/gridColDef';
 import { GridTreeNodeWithRender } from '../../models/gridRows';
-import { GridEditCellProps } from '../../models/gridEditRowModel';
 import { useGridSelector, objectShallowCompare } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -45,6 +44,7 @@ type GridCellV7Props = {
   width: number;
   colSpan?: number;
   disableDragEvents?: boolean;
+  isNotVisible?: boolean;
   editCellState: GridEditCellProps<any> | null;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -247,6 +247,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   const {
     align,
     children: childrenProp,
+    editCellState,
     colIndex,
     column,
     cellMode,
@@ -266,6 +267,7 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     row,
     colSpan,
     disableDragEvents,
+    isNotVisible,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -329,12 +331,22 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
     [apiRef, field, rowId],
   );
 
-  const style = {
-    minWidth: width,
-    maxWidth: width,
-    minHeight: height,
-    maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
-  };
+  const style = React.useMemo(() => {
+    if (isNotVisible) {
+      return {
+        padding: 0,
+        opacity: 0,
+        width: 0,
+      };
+    }
+    const cellStyle = {
+      minWidth: width,
+      maxWidth: width,
+      minHeight: height,
+      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+    };
+    return cellStyle;
+  }, [width, height, isNotVisible]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -392,8 +404,9 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   let children: React.ReactNode = childrenProp;
   if (children === undefined) {
     const valueString = valueToRender?.toString();
+
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );
@@ -410,11 +423,14 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
+  const ariaV7 = rootProps.experimentalFeatures?.ariaV7;
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classes.root)}
-      role="cell"
+      role={ariaV7 ? 'gridcell' : 'cell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
@@ -482,6 +498,7 @@ GridCell.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
+  isNotVisible: PropTypes.bool,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
@@ -513,6 +530,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
     row,
     colSpan,
     disableDragEvents,
+    isNotVisible,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -636,12 +654,22 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
     [apiRef, field, rowId],
   );
 
-  const style = {
-    minWidth: width,
-    maxWidth: width,
-    minHeight: height,
-    maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
-  };
+  const style = React.useMemo(() => {
+    if (isNotVisible) {
+      return {
+        padding: 0,
+        opacity: 0,
+        width: 0,
+      };
+    }
+    const cellStyle = {
+      minWidth: width,
+      maxWidth: width,
+      minHeight: height,
+      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+    };
+    return cellStyle;
+  }, [width, height, isNotVisible]);
 
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
@@ -725,7 +753,7 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
   if (children === undefined) {
     const valueString = valueToRender?.toString();
     children = (
-      <div className={classes.content} title={valueString}>
+      <div className={classes.content} title={valueString} role="presentation">
         {valueString}
       </div>
     );
@@ -742,11 +770,14 @@ const GridCellV7 = React.forwardRef<HTMLDivElement, GridCellV7Props>((props, ref
         onDragOver: publish('cellDragOver', onDragOver),
       };
 
+  const ariaV7 = rootProps.experimentalFeatures?.ariaV7;
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       ref={handleRef}
       className={clsx(className, classNames, classes.root)}
-      role="cell"
+      role={ariaV7 ? 'gridcell' : 'cell'}
       data-field={field}
       data-colindex={colIndex}
       aria-colindex={colIndex + 1}
@@ -774,11 +805,11 @@ GridCellV7.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  align: PropTypes.oneOf(['center', 'left', 'right']),
+  align: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
   className: PropTypes.string,
-  colIndex: PropTypes.number,
+  colIndex: PropTypes.number.isRequired,
   colSpan: PropTypes.number,
-  column: PropTypes.object,
+  column: PropTypes.object.isRequired,
   disableDragEvents: PropTypes.bool,
   editCellState: PropTypes.shape({
     changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
@@ -786,7 +817,8 @@ GridCellV7.propTypes = {
     isValidating: PropTypes.bool,
     value: PropTypes.any,
   }),
-  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
+  isNotVisible: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,
@@ -794,9 +826,9 @@ GridCellV7.propTypes = {
   onKeyDown: PropTypes.func,
   onMouseDown: PropTypes.func,
   onMouseUp: PropTypes.func,
-  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   showRightBorder: PropTypes.bool,
-  width: PropTypes.number,
+  width: PropTypes.number.isRequired,
 } as any;
 
 const MemoizedGridCellV7 = fastMemo(GridCellV7);

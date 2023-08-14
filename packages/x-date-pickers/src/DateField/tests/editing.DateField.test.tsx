@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getTextbox } from 'test/utils/pickers-utils';
+import { expectInputValue, getTextbox } from 'test/utils/pickers';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<DateField /> - Editing', () => {
@@ -807,6 +807,26 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, '01/13/2018');
       expect(onChange.callCount).to.equal(0);
     });
+
+    it('should reset sections internal state when pasting', () => {
+      const onChange = spy();
+
+      const { input, selectSection } = renderWithProps({
+        defaultValue: adapter.date(new Date(2018, 11, 5)),
+        onChange,
+      });
+
+      selectSection('day');
+
+      fireEvent.change(input, { target: { value: '12/2/2018' } }); // Press 2
+      expectInputValue(input, '12/02/2018');
+
+      firePasteEvent(input, '09/16/2022');
+      expectInputValue(input, '09/16/2022');
+
+      fireEvent.change(input, { target: { value: '09/2/2022' } }); // Press 2
+      expectInputValue(input, '09/02/2022'); // If internal state is not reset it would be 22 instead of 02
+    });
   });
 
   describeAdapters(
@@ -932,6 +952,47 @@ describe('<DateField /> - Editing', () => {
 
       clickOnInput(input, 0);
       expectInputValue(input, 'MM/DD/YYYY');
+    });
+
+    it('should reset the input query state on an unfocused field', () => {
+      const { setProps } = render(<DateField />);
+      const input = getTextbox();
+
+      clickOnInput(input, 0);
+
+      fireEvent.change(input, { target: { value: '1/DD/YYYY' } }); // Press "1"
+      expectInputValue(input, '01/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/DD/YYYY' } }); // Press "1"
+      expectInputValue(input, '11/DD/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/2/YYYY' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '11/5/YYYY' } }); // Press "5"
+      expectInputValue(input, '11/25/YYYY');
+
+      fireEvent.change(input, { target: { value: '11/25/2' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '11/25/0' } }); // Press "0"
+      expectInputValue(input, '11/25/0020');
+
+      act(() => {
+        input.blur();
+      });
+
+      setProps({ value: adapter.date(new Date(2022, 10, 23)) });
+      expectInputValue(input, '11/23/2022');
+
+      // not using clickOnInput here because it will call `runLast` on the fake timer
+      act(() => {
+        fireEvent.mouseDown(input);
+        fireEvent.mouseUp(input);
+        input.setSelectionRange(6, 9);
+        fireEvent.click(input);
+      });
+
+      fireEvent.change(input, { target: { value: '11/23/2' } }); // Press "2"
+      expectInputValue(input, '11/23/0002');
+      fireEvent.change(input, { target: { value: '11/23/1' } }); // Press "0"
+      expectInputValue(input, '11/23/0021');
     });
   });
 

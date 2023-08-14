@@ -24,14 +24,12 @@ export default function BiaxialBarChart() {
           data: pData,
           label: 'pv',
           id: 'pvId',
-          color: '#8884d8',
           yAxisKey: 'leftAxisId',
         },
         {
           data: uData,
           label: 'uv',
           id: 'uvId',
-          color: '#82ca9d',
           yAxisKey: 'rightAxisId',
         },
       ]}

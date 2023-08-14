@@ -1,5 +1,5 @@
 import * as React from 'react';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import momentTZ from 'moment-timezone';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -7,11 +7,7 @@ import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';
@@ -21,25 +17,25 @@ import {
 } from '@mui/x-date-pickers/tests/describeGregorianAdapter';
 
 describe('<AdapterMoment />', () => {
-  describeGregorianAdapter(AdapterMoment, {
+  const commonParams = {
     formatDateTime: 'YYYY-MM-DD HH:mm:ss',
     dateLibInstanceWithTimezoneSupport: momentTZ,
     setDefaultTimezone: momentTZ.tz.setDefault,
+    getLocaleFromDate: (value: Moment) => value.locale(),
     frenchLocale: 'fr',
-  });
+  };
+
+  describeGregorianAdapter(AdapterMoment, commonParams);
 
   // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
   describeGregorianAdapter(AdapterMoment, {
-    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
-    dateLibInstanceWithTimezoneSupport: momentTZ,
+    ...commonParams,
     prepareAdapter: (adapter) => {
       // @ts-ignore
       adapter.hasTimezonePlugin = () => false;
       // Makes sure that we don't run timezone related tests, that would not work.
       adapter.isTimezoneCompatible = false;
     },
-    setDefaultTimezone: momentTZ.tz.setDefault,
-    frenchLocale: 'fr',
   });
 
   describe('Adapter localization', () => {

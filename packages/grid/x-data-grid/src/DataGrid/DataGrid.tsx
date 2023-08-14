@@ -36,7 +36,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
@@ -182,6 +182,7 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV7: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -204,6 +205,7 @@ DataGridRaw.propTypes = {
       }),
     ).isRequired,
     logicOperator: PropTypes.oneOf(['and', 'or']),
+    quickFilterExcludeHiddenColumns: PropTypes.bool,
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
@@ -221,7 +223,7 @@ DataGridRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**
@@ -536,7 +538,15 @@ DataGridRaw.propTypes = {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  pageSizeOptions: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({
+        label: PropTypes.string.isRequired,
+        value: PropTypes.number.isRequired,
+      }),
+    ]).isRequired,
+  ),
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(

@@ -51,6 +51,7 @@ export { PickersToolbarButton } from './components/PickersToolbarButton';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
+export { useControlledValueWithTimezone } from './hooks/useValueWithTimezone';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
@@ -130,7 +131,7 @@ export {
   onSpaceOrEnter,
   DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from './utils/utils';
-export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+export { useDefaultReduceAnimations } from './hooks/useDefaultReduceAnimations';
 export { extractValidationProps } from './utils/validation/extractValidationProps';
 export { validateDate } from './utils/validation/validateDate';
 export { validateDateTime } from './utils/validation/validateDateTime';
@@ -138,13 +139,6 @@ export { validateTime } from './utils/validation/validateTime';
 export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 export { uncapitalizeObjectKeys } from './utils/slots-migration';
 export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
-
-export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
-export type {
-  ExportedCalendarHeaderProps,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
-} from '../DateCalendar/PickersCalendarHeader';
 
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {

@@ -42,16 +42,20 @@ function RenderCellParamsExplicitTyping() {
         {
           field: 'price6',
           type: 'actions',
-          // @ts-expect-error `price` is expected to be a number because of GridColDef
           getActions: (params: GridRowParams<{ price: string }>) => {
-            return params.row.price.toUpperCase();
+            // @ts-expect-error Property tax does not exist on type { price: string }
+            params.row.tax;
+            params.row.price.toUpperCase();
+            return [];
           },
         },
         {
           field: 'price7',
           type: 'actions',
           getActions: (params: GridRowParams) => {
-            return params.row.price.toUpperCase();
+            // row is typed as any by default
+            params.row.price.toUpperCase();
+            return [];
           },
         },
       ]}

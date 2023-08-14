@@ -98,6 +98,14 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 {{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Single click editing
+
+By default, one of the ways to [enter the edit mode](/x/react-data-grid/editing/#start-editing) is by double-clicking a cell.
+Using the [controlled mode](/x/react-data-grid/editing/#controlled-model) and listening to click events, you can also enter the edit mode with just a single click.
+The following demo implements this behavior.
+
+{{"demo": "SingleClickEditing.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## Usage with `@mui/x-date-pickers`
 
 By default, the data grid uses native browser inputs for editing `date` and `dateTime` columns.

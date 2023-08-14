@@ -2,6 +2,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/models/validation';
+import { TimezoneProps } from '../models';
 
 export interface ExportedYearCalendarProps {
   /**
@@ -14,7 +15,8 @@ export interface ExportedYearCalendarProps {
 export interface YearCalendarProps<TDate>
   extends ExportedYearCalendarProps,
     YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
+    BaseDateValidationProps<TDate>,
+    TimezoneProps {
   autoFocus?: boolean;
   /**
    * className applied to the root element.
@@ -42,13 +44,13 @@ export interface YearCalendarProps<TDate>
   defaultValue?: TDate | null;
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
-   * @default The closest valid year using the validation props, except callbacks such as `shouldDisableDate`.
+   * @default The closest valid year using the validation props, except callbacks such as `shouldDisableYear`.
    */
   referenceDate?: TDate;
   /**
    * Callback fired when the value changes.
    * @template TDate
-   * @param {TDate | null} value The new value.
+   * @param {TDate} value The new value.
    */
   onChange?: (value: TDate) => void;
   /** If `true` picker is readonly */

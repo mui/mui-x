@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -182,6 +183,37 @@ describe('<DataGrid /> - Cells', () => {
     expect(() => {
       getCell(1, 0).focus();
     }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
+  });
+
+  it('should keep the focused cell/row rendered in the DOM if it scrolls outside the viewport', function test() {
+    if (isJSDOM) {
+      this.skip();
+    }
+    const rowHeight = 50;
+    const defaultData = getBasicGridData(20, 20);
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={defaultData.columns} rows={defaultData.rows} rowHeight={rowHeight} />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+
+    const cell = getCell(1, 3);
+    userEvent.mousePress(cell);
+
+    const activeElementTextContent = document.activeElement?.textContent;
+    const columnWidth = document.activeElement!.clientWidth;
+
+    const scrollTop = 10 * rowHeight;
+    fireEvent.scroll(virtualScroller, { target: { scrollTop } });
+    expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
+
+    const scrollLeft = 10 * columnWidth;
+    fireEvent.scroll(virtualScroller, { target: { scrollLeft } });
+
+    expect(document.activeElement?.textContent).to.equal(activeElementTextContent);
   });
 
   // See https://github.com/mui/mui-x/issues/6378

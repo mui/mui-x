@@ -97,8 +97,9 @@ export default function CSSCustomization() {
           area: true,
         },
       ]}
+      margin={{ left: 60, top: 10, right: 20 }}
       width={600}
-      height={500}
+      height={300}
     >
       <defs>
         <linearGradient id="myGradient" gradientTransform="rotate(90)">

@@ -18,6 +18,7 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
 import { LicenseInfo } from '@mui/x-license-pro';
+import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
@@ -56,6 +57,8 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
+      '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
+      '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       'date-fns': 'latest',
       dayjs: 'latest',
       exceljs: 'latest',
@@ -171,6 +174,18 @@ function AppWrapper(props) {
   const { children, emotionCache, pageProps } = props;
 
   const router = useRouter();
+  const { productId: productIdRaw, productCategoryId } = getProductInfoFromUrl(router.asPath);
+  const { canonicalAs } = pathnameToLanguage(router.asPath);
+  let productId = productIdRaw;
+
+  // Not respecting URL convention, ad-hoc workaround
+  if (canonicalAs.startsWith('/x/api/data-grid/')) {
+    productId = 'x-data-grid';
+  } else if (canonicalAs.startsWith('/x/api/date-pickers/')) {
+    productId = 'x-date-pickers';
+  } else if (canonicalAs.startsWith('/x/api/charts/')) {
+    productId = 'x-charts';
+  }
 
   React.useEffect(() => {
     loadDependencies();
@@ -184,17 +199,14 @@ function AppWrapper(props) {
   }, []);
 
   let fonts = [];
-  if (router.pathname.match(/onepirate/)) {
+  if (pathnameToLanguage(router.asPath).canonicalAs.match(/onepirate/)) {
     fonts = [
       'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
     ];
   }
 
-  const { canonicalAs } = pathnameToLanguage(router.asPath);
-
   const pageContextValue = React.useMemo(() => {
     const { activePage, activePageParents } = findActivePage(pages, router.pathname);
-
     const languagePrefix = pageProps.userLanguage === 'en' ? '' : `/${pageProps.userLanguage}`;
 
     let productIdentifier = {
@@ -207,10 +219,7 @@ function AppWrapper(props) {
       ],
     };
 
-    if (
-      canonicalAs.startsWith('/x/react-data-grid/') ||
-      canonicalAs.startsWith('/x/api/data-grid/')
-    ) {
+    if (productId === 'x-data-grid') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Data Grid',
@@ -220,10 +229,7 @@ function AppWrapper(props) {
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
-    } else if (
-      canonicalAs.startsWith('/x/react-date-pickers/') ||
-      canonicalAs.startsWith('/x/api/date-pickers/')
-    ) {
+    } else if (productId === 'x-date-pickers') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Date Pickers',
@@ -235,10 +241,23 @@ function AppWrapper(props) {
           },
         ],
       };
+    } else if (productId === 'x-charts') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Charts',
+        versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
+      };
     }
 
-    return { activePage, activePageParents, pages, productIdentifier };
-  }, [canonicalAs, pageProps.userLanguage, router.pathname]);
+    return {
+      activePage,
+      activePageParents,
+      pages,
+      productIdentifier,
+      productId,
+      productCategoryId,
+    };
+  }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
@@ -250,6 +269,8 @@ function AppWrapper(props) {
         {fonts.map((font) => (
           <link rel="stylesheet" href={font} key={font} />
         ))}
+        <meta name="mui:productId" content={productId} />
+        <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
         <CodeCopyProvider>

@@ -10,58 +10,62 @@ import {
   GridRowsProp,
   GridRowModesModel,
   GridRowModes,
-  DataGridPro,
+  DataGrid,
   GridColDef,
-  GridRowParams,
-  MuiEvent,
   GridToolbarContainer,
   GridActionsCellItem,
   GridEventListener,
   GridRowId,
   GridRowModel,
-} from '@mui/x-data-grid-pro';
+  GridRowEditStopReasons,
+} from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
-  randomUpdatedDate,
   randomId,
+  randomArrayItem,
 } from '@mui/x-data-grid-generator';
+
+const roles = ['Market', 'Finance', 'Development'];
+const randomRole = () => {
+  return randomArrayItem(roles);
+};
 
 const initialRows: GridRowsProp = [
   {
     id: randomId(),
     name: randomTraderName(),
     age: 25,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 36,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 19,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 28,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
   {
     id: randomId(),
     name: randomTraderName(),
     age: 23,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
+    joinDate: randomCreatedDate(),
+    role: randomRole(),
   },
 ];
 
@@ -97,15 +101,10 @@ export default function FullFeaturedCrudGrid() {
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
-  const handleRowEditStart = (
-    params: GridRowParams,
-    event: MuiEvent<React.SyntheticEvent>,
-  ) => {
-    event.defaultMuiPrevented = true;
-  };
-
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
-    event.defaultMuiPrevented = true;
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
   };
 
   const handleEditClick = (id: GridRowId) => () => {
@@ -144,20 +143,29 @@ export default function FullFeaturedCrudGrid() {
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 180, editable: true },
-    { field: 'age', headerName: 'Age', type: 'number', editable: true },
     {
-      field: 'dateCreated',
-      headerName: 'Date Created',
+      field: 'age',
+      headerName: 'Age',
+      type: 'number',
+      width: 80,
+      align: 'left',
+      headerAlign: 'left',
+      editable: true,
+    },
+    {
+      field: 'joinDate',
+      headerName: 'Join date',
       type: 'date',
       width: 180,
       editable: true,
     },
     {
-      field: 'lastLogin',
-      headerName: 'Last Login',
-      type: 'dateTime',
+      field: 'role',
+      headerName: 'Department',
       width: 220,
       editable: true,
+      type: 'singleSelect',
+      valueOptions: ['Market', 'Finance', 'Development'],
     },
     {
       field: 'actions',
@@ -173,6 +181,9 @@ export default function FullFeaturedCrudGrid() {
             <GridActionsCellItem
               icon={<SaveIcon />}
               label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
               onClick={handleSaveClick(id)}
             />,
             <GridActionsCellItem
@@ -217,13 +228,12 @@ export default function FullFeaturedCrudGrid() {
         },
       }}
     >
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         editMode="row"
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
         slots={{

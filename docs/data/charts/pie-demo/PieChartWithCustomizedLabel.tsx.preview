@@ -1,0 +1,16 @@
+<PieChart
+  series={[
+    {
+      outerRadius: 80,
+      data,
+      arcLabel: getArcLabel,
+    },
+  ]}
+  sx={{
+    [`& .${pieArcLabelClasses.root}`]: {
+      fill: 'white',
+      fontSize: 14,
+    },
+  }}
+  {...sizing}
+/>

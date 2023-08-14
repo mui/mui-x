@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Popper from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import {
@@ -11,6 +12,7 @@ import { generateVirtualElement, useMouseTracker, getTootipHasData, TriggerOptio
 import { ChartSeriesType } from '../models/seriesType/config';
 import { ChartsItemContentProps, ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisContentProps, ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
+import { ChartsTooltipClasses, getTooltipUtilityClass } from './tooltipClasses';
 
 export type ChartsTooltipProps = {
   /**
@@ -29,6 +31,23 @@ export type ChartsTooltipProps = {
    * Component to override the tooltip content when triger is set to 'axis'.
    */
   axisContent?: React.ElementType<ChartsAxisContentProps>;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<ChartsTooltipClasses>;
+};
+
+const useUtilityClasses = (ownerState: { classes: ChartsTooltipProps['classes'] }) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['root'],
+    markCell: ['markCell'],
+    labelCell: ['labelCell'],
+    valueCell: ['valueCell'],
+  };
+
+  return composeClasses(slots, getTooltipUtilityClass, classes);
 };
 
 function ChartsTooltip(props: ChartsTooltipProps) {
@@ -42,6 +61,8 @@ function ChartsTooltip(props: ChartsTooltipProps) {
 
   const tooltipHasData = getTootipHasData(trigger, displayedData);
   const popperOpen = mousePosition !== null && tooltipHasData;
+
+  const classes = useUtilityClasses({ classes: props.classes });
 
   if (trigger === 'none') {
     return null;
@@ -59,11 +80,15 @@ function ChartsTooltip(props: ChartsTooltipProps) {
             <ChartsItemTooltipContent
               itemData={displayedData as ItemInteractionData<ChartSeriesType>}
               content={itemContent}
+              sx={{ mx: 2 }}
+              classes={classes}
             />
           ) : (
             <ChartsAxisTooltipContent
               axisData={displayedData as AxisInteractionData}
               content={axisContent}
+              sx={{ mx: 2 }}
+              classes={classes}
             />
           )}
         </Popper>
@@ -81,6 +106,10 @@ ChartsTooltip.propTypes = {
    * Component to override the tooltip content when triger is set to 'axis'.
    */
   axisContent: PropTypes.elementType,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
   /**
    * Component to override the tooltip content when triger is set to 'item'.
    */

@@ -49,6 +49,7 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   fixedWeekNumber,
   disableDragEditing,
   displayWeekNumber,
+  timezone,
 }: DateRangeViewRendererProps<TDate, any>) => (
   <DateRangeCalendar
     value={value}
@@ -86,5 +87,6 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     fixedWeekNumber={fixedWeekNumber}
     disableDragEditing={disableDragEditing}
     displayWeekNumber={displayWeekNumber}
+    timezone={timezone}
   />
 );

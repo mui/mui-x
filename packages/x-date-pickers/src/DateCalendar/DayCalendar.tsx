@@ -27,6 +27,8 @@ import { useIsDateDisabled } from './useIsDateDisabled';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
+import { TimezoneProps } from '../models';
+import { DefaultizedProps } from '../internals/models/helpers';
 
 export interface DayCalendarSlotsComponent<TDate> {
   /**
@@ -83,6 +85,7 @@ export interface DayCalendarProps<TDate>
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
+    DefaultizedProps<TimezoneProps, 'timezone'>,
     SlotsAndSlotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
@@ -234,9 +237,6 @@ function WrappedDay<TDate extends unknown>({
   currentMonthNumber: number;
   isViewFocused: boolean;
 }) {
-  const utils = useUtils<TDate>();
-  const now = useNow<TDate>();
-
   const {
     disabled,
     disableHighlightToday,
@@ -246,7 +246,11 @@ function WrappedDay<TDate extends unknown>({
     componentsProps,
     slots,
     slotProps,
+    timezone,
   } = parentProps;
+
+  const utils = useUtils<TDate>();
+  const now = useNow<TDate>(timezone);
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
   const isSelected = selectedDays.some((selectedDay) => utils.isSameDay(selectedDay, day));
@@ -317,12 +321,7 @@ function WrappedDay<TDate extends unknown>({
  * @ignore - do not document.
  */
 export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
-  const now = useNow<TDate>();
-  const utils = useUtils<TDate>();
   const props = useThemeProps({ props: inProps, name: 'MuiDayCalendar' });
-  const classes = useUtilityClasses(props);
-  const theme = useTheme();
-  const isRTL = theme.direction === 'rtl';
 
   const {
     onFocusedDayChange,
@@ -352,7 +351,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     displayWeekNumber,
     fixedWeekNumber,
     autoFocus,
+    timezone,
   } = props;
+
+  const now = useNow<TDate>(timezone);
+  const utils = useUtils<TDate>();
+  const classes = useUtilityClasses(props);
+  const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const isDateDisabled = useIsDateDisabled({
     shouldDisableDate,
@@ -362,6 +368,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     maxDate,
     disablePast,
     disableFuture,
+    timezone,
   });
 
   const localeText = useLocaleText<TDate>();
@@ -416,6 +423,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             minDate: isRTL ? newFocusedDayDefault : utils.startOfMonth(nextAvailableMonth),
             maxDate: isRTL ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
             isDateDisabled,
+            timezone,
           });
           focusDay(closestDayToFocus || newFocusedDayDefault);
           event.preventDefault();
@@ -431,6 +439,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             minDate: isRTL ? utils.startOfMonth(nextAvailableMonth) : newFocusedDayDefault,
             maxDate: isRTL ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
             isDateDisabled,
+            timezone,
           });
           focusDay(closestDayToFocus || newFocusedDayDefault);
           event.preventDefault();
@@ -495,14 +504,24 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
         disablePast,
         disableFuture,
         isDateDisabled,
+        timezone,
       });
     }
     return internalFocusedDay;
-  }, [currentMonth, disableFuture, disablePast, internalFocusedDay, isDateDisabled, utils]);
+  }, [
+    currentMonth,
+    disableFuture,
+    disablePast,
+    internalFocusedDay,
+    isDateDisabled,
+    utils,
+    timezone,
+  ]);
 
   const weeksToDisplay = React.useMemo(() => {
-    const toDisplay = utils.getWeekArray(currentMonth);
-    let nextMonth = utils.addMonths(currentMonth, 1);
+    const currentMonthWithTimezone = utils.setTimezone(currentMonth, timezone);
+    const toDisplay = utils.getWeekArray(currentMonthWithTimezone);
+    let nextMonth = utils.addMonths(currentMonthWithTimezone, 1);
     while (fixedWeekNumber && toDisplay.length < fixedWeekNumber) {
       const additionalWeeks = utils.getWeekArray(nextMonth);
       const hasCommonWeek = utils.isSameDay(
@@ -519,7 +538,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
       nextMonth = utils.addMonths(nextMonth, 1);
     }
     return toDisplay;
-  }, [currentMonth, fixedWeekNumber, utils]);
+  }, [currentMonth, fixedWeekNumber, utils, timezone]);
 
   return (
     <div role="grid" aria-labelledby={gridLabelId}>

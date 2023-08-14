@@ -83,6 +83,8 @@ For now, row reordering is disabled if sorting is applied to the data grid.
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #4821](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
 ## Reordering rows with tree data 🚧
@@ -91,6 +93,8 @@ This feature isn't implemented yet. It's coming.
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #4821](https://github.com/mui/mui-x/issues/4821) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
 ## API

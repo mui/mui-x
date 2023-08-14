@@ -1,3 +1,7 @@
+---
+productId: x-data-grid
+---
+
 # Migration from v5 to v6
 
 <!-- #default-branch-switch -->
@@ -27,10 +31,10 @@ The `preset-safe` codemod will automatically adjust the bulk of your code to acc
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-```sh
+```bash
 // Data Grid specific
 npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
-// Target Date and Time pickers as well
+// Target Date and Time Pickers as well
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
@@ -416,7 +420,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
    />
   ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
-- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#server-side-persistence) section about the topic.
 - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
 - The `GridEditRowsModel` type was removed.
 - The following API methods were removed:
@@ -491,7 +495,7 @@ To smooth the transition, data grid support both the `components` props which ar
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
-```sh
+```bash
 npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 

@@ -5,14 +5,16 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../../models/validation';
-import { DateValidationError } from '../../../models';
+import { DateValidationError, TimezoneProps } from '../../../models';
 import { applyDefaultDate } from '../date-utils';
+import { DefaultizedProps } from '../../models/helpers';
 
 export interface DateComponentValidationProps<TDate>
   extends DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
-    Required<BaseDateValidationProps<TDate>> {}
+    Required<BaseDateValidationProps<TDate>>,
+    DefaultizedProps<TimezoneProps, 'timezone'> {}
 
 export const validateDate: Validator<
   any | null,
@@ -24,7 +26,16 @@ export const validateDate: Validator<
     return null;
   }
 
-  const now = adapter.utils.date()!;
+  const {
+    shouldDisableDate,
+    shouldDisableMonth,
+    shouldDisableYear,
+    disablePast,
+    disableFuture,
+    timezone,
+  } = props;
+
+  const now = adapter.utils.dateWithTimezone(undefined, timezone)!;
   const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
   const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
 
@@ -32,19 +43,19 @@ export const validateDate: Validator<
     case !adapter.utils.isValid(value):
       return 'invalidDate';
 
-    case Boolean(props.shouldDisableDate && props.shouldDisableDate(value)):
+    case Boolean(shouldDisableDate && shouldDisableDate(value)):
       return 'shouldDisableDate';
 
-    case Boolean(props.shouldDisableMonth && props.shouldDisableMonth(value)):
+    case Boolean(shouldDisableMonth && shouldDisableMonth(value)):
       return 'shouldDisableMonth';
 
-    case Boolean(props.shouldDisableYear && props.shouldDisableYear(value)):
+    case Boolean(shouldDisableYear && shouldDisableYear(value)):
       return 'shouldDisableYear';
 
-    case Boolean(props.disableFuture && adapter.utils.isAfterDay(value, now)):
+    case Boolean(disableFuture && adapter.utils.isAfterDay(value, now)):
       return 'disableFuture';
 
-    case Boolean(props.disablePast && adapter.utils.isBeforeDay(value, now)):
+    case Boolean(disablePast && adapter.utils.isBeforeDay(value, now)):
       return 'disablePast';
 
     case Boolean(minDate && adapter.utils.isBeforeDay(value, minDate)):

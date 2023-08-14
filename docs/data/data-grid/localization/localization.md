@@ -101,7 +101,7 @@ You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data Grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
-## 🚧 RTL Support
+## RTL Support 🚧
 
 :::warning
 RTL is not fully supported in the Data Grid.

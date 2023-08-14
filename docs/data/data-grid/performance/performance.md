@@ -48,6 +48,10 @@ shows you which cells re-render in reaction to your interaction with the grid.
 
 {{"demo": "GridVisualization.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Filtering
+
+For filtering performance, see [the filter customization section](/x/react-data-grid/filtering/customization/#optimize-performance).
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

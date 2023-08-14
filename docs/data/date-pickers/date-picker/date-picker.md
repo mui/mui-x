@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Picker component
 components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker
 githubLabel: 'component: DatePicker'

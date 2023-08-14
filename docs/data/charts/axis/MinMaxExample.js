@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Slider from '@mui/material/Slider';
+import Box from '@mui/material/Box';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { Chance } from 'chance';
 
@@ -34,7 +35,7 @@ export default function MinMaxExample() {
   };
 
   return (
-    <div>
+    <Box sx={{ width: '100%', maxWidth: 500 }}>
       <ScatterChart
         xAxis={[
           {
@@ -44,8 +45,9 @@ export default function MinMaxExample() {
           },
         ]}
         series={[{ data }]}
-        width={600}
-        height={500}
+        height={300}
+        margin={{ top: 10 }}
+        sx={{ mt: 2 }}
       />
       <Slider
         value={value}
@@ -53,7 +55,8 @@ export default function MinMaxExample() {
         valueLabelDisplay="auto"
         min={-40}
         max={40}
+        sx={{ mt: 2 }}
       />
-    </div>
+    </Box>
   );
 }

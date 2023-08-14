@@ -5,26 +5,39 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import globalChance from 'chance';
+import { Chance } from 'chance';
 
-const chance = globalChance();
+const chance = new Chance(42);
 
 function getGaussianSeriesData(mean, stdev = [0.3, 0.4], N = 50) {
   return [...Array(N)].map((_, i) => {
     const x =
-      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 1 }))) *
-        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 1 })) *
+      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 0.99 }))) *
+        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
         stdev[0] +
       mean[0];
     const y =
-      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 1 }))) *
-        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 1 })) *
+      Math.sqrt(-2.0 * Math.log(1 - chance.floating({ min: 0, max: 0.99 }))) *
+        Math.cos(2.0 * Math.PI * chance.floating({ min: 0, max: 0.99 })) *
         stdev[1] +
       mean[1];
     return { x, y, id: i };
   });
 }
 
+const legendPlacement = {
+  legend: {
+    position: {
+      vertical: 'middle',
+      horizontal: 'right',
+    },
+    direction: 'column',
+  },
+  margin: {
+    top: 20,
+    right: 100,
+  },
+};
 const series = [
   { label: 'series 1', data: getGaussianSeriesData([-5, 0]) },
   { label: 'series 2', data: getGaussianSeriesData([-4, 0]) },
@@ -168,10 +181,11 @@ export default function ColorTemplate() {
     <Stack direction="column" spacing={2}>
       <ScatterChart
         width={600}
-        height={400}
+        height={300}
         series={series}
         yAxis={[{ min: -1.5, max: 1.5 }]}
         colors={categories[colorScheme]}
+        {...legendPlacement}
       />
       <TextField
         select

@@ -11,19 +11,14 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { GridRootStyles } from './GridRootStyles';
-import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
-import { gridColumnGroupsHeaderMaxDepthSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
-import {
-  gridPinnedRowsCountSelector,
-  gridRowCountSelector,
-} from '../../hooks/features/rows/gridRowsSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridDensity } from '../../models/gridDensity';
+import { useGridAriaAttributes } from '../../hooks/utils/useGridAriaAttributes';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -55,13 +50,14 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const rootProps = useGridRootProps();
   const { children, className, ...other } = props;
   const apiRef = useGridPrivateApiContext();
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
-  const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
-  const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
+
+  const getAriaAttributes = rootProps.experimentalFeatures?.ariaV7 // ariaV7 should never change
+    ? null
+    : useGridAriaAttributes;
+  const ariaAttributes = typeof getAriaAttributes === 'function' ? getAriaAttributes() : null;
 
   const ownerState = {
     ...rootProps,
@@ -87,10 +83,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
       ref={handleRef}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
-      role="grid"
-      aria-colcount={visibleColumns.length}
-      aria-rowcount={headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount}
-      aria-multiselectable={!rootProps.disableMultipleRowSelection}
+      {...ariaAttributes}
       {...other}
     >
       {children}

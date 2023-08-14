@@ -1,16 +1,23 @@
 import * as React from 'react';
+import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { AxisInteractionData } from '../context/InteractionProvider';
-import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
+import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import {
+  CartesianChartSeriesType,
+  ChartSeriesDefaultized,
+  ChartSeriesType,
+} from '../models/seriesType/config';
 import { AxisDefaultized } from '../models/axis';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,
   ChartsTooltipTable,
   ChartsTooltipMark,
+  ChartsTooltipRow,
 } from './ChartsTooltipTable';
+import { ChartsTooltipClasses } from './tooltipClasses';
 
 export type ChartsAxisContentProps = {
   /**
@@ -34,41 +41,46 @@ export type ChartsAxisContentProps = {
    * The value associated to the current mouse position.
    */
   axisValue: any;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: ChartsTooltipClasses;
+  sx?: SxProps<Theme>;
 };
 export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
-  const { series, axis, dataIndex, axisValue } = props;
+  const { series, axis, dataIndex, axisValue, sx, classes } = props;
 
   if (dataIndex == null) {
     return null;
   }
   const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
-    <ChartsTooltipPaper>
+    <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
       <ChartsTooltipTable>
-        {axisValue != null && (
+        {axisValue != null && !axis.hideTooltip && (
           <thead>
-            <tr>
+            <ChartsTooltipRow>
               <ChartsTooltipCell colSpan={3}>
-                <Typography variant="caption">{axisFormatter(axisValue)}</Typography>
+                <Typography>{axisFormatter(axisValue)}</Typography>
               </ChartsTooltipCell>
-            </tr>
+            </ChartsTooltipRow>
           </thead>
         )}
         <tbody>
           {series.map(({ color, id, label, valueFormatter, data }: ChartSeriesDefaultized<any>) => (
-            <tr key={id}>
-              <ChartsTooltipCell>
-                <ChartsTooltipMark ownerState={{ color }} />
+            <ChartsTooltipRow key={id}>
+              <ChartsTooltipCell className={classes.markCell}>
+                <ChartsTooltipMark ownerState={{ color }} boxShadow={1} />
               </ChartsTooltipCell>
 
-              <ChartsTooltipCell>
-                {label ? <Typography variant="caption">{label}</Typography> : null}
+              <ChartsTooltipCell className={classes.labelCell}>
+                {label ? <Typography>{label}</Typography> : null}
               </ChartsTooltipCell>
 
-              <ChartsTooltipCell>
-                <Typography variant="caption">{valueFormatter(data[dataIndex])}</Typography>
+              <ChartsTooltipCell className={classes.valueCell}>
+                <Typography>{valueFormatter(data[dataIndex])}</Typography>
               </ChartsTooltipCell>
-            </tr>
+            </ChartsTooltipRow>
           ))}
         </tbody>
       </ChartsTooltipTable>
@@ -79,8 +91,10 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
 export function ChartsAxisTooltipContent(props: {
   axisData: AxisInteractionData;
   content?: React.ElementType<ChartsAxisContentProps>;
+  sx?: SxProps<Theme>;
+  classes: ChartsAxisContentProps['classes'];
 }) {
-  const { content, axisData } = props;
+  const { content, axisData, sx, classes } = props;
   const dataIndex = axisData.x && axisData.x.index;
   const axisValue = axisData.x && axisData.x.value;
 
@@ -91,7 +105,11 @@ export function ChartsAxisTooltipContent(props: {
 
   const relevantSeries = React.useMemo(() => {
     const rep: any[] = [];
-    (Object.keys(series) as (keyof FormattedSeries)[]).forEach((seriesType) => {
+    (
+      Object.keys(series).filter((seriesType) =>
+        ['bar', 'line', 'scatter'].includes(seriesType),
+      ) as CartesianChartSeriesType[]
+    ).forEach((seriesType) => {
       series[seriesType]!.seriesOrder.forEach((seriesId) => {
         const axisKey = series[seriesType]!.series[seriesId].xAxisKey;
         if (axisKey === undefined || axisKey === USED_X_AXIS_ID) {
@@ -114,6 +132,8 @@ export function ChartsAxisTooltipContent(props: {
       axis={relevantAxis}
       dataIndex={dataIndex}
       axisValue={axisValue}
+      sx={sx}
+      classes={classes}
     />
   );
 }

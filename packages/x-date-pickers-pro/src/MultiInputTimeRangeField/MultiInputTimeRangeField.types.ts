@@ -8,10 +8,11 @@ import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
-} from '../internal/models/timeRange';
-import { RangePosition } from '../internal/models/range';
-import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
-import { RangeFieldSection } from '../internal/models/fields';
+} from '../internals/models/timeRange';
+import { RangePosition } from '../internals/models/range';
+import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internals/models/fields';
+import { MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputTimeRangeFieldParams<
   TDate,
@@ -33,6 +34,10 @@ export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends
 export interface MultiInputTimeRangeFieldProps<TDate>
   extends UseMultiInputTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   autoFocus?: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<MultiInputRangeFieldClasses>;
   /**
    * Overridable components.
    * @default {}
@@ -92,4 +97,5 @@ export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {
 export type UseMultiInputTimeRangeFieldDefaultizedProps<
   TDate,
   AdditionalProps extends {},
-> = UseTimeRangeFieldDefaultizedProps<TDate> & AdditionalProps;
+> = UseTimeRangeFieldDefaultizedProps<TDate> &
+  Omit<AdditionalProps, 'value' | 'defaultValue' | 'onChange'>;

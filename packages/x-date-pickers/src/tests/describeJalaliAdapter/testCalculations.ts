@@ -269,6 +269,18 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
     expect(adapter.getDate(testDateIso)).to.equal(8);
   });
 
+  it('Method: getMinutes', () => {
+    expect(adapter.getMinutes(testDateIso)).to.equal(44);
+  });
+
+  it('Method: getSeconds', () => {
+    expect(adapter.getSeconds(testDateIso)).to.equal(0);
+  });
+
+  it('Method: getMilliseconds', () => {
+    expect(adapter.getMilliseconds(testDateIso)).to.equal(0);
+  });
+
   it('Method: setYear', () => {
     expect(adapter.setYear(testDateIso, 1398)).toEqualDateTime('2019-10-30T11:44:00.000Z');
   });
@@ -279,6 +291,22 @@ export const testCalculations: DescribeJalaliAdapterTestSuite = ({ adapter }) =>
 
   it('Method: setDate', () => {
     expect(adapter.setDate(testDateIso, 9)).toEqualDateTime('2018-10-31T11:44:00.000Z');
+  });
+
+  it('Method: setHours', () => {
+    expect(adapter.setHours(testDateIso, 0)).toEqualDateTime('2018-10-30T00:44:00.000Z');
+  });
+
+  it('Method: setMinutes', () => {
+    expect(adapter.setMinutes(testDateIso, 12)).toEqualDateTime('2018-10-30T11:12:00.000Z');
+  });
+
+  it('Method: setSeconds', () => {
+    expect(adapter.setSeconds(testDateIso, 11)).toEqualDateTime('2018-10-30T11:44:11.000Z');
+  });
+
+  it('Method: setMilliseconds', () => {
+    expect(adapter.setMilliseconds(testDateIso, 11)).toEqualDateTime('2018-10-30T11:44:00.011Z');
   });
 
   it('Method: getNextMonth', () => {

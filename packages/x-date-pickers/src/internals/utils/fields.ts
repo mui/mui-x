@@ -12,6 +12,7 @@ const SHARED_FIELD_INTERNAL_PROP_NAMES = [
   'format',
   'formatDensity',
   'onChange',
+  'timezone',
   'readOnly',
   'onError',
   'shouldRespectLeadingZeros',

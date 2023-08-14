@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Date Range Picker component
 components: DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateRangeCalendar, DateRangePickerDay
 githubLabel: 'component: DateRangePicker'
@@ -24,6 +24,8 @@ Check-out their documentation page for more information:
 
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 
@@ -99,12 +101,14 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
-## 🚧 Month Range Picker
+## Month Range Picker 🚧
+
+The Month Range Picker allows setting a range of months.
 
 :::warning
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
-:::
 
-The Month Range Picker allows setting a range of months.
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
+:::

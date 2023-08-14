@@ -1,12 +1,12 @@
 ---
-product: date-pickers
-title: React Fields components
+productId: x-date-pickers
+title: React Date Fields components
 components: DateField, TimeField, DateTimeField, MultiInputDateRangeField, SingleInputDateRangeField, MultiInputTimeRangeField, SingleInputTimeRangeField, MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Fields
+# Fields component
 
 <p class="description">The field components let the user input date and time values with a keyboard and refined keyboard navigation.</p>
 
@@ -37,40 +37,6 @@ For example, if the format passed to the field is `MM/DD/YYYY`, the field will c
 - A `year` section for the token `YYYY`
 
 Those sections are independent, pressing <kbd class="key">ArrowUp</kbd> while focusing the `day` section will add one day to the date, but it will never change the month or the year.
-
-### When is `onChange` called?
-
-The field components have an internal state to update the visible value.
-
-It will only call the `onChange` callback when:
-
-- the user fills one section of an empty input. The value equals `Invalid date`.
-- the user completes all sections of an input. The value reflects the input.
-- the user cleans one section of a completed input. The value equals `Invalid date`.
-- the user cleans all sections of an input. The value equals `null`.
-
-In the example below, `onChange` will be called when any of the conditions are triggered:
-
-{{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
-
-#### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
-
-On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
-`onChange` will be called if the date you are modifying is matching one of the condition above,
-even if the other date does not.
-
-In the example below, changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
-
-{{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
-
-#### Only update when the value is valid
-
-The `onChange` callback received a 2nd parameter containing the validation error associated to the current value.
-If you only want to update your state when the value is valid, you can ignore any `onChange` call with a non-null `validationError`.
-
-In the example below, `onChange` will only be called if the date is valid and its year is 2022:
-
-{{"demo": "LifeCycleIgnoreInvalidValue.js"}}
 
 ### Control the selected sections
 

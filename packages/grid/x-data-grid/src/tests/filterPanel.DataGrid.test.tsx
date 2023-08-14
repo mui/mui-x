@@ -4,6 +4,7 @@ import { spy } from 'sinon';
 import {
   DataGrid,
   DataGridProps,
+  GridCellParams,
   GridFilterInputValue,
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
@@ -102,7 +103,8 @@ describe('<DataGrid /> - Filter panel', () => {
                 sensitivity: 'base',
                 usage: 'search',
               });
-              return ({ value }): boolean => {
+              return (params: GridCellParams): boolean => {
+                const value = params.value!;
                 return collator.compare(filterItem.value, (value && value.toString()) || '') === 0;
               };
             },

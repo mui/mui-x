@@ -23,6 +23,8 @@
       "@mui/x-date-pickers-pro/*": ["./packages/x-date-pickers-pro/src/*"],
       "@mui/x-charts": ["./packages/x-charts/src"],
       "@mui/x-charts/*": ["./packages/x-charts/src/*"],
+      "@mui/x-tree-view": ["./packages/x-tree-view/src"],
+      "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
       "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
       "test/*": ["./test/*"],

@@ -1,4 +1,4 @@
-import { DateView, FieldValueType, MuiPickersAdapter } from '../../models';
+import { DateView, FieldValueType, MuiPickersAdapter, PickersTimezone } from '../../models';
 import { DateOrTimeViewWithMeridiem } from '../models';
 import { areViewsEqual } from './views';
 
@@ -10,6 +10,7 @@ interface FindClosestDateParams<TDate> {
   minDate: TDate;
   isDateDisabled: (date: TDate) => boolean;
   utils: MuiPickersAdapter<TDate>;
+  timezone: PickersTimezone;
 }
 
 export const findClosestEnabledDate = <TDate>({
@@ -20,8 +21,9 @@ export const findClosestEnabledDate = <TDate>({
   minDate,
   isDateDisabled,
   utils,
+  timezone,
 }: FindClosestDateParams<TDate>) => {
-  const today = utils.startOfDay(utils.date()!);
+  const today = utils.startOfDay(utils.dateWithTimezone(undefined, timezone)!);
 
   if (disablePast && utils.isBefore(minDate!, today)) {
     minDate = today;
@@ -122,8 +124,19 @@ export const mergeDateAndTime = <TDate>(
   return mergedDate;
 };
 
-export const getTodayDate = <TDate>(utils: MuiPickersAdapter<TDate>, valueType?: FieldValueType) =>
-  valueType === 'date' ? utils.startOfDay(utils.date()!) : utils.date()!;
+export const getTodayDate = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  timezone: PickersTimezone,
+  valueType?: FieldValueType,
+) =>
+  valueType === 'date'
+    ? utils.startOfDay(utils.dateWithTimezone(undefined, timezone)!)
+    : utils.dateWithTimezone(undefined, timezone)!;
+
+export const formatMeridiem = <TDate>(utils: MuiPickersAdapter<TDate>, meridiem: 'am' | 'pm') => {
+  const date = utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14);
+  return utils.format(date, 'meridiem');
+};
 
 const dateViews = ['year', 'month', 'day'];
 export const isDatePickerView = (view: DateOrTimeViewWithMeridiem): view is DateView =>

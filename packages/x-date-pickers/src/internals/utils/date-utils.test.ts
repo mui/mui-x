@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { adapterToUse } from '../../../../../test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers';
 import { findClosestEnabledDate } from './date-utils';
 
 describe('findClosestEnabledDate', () => {
@@ -15,6 +15,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: () => true,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     });
 
     expect(result).to.equal(null);
@@ -29,6 +30,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: () => false,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, adapterToUse.date(new Date(2000, 0, 1)))).to.equal(true);
@@ -43,6 +45,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, adapterToUse.date(new Date(2018, 7, 18)))).to.equal(true);
@@ -57,6 +60,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, adapterToUse.date(new Date(2018, 6, 18)))).to.equal(true);
@@ -72,6 +76,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: true,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isBefore(result, today)).to.equal(false);
@@ -88,6 +93,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: () => false,
       disableFuture: true,
       disablePast: true,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, today)).to.equal(true);
@@ -103,6 +109,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: (date) => adapterToUse.isSameDay(date, today),
       disableFuture: true,
       disablePast: true,
+      timezone: 'default',
     });
 
     expect(adapterToUse.isEqual(result, adapterToUse.date()));
@@ -117,6 +124,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, adapterToUse.date(new Date(2018, 7, 18)))).to.equal(true);
@@ -131,6 +139,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, adapterToUse.date(new Date(2018, 7, 18)))).to.equal(true);
@@ -145,6 +154,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, adapterToUse.date(new Date(2018, 6, 18)))).to.equal(true);
@@ -159,6 +169,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: only18th,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(adapterToUse.isSameDay(result, adapterToUse.date(new Date(2018, 6, 18)))).to.equal(true);
@@ -173,6 +184,7 @@ describe('findClosestEnabledDate', () => {
       isDateDisabled: () => false,
       disableFuture: false,
       disablePast: false,
+      timezone: 'default',
     })!;
 
     expect(result).to.equal(null);

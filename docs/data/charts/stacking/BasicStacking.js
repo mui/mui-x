@@ -17,7 +17,7 @@ export default function BasicStacking() {
   return (
     <BarChart
       width={600}
-      height={400}
+      height={300}
       series={[
         { ...seriesA, stack: 'total' },
         { ...seriesB, stack: 'total' },

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Settings } from 'luxon';
+import { expect } from 'chai';
+import { DateTime, Settings } from 'luxon';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { expect } from 'chai';
 import {
   cleanText,
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import {
   describeGregorianAdapter,
   TEST_DATE_ISO_STRING,
@@ -22,6 +22,7 @@ describe('<AdapterLuxon />', () => {
     setDefaultTimezone: (timezone) => {
       Settings.defaultZone = timezone ?? 'system';
     },
+    getLocaleFromDate: (value: DateTime) => value.locale!,
     frenchLocale: 'fr',
   });
 

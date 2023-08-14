@@ -1,6 +1,10 @@
 {
   "props": {
-    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
     "view": {
       "type": {
         "name": "enum",
@@ -8,14 +12,19 @@
       },
       "required": true
     },
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "className": { "type": { "name": "string" } },
     "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DateTimePickerToolbar",
+  "imports": [
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers/DateTimePicker';",
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers';",
+    "import { DateTimePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": [
       "root",

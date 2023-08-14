@@ -12,7 +12,7 @@ export default function StackBars() {
         { data: [10, 6, 5, 8, 9], label: 'series C1' },
       ]}
       width={600}
-      height={500}
+      height={350}
     />
   );
 }

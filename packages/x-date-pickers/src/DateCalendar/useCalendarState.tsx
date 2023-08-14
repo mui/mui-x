@@ -3,7 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from './useIsDateDisabled';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
-import { MuiPickersAdapter } from '../models';
+import { MuiPickersAdapter, PickersTimezone } from '../models';
 import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
@@ -108,6 +108,7 @@ interface UseCalendarStateParams<TDate>
     | 'shouldDisableDate'
   > {
   disableSwitchToMonthOnDayFocus?: boolean;
+  timezone: PickersTimezone;
 }
 
 export const useCalendarState = <TDate extends unknown>(params: UseCalendarStateParams<TDate>) => {
@@ -123,9 +124,10 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
     onMonthChange,
     reduceAnimations,
     shouldDisableDate,
+    timezone,
   } = params;
 
-  const now = useNow<TDate>();
+  const now = useNow<TDate>(timezone);
   const utils = useUtils<TDate>();
 
   const reducerFn = React.useRef(
@@ -149,6 +151,7 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
       return singleItemValueManager.getInitialReferenceValue({
         value,
         utils,
+        timezone,
         props: params,
         referenceDate: externalReferenceDate,
         granularity: SECTION_TYPE_GRANULARITY.day,
@@ -201,6 +204,7 @@ export const useCalendarState = <TDate extends unknown>(params: UseCalendarState
     maxDate,
     disableFuture,
     disablePast,
+    timezone,
   });
 
   const onMonthSwitchingAnimationEnd = React.useCallback(() => {

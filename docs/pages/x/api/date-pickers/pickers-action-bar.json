@@ -12,11 +12,17 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "PickersActionBar",
+  "imports": [
+    "import { PickersActionBar } from '@mui/x-date-pickers/PickersActionBar';",
+    "import { PickersActionBar } from '@mui/x-date-pickers';",
+    "import { PickersActionBar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "spacing"], "globalClasses": {}, "name": "MuiPickersActionBar" },
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,

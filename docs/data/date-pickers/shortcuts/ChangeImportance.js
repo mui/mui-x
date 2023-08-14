@@ -27,7 +27,6 @@ const shortcutsItems = [
     label: "New Year's Day",
     getValue: () => {
       // (January 1)
-
       const today = dayjs();
       return today.month(0).date(1);
     },
@@ -43,7 +42,6 @@ const shortcutsItems = [
     label: 'Independence Day',
     getValue: () => {
       // (July 4)
-
       const today = dayjs();
       return today.month(6).date(4);
     },
@@ -66,7 +64,6 @@ const shortcutsItems = [
     label: 'Christmas Day',
     getValue: () => {
       // (December 25)
-
       const today = dayjs();
       return today.month(11).date(25);
     },
@@ -83,9 +80,11 @@ export default function ChangeImportance() {
           value={changeImportance}
           exclusive
           fullWidth
-          onChange={(event, newEventImportance) =>
-            setChangeImportance(newEventImportance)
-          }
+          onChange={(event, newEventImportance) => {
+            if (newEventImportance != null) {
+              setChangeImportance(newEventImportance);
+            }
+          }}
         >
           <ToggleButton value="accept">accept</ToggleButton>
           <ToggleButton value="set">set</ToggleButton>

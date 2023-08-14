@@ -17,6 +17,16 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 ## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
+:::info
+
+<details style="margin: 0">
+  <summary markdown="span">Video preview</summary>
+  <video muted loop playsinline controls style="margin-top: 8px">
+    <source src="https://github-production-user-asset-6210df.s3.amazonaws.com/13808724/237996024-abfcb5c6-9db6-4677-9ba7-ae97de441080.mov" type="video/mp4" />
+  </video>
+</details>
+:::
+
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `clipboardPaste` experimental feature flag.
 
@@ -57,7 +67,7 @@ To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
 
 ### Persisting pasted data
 
-Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/#persistence)—use the `processRowUpdate` prop to persist the updated row in your data source:
+Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/#server-side-persistence)—use the `processRowUpdate` prop to persist the updated row in your data source:
 
 ```tsx
 processRowUpdate?: (newRow: R, oldRow: R) => Promise<R> | R;

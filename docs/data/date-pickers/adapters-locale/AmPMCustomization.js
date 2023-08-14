@@ -21,7 +21,11 @@ export default function AmPMCustomization() {
           value={locale}
           exclusive
           fullWidth
-          onChange={(event, newLocale) => setLocale(newLocale)}
+          onChange={(event, newLocale) => {
+            if (newLocale != null) {
+              setLocale(newLocale);
+            }
+          }}
         >
           {locales.map((localeItem) => (
             <ToggleButton key={localeItem} value={localeItem}>

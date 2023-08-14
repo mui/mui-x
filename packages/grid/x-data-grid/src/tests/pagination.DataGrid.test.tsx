@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, userEvent, waitFor } from '@mui/monorepo/test/utils';
 import {
   DataGrid,
   DataGridProps,
@@ -327,6 +327,23 @@ describe('<DataGrid /> - Pagination', () => {
       ]);
     });
 
+    it('should not display a warning if the prop pageSize is in the prop pageSizeOptions when it is an array of objects.', () => {
+      const pageSize = 10;
+
+      expect(() => {
+        render(
+          <BaselineTestCase
+            paginationModel={{ pageSize, page: 0 }}
+            pageSizeOptions={[
+              { label: '10', value: 10 },
+              { label: '20', value: 20 },
+              { label: '30', value: 30 },
+            ]}
+          />,
+        );
+      }).not.toWarnDev();
+    });
+
     it('should display a warning if the prop pageSize is not in the default pageSizeOptions', () => {
       const pageSize = 12;
 
@@ -572,6 +589,18 @@ describe('<DataGrid /> - Pagination', () => {
     expect(getColumnValues(0)).to.deep.equal(['0']);
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
     expect(getColumnValues(0)).to.deep.equal(['1']);
+  });
+
+  it('should make the first cell focusable after changing the page', () => {
+    render(
+      <BaselineTestCase
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+        pageSizeOptions={[1]}
+      />,
+    );
+    userEvent.mousePress(getCell(0, 0));
+    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+    expect(getCell(1, 0)).to.have.attr('tabindex', '0');
   });
 
   describe('prop: initialState.pagination', () => {

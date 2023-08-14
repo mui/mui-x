@@ -49,7 +49,7 @@ interface BrowserFieldProps
 
 type BrowserFieldComponent = ((
   props: BrowserFieldProps & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const BrowserField = React.forwardRef(
   (props: BrowserFieldProps, inputRef: React.Ref<HTMLInputElement>) => {
@@ -90,7 +90,7 @@ interface BrowserSingleInputDateRangeFieldProps
 type BrowserSingleInputDateRangeFieldComponent = ((
   props: BrowserSingleInputDateRangeFieldProps &
     React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { fieldType?: string };
+) => React.JSX.Element) & { fieldType?: string };
 
 const BrowserSingleInputDateRangeField = React.forwardRef(
   (
@@ -170,7 +170,7 @@ interface BrowserMultiInputDateRangeFieldProps
 
 type BrowserMultiInputDateRangeFieldComponent = ((
   props: BrowserMultiInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const BrowserMultiInputDateRangeField = React.forwardRef(
   (props: BrowserMultiInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { DrawingProvider, DrawingProviderProps } from '../context/DrawingProvider';
 import {
   SeriesContextProvider,
@@ -22,7 +23,10 @@ export type ChartContainerProps = Omit<
   children?: React.ReactNode;
 };
 
-export function ChartContainer(props: ChartContainerProps) {
+export const ChartContainer = React.forwardRef(function ChartContainer(
+  props: ChartContainerProps,
+  ref,
+) {
   const {
     width,
     height,
@@ -31,24 +35,26 @@ export function ChartContainer(props: ChartContainerProps) {
     xAxis,
     yAxis,
     colors,
+    dataset,
     sx,
     title,
     desc,
     disableAxisListener,
     children,
   } = props;
-  const ref = React.useRef<SVGSVGElement>(null);
+  const svgRef = React.useRef<SVGSVGElement>(null);
+  const handleRef = useForkRef(ref, svgRef);
 
   return (
-    <DrawingProvider width={width} height={height} margin={margin} svgRef={ref}>
-      <SeriesContextProvider series={series} colors={colors}>
-        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
+    <DrawingProvider width={width} height={height} margin={margin} svgRef={svgRef}>
+      <SeriesContextProvider series={series} colors={colors} dataset={dataset}>
+        <CartesianContextProvider xAxis={xAxis} yAxis={yAxis} dataset={dataset}>
           <InteractionProvider>
             <HighlightProvider>
               <ChartsSurface
                 width={width}
                 height={height}
-                ref={ref}
+                ref={handleRef}
                 sx={sx}
                 title={title}
                 desc={desc}
@@ -62,4 +68,4 @@ export function ChartContainer(props: ChartContainerProps) {
       </SeriesContextProvider>
     </DrawingProvider>
   );
-}
+});

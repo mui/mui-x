@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Axis
 ---
 
@@ -23,7 +22,7 @@ But one uses a linear, and the other a log axis.
 Each axis definition is identified by its property `id`.
 And series specify the axis they use with `xAxisKey` and `yAxisKey` properties.
 
-{{"demo": "ScaleExample.js", "bg": "inline"}}
+{{"demo": "ScaleExample.js"}}
 
 :::info
 The management of those ids is for advanced use cases, such as charts with multiple axes.
@@ -63,15 +62,29 @@ By default, the axis domain is computed such that all your data is visible.
 To show a specific range of values, you can provide properties `min` and/or `max` to the axis definition.
 
 ```js
-xAxis={[
-  {
-    min: 10,
-    max: 50,
-  }
-]}
+xAxis={[{ min: 10, max: 50,  }]}
 ```
 
-{{"demo": "MinMaxExample.js", "bg": "inline"}}
+{{"demo": "MinMaxExample.js"}}
+
+### Ticks positions
+
+You can customize the number of ticks with the property `tickNumber`.
+
+:::info
+This number is not the exact number of ticks displayed.
+
+Thanks to d3, ticks are placed to be human-readable.
+For example, ticks for time axes will be placed on special values (years, days, half-days, ...).
+
+If you set `tickNumber=5` but there are only 4 years to display in the axis, the component might chose to render ticks on the 4 years, instead of putting 5 ticks on some months.
+:::
+
+As a helper, you can also provide `tickMinStep` and `tickMaxStep` which will compute `tickNumber` such that the step between two ticks respect those min/max values.
+
+Here the top axis has a `tickMinStep` of half a day, and the bottom axis a `tickMinStep` of a full day.
+
+{{"demo": "TickNumber.js"}}
 
 ## Axis customization
 
@@ -86,7 +99,7 @@ Those pros can accept three type of value:
 - `string` which should correspond to the id of a `xAxis` for top and bottom. Or to the id of a `yAxis` for left and right.
 - `object` which will be passed as props to `<XAxis />` or `<YAxis />`. It allows to specify which axis should be represent, and to customize the design of the axis.
 
-{{"demo": "ModifyAxisPosition.js", "bg": "inline"}}
+{{"demo": "ModifyAxisPosition.js"}}
 
 ### Rendering
 
@@ -104,4 +117,4 @@ Those components require an `axisId` prop to link them to an axis you defined in
 You can choose their position with `position` props which accept `'top'`/`'bottom'` for `<XAxis />` and `'left'`/`'right'` for `<YAxis />`.
 Other props are similar to the ones defined in the [previous section](/x/react-charts/axis/#rendering).
 
-{{"demo": "AxisWithComposition.js", "bg": "inline"}}
+{{"demo": "AxisWithComposition.js"}}

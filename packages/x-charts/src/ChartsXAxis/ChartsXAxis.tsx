@@ -8,10 +8,10 @@ import useTicks from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
 import {
-  Line,
-  Tick,
-  TickLabel,
-  Label,
+  ChartsLine,
+  ChartsTick,
+  ChartsTickLabel,
+  ChartsLabel,
   AxisRoot,
 } from '../internals/components/AxisSharedComponents';
 
@@ -28,9 +28,9 @@ const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
 
   return composeClasses(slots, getAxisUtilityClass, classes);
 };
+
 const defaultProps = {
   position: 'bottom',
-  hidden: false,
   disableLine: false,
   disableTicks: false,
   tickFontSize: 12,
@@ -39,7 +39,7 @@ const defaultProps = {
 } as const;
 
 function ChartsXAxis(inProps: ChartsXAxisProps) {
-  const props = useThemeProps({ props: inProps, name: 'MuiChartsXAxis' });
+  const props = useThemeProps({ props: { ...defaultProps, ...inProps }, name: 'MuiChartsXAxis' });
   const {
     xAxis: {
       [props.axisId]: { scale: xScale, ticksNumber, ...settings },
@@ -55,6 +55,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     label,
     labelFontSize,
     tickSize: tickSizeProp,
+    valueFormatter,
+    slots,
+    slotProps,
   } = defaultizedProps;
 
   const theme = useTheme();
@@ -64,7 +67,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
 
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
-  const xTicks = useTicks({ scale: xScale, ticksNumber });
+  const xTicks = useTicks({ scale: xScale, ticksNumber, valueFormatter });
   const positionSigne = position === 'bottom' ? 1 : -1;
 
   const labelRefPoint = {
@@ -72,22 +75,39 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     y: positionSigne * (tickFontSize + tickSize + 10),
   };
 
+  const Line = slots?.axisLine ?? ChartsLine;
+  const Tick = slots?.axisTick ?? ChartsTick;
+  const TickLabel = slots?.axisTickLabel ?? ChartsTickLabel;
+  const Label = slots?.axisLabel ?? ChartsLabel;
+
   return (
     <AxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height : top})`}
       className={classes.root}
     >
       {!disableLine && (
-        <Line x1={xScale.range()[0]} x2={xScale.range()[1]} className={classes.line} />
+        <Line
+          x1={xScale.range()[0]}
+          x2={xScale.range()[1]}
+          className={classes.line}
+          {...slotProps?.axisLine}
+        />
       )}
 
-      {xTicks.map(({ value, offset, labelOffset }, index) => {
+      {xTicks.map(({ formattedValue, offset, labelOffset }, index) => {
         const xTickLabel = labelOffset ?? 0;
         const yTickLabel = positionSigne * (tickSize + 3);
         return (
           <g key={index} transform={`translate(${offset}, 0)`} className={classes.tickContainer}>
-            {!disableTicks && <Tick y2={positionSigne * tickSize} className={classes.tick} />}
-            {value !== undefined && (
+            {!disableTicks && (
+              <Tick
+                y2={positionSigne * tickSize}
+                className={classes.tick}
+                {...slotProps?.axisTick}
+              />
+            )}
+
+            {formattedValue !== undefined && (
               <TickLabel
                 x={xTickLabel}
                 y={yTickLabel}
@@ -96,8 +116,9 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                   fontSize: tickFontSize,
                 }}
                 className={classes.tickLabel}
+                {...slotProps?.axisTickLabel}
               >
-                {value.toLocaleString()}
+                {formattedValue}
               </TickLabel>
             )}
           </g>
@@ -112,6 +133,7 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
             transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
           }}
           className={classes.label}
+          {...slotProps?.axisLabel}
         >
           {label}
         </Label>
@@ -162,6 +184,16 @@ ChartsXAxis.propTypes = {
    */
   position: PropTypes.oneOf(['bottom', 'top']),
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
    * The stroke color of the axis line.
    * @default 'currentColor'
    */
@@ -171,6 +203,23 @@ ChartsXAxis.propTypes = {
    * @default 12
    */
   tickFontSize: PropTypes.number,
+  /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMaxStep: PropTypes.number,
+  /**
+   * Maximal step between two ticks.
+   * When using time data, the value is assumed to be in ms.
+   * Not supported by categorical axis (band, points).
+   */
+  tickMinStep: PropTypes.number,
+  /**
+   * The number of ticks. This number is not guaranted.
+   * Not supported by categorical axis (band, points).
+   */
+  tickNumber: PropTypes.number,
   /**
    * The size of the ticks.
    * @default 6

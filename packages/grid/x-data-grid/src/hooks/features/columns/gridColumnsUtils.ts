@@ -8,7 +8,7 @@ import {
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import { GridColumnTypesRecord } from '../../../models';
-import { DEFAULT_GRID_COL_TYPE_KEY } from '../../../colDef';
+import { DEFAULT_GRID_COL_TYPE_KEY, GRID_STRING_COL_DEF } from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -42,6 +42,7 @@ export function computeFlexColumnsWidth({
     maxWidth?: number;
   }[];
 }) {
+  const uniqueFlexColumns = new Set<GridColDef['field']>(flexColumns.map((col) => col.field));
   const flexColumnsLookup: {
     all: Record<
       GridColDef['field'],
@@ -68,7 +69,7 @@ export function computeFlexColumnsWidth({
   // Step 5 of https://drafts.csswg.org/css-flexbox-1/#resolve-flexible-lengths
   function loopOverFlexItems() {
     // 5a: If all the flex items on the line are frozen, free space has been distributed.
-    if (flexColumnsLookup.frozenFields.length === flexColumns.length) {
+    if (flexColumnsLookup.frozenFields.length === uniqueFlexColumns.size) {
       return;
     }
 
@@ -176,7 +177,11 @@ export const hydrateColumnsWidth = (
         computedWidth = 0;
         flexColumns.push(newColumn);
       } else {
-        computedWidth = clamp(newColumn.width!, newColumn.minWidth!, newColumn.maxWidth!);
+        computedWidth = clamp(
+          newColumn.width || GRID_STRING_COL_DEF.width!,
+          newColumn.minWidth || GRID_STRING_COL_DEF.minWidth!,
+          newColumn.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
+        );
       }
 
       widthAllocatedBeforeFlex += computedWidth;
@@ -272,6 +277,14 @@ export const applyInitialState = (
   return newColumnsState;
 };
 
+function getDefaultColTypeDef(columnTypes: GridColumnTypesRecord, type: GridColDef['type']) {
+  let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
+  if (type && columnTypes[type]) {
+    colDef = columnTypes[type];
+  }
+  return colDef;
+}
+
 export const createColumnsState = ({
   apiRef,
   columnsToUpsert,
@@ -323,20 +336,23 @@ export const createColumnsState = ({
     let existingState = columnsState.lookup[field];
 
     if (existingState == null) {
-      let colDef = columnTypes[DEFAULT_GRID_COL_TYPE_KEY];
-
-      if (newColumn.type && columnTypes[newColumn.type]) {
-        colDef = columnTypes[newColumn.type];
-      }
-
       existingState = {
-        ...colDef,
+        ...getDefaultColTypeDef(columnTypes, newColumn.type),
         field,
         hasBeenResized: false,
       };
       columnsState.orderedFields.push(field);
     } else if (keepOnlyColumnsToUpsert) {
       columnsState.orderedFields.push(field);
+    }
+
+    // If the column type has changed - merge the existing state with the default column type definition
+    if (existingState && existingState.type !== newColumn.type) {
+      existingState = {
+        ...existingState,
+        ...getDefaultColTypeDef(columnTypes, newColumn.type),
+        field,
+      };
     }
 
     let hasBeenResized = existingState.hasBeenResized;

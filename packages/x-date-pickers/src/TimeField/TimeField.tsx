@@ -8,7 +8,7 @@ import { useTimeField } from './useTimeField';
 
 type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const TimeField = React.forwardRef(function TimeField<TDate>(
   inProps: TimeFieldProps<TDate>,
@@ -33,12 +33,13 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
   });
 
   // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
-  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
+  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
+  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const {
     ref: inputRef,
     onPaste,
+    onKeyDown,
     inputMode,
     readOnly,
     ...fieldProps
@@ -52,7 +53,7 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
       ref={ref}
       {...fieldProps}
       InputProps={{ ...fieldProps.InputProps, readOnly }}
-      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, ref: inputRef }}
+      inputProps={{ ...fieldProps.inputProps, inputMode, onPaste, onKeyDown, ref: inputRef }}
     />
   );
 }) as TimeFieldComponent;
@@ -80,6 +81,7 @@ TimeField.propTypes = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
+  component: PropTypes.elementType,
   /**
    * Overridable components.
    * @default {}
@@ -333,6 +335,14 @@ TimeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The ref object used to imperatively interact with the field.
    */

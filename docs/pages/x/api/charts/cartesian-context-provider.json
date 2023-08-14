@@ -1,7 +1,11 @@
 {
   "props": {},
-  "slots": {},
+  "slots": [],
   "name": "CartesianContextProvider",
+  "imports": [
+    "import { CartesianContextProvider } from '@mui/x-charts/context';",
+    "import { CartesianContextProvider } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiCartesianContextProvider" },
   "filename": "/packages/x-charts/src/context/CartesianContextProvider.tsx",
   "demos": "<ul></ul>",

@@ -40,7 +40,6 @@ export default function CustomSelectionOperator() {
   );
 
   const rowSelectionModelLookupRef = React.useRef(rowSelectionModelLookup);
-
   rowSelectionModelLookupRef.current = rowSelectionModelLookup;
 
   const columns = React.useMemo(() => {

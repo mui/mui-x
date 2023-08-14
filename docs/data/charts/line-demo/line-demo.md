@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Line demonstration
 ---
 
@@ -9,16 +8,16 @@ title: Charts - Line demonstration
 
 ## SimpleLineChart
 
-{{"demo": "SimpleLineChart.js", "bg": "inline"}}
+{{"demo": "SimpleLineChart.js"}}
 
 ## TinyLineChart
 
-{{"demo": "TinyLineChart.js", "bg": "inline"}}
+{{"demo": "TinyLineChart.js"}}
 
 ## DashedLineChart
 
-{{"demo": "DashedLineChart.js", "bg": "inline"}}
+{{"demo": "DashedLineChart.js"}}
 
 ## BiaxialLineChart
 
-{{"demo": "BiaxialLineChart.js", "bg": "inline"}}
+{{"demo": "BiaxialLineChart.js"}}

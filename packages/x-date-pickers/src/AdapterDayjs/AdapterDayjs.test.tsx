@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,11 +9,11 @@ import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   buildPickerDragInteractions,
-  createPickerRenderer,
+  MockedDataTransfer,
   expectInputPlaceholder,
   expectInputValue,
-  MockedDataTransfer,
-} from 'test/utils/pickers-utils';
+  createPickerRenderer,
+} from 'test/utils/pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import {
@@ -28,15 +28,18 @@ import 'dayjs/plugin/utc';
 import 'dayjs/plugin/timezone';
 
 describe('<AdapterDayjs />', () => {
-  describeGregorianAdapter(AdapterDayjs, {
+  const commonParams = {
     formatDateTime: 'YYYY-MM-DD HH:mm:ss',
     setDefaultTimezone: dayjs.tz.setDefault,
+    getLocaleFromDate: (value: Dayjs) => value.locale(),
     frenchLocale: 'fr',
-  });
+  };
+
+  describeGregorianAdapter(AdapterDayjs, commonParams);
 
   // Makes sure that all the tests that do not use timezones works fine when dayjs do not support UTC / timezone.
   describeGregorianAdapter(AdapterDayjs, {
-    formatDateTime: 'YYYY-MM-DD HH:mm:ss',
+    ...commonParams,
     prepareAdapter: (adapter) => {
       // @ts-ignore
       adapter.hasUTCPlugin = () => false;
@@ -45,13 +48,11 @@ describe('<AdapterDayjs />', () => {
       // Makes sure that we don't run timezone related tests, that would not work.
       adapter.isTimezoneCompatible = false;
     },
-    setDefaultTimezone: dayjs.tz.setDefault,
-    frenchLocale: 'fr',
   });
 
   describe('Adapter localization', () => {
     describe('English', () => {
-      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'en' });
+      const adapter = new AdapterDayjs({ locale: 'en' });
       const date = adapter.date(TEST_DATE_ISO_STRING)!;
 
       it('getWeekdays: should start on Sunday', () => {
@@ -70,7 +71,7 @@ describe('<AdapterDayjs />', () => {
     });
 
     describe('Russian', () => {
-      const adapter = new AdapterDayjs({ instance: dayjs, locale: 'ru' });
+      const adapter = new AdapterDayjs({ locale: 'ru' });
 
       it('getWeekDays: should start on Monday', () => {
         const result = adapter.getWeekdays();

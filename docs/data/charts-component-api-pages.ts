@@ -18,7 +18,10 @@ export default [
   { pathname: '/x/api/charts/line-plot', title: 'LinePlot' },
   { pathname: '/x/api/charts/mark-element', title: 'MarkElement' },
   { pathname: '/x/api/charts/mark-plot', title: 'MarkPlot' },
+  { pathname: '/x/api/charts/pie-chart', title: 'PieChart' },
+  { pathname: '/x/api/charts/pie-plot', title: 'PiePlot' },
   { pathname: '/x/api/charts/scatter', title: 'Scatter' },
   { pathname: '/x/api/charts/scatter-chart', title: 'ScatterChart' },
   { pathname: '/x/api/charts/scatter-plot', title: 'ScatterPlot' },
+  { pathname: '/x/api/charts/spark-line-chart', title: 'SparkLineChart' },
 ] as MuiPage[];

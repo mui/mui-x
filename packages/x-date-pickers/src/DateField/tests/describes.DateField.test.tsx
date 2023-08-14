@@ -7,11 +7,11 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   createPickerRenderer,
   wrapPickerMount,
-  adapterToUse,
   expectInputValue,
-  getTextbox,
   expectInputPlaceholder,
-} from 'test/utils/pickers-utils';
+  adapterToUse,
+  getTextbox,
+} from 'test/utils/pickers';
 
 describe('<DateField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

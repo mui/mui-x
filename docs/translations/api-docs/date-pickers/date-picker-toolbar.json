@@ -1,12 +1,36 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "className": "className applied to the root component.",
-    "hidden": "If <code>true</code>, show the toolbar even in desktop mode.",
-    "onViewChange": "Callback called when a toolbar is clicked<br><br><strong>Signature:</strong><br><code>function(view: TView) =&gt; void</code><br><em>view:</em> The view to open",
-    "toolbarFormat": "Toolbar date format.",
-    "toolbarPlaceholder": "Toolbar value placeholder—it is displayed when the value is empty.",
-    "view": "Currently visible picker view."
+    "className": {
+      "description": "className applied to the root component.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "hidden": {
+      "description": "If <code>true</code>, show the toolbar even in desktop mode.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "onViewChange": {
+      "description": "Callback called when a toolbar is clicked",
+      "deprecated": "",
+      "typeDescriptions": { "view": "The view to open" }
+    },
+    "toolbarFormat": {
+      "description": "Toolbar date format.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "toolbarPlaceholder": {
+      "description": "Toolbar value placeholder—it is displayed when the value is empty.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "view": {
+      "description": "Currently visible picker view.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },

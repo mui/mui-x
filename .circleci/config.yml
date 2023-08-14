@@ -90,6 +90,12 @@ commands:
           command: yarn install
           environment:
             PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: <<# parameters.browsers >>0<</ parameters.browsers >><<^ parameters.browsers >>1<</ parameters.browsers >>
+      - when:
+          condition: << parameters.browsers >>
+          steps:
+            - run:
+                name: Install playwright
+                command: npx playwright install --with-deps
       - save_cache:
           name: Save yarn cache
           key: v8-yarn-{{ checksum "yarn.lock" }}
@@ -116,7 +122,7 @@ jobs:
       - install_js
       - run:
           name: Should not have any git not staged
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: Check for duplicated packages
           command: yarn deduplicate
@@ -168,28 +174,28 @@ jobs:
           command: yarn proptypes
       - run:
           name: '`yarn proptypes` changes committed?'
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: Generate the documentation
           command: yarn docs:api
       - run:
           name: '`yarn docs:api` changes committed?'
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: Sync locale files
           command: yarn l10n
       - run:
           name: '`yarn l10n` changes committed?'
-          command: git diff --exit-code
+          command: git add -A && git diff --exit-code --staged
       - run:
           name: '`yarn docs:link-check` changes committed?'
           command: |
             yarn docs:link-check
-            git diff --exit-code
+            git add -A && git diff --exit-code --staged
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.33.0-focal
+      - image: mcr.microsoft.com/playwright:v1.36.2-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -222,7 +228,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.33.0-focal
+      - image: mcr.microsoft.com/playwright:v1.36.2-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -235,7 +241,7 @@ jobs:
   test_e2e_website:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.33.0-focal
+      - image: mcr.microsoft.com/playwright:v1.36.2-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -250,7 +256,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.33.0-focal
+      - image: mcr.microsoft.com/playwright:v1.36.2-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -266,7 +272,7 @@ jobs:
   test_performance:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright:v1.33.0-focal
+      - image: mcr.microsoft.com/playwright:v1.36.2-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:

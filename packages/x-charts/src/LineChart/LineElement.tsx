@@ -1,6 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { color as d3Color } from 'd3-color';
 import composeClasses from '@mui/utils/composeClasses';
+import { SlotComponentProps } from '@mui/base';
+import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
@@ -50,15 +53,18 @@ const useUtilityClasses = (ownerState: LineElementOwnerState) => {
   return composeClasses(slots, getLineElementUtilityClass, classes);
 };
 
-const LineElementPath = styled('path', {
+export const LineElementPath = styled('path', {
   name: 'MuiLineElement',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: LineElementOwnerState }>(({ ownerState }) => ({
-  stroke: ownerState.color,
   strokeWidth: 2,
   strokeLinejoin: 'round',
   fill: 'none',
+  stroke: ownerState.isHighlighted
+    ? d3Color(ownerState.color)!.brighter(0.5).formatHex()
+    : ownerState.color,
+  transition: 'opacity 0.2s ease-in, stroke 0.2s ease-in',
   opacity: ownerState.isFaded ? 0.3 : 1,
 }));
 
@@ -85,10 +91,28 @@ LineElementPath.propTypes = {
 export type LineElementProps = Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'> &
   React.ComponentPropsWithoutRef<'path'> & {
     highlightScope?: Partial<HighlightScope>;
+    /**
+     * The props used for each component slot.
+     * @default {}
+     */
+    slotProps?: {
+      line?: SlotComponentProps<'path', {}, LineElementOwnerState>;
+    };
+    /**
+     * Overridable component slots.
+     * @default {}
+     */
+    slots?: {
+      /**
+       * The component that renders the root.
+       * @default LineElementPath
+       */
+      line?: React.ElementType;
+    };
   };
 
 function LineElement(props: LineElementProps) {
-  const { id, classes: innerClasses, color, highlightScope, ...other } = props;
+  const { id, classes: innerClasses, color, highlightScope, slots, slotProps, ...other } = props;
 
   const getInteractionItemProps = useInteractionItemProps(highlightScope);
 
@@ -107,14 +131,18 @@ function LineElement(props: LineElementProps) {
   };
   const classes = useUtilityClasses(ownerState);
 
-  return (
-    <LineElementPath
-      {...other}
-      ownerState={ownerState}
-      className={classes.root}
-      {...getInteractionItemProps({ type: 'line', seriesId: id })}
-    />
-  );
+  const Line = slots?.line ?? LineElementPath;
+  const lineProps = useSlotProps({
+    elementType: Line,
+    externalSlotProps: slotProps?.line,
+    additionalProps: {
+      ...other,
+      ...getInteractionItemProps({ type: 'line', seriesId: id }),
+      className: classes.root,
+    },
+    ownerState,
+  });
+  return <Line {...lineProps} />;
 }
 
 LineElement.propTypes = {
@@ -127,6 +155,16 @@ LineElement.propTypes = {
     faded: PropTypes.oneOf(['global', 'none', 'series']),
     highlighted: PropTypes.oneOf(['item', 'none', 'series']),
   }),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
 } as any;
 
 export { LineElement };

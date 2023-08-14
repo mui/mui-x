@@ -16,6 +16,7 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { MonthCalendarProps } from './MonthCalendar.types';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
+import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -64,18 +65,13 @@ const MonthCalendarRoot = styled('div', {
 
 type MonthCalendarComponent = (<TDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
   inProps: MonthCalendarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const now = useNow<TDate>();
-  const theme = useTheme();
-  const utils = useUtils<TDate>();
-
   const props = useMonthCalendarDefaultizedProps(inProps, 'MuiMonthCalendar');
-
   const {
     className,
     value: valueProp,
@@ -95,18 +91,22 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     hasFocus,
     onFocusedViewChange,
     monthsPerRow = 3,
+    timezone: timezoneProp,
     ...other
   } = props;
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
-
-  const [value, setValue] = useControlled({
+  const { value, handleValueChange, timezone } = useControlledValueWithTimezone({
     name: 'MonthCalendar',
-    state: 'value',
-    controlled: valueProp,
-    default: defaultValue ?? null,
+    timezone: timezoneProp,
+    value: valueProp,
+    defaultValue,
+    onChange: onChange as (value: TDate | null) => void,
+    valueManager: singleItemValueManager,
   });
+
+  const now = useNow<TDate>(timezone);
+  const theme = useTheme();
+  const utils = useUtils<TDate>();
 
   const referenceDate = React.useMemo(
     () =>
@@ -114,11 +114,15 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
         value,
         utils,
         props,
+        timezone,
         referenceDate: referenceDateProp,
         granularity: SECTION_TYPE_GRANULARITY.month,
       }),
     [], // eslint-disable-line react-hooks/exhaustive-deps
   );
+
+  const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
 
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 
@@ -185,8 +189,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     }
 
     const newDate = utils.setMonth(value ?? referenceDate, month);
-    setValue(newDate);
-    onChange?.(newDate);
+    handleValueChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
@@ -336,7 +339,7 @@ MonthCalendar.propTypes = {
   /**
    * Callback fired when the value changes.
    * @template TDate
-   * @param {TDate | null} value The new value.
+   * @param {TDate} value The new value.
    */
   onChange: PropTypes.func,
   onFocusedViewChange: PropTypes.func,
@@ -347,7 +350,7 @@ MonthCalendar.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
-   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableDate`.
+   * @default The closest valid month using the validation props, except callbacks such as `shouldDisableMonth`.
    */
   referenceDate: PropTypes.any,
   /**
@@ -365,6 +368,14 @@ MonthCalendar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Choose which timezone to use for the value.
+   * Example: "default", "system", "UTC", "America/New_York".
+   * If you pass values from other timezones to some props, they will be converted to this timezone before being used.
+   * @see See the {@link https://mui.com/x/react-date-pickers/timezone/ timezones documention} for more details.
+   * @default The timezone of the `value` or `defaultValue` prop is defined, 'default' otherwise.
+   */
+  timezone: PropTypes.string,
   /**
    * The selected value.
    * Used when the component is controlled.

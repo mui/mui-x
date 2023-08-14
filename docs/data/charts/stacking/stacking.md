@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Stacking
 ---
 
@@ -31,7 +30,7 @@ Otherwise, the stacked rectangle will overlap.
 
 To show series evolution relative to other stacked series (instead of their absolute values), you can use `'expand'`.
 
-| value         | description                                               |
+| Value         | Description                                               |
 | :------------ | :-------------------------------------------------------- |
 | `'none'`      | Set baseline at 0 and stack data on top of each other.    |
 | `'expand'`    | Set baseline at zero and scale data to end up at 1.       |
@@ -61,7 +60,7 @@ With `'appearance'`, the position of the maximal series value is taken into cons
 With `'ascending'` and `'descending'`, the sum of values is taken into consideration.
 Which corresponds to the area taken by the series on the chart.
 
-| value          | description                                                                                                                               |
+| Value          | Description                                                                                                                               |
 | :------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
 | `'none'`       | Respect the order the series are provided in.                                                                                             |
 | `'reverse'`    | Reverse the order the series are provided in.                                                                                             |

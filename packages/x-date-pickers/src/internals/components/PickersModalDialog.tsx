@@ -17,12 +17,12 @@ export interface PickersModalDialogSlotsComponent {
   Dialog?: React.ElementType<MuiDialogProps>;
   /**
    * Custom component for the paper rendered inside the mobile picker's Dialog.
-   * @default Paper from @mui/material
+   * @default Paper from '@mui/material'.
    */
   MobilePaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).
-   * @default Fade from @mui/material
+   * @default Fade from '@mui/material'.
    */
   MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
 }

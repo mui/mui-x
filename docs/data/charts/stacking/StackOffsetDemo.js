@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -39,7 +38,7 @@ export default function StackOffsetDemo() {
   const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
 
   return (
-    <Box>
+    <div>
       <Stack direction="row">
         <TextField
           sx={{ minWidth: 150, mr: 5 }}
@@ -65,9 +64,9 @@ export default function StackOffsetDemo() {
       </Stack>
       <BarChart
         width={600}
-        height={400}
+        height={300}
         series={getSeries({ hasNegativeValue, stackOffset })}
       />
-    </Box>
+    </div>
   );
 }

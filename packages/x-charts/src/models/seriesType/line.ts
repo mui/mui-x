@@ -21,7 +21,14 @@ export interface LineSeriesType
     CartesianSeriesType,
     StackableSeriesType {
   type: 'line';
-  data: number[];
+  /**
+   * Data associated to the line.
+   */
+  data?: number[];
+  /**
+   * The key used to retrive data from the dataset.
+   */
+  dataKey?: string;
   stack?: string;
   area?: boolean;
   label?: string;
@@ -42,4 +49,4 @@ export type LineItemIdentifier = {
 };
 
 export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps> {}
+  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps | 'color'> {}

@@ -152,17 +152,11 @@ export const removeNodeFromTree = ({
   else {
     const groupingField = (node as GridGroupNode).groupingField ?? '__no_field__';
     const groupingKey = (node as GridGroupNode).groupingKey ?? '__no_key__';
-    const { [groupingKey.toString()]: childrenToRemove, ...newChildrenFromPathWithField } =
-      parentNode.childrenFromPath?.[groupingField] ?? {};
 
     // TODO rows v6: Can we avoid this linear complexity ?
     const children = parentNode.children.filter((childId) => childId !== node.id);
-    const childrenFromPath: GridChildrenFromPathLookup = { ...parentNode.childrenFromPath };
-    if (Object.keys(newChildrenFromPathWithField).length === 0) {
-      delete childrenFromPath[groupingField];
-    } else {
-      childrenFromPath[groupingField] = newChildrenFromPathWithField;
-    }
+    const childrenFromPath: GridChildrenFromPathLookup = parentNode.childrenFromPath;
+    delete childrenFromPath[groupingField][groupingKey.toString()];
 
     tree[parentNode.id] = {
       ...parentNode,

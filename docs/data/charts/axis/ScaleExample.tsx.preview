@@ -10,6 +10,5 @@
   ]}
   leftAxis="linearAxis"
   rightAxis="logAxis"
-  width={600}
-  height={500}
+  height={400}
 />
