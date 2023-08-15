@@ -237,6 +237,7 @@ export const buildAggregatedFilterItemsApplier = (
   getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  disableEval: boolean,
 ): GridFilterItemApplierNotAggregated | null => {
   const { items } = filterModel;
 
@@ -248,7 +249,7 @@ export const buildAggregatedFilterItemsApplier = (
     return null;
   }
 
-  if (!hasEval) {
+  if (!hasEval || disableEval) {
     // This is the original logic, which is used if `eval()` is not supported (aka prevented by CSP).
     return (row, shouldApplyFilter) => {
       const resultPerItemId: GridFilterItemResult = {};
@@ -419,8 +420,14 @@ export const buildAggregatedFilterApplier = (
   getRowId: GridRowIdGetter | undefined,
   filterModel: GridFilterModel,
   apiRef: React.MutableRefObject<GridApiCommunity>,
+  disableEval: boolean,
 ): GridAggregatedFilterItemApplier => {
-  const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(getRowId, filterModel, apiRef);
+  const isRowMatchingFilterItems = buildAggregatedFilterItemsApplier(
+    getRowId,
+    filterModel,
+    apiRef,
+    disableEval,
+  );
   const isRowMatchingQuickFilter = buildAggregatedQuickFilterApplier(getRowId, filterModel, apiRef);
 
   return function isRowMatchingFilters(row, shouldApplyFilter, result) {
