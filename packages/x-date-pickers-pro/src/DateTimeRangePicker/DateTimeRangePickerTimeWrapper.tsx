@@ -1,8 +1,5 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Divider from '@mui/material/Divider';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { TimeViewWithMeridiem } from '@mui/x-date-pickers/internals/models';
 import { BaseClockProps } from '@mui/x-date-pickers/internals/models/props/clock';
 import {
@@ -107,16 +104,6 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
 
   return (
     <DateTimeRangePickerTimeWrapperRoot ref={ref} className={className}>
-      <Tabs
-        value={rangePosition}
-        onChange={(_, rangeValue) => onRangePositionChange(rangeValue)}
-        variant="fullWidth"
-        aria-label="time range position selection"
-      >
-        <Tab value="start" label="Start" sx={{ minWidth: 0 }} />
-        <Tab value="end" label="End" sx={{ minWidth: 0 }} />
-      </Tabs>
-      <Divider />
       {viewRenderer({
         ...other,
         views,
