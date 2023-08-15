@@ -1,9 +1,5 @@
 import { MakeOptional, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
-  DateTimePickerTabsProps,
-  ExportedDateTimePickerTabsProps,
-} from '@mui/x-date-pickers/DateTimePicker/DateTimePickerTabs';
-import {
   UseMobileRangePickerSlotsComponent,
   UseMobileRangePickerSlotsComponentsProps,
   MobileRangeOnlyPickerProps,
@@ -17,22 +13,11 @@ import { DateTimeRangePickerViews } from '../internals/models';
 
 export interface MobileDateTimeRangePickerSlotsComponent<TDate>
   extends BaseDateTimeRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobileRangePickerSlotsComponent<TDate, DateTimeRangePickerViews>, 'Field'> {
-  /**
-   * Tabs enabling toggling between date and time pickers.
-   * @default DateTimePickerTabs
-   */
-  Tabs?: React.ElementType<DateTimePickerTabsProps>;
-}
+    MakeOptional<UseMobileRangePickerSlotsComponent<TDate, DateTimeRangePickerViews>, 'Field'> {}
 
 export interface MobileDateTimeRangePickerSlotsComponentsProps<TDate>
   extends BaseDateTimeRangePickerSlotsComponentsProps<TDate>,
-    UseMobileRangePickerSlotsComponentsProps<TDate, DateTimeRangePickerViews> {
-  /**
-   * Props passed down to the tabs component.
-   */
-  tabs?: ExportedDateTimePickerTabsProps;
-}
+    UseMobileRangePickerSlotsComponentsProps<TDate, DateTimeRangePickerViews> {}
 
 export interface MobileDateTimeRangePickerProps<TDate>
   extends BaseDateTimeRangePickerProps<TDate>,

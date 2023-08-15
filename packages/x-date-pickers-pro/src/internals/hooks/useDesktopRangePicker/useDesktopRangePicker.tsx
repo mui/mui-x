@@ -190,6 +190,11 @@ export const useDesktopRangePicker = <
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
+    tabs: {
+      ...slotProps?.tabs,
+      rangePosition,
+      onRangePositionChange,
+    },
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,

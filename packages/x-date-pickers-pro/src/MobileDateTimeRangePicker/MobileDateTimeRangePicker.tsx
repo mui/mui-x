@@ -8,7 +8,6 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { renderMultiSectionDigitalClockTimeView } from '@mui/x-date-pickers/timeViewRenderers';
-import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';
 import { multiSectionDigitalClockSectionClasses } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { rangeValueManager } from '../internals/utils/valueManagers';
 import { MobileDateTimeRangePickerProps } from './MobileDateTimeRangePicker.types';
@@ -54,7 +53,6 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
     calendars: 1,
     slots: {
       field: MultiInputDateTimeRangeField,
-      tabs: DateTimePickerTabs,
       ...defaultizedProps.slots,
     },
     slotProps: {
@@ -64,14 +62,14 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
         ...extractValidationProps(defaultizedProps),
         ref,
       }),
+      tabs: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.tabs,
+      },
       toolbar: {
         hidden: false,
         toolbarVariant: 'mobile',
         ...defaultizedProps.slotProps?.toolbar,
-      },
-      tabs: {
-        hidden: false,
-        ...defaultizedProps.slotProps?.tabs,
       },
     },
   };

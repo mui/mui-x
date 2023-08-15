@@ -73,6 +73,10 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
         ...extractValidationProps(defaultizedProps),
         ref,
       }),
+      tabs: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.tabs,
+      },
       toolbar: {
         hidden: true,
         toolbarVariant: 'desktop',

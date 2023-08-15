@@ -27,9 +27,19 @@ import {
   ExportedDateTimeRangePickerToolbarProps,
 } from './DateTimeRangePickerToolbar';
 import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
+import {
+  DateTimeRangePickerTabs,
+  DateTimeRangePickerTabsProps,
+  ExportedDateTimeRangePickerTabsProps,
+} from './DateTimeRangePickerTabs';
 
 export interface BaseDateTimeRangePickerSlotsComponent<TDate>
   extends DateRangeCalendarSlotsComponent<TDate> {
+  /**
+   * Tabs enabling toggling between date and time pickers.
+   * @default DateTimeRangePickerTabs
+   */
+  Tabs?: React.ElementType<DateTimeRangePickerTabsProps>;
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DateTimeRangePickerToolbar
@@ -39,6 +49,13 @@ export interface BaseDateTimeRangePickerSlotsComponent<TDate>
 
 export interface BaseDateTimeRangePickerSlotsComponentsProps<TDate>
   extends DateRangeCalendarSlotsComponentsProps<TDate> {
+  /**
+   * Props passed down to the tabs component.
+   */
+  tabs?: ExportedDateTimeRangePickerTabsProps;
+  /**
+   * Props passed down to the toolbar component.
+   */
   toolbar?: ExportedDateTimeRangePickerToolbarProps;
 }
 
@@ -145,6 +162,7 @@ export function useDateTimeRangePickerDefaultizedProps<
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: {
+      tabs: DateTimeRangePickerTabs,
       toolbar: DateTimeRangePickerToolbar,
       ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
     },

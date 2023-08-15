@@ -21,6 +21,7 @@ import {
   RangePickerFieldSlotsComponent,
   RangePickerFieldSlotsComponentsProps,
 } from '../useEnrichedRangePickerFieldProps';
+import { ExportedDateTimeRangePickerTabsProps } from '../../../DateTimeRangePicker/DateTimeRangePickerTabs';
 
 export interface UseDesktopRangePickerSlotsComponent<
   TDate,
@@ -36,6 +37,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
+  tabs?: ExportedDateTimeRangePickerTabsProps;
 }
 
 export interface DesktopRangeOnlyPickerProps<TDate>

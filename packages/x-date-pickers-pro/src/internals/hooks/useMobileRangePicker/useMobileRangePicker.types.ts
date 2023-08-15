@@ -21,6 +21,7 @@ import {
   RangePickerFieldSlotsComponent,
   RangePickerFieldSlotsComponentsProps,
 } from '../useEnrichedRangePickerFieldProps';
+import { ExportedDateTimeRangePickerTabsProps } from '../../../DateTimeRangePicker/DateTimeRangePickerTabs';
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeViewWithMeridiem>
   extends PickersModalDialogSlotsComponent,
@@ -34,6 +35,7 @@ export interface UseMobileRangePickerSlotsComponentsProps<
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
     RangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
+  tabs?: ExportedDateTimeRangePickerTabsProps;
 }
 
 export interface MobileRangeOnlyPickerProps<TDate>
