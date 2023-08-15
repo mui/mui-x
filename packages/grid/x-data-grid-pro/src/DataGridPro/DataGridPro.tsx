@@ -219,6 +219,12 @@ DataGridProRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: PropTypes.bool,
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
