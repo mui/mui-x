@@ -349,7 +349,6 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...existingState,
         ...getDefaultColTypeDef(columnTypes, newColumn.type),
         field,
       };
