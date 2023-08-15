@@ -70,6 +70,7 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
     onViewChange,
     views,
     sequentialViewOrder,
+    className,
     ...other
   } = props;
 
@@ -105,7 +106,7 @@ const DateTimeRangePickerTimeWrapper = React.forwardRef(function DateTimeRangePi
   };
 
   return (
-    <DateTimeRangePickerTimeWrapperRoot ref={ref}>
+    <DateTimeRangePickerTimeWrapperRoot ref={ref} className={className}>
       <Tabs
         value={rangePosition}
         onChange={(_, rangeValue) => onRangePositionChange(rangeValue)}

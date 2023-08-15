@@ -22,19 +22,11 @@ import { useDateTimeRangePickerDefaultizedProps } from '../DateTimeRangePicker/s
 import { MultiInputDateTimeRangeField } from '../MultiInputDateTimeRangeField';
 import { DateTimeRangePickerTimeWrapper } from '../DateTimeRangePicker/DateTimeRangePickerTimeWrapper';
 
-const DesktopDateTimeRangeContainer = styled('div')<{ isTimeActive: boolean }>(
-  ({ isTimeActive }) => ({
-    display: 'flex',
-    margin: '0 auto',
-    ...(isTimeActive
-      ? {
-          '> :first-child': {
-            opacity: 0.4,
-          },
-        }
-      : { '> :nth-child(3)': { opacity: 0.4 } }),
-  }),
-);
+const DesktopDateTimeRangeContainer = styled('div')({
+  display: 'flex',
+  margin: '0 auto',
+  '.MuiDateTimeRangePickerTimeWrapper-inactive': { opacity: 0.6 },
+});
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateTimeRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -110,7 +102,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
       };
       const isTimeViewActive = isInternalTimeView(popperView);
       return (
-        <DesktopDateTimeRangeContainer isTimeActive={isTimeViewActive}>
+        <DesktopDateTimeRangeContainer>
           {isTimeViewActive ? (
             <React.Fragment>
               {inViewRenderers.day?.({
@@ -135,6 +127,7 @@ const DesktopDateTimeRangePicker = React.forwardRef(function DesktopDateTimeRang
                 {...finalProps}
                 view="hours"
                 viewRenderer={inViewRenderers.hours}
+                className="MuiDateTimeRangePickerTimeWrapper-inactive"
               />
             </React.Fragment>
           ) : null}
