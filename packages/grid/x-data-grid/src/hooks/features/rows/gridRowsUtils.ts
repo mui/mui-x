@@ -336,7 +336,6 @@ export const updateCacheWithNewRows = ({
       if (partialUpdates.actions.remove.includes(id)) {
         partialUpdates.actions.remove = partialUpdates.actions.remove.filter(removeid => removeid !== id)
         partialUpdates.actions.modify.push(id);
-        partialUpdates.actions.insert = partialUpdates.actions.insert.filter(removeid => removeid !== id)
       } else {
         partialUpdates.actions.insert.push(id);
       }
