@@ -259,6 +259,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         range: value,
         rangePosition,
         allowRangeFlip,
+        shouldMergeDateAndTime: true,
       });
 
       if (!sequentialViewOrder) {
