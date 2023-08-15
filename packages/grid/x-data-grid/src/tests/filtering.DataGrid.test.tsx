@@ -49,6 +49,7 @@ describe('<DataGrid /> - Filter', () => {
       fn();
       disableEval = true;
       fn();
+      disableEval = false;
     };
   }
 
