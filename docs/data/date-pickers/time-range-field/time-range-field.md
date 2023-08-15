@@ -1,5 +1,5 @@
 ---
-product: date-pickers
+productId: x-date-pickers
 title: React Time Range Field components
 components: MultiInputTimeRangeField, SingleInputTimeRangeField
 githubLabel: 'component: pickers'
@@ -20,6 +20,8 @@ You can render your Time Range Field with either one input using `SingleInputTim
 or two inputs using `MultiInputTimeRangeField` as show below.
 
 {{"demo": "BasicTimeRangeField.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

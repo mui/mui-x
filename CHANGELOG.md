@@ -3,6 +3,502 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.11.1
+
+_Aug 11, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Add theme augmentation to `@mui/x-tree-view`
+- 📈 Enable charts customization using `slot` and `slotProps` props
+- 🌍 Improve Finnish (fi-FI) and Icelandic (is-IS) locales on the pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.11.1`
+
+- [DataGrid] `getCellAggregationResult`: Handle `null` `rowNode` case (#9915) @romgrk
+
+#### `@mui/x-data-grid-pro@6.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@6.11.1`.
+
+#### `@mui/x-data-grid-premium@6.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.11.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.11.1`
+
+- [fields] Use `numeric` `inputmode` instead of `tel` (#9918) @LukasTy
+- [pickers] Always respect locale when formatting meridiem (#9979) @flaviendelangle
+- [pickers] Call `onChange` when selecting a shortcut with `changeImportance="set"` (#9974) @flaviendelangle
+- [pickers] Refactor `themeAugmentation` `styleOverrides` (#9978) @LukasTy
+- [l10n] Improve Finnish (fi-FI) locale (#9795) @kurkle
+- [l10n] Improve Icelandic (is-IS) locale (#9639) @magnimarels
+
+#### `@mui/x-date-pickers-pro@6.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.11.1`.
+
+### Charts / `@mui/x-charts@v6.0.0-alpha.7`
+
+- [charts] Fix label and tick alignment (#9952) @LukasTy
+- [charts] Remove not functional component `styleOverrides` (#9996) @LukasTy
+- [charts] Set custom ticks number (#9922) @alexfauquette
+- [charts] Use `slot`/`slotProps` for customization (#9744) @alexfauquette
+- [charts] Extend cheerful fiesta palette (#9980) @noraleonte
+
+### Tree View / `@mui/x-tree-view@v6.0.0-alpha.1`
+
+- [TreeView] Add theme augmentation (#9967) @flaviendelangle
+
+### Docs
+
+- [docs] Clarify the `shouldDisableClock` migration code options (#9920) @LukasTy
+
+### Core
+
+- [core] Port GitHub workflow for ensuring triage label is present (#9924) @DanailH
+- [docs-infra] Fix the import samples in Api pages (#9898) @alexfauquette
+
+## 6.11.0
+
+_Aug 4, 2023_
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- ⌚️ Move the tree view component from `@mui/lab` package
+
+  The `<TreeView />` component has been moved to the MUI X repository.
+  It is now accessible from its own package: `@mui/x-tree-view`.
+
+- 🌍 Improve Hebrew (he-IL), Finnish (fi-FI), and Italian (it-IT) locales on the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.11.0`
+
+- [DataGrid] Add `ariaV7` experimental flag (#9496) @cherniavskii
+- [DataGrid] Fix cell size when column width is set to `undefined` (#9871) @gitstart
+- [l10n] Improve Hebrew (he-IL) locale (#9820) @itayG98
+- [l10n] Improve Finnish (fi-FI) locale (#9848) @sambbaahh
+- [l10n] Improve Italian (it-IT) locale (#9627) @fabio-rizzello-omnia
+
+#### `@mui/x-data-grid-pro@v6.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@v6.11.0`.
+
+#### `@mui/x-data-grid-premium@v6.11.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@v6.11.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.11.0`
+
+- [fields] Correctly handle events with a complete value insertion (#9896) @LukasTy
+- [fields] Fix hours editing on dayjs with timezone and DST (#9901) @flaviendelangle
+- [fields] Fix section clearing with timezone (#9819) @flaviendelangle
+- [pickers] Add `CalendarHeader` slot (#7784) @flaviendelangle
+- [pickers] Allow to override the `InputProps` of the `TextField` using the `slotProps` (#9849) @flaviendelangle
+- [pickers] Allow to override the opening aria text using the `localeText` prop on the pickers (#9870) @flaviendelangle
+- [pickers] Fix `sx` and `className` props on `MobileDateRangePicker` (#9853) @flaviendelangle
+- [pickers] Fix default descriptions (#9887) @LukasTy
+- [pickers] Fix offset management on dayjs adapter (#9884) @flaviendelangle
+- [pickers] Use device motion reduction preference (#9823) @LukasTy
+
+#### `@mui/x-date-pickers-pro@v6.11.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@v6.11.0`.
+
+### Charts / `@mui/x-charts@v6.0.0-alpha.6`
+
+- [charts] Add TS definition to the exported elements (#9885) @alexfauquette
+- [charts] Add sparkline (#9662) @alexfauquette
+- [charts] Fix missing configuration types (#9886) @alexfauquette
+- [charts] Introduce dataset to simplify plot of data from API (#9774) @alexfauquette
+
+### Tree View / `@mui/x-tree-view@v6.0.0-alpha.0`
+
+- [TreeView] Add missing exported types (#9862) @flaviendelangle
+- [TreeView] Add tree view to changelog generator script (#9903) @MBilalShafi
+- [TreeView] Create the package on the X repository (#9798) @flaviendelangle
+- [TreeView] Improve props typing (#9855) @flaviendelangle
+
+### Docs
+
+- [docs] Add Tree View doc (#9825) @flaviendelangle
+- [docs] Add charts nav item (#9821) @LukasTy
+- [docs] Add charts to MUI X introduction pages (#9704) @joserodolfofreitas
+- [docs] Add example for avoiding picker views layout shift (#9781) @noraleonte
+- [docs] Consistency of Next.js App Router @oliviertassinari
+- [docs] Fix API page regression: bring back slots section (#9866) @alexfauquette
+- [docs] Fix demo using Pro while it's MIT (#9842) @oliviertassinari
+- [docs] Get ready for next docs-infra change @oliviertassinari
+- [docs] Improve the slots documentation `Recommended usage` section (#9892) @flaviendelangle
+
+### Core
+
+- [core] Fix font loading issue dev-mode (#9843) @oliviertassinari
+- [core] Fix pipeline (#9894) @LukasTy
+- [core] Fix the link-check script on Windows (#9888) @alexfauquette
+- [core] Fix v7 capitalization (#9878) @oliviertassinari
+- [core] Regen doc (#9902) @flaviendelangle
+- [core] Remove benchmark package (#9413) @LukasTy
+- [core] Stop using the deprecated `JSX` global namespace (#9854) @flaviendelangle
+- [core] Update monorepo (#9846) @flaviendelangle
+- [core] Update tree data API docs (#9827) @cherniavskii
+- [test] Add pickers e2e tests (#9747) @LukasTy
+- [test] Data grid e2e tests follow-up (#9822) @cherniavskii
+
+## 6.10.2
+
+_Jul 27, 2023_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Improve scatter charts performance
+- 📚 Redesigned component API documentation and side navigation
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.10.2`
+
+- [DataGrid] Fix quick filter & aggregation error (#9729) @romgrk
+- [DataGrid] Fix row click propagation causing error in nested grid (#9741) @cherniavskii
+- [DataGrid] Keep focused cell in the DOM (#7357) @yaredtsy
+- [l10n] Improve Finnish (fi-FI) locale (#9746) @sambbaahh
+
+#### `@mui/x-data-grid-pro@v6.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@v6.10.2`.
+
+#### `@mui/x-data-grid-premium@v6.10.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@v6.10.2`, plus:
+
+- [DataGridPremium] Allow to customize grouping cell offset (#9417) @cherniavskii
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.10.2`
+
+- [pickers] Remove the `endOfDate` from `DigitalClock` timeOptions (#9800) @noraleonte
+
+#### `@mui/x-date-pickers-pro@v6.10.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@v6.10.2`.
+
+### Charts / `@mui/x-charts@v6.0.0-alpha.5`
+
+- [charts] Improve JSDoc for axis-related props (#9779) @flaviendelangle
+- [charts] Improve performances of Scatter component (#9527) @flaviendelangle
+
+### Docs
+
+- [docs] Add `pnpm` in more places @oliviertassinari
+- [docs] Add `pnpm` installation instructions for MUI X (#9707) @richbustos
+- [docs] Align pickers "uncontrolled vs controlled" sections (#9772) @LukasTy
+- [docs] Apply style guide to the data grid Layout page (#9673) @richbustos
+- [docs] Differentiate between packages in `slotProps` docs (#9668) @cherniavskii
+- [docs] Fix charts width in axis pages (#9801) @alexfauquette
+- [docs] Fix wrong prop name in the Editing page (#9753) @m4theushw
+- [docs] New component API page and side nav design (#9187) @alexfauquette
+- [docs] Update overview page with up to date information about the plans (#9512) @joserodolfofreitas
+
+### Core
+
+- [core] Use PR charts version in preview (#9787) @alexfauquette
+- [license] Allow overriding the license on specific parts of the page (#9717) @Janpot
+- [license] Throw in dev mode after 30 days (#9701) @oliviertassinari
+- [license] Only throw in dev mode (#9803) @oliviertassinari
+- [test] Fail the CI when new unexpected files are created (#9728) @oliviertassinari
+
+## 6.10.1
+
+_Jul 20, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Fix CSV export for values containing double quotes
+- 🚀 Improve tree data performance
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.10.1`
+
+- [DataGrid] Filtering performance: compile filter applier with `eval` (#9635) @romgrk
+- [DataGrid] Fix CSV export for values containing double quotes (#9667) @cherniavskii
+- [DataGrid] Fix column type change not working correctly (#9594) @cherniavskii
+- [DataGrid] Fix quick filter `undefined` row error (#9708) @romgrk
+- [DataGrid] Prevent `viewportOuterSize.height` going negative (#9664) @gitstart
+- [DataGrid] Update focused cell on page change via keyboard (#9203) @m4theushw
+- [DataGrid] Wait for remote stylesheets to load before print (#9665) @cherniavskii
+
+#### `@mui/x-data-grid-pro@v6.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@v6.10.1`, plus:
+
+- [DataGridPro] Improve tree data performance (#9682) @cherniavskii
+- [DataGridPro] Prevent affecting cells from child DataGrid when resizing a column (#9670) @m4theushw
+
+#### `@mui/x-data-grid-premium@v6.10.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@v6.10.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.10.1`
+
+- [fields] Fix `format` and `value` update order (#9715) @LukasTy
+- [pickers] Remove `require` usage in comment (#9675) @LukasTy
+
+#### `@mui/x-date-pickers-pro@v6.10.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@v6.10.1`.
+
+### Charts / `@mui/x-charts@v6.0.0-alpha.4`
+
+- [charts] Fix blinking in responsive charts and extremums computation for line charts (#9734) @alexfauquette
+- [charts] Use ESM with imports (#9645) @alexfauquette
+
+### Docs
+
+- [docs] Add additional note for license key installation on Next.js (#9575) @joserodolfofreitas
+- [docs] Add paragraph about managing focus of custom edit components (#9658) @m4theushw
+- [docs] Add unsorted icon slot to the custom sort icons demo (#9169) @d4rekanguok
+- [docs] Disable ad for onboarding pages (#9700) @oliviertassinari
+- [docs] Disabling ads without toolbar has no effect @oliviertassinari
+- [docs] Fix Date Pickers usage to Title Case (#9680) @richbustos
+- [docs] Fix sorting in `CustomSortIcons` demo (#9656) @MBilalShafi
+- [docs] Improve the UI for pickers introduction (#9644) @alexfauquette
+- [docs] Improve the demo design @oliviertassinari
+- [docs] Localization progress, polish (#9672) @oliviertassinari
+- [docs] Normalize the WIP items (#9671) @oliviertassinari
+
+### Core
+
+- [core] Add `validate` command (#9714) @romgrk
+- [CHANGELOG] Update generator to new format @oliviertassinari
+
+## 6.10.0
+
+_Jul 13, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡ Improve data grid filtering performance
+- 🎁 Include column groups in the CSV export
+- 🌍 Improve Polish (pl-PL) locale for the data grid
+- 🌍 Improve Norwegian (nb-NO) locale for the pickers
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.10.0`
+
+- [DataGrid] Allow to exclude hidden columns from the quick filter (#9610) @cherniavskii
+- [DataGrid] Filtering performance: remove indirection (#9334) @romgrk
+- [DataGrid] Fix props propagation on `GridToolbarQuickFilter` component (#9633) @giladappsforce
+- [DataGrid] Fix quick filter input lag (#9630) @cherniavskii
+- [DataGrid] Include column groups in the CSV export (#9585) @cherniavskii
+- [DataGrid] Make `rowExpansionChange` event public (#9611) @MBilalShafi
+- [l10n] Improve Polish (pl-PL) locale (#9625) @ch1llysense
+
+#### `@mui/x-data-grid-pro@6.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@6.10.0`.
+
+#### `@mui/x-data-grid-premium@6.10.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.10.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.10.0`
+
+- [pickers] Fix date calendar issues (#9652) @LukasTy
+- [l10n] Improve Norwegian (nb-NO) locale (#9608) @JosteinBrevik
+
+#### `@mui/x-date-pickers-pro@6.10.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.10.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.3`
+
+- [charts] Allow configuring bar size (#9632) @alexfauquette
+- [charts] Simplify custom components creation (#9561) @alexfauquette
+
+### Docs
+
+- [docs] Add slot components usage alert (#9660) @LukasTy
+- [docs] Fix casing Cell selection @oliviertassinari
+
+### Core
+
+- [core] Disambiguate eslint plugin name @oliviertassinari
+- [core] Update priority support issue template and prompt (#9574) @DanailH
+- [CHANGELOG] Clarify each plan (#9446) @oliviertassinari
+- [license] Fix error terminology (#9614) @oliviertassinari
+
+## 6.9.2
+
+_Jul 6, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Auto-scroll when making range selection (#8661) @m4theushw
+
+- 📚 New page: Components lifecycle (#8372) @flaviendelangle
+
+  Clarify pickers events and value updates in a [single docs page](https://mui.com/x/react-date-pickers/lifecycle/).
+
+- 🥧 Add pie chart component
+
+  They are fresh from the code editor. You can visit [pie charts docs](https://mui.com/x/react-charts/pie/) or their [demo page](https://mui.com/x/react-charts/pie-demo/).
+
+  <img width="380" alt="pie-charts" src="https://github.com/mui/mui-x/assets/13808724/fe908c45-803c-4316-b913-dbd2f9f0551e">
+
+- 🐞 Bugfixes
+
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.9.2`
+
+- [DataGrid] Fix `RangeError` when using flex columns (#9554) @cherniavskii
+- [DataGrid] Fix React 17 editing bug (#9530) @romgrk
+- [DataGrid] Use `getRowId` in filtering (#9564) @romgrk
+- [DataGrid] Correctly reflect `TablePagination`'s `rowsPerPageOptions` shape to `pageSizeOptions` (#9438) @burakkgunduzz
+- [l10n] Improve Spanish (es-ES) locale (#9500) @fufex
+
+#### `@mui/x-data-grid-pro@6.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@6.9.2`.
+
+#### `@mui/x-data-grid-premium@6.9.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.9.2`, plus:
+
+- [DataGridPremium] Auto-scroll when making range selection (#8661) @m4theushw
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.9.2`
+
+- [pickers] Forward digital clock classes (#9555) @YoonjiJang
+- [pickers] Rename `internal` folder to `internals` on `@mui/x-date-picker-pro` (#9571) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.9.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.9.2`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.2`
+
+- [charts] Add pie chart component (#9395) @alexfauquette
+
+### Docs
+
+- [docs] Add pickers playground (#9164) @LukasTy
+- [docs] Fix API links for pickers (#9573) @alexfauquette
+- [docs] Fix demos with `ToggleButtonGroup` (#9548) @flaviendelangle
+- [docs] Fix typos in pagination documentation page (#9332) @RatherBeLunar
+- [docs] Hide ads on paid content @oliviertassinari
+- [docs] Move the charts in the sidebar (#9437) @flaviendelangle
+- [docs] New page: Components lifecycle (#8372) @flaviendelangle
+- [docs] Remove outdated header tag @oliviertassinari
+
+### Core
+
+- [core] Fix typo in priority support @oliviertassinari
+- [core] Remove mention of Crowdin @oliviertassinari
+
+## 6.9.1
+
+_Jun 30, 2023_
+
+We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔎 Add experimental API for faster filtering performance
+- 🌍 Add Chinese (Hong Kong) (zh-HK) locale on the pickers
+- 🌍 Improve Romanian (ro-RO) and Hungarian (hu-HU) translations on the pickers and the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.9.1`
+
+- [DataGrid] Add Joy UI `tooltip` and `loadingOverlay` slots (#9028) @cherniavskii
+- [DataGrid] Add section about enabling pagination on Pro and Premium (#8759) @joserodolfofreitas
+- [DataGrid] Don't forward `editCellState` prop to DOM element (#9501) @m4theushw
+- [DataGrid] Add experimental API for faster filtering performance (#9254) @romgrk
+- [DataGrid] Fix `nextFieldToFocus` to always be a visible column field when <kbd>Tab</kbd> key is pressed (#8314) @yaredtsy
+- [DataGrid] Fix `Maximum call stack size exceeded` error when using fractional width (#9516) @cherniavskii
+- [l10n] Improve Romanian (ro-RO) and Hungarian (hu-HU) translations (#9436) @noraleonte
+
+#### `@mui/x-data-grid-pro@6.9.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@6.9.1`, plus:
+
+- [DataGridPro] Don't throw error in column pinning (#9507) @romgrk
+- [DataGridPro] Fix bug with `checkboxSelection` and treeData/grouping (#9418) @romgrk
+
+#### `@mui/x-data-grid-premium@6.9.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.9.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.9.1`
+
+- [DateTimePicker] Scroll to Digital Clock section only when selection changes (#9434) @LukasTy
+- [pickers] Handle `keyDown` only when input is focused (#9481) @LukasTy
+- [pickers] Add `referenceDate` prop on `TimeClock`, `DigitalClock` and `MultiSectionDigitalClock` (#9356) @flaviendelangle
+- [l10n] Add Chinese (Hong Kong) (zh-HK) locale (#9468) @samchiu90
+- [l10n] Improve Romanian (ro-RO) translations (#9436) @noraleonte
+
+#### `@mui/x-date-pickers-pro@6.9.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.9.1`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.1`
+
+- [charts] Take responsive container from data grid (#9497) @alexfauquette
+- [charts] Update README.md (#9426) @alexfauquette
+- [charts] Fix typo and small refactor (#9526) @flaviendelangle
+
+### Docs
+
+- [docs] Add a recipe limiting to one expanded detail panel at a time (#9488) @cherniavskii
+- [docs] Add missing upcoming flag without issue (#9449) @oliviertassinari
+- [docs] Fix 301 when opening the charts @oliviertassinari
+- [docs] Fix 404 link (#9435) @alexfauquette
+- [docs] Fix `productId` logic (#9451) @oliviertassinari
+- [docs] Update charts overview.md (#9429) @brentertz
+- [docs] Avoid systematic usage of `"bg": "inline"` (#9499) @alexfauquette
+- [docs] Display plan icon in ToC (#9490) @cherniavskii
+- [docs] Remove "product" markdown header (#9517) @oliviertassinari
+
+### Core
+
+- [core] Add `edit-mode` to priority support action (#9483) @DanailH
+- [core] Fix priority support prompt action (#9472) @DanailH
+- [core] Update `uses` for priority support action (#9480) @DanailH
+- [core] Bumb update monorepo (#9476) @alexfauquette
+- [CHANGELOG] Fix media quality (#9439) @oliviertassinari
+- [CHANGELOG] Remove height img attribute @oliviertassinari
+- [test] Skip flaky row pinning tests in JSDOM (#9511) @cherniavskii
+
 ## 6.9.0
 
 _Jun 22, 2023_
@@ -17,7 +513,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - 🚀 Introducing UTC and timezone support for pickers.
 
-  <img width="774" height="314" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348">
+  <img width="774" src="https://github.com/mui/mui-x/assets/3165635/ad95a404-ee67-4aff-b996-ad6cbb322348">
 
   Visit the [documentation](https://mui.com/x/react-date-pickers/timezone/) to learn how to use it.
 
@@ -27,17 +523,25 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.9.0` / `@mui/x-data-grid-pro@v6.9.0` / `@mui/x-data-grid-premium@v6.9.0`
+### Data Grid
 
-#### Changes
+#### `@mui/x-data-grid@6.9.0`
 
 - [DataGrid] Filtering performance: use unmemoized selectors by default (#9287) @romgrk
 - [DataGrid] Use container dimensions from `getComputedStyle` (#9236) @m4theushw
 - [l10n] Improve Brazilian Portuguese (pt-BR) locale (#9404) @julioAz
 
-### `@mui/x-date-pickers@v6.9.0` / `@mui/x-date-pickers-pro@v6.9.0`
+#### `@mui/x-data-grid-pro@6.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-data-grid@6.9.0`.
+
+#### `@mui/x-data-grid-premium@6.9.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.9.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.9.0`
 
 - [fields] Ensure `minutesStep` is respected by fields arrows up/down (#9338) @alexfauquette
 - [fields] Reset internal state when `referenceValue` changes (#9390) @adrianmxb
@@ -47,9 +551,11 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [pickers] Reduce date range calendar vertical border width (#9368) @oliviertassinari
 - [pickers] Reset fields internal state when pasting value (#9385) @alexfauquette
 
-### `@mui/x-charts@v6.0.0-alpha.0`
+#### `@mui/x-date-pickers-pro@6.9.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-date-pickers@6.9.0`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.0`
 
 - [charts] Allow to customize colors based on the theme mode (#9006) @alexfauquette
 - [charts] Prepare the charts release (#9361) @alexfauquette
@@ -85,9 +591,9 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@6.8.0` / `@mui/x-data-grid-pro@6.8.0` / `@mui/x-data-grid-premium@6.8.0`
+### Data Grid
 
-#### Changes
+#### `@mui/x-data-grid@6.8.0`
 
 - [DataGrid] Add missing styles to `overridesResolver` (#9248) @mrmuhammadali
 - [DataGrid] Keep column header menu icon always visible on touch devices (#9076) @cherniavskii
@@ -101,14 +607,26 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 - [DataGrid] Scroll performance improvements (#9037) @romgrk
 - [l10n] Improve Greek (el-GR) locale (#9292) @clytras
 
-### `@mui/x-date-pickers@6.8.0` / `@mui/x-date-pickers-pro@6.8.0`
+#### `@mui/x-data-grid-pro@6.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-data-grid@6.8.0`.
+
+#### `@mui/x-data-grid-premium@6.8.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.8.0`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.8.0`
 
 - [l10n] Add Greek (el-GR) locale (#9293) @clytras
 - [pickers] Add a `referenceDate` prop on `DateCalendar`, `MonthCalendar` and `YearCalendar` (#9260) @flaviendelangle
 - [pickers] Close the calendar when a shortcut is selected (#9080) @flaviendelangle
 - [pickers] Fix disabling for digital clock (#9300) @alexfauquette
+
+#### `@mui/x-date-pickers-pro@6.8.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.8.0`.
 
 ### Docs
 
@@ -167,9 +685,9 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.7.0` / `@mui/x-data-grid-pro@v6.7.0` / `@mui/x-data-grid-premium@v6.7.0`
+### Data Grid
 
-#### Changes
+#### `@mui/x-data-grid@6.7.0`
 
 - [DataGrid] Allow overflowing grid root element (#9179) @cherniavskii
 - [DataGrid] Fix module augmentation error when using `@mui/lab` (#9235) @cherniavskii
@@ -178,19 +696,34 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Improve grouping performance for large datasets (#9200) @romgrk
 - [DataGrid] Increase threshold to trigger memory leak warning (#9263) @m4theushw
 - [DataGrid] Update data grid migration guide to include updated type (#9272) @MBilalShafi
-- [DataGridPro] Improve header filter menu visuals (#9181) @MBilalShafi
-- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
 - [l10n] Improve Czech (cs-CZ) locale (#9266) @MartinSkarpa
 - [l10n] Improve German (de-DE) locale (#9259) @ximex
 - [l10n] Improve Turkish (tr-TR) locale (#9237) @MCErtan
 
-### `@mui/x-date-pickers@v6.7.0` / `@mui/x-date-pickers-pro@v6.7.0`
+#### `@mui/x-data-grid-pro@6.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
 
-#### Changes
+Same changes as in `@mui/x-data-grid@6.7.0`, plus:
+
+- [DataGridPro] Improve header filter menu visuals (#9181) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@6.7.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.7.0`, plus:
+
+- [DataGridPremium] Remove last line break on clipboard paste (#9163) @cherniavskii
+
+### Pickers
+
+#### `@mui/x-date-pickers@6.7.0`
 
 - [l10n] Add Romanian (ro-RO) locale (#9257) @ximex
 - [l10n] Improve German (de-DE) locale (#9258) @ximex
 - [pickers] Apply dynamic default format depending on views for all desktop and mobile pickers (#9126) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@6.7.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.7.0`, plus:
+
 - [pickers] Update `DateRangePickerDay` props JSDoc (#9191) @stevus
 
 ### Docs
@@ -224,7 +757,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - 🌍 Improve Dutch (nl-NL) and French (fr-FR) locales on the data grid
 - 🌍 Add Vietnamese (vi-VN) locale on the pickers
 
-### `@mui/x-data-grid@v6.6.0` / `@mui/x-data-grid-pro@v6.6.0` / `@mui/x-data-grid-premium@v6.6.0`
+### `@mui/x-data-grid@6.6.0` / `@mui/x-data-grid-pro@6.6.0` / `@mui/x-data-grid-premium@6.6.0`
 
 #### Changes
 
@@ -242,7 +775,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [l10n] Improve Dutch (nl-NL) locale (#9043) @thedutchruben
 - [l10n] Improve French (fr-FR) locale (#9109) @Jul13nT
 
-### `@mui/x-date-pickers@v6.6.0` / `@mui/x-date-pickers-pro@v6.6.0`
+### `@mui/x-date-pickers@6.6.0` / `@mui/x-date-pickers-pro@6.6.0`
 
 #### Changes
 
@@ -357,7 +890,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.4.0` / `@mui/x-data-grid-pro@v6.4.0` / `@mui/x-data-grid-premium@v6.4.0`
+### `@mui/x-data-grid@6.4.0` / `@mui/x-data-grid-pro@6.4.0` / `@mui/x-data-grid-premium@6.4.0`
 
 #### Changes
 
@@ -367,12 +900,12 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Add Joy UI pagination slot (#8871) @cherniavskii
 - [DataGrid] Extract `baseChip` slot (#8748) @cherniavskii
 - [DataGridPremium] Implement Clipboard import (#7389) @cherniavskii
-- [l10n] Improve French (fr-FR) locale (#8825) @vallereaugabriel
+- [l10n] Improve French (fr-FR) locale (#8825) @allereaugabriel
 - [l10n] Improve German (de-DE) locale (#8898) @marcauberer
 - [l10n] Improve Portuguese (pt-BR) locale (#8960) @Sorriso337
 - [l10n] Improve Ukrainian (uk-UA) locale (#8863) @Neonin
 
-### `@mui/x-date-pickers@v6.4.0` / `@mui/x-date-pickers-pro@v6.4.0`
+### `@mui/x-date-pickers@6.4.0` / `@mui/x-date-pickers-pro@6.4.0`
 
 #### Changes
 
@@ -406,7 +939,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.3.1` / `@mui/x-data-grid-pro@v6.3.1` / `@mui/x-data-grid-premium@v6.3.1`
+### `@mui/x-data-grid@6.3.1` / `@mui/x-data-grid-pro@6.3.1` / `@mui/x-data-grid-premium@6.3.1`
 
 #### Changes
 
@@ -417,7 +950,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Add Joy UI slots (`Select`, `SelectOption`, `InputLabel`, `FormControl`) (#8747) @cherniavskii
 - [DataGridPremium] Fix expanded groups being collapsed after calling `updateRows` (#8823) @cherniavskii
 
-### `@mui/x-date-pickers@v6.3.1` / `@mui/x-date-pickers-pro@v6.3.1`
+### `@mui/x-date-pickers@6.3.1` / `@mui/x-date-pickers-pro@6.3.1`
 
 #### Changes
 
@@ -458,7 +991,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.3.0` / `@mui/x-data-grid-pro@v6.3.0` / `@mui/x-data-grid-premium@v6.3.0`
+### `@mui/x-data-grid@6.3.0` / `@mui/x-data-grid-pro@6.3.0` / `@mui/x-data-grid-premium@6.3.0`
 
 #### Changes
 
@@ -473,7 +1006,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [l10n] Improve French (fr-FR) locale (#8704) @Jul13nT
 - [l10n] Improve Turkish (tr-TR) locale (#8783) @cccaaannn
 
-### `@mui/x-date-pickers@v6.3.0` / `@mui/x-date-pickers-pro@v6.3.0`
+### `@mui/x-date-pickers@6.3.0` / `@mui/x-date-pickers-pro@6.3.0`
 
 #### Changes
 
@@ -522,7 +1055,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.2.1` / `@mui/x-data-grid-pro@v6.2.1` / `@mui/x-data-grid-premium@v6.2.1`
+### `@mui/x-data-grid@6.2.1` / `@mui/x-data-grid-pro@6.2.1` / `@mui/x-data-grid-premium@6.2.1`
 
 #### Changes
 
@@ -533,14 +1066,14 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Use stable ID for the placeholder filter item (#8603) @m4theushw
 - [DataGridPro] Virtualize row detail panels (#7969) @yaredtsy
 
-### `@mui/x-date-pickers@v6.2.1` / `@mui/x-date-pickers-pro@v6.2.1`
+### `@mui/x-date-pickers@6.2.1` / `@mui/x-date-pickers-pro@6.2.1`
 
 #### Changes
 
 - [pickers] Do not include the time in date components when going to today (#8657) @flaviendelangle
 - [pickers] Sync internal state with controlled value (#8674) @alexfauquette
 
-### `@mui/x-codemod@v6.2.1`
+### `@mui/x-codemod@6.2.1`
 
 #### Changes
 
@@ -580,16 +1113,16 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.2.0` / `@mui/x-data-grid-pro@v6.2.0` / `@mui/x-data-grid-premium@v6.2.0`
+### `@mui/x-data-grid@6.2.0` / `@mui/x-data-grid-pro@6.2.0` / `@mui/x-data-grid-premium@6.2.0`
 
 #### Changes
 
 - [DataGrid] Reset selection state on `checkboxSelection` toggle (#8522) @MBilalShafi
 - [DataGrid] Use `baseSelect` slot instead of `baseTextField` with `select={true}` (#8110) @cherniavskii
-- [l10n] Improve French (fr-FR) locale (#8537) @vallereaugabriel
+- [l10n] Improve French (fr-FR) locale (#8537) @allereaugabriel
 - [l10n] Improve Urdu (ur-PK) locale (#8513) @SFARPak
 
-### `@mui/x-date-pickers@v6.2.0` / `@mui/x-date-pickers-pro@v6.2.0`
+### `@mui/x-date-pickers@6.2.0` / `@mui/x-date-pickers-pro@6.2.0`
 
 #### Changes
 
@@ -623,7 +1156,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.1.0` / `@mui/x-data-grid-pro@v6.1.0` / `@mui/x-data-grid-premium@v6.1.0`
+### `@mui/x-data-grid@6.1.0` / `@mui/x-data-grid-pro@6.1.0` / `@mui/x-data-grid-premium@6.1.0`
 
 #### Changes
 
@@ -638,7 +1171,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 - [l10n] Improve Portuguese (pt-BR) locale (#8480) @pwnedev
 - [l10n] Improve Russian (ru-RU) locale (#8510) @alexrapro
 
-### `@mui/x-date-pickers@v6.1.0` / `@mui/x-date-pickers-pro@v6.1.0`
+### `@mui/x-date-pickers@6.1.0` / `@mui/x-date-pickers-pro@6.1.0`
 
 #### Changes
 
@@ -680,7 +1213,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.0.4` / `@mui/x-data-grid-pro@v6.0.4` / `@mui/x-data-grid-premium@v6.0.4`
+### `@mui/x-data-grid@6.0.4` / `@mui/x-data-grid-pro@6.0.4` / `@mui/x-data-grid-premium@6.0.4`
 
 #### Changes
 
@@ -698,7 +1231,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [l10n] Improve Spanish (es-ES) locale (#8420) @martjanz
 - [l10n] Improve Swedish (sv-SE) locale (#8381) @BossElijah
 
-### `@mui/x-date-pickers@v6.0.4` / `@mui/x-date-pickers-pro@v6.0.4`
+### `@mui/x-date-pickers@6.0.4` / `@mui/x-date-pickers-pro@6.0.4`
 
 #### Changes
 
@@ -714,7 +1247,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [l10n] Add Danish (da-DK) locale (#8379) @BossElijah
 - [l10n] Improve Swedish (sv-SE) locale (#8381) @BossElijah
 
-### `@mui/x-codemod@v6.0.4`
+### `@mui/x-codemod@6.0.4`
 
 #### Changes
 
@@ -741,7 +1274,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-### `@mui/x-data-grid@v6.0.3` / `@mui/x-data-grid-pro@v6.0.3` / `@mui/x-data-grid-premium@v6.0.3`
+### `@mui/x-data-grid@6.0.3` / `@mui/x-data-grid-pro@6.0.3` / `@mui/x-data-grid-premium@6.0.3`
 
 #### Changes
 
@@ -751,7 +1284,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [l10n] Improve Persian (fa-IR) locale (#8268) @fakhamatia
 - [l10n] improve Dutch (nl-NL) locale (#8317) @developenguin
 
-### `@mui/x-date-pickers@v6.0.3` / `@mui/x-date-pickers-pro@v6.0.3`
+### `@mui/x-date-pickers@6.0.3` / `@mui/x-date-pickers-pro@6.0.3`
 
 #### Changes
 
@@ -798,7 +1331,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.2` / `@mui/x-data-grid-pro@v6.0.2` / `@mui/x-data-grid-premium@v6.0.2`
+### `@mui/x-data-grid@6.0.2` / `@mui/x-data-grid-pro@6.0.2` / `@mui/x-data-grid-premium@6.0.2`
 
 #### Changes
 
@@ -806,7 +1339,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Remove warning when adding a custom column type (#8227) @m4theushw
 - [l10n] Improve Brazilian Portuguese (pt-BR) locale (#8198) @JoaoSerafim3001
 
-### `@mui/x-date-pickers@v6.0.2` / `@mui/x-date-pickers-pro@v6.0.2`
+### `@mui/x-date-pickers@6.0.2` / `@mui/x-date-pickers-pro@6.0.2`
 
 #### Changes
 
@@ -848,7 +1381,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.1` / `@mui/x-data-grid-pro@v6.0.1` / `@mui/x-data-grid-premium@v6.0.1`
+### `@mui/x-data-grid@6.0.1` / `@mui/x-data-grid-pro@6.0.1` / `@mui/x-data-grid-premium@6.0.1`
 
 #### Changes
 
@@ -856,7 +1389,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Simplify `buildPrintWindow` (#8142) @oliviertassinari
 - [l10n] Improve French (fr-FR) locale (#8122) @MaherSamiGMC
 
-### `@mui/x-date-pickers@v6.0.1` / `@mui/x-date-pickers-pro@v6.0.1`
+### `@mui/x-date-pickers@6.0.1` / `@mui/x-date-pickers-pro@6.0.1`
 
 #### Changes
 
@@ -907,7 +1440,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0` / `@mui/x-data-grid-pro@v6.0.0` / `@mui/x-data-grid-premium@v6.0.0`
+### `@mui/x-data-grid@6.0.0` / `@mui/x-data-grid-pro@6.0.0` / `@mui/x-data-grid-premium@6.0.0`
 
 #### Breaking changes
 
@@ -930,7 +1463,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [l10n] Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
 - [l10n] Improve Arabic (ar-SD) locale (#8100) @atf98
 
-### `@mui/x-date-pickers@v6.0.0` / `@mui/x-date-pickers-pro@v6.0.0`
+### `@mui/x-date-pickers@6.0.0` / `@mui/x-date-pickers-pro@6.0.0`
 
 #### Breaking changes
 
@@ -988,7 +1521,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-beta.5` / `@mui/x-data-grid-pro@v6.0.0-beta.5` / `@mui/x-data-grid-premium@v6.0.0-beta.5`
+### `@mui/x-data-grid@6.0.0-beta.5` / `@mui/x-data-grid-pro@6.0.0-beta.5` / `@mui/x-data-grid-premium@6.0.0-beta.5`
 
 #### Changes
 
@@ -998,7 +1531,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGridPro] Add `Remove All` option in filter panel (#7326) @MBilalShafi
 - [DataGridPremium] Add web worker support for Excel export (#7770) @m4theushw
 
-### `@mui/x-date-pickers@v6.0.0-beta.5` / `@mui/x-date-pickers-pro@v6.0.0-beta.5`
+### `@mui/x-date-pickers@6.0.0-beta.5` / `@mui/x-date-pickers-pro@6.0.0-beta.5`
 
 #### Breaking changes
 
@@ -1013,7 +1546,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [fields] Clean the section object (#8009) @flaviendelangle
 - [pickers] Fix `textField` slot `error` prop propagation (#7987) @LukasTy
 
-### `@mui/x-codemod@v6.0.0-beta.5`
+### `@mui/x-codemod@6.0.0-beta.5`
 
 #### Changes
 
@@ -1040,17 +1573,17 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-beta.4` / `@mui/x-data-grid-pro@v6.0.0-beta.4` / `@mui/x-data-grid-premium@v6.0.0-beta.4`
+### `@mui/x-data-grid@6.0.0-beta.4` / `@mui/x-data-grid-pro@6.0.0-beta.4` / `@mui/x-data-grid-premium@6.0.0-beta.4`
 
 #### Changes
 
 - [DataGrid] Add interface for `singleSelect` column (#7685) @m4theushw
-- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7733) @Vivek-Prajapatii
+- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7733) @ivek-Prajapatii
 - [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7857) @cherniavskii
 - [DataGridPro] Change cursor when dragging a column (#7725) @sai6855
 - [DataGridPremium] Fix `leafField` to have correct focus value (#7950) @MBilalShafi
 
-### `@mui/x-date-pickers@v6.0.0-beta.4` / `@mui/x-date-pickers-pro@v6.0.0-beta.4`
+### `@mui/x-date-pickers@6.0.0-beta.4` / `@mui/x-date-pickers-pro@6.0.0-beta.4`
 
 #### Changes
 
@@ -1059,7 +1592,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [fields] Support escaped characters on `Luxon` (#7888) @flaviendelangle
 - [pickers] Prepare new pickers for custom fields (#7806) @flaviendelangle
 
-### `@mui/x-codemod@v6.0.0-beta.4`
+### `@mui/x-codemod@6.0.0-beta.4`
 
 #### Changes
 
@@ -1089,7 +1622,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-beta.3` / `@mui/x-data-grid-pro@v6.0.0-beta.3` / `@mui/x-data-grid-premium@v6.0.0-beta.3`
+### `@mui/x-data-grid@6.0.0-beta.3` / `@mui/x-data-grid-pro@6.0.0-beta.3` / `@mui/x-data-grid-premium@6.0.0-beta.3`
 
 #### Changes
 
@@ -1101,7 +1634,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGrid] Improve query selectors for selecting cell element (#7354) @yaredtsy
 - [l10n] Improve Brazilian Portuguese (pt-BR) locale (#7854) @ed-ateixeira
 
-### `@mui/x-date-pickers@v6.0.0-beta.3` / `@mui/x-date-pickers-pro@v6.0.0-beta.3`
+### `@mui/x-date-pickers@6.0.0-beta.3` / `@mui/x-date-pickers-pro@6.0.0-beta.3`
 
 #### Changes
 
@@ -1113,7 +1646,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [pickers] Ditch pickers `skipLibCheck` (#7808) @LukasTy
 - [pickers] Improve JSDoc and resulting API docs pages (#7847) @LukasTy
 
-### `@mui/x-codemod@v6.0.0-beta.3`
+### `@mui/x-codemod@6.0.0-beta.3`
 
 #### Changes
 
@@ -1147,7 +1680,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bug fixes
 
-### `@mui/x-data-grid@v6.0.0-beta.2` / `@mui/x-data-grid-pro@v6.0.0-beta.2` / `@mui/x-data-grid-premium@v6.0.0-beta.2`
+### `@mui/x-data-grid@6.0.0-beta.2` / `@mui/x-data-grid-pro@6.0.0-beta.2` / `@mui/x-data-grid-premium@6.0.0-beta.2`
 
 #### Changes
 
@@ -1155,20 +1688,20 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [DataGrid] Merge row styles with `componentsProps.row.style` (#7641) @marktoman
 - [l10n] Add Hungarian (hu-HU) locale (#7776) @noherczeg
 - [l10n] Add Urdu (ur-PK) locale (#6866) @MBilalShafi
-- [l10n] Improve French (fr-FR) locale (#7777) @Vivek-Prajapatii
+- [l10n] Improve French (fr-FR) locale (#7777) @ivek-Prajapatii
 - [l10n] Improve Italian (it-IT) locale (#7761) @simonecervini
 
-### `@mui/x-date-pickers@v6.0.0-beta.2` / `@mui/x-date-pickers-pro@v6.0.0-beta.2`
+### `@mui/x-date-pickers@6.0.0-beta.2` / `@mui/x-date-pickers-pro@6.0.0-beta.2`
 
 #### Changes
 
 - [fields] Support week day formats (#7392) @flaviendelangle
 - [pickers] Allow to initialize and control the `rangePosition` on all range components (#7764) @flaviendelangle
 - [pickers] Fix theme augmentation (#7800) @LukasTy
-- [pickers] Hide scrollbars in the date calendar container (#7766) @Vivek-Prajapatii
+- [pickers] Hide scrollbars in the date calendar container (#7766) @ivek-Prajapatii
 - [pickers] Remove the dependency on `rifm` (#7785) @alexfauquette
 
-### `@mui/x-codemod@v6.0.0-beta.2`
+### `@mui/x-codemod@6.0.0-beta.2`
 
 #### Changes
 
@@ -1201,7 +1734,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bug fixes
 
-### `@mui/x-data-grid@v6.0.0-beta.1` / `@mui/x-data-grid-pro@v6.0.0-beta.1` / `@mui/x-data-grid-premium@v6.0.0-beta.1`
+### `@mui/x-data-grid@6.0.0-beta.1` / `@mui/x-data-grid-pro@6.0.0-beta.1` / `@mui/x-data-grid-premium@6.0.0-beta.1`
 
 #### Changes
 
@@ -1213,9 +1746,9 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 - [l10n] Add Slovak (sk-SK) translation for aggregation functions (#7702) @msidlo
 - [l10n] Add missing core locales for `MuiTablePagination` (#7717) @MBilalShafi
 - [l10n] Improve Spanish (es-ES) and Vietnamese (vi-VN) locale (#7634) @WiXSL and @SpacerZ
-- [l10n] Add Belarusian (be-BY) locale (#7646) @volhalink
+- [l10n] Add Belarusian (be-BY) locale (#7646) @olhalink
 
-### `@mui/x-date-pickers@v6.0.0-beta.1` / `@mui/x-date-pickers-pro@v6.0.0-beta.1`
+### `@mui/x-date-pickers@6.0.0-beta.1` / `@mui/x-date-pickers-pro@6.0.0-beta.1`
 
 #### Changes
 
@@ -1227,7 +1760,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 - [l10n] Add Russian (ru-RU) locale (#7706) @rstmzh
 - [l10n] Improve Japanese (ja-JP) locale (#7624) @makoto14
 
-### `@mui/x-codemod@v6.0.0-beta.1`
+### `@mui/x-codemod@6.0.0-beta.1`
 
 #### Changes
 
@@ -1244,7 +1777,7 @@ We'd like to offer a big thanks to the 17 contributors who made this release pos
 
 ### Docs
 
-- [docs] Add info callout about available component `slots` (#7714) @Vivek-Prajapatii
+- [docs] Add info callout about available component `slots` (#7714) @ivek-Prajapatii
 - [docs] Add recipe for pinning grouped column (#7712) @MBilalShafi
 - [docs] Fix 404 links to picker API page @oliviertassinari
 - [docs] Update `DemoContainer` `components` prop using a codemod (#7574) @alexfauquette
@@ -1283,7 +1816,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bug fixes
 
-### `@mui/x-data-grid@v6.0.0-beta.0` / `@mui/x-data-grid-pro@v6.0.0-beta.0` / `@mui/x-data-grid-premium@v6.0.0-beta.0`
+### `@mui/x-data-grid@6.0.0-beta.0` / `@mui/x-data-grid-pro@6.0.0-beta.0` / `@mui/x-data-grid-premium@6.0.0-beta.0`
 
 #### Breaking changes
 
@@ -1390,7 +1923,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGridPremium] Keep focus on first selected cell (#7482) @m4theushw
 - [l10n] Update Swedish (sv-SE) locale (#7585) @MaanTyringe
 
-### `@mui/x-date-pickers@v6.0.0-beta.0` / `@mui/x-date-pickers-pro@v6.0.0-beta.0`
+### `@mui/x-date-pickers@6.0.0-beta.0` / `@mui/x-date-pickers-pro@6.0.0-beta.0`
 
 #### Breaking changes
 
@@ -1449,7 +1982,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [pickers] Stop using the `WrapperVariantContext` in `DateRangeCalendar` (#7488) @flaviendelangle
 - [l10n] Improve Italian (it-IT) locale (#7582) @marikadeveloper
 
-### `@mui/x-codemod@v6.0.0-beta.0`
+### `@mui/x-codemod@6.0.0-beta.0`
 
 #### Changes
 
@@ -1481,7 +2014,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.15` / `@mui/x-data-grid-pro@6.0.0-alpha.15` / `@mui/x-data-grid-premium@6.0.0-alpha.15`
+### `@mui/x-data-grid@6.0.0-alpha.15` / `@mui/x-data-grid-pro@6.0.0-alpha.15` / `@mui/x-data-grid-premium@6.0.0-alpha.15`
 
 #### Breaking changes
 
@@ -1600,7 +2133,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### Changes
 
 - [fields] Fix Android editing (#7444) @flaviendelangle
-- [pickers] Add Belarusian (be-BY) locale (#7395) @volhalink
+- [pickers] Add Belarusian (be-BY) locale (#7395) @olhalink
 - [pickers] Hide am/pm controls when there is no hour view (#7380) @flaviendelangle
 - [pickers] Hide the tabs by default on `DesktopNextDateTimePicker` (#7503) @flaviendelangle
 - [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
@@ -1639,7 +2172,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 📚 Many documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.14` / `@mui/x-data-grid-pro@v6.0.0-alpha.14` / `@mui/x-data-grid-premium@v6.0.0-alpha.14`
+### `@mui/x-data-grid@6.0.0-alpha.14` / `@mui/x-data-grid-pro@6.0.0-alpha.14` / `@mui/x-data-grid-premium@6.0.0-alpha.14`
 
 #### Breaking changes
 
@@ -1656,7 +2189,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Remove remaining props from legacy editing API (#7381) @m4theushw
 - [DataGrid] Set default `GridCellParams['value']` type to `unknown` (#6959) @cherniavskii
 
-### `@mui/x-date-pickers@v6.0.0-alpha.14` / `@mui/x-date-pickers-pro@v6.0.0-alpha.14`
+### `@mui/x-date-pickers@6.0.0-alpha.14` / `@mui/x-date-pickers-pro@6.0.0-alpha.14`
 
 #### Breaking changes
 
@@ -1673,7 +2206,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] Remove the `PaperContent` slot from the new pickers (#7342) @flaviendelangle
 - [pickers] Use grid for modifying the layout (#6900) @alexfauquette
 
-### `@mui/x-codemod@v6.0.0-alpha.14`
+### `@mui/x-codemod@6.0.0-alpha.14`
 
 #### Changes
 
@@ -1796,7 +2329,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Remove `GridDensityType` enum (#7304) @cherniavskii
 - [DataGrid] Remove `rowHeight` and `headerHeight` from state (#7199) @DanailH
 - [DataGrid] Remove column separator to match table styles (#7067) @MBilalShafi
-- [DataGrid] Update Russian (ru-RU) locale (#7220) @VeceluXa
+- [DataGrid] Update Russian (ru-RU) locale (#7220) @eceluXa
 - [DataGridPro] Use row ID as `key` of the detail panels (#7302) @m4theushw
 - [DataGridPremium] Fix `exceljs` import with parcel (#7284) @alexfauquette
 
@@ -1865,7 +2398,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.12` / `@mui/x-data-grid-pro@v6.0.0-alpha.12` / `@mui/x-data-grid-premium@v6.0.0-alpha.12`
+### `@mui/x-data-grid@6.0.0-alpha.12` / `@mui/x-data-grid-pro@6.0.0-alpha.12` / `@mui/x-data-grid-premium@6.0.0-alpha.12`
 
 #### Breaking changes
 
@@ -1886,7 +2419,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [DataGridPro] Fix missing border in right-pinned columns (#4197) @cherniavskii
 - [DataGridPro] Fix wrong border color on skeleton cells (#7202) @cherniavskii
 
-### `@mui/x-date-pickers@v6.0.0-alpha.12` / `@mui/x-date-pickers-pro@v6.0.0-alpha.12`
+### `@mui/x-date-pickers@6.0.0-alpha.12` / `@mui/x-date-pickers-pro@6.0.0-alpha.12`
 
 #### Changes
 
@@ -1920,7 +2453,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - ✨ Fix lazy-loading feature not working in `DataGridPremium` (#7124) @m4theushw
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.11` / `@mui/x-data-grid-pro@v6.0.0-alpha.11` / `@mui/x-data-grid-premium@v6.0.0-alpha.11`
+### `@mui/x-data-grid@6.0.0-alpha.11` / `@mui/x-data-grid-pro@6.0.0-alpha.11` / `@mui/x-data-grid-premium@6.0.0-alpha.11`
 
 #### Breaking changes
 
@@ -1935,7 +2468,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGridPremium] Add support for lazy-loading (#7124) @m4theushw
 - [DataGridPremium] Pass `groupId` to aggregation function (#7003) @m4theushw
 
-### `@mui/x-date-pickers@v6.0.0-alpha.11` / `@mui/x-date-pickers-pro@v6.0.0-alpha.11`
+### `@mui/x-date-pickers@6.0.0-alpha.11` / `@mui/x-date-pickers-pro@6.0.0-alpha.11`
 
 #### Breaking changes
 
@@ -2032,7 +2565,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.10` / `@mui/x-data-grid-pro@v6.0.0-alpha.10` / `@mui/x-data-grid-premium@v6.0.0-alpha.10`
+### `@mui/x-data-grid@6.0.0-alpha.10` / `@mui/x-data-grid-pro@6.0.0-alpha.10` / `@mui/x-data-grid-premium@6.0.0-alpha.10`
 
 ### Breaking changes
 
@@ -2066,7 +2599,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGridPremium] Use custom cell component for grouping cell by default (#6692) @cherniavskii
 - [l10n] Improve Ukrainian (uk-UA) locale (#7009) @rettoua
 
-### `@mui/x-date-pickers@v6.0.0-alpha.10` / `@mui/x-date-pickers-pro@v6.0.0-alpha.10`
+### `@mui/x-date-pickers@6.0.0-alpha.10` / `@mui/x-date-pickers-pro@6.0.0-alpha.10`
 
 #### Breaking changes
 
@@ -2129,7 +2662,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.9` / `@mui/x-data-grid-pro@v6.0.0-alpha.9` / `@mui/x-data-grid-premium@v6.0.0-alpha.9`
+### `@mui/x-data-grid@6.0.0-alpha.9` / `@mui/x-data-grid-pro@6.0.0-alpha.9` / `@mui/x-data-grid-premium@6.0.0-alpha.9`
 
 ### Breaking changes
 
@@ -2156,7 +2689,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 - [DataGridPremium] Improve typing for theme in `styleOverrides` (#6920) @m4theushw
 - [l10n] Fix translation of `filterOperatorBefore` in Arabic (ar-SD) locale (#6884) @HassanGhazy
 
-### `@mui/x-date-pickers@v6.0.0-alpha.9` / `@mui/x-date-pickers-pro@v6.0.0-alpha.9`
+### `@mui/x-date-pickers@6.0.0-alpha.9` / `@mui/x-date-pickers-pro@6.0.0-alpha.9`
 
 #### Changes
 
@@ -2200,12 +2733,12 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.8` / `@mui/x-data-grid-pro@v6.0.0-alpha.8` / `@mui/x-data-grid-premium@v6.0.0-alpha.8`
+### `@mui/x-data-grid@6.0.0-alpha.8` / `@mui/x-data-grid-pro@6.0.0-alpha.8` / `@mui/x-data-grid-premium@6.0.0-alpha.8`
 
 #### Changes
 
 - [DataGrid] Fix `ErrorOverlay` not receiving defined input props (#6819) @banoth-ravinder
-- [DataGrid] Fix conflict with the latest version of `@types/react` (#6797) @vizv
+- [DataGrid] Fix conflict with the latest version of `@types/react` (#6797) @izv
 - [DataGrid] Make more `apiRef` methods private (#6700) @cherniavskii
 - [DataGrid] Provide a clear error message when upgrading (#6685) @oliviertassinari
 - [DataGridPremium] Allow to customize the indent of group expansion toggle (#6837) @MBilalShafi
@@ -2214,7 +2747,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGridPro] Opt-out for column jump back on re-order (#6733) @gavbrennan
 - [l10n] Improve Finnish (fi-FI) locale (#6859) @RainoPikkarainen
 
-### `@mui/x-date-pickers@v6.0.0-alpha.8` / `@mui/x-date-pickers-pro@v6.0.0-alpha.8`
+### `@mui/x-date-pickers@6.0.0-alpha.8` / `@mui/x-date-pickers-pro@6.0.0-alpha.8`
 
 #### Breaking changes
 
@@ -2270,14 +2803,14 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.7` / `@mui/x-data-grid-pro@v6.0.0-alpha.7` / `@mui/x-data-grid-premium@v6.0.0-alpha.7`
+### `@mui/x-data-grid@6.0.0-alpha.7` / `@mui/x-data-grid-pro@6.0.0-alpha.7` / `@mui/x-data-grid-premium@6.0.0-alpha.7`
 
 #### Changes
 
 - [DataGrid] Fix cell focus causing scroll jump when virtualization enabled (#6785) @yaredtsy
 - [DataGrid] Remove items marked as `@deprecated` (#6505) @DanailH
 
-### `@mui/x-date-pickers@v6.0.0-alpha.7` / `@mui/x-date-pickers-pro@v6.0.0-alpha.7`
+### `@mui/x-date-pickers@6.0.0-alpha.7` / `@mui/x-date-pickers-pro@6.0.0-alpha.7`
 
 #### Changes
 
@@ -2320,7 +2853,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.6` / `@mui/x-data-grid-pro@v6.0.0-alpha.6` / `@mui/x-data-grid-premium@v6.0.0-alpha.6`
+### `@mui/x-data-grid@6.0.0-alpha.6` / `@mui/x-data-grid-pro@6.0.0-alpha.6` / `@mui/x-data-grid-premium@6.0.0-alpha.6`
 
 #### Breaking changes
 
@@ -2335,11 +2868,11 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Remove `disableIgnoreModificationsIfProcessingProps` prop (#6640) @m4theushw
 - [DataGrid] Separate private and public `apiRef` properties (#6388) @cherniavskii
 
-### `@mui/x-date-pickers@v6.0.0-alpha.6` / `@mui/x-date-pickers-pro@v6.0.0-alpha.6`
+### `@mui/x-date-pickers@6.0.0-alpha.6` / `@mui/x-date-pickers-pro@6.0.0-alpha.6`
 
 #### Changes
 
-- [DateRangePicker] Fix input focused style and mobile behaviour (#6645) @LukasTy
+- [DateRangePicker] Fix input focused style and mobile behavior (#6645) @LukasTy
 - [fields] Update sections when the locale changes (#6649) @flaviendelangle
 - [pickers] Add Ukrainian (uk-UA) locale (#6661) @Dufran
 - [pickers] Allow non-controlled usage of the calendar components (#6643) @flaviendelangle
@@ -2365,7 +2898,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🎁 Allow to disable the autofocus of the search field when opening the column visibility panel (#6444) @e-cloud
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.5` / `@mui/x-data-grid-pro@v6.0.0-alpha.5` / `@mui/x-data-grid-premium@v6.0.0-alpha.5`
+### `@mui/x-data-grid@6.0.0-alpha.5` / `@mui/x-data-grid-pro@6.0.0-alpha.5` / `@mui/x-data-grid-premium@6.0.0-alpha.5`
 
 #### Breaking changes
 
@@ -2389,7 +2922,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Stop exporting `gridColumnsSelector` (#6693)
 - [l10n] Improve Bulgarian (bg-BG) locale (#6578) @AtanasVA
 
-### `@mui/x-date-pickers@v6.0.0-alpha.5` / `@mui/x-date-pickers-pro@v6.0.0-alpha.5`
+### `@mui/x-date-pickers@6.0.0-alpha.5` / `@mui/x-date-pickers-pro@6.0.0-alpha.5`
 
 #### Breaking changes
 
@@ -2483,7 +3016,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - 🐞 Bugfixes
 - 🌍 Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) @ramazansancar
 
-### `@mui/x-data-grid@v6.0.0-alpha.4` / `@mui/x-data-grid-pro@v6.0.0-alpha.4` / `@mui/x-data-grid-premium@v6.0.0-alpha.4`
+### `@mui/x-data-grid@6.0.0-alpha.4` / `@mui/x-data-grid-pro@6.0.0-alpha.4` / `@mui/x-data-grid-premium@6.0.0-alpha.4`
 
 #### Breaking changes
 
@@ -2509,7 +3042,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Rename selection props (#6556) @m4theushw
 - [l10n] Improve Turkish (tr-TR) locale on the data grid and pickers (#6542) @ramazansancar
 
-### `@mui/x-date-pickers@v6.0.0-alpha.4` / `@mui/x-date-pickers-pro@v6.0.0-alpha.4`
+### `@mui/x-date-pickers@6.0.0-alpha.4` / `@mui/x-date-pickers-pro@6.0.0-alpha.4`
 
 #### Breaking changes
 
@@ -2627,7 +3160,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.3` / `@mui/x-data-grid-pro@v6.0.0-alpha.3` / `@mui/x-data-grid-premium@v6.0.0-alpha.3`
+### `@mui/x-data-grid@6.0.0-alpha.3` / `@mui/x-data-grid-pro@6.0.0-alpha.3` / `@mui/x-data-grid-premium@6.0.0-alpha.3`
 
 #### Breaking changes
 
@@ -2661,7 +3194,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Use generics instead of verbose state overrides (#6409) @cherniavskii
 - [DataGridPro] Allow to limit to one filter per column (#6333) @MBilalShafi
 
-### `@mui/x-date-pickers@v6.0.0-alpha.3` / `@mui/x-date-pickers-pro@v6.0.0-alpha.3`
+### `@mui/x-date-pickers@6.0.0-alpha.3` / `@mui/x-date-pickers-pro@6.0.0-alpha.3`
 
 #### Breaking changes
 
@@ -2824,7 +3357,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.2` / `@mui/x-data-grid-pro@v6.0.0-alpha.2` / `@mui/x-data-grid-premium@v6.0.0-alpha.2`
+### `@mui/x-data-grid@6.0.0-alpha.2` / `@mui/x-data-grid-pro@6.0.0-alpha.2` / `@mui/x-data-grid-premium@6.0.0-alpha.2`
 
 #### Breaking changes
 
@@ -2849,7 +3382,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DataGrid] Pass generics to the components in the theme augmentation (#6269) @cherniavskii
 - [DataGridPremium] Remove the aggregation from the experimental features (#6372) @flaviendelangle
 
-### `@mui/x-date-pickers@v6.0.0-alpha.2` / `@mui/x-date-pickers-pro@v6.0.0-alpha.2`
+### `@mui/x-date-pickers@6.0.0-alpha.2` / `@mui/x-date-pickers-pro@6.0.0-alpha.2`
 
 #### Breaking changes
 
@@ -2900,7 +3433,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.1` / `@mui/x-data-grid-pro@v6.0.0-alpha.1` / `@mui/x-data-grid-premium@v6.0.0-alpha.1`
+### `@mui/x-data-grid@6.0.0-alpha.1` / `@mui/x-data-grid-pro@6.0.0-alpha.1` / `@mui/x-data-grid-premium@6.0.0-alpha.1`
 
 #### Breaking changes
 
@@ -2960,7 +3493,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Improve print support (#6273) @oliviertassinari
 - [DataGridPremium] Add missing `themeAugmentation` module (#6270) @cherniavskii
 
-### `@mui/x-date-pickers@v6.0.0-alpha.1` / `@mui/x-date-pickers-pro@v6.0.0-alpha.1`
+### `@mui/x-date-pickers@6.0.0-alpha.1` / `@mui/x-date-pickers-pro@6.0.0-alpha.1`
 
 #### Breaking changes
 
@@ -3032,7 +3565,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.0` / `@mui/x-data-grid-pro@v6.0.0-alpha.0` / `@mui/x-data-grid-premium@v6.0.0-alpha.0`
+### `@mui/x-data-grid@6.0.0-alpha.0` / `@mui/x-data-grid-pro@6.0.0-alpha.0` / `@mui/x-data-grid-premium@6.0.0-alpha.0`
 
 #### Breaking changes
 
@@ -3069,7 +3602,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Remove the `GridEvents` enum (#6003) @flaviendelangle
 - [DataGrid] Remove the deprecated `hide` column property (#5999) @flaviendelangle
 
-### `@mui/x-date-pickers@v6.0.0-alpha.0` / `@mui/x-date-pickers-pro@v6.0.0-alpha.0`
+### `@mui/x-date-pickers@6.0.0-alpha.0` / `@mui/x-date-pickers-pro@6.0.0-alpha.0`
 
 #### Breaking changes
 

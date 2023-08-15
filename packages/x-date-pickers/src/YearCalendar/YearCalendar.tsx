@@ -67,7 +67,7 @@ const YearCalendarRoot = styled('div', {
   maxHeight: 304,
 });
 
-type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
+type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
   propTypes?: any;
 };
 
@@ -363,7 +363,7 @@ YearCalendar.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
-   * @default The closest valid year using the validation props, except callbacks such as `shouldDisableDate`.
+   * @default The closest valid year using the validation props, except callbacks such as `shouldDisableYear`.
    */
   referenceDate: PropTypes.any,
   /**

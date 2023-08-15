@@ -7,14 +7,13 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   PickersToolbar,
   PickersToolbarButton,
-  pickersToolbarClasses,
   useUtils,
   BaseToolbarProps,
   useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internal/models';
-import { UseRangePositionResponse } from '../internal/hooks/useRangePosition';
+import { DateRange } from '../internals/models';
+import { UseRangePositionResponse } from '../internals/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -47,12 +46,7 @@ const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })<{
   ownerState: DateRangePickerToolbarProps<any>;
-}>({
-  [`& .${pickersToolbarClasses.penIconButton}`]: {
-    position: 'relative',
-    top: 4,
-  },
-});
+}>({});
 
 const DateRangePickerToolbarContainer = styled('div', {
   name: 'MuiDateRangePickerToolbar',

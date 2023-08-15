@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { DataGridPro, GridEditInputCell } from '@mui/x-data-grid-pro';
+import { DataGrid, GridEditInputCell } from '@mui/x-data-grid';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   height: 400,
@@ -79,7 +79,7 @@ export default function ValidateServerNameGrid() {
 
   return (
     <StyledBox>
-      <DataGridPro
+      <DataGrid
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.id === 5}

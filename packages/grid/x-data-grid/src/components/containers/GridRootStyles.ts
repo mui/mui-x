@@ -127,6 +127,7 @@ export const GridRootStyles = styled('div', {
     '--unstable_DataGrid-overlayBackground': theme.vars
       ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
       : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
+    '--DataGrid-cellOffsetMultiplier': 2,
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',

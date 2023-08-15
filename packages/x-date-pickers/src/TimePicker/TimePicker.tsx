@@ -9,7 +9,7 @@ import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type TimePickerComponent = (<TDate>(
   props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const TimePicker = React.forwardRef(function TimePicker<TDate>(
   inProps: TimePickerProps<TDate>,

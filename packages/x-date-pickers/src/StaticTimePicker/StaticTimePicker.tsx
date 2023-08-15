@@ -11,7 +11,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 
 type StaticTimePickerComponent = (<TDate>(
   props: StaticTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   inProps: StaticTimePickerProps<TDate>,

@@ -1,6 +1,10 @@
+---
+productId: x-date-pickers
+---
+
 # Migration from the lab
 
-<p class="description">MUI date and time pickers are now available on MUI X!</p>
+<p class="description">MUI Date and Time Pickers are now available on MUI X!</p>
 
 ## Introduction
 
@@ -27,23 +31,38 @@ If you already have a license for `@mui/x-data-grid-pro`, you can use the same o
 
 #### Community Plan
 
-```sh
-// with npm
+<codeblock storageKey="package-manager">
+```bash npm
 npm install @mui/x-date-pickers
+```
 
-// with yarn
+```bash yarn
 yarn add @mui/x-date-pickers
 ```
 
+```bash pnpm
+pnpm add @mui/x-date-pickers
+```
+
+</codeblock>
+
 #### Pro Plan
 
-```sh
-// with npm
-npm install @mui/x-date-pickers-pro @mui/x-license-pro
+<codeblock storageKey="package-manager">
 
-// with yarn
+```bash npm
+npm install @mui/x-date-pickers-pro @mui/x-license-pro
+```
+
+```bash yarn
 yarn add @mui/x-date-pickers-pro @mui/x-license-pro
 ```
+
+```bash pnpm
+pnpm add @mui/x-date-pickers-pro @mui/x-license-pro
+```
+
+</codeblock>
 
 When you purchase a commercial license, you'll receive a license key by email.
 You must set the license key before rendering the first component.
@@ -62,7 +81,7 @@ We have prepared a codemod to help you migrate your codebase.
 
 You can either run it on a specific file, folder, or your entire codebase when choosing the `<path>` argument.
 
-```sh
+```bash
 npx @mui/codemod v5.0.0/date-pickers-moved-to-x <path>
 ```
 

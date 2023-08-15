@@ -206,7 +206,7 @@ export const serializeColumn = (column: GridColDef, columnsStyles: ColumnsStyles
     headerText: column.headerName ?? column.field,
     // Excel width must stay between 0 and 255 (https://support.microsoft.com/en-us/office/change-the-column-width-and-row-height-72f5e3cc-994d-43e8-ae58-9774a0905f46)
     // From the example of column width behavior (https://docs.microsoft.com/en-US/office/troubleshoot/excel/determine-column-widths#example-of-column-width-behavior)
-    // a value of 10 corresponds to 75px. This is an approximation, because column width depends on the the font-size
+    // a value of 10 corresponds to 75px. This is an approximation, because column width depends on the font-size
     width: Math.min(255, column.width ? column.width / 7.5 : 8.43),
     style: { ...(type && defaultColumnsStyles?.[type]), ...columnsStyles?.[field] },
   };

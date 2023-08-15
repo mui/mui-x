@@ -1,11 +1,31 @@
 {
   "props": {
-    "debounceMs": { "type": { "name": "number" }, "default": "500" },
-    "quickFilterFormatter": { "type": { "name": "func" } },
-    "quickFilterParser": { "type": { "name": "func" } }
+    "debounceMs": { "type": { "name": "number" }, "default": "150" },
+    "quickFilterFormatter": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(values: Array<any>) => string",
+        "describedArgs": ["values"],
+        "returned": "string"
+      }
+    },
+    "quickFilterParser": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(input: string) => Array<any>",
+        "describedArgs": ["input"],
+        "returned": "Array<any>"
+      }
+    }
   },
-  "slots": {},
+  "slots": [],
   "name": "GridToolbarQuickFilter",
+  "imports": [
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid/components';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid-pro';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/toolbar/GridToolbarQuickFilter.tsx",

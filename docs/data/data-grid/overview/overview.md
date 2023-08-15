@@ -9,23 +9,23 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/grid/
 
 <p class="description">A fast and extendable react data table and react data grid. It's a feature-rich component available in MIT or Commercial versions.</p>
 
-{{"component": "modules/components/ComponentLinkHeader.js"}}
-
 The component leverages the power of React and TypeScript, to provide the best UX while manipulating an unlimited set of data. It comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
+
+{{"component": "modules/components/ComponentLinkHeader.js"}}
 
 ## Overview
 
-> Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::info
+Visit the [installation guide](/x/react-data-grid/getting-started/#installation) to learn how to install the correct package version and dependencies.
+:::
 
-Data tables display information in a grid-like format of rows and columns.
-They organize information in a way that's easy to scan so that users can look for patterns and insights.
+The `DataGrid` presents information in a structured format of rows and columns. The data is displayed in a user-friendly, quick-to-scan and interactive way, enabling users to efficiently identify patterns, edit data, and gather insights.
 
-The data grid comes in two different versions:
+The component comes in three different versions. One available under MIT license and two available under commercial license.
 
-### MIT version
+### MIT version (Free forever)
 
-The first version is meant to simplify the [Table demo](/material-ui/react-table/#sorting-amp-selecting) with a clean abstraction.
-This abstraction also set constraints that allow the component to implement new features.
+The first version is meant as a stronger alternative to [data tables](/material-ui/react-table/#sorting-amp-selecting). It's a clean abstraction with basic features like editing, pagination, sorting and filtering single columns, and column groups.
 
 ```js
 import { DataGrid } from '@mui/x-data-grid';
@@ -33,15 +33,14 @@ import { DataGrid } from '@mui/x-data-grid';
 
 {{"demo": "DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### Commercial version
+### Commercial versions
 
-The commercial version is available in the form of two plans: Pro and Premium.
+The commercial versions are available in the form of two plans: Pro and Premium.
 
 #### Pro Plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-The Pro version extends the features available in the MIT version, by allowing to sort and filter multiple columns at the same time.
-It also brings new features, e.g. column groups, column pinning, tree data, row, and column reordering, etc.
-Finally, the Pro version leverages virtualization to handle bigger datasets.
+The Pro version includes and extends the features available in the MIT version to support more complex use cases. It adds new features like advanced filtering, column pinning, column and row reordering, support for tree data, and virtualization to handle bigger datasets.
+
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
 ```js
@@ -52,11 +51,13 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 
 #### Premium Plan [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-The Premium version contains all features from Pro, as well as features for analyzing large datasets.
-The features available on the initial release are row grouping and the ability to export to Excel files.
-Aggregation is coming right next.
-In the following demo, the rows are grouped by commodity name, but you can experiment grouping other columns in the column menu.
-And since you're here, you may want to export the different views of your data to an Excel file.
+The Premium version includes everything from Pro, as well as advanced features for data analysis and large datasets management, like row grouping with aggregation functions (e.g., Sum) and the ability to export to Excel files.
+
+You can visit the [showcase page](/x/react-data-grid/demo/) for a comprehensible overview of all features exclusive to this plan.
+
+The demo below groups rows by commodity name, and uses an aggregation function to calculate the sum of quantities for each group and in total (displayed on a summary row). You can experiment with grouping other columns in the columns' header menus.
+
+And since you're here, try exporting to Excel and copying and pasting data from-to Excel tables.
 
 ```js
 import { DataGridPremium } from '@mui/x-data-grid-premium';
@@ -72,7 +73,8 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- [Filtering](/x/react-data-grid/filtering/), [multi-filters](/x/react-data-grid/filtering/multi-filters/) <span class="plan-pro"></span>, and [header filters](/x/react-data-grid/filtering/header-filters/) <span class="plan-premium"></span>
+- [Column groups](/x/react-data-grid/column-groups/)
+- [Filtering](/x/react-data-grid/filtering/), [multi-filters](/x/react-data-grid/filtering/multi-filters/) <span class="plan-pro"></span>, and [header filters](/x/react-data-grid/filtering/header-filters/) <span class="plan-pro"></span>
 - [Pagination](/x/react-data-grid/pagination/)
 - [Row & Cell editing](/x/react-data-grid/editing/)
 - [Sorting](/x/react-data-grid/sorting/) and [multi-sorting](/x/react-data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
@@ -93,12 +95,13 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Accessible](/x/react-data-grid/accessibility/)
 - [Localization](/x/react-data-grid/localization/)
 
-### 🚧 Upcoming features
+### Upcoming features 🚧
 
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
 - Headless (hooks only)
 - [Pivoting](/x/react-data-grid/pivoting/) <span class="plan-premium"></span>
+- [Charts integration](/x/react-charts/) <span class="plan-premium"></span>
 
 You can find more details on, the [feature comparison](/x/react-data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui/mui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui/mui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
 

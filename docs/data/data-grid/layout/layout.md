@@ -3,15 +3,16 @@
 <p class="description">The data grid offers multiple layout modes.</p>
 
 :::error
-By default, the data grid has **no intrinsic dimensions**. It occupies the space its parent leaves.
+By default, the Data Grid has **no intrinsic dimensions**.
+Instead, it takes up the space given by its parent.
 The grid will raise an error in the console if its container has no intrinsic dimensions.
 :::
 
 ## Percentage dimensions
 
-When using % (percentage) for your height or width, you need to make sure the container you are putting the data grid into also has an intrinsic dimension.
-The browsers fit the element according to a percentage of the parent dimension.
-If the parent has no dimensions, then the % will be zero.
+When using percentages (%) for height or width, make sure that the Data Grid's parent container has intrinsic dimensions.
+Browsers adjust the element based on a percentage of its parent's size.
+If the parent has no size, the percentage will be zero.
 
 ## Predefined dimensions
 
@@ -21,8 +22,8 @@ You can predefine dimensions for the parent of the data grid.
 
 ## Auto height
 
-The `autoHeight` prop allows the data grid to size according to its content.
-This means that the number of rows will drive the height of the data grid and consequently, they will all be rendered and visible to the user at the same time.
+The `autoHeight` prop enables the Data Grid to adjust its size based on its content.
+This means that the Data Grid's height will be determined by the number of rows, ensuring that all rows will be visible to the user simultaneously.
 
 :::warning
 This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.

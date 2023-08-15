@@ -45,7 +45,7 @@ type Row = {
   description: string;
   plan: string;
   detailPage: string;
-  demo: JSX.Element;
+  demo: React.JSX.Element;
   newBadge?: boolean;
 };
 
@@ -185,7 +185,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 17,
-    name: 'Cell Selection',
+    name: 'Cell selection',
     description:
       'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
     plan: 'Premium',
@@ -432,7 +432,7 @@ export default function PopularFeaturesDemo() {
           detailPanelCollapseIcon: ArrowUp,
         }}
         slotProps={{
-          toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+          toolbar: { showQuickFilter: true },
         }}
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}

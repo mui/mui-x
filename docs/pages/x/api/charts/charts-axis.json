@@ -3,35 +3,58 @@
     "bottomAxis": {
       "type": {
         "name": "union",
-        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'bottom'<br>&#124;&nbsp;'top', stroke?: string, tickFontSize?: number, tickSize?: number }<br>&#124;&nbsp;string"
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
       "default": "xAxisIds[0] The id of the first provided axis"
     },
     "leftAxis": {
       "type": {
         "name": "union",
-        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'left'<br>&#124;&nbsp;'right', stroke?: string, tickFontSize?: number, tickSize?: number }<br>&#124;&nbsp;string"
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
       "default": "yAxisIds[0] The id of the first provided axis"
     },
     "rightAxis": {
       "type": {
         "name": "union",
-        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'left'<br>&#124;&nbsp;'right', stroke?: string, tickFontSize?: number, tickSize?: number }<br>&#124;&nbsp;string"
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
       "default": "null"
     },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "topAxis": {
       "type": {
         "name": "union",
-        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'bottom'<br>&#124;&nbsp;'top', stroke?: string, tickFontSize?: number, tickSize?: number }<br>&#124;&nbsp;string"
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
       },
       "default": "null"
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "ChartsAxis",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiChartsAxis" },
+  "imports": [
+    "import { ChartsAxis } from '@mui/x-charts/ChartsAxis';",
+    "import { ChartsAxis } from '@mui/x-charts';"
+  ],
+  "styles": {
+    "classes": [
+      "root",
+      "line",
+      "tickContainer",
+      "tick",
+      "tickLabel",
+      "label",
+      "directionX",
+      "directionY",
+      "top",
+      "bottom",
+      "left",
+      "right"
+    ],
+    "globalClasses": {},
+    "name": "MuiChartsAxis"
+  },
   "filename": "/packages/x-charts/src/ChartsAxis/ChartsAxis.tsx",
   "demos": "<ul></ul>",
   "packages": [{ "packageName": "@mui/x-charts", "componentName": "ChartsAxis" }]

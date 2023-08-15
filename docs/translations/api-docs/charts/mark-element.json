@@ -1,8 +1,12 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "dataIndex": "The index to the element in the series&#39; data array.",
-    "shape": "The shape of the marker."
+    "dataIndex": {
+      "description": "The index to the element in the series&#39; data array.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "shape": { "description": "The shape of the marker.", "deprecated": "", "typeDescriptions": {} }
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },

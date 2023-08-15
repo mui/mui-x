@@ -7,13 +7,13 @@ It's part of MUI X, an open-core extension of MUI, with advanced components.
 
 Install the package in your project directory with:
 
-```sh
+```bash
 npm install @mui/x-charts
 ```
 
 or
 
-```sh
+```bash
 yarn add @mui/x-charts
 ```
 

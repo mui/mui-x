@@ -135,7 +135,7 @@ Please update your npm package if you're using an earlier version.
 If this isn't possible, please contact sales@mui.com to request a compatible license key.
 :::
 
-### How to install the key
+## How to install the key
 
 First, make sure you have [any](#plans) of the commercial packages installed.
 They include a dependency called `@mui/x-license-pro`, used to validate the license.
@@ -153,17 +153,19 @@ LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
 You only need to install the key once in your application.
 
-### Where to install the key
+## Where to install the key
 
 You need to call `setLicenseKey()` before React renders the first component.
 
 The bundle size of `setLicenseKey()` is relatively small, it should be small enough for you to be able to call it in all your bundles, regardless of whether a commercial MUI X component is rendered or not.
 
-#### Next.js app
+## Next.js integration
 
-When using Next.js app, if have multiple options to install the license key.
+### Next.js App Router
 
-1. If your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) is already using `'use client'`, you can do:
+When using Next.js App Router, you have multiple options to install the license key.
+
+1. If your [`layout.js`](https://nextjs.org/docs/app/api-reference/file-conventions/layout) is using `'use client'`, you can set the license key in it:
 
 ```tsx
 'use client';
@@ -173,7 +175,7 @@ import { LicenseInfo } from '@mui/x-license-pro';
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 ```
 
-2. Otherwise (recommended), you can create a dummy component called `MuiXLicense.tsx`:
+2. Otherwise (**recommended**), you can create a dummy component called `MuiXLicense.tsx`:
 
 ```tsx
 'use client';
@@ -204,7 +206,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 }
 ```
 
-#### Next.js pages
+### Next.js pages
 
 When using Next.js pages, a great place to call `setLicenseKey` is in [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app).
 
@@ -219,25 +221,41 @@ export default function MyApp(props) {
 }
 ```
 
-### What is the key for?
+### Environment variable with Next.js
+
+:::info
+While we recommend hard-coding the license key in git, you can also use an environment variable to set the license key.
+This method is required if your codebase is "source-available" (to hide the license key), and can be preferred if you want to granularly share the license key with your licensed developers.
+:::
+
+The license key is validated on the server and client side so you must expose the environment variable to the browser.
+To do this, you need to prefix the environment variables with `NEXT_PUBLIC_` as explained in the [Next.js documentation](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser):
+
+```tsx
+import { LicenseInfo } from '@mui/x-license-pro';
+
+LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_X_LICENSE_KEY);
+```
+
+## What is the key for?
 
 The license key is meant to help you [stay compliant](https://mui.com/legal/mui-x-eula/#license-key) with the EULA of the commercial licenses.
 While each developer needs to be licensed, the license key is set once per project, where the components are used.
 
-### Security
+## License key security
 
 The license key is checked without making any network requests—it's designed to be public.
 It's expected that the license key will be exposed in a JavaScript bundle;
 we simply ask licensed users not to actively publicize their license key.
 
-### Validation failures
+## Validation failures
 
 If the validation of the license key fails, the component displays a watermark and provides a console warning in both development and production.
 End users can still use the component.
 
 Here are the different possible validation errors:
 
-#### 1. `Missing license key`
+### 1. `Missing license key`
 
 This error indicates that your license key is missing. You might not be allowed to use the software.
 The component will look something like this:
@@ -252,7 +270,7 @@ The component will look something like this:
 To solve the issue, you can check the [free trial conditions](#evaluation-trial-licenses), if you are eligible no actions are required.
 If you are not eligible to the free trial, you need to [purchase a license](https://mui.com/r/x-get-license/) or stop using the software immediately.
 
-#### 2. `Expired package version`
+### 2. `Expired package version`
 
 This error indicates that you have installed a version of the software released after the end of your license term.
 By default, commercial licenses provide access to new versions released during the first year after the purchase.
@@ -261,7 +279,7 @@ To solve the issue, you can [renew your license](https://mui.com/r/x-get-license
 
 For example, if you purchase a one-year license today, you will be able to update to any version—including major versions—released in the next twelve months.
 
-#### 3. `Expired license key`
+### 3. `Expired license key`
 
 This error indicates that your annual license key is expired.
 
@@ -270,7 +288,7 @@ However, when the term ends, you are not allowed to use the current or older ver
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
 
-#### 4. `License key plan mismatch`
+### 4. `License key plan mismatch`
 
 This error indicates that your use of MUI X is not compatible with the plan of your license key.
 The feature you are trying to use is not included in the plan of your license key.
@@ -279,7 +297,7 @@ This happens if you try to use `DataGridPremium` with a license key for the Pro 
 To solve the issue, you can [upgrade your plan](https://mui.com/r/x-get-license/?scope=premium) from Pro to Premium.
 Or if you didn\'t intend to use Premium features, you can replace the import of `@mui/x-data-grid-premium` with `@mui/x-data-grid-pro`.
 
-#### 5. `Invalid license key`
+### 5. `Invalid license key`
 
 This error indicates that your MUI X license key format isn't valid.
 It could be because the license key is missing a character or has a typo.
@@ -287,7 +305,7 @@ It could be because the license key is missing a character or has a typo.
 To solve the issue, you need to double check that `setLicenseKey()` is called with the right argument.
 Please check the [license key installation](#license-key-installation).
 
-#### 6. Invalid license key (`TypeError: extracting license expiry timestamp`)
+### 6. Invalid license key (`TypeError: extracting license expiry timestamp`)
 
 The following JavaScript exception indicates that you may be trying to validate the new license's key format on an older version of the npm package.
 

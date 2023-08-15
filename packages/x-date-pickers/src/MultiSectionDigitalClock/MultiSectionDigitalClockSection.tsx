@@ -108,7 +108,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 
 type MultiSectionDigitalClockSectionComponent = <TValue>(
   props: MultiSectionDigitalClockSectionProps<TValue> & React.RefAttributes<HTMLUListElement>,
-) => JSX.Element & { propTypes?: any };
+) => React.JSX.Element & { propTypes?: any };
 
 /**
  * @ignore - internal component.

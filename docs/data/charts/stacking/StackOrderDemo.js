@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
@@ -74,7 +73,7 @@ const xAxis = {
 
 const series = [
   { label: 'Car', data: car, stack: 'total' },
-  { label: 'Common Transportation', data: commonTransportation, stack: 'total' },
+  { label: 'Public T.', data: commonTransportation, stack: 'total' },
   { label: 'Motorcycle', data: motorcycle, stack: 'total' },
   { label: 'Walk', data: walking, stack: 'total' },
   { label: 'Bike', data: biking, stack: 'total' },
@@ -93,7 +92,7 @@ export default function StackOrderDemo() {
 
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
-    <Box>
+    <div>
       <Stack direction="row">
         <TextField
           sx={{ minWidth: 150, mr: 5 }}
@@ -120,15 +119,16 @@ export default function StackOrderDemo() {
           [`.${axisClasses.bottom}`]: {
             [`.${axisClasses.tickLabel}`]: {
               transform: 'rotate(45deg)',
-              alignmentBaseline: 'hanging',
+              dominantBaseline: 'hanging',
               textAnchor: 'start',
             },
             [`.${axisClasses.label}`]: {
               transform: 'translateY(15px)',
             },
           },
+          '--ChartsLegend-itemWidth': '110px',
         }}
       />
-    </Box>
+    </div>
   );
 }

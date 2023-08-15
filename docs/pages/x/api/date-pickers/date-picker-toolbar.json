@@ -1,6 +1,10 @@
 {
   "props": {
-    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
     "view": {
       "type": {
         "name": "enum",
@@ -13,8 +17,13 @@
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
-  "slots": {},
+  "slots": [],
   "name": "DatePickerToolbar",
+  "imports": [
+    "import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';",
+    "import { DatePickerToolbar } from '@mui/x-date-pickers';",
+    "import { DatePickerToolbar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",
   "demos": "<ul></ul>",

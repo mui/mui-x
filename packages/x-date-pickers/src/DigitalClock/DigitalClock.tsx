@@ -1,6 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import { useSlotProps } from '@mui/base/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
@@ -17,6 +18,7 @@ import { TimeView } from '../models';
 import { DIGITAL_CLOCK_VIEW_HEIGHT } from '../internals/constants/dimensions';
 import { useControlledValueWithTimezone } from '../internals/hooks/useValueWithTimezone';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { useClockReferenceDate } from '../internals/hooks/useClockReferenceDate';
 
 const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
@@ -79,7 +81,7 @@ const DigitalClockItem = styled(MenuItem, {
 
 type DigitalClockComponent = (<TDate>(
   props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends unknown>(
   inProps: DigitalClockProps<TDate>,
@@ -104,6 +106,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     slots,
     slotProps,
     value: valueProp,
+    defaultValue,
+    referenceDate: referenceDateProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
@@ -113,7 +117,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     shouldDisableClock,
     shouldDisableTime,
     onChange,
-    defaultValue,
     view: inView,
     openTo,
     onViewChange,
@@ -152,7 +155,20 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const classes = useUtilityClasses(ownerState);
 
   const ClockItem = slots?.digitalClockItem ?? components?.DigitalClockItem ?? DigitalClockItem;
-  const clockItemProps = slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem;
+  const clockItemProps = useSlotProps({
+    elementType: ClockItem,
+    externalSlotProps: slotProps?.digitalClockItem ?? componentsProps?.digitalClockItem,
+    ownerState: {},
+    className: classes.item,
+  });
+
+  const valueOrReferenceDate = useClockReferenceDate({
+    value,
+    referenceDate: referenceDateProp,
+    utils,
+    props,
+    timezone,
+  });
 
   const handleValueChange = useEventCallback((newValue: TDate | null) =>
     handleRawValueChange(newValue, 'finish'),
@@ -188,11 +204,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     // Subtracting the 4px of extra margin intended for the first visible section item
     containerRef.current.scrollTop = offsetTop - 4;
   });
-
-  const selectedTimeOrMidnight = React.useMemo(
-    () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
-    [value, now, utils],
-  );
 
   const isTimeDisabled = React.useCallback(
     (valueToCheck: TDate) => {
@@ -251,15 +262,14 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const timeOptions = React.useMemo(() => {
-    const startOfDay = utils.startOfDay(selectedTimeOrMidnight);
+    const startOfDay = utils.startOfDay(valueOrReferenceDate);
     return [
       startOfDay,
       ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
         utils.addMinutes(startOfDay, timeStep * (index + 1)),
       ),
-      utils.endOfDay(selectedTimeOrMidnight),
     ];
-  }, [selectedTimeOrMidnight, timeStep, utils]);
+  }, [valueOrReferenceDate, timeStep, utils]);
 
   return (
     <DigitalClockRoot
@@ -272,6 +282,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         autoFocusItem={autoFocus || !!focusedView}
         role="listbox"
         aria-label={localeText.timePickerToolbarTitle}
+        className={classes.list}
       >
         {timeOptions.map((option) => {
           if (skipDisabled && isTimeDisabled(option)) {
@@ -380,7 +391,7 @@ DigitalClock.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TDate
+   * @template TDate, TView
    * @param {TDate | null} value The new value.
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    * @param {TView | undefined} selectedView Indicates the view in which the selection has been made.
@@ -410,6 +421,11 @@ DigitalClock.propTypes = {
    * @default false
    */
   readOnly: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid time using the validation props, except callbacks such as `shouldDisableTime`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.

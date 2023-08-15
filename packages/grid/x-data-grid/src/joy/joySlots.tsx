@@ -185,7 +185,7 @@ const Switch = React.forwardRef<
         input: {
           ...inputProps,
           name,
-          onClick: onClick as JSX.IntrinsicElements['input']['onClick'],
+          onClick: onClick as React.JSX.IntrinsicElements['input']['onClick'],
           ref: inputRef,
         },
         thumb: {
@@ -344,9 +344,21 @@ const Pagination = React.forwardRef<
   const page = paginationModel.page <= lastPage ? paginationModel.page : lastPage;
   const pageSize = paginationModel.pageSize;
 
-  const pageSizeOptions = rootProps.pageSizeOptions?.includes(pageSize)
-    ? rootProps.pageSizeOptions
-    : [];
+  const isPageSizeIncludedInPageSizeOptions = () => {
+    for (let i = 0; i < rootProps.pageSizeOptions.length; i += 1) {
+      const option = rootProps.pageSizeOptions[i];
+      if (typeof option === 'number') {
+        if (option === pageSize) {
+          return true;
+        }
+      } else if (option.value === pageSize) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const pageSizeOptions = isPageSizeIncludedInPageSizeOptions() ? rootProps.pageSizeOptions : [];
 
   const handleChangeRowsPerPage: JoySelectProps<number>['onChange'] = (event, newValue) => {
     const newPageSize = Number(newValue);
@@ -366,10 +378,13 @@ const Pagination = React.forwardRef<
       <JoyFormControl orientation="horizontal" size="sm">
         <JoyFormLabel>Rows per page:</JoyFormLabel>
         <JoySelect<number> onChange={handleChangeRowsPerPage} value={pageSize}>
-          {pageSizeOptions.map((option) => {
+          {pageSizeOptions.map((option: number | { label: string; value: number }) => {
             return (
-              <Option value={option} key={option}>
-                {option}
+              <Option
+                value={typeof option !== 'number' && option.value ? option.value : option}
+                key={typeof option !== 'number' && option.label ? option.label : `${option}`}
+              >
+                {typeof option !== 'number' && option.label ? option.label : `${option}`}
               </Option>
             );
           })}

@@ -1,0 +1,46 @@
+{
+  "props": {
+    "bottomAxis": {
+      "type": {
+        "name": "union",
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
+      },
+      "default": "xAxisIds[0] The id of the first provided axis"
+    },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" }
+    },
+    "leftAxis": {
+      "type": {
+        "name": "union",
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
+      },
+      "default": "yAxisIds[0] The id of the first provided axis"
+    },
+    "rightAxis": {
+      "type": {
+        "name": "union",
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'left'<br>&#124;&nbsp;'right', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
+      },
+      "default": "null"
+    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "topAxis": {
+      "type": {
+        "name": "union",
+        "description": "{ axisId: string, classes?: object, disableLine?: bool, disableTicks?: bool, fill?: string, label?: string, labelFontSize?: number, position?: 'bottom'<br>&#124;&nbsp;'top', slotProps?: object, slots?: object, stroke?: string, tickFontSize?: number, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickSize?: number }<br>&#124;&nbsp;string"
+      },
+      "default": "null"
+    }
+  },
+  "slots": [],
+  "name": "PieChart",
+  "imports": [
+    "import { PieChart } from '@mui/x-charts/PieChart';",
+    "import { PieChart } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPieChart" },
+  "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "PieChart" }]
+}

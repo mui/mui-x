@@ -423,6 +423,15 @@ export const useFieldState = <
     setState((prev) => ({ ...prev, tempValueStrAndroid }));
 
   React.useEffect(() => {
+    const sections = getSectionsFromValue(state.value);
+    validateSections(sections, valueType);
+    setState((prevState) => ({
+      ...prevState,
+      sections,
+    }));
+  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
     let shouldUpdate = false;
     if (!valueManager.areValuesEqual(utils, state.value, valueFromTheOutside)) {
       shouldUpdate = true;
@@ -445,15 +454,6 @@ export const useFieldState = <
       }));
     }
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  React.useEffect(() => {
-    const sections = getSectionsFromValue(state.value);
-    validateSections(sections, valueType);
-    setState((prevState) => ({
-      ...prevState,
-      sections,
-    }));
-  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,

@@ -1128,6 +1128,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(virtualScroller.clientWidth).to.equal(initialVirtualScrollerWidth);
   });
 
+  // See https://github.com/mui/mui-x/issues/8689#issuecomment-1582616570
   it('should not add scrollbars when the parent container has fractional size', async function test() {
     if (/jsdom/.test(window.navigator.userAgent)) {
       // Need layouting
@@ -1145,5 +1146,68 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     expect(virtualScroller.scrollWidth - virtualScroller.clientWidth).to.equal(0);
     // It should not have a vertical scrollbar
     expect(virtualScroller.scrollHeight - virtualScroller.clientHeight).to.equal(0);
+  });
+
+  // See https://github.com/mui/mui-x/issues/9510
+  it('should not exceed maximum call stack size when the parent container has fractional width', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: '100%', width: 400.6 }}>
+        <DataGrid rows={[{ id: 1 }]} columns={[{ field: 'id', flex: 1 }]} />
+      </div>,
+    );
+  });
+
+  // See https://github.com/mui/mui-x/issues/9550
+  it('should not exceed maximum call stack size with duplicated flex fields', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    expect(() => {
+      render(
+        <div style={{ height: 200, width: 400 }}>
+          <DataGrid
+            rows={[{ id: 1 }]}
+            columns={[
+              { field: 'id', flex: 1 },
+              { field: 'id', flex: 1 },
+            ]}
+          />
+        </div>,
+      );
+    }).toErrorDev([
+      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+      'Warning: Encountered two children with the same key, `id`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.',
+    ]);
+  });
+
+  // See https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+  it('should not exceed maximum call stack size caused by floating point precision error', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+
+    render(
+      <div style={{ height: 'auto', width: 1584 }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[
+            { field: '1', flex: 1 },
+            { field: '2', flex: 1 },
+            { field: '3', flex: 1 },
+            { field: '4', flex: 1 },
+            { field: '5', flex: 1 },
+            { field: '6', flex: 1 },
+          ]}
+        />
+      </div>,
+    );
   });
 });

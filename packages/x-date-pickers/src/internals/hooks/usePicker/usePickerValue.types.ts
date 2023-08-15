@@ -9,9 +9,13 @@ import {
   TimezoneProps,
   MuiPickersAdapter,
   PickersTimezone,
+  PickerChangeHandlerContext,
 } from '../../../models';
 import { GetDefaultReferenceDateProps } from '../../utils/getDefaultReferenceDate';
-import { PickerShortcutChangeImportance } from '../../../PickersShortcuts';
+import {
+  PickerShortcutChangeImportance,
+  PickersShortcutsItemContext,
+} from '../../../PickersShortcuts';
 
 export interface PickerValueManager<TValue, TDate, TError> {
   /**
@@ -54,6 +58,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
    * @param {MuiPickersAdapter<TDate>} params.utils The adapter.
    * @param {number} params.granularity The granularity of the selection possible on this component.
    * @param {PickersTimezone} params.timezone The current timezone.
+   * @param {() => TDate} params.getTodayDate The reference date to use if no reference date is passed to the component.
    * @returns {TValue} The reference value to use for non-provided dates.
    */
   getInitialReferenceValue: (params: {
@@ -63,6 +68,7 @@ export interface PickerValueManager<TValue, TDate, TError> {
     utils: MuiPickersAdapter<TDate>;
     granularity: number;
     timezone: PickersTimezone;
+    getTodayDate?: () => TDate;
   }) => TValue;
   /**
    * Method parsing the input value to replace all invalid dates by `null`.
@@ -126,10 +132,6 @@ export interface PickerValueManager<TValue, TDate, TError> {
     timezone: PickersTimezone,
     value: TValue,
   ) => TValue;
-}
-
-export interface PickerChangeHandlerContext<TError> {
-  validationError: TError;
 }
 
 export type PickerSelectionState = 'partial' | 'shallow' | 'finish';
@@ -199,6 +201,8 @@ export type PickerValueUpdateAction<TValue, TError> =
       name: 'setValueFromShortcut';
       value: TValue;
       changeImportance: PickerShortcutChangeImportance;
+      // TODO v7: Make shortcut mandatory.
+      shortcut?: PickersShortcutsItemContext;
     };
 
 /**

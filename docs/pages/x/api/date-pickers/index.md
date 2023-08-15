@@ -1,6 +1,6 @@
 # Date and Time Pickers - API Reference
 
-<p class="description">This page contains an index to the most important APIs of the date pickers.</p>
+<p class="description">This page contains an index to the most important APIs of the Date and Time Pickers.</p>
 
 ## Components
 
@@ -70,4 +70,5 @@
 - [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs/)
 - [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton/)
 - [LocalizationProvider](/x/api/date-pickers/localization-provider/)
+- [PickersCalendarHeader](/x/api/date-pickers/pickers-calendar-header/)
 - [PickersDay](/x/api/date-pickers/pickers-day/)

@@ -1,6 +1,6 @@
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
-import { GridRowId } from '../../../models/gridRows';
+import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 
 export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
 export type GridQuickFilterValueResult = { [key: string]: boolean };
@@ -35,17 +35,20 @@ export interface GridFilterInitialState {
   filterModel?: GridFilterModel;
 }
 
+export interface GridAggregatedFilterItemApplierResult {
+  passingFilterItems: null | GridFilterItemResult;
+  passingQuickFilterValues: null | GridQuickFilterValueResult;
+}
+
 /**
  * @param {GridRowId} rowId The id of the row we want to filter.
  * @param {(filterItem: GridFilterItem) => boolean} shouldApplyItem An optional callback to allow the filtering engine to only apply some items.
  */
 export type GridAggregatedFilterItemApplier = (
-  rowId: GridRowId,
-  shouldApplyItem?: (field: string) => boolean,
-) => {
-  passingFilterItems: null | GridFilterItemResult;
-  passingQuickFilterValues: null | GridQuickFilterValueResult;
-};
+  row: GridValidRowModel,
+  shouldApplyItem: ((field: string) => boolean) | undefined,
+  result: GridAggregatedFilterItemApplierResult,
+) => void;
 
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;

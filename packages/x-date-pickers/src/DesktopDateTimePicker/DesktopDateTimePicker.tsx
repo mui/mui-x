@@ -19,7 +19,7 @@ import { PickersActionBarAction } from '../PickersActionBar';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
   inProps: DesktopDateTimePickerProps<TDate>,
@@ -109,7 +109,8 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     props,
     valueManager: singleItemValueManager,
     valueType: 'date-time',
-    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
     validator: validateDateTime,
   });
 

@@ -9,6 +9,9 @@ import {
   GridFilterItem,
   GridPreferencePanelsValue,
   GridToolbar,
+  GridFilterOperator,
+  GRID_STRING_COL_DEF,
+  getGridStringOperators,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -212,6 +215,33 @@ describe('<DataGrid /> - Filter', () => {
       });
       clock.runToLast();
       expect(getColumnValues(0)).to.deep.equal(['Puma']);
+    });
+  });
+
+  describe('prop: getRowId', () => {
+    it('works with filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [{ id: 0, field: 'brand', operator: 'contains', value: 'Nike' }],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
+    });
+
+    it('works with quick filter', () => {
+      render(
+        <TestCase
+          getRowId={(row) => row.brand}
+          filterModel={{
+            items: [],
+            quickFilterValues: ['Nike'],
+          }}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Nike']);
     });
   });
 
@@ -1216,6 +1246,171 @@ describe('<DataGrid /> - Filter', () => {
 
       expect(tooltip).toBeVisible();
       expect(tooltip.textContent).to.contain('"John" text string');
+    });
+  });
+
+  describe('v7 filter compatibility', () => {
+    const getRows = (operator: GridFilterOperator) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [{ field: 'country', operator: 'equals', value: 'UK' }],
+          }}
+          rows={[
+            { id: 0, country: 'Canada' },
+            { id: 1, country: 'Spain' },
+            { id: 2, country: 'UK' },
+          ]}
+          columns={[
+            {
+              field: 'country',
+              type: 'string',
+              filterOperators: [operator],
+            },
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    it('works with internal filters', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFn,
+        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFnV7,
+      };
+
+      expect(getRows(operator)).to.deep.equal(['UK']);
+    });
+
+    it('works with custom getApplyFilterFn', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: () => {
+          return (params): boolean => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyFilterFnV7: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFnV7,
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Canada']);
+    });
+
+    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: () => {
+          return (params): boolean => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyFilterFnV7: () => {
+          return (value): boolean => {
+            return value === 'Spain';
+          };
+        },
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Spain']);
+    });
+
+    it('works with custom getApplyFilterFnV7', () => {
+      const operator: GridFilterOperator = {
+        value: 'equals',
+        getApplyFilterFn: getGridStringOperators().find((o) => o.value === 'equals')!
+          .getApplyFilterFn,
+        getApplyFilterFnV7: () => {
+          return (value): boolean => {
+            return value === 'Spain';
+          };
+        },
+      };
+
+      expect(getRows(operator)).to.deep.equal(['Spain']);
+    });
+  });
+
+  describe('v7 quick filter compatibility', () => {
+    const getRows = (colDef: Partial<GridColDef>) => {
+      const { unmount } = render(
+        <TestCase
+          filterModel={{
+            items: [],
+            quickFilterValues: ['UK'],
+          }}
+          rows={[
+            { id: 0, country: 'Canada' },
+            { id: 1, country: 'Spain' },
+            { id: 2, country: 'UK' },
+          ]}
+          columns={[
+            {
+              field: 'country',
+              type: 'string',
+              ...colDef,
+            },
+          ]}
+        />,
+      );
+
+      const values = getColumnValues(0);
+      unmount();
+      return values;
+    };
+
+    it('works with internal filters', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['UK']);
+    });
+
+    it('works with custom getApplyFilterFn', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyQuickFilterFnV7: GRID_STRING_COL_DEF.getApplyQuickFilterFnV7,
+      };
+      expect(getRows(colDef)).to.deep.equal(['Canada']);
+    });
+
+    it('works with custom getApplyFilterFn and getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: () => {
+          return (params) => {
+            return params.value === 'Canada';
+          };
+        },
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          };
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
+    });
+
+    it('works with custom getApplyFilterFnV7', () => {
+      const colDef: Partial<GridColDef> = {
+        getApplyQuickFilterFn: GRID_STRING_COL_DEF.getApplyQuickFilterFn,
+        getApplyQuickFilterFnV7: () => {
+          return (value) => {
+            return value === 'Spain';
+          };
+        },
+      };
+      expect(getRows(colDef)).to.deep.equal(['Spain']);
     });
   });
 

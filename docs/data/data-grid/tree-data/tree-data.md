@@ -113,12 +113,14 @@ You can limit the sorting to the top-level rows with the `disableChildrenSorting
 > const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
 > ```
 
-## Children lazy-loading
+## Children lazy-loading 🚧
 
 :::warning
 This feature isn't implemented yet. It's coming.
 
 👍 Upvote [issue #3377](https://github.com/mui/mui-x/issues/3377) if you want to see it land faster.
+
+Don't hesitate to leave a comment on the same issue to influence what gets built. Especially if you already have a use case for this component, or if you are facing a pain point with your current solution.
 :::
 
 Alternatively, you can achieve a similar behavior by implementing this feature outside the component as shown below.

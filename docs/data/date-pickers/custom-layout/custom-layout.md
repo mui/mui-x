@@ -1,6 +1,6 @@
 ---
-product: date-pickers
-title: Date and Time pickers - Custom layout
+productId: x-date-pickers
+title: Date and Time Pickers - Custom layout
 components: PickersActionBar, PickersLayout
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'

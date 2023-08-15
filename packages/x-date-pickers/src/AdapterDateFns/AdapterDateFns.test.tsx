@@ -4,11 +4,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import {
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
 import enUS from 'date-fns/locale/en-US';
 import fr from 'date-fns/locale/fr';
 import de from 'date-fns/locale/de';

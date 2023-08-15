@@ -1,5 +1,4 @@
 ---
-product: charts
 title: Charts - Styling
 ---
 
@@ -17,7 +16,7 @@ Series accepts a property `color` which is the base color used to render its com
 <LineChart series={[{ ..., color: '#fdb462'}]} />
 ```
 
-{{"demo": "BasicColor.js", "bg": "inline"}}
+{{"demo": "BasicColor.js"}}
 
 ### Color palette
 
@@ -31,7 +30,7 @@ This prop takes an array of colors, or callback whose input is the theme's mode 
 
 The library includes three palettes.
 
-{{"demo": "MuiColorTemplate.js", "bg": "inline"}}
+{{"demo": "MuiColorTemplate.js"}}
 
 #### Custom palettes
 
@@ -40,7 +39,7 @@ Or any color manipulation library you like.
 
 Here is an example of the d3 Categorical color palette.
 
-{{"demo": "ColorTemplate.js", "bg": "inline"}}
+{{"demo": "ColorTemplate.js"}}
 
 ## Styling
 

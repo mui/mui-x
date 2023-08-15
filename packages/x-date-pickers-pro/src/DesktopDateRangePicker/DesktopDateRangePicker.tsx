@@ -2,18 +2,18 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
-import { rangeValueManager } from '../internal/utils/valueManagers';
+import { rangeValueManager } from '../internals/utils/valueManagers';
 import { DesktopDateRangePickerProps } from './DesktopDateRangePicker.types';
 import { useDateRangePickerDefaultizedProps } from '../DateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
-import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
-import { validateDateRange } from '../internal/utils/validation/validateDateRange';
-import { DateRange } from '../internal/models';
+import { useDesktopRangePicker } from '../internals/hooks/useDesktopRangePicker';
+import { validateDateRange } from '../internals/utils/validation/validateDateRange';
+import { DateRange } from '../internals/models';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<TDate>(
   inProps: DesktopDateRangePickerProps<TDate>,

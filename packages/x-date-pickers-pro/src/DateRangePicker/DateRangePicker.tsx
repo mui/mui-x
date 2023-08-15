@@ -8,7 +8,7 @@ import { DateRangePickerProps } from './DateRangePicker.types';
 
 type DatePickerComponent = (<TDate>(
   props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   inProps: DateRangePickerProps<TDate>,

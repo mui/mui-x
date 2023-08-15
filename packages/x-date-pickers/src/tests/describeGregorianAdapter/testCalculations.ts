@@ -1,8 +1,19 @@
 import { expect } from 'chai';
-import { PickersTimezone } from '@mui/x-date-pickers/models';
-import { getDateOffset } from 'test/utils/pickers-utils';
+import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
+import { getDateOffset } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
+
+/**
+ * To check if the date has the right offset even after changing it's date parts,
+ * we convert it to a different timezone that always has the same offset,
+ * then we check that both dates have the same hour value.
+ */
+// We change to
+const expectSameTimeInMonacoTZ = <TDate>(adapter: MuiPickersAdapter<TDate>, value: TDate) => {
+  const valueInMonacoTz = adapter.setTimezone(value, 'Europe/Monaco');
+  expect(adapter.getHours(value)).to.equal(adapter.getHours(valueInMonacoTz));
+};
 
 export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   adapter,
@@ -12,6 +23,9 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
   getLocaleFromDate,
 }) => {
   const testDateIso = adapter.date(TEST_DATE_ISO_STRING)!;
+  const testDateLastNonDSTDay = adapterTZ.isTimezoneCompatible
+    ? adapterTZ.dateWithTimezone('2022-03-27', 'Europe/Paris')!
+    : adapterTZ.date('2022-03-27')!;
   const testDateLocale = adapter.date(TEST_DATE_LOCALE_STRING)!;
 
   describe('Method: date', () => {
@@ -733,10 +747,21 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.endOfYear(testDateLocale)).toEqualDateTime(expected);
   });
 
-  it('Method: endOfMonth', () => {
-    const expected = '2018-10-31T23:59:59.999Z';
-    expect(adapter.endOfMonth(testDateIso)).toEqualDateTime(expected);
-    expect(adapter.endOfMonth(testDateLocale)).toEqualDateTime(expected);
+  describe('Method: endOfMonth', () => {
+    it('should handle basic usecases', () => {
+      const expected = '2018-10-31T23:59:59.999Z';
+      expect(adapter.endOfMonth(testDateIso)).toEqualDateTime(expected);
+      expect(adapter.endOfMonth(testDateLocale)).toEqualDateTime(expected);
+    });
+
+    it('should update the offset when entering DST', function test() {
+      if (!adapterTZ.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.endOfMonth(testDateLastNonDSTDay));
+    });
   });
 
   it('Method: endOfWeek', () => {
@@ -757,20 +782,53 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     expect(adapter.addYears(testDateIso, -2)).toEqualDateTime('2016-10-30T11:44:00.000Z');
   });
 
-  it('Method: addMonths', () => {
-    expect(adapter.addMonths(testDateIso, 2)).toEqualDateTime('2018-12-30T11:44:00.000Z');
-    expect(adapter.addMonths(testDateIso, -2)).toEqualDateTime('2018-08-30T11:44:00.000Z');
-    expect(adapter.addMonths(testDateIso, 3)).toEqualDateTime('2019-01-30T11:44:00.000Z');
+  describe('Method: addMonths', () => {
+    it('should handle basic usecases', () => {
+      expect(adapter.addMonths(testDateIso, 2)).toEqualDateTime('2018-12-30T11:44:00.000Z');
+      expect(adapter.addMonths(testDateIso, -2)).toEqualDateTime('2018-08-30T11:44:00.000Z');
+      expect(adapter.addMonths(testDateIso, 3)).toEqualDateTime('2019-01-30T11:44:00.000Z');
+    });
+
+    it('should update the offset when entering DST', function test() {
+      if (!adapterTZ.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.addMonths(testDateLastNonDSTDay, 1));
+    });
   });
 
-  it('Method: addWeeks', () => {
-    expect(adapter.addWeeks(testDateIso, 2)).toEqualDateTime('2018-11-13T11:44:00.000Z');
-    expect(adapter.addWeeks(testDateIso, -2)).toEqualDateTime('2018-10-16T11:44:00.000Z');
+  describe('Method: addWeeks', () => {
+    it('should handle basic usecases', () => {
+      expect(adapter.addWeeks(testDateIso, 2)).toEqualDateTime('2018-11-13T11:44:00.000Z');
+      expect(adapter.addWeeks(testDateIso, -2)).toEqualDateTime('2018-10-16T11:44:00.000Z');
+    });
+
+    it('should update the offset when entering DST', function test() {
+      if (!adapterTZ.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.addWeeks(testDateLastNonDSTDay, 1));
+    });
   });
 
-  it('Method: addDays', () => {
-    expect(adapter.addDays(testDateIso, 2)).toEqualDateTime('2018-11-01T11:44:00.000Z');
-    expect(adapter.addDays(testDateIso, -2)).toEqualDateTime('2018-10-28T11:44:00.000Z');
+  describe('Method: addWeeks', () => {
+    it('should handle basic usecases', () => {
+      expect(adapter.addDays(testDateIso, 2)).toEqualDateTime('2018-11-01T11:44:00.000Z');
+      expect(adapter.addDays(testDateIso, -2)).toEqualDateTime('2018-10-28T11:44:00.000Z');
+    });
+
+    it('should update the offset when entering DST', function test() {
+      if (!adapterTZ.isTimezoneCompatible) {
+        this.skip();
+      }
+
+      expectSameTimeInMonacoTZ(adapterTZ, testDateLastNonDSTDay);
+      expectSameTimeInMonacoTZ(adapterTZ, adapterTZ.addDays(testDateLastNonDSTDay, 1));
+    });
   });
 
   it('Method: addHours', () => {
@@ -913,7 +971,6 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       const referenceDate = adapterTZ.dateWithTimezone('2022-03-17', 'Europe/Paris')!;
       const weekArray = adapterTZ.getWeekArray(referenceDate);
       let expectedDate = adapter.startOfWeek(adapter.startOfMonth(referenceDate));
-      const lastNonDSTDay = adapterTZ.dateWithTimezone('2022-03-27', 'Europe/Paris')!;
 
       expect(weekArray).to.have.length(5);
       weekArray.forEach((week) => {
@@ -923,7 +980,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
           expectedDate = adapterTZ.addDays(expectedDate, 1);
 
           expect(getDateOffset(adapterTZ, day)).to.equal(
-            adapterTZ.isAfter(day, lastNonDSTDay) ? 120 : 60,
+            adapterTZ.isAfter(day, testDateLastNonDSTDay) ? 120 : 60,
           );
         });
       });

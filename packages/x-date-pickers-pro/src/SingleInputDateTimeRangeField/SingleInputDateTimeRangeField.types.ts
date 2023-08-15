@@ -6,7 +6,7 @@ import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
-} from '../internal/models';
+} from '../internals/models';
 
 export interface UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
   props: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>;

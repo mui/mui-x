@@ -1,8 +1,23 @@
 {
   "props": {
-    "applyFilterChanges": { "type": { "name": "func" }, "required": true },
-    "applyMultiFilterOperatorChanges": { "type": { "name": "func" }, "required": true },
-    "deleteFilter": { "type": { "name": "func" }, "required": true },
+    "applyFilterChanges": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(item: GridFilterItem) => void", "describedArgs": ["item"] }
+    },
+    "applyMultiFilterOperatorChanges": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": {
+        "type": "function(operator: GridLogicOperator) => void",
+        "describedArgs": ["operator"]
+      }
+    },
+    "deleteFilter": {
+      "type": { "name": "func" },
+      "required": true,
+      "signature": { "type": "function(item: GridFilterItem) => void", "describedArgs": ["item"] }
+    },
     "hasMultipleFilters": { "type": { "name": "bool" }, "required": true },
     "item": {
       "type": {
@@ -15,7 +30,13 @@
     "columnsSort": { "type": { "name": "enum", "description": "'asc'<br>&#124;&nbsp;'desc'" } },
     "deleteIconProps": { "type": { "name": "any" }, "default": "{}" },
     "disableMultiFilterOperator": { "type": { "name": "bool" } },
-    "filterColumns": { "type": { "name": "func" } },
+    "filterColumns": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(args: FilterColumnsArgs) => void",
+        "describedArgs": ["args"]
+      }
+    },
     "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "logicOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
     "logicOperators": {
@@ -29,8 +50,14 @@
     "showMultiFilterOperators": { "type": { "name": "bool" } },
     "valueInputProps": { "type": { "name": "any" }, "default": "{}" }
   },
-  "slots": {},
+  "slots": [],
   "name": "GridFilterForm",
+  "imports": [
+    "import { GridFilterForm } from '@mui/x-data-grid/components';",
+    "import { GridFilterForm } from '@mui/x-data-grid';",
+    "import { GridFilterForm } from '@mui/x-data-grid-pro';",
+    "import { GridFilterForm } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",

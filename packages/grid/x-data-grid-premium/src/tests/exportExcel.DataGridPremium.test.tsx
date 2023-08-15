@@ -12,6 +12,7 @@ import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils
 import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import Excel from 'exceljs';
+import { spyApi } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -365,7 +366,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
     it('should not call getDataAsExcel', async () => {
       render(<TestCaseExcelExport />);
-      const getDataAsExcelSpy = spy(apiRef.current, 'getDataAsExcel');
+      const getDataAsExcelSpy = spyApi(apiRef.current, 'getDataAsExcel');
       await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
       expect(getDataAsExcelSpy.calledOnce).to.equal(false);
     });

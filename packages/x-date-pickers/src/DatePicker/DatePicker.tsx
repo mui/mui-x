@@ -9,7 +9,7 @@ import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DatePickerComponent = (<TDate>(
   props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DatePicker = React.forwardRef(function DatePicker<TDate>(
   inProps: DatePickerProps<TDate>,
