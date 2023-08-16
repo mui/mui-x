@@ -9,10 +9,10 @@ const androidVersion =
   mobileVersionMatches && mobileVersionMatches[1] ? parseInt(mobileVersionMatches[1], 10) : null;
 const iOSVersion =
   mobileVersionMatches && mobileVersionMatches[2] ? parseInt(mobileVersionMatches[2], 10) : null;
-export const defaultReduceAnimations =
+export const slowAnimationDevices =
   (androidVersion && androidVersion < 10) || (iOSVersion && iOSVersion < 13) || false;
 
 export const useDefaultReduceAnimations = () => {
   const prefersReduced = useMediaQuery(PREFERS_REDUCED_MOTION, { defaultMatches: false });
-  return prefersReduced || defaultReduceAnimations;
+  return prefersReduced || slowAnimationDevices;
 };
