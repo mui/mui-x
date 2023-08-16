@@ -1,6 +1,6 @@
 {
   "props": {
-    "debounceMs": { "type": { "name": "number" }, "default": "500" },
+    "debounceMs": { "type": { "name": "number" }, "default": "150" },
     "quickFilterFormatter": {
       "type": { "name": "func" },
       "signature": {

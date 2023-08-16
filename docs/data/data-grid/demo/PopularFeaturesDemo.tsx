@@ -432,7 +432,7 @@ export default function PopularFeaturesDemo() {
           detailPanelCollapseIcon: ArrowUp,
         }}
         slotProps={{
-          toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+          toolbar: { showQuickFilter: true },
         }}
         getDetailPanelContent={getDetailPanelContent}
         getDetailPanelHeight={getDetailPanelHeight}

@@ -231,6 +231,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: number;
+  /**
    * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */

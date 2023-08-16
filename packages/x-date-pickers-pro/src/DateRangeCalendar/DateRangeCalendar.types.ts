@@ -77,8 +77,8 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   readOnly?: boolean;
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations?: boolean;
   /**
