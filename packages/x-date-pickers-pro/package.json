@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "6.11.1",
+  "version": "6.11.2",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -43,7 +43,7 @@
   "dependencies": {
     "@babel/runtime": "^7.22.6",
     "@mui/utils": "^5.14.3",
-    "@mui/x-date-pickers": "6.11.1",
+    "@mui/x-date-pickers": "6.11.2",
     "@mui/x-license-pro": "6.10.2",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",
