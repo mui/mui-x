@@ -92,12 +92,12 @@ const esESGrid: Partial<GridLocaleText> = {
   headerFilterOperatorIsEmpty: 'Esta vacío',
   headerFilterOperatorIsNotEmpty: 'No esta vacío',
   headerFilterOperatorIsAnyOf: 'Es cualquiera de',
-  'headerFilterOperator=': 'es igual a',
-  'headerFilterOperator!=': 'es diferente a',
-  'headerFilterOperator>': 'es mayor que',
-  'headerFilterOperator>=': 'es mayor o igual que',
-  'headerFilterOperator<': 'es menor que',
-  'headerFilterOperator<=': 'es menor o igual que',
+  'headerFilterOperator=': 'Es igual a',
+  'headerFilterOperator!=': 'Es diferente a',
+  'headerFilterOperator>': 'Es mayor que',
+  'headerFilterOperator>=': 'Es mayor o igual que',
+  'headerFilterOperator<': 'Es menor que',
+  'headerFilterOperator<=': 'Es menor o igual que',
 
   // Filter values text
   filterValueAny: 'cualquiera',
