@@ -56,7 +56,7 @@ function buildPrintWindow(title?: string): HTMLIFrameElement {
  */
 export const useGridPrintExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight' | 'rowCount'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
