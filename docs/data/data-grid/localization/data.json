@@ -195,7 +195,7 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 25,
+    "missingKeysCount": 0,
     "totalKeysCount": 119,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/esES.ts"
   },
