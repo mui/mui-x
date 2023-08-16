@@ -120,7 +120,7 @@ export const useGridRows = (
       }
       return row.id;
     },
-    [apiRef, getRowIdProp],
+    [getRowIdProp],
   );
 
   const lookup = React.useMemo(
