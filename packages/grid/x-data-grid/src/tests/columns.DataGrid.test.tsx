@@ -2,11 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { DataGrid, DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import {
-  getCell,
-  getColumnHeaderCell,
-  getColumnHeadersTextContent,
-} from '../../../../../test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

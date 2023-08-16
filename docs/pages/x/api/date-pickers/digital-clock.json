@@ -2,7 +2,7 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -74,7 +74,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timeStep": { "type": { "name": "number" }, "default": "30" },
     "timezone": {
@@ -85,13 +85,20 @@
     "view": { "type": { "name": "enum", "description": "'hours'" } },
     "views": { "type": { "name": "arrayOf", "description": "Array&lt;'hours'&gt;" } }
   },
-  "slots": {
-    "digitalClockItem": {
-      "default": "MenuItem from '@mui/material'",
-      "type": { "name": "elementType" }
+  "slots": [
+    {
+      "class": null,
+      "name": "digitalClockItem",
+      "description": "Component responsible for rendering a single digital clock item.",
+      "default": "MenuItem from '@mui/material'"
     }
-  },
+  ],
   "name": "DigitalClock",
+  "imports": [
+    "import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';",
+    "import { DigitalClock } from '@mui/x-date-pickers';",
+    "import { DigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "list", "item"], "globalClasses": {}, "name": "MuiDigitalClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

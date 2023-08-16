@@ -4,14 +4,16 @@ import { TransitionProps } from '@mui/material/transitions';
 import { SxProps } from '@mui/system';
 import { TreeItemContentProps } from './TreeItemContent';
 import { TreeItemClasses } from './treeItemClasses';
-import { StandardProps } from '../internals/models';
 
-export interface TreeItemProps
-  extends StandardProps<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
+export interface TreeItemProps extends Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   /**
    * The content of the component.
    */
   children?: React.ReactNode;
+  /**
+   * className applied to the root element.
+   */
+  className?: string;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -26,7 +28,7 @@ export interface TreeItemProps
    */
   ContentComponent?: React.JSXElementConstructor<TreeItemContentProps>;
   /**
-   * Props applied to ContentComponent
+   * Props applied to ContentComponent.
    */
   ContentProps?: React.HTMLAttributes<HTMLElement>;
   /**
@@ -35,7 +37,7 @@ export interface TreeItemProps
    */
   disabled?: boolean;
   /**
-   * The icon displayed next to a end node.
+   * The icon displayed next to an end node.
    */
   endIcon?: React.ReactNode;
   /**

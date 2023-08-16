@@ -6,11 +6,11 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
   createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-  getTextbox,
   wrapPickerMount,
-} from 'test/utils/pickers-utils';
+  expectInputValue,
+  expectInputPlaceholder,
+  getTextbox,
+} from 'test/utils/pickers';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
 describe('<DateTimeField /> - Describes', () => {

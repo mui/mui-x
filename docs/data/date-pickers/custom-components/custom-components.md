@@ -40,50 +40,55 @@ To modify components position, have a look at the [custom layout](/x/react-date-
 ### Recommended usage
 
 :::success
-Remember to pass a reference to the component instead of an inline render function and define it outside of the main component.
-This ensures that the component is not re-rendered on every update.
+Remember to pass a reference to the component instead of an inline render function and define it outside the main component.
+This ensures that the component is not remounted on every update.
 :::
 
-This code is buggy because it will render a new input after each keystroke, leading to a loss of focus.
+The first two examples below are buggy because the toolbar will remount after each keystroke, leading to a loss of focus.
 
 ```jsx
+// ❌ The `toolbar` slot is re-defined each time the parent component renders,
+// causing the component to remount.
 function MyApp() {
-  const [name, setName] = React.useState('');
-
-  // This component gets redefined each time `name` is updated ❌
-  const CustomActionBar = () => (
-    <input value={name} onChange={(event) => setName(event.target.value)} />
-  );
   return (
     <DatePicker
       slots={{
-        actionBar: CustomActionBar,
-        // This component gets re-rendered each time the parent component updates ❌
-        toolbar: () => <input />,
+        toolbar: () => (
+          <input value={name} onChange={(event) => setName(event.target.value)} />
+        ),
       }}
     />
   );
 }
 ```
 
-This one is correct since it's always the same input with different props.
+```jsx
+// ❌ The `toolbar` slot is re-defined each time `name` is updated,
+// causing the component to remount.
+function MyApp() {
+  const [name, setName] = React.useState('');
+
+  const CustomToolbar = React.useCallback(
+    () => <input value={name} onChange={(event) => setName(event.target.value)} />,
+    [name],
+  );
+
+  return <DatePicker slots={{ toolbar: CustomToolbar }} />;
+}
+```
 
 ```jsx
-// These components are defined only once ✅
+// ✅ The `toolbar` slot is defined only once, it will never remount.
 const CustomActionBar = ({ name, setName }) => (
   <input value={name} onChange={(event) => setName(event.target.value)} />
 );
-const CustomToolbar = () => <input />;
 
 function MyApp() {
   const [name, setName] = React.useState('');
   return (
     <DatePicker
-      slots={{
-        actionBar: CustomActionBar,
-        toolbar: CustomToolbar,
-      }}
-      slotProps={{ actionBar: { name, setName } }}
+      slots={{ toolbar: CustomToolbar }}
+      slotProps={{ toolbar: { name, setName } }}
     />
   );
 }

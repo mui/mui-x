@@ -203,7 +203,10 @@ export const wrapColumnWithAggregationValue = ({
     field: string,
   ): GridAggregationLookup[GridRowId][string] | null => {
     let cellAggregationPosition: GridAggregationPosition | null = null;
-    const rowNode = apiRef.current.getRowNode(id)!;
+    const rowNode = apiRef.current.getRowNode(id);
+    if (!rowNode) {
+      return null;
+    }
 
     if (rowNode.type === 'group') {
       cellAggregationPosition = 'inline';

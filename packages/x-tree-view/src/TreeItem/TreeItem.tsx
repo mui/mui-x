@@ -12,7 +12,7 @@ import { TreeViewContext } from '../TreeView/TreeViewContext';
 import { DescendantProvider, TreeItemDescendant, useDescendant } from '../TreeView/descendants';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
-import { TreeItemOwnerState, TreeItemProps } from './TreeItem.interface';
+import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -373,6 +373,10 @@ TreeItem.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * className applied to the root element.
+   */
+  className: PropTypes.string,
+  /**
    * The icon used to collapse the node.
    */
   collapseIcon: PropTypes.node,
@@ -382,7 +386,7 @@ TreeItem.propTypes = {
    */
   ContentComponent: elementTypeAcceptingRef,
   /**
-   * Props applied to ContentComponent
+   * Props applied to ContentComponent.
    */
   ContentProps: PropTypes.object,
   /**
@@ -391,7 +395,7 @@ TreeItem.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * The icon displayed next to a end node.
+   * The icon displayed next to an end node.
    */
   endIcon: PropTypes.node,
   /**

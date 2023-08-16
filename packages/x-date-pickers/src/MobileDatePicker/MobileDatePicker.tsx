@@ -63,7 +63,8 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
-    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
     validator: validateDate,
   });
 
@@ -277,7 +278,7 @@ MobileDatePicker.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
-   * @default true when `navigator.userAgent` matches Android <10 or iOS <13
+   * @default true when `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
   /**

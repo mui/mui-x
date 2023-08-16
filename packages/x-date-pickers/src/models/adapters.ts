@@ -742,6 +742,7 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
   getYearRange(start: TDate, end: TDate): TDate[];
   /**
    * Allow to customize how the "am"` and "pm" strings are rendered.
+   * @deprecated Use `utils.format(utils.setHours(utils.date()!, meridiem === 'am' ? 2 : 14), 'meridiem')` instead.
    * @param {"am" | "pm"} meridiem The string to render.
    * @return {string} The formatted string.
    */

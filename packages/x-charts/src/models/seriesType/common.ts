@@ -1,4 +1,4 @@
-import type { HighlightScope } from '@mui/x-charts/context/HighlightProvider';
+import type { HighlightScope } from '../../context/HighlightProvider';
 import type { StackOffset, StackOrder } from '../../internals/stackSeries';
 
 export type CommonSeriesType<TValue> = {

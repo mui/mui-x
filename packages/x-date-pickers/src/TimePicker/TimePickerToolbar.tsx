@@ -15,6 +15,7 @@ import {
   TimePickerToolbarClasses,
 } from './timePickerToolbarClasses';
 import { TimeViewWithMeridiem } from '../internals/models';
+import { formatMeridiem } from '../internals/utils/date-utils';
 
 export interface TimePickerToolbarProps<TDate>
   extends BaseToolbarProps<TDate | null, TimeViewWithMeridiem> {
@@ -232,7 +233,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             data-mui-test="toolbar-am-btn"
             selected={meridiemMode === 'am'}
             typographyClassName={classes.ampmLabel}
-            value={utils.getMeridiemText('am')}
+            value={formatMeridiem(utils, 'am')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
             disabled={disabled}
           />
@@ -242,7 +243,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
             data-mui-test="toolbar-pm-btn"
             selected={meridiemMode === 'pm'}
             typographyClassName={classes.ampmLabel}
-            value={utils.getMeridiemText('pm')}
+            value={formatMeridiem(utils, 'pm')}
             onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
             disabled={disabled}
           />

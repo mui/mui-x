@@ -140,13 +140,6 @@ export { buildDeprecatedPropsWarning, buildWarning } from './utils/warning';
 export { uncapitalizeObjectKeys } from './utils/slots-migration';
 export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
 
-export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
-export type {
-  ExportedCalendarHeaderProps,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
-} from '../DateCalendar/PickersCalendarHeader';
-
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {
   DayCalendarProps,

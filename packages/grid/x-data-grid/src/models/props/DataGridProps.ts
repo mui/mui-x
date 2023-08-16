@@ -44,7 +44,7 @@ export interface GridExperimentalFeatures {
    */
   warnIfFocusStateIsNotSynced: boolean;
   /**
-   * Enables accessibility improvements that will be enabled by default in V7.
+   * Enables accessibility improvements that will be enabled by default in v7.
    * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
    * @default false
    */
@@ -230,6 +230,11 @@ export interface DataGridPropsWithDefaultValues {
    * @default "client"
    */
   filterMode: GridFeatureMode;
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: number;
   /**
    * Sets the height in pixel of the column headers in the grid.
    * @default 56

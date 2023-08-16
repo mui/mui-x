@@ -1,7 +1,8 @@
 {
   "props": {
     "children": { "type": { "name": "node" } },
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
+    "className": { "type": { "name": "string" } },
     "defaultCollapseIcon": { "type": { "name": "node" } },
     "defaultEndIcon": { "type": { "name": "node" } },
     "defaultExpanded": {
@@ -48,11 +49,15 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "TreeView",
+  "imports": [
+    "import { TreeView } from '@mui/x-tree-view/TreeView';",
+    "import { TreeView } from '@mui/x-tree-view';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiTreeView" },
   "spread": true,
   "forwardsRefTo": "HTMLUListElement",

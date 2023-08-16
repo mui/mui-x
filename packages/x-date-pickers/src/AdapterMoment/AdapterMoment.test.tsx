@@ -7,11 +7,7 @@ import { AdapterFormats } from '@mui/x-date-pickers/models';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
 import 'moment/locale/de';
 import 'moment/locale/fr';
 import 'moment/locale/ko';

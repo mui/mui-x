@@ -112,7 +112,7 @@
     },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "true when `navigator.userAgent` matches Android <10 or iOS <13"
+      "default": "true when `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -179,7 +179,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -209,26 +209,120 @@
       "default": "3"
     }
   },
-  "slots": {
-    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "day": { "default": "PickersDay", "type": { "name": "elementType" } },
-    "dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
-    "field": { "type": { "name": "elementType" } },
-    "layout": { "type": { "name": "elementType" } },
-    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "mobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
-    "mobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
-    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "switchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "switchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } },
-    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
-    "toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
-  },
+  "slots": [
+    {
+      "class": null,
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
+    },
+    {
+      "class": null,
+      "name": "day",
+      "description": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+      "default": "PickersDay"
+    },
+    {
+      "class": null,
+      "name": "dialog",
+      "description": "Custom component for the dialog inside which the views are rendered on mobile.",
+      "default": "PickersModalDialogRoot"
+    },
+    {
+      "class": null,
+      "name": "field",
+      "description": "Component used to enter the date with the keyboard."
+    },
+    {
+      "class": null,
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+    },
+    {
+      "class": null,
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft"
+    },
+    {
+      "class": null,
+      "name": "mobilePaper",
+      "description": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
+      "default": "Paper from '@mui/material'."
+    },
+    {
+      "class": null,
+      "name": "mobileTransition",
+      "description": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
+      "default": "Fade from '@mui/material'."
+    },
+    {
+      "class": null,
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight"
+    },
+    {
+      "class": null,
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts"
+    },
+    {
+      "class": null,
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+      "default": "ArrowDropDown"
+    },
+    {
+      "class": null,
+      "name": "tabs",
+      "description": "Tabs enabling toggling between date and time pickers.",
+      "default": "DateTimePickerTabs"
+    },
+    {
+      "class": null,
+      "name": "textField",
+      "description": "Form control with an input to render the value inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "default": "TextField from '@mui/material'"
+    },
+    {
+      "class": null,
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DateTimePickerToolbar"
+    }
+  ],
   "name": "MobileDateTimePicker",
+  "imports": [
+    "import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';",
+    "import { MobileDateTimePicker } from '@mui/x-date-pickers';",
+    "import { MobileDateTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/MobileDateTimePicker/MobileDateTimePicker.tsx",
   "inheritance": null,

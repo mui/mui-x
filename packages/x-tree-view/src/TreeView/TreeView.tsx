@@ -892,6 +892,10 @@ TreeView.propTypes = {
    */
   classes: PropTypes.object,
   /**
+   * className applied to the root element.
+   */
+  className: PropTypes.string,
+  /**
    * The default icon used to collapse the node.
    */
   defaultCollapseIcon: PropTypes.node,
@@ -901,7 +905,8 @@ TreeView.propTypes = {
    */
   defaultEndIcon: PropTypes.node,
   /**
-   * Expanded node ids. (Uncontrolled)
+   * Expanded node ids.
+   * Used when the item's expansion are not controlled.
    * @default []
    */
   defaultExpanded: PropTypes.arrayOf(PropTypes.string),
@@ -931,7 +936,8 @@ TreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
-   * Expanded node ids. (Controlled)
+   * Expanded node ids.
+   * Used when the item's expansion are controlled.
    */
   expanded: PropTypes.arrayOf(PropTypes.string),
   /**

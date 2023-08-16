@@ -1,6 +1,8 @@
 [
   { "name": "getTreeItemUtilityClass", "kind": "Function" },
   { "name": "getTreeViewUtilityClass", "kind": "Function" },
+  { "name": "MultiSelectTreeViewProps", "kind": "Interface" },
+  { "name": "SingleSelectTreeViewProps", "kind": "Interface" },
   { "name": "TreeItem", "kind": "Variable" },
   { "name": "treeItemClasses", "kind": "Variable" },
   { "name": "TreeItemClasses", "kind": "Interface" },
@@ -11,5 +13,7 @@
   { "name": "treeViewClasses", "kind": "Variable" },
   { "name": "TreeViewClasses", "kind": "Interface" },
   { "name": "TreeViewClassKey", "kind": "TypeAlias" },
+  { "name": "TreeViewProps", "kind": "TypeAlias" },
+  { "name": "TreeViewPropsBase", "kind": "Interface" },
   { "name": "useTreeItem", "kind": "Function" }
 ]

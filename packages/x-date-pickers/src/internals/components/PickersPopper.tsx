@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useSlotProps, SlotComponentProps } from '@mui/base/utils';
 import Grow from '@mui/material/Grow';
+import Fade from '@mui/material/Fade';
 import MuiPaper, { PaperProps as MuiPaperProps } from '@mui/material/Paper';
 import MuiPopper, {
   PopperProps as MuiPopperProps,
@@ -21,6 +22,7 @@ import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPop
 import { getActiveElement } from '../utils/utils';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
+import { useDefaultReduceAnimations } from '../hooks/useDefaultReduceAnimations';
 
 export interface PickersPopperSlotsComponent {
   /**
@@ -30,17 +32,17 @@ export interface PickersPopperSlotsComponent {
   DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
    * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
-   * @default Grow from @mui/material
+   * @default Grow or Fade from '@mui/material' when `reduceAnimations` is `true`.
    */
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
   /**
    * Custom component for trapping the focus inside the views on desktop.
-   * @default TrapFocus from @mui/material
+   * @default TrapFocus from '@mui/material'.
    */
   DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
-   * @default Popper from @mui/material
+   * @default Popper from '@mui/material'.
    */
   Popper?: React.ElementType<MuiPopperProps>;
 }
@@ -80,6 +82,7 @@ export interface PickerPopperProps extends UsePickerValueActions {
   slotProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
+  reduceAnimations?: boolean;
 }
 
 const useUtilityClasses = (ownerState: PickerPopperProps) => {
@@ -273,6 +276,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     placement,
     slots,
     slotProps,
+    reduceAnimations: inReduceAnimations,
   } = props;
 
   React.useEffect(() => {
@@ -322,6 +326,8 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+  const defaultReduceAnimations = useDefaultReduceAnimations();
+  const reduceAnimations = inReduceAnimations ?? defaultReduceAnimations;
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -331,7 +337,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const Transition = slots?.desktopTransition ?? Grow;
+  const Transition = slots?.desktopTransition ?? reduceAnimations ? Fade : Grow;
   const TrapFocus = slots?.desktopTrapFocus ?? MuiTrapFocus;
 
   const Paper = slots?.desktopPaper ?? PickersPopperPaper;

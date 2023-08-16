@@ -50,8 +50,14 @@
     "showMultiFilterOperators": { "type": { "name": "bool" } },
     "valueInputProps": { "type": { "name": "any" }, "default": "{}" }
   },
-  "slots": {},
+  "slots": [],
   "name": "GridFilterForm",
+  "imports": [
+    "import { GridFilterForm } from '@mui/x-data-grid/components';",
+    "import { GridFilterForm } from '@mui/x-data-grid';",
+    "import { GridFilterForm } from '@mui/x-data-grid-pro';",
+    "import { GridFilterForm } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",

@@ -2,9 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useTreeItem } from './useTreeItem';
-import { StandardProps } from '../internals/models';
 
-export interface TreeItemContentProps extends StandardProps<React.HTMLAttributes<HTMLElement>> {
+export interface TreeItemContentProps extends React.HTMLAttributes<HTMLElement> {
   /**
    * className applied to the root element.
    */

@@ -53,12 +53,21 @@ Shortcuts on range pickers require `getValue` property to return an array with t
 
 ## Advanced shortcuts
 
+### Use validation to get the value
+
 The `getValue` methods receive a `isValid` helper function.
 You can use it to test if a value is valid or not based on the [validation props](/x/react-date-pickers/validation/).
 
 In the following demonstration, it is used to get the next available week and weekend.
 
 {{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}
+
+### Know which shortcut has been selected
+
+The `onChange` callback receives the shortcut as a property of it's second argument.
+You can use it to know, which shortcut has been chosen:
+
+{{"demo": "OnChangeShortcutLabel.js", "bg": "inline"}}
 
 ## Behavior when selecting a shortcut
 

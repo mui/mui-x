@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import { useSlotProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -15,7 +16,7 @@ import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
 import { useViews } from '../internals/hooks/useViews';
-import { PickersCalendarHeader } from './PickersCalendarHeader';
+import { PickersCalendarHeader, PickersCalendarHeaderProps } from '../PickersCalendarHeader';
 import {
   findClosestEnabledDate,
   applyDefaultDate,
@@ -188,6 +189,38 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     timezone,
   });
 
+  // When disabled, limit the view to the selected date
+  const minDateWithDisabled = (disabled && value) || minDate;
+  const maxDateWithDisabled = (disabled && value) || maxDate;
+
+  const gridLabelId = `${id}-grid-label`;
+  const hasFocus = focusedView !== null;
+
+  const CalendarHeader =
+    slots?.calendarHeader ?? components?.CalendarHeader ?? PickersCalendarHeader;
+  const calendarHeaderProps: PickersCalendarHeaderProps<TDate> = useSlotProps({
+    elementType: CalendarHeader,
+    externalSlotProps: slotProps?.calendarHeader ?? componentsProps?.calendarHeader,
+    additionalProps: {
+      views,
+      view,
+      currentMonth: calendarState.currentMonth,
+      onViewChange: setView,
+      onMonthChange: (newMonth, direction) => handleChangeMonth({ newMonth, direction }),
+      minDate: minDateWithDisabled,
+      maxDate: maxDateWithDisabled,
+      disabled,
+      disablePast,
+      disableFuture,
+      reduceAnimations,
+      timezone,
+      labelId: gridLabelId,
+      slots,
+      slotProps,
+    },
+    ownerState: props,
+  });
+
   const handleDateMonthChange = useEventCallback((newDate: TDate) => {
     const startOfMonth = utils.startOfMonth(newDate);
     const endOfMonth = utils.endOfMonth(newDate);
@@ -269,19 +302,12 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     minDate,
   };
 
-  // When disabled, limit the view to the selected date
-  const minDateWithDisabled = (disabled && value) || minDate;
-  const maxDateWithDisabled = (disabled && value) || maxDate;
-
   const commonViewProps = {
     disableHighlightToday,
     readOnly,
     disabled,
     timezone,
   };
-
-  const gridLabelId = `${id}-grid-label`;
-  const hasFocus = focusedView !== null;
 
   const prevOpenViewRef = React.useRef(view);
   React.useEffect(() => {
@@ -306,23 +332,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      <PickersCalendarHeader
-        views={views}
-        view={view}
-        currentMonth={calendarState.currentMonth}
-        onViewChange={setView}
-        onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
-        minDate={minDateWithDisabled}
-        maxDate={maxDateWithDisabled}
-        disabled={disabled}
-        disablePast={disablePast}
-        disableFuture={disableFuture}
-        reduceAnimations={reduceAnimations}
-        labelId={gridLabelId}
-        slots={slots}
-        slotProps={slotProps}
-        timezone={timezone}
-      />
+      <CalendarHeader {...calendarHeaderProps} />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
         className={classes.viewTransitionContainer}
@@ -533,7 +543,7 @@ DateCalendar.propTypes = {
   readOnly: PropTypes.bool,
   /**
    * If `true`, disable heavy animations.
-   * @default true when `navigator.userAgent` matches Android <10 or iOS <13
+   * @default true when `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
   /**

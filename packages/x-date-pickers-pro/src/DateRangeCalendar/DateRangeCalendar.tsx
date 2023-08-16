@@ -7,6 +7,7 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Watermark } from '@mui/x-license-pro';
+import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
@@ -16,7 +17,6 @@ import {
   DayCalendarSlotsComponentsProps,
   useDefaultReduceAnimations,
   PickersArrowSwitcher,
-  PickersCalendarHeader,
   useCalendarState,
   useDefaultDates,
   useLocaleText,
@@ -729,8 +729,8 @@ DateRangeCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default true when `navigator.userAgent` matches Android <10 or iOS <13
+   * If `true`, disable heavy animations.
+   * @default true when `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
   /**

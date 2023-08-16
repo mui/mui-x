@@ -6,8 +6,6 @@ import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '.
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
   MuiChartsAxis: ChartsAxisClassKey;
-  MuiChartsXAxis:  ChartsAxisClassKey;
-  MuiChartsYAxis:  ChartsAxisClassKey;
   MuiChartsLegend: ChartsLegendClassKey;
 
   // BarChart components
