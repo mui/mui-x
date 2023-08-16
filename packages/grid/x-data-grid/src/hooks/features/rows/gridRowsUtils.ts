@@ -334,7 +334,9 @@ export const updateCacheWithNewRows = ({
     // `actionAlreadyAppliedToRow` can't be equal to "modify", otherwise we would have an `oldRow` above.
     else if (actionAlreadyAppliedToRow == null) {
       if (partialUpdates.actions.remove.includes(id)) {
-        partialUpdates.actions.remove = partialUpdates.actions.remove.filter(removeid => removeid !== id)
+        partialUpdates.actions.remove = partialUpdates.actions.remove.filter(
+          (removeid) => removeid !== id,
+        );
         partialUpdates.actions.modify.push(id);
       } else {
         partialUpdates.actions.insert.push(id);
