@@ -12,9 +12,11 @@ import {
   GridOverlays,
 } from '@mui/x-data-grid';
 import {
+  GridHeaders,
   GridVirtualScroller,
   GridVirtualScrollerContent,
   GridVirtualScrollerRenderZone,
+  DataGridVirtualScrollerProps,
   useGridVirtualScroller,
   calculatePinnedRowsHeight,
 } from '@mui/x-data-grid/internals';
@@ -191,15 +193,13 @@ const VirtualScrollerPinnedRowsRenderZone = styled('div')({
   position: 'absolute',
 });
 
-interface DataGridProVirtualScrollerProps extends React.HTMLAttributes<HTMLDivElement> {
-  disableVirtualization?: boolean;
-}
+type DataGridProVirtualScrollerProps = DataGridVirtualScrollerProps;
 
 const DataGridProVirtualScroller = React.forwardRef<
   HTMLDivElement,
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
-  const { className, disableVirtualization, ...other } = props;
+  const { className, disableVirtualization, ColumnHeadersProps, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
@@ -387,6 +387,7 @@ const DataGridProVirtualScroller = React.forwardRef<
 
   return (
     <GridVirtualScroller {...getRootProps(other)}>
+      <GridHeaders contentProps={contentProps} ColumnHeadersProps={ColumnHeadersProps} />
       <GridOverlays />
       {topPinnedRowsData.length > 0 ? (
         <VirtualScrollerPinnedRows
