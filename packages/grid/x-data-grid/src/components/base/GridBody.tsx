@@ -74,14 +74,14 @@ function GridBody(props: GridBodyProps) {
   apiRef.current.unstable_disableVirtualization = disableVirtualization;
   apiRef.current.unstable_enableVirtualization = enableVirtualization;
 
-  const hasDimensions = !!apiRef.current.getRootDimensions();
-
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
   apiRef.current.register('private', {
     virtualScrollerRef,
     mainElementRef: rootRef,
   });
+
+  const hasDimensions = !!apiRef.current.getRootDimensions();
 
   return (
     <GridMainContainer ref={rootRef}>
