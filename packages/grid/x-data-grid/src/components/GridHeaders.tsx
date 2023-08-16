@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -25,9 +25,9 @@ import { gridColumnMenuSelector } from '../hooks/features/columnMenu/columnMenuS
 import type { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
 
 type Props = {
-  contentProps: ReturnType<ReturnType<typeof useGridVirtualScroller>['getContentProps']>
+  contentProps: ReturnType<ReturnType<typeof useGridVirtualScroller>['getContentProps']>;
   ColumnHeadersProps?: Record<string, any>;
-}
+};
 
 export function GridHeaders(props: Props) {
   const { contentProps, ColumnHeadersProps } = props;
