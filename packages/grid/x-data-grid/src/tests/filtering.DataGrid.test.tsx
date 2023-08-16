@@ -41,10 +41,22 @@ describe('<DataGrid /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
+  let disableEval = false;
+
+  function testEval(fn: Function) {
+    return () => {
+      disableEval = false;
+      fn();
+      disableEval = true;
+      fn();
+      disableEval = false;
+    };
+  }
+
   function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} {...props} />
+        <DataGrid {...baselineProps} {...props} disableEval={disableEval} />
       </div>
     );
   }
@@ -278,25 +290,27 @@ describe('<DataGrid /> - Filter', () => {
     const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany', '0', '1'];
 
     it('should filter with operator "contains"', () => {
-      expect(getRows({ operator: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
+      testEval(() => {
+        expect(getRows({ operator: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
 
-      // Trim value
-      expect(getRows({ operator: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
+        // Trim value
+        expect(getRows({ operator: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
 
-      // Case-insensitive
-      expect(getRows({ operator: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
+        // Case-insensitive
+        expect(getRows({ operator: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
 
-      // Number casting
-      expect(getRows({ operator: 'contains', value: '0' })).to.deep.equal(['0']);
-      expect(getRows({ operator: 'contains', value: '1' })).to.deep.equal(['1']);
+        // Number casting
+        expect(getRows({ operator: 'contains', value: '0' })).to.deep.equal(['0']);
+        expect(getRows({ operator: 'contains', value: '1' })).to.deep.equal(['1']);
 
-      // Empty values
-      expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
+        // Empty values
+        expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
 
-      // Value with regexp special literal
-      expect(getRows({ operator: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
-      expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+        // Value with regexp special literal
+        expect(getRows({ operator: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
+        expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+      });
     });
 
     it('should filter with operator "equals"', () => {
