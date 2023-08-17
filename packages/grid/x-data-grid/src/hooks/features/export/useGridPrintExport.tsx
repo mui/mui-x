@@ -71,12 +71,6 @@ export const useGridPrintExport = (
   const updateGridColumnsForPrint = React.useCallback(
     (fields?: string[], allColumns?: boolean) =>
       new Promise<void>((resolve) => {
-        // TODO remove unused Promise
-        if (!fields && !allColumns) {
-          resolve();
-          return;
-        }
-
         const exportedColumnFields = getColumnsToExport({
           apiRef,
           options: { fields, allColumns },
