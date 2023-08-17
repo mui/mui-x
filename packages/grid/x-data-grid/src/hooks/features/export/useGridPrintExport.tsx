@@ -279,6 +279,7 @@ export const useGridPrintExport = (
         };
         apiRef.current.updateControlState(
           'pagination',
+          // Using signature `DataGridPro` to allow more than 100 rows in the print export
           mergeStateWithPaginationModel(visibleRowCount, 'DataGridPro', paginationModel),
         );
         apiRef.current.forceUpdate();
