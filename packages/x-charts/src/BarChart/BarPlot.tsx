@@ -69,9 +69,9 @@ function BarPlot(props: BarPlotProps) {
           const xAxisConfig = xAxis[xAxisKey];
           const yAxisConfig = yAxis[yAxisKey];
 
-          const vertiaclLayout = series[seriesId].layout === 'vertical';
+          const verticalLayout = series[seriesId].layout === 'vertical';
           let baseScaleConfig;
-          if (vertiaclLayout) {
+          if (verticalLayout) {
             if (!isBandScaleConfig(xAxisConfig)) {
               throw new Error(
                 `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
@@ -117,17 +117,17 @@ function BarPlot(props: BarPlotProps) {
                 id={seriesId}
                 dataIndex={dataIndex}
                 x={
-                  vertiaclLayout
+                  verticalLayout
                     ? xScale(xAxis[xAxisKey].data?.[dataIndex])! + barOffset
                     : xScale(baseline)
                 }
                 y={
-                  vertiaclLayout
+                  verticalLayout
                     ? yScale(value)
                     : yScale(yAxis[yAxisKey].data?.[dataIndex])! + barOffset
                 }
-                height={vertiaclLayout ? Math.abs(yScale(baseline) - yScale(value)) : barWidth}
-                width={vertiaclLayout ? barWidth : Math.abs(xScale(baseline) - xScale(value))}
+                height={verticalLayout ? Math.abs(yScale(baseline) - yScale(value)) : barWidth}
+                width={verticalLayout ? barWidth : Math.abs(xScale(baseline) - xScale(value))}
                 color={color}
                 highlightScope={series[seriesId].highlightScope}
                 {...props}
