@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts';
 
 const chartSetting = {
   xAxis: [
@@ -9,12 +8,7 @@ const chartSetting = {
     },
   ],
   width: 500,
-  height: 300,
-  sx: {
-    [`.${axisClasses.left} .${axisClasses.label}`]: {
-      transform: 'rotate(-90deg) translate(0px, -20px)',
-    },
-  },
+  height: 400,
 };
 const dataset = [
   {
