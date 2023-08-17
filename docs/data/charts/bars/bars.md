@@ -55,9 +55,9 @@ By default, they are stacked in the order you defined them, with positive values
 
 For more information, see [stacking docs](/x/react-charts/stacking/).
 
-## Pivoting
+## Layout
 
-Bar charts can be rendered with a horizontal layout by providing the props `layout='horizontal'`.
+Bar charts can be rendered with a horizontal layout by providing the `layout="horizontal"` prop.
 If you're using [composition](/x/react-charts/#multiple-charts), you should set the property `layout: 'horizontal'` to each bar series object.
 
 {{"demo": "HorizontalBars.js"}}
