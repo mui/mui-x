@@ -43,7 +43,7 @@
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
-      "default": "'@media (pointer: fine)'"
+      "default": "'@media (hover: hover) and (pointer: fine)'"
     },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },

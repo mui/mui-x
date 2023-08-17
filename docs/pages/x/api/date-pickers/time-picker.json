@@ -23,7 +23,7 @@
     "defaultValue": { "type": { "name": "any" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
-      "default": "'@media (pointer: fine)'"
+      "default": "'@media (hover: hover) and (pointer: fine)'"
     },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
