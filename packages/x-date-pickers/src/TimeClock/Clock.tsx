@@ -113,7 +113,7 @@ const ClockSquareMask = styled('div', {
   ...(ownerState.disabled
     ? {}
     : {
-        '@media (pointer: fine)': {
+        '@media (hover: hover) and (pointer: fine)': {
           cursor: 'pointer',
           borderRadius: '50%',
         },

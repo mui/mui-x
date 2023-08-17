@@ -135,7 +135,7 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   // explicitly setting to `transparent` to avoid potentially getting impacted by change from the overridden component
   backgroundColor: 'transparent',
   color: (theme.vars || theme).palette.text.primary,
-  '@media (pointer: fine)': {
+  '@media (hover: hover) and (pointer: fine)': {
     '&:hover': {
       backgroundColor: theme.vars
         ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.hoverOpacity})`

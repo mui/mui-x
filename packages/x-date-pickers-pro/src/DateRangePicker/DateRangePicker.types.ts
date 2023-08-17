@@ -1,4 +1,4 @@
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { BaseResponsivePickerProps, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   DesktopDateRangePickerProps,
   DesktopDateRangePickerSlotsComponent,
@@ -20,13 +20,8 @@ export interface DateRangePickerSlotsComponentsProps<TDate>
 
 export interface DateRangePickerProps<TDate>
   extends DesktopDateRangePickerProps<TDate>,
-    MobileDateRangePickerProps<TDate> {
-  /**
-   * CSS media query when `Mobile` mode will be changed to `Desktop`.
-   * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
-   */
-  desktopModeMediaQuery?: string;
+    MobileDateRangePickerProps<TDate>,
+    BaseResponsivePickerProps {
   /**
    * Overridable components.
    * @default {}

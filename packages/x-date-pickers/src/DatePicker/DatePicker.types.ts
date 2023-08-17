@@ -3,6 +3,7 @@ import {
   DesktopDatePickerSlotsComponent,
   DesktopDatePickerSlotsComponentsProps,
 } from '../DesktopDatePicker';
+import { BaseResponsivePickerProps } from '../internals';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileDatePickerProps,
@@ -20,13 +21,8 @@ export interface DatePickerSlotsComponentsProps<TDate>
 
 export interface DatePickerProps<TDate>
   extends DesktopDatePickerProps<TDate>,
-    MobileDatePickerProps<TDate> {
-  /**
-   * CSS media query when `Mobile` mode will be changed to `Desktop`.
-   * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
-   */
-  desktopModeMediaQuery?: string;
+    MobileDatePickerProps<TDate>,
+    BaseResponsivePickerProps {
   /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile

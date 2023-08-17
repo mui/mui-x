@@ -103,6 +103,7 @@ export type {
   BasePickerProps,
   BasePickerInputProps,
   BaseNonStaticPickerProps,
+  BaseResponsivePickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';

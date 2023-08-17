@@ -3,6 +3,7 @@ import {
   DesktopTimePickerSlotsComponent,
   DesktopTimePickerSlotsComponentsProps,
 } from '../DesktopTimePicker';
+import { BaseResponsivePickerProps } from '../internals';
 import { TimeViewWithMeridiem } from '../internals/models';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
@@ -21,13 +22,8 @@ export interface TimePickerSlotsComponentsProps<TDate>
 
 export interface TimePickerProps<TDate>
   extends DesktopTimePickerProps<TDate>,
-    Omit<MobileTimePickerProps<TDate, TimeViewWithMeridiem>, 'views'> {
-  /**
-   * CSS media query when `Mobile` mode will be changed to `Desktop`.
-   * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
-   */
-  desktopModeMediaQuery?: string;
+    Omit<MobileTimePickerProps<TDate, TimeViewWithMeridiem>, 'views'>,
+    BaseResponsivePickerProps {
   /**
    * Overridable components.
    * @default {}

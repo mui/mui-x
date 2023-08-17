@@ -78,3 +78,15 @@ export interface BaseNonRangeNonStaticPickerProps {
    */
   inputRef?: React.Ref<HTMLInputElement>;
 }
+
+/**
+ * Props common to all root level responsive pickers (i.e. `DatePicker`).
+ */
+export interface BaseResponsivePickerProps {
+  /**
+   * CSS media query when `Mobile` mode will be changed to `Desktop`.
+   * @default '@media (hover: hover) and (pointer: fine)'
+   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
+   */
+  desktopModeMediaQuery?: string;
+}

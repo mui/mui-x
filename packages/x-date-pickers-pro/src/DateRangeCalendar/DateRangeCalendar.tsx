@@ -105,7 +105,7 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
       },
   },
   [`&:not(.${dateRangeCalendarClasses.dayDragging}) .${dayClasses.dayOutsideRangeInterval}`]: {
-    '@media (pointer: fine)': {
+    '@media (hover: hover) and (pointer: fine)': {
       '&:hover': {
         border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
       },

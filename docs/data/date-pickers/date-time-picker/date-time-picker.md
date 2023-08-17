@@ -57,8 +57,8 @@ The component is available in four variants:
 
 {{"demo": "ResponsiveDateTimePickers.js"}}
 
-By default, the `DateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
-This can be customized with the `desktopModeMediaQuery` prop.
+By default, the `DateTimePicker` component renders the desktop version if the media query [`@media (hover: hover) and (pointer: fine)](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+This can be customized with the`desktopModeMediaQuery` prop.
 
 :::warning
 Responsive components can suffer some inconsistencies between testing environments if media query is not supported.

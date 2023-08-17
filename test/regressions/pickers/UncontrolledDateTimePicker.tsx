@@ -31,7 +31,7 @@ export default function UncontrolledDateTimePicker() {
       delete (window as any).muiTogglePickerMode;
     };
   }, []);
-  const desktopMediaQuery = '(pointer: fine)';
+  const desktopMediaQuery = '@media (hover: hover) and (pointer: fine)';
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>

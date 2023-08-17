@@ -4,6 +4,7 @@ import {
   DesktopDateTimePickerSlotsComponentsProps,
 } from '../DesktopDateTimePicker';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
+import { BaseResponsivePickerProps } from '../internals';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileDateTimePickerProps,
@@ -21,13 +22,8 @@ export interface DateTimePickerSlotsComponentsProps<TDate>
 
 export interface DateTimePickerProps<TDate>
   extends DesktopDateTimePickerProps<TDate>,
-    Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>, 'views'> {
-  /**
-   * CSS media query when `Mobile` mode will be changed to `Desktop`.
-   * @default '@media (pointer: fine)'
-   * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
-   */
-  desktopModeMediaQuery?: string;
+    Omit<MobileDateTimePickerProps<TDate, DateOrTimeViewWithMeridiem>, 'views'>,
+    BaseResponsivePickerProps {
   /**
    * Years rendered per row.
    * @default 4 on desktop, 3 on mobile
