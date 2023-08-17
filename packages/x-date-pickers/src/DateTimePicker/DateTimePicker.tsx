@@ -90,7 +90,7 @@ DateTimePicker.propTypes = {
   defaultValue: PropTypes.any,
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
-   * @default '@media (pointer: fine)'
+   * @default '@media (hover: hover) and (pointer: fine)'
    * @example '@media (min-width: 720px)' or theme.breakpoints.up("sm")
    */
   desktopModeMediaQuery: PropTypes.string,
