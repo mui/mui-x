@@ -97,7 +97,6 @@ function BarPlot(props: BarPlotProps) {
           const xScale = xAxisConfig.scale;
           const yScale = yAxisConfig.scale;
 
-          // Currently assuming all bars are vertical
           const bandWidth = baseScaleConfig.scale.bandwidth();
 
           const { barWidth, offset } = getBandSize({
