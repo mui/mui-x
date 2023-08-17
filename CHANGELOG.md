@@ -14,7 +14,6 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
-
 ### Data Grid
 
 #### `@mui/x-data-grid@v6.11.2`
