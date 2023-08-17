@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### `@mui/x-data-grid@v6.11.2`
 
-- [DataGrid] Fix eval blocked by CSP (#9863) @romgrk
+- [DataGrid] Fix `eval` blocked by CSP (#9863) @romgrk
 - [DataGrid] Fix row id bug (#10051) @romgrk
 - [DataGrid] Honor `disableExport` flag in Print Export (#10044) @MBilalShafi
 - [DataGrid] Lower filter debounce delay (#9712) @romgrk
