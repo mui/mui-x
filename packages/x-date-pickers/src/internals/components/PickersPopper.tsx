@@ -113,7 +113,7 @@ const PickersPopperPaper = styled(MuiPaper, {
 }>(({ ownerState }) => ({
   transformOrigin: 'top center',
   outline: 0,
-  ...(ownerState.placement === 'top' && {
+  ...(ownerState.placement?.includes('top') && {
     transformOrigin: 'bottom center',
   }),
 }));
