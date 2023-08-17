@@ -127,7 +127,7 @@ const frFRGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} ligne sélectionnée`,
 
   // Total row amount footer text
-  footerTotalRows: 'Total de lignes :',
+  footerTotalRows: (count) => `Total de lignes : ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

@@ -127,7 +127,7 @@ const deDEGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} Eintrag ausgewählt`,
 
   // Total row amount footer text
-  footerTotalRows: 'Gesamt:',
+  footerTotalRows: (count) => `Gesamt: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

@@ -122,7 +122,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => `${count.toLocaleString()} sor kiválasztva`,
 
   // Total row amount footer text
-  footerTotalRows: 'Összesen:',
+  footerTotalRows: (count) => `Összesen: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

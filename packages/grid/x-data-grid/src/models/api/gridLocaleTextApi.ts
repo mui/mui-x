@@ -124,7 +124,7 @@ export interface GridLocaleText {
   footerRowSelected: (count: number) => React.ReactNode;
 
   // Total rows footer text
-  footerTotalRows: React.ReactNode;
+  footerTotalRows: (count: React.ReactNode) => React.ReactNode;
 
   // Total visible rows footer text
   footerTotalVisibleRows: (visibleCount: number, totalCount: number) => React.ReactNode;

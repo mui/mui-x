@@ -146,7 +146,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   },
 
   // Total row amount footer text
-  footerTotalRows: 'Riadkov spolu:',
+  footerTotalRows: (count) => `Riadkov spolu: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) => {

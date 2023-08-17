@@ -125,7 +125,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
       : `${count.toLocaleString()} row selected`,
 
   // Total row amount footer text
-  footerTotalRows: 'Total Rows:',
+  footerTotalRows: (count) => `Total Rows: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

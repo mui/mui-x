@@ -149,7 +149,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   },
 
   // Total row amount footer text
-  footerTotalRows: 'Всего строк:',
+  footerTotalRows: (count) => `Всего строк: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

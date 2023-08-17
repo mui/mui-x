@@ -127,7 +127,7 @@ const esESGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} fila seleccionada`,
 
   // Total row amount footer text
-  footerTotalRows: 'Filas Totales:',
+  footerTotalRows: (count) => `Filas Totales: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

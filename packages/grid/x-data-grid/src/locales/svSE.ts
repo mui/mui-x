@@ -127,7 +127,7 @@ const svSEGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} rad markerad`,
 
   // Total row amount footer text
-  footerTotalRows: 'Totalt antal rader:',
+  footerTotalRows: (count) => `Totalt antal rader: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

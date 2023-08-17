@@ -125,7 +125,7 @@ const urPKGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count.toLocaleString()} منتخب قطاریں` : `${count.toLocaleString()} منتخب قطار`,
 
   // Total row amount footer text
-  footerTotalRows: 'کل قطاریں:',
+  footerTotalRows: (count) => `کل قطاریں: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

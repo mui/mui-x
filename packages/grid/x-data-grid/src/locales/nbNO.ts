@@ -125,7 +125,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count.toLocaleString()} rader valgt` : `${count.toLocaleString()} rad valgt`,
 
   // Total row amount footer text
-  footerTotalRows: 'Totalt antall rader:',
+  footerTotalRows: (count) => `Totalt antall rader: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

@@ -127,7 +127,7 @@ const roROGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} Înregistrare selectată`,
 
   // Total row amount footer text
-  footerTotalRows: 'Total:',
+  footerTotalRows: (count) => `Total: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

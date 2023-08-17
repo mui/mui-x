@@ -127,7 +127,7 @@ const faIRGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} سطر انتخاب شده`,
 
   // Total row amount footer text
-  footerTotalRows: 'مجموع سطرها:',
+  footerTotalRows: (count) => `مجموع سطرها: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

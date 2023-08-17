@@ -123,7 +123,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => `共选中了${count.toLocaleString()}行`,
 
   // Total row amount footer text
-  footerTotalRows: '所有行:',
+  footerTotalRows: (count) => `所有行: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

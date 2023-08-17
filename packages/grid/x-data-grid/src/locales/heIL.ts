@@ -125,7 +125,7 @@ const heILGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count.toLocaleString()} שורות נבחרו` : `שורה אחת נבחרה`,
 
   // Total row amount footer text
-  footerTotalRows: 'סך הכל:',
+  footerTotalRows: (count) => `סך הכל: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

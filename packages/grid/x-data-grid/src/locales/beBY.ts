@@ -156,7 +156,7 @@ const beBYGrid: Partial<GridLocaleText> = {
     }),
 
   // Total row amount footer text
-  footerTotalRows: 'Усяго радкоў:',
+  footerTotalRows: (count) => `Усяго радкоў: ${count}`,
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
