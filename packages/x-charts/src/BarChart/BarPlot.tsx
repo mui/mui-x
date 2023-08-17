@@ -106,7 +106,6 @@ function BarPlot(props: BarPlotProps) {
           });
           const barOffset = groupIndex * (barWidth + offset);
 
-          // @ts-ignore TODO: fix when adding a correct API for customisation
           const { stackedData, color } = series[seriesId];
 
           return stackedData.map((values, dataIndex: number) => {
