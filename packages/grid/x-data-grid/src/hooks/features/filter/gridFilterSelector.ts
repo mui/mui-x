@@ -4,6 +4,11 @@ import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { gridSortedRowEntriesSelector } from '../sorting/gridSortingSelector';
 import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { foo } from './foo';
+
+export const bar = () => {
+  foo({} as any);
+};
 
 /**
  * @category Filtering
