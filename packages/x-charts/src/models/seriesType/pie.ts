@@ -67,7 +67,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   highlighted?: {
     /**
      * Value added to the default `outerRadius`.
-     * Can be negative. ANd is ignored if you provide a `highlighted.outerRadius` value.
+     * Can be negative. It is ignored if you provide a `highlighted.outerRadius` value.
      */
     additionalRadius?: number;
     innerRadius?: number;
@@ -80,7 +80,7 @@ export interface PieSeriesType<Tdata = PieValueType> extends CommonSeriesType<Td
   faded?: {
     /**
      * Value added to the default `outerRadius`.
-     * Can be negative. ANd is ignored if you provide a `faded.outerRadius` value.
+     * Can be negative. It is ignored if you provide a `faded.outerRadius` value.
      */
     additionalRadius?: number;
     innerRadius?: number;

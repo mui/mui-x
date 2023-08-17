@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import { expect } from 'chai';
-import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
+import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
 
 describe('<DateTimePicker />', () => {
   const { render } = createPickerRenderer();

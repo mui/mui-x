@@ -34,7 +34,7 @@ You can either run it on a specific file, folder, or your entire codebase when c
 ```bash
 // Data Grid specific
 npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
-// Target Date and Time pickers as well
+// Target Date and Time Pickers as well
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 

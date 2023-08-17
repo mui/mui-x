@@ -59,9 +59,27 @@
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
     "name": { "type": { "name": "string" } },
-    "onChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
-    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onSelectedSectionsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(newValue: FieldSelectedSections) => void",
+        "describedArgs": ["newValue"]
+      }
+    },
     "readOnly": { "type": { "name": "bool" } },
     "referenceDate": {
       "type": { "name": "any" },
@@ -77,12 +95,45 @@
     "shouldDisableClock": {
       "type": { "name": "func" },
       "deprecated": true,
-      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>.",
+      "signature": {
+        "type": "function(clockValue: number, view: TimeView) => boolean",
+        "describedArgs": ["clockValue", "view"],
+        "returned": "boolean"
+      }
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
-    "shouldDisableTime": { "type": { "name": "func" } },
-    "shouldDisableYear": { "type": { "name": "func" } },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate) => boolean",
+        "describedArgs": ["day"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableMonth": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(month: TDate) => boolean",
+        "describedArgs": ["month"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableTime": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TDate, view: TimeView) => boolean",
+        "describedArgs": ["value", "view"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableYear": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(year: TDate) => boolean",
+        "describedArgs": ["year"],
+        "returned": "boolean"
+      }
+    },
     "shouldRespectLeadingZeros": { "type": { "name": "bool" }, "default": "`false`" },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -91,7 +142,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -109,10 +161,20 @@
       "default": "'outlined'"
     }
   },
-  "slots": {
-    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
-  },
+  "slots": [
+    {
+      "class": null,
+      "name": "textField",
+      "description": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "default": "TextField from '@mui/material'"
+    }
+  ],
   "name": "DateTimeField",
+  "imports": [
+    "import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';",
+    "import { DateTimeField } from '@mui/x-date-pickers';",
+    "import { DateTimeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimeField" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",

@@ -2,7 +2,7 @@
 title: Charts - Pie
 ---
 
-# Charts - Pie 🚧
+# Charts - Pie
 
 <p class="description">Pie charts express portions of a whole, using arcs or angles within a circle.</p>
 
@@ -50,7 +50,7 @@ Pie series shape is described by multiple properties:
 - `startAngle`/`endAngle` The angle range of the pie chart. Values are given in degrees.
 - `cx`/`cy` The center of the pie charts. By default the middle of the drawing area.
 
-{{"demo": "PieShapeNoSnap.js", "hideToolbar": true, "bg": "inline", "disableAd": true}}
+{{"demo": "PieShapeNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 ## Labels
 

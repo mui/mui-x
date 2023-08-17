@@ -14,7 +14,7 @@ import { resolveDateFormat } from '../internals/utils/date-utils';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
   inProps: MobileDatePickerProps<TDate>,
@@ -63,7 +63,8 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
     props,
     valueManager: singleItemValueManager,
     valueType: 'date',
-    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    getOpenDialogAriaText:
+      props.localeText?.openDatePickerDialogue ?? localeText.openDatePickerDialogue,
     validator: validateDate,
   });
 
@@ -276,8 +277,8 @@ MobileDatePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
   /**

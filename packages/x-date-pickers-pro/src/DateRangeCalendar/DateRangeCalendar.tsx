@@ -7,6 +7,7 @@ import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Watermark } from '@mui/x-license-pro';
+import { PickersCalendarHeader } from '@mui/x-date-pickers/PickersCalendarHeader';
 import {
   applyDefaultDate,
   BaseDateValidationProps,
@@ -14,9 +15,8 @@ import {
   DayCalendar,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
-  defaultReduceAnimations,
+  useDefaultReduceAnimations,
   PickersArrowSwitcher,
-  PickersCalendarHeader,
   useCalendarState,
   useDefaultDates,
   useLocaleText,
@@ -119,6 +119,7 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
 ): DateRangeCalendarDefaultizedProps<TDate> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
+  const defaultReduceAnimations = useDefaultReduceAnimations();
   const themeProps = useThemeProps({
     props,
     name,
@@ -152,7 +153,7 @@ const useUtilityClasses = (ownerState: DateRangeCalendarOwnerState<any>) => {
 
 type DateRangeCalendarComponent = (<TDate>(
   props: DateRangeCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   inProps: DateRangeCalendarProps<TDate>,
@@ -728,8 +729,8 @@ DateRangeCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
   /**

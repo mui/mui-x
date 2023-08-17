@@ -1,7 +1,14 @@
 {
-  "props": {},
-  "slots": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [],
   "name": "MarkPlot",
+  "imports": [
+    "import { MarkPlot } from '@mui/x-charts/LineChart';",
+    "import { MarkPlot } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMarkPlot" },
   "filename": "/packages/x-charts/src/LineChart/MarkPlot.tsx",
   "demos": "<ul></ul>",

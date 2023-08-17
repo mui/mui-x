@@ -10,8 +10,8 @@ const baselineProps = {
     },
   ],
   columns: [
-    { field: 'birthday', type: 'date', editable: true, width: 100 },
-    { field: 'lastConnection', type: 'dateTime', editable: true, width: 100 },
+    { field: 'birthday', type: 'date', editable: true, width: 120 },
+    { field: 'lastConnection', type: 'dateTime', editable: true, width: 180 },
   ],
 };
 

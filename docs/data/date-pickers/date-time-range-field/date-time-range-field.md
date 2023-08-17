@@ -21,6 +21,8 @@ or two inputs using `MultiInputDateTimeRangeField` as show below.
 
 {{"demo": "BasicDateTimeRangeField.js"}}
 
+## Uncontrolled vs. controlled value
+
 The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateTimeRangeFieldValue.js"}}

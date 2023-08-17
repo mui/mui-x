@@ -217,17 +217,19 @@ Updating the row will rerender the row and so call renderCell with updated param
 ## Column types
 
 To facilitate the configuration of the columns, some column types are predefined.
-By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
+By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell. Some column types require that their value have a specific type.
 
-The following are the native column types:
+The following are the native column types with their required value types:
 
-- `'string'` (default)
-- `'number'`
-- `'date'`
-- `'dateTime'`
-- `'boolean'`
-- `'singleSelect'`
-- `'actions'`
+| Column type          | Value type                 |
+| :------------------- | :------------------------- |
+| `'string'` (default) | `string`                   |
+| `'number'`           | `number`                   |
+| `'date'`             | `Date() object`            |
+| `'dateTime'`         | `Date() object`            |
+| `'boolean'`          | `boolean`                  |
+| `'singleSelect'`     | A value in `.valueOptions` |
+| `'actions'`          | Not applicable             |
 
 ### Converting types
 

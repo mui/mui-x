@@ -59,36 +59,36 @@ export type GridToolbarQuickFilterProps = TextFieldProps & {
    * @param {any[]} values The new values passed to the quick filter model
    * @returns {string} The string to display in the text field
    */
-  quickFilterFormatter?: (values: GridFilterModel['quickFilterValues']) => string;
+  quickFilterFormatter?: (values: NonNullable<GridFilterModel['quickFilterValues']>) => string;
   /**
    * The debounce time in milliseconds.
-   * @default 500
+   * @default 150
    */
   debounceMs?: number;
 };
 
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
-  const {
-    quickFilterParser = defaultSearchValueParser,
-    quickFilterFormatter = defaultSearchValueFormatter,
-    debounceMs = 500,
-    ...other
-  } = props;
-
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const quickFilterValues = useGridSelector(apiRef, gridQuickFilterValuesSelector);
+
+  const {
+    quickFilterParser = defaultSearchValueParser,
+    quickFilterFormatter = defaultSearchValueFormatter,
+    debounceMs = rootProps.filterDebounceMs,
+    ...other
+  } = props;
 
   const [searchValue, setSearchValue] = React.useState(() =>
     quickFilterFormatter(quickFilterValues ?? []),
   );
 
-  const [prevQuickFilterValues, setPrevQuickFilterValues] = React.useState(quickFilterValues);
+  const prevQuickFilterValuesRef = React.useRef(quickFilterValues);
 
   React.useEffect(() => {
-    if (!isDeepEqual(prevQuickFilterValues, quickFilterValues)) {
+    if (!isDeepEqual(prevQuickFilterValuesRef.current, quickFilterValues)) {
       // The model of quick filter value has been updated
-      setPrevQuickFilterValues(quickFilterValues);
+      prevQuickFilterValuesRef.current = quickFilterValues;
 
       // Update the input value if needed to match the new model
       setSearchValue((prevSearchValue) =>
@@ -97,11 +97,13 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           : quickFilterFormatter(quickFilterValues ?? []),
       );
     }
-  }, [prevQuickFilterValues, quickFilterValues, quickFilterFormatter, quickFilterParser]);
+  }, [quickFilterValues, quickFilterFormatter, quickFilterParser]);
 
   const updateSearchValue = React.useCallback(
     (newSearchValue: string) => {
-      apiRef.current.setQuickFilterValues(quickFilterParser(newSearchValue));
+      const newQuickFilterValues = quickFilterParser(newSearchValue);
+      prevQuickFilterValuesRef.current = newQuickFilterValues;
+      apiRef.current.setQuickFilterValues(newQuickFilterValues);
     },
     [apiRef, quickFilterParser],
   );
@@ -135,6 +137,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       placeholder={apiRef.current.getLocaleText('toolbarQuickFilterPlaceholder')}
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
+      {...other}
       InputProps={{
         startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
         endAdornment: (
@@ -148,8 +151,8 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
             <rootProps.slots.quickFilterClearIcon fontSize="small" />
           </rootProps.slots.baseIconButton>
         ),
+        ...other.InputProps,
       }}
-      {...other}
       {...rootProps.slotProps?.baseTextField}
     />
   );
@@ -162,7 +165,7 @@ GridToolbarQuickFilter.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * The debounce time in milliseconds.
-   * @default 500
+   * @default 150
    */
   debounceMs: PropTypes.number,
   /**

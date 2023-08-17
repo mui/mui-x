@@ -18,6 +18,19 @@ To modify the x values, you should provide a `xAxis` with data property.
 
 {{"demo": "BasicLineChart.js"}}
 
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
+
+You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
+
+For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+
+Here is a plot of the evolution of world electricity production by source.
+
+{{"demo": "LineDataset.js"}}
+
 ### Area
 
 You can fill the area of the line by setting the series' `area` property to `true`.
@@ -46,7 +59,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
-{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline", "disableAd": true}}
+{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline"}}
 
 ### CSS
 

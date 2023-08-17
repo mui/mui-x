@@ -27,4 +27,9 @@ export interface GridFilterModel {
    * @default `GridLogicOperator.And`
    */
   quickFilterLogicOperator?: GridLogicOperator;
+  /**
+   * If `true`, the quick filter will skip cell values from hidden columns.
+   * @default false
+   */
+  quickFilterExcludeHiddenColumns?: boolean;
 }

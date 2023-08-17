@@ -1,11 +1,8 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
-import standardNavIcons from '@mui/monorepo/docs/src/modules/components/AppNavIcons';
-import ChartIcon from '@mui/icons-material/BarChartRounded';
-import TableViewIcon from '@mui/icons-material/TableViewRounded';
-import DatePickerIcon from '@mui/icons-material/DateRangeRounded';
 import dataGridComponentApi from './data-grid-component-api-pages';
 import pickersComponentApi from './date-pickers-component-api-pages';
 import chartsComponentApi from './charts-component-api-pages';
+import treeViewComponentApi from './tree-view-component-api-pages';
 
 // const isPreview =
 //   process.env.NODE_ENV === 'development' ||
@@ -16,12 +13,11 @@ const pages: MuiPage[] = [
   {
     pathname: '/blog/mui-x-v6/',
     title: "✨ What's new in v6? ✨",
-    icon: standardNavIcons.VisibilityIcon,
   },
   {
     pathname: '/x/introduction-group',
     title: 'Introduction',
-    icon: standardNavIcons.DescriptionIcon,
+
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
@@ -33,7 +29,7 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-data-grid-group',
     title: 'Data Grid',
-    icon: TableViewIcon,
+
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
       { pathname: '/x/react-data-grid/demo' },
@@ -104,6 +100,7 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid-group-pivot',
         title: 'Group & Pivot',
+        plan: 'pro',
         children: [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
@@ -125,7 +122,11 @@ const pages: MuiPage[] = [
         pathname: '/x/react-data-grid/recipes',
         children: [
           { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
-          { pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' },
+          {
+            pathname: '/x/react-data-grid/recipes-row-grouping',
+            title: 'Row grouping',
+            plan: 'premium',
+          },
         ],
       },
       {
@@ -192,7 +193,6 @@ const pages: MuiPage[] = [
   {
     pathname: '/x/react-date-pickers-group',
     title: 'Date and Time Pickers',
-    icon: DatePickerIcon,
     children: [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
@@ -323,7 +323,6 @@ const pages: MuiPage[] = [
     pathname: '/x/react-charts-group',
     title: 'Charts 🧪',
     newFeature: true,
-    icon: ChartIcon,
     children: [
       { pathname: '/x/react-charts', title: 'Overview' },
       {
@@ -359,28 +358,45 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-charts/scatter-demo', title: 'Demo' },
         ],
       },
+      {
+        pathname: '/x/react-charts/sparkline',
+        title: 'Sparkline',
+      },
       { pathname: '/x/react-charts/axis', title: 'Axis' },
-      { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
+      { pathname: '/x/react-charts/components', title: 'Custom components' },
       { pathname: '/x/react-charts/legend', title: 'Legend' },
-      { pathname: '/x/react-charts/styling', title: 'Styling' },
       { pathname: '/x/react-charts/stacking', title: 'Stacking' },
+      { pathname: '/x/react-charts/styling', title: 'Styling' },
+      { pathname: '/x/react-charts/tooltip', title: 'Tooltip' },
       {
         pathname: '/x/api/charts-group',
         title: 'API Reference',
         children: [...chartsComponentApi],
       },
-      { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
-      { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
-      { pathname: '/x/react-charts/gantt', title: '🚧 Gantt' },
-      { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
-      { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
-      { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
+      { pathname: '/x/react-charts/heat-map', title: 'Heat map 🚧' },
+      { pathname: '/x/react-charts/funnel', title: 'Funnel 🚧' },
+      { pathname: '/x/react-charts/gantt', title: 'Gantt 🚧' },
+      { pathname: '/x/react-charts/radar', title: 'Radar 🚧' },
+      { pathname: '/x/react-charts/sankey', title: 'Sankey 🚧' },
+      { pathname: '/x/react-charts/tree-map', title: 'Tree map 🚧' },
+    ],
+  },
+  {
+    pathname: '/x/react-tree-view-group',
+    title: 'Tree View',
+    newFeature: true,
+    children: [
+      { pathname: '/x/react-tree-view', title: 'Overview' },
+      {
+        pathname: '/x/api/tree-view-group',
+        title: 'API Reference',
+        children: [...treeViewComponentApi],
+      },
     ],
   },
   {
     pathname: '/x/migration-group',
     title: 'Migration',
-    icon: standardNavIcons.BookIcon,
     children: [
       {
         pathname: '/x/migration-v6',
@@ -390,6 +406,10 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/migration/migration-pickers-v5',
             title: 'Breaking changes: Date and Time Pickers',
+          },
+          {
+            pathname: '/x/migration/migration-tree-view-lab',
+            title: 'Migration from lab to v6 (Tree View)',
           },
         ],
       },

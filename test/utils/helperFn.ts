@@ -1,4 +1,36 @@
+import { spy } from 'sinon';
 import { act } from '@mui/monorepo/test/utils';
+import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
+import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
+
+export function sleep(duration: number) {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
+}
+
+export function microtasks() {
+  return act(() => Promise.resolve());
+}
+
+export function spyApi(api: GridApiCommon, methodName: string) {
+  const methodKey = methodName as keyof GridApiCommon;
+  const privateApi = unwrapPrivateAPI(api);
+  const method = privateApi[methodKey];
+
+  const spyFn = spy((...args: any[]) => {
+    return spyFn.target(...args);
+  }) as any;
+  spyFn.spying = true;
+  spyFn.target = method;
+
+  api[methodKey] = spyFn;
+  privateApi[methodKey] = spyFn;
+
+  return spyFn;
+}
 
 export async function raf() {
   return new Promise<void>((resolve) => {
@@ -50,18 +82,6 @@ export function getActiveColumnHeader() {
   }
 
   return `${Number(activeElement.getAttribute('aria-colindex')) - 1}`;
-}
-
-export function sleep(duration: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
-export function microtasks() {
-  return act(() => Promise.resolve());
 }
 
 export function getColumnValues(colIndex: number) {

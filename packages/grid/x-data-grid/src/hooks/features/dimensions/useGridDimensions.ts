@@ -118,7 +118,7 @@ export function useGridDimensions(
     } else {
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
-        height: rootDimensionsRef.current.height - totalHeaderHeight,
+        height: Math.max(rootDimensionsRef.current.height - totalHeaderHeight, 0),
       };
 
       const scrollInformation = hasScroll({

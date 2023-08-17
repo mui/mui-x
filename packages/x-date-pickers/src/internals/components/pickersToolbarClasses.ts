@@ -8,10 +8,6 @@ export interface PickersToolbarClasses {
   root: string;
   /** Styles applied to the content element. */
   content: string;
-  /** Styles applied to the pen icon button element. */
-  penIconButton: string;
-  /** Styles applied to the pen icon button element in landscape mode. */
-  penIconButtonLandscape: string;
 }
 
 export type PickersToolbarClassKey = keyof PickersToolbarClasses;
@@ -23,6 +19,4 @@ export function getPickersToolbarUtilityClass(slot: string) {
 export const pickersToolbarClasses = generateUtilityClasses('MuiPickersToolbar', [
   'root',
   'content',
-  'penIconButton',
-  'penIconButtonLandscape',
 ]);

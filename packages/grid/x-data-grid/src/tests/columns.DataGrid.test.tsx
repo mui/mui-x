@@ -2,10 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { DataGrid, DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import {
-  getColumnHeaderCell,
-  getColumnHeadersTextContent,
-} from '../../../../../test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -13,7 +10,7 @@ const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
-describe('<DataGridPro /> - Columns', () => {
+describe('<DataGrid /> - Columns', () => {
   const { render } = createRenderer();
 
   function TestDataGrid(
@@ -63,5 +60,52 @@ describe('<DataGridPro /> - Columns', () => {
 
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '100px' });
     });
+  });
+
+  it('should allow to change the column type', () => {
+    const { setProps } = render(
+      <TestDataGrid columns={[{ field: 'id', type: 'string' }, { field: 'idBis' }]} />,
+    );
+    expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--numeric');
+
+    setProps({ columns: [{ field: 'id', type: 'number' }, { field: 'idBis' }] });
+    expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--numeric');
+  });
+
+  it('should not override column properties when changing column type', () => {
+    const { setProps } = render(
+      <TestDataGrid
+        columns={[
+          {
+            field: 'id',
+            type: 'string',
+            width: 200,
+            valueFormatter: (params) => {
+              return `formatted: ${params.value}`;
+            },
+          },
+          { field: 'idBis' },
+        ]}
+      />,
+    );
+    expect(getColumnHeaderCell(0)).not.to.have.class('MuiDataGrid-columnHeader--numeric');
+    expect(getCell(0, 0).textContent).to.equal('formatted: 1');
+
+    setProps({
+      columns: [
+        {
+          field: 'id',
+          type: 'number',
+          width: 200,
+          valueFormatter: (params) => {
+            return `formatted: ${params.value}`;
+          },
+        },
+        { field: 'idBis' },
+      ],
+    } as Partial<DataGridProps>);
+    expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--numeric');
+    // should not override valueFormatter with the default numeric one
+    expect(getCell(0, 0).textContent).to.equal('formatted: 1');
   });
 });

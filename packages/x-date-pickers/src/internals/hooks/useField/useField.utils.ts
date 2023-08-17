@@ -181,7 +181,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   keyCode: AvailableAdjustKeyCode,
   sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   activeDate: TDate | null,
-  stepsAttribues?: { minutesStep?: number },
+  stepsAttributes?: { minutesStep?: number },
 ): string => {
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
@@ -200,7 +200,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
       cleanDigitSectionValue(utils, timezone, value, sectionBoundaries, section);
 
     const step =
-      section.type === 'minutes' && stepsAttribues?.minutesStep ? stepsAttribues.minutesStep : 1;
+      section.type === 'minutes' && stepsAttributes?.minutesStep ? stepsAttributes.minutesStep : 1;
 
     const currentSectionValue = parseInt(section.value, 10);
     let newSectionValueNumber = currentSectionValue + delta * step;
@@ -703,8 +703,8 @@ export const getSectionsBoundaries = <TDate>(
   timezone: PickersTimezone,
 ): FieldSectionsValueBoundaries<TDate> => {
   const today = utils.dateWithTimezone(undefined, timezone)!;
-
   const endOfYear = utils.endOfYear(today);
+  const endOfDay = utils.endOfDay(today);
 
   const { maxDaysInMonth, longestMonth } = getMonthsInYear(utils, today).reduce(
     (acc, month) => {
@@ -752,7 +752,7 @@ export const getSectionsBoundaries = <TDate>(
       };
     },
     hours: ({ format }) => {
-      const lastHourInDay = utils.getHours(endOfYear);
+      const lastHourInDay = utils.getHours(endOfDay);
       const hasMeridiem =
         utils.formatByString(utils.endOfDay(today), format) !== lastHourInDay.toString();
 
@@ -771,12 +771,12 @@ export const getSectionsBoundaries = <TDate>(
     minutes: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of minutes
-      maximum: utils.getMinutes(endOfYear),
+      maximum: utils.getMinutes(endOfDay),
     }),
     seconds: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of seconds
-      maximum: utils.getSeconds(endOfYear),
+      maximum: utils.getSeconds(endOfDay),
     }),
     meridiem: () => ({
       minimum: 0,

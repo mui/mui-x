@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 # Date and Time Pickers
 
-<p class="description">The Date and Time pickers let the user select date and time values.</p>
+<p class="description">The Date and Time Pickers let the user select date and time values.</p>
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 

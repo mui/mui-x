@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { defaultMemoize } from 'reselect';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -7,6 +8,7 @@ import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFilterItem } from '../../../models/gridFilterItem';
 import { GridRowId } from '../../../models/gridRows';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import { useLazyRef } from '../../utils/useLazyRef';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -42,6 +44,7 @@ export const filterStateInitializer: GridStateInitializer<
     ...state,
     filter: {
       filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
+      filteredRowsLookup: {},
       filteredDescendantCountLookup: {},
     },
     visibleRowsLookup: new Set(),
@@ -63,6 +66,10 @@ function getVisibleRowsLookupState(
   });
 }
 
+function createMemoizedValues() {
+  return defaultMemoize(Object.values);
+}
+
 /**
  * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
@@ -82,6 +89,7 @@ export const useGridFilter = (
     | 'slots'
     | 'slotProps'
     | 'disableColumnFilter'
+    | 'disableEval'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -99,7 +107,7 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
         props.filterMode === 'client'
-          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef)
+          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef, props.disableEval)
           : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
@@ -123,7 +131,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [apiRef, props.filterMode, props.getRowId]);
+  }, [apiRef, props.filterMode, props.getRowId, props.disableEval]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
@@ -388,9 +396,8 @@ export const useGridFilter = (
     [props.slots.filterPanel, props.slotProps?.filterPanel],
   );
 
-  const dataRowIdToIdLookup = apiRef.current.state.rows.dataRowIdToModelLookup;
-  const rows = React.useMemo(() => Object.values(dataRowIdToIdLookup), [dataRowIdToIdLookup]);
   const { getRowId } = props;
+  const getRowsRef = useLazyRef(createMemoizedValues);
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
@@ -411,6 +418,7 @@ export const useGridFilter = (
         passingQuickFilterValues: null,
       };
 
+      const rows = getRowsRef.current(apiRef.current.state.rows.dataRowIdToModelLookup);
       for (let i = 0; i < rows.length; i += 1) {
         const row = rows[i];
         const id = getRowId ? getRowId(row) : row.id;
@@ -439,7 +447,7 @@ export const useGridFilter = (
         filteredDescendantCountLookup: {},
       };
     },
-    [apiRef, rows, props.filterMode, getRowId],
+    [apiRef, props.filterMode, getRowId, getRowsRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
@@ -496,6 +504,13 @@ export const useGridFilter = (
   useGridApiEventHandler(apiRef, 'columnsChange', handleColumnsChange);
   useGridApiEventHandler(apiRef, 'activeStrategyProcessorChange', handleStrategyProcessorChange);
   useGridApiEventHandler(apiRef, 'rowExpansionChange', updateVisibleRowsLookupState);
+  useGridApiEventHandler(apiRef, 'columnVisibilityModelChange', () => {
+    const filterModel = gridFilterModelSelector(apiRef);
+    if (filterModel.quickFilterValues && filterModel.quickFilterExcludeHiddenColumns) {
+      // re-apply filters because the quick filter results may have changed
+      apiRef.current.unstable_applyFilters();
+    }
+  });
 
   /**
    * 1ST RENDER

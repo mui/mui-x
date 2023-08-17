@@ -64,6 +64,11 @@ export interface UsePickerViewsBaseProps<
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
+  /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   */
+  reduceAnimations?: boolean;
 }
 
 /**

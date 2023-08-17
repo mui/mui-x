@@ -11,8 +11,7 @@ import {
   openPicker,
   expectInputValue,
   getTextbox,
-} from 'test/utils/pickers-utils';
-import { DatePicker } from '@mui/x-date-pickers';
+} from 'test/utils/pickers';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -105,7 +104,7 @@ describe('<DesktopDatePicker />', () => {
       if (isJSDOM) {
         this.skip();
       }
-      render(<DatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
+      render(<DesktopDatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
       expect(document.activeElement).to.have.text('2019');

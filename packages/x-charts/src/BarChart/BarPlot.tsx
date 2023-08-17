@@ -1,10 +1,53 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { isBandScale } from '../hooks/useScale';
-import { BarElement } from './BarElement';
+import { BarElement, BarElementProps } from './BarElement';
+import { isBandScaleConfig } from '../models/axis';
 
-export function BarPlot() {
+/**
+ * Solution of the equations
+ * W = barWidth * N + offset * (N-1)
+ * offset / (offset + barWidth) = r
+ * @param bandWidth The width available to place bars.
+ * @param numberOfGroups The number of bars to place in that space.
+ * @param gapRatio The ratio of the gap between bars over the bar width.
+ * @returns The bar width and the offset between bars.
+ */
+function getBandSize({
+  bandWidth: W,
+  numberOfGroups: N,
+  gapRatio: r,
+}: {
+  bandWidth: number;
+  numberOfGroups: number;
+  gapRatio: number;
+}) {
+  if (r === 0) {
+    return {
+      barWidth: W / N,
+      offset: 0,
+    };
+  }
+  const barWidth = W / (N + (N - 1) * r);
+  const offset = r * barWidth;
+  return {
+    barWidth,
+    offset,
+  };
+}
+
+export interface BarPlotSlotsComponent {
+  bar?: React.JSXElementConstructor<BarElementProps>;
+}
+
+export interface BarPlotSlotComponentProps {
+  bar?: Partial<BarElementProps>;
+}
+
+export interface BarPlotProps extends Pick<BarElementProps, 'slots' | 'slotProps'> {}
+
+function BarPlot(props: BarPlotProps) {
   const seriesData = React.useContext(SeriesContext).bar;
   const axisData = React.useContext(CartesianContext);
 
@@ -23,12 +66,11 @@ export function BarPlot() {
           const xAxisKey = series[seriesId].xAxisKey ?? defaultXAxisId;
           const yAxisKey = series[seriesId].yAxisKey ?? defaultYAxisId;
 
-          const xScale = xAxis[xAxisKey].scale;
-          const yScale = yAxis[yAxisKey].scale;
-
-          if (!isBandScale(xScale)) {
+          const xAxisConfig = xAxis[xAxisKey];
+          const yAxisConfig = yAxis[yAxisKey];
+          if (!isBandScaleConfig(xAxisConfig)) {
             throw new Error(
-              `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series ${stackingGroups}`,
+              `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series of id "${seriesId}"`,
             );
           }
 
@@ -36,10 +78,17 @@ export function BarPlot() {
             throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
           }
 
+          const xScale = xAxisConfig.scale;
+          const yScale = yAxisConfig.scale;
+
           // Currently assuming all bars are vertical
           const bandWidth = xScale.bandwidth();
-          const barWidth = (0.9 * bandWidth) / stackingGroups.length;
-          const offset = 0.05 * bandWidth;
+
+          const { barWidth, offset } = getBandSize({
+            bandWidth,
+            numberOfGroups: stackingGroups.length,
+            gapRatio: xAxisConfig.barGapRatio,
+          });
 
           // @ts-ignore TODO: fix when adding a correct API for customisation
           const { stackedData, color } = series[seriesId];
@@ -52,12 +101,13 @@ export function BarPlot() {
                 key={`${seriesId}-${dataIndex}`}
                 id={seriesId}
                 dataIndex={dataIndex}
-                x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * barWidth + offset}
+                x={xScale(xAxis[xAxisKey].data?.[dataIndex])! + groupIndex * (barWidth + offset)}
                 y={yScale(value)}
                 height={yScale(baseline) - yScale(value)}
                 width={barWidth}
                 color={color}
                 highlightScope={series[seriesId].highlightScope}
+                {...props}
               />
             );
           });
@@ -66,3 +116,22 @@ export function BarPlot() {
     </React.Fragment>
   );
 }
+
+BarPlot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+} as any;
+
+export { BarPlot };

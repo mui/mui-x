@@ -14,6 +14,8 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "BasicTimeClock.js"}}
 
+## Uncontrolled vs. controlled value
+
 The value of the component can be uncontrolled or controlled.
 
 {{"demo": "TimeClockValue.js"}}

@@ -20,6 +20,8 @@ The `DigitalClock` is more appropriate when there is a limited amount of time op
 
 {{"demo": "DigitalClockBasic.js"}}
 
+## Uncontrolled vs. controlled value
+
 The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DigitalClockValue.js"}}

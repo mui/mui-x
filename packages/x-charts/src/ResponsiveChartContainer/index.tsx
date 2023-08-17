@@ -26,8 +26,8 @@ const useChartDimensions = (
     const win = ownerWindow(mainEl);
     const computedStyle = win.getComputedStyle(mainEl);
 
-    const newHeight = parseFloat(computedStyle.height) || 0;
-    const newWidth = parseFloat(computedStyle.width) || 0;
+    const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
+    const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
     setWidth(newWidth);
     setHeight(newHeight);
@@ -111,16 +111,16 @@ const ResizableContainer = styled('div', {
   },
 }));
 
-export function ResponsiveChartContainer(props: ResponsiveChartContainerProps) {
-  const { width: propsWidth, height: propsHeight, ...other } = props;
-  const [containerRef, width, height] = useChartDimensions(propsWidth, propsHeight);
+export const ResponsiveChartContainer = React.forwardRef(function ResponsiveChartContainer(
+  props: ResponsiveChartContainerProps,
+  ref,
+) {
+  const { width: inWidth, height: inHeight, ...other } = props;
+  const [containerRef, width, height] = useChartDimensions(inWidth, inHeight);
 
   return (
-    <ResizableContainer
-      ref={containerRef}
-      ownerState={{ width: props.width, height: props.height }}
-    >
-      <ChartContainer {...other} width={width} height={height} />
+    <ResizableContainer ref={containerRef} ownerState={{ width: inWidth, height: inHeight }}>
+      <ChartContainer {...other} width={width} height={height} ref={ref} />
     </ResizableContainer>
   );
-}
+});

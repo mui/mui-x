@@ -12,7 +12,7 @@ export const GLOBAL_API_REF = {
 
 /**
  * A tagger to determine if the filter is internal or custom user-supplied.
- * To be a valid internal filter, the V7 function *must* be defined/redefined at
+ * To be a valid internal filter, the v7 function *must* be defined/redefined at
  * the same time as the legacy one.
  * https://github.com/mui/mui-x/pull/9254#discussion_r1231095551
  */

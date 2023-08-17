@@ -1,0 +1,67 @@
+{
+  "name": "@mui/x-tree-view",
+  "version": "6.0.0-alpha.1",
+  "description": "The community edition of the tree view components (MUI X).",
+  "author": "MUI Team",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-tree-view/",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "mui",
+    "material-ui",
+    "material design",
+    "treeview"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
+    "build:legacy": "node ../../scripts/build.mjs legacy",
+    "build:modern": "node ../../scripts/build.mjs modern",
+    "build:node": "node ../../scripts/build.mjs node",
+    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../scripts/copyFiles.mjs",
+    "build:types": "node ../../scripts/buildTypes.mjs",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mui/mui-x.git",
+    "directory": "packages/x-tree-view"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.22.6",
+    "@mui/utils": "^5.14.5",
+    "@types/react-transition-group": "^4.4.6",
+    "clsx": "^2.0.0",
+    "prop-types": "^15.8.1",
+    "react-transition-group": "^4.4.5"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/base": "^5.0.0-alpha.87",
+    "@mui/material": "^5.8.6",
+    "@mui/system": "^5.8.0",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
+  },
+  "setupFiles": [
+    "<rootDir>/src/setupTests.js"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

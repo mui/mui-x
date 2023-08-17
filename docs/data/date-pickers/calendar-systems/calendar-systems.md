@@ -1,6 +1,6 @@
 ---
 productId: x-date-pickers
-title: Date and Time pickers - Calendar systems
+title: Date and Time Pickers - Calendar systems
 components: LocalizationProvider
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'

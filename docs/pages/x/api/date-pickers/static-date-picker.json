@@ -16,7 +16,12 @@
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
-      "default": "(day) => day.charAt(0).toUpperCase()"
+      "default": "(day) => day.charAt(0).toUpperCase()",
+      "signature": {
+        "type": "function(day: string) => string",
+        "describedArgs": ["day"],
+        "returned": "string"
+      }
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultValue": { "type": { "name": "any" } },
@@ -38,17 +43,41 @@
       "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
       "default": "3"
     },
-    "onAccept": { "type": { "name": "func" } },
-    "onChange": { "type": { "name": "func" } },
+    "onAccept": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(value: TValue) => void", "describedArgs": ["value"] }
+    },
+    "onChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(value: TValue, context: FieldChangeHandlerContext<TError>) => void",
+        "describedArgs": ["value", "context"]
+      }
+    },
     "onClose": {
       "type": { "name": "func" },
       "deprecated": true,
       "deprecationInfo": "Please avoid using as it will be removed in next major version."
     },
-    "onError": { "type": { "name": "func" } },
-    "onMonthChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
-    "onYearChange": { "type": { "name": "func" } },
+    "onError": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(error: TError, value: TValue) => void",
+        "describedArgs": ["error", "value"]
+      }
+    },
+    "onMonthChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(month: TDate) => void", "describedArgs": ["month"] }
+    },
+    "onViewChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(view: TView) => void", "describedArgs": ["view"] }
+    },
+    "onYearChange": {
+      "type": { "name": "func" },
+      "signature": { "type": "function(year: TDate) => void", "describedArgs": ["year"] }
+    },
     "openTo": {
       "type": {
         "name": "enum",
@@ -60,15 +89,41 @@
     },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": {
       "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
+      "default": "() => <span data-mui-test=\"loading-progress\">...</span>",
+      "signature": {
+        "type": "function() => React.ReactNode",
+        "describedArgs": [],
+        "returned": "React.ReactNode"
+      }
     },
-    "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
-    "shouldDisableYear": { "type": { "name": "func" } },
+    "shouldDisableDate": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(day: TDate) => boolean",
+        "describedArgs": ["day"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableMonth": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(month: TDate) => boolean",
+        "describedArgs": ["month"],
+        "returned": "boolean"
+      }
+    },
+    "shouldDisableYear": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(year: TDate) => boolean",
+        "describedArgs": ["year"],
+        "returned": "boolean"
+      }
+    },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
@@ -76,7 +131,8 @@
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -103,20 +159,85 @@
       "default": "3"
     }
   },
-  "slots": {
-    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
-    "day": { "default": "PickersDay", "type": { "name": "elementType" } },
-    "layout": { "type": { "name": "elementType" } },
-    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
-    "shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
-    "switchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "switchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
-  },
+  "slots": [
+    {
+      "class": null,
+      "name": "actionBar",
+      "description": "Custom component for the action bar, it is placed below the picker views.",
+      "default": "PickersActionBar"
+    },
+    {
+      "class": null,
+      "name": "calendarHeader",
+      "description": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
+      "default": "PickersCalendarHeader"
+    },
+    {
+      "class": null,
+      "name": "day",
+      "description": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
+      "default": "PickersDay"
+    },
+    {
+      "class": null,
+      "name": "layout",
+      "description": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts."
+    },
+    {
+      "class": null,
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft"
+    },
+    {
+      "class": null,
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight"
+    },
+    {
+      "class": null,
+      "name": "shortcuts",
+      "description": "Custom component for the shortcuts.",
+      "default": "PickersShortcuts"
+    },
+    {
+      "class": null,
+      "name": "switchViewButton",
+      "description": "Button displayed to switch between different calendar views.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "switchViewIcon",
+      "description": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+      "default": "ArrowDropDown"
+    },
+    {
+      "class": null,
+      "name": "toolbar",
+      "description": "Custom component for the toolbar rendered above the views.",
+      "default": "DatePickerToolbar"
+    }
+  ],
   "name": "StaticDatePicker",
+  "imports": [
+    "import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';",
+    "import { StaticDatePicker } from '@mui/x-date-pickers';",
+    "import { StaticDatePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDatePicker" },
   "filename": "/packages/x-date-pickers/src/StaticDatePicker/StaticDatePicker.tsx",
   "inheritance": null,

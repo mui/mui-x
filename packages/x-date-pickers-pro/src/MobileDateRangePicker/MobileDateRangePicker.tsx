@@ -13,14 +13,14 @@ import { DateRange } from '../internals/models';
 
 type MobileDateRangePickerComponent = (<TDate>(
   props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
   inProps: MobileDateRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   // Props with the default values common to all date time pickers
-  const { className, sx, ...defaultizedProps } = useDateRangePickerDefaultizedProps<
+  const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
     MobileDateRangePickerProps<TDate>
   >(inProps, 'MuiMobileDateRangePicker');
@@ -281,8 +281,8 @@ MobileDateRangePicker.propTypes = {
   rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
   /**
