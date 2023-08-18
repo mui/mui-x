@@ -7,12 +7,12 @@ import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.type
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
 type DateRangeFieldComponent = (<TDate>(
-  props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
+  props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRangeField<TDate>(
   inProps: SingleInputDateRangeFieldProps<TDate>,
-  ref: React.Ref<HTMLInputElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const themeProps = useThemeProps({
     props: inProps,

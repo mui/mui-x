@@ -53,7 +53,7 @@ type BrowserFieldComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 const BrowserField = React.forwardRef(
-  (props: BrowserFieldProps, ref: React.Ref<HTMLInputElement>) => {
+  (props: BrowserFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       disabled,
       id,
@@ -90,15 +90,11 @@ interface BrowserSingleInputDateRangeFieldProps
 }
 
 type BrowserSingleInputDateRangeFieldComponent = ((
-  props: BrowserSingleInputDateRangeFieldProps &
-    React.RefAttributes<HTMLInputElement>,
+  props: BrowserSingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { fieldType?: string };
 
 const BrowserSingleInputDateRangeField = React.forwardRef(
-  (
-    props: BrowserSingleInputDateRangeFieldProps,
-    ref: React.Ref<HTMLInputElement>,
-  ) => {
+  (props: BrowserSingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
     const {

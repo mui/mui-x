@@ -66,7 +66,7 @@ type JoyFieldComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 const JoyField = React.forwardRef(
-  (props: JoyFieldProps, ref: React.Ref<HTMLInputElement>) => {
+  (props: JoyFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const {
       disabled,
       id,
@@ -111,11 +111,11 @@ interface JoySingleInputDateRangeFieldProps
 }
 
 type JoySingleInputDateRangeFieldComponent = ((
-  props: JoySingleInputDateRangeFieldProps & React.RefAttributes<HTMLInputElement>,
+  props: JoySingleInputDateRangeFieldProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { fieldType?: string };
 
 const JoySingleInputDateRangeField = React.forwardRef(
-  (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLInputElement>) => {
+  (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLDivElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
 
     const {
