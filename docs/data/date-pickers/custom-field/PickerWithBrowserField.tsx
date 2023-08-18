@@ -37,6 +37,7 @@ import {
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: React.ReactNode;
+  inputRef?: React.Ref<any>;
   InputProps?: {
     ref?: React.Ref<any>;
     endAdornment?: React.ReactNode;
@@ -52,11 +53,12 @@ type BrowserFieldComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 const BrowserField = React.forwardRef(
-  (props: BrowserFieldProps, inputRef: React.Ref<HTMLInputElement>) => {
+  (props: BrowserFieldProps, ref: React.Ref<HTMLInputElement>) => {
     const {
       disabled,
       id,
       label,
+      inputRef,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
       // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
       error,
@@ -69,7 +71,7 @@ const BrowserField = React.forwardRef(
       <Box
         sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
         id={id}
-        ref={containerRef}
+        ref={containerRef ?? ref}
       >
         {startAdornment}
         <input disabled={disabled} ref={inputRef} {...other} />
@@ -109,7 +111,10 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       ownerState: props as any,
     });
 
-    const response = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>({
+    const { ref: inputRef, ...response } = useSingleInputDateRangeField<
+      Dayjs,
+      typeof textFieldProps
+    >({
       props: textFieldProps,
       inputRef: externalInputRef,
     });
@@ -117,12 +122,13 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
     return (
       <BrowserField
         {...response}
+        ref={ref}
         style={{
           minWidth: 300,
         }}
+        inputRef={inputRef}
         InputProps={{
           ...response.InputProps,
-          ref,
           endAdornment: (
             <IconButton onClick={onAdornmentClick}>
               <DateRangeIcon />
@@ -205,10 +211,10 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const { startDate, endDate } = useMultiInputDateRangeField<
-      Dayjs,
-      MultiInputFieldSlotTextFieldProps
-    >({
+    const {
+      startDate: { ref: startRef, ...startDateProps },
+      endDate: { ref: endRef, ...endDateProps },
+    } = useMultiInputDateRangeField<Dayjs, MultiInputFieldSlotTextFieldProps>({
       sharedProps: {
         value,
         defaultValue,
@@ -233,9 +239,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
 
     return (
       <Stack ref={ref} spacing={2} direction="row" className={className}>
-        <BrowserField {...startDate} />
+        <BrowserField {...startDateProps} inputRef={startRef} />
         <span> — </span>
-        <BrowserField {...endDate} />
+        <BrowserField {...endDateProps} inputRef={endRef} />
       </Stack>
     );
   },
