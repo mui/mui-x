@@ -18,7 +18,7 @@ export function useCodeLoader(selectedDemo, selectedCustomizationOption, example
     const fetchCodeSnippet = async () => {
       try {
         const module = await import(
-          `./examples/${selectedDemo}/${examples[selectedDemo][selectedCustomizationOption]}`
+          `./examples/${selectedDemo}/${examples[selectedDemo][selectedCustomizationOption].code}`
         );
 
         const code = module.default;

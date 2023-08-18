@@ -4,11 +4,6 @@ import { deepPurple } from '@mui/material/colors';
 
 const StyledStaticDatePicker = styled(StaticDatePicker)(() => ({
   '& .MuiPickersCalendarHeader-root': {
-    '& .MuiDateCalendar-root': {
-      height: 'fit-content',
-      maxHeight: '400px',
-      '& *': { fontFamily: 'Arial' },
-    },
     background: deepPurple[50],
   },
   '& .MuiPickersCalendarHeader-label': {

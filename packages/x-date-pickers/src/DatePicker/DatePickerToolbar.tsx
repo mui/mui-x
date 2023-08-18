@@ -18,7 +18,9 @@ export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | 
   sx?: SxProps<Theme>;
 }
 
-export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {}
+export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {
+  sx?: SxProps<Theme>;
+}
 
 const useUtilityClasses = (ownerState: DatePickerToolbarProps<any>) => {
   const { classes } = ownerState;

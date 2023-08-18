@@ -7,11 +7,6 @@ import { deepPurple } from '@mui/material/colors';
 
 const StyledDesktopDatePicker = styled(DesktopDatePicker)(() => ({
   '& .MuiPickersCalendarHeader-root': {
-    '& .MuiDateCalendar-root': {
-      height: 'fit-content',
-      maxHeight: '400px',
-      '& *': { fontFamily: 'Arial' },
-    },
     background: deepPurple[50],
   },
   '& .MuiPickersCalendarHeader-label': {

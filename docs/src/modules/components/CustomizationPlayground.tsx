@@ -9,16 +9,24 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { blue, grey } from '@mui/material/colors';
 import clsx from 'clsx';
 
+const customizationLabels: { [k: string]: string } = {
+  customTheme: 'Custom Theme',
+  styledComponents: 'Styled Components',
+  sxProp: 'SX Prop',
+};
+
+type CustomizationItemsType = Partial<{
+  [k in keyof typeof customizationLabels]: { code: string; type?: 'warning' | 'success' };
+}>;
 interface CustomizationPlaygroundProps {
   children: React.ReactNode;
-  examples: {
-    [key: string]: {
-      [key: string]: string;
-    };
-  };
+  examples: { [k: string]: CustomizationItemsType };
   selectedDemo: string | null;
   hoveredDemo: string | null;
   customizationOptions: { [key: string]: string };
@@ -132,6 +140,20 @@ const HighlightedDemo = styled(Box, {
   },
 );
 
+const RECOMMENDATION_MESSAGES: { [k in 'warning' | 'success']: string } = {
+  warning:
+    'This might not be the best styling approach for the selected component. You can check out the other options for better results.',
+  success: 'This is the recommended styling approach for the selected component.',
+};
+
+function StylingRecomendation({ type = 'success' }: { type?: 'warning' | 'success' }) {
+  return (
+    <Tooltip title={RECOMMENDATION_MESSAGES[type]}>
+      {type === 'warning' ? <WarningIcon color="warning" /> : <CheckBoxIcon color="success" />}
+    </Tooltip>
+  );
+}
+
 const CustomizationPlayground = React.forwardRef(function CustomizationPlayground(
   {
     children,
@@ -186,21 +208,26 @@ const CustomizationPlayground = React.forwardRef(function CustomizationPlaygroun
       </HighlightedDemo>
       <BrandingProvider>
         {selectedDemo && customizationOptions && (
-          <TextField
-            size="small"
-            label="Customization options"
-            value={selectedCustomizationOption}
-            onChange={(e) => {
-              setSelectedCustomizationOption(e.target.value as string);
-            }}
-            select
-          >
-            {Object.keys(customizationOptions)?.map((option) => (
-              <MenuItem value={option} key={option}>
-                {customizationOptions[option as string]}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TextField
+              size="small"
+              label="Customization options"
+              value={selectedCustomizationOption}
+              onChange={(e) => {
+                setSelectedCustomizationOption(e.target.value as string);
+              }}
+              select
+            >
+              {Object.keys(customizationOptions)?.map((option) => (
+                <MenuItem value={option} key={option}>
+                  {customizationOptions[option as string]}
+                </MenuItem>
+              ))}
+            </TextField>
+            <StylingRecomendation
+              type={examples[selectedDemo][selectedCustomizationOption]?.type}
+            />
+          </Box>
         )}
 
         {selectedDemo && selectedCustomizationOption && codeExample && (

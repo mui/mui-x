@@ -9,7 +9,9 @@ export const customizationLabels: { [k: string]: string } = {
   sxProp: 'SX Prop',
 };
 
-type CustomizationItemsType = Partial<{ [k in keyof typeof customizationLabels]: string }>;
+type CustomizationItemsType = Partial<{
+  [k in keyof typeof customizationLabels]: { code: string; type?: 'warning' | 'success' };
+}>;
 
 type PickerExamplesType<TComponent, TComponentProps> = {
   name: string;
@@ -20,35 +22,90 @@ type PickerExamplesType<TComponent, TComponentProps> = {
 
 export const staticDatePickerExamples: { [k: string]: CustomizationItemsType } = {
   PickersToolbar: {
-    customTheme: 'ToolbarCustomTheme.styling.ts',
-    styledComponents: 'ToolbarStyledComponents.styling.ts',
+    customTheme: {
+      code: 'ToolbarCustomTheme.styling.ts',
+    },
+    styledComponents: {
+      code: 'ToolbarStyledComponents.styling.ts',
+    },
+    sxProp: {
+      code: 'ToolbarSxProp.styling.tsx',
+    },
   },
   DateCalendar: {
-    customTheme: 'DateCalendarCustomTheme.styling.ts',
-    styledComponents: 'DateCalendarStyledComponents.styling.ts',
+    customTheme: {
+      code: 'DateCalendarCustomTheme.styling.ts',
+    },
+    styledComponents: {
+      code: 'DateCalendarStyledComponents.styling.ts',
+    },
+    sxProp: {
+      code: 'DateCalendarSxProp.styling.ts',
+    },
   },
   PickersCalendarHeader: {
-    customTheme: 'CalendarHeaderCustomTheme.styling.ts',
-    styledComponents: 'CalendarHeaderStyledComponents.styling.ts',
+    customTheme: {
+      code: 'CalendarHeaderCustomTheme.styling.ts',
+    },
+    styledComponents: {
+      code: 'CalendarHeaderStyledComponents.styling.ts',
+    },
+    sxProp: {
+      code: 'CalendarHeaderSxProp.styling.tsx',
+    },
   },
   DayCalendar: {
-    customTheme: 'DayCalendarCustomTheme.styling.ts',
-    styledComponents: 'DayCalendarStyledComponents.styling.ts',
+    customTheme: {
+      code: 'DayCalendarCustomTheme.styling.ts',
+    },
+    styledComponents: {
+      code: 'DayCalendarStyledComponents.styling.ts',
+    },
+    sxProp: {
+      code: 'DayCalendarSxProp.styling.tsx',
+    },
   },
 };
 
 export const datePickerExamples: { [k: string]: CustomizationItemsType } = {
   DateCalendar: {
-    customTheme: 'DateCalendarCustomTheme.styling.ts',
-    styledComponents: 'DesktopDatePicker/DateCalendarStyledComponents.styling.tsx',
+    customTheme: {
+      code: 'DateCalendarCustomTheme.styling.ts',
+    },
+
+    sxProp: {
+      code: 'DesktopDatePicker/DateCalendarSxProp.styling.tsx',
+    },
+    styledComponents: {
+      code: 'DesktopDatePicker/DateCalendarStyledComponents.styling.tsx',
+      type: 'warning',
+    },
   },
   PickersCalendarHeader: {
-    customTheme: 'CalendarHeaderCustomTheme.styling.ts',
-    styledComponents: 'DesktopDatePicker/CalendarHeaderStyledComponents.styling.tsx',
+    customTheme: {
+      code: 'CalendarHeaderCustomTheme.styling.ts',
+    },
+
+    sxProp: {
+      code: 'DesktopDatePicker/CalendarHeaderSxProp.styling.tsx',
+    },
+    styledComponents: {
+      code: 'DesktopDatePicker/CalendarHeaderStyledComponents.styling.tsx',
+      type: 'warning',
+    },
   },
   DayCalendar: {
-    customTheme: 'DayCalendarCustomTheme.styling.ts',
-    styledComponents: 'DesktopDatePicker/DayCalendarStyledComponents.styling.tsx',
+    customTheme: {
+      code: 'DayCalendarCustomTheme.styling.ts',
+    },
+
+    sxProp: {
+      code: 'DesktopDatePicker/DayCalendarSxProp.styling.tsx',
+    },
+    styledComponents: {
+      code: 'DesktopDatePicker/DayCalendarStyledComponents.styling.tsx',
+      type: 'warning',
+    },
   },
 };
 
@@ -74,6 +131,7 @@ export const pickerExamples = [
       open: true,
       slotProps: {
         popper: {
+          sx: { zIndex: 1 },
           disablePortal: true,
           placement: 'bottom-start',
           modifiers: [
