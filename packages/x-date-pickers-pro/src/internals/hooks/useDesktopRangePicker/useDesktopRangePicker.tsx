@@ -57,6 +57,7 @@ export const useDesktopRangePicker = <
     reduceAnimations,
   } = props;
 
+  const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
 
@@ -90,7 +91,7 @@ export const useDesktopRangePicker = <
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
       if (
-        anchorRef.current?.contains(getActiveElement(document)) ||
+        fieldContainerRef.current?.contains(getActiveElement(document)) ||
         popperRef.current?.contains(getActiveElement(document))
       ) {
         return;
@@ -121,6 +122,7 @@ export const useDesktopRangePicker = <
       formatDensity,
       timezone,
       autoFocus: autoFocus && !props.open,
+      ref: fieldContainerRef,
       ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,
