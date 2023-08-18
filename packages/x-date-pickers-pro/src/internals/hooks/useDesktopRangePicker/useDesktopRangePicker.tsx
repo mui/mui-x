@@ -164,6 +164,7 @@ export const useDesktopRangePicker = <
       <Field {...enrichedFieldProps} />
       <PickersPopper
         role="tooltip"
+        placement="bottom-start"
         containerRef={popperRef}
         anchorEl={fieldContainerRef.current}
         onBlur={handleBlur}
