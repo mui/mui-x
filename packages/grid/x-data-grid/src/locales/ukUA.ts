@@ -94,12 +94,12 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'порожній',
   filterOperatorIsNotEmpty: 'не порожній',
   filterOperatorIsAnyOf: 'будь-що із',
-  // 'filterOperator=': '=',
-  // 'filterOperator!=': '!=',
-  // 'filterOperator>': '>',
-  // 'filterOperator>=': '>=',
-  // 'filterOperator<': '<',
-  // 'filterOperator<=': '<=',
+  'filterOperator=': '=',
+  'filterOperator!=': '!=',
+  'filterOperator>': '>',
+  'filterOperator>=': '>=',
+  'filterOperator<': '<',
+  'filterOperator<=': '<=',
 
   // Header filter operators text
   headerFilterOperatorContains: 'Містить',
