@@ -95,6 +95,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlotProps: RangePickerFieldSlotsComponentsProps<TDate> | undefined;
   pickerSlots: UncapitalizeObjectKeys<RangePickerFieldSlotsComponent> | undefined;
   fieldProps: FieldProps;
+  anchorRef: React.Ref<HTMLDivElement>;
 }
 
 const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
@@ -111,6 +112,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   pickerSlotProps,
   pickerSlots,
   fieldProps,
+  anchorRef,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -179,7 +181,9 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
   } = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
+      const resolvedComponentProps = resolveComponentProps(pickerSlotProps?.textField, ownerState);
       let inputProps: MultiInputFieldSlotTextFieldProps;
+      let InputProps: MultiInputFieldSlotTextFieldProps['InputProps'];
       if (ownerState.position === 'start') {
         inputProps = {
           inputRef: startRef,
@@ -191,6 +195,10 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeStartSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
+        };
+        InputProps = {
+          ...resolvedComponentProps?.InputProps,
+          ref: anchorRef,
         };
       } else {
         inputProps = {
@@ -210,6 +218,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
         ...(labelId != null && { id: `${labelId}-${ownerState.position!}` }),
         ...inputProps,
         ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
+        InputProps,
       };
     },
     root: (ownerState) => {
@@ -246,6 +255,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
   pickerSlots,
   pickerSlotProps,
   fieldProps,
+  anchorRef,
 }: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
@@ -317,6 +327,10 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMer
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onSelectedSectionsChange: handleSelectedSectionsChange,
     onBlur,
+    InputProps: {
+      ref: anchorRef,
+      ...fieldProps?.InputProps,
+    },
     focused: open,
     ...(labelId != null && { id: labelId }),
     ...(wrapperVariant === 'mobile' && { readOnly: true }),

@@ -57,7 +57,7 @@ export const useDesktopRangePicker = <
     reduceAnimations,
   } = props;
 
-  const fieldContainerRef = React.useRef<HTMLDivElement>(null);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
 
   const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
@@ -90,7 +90,7 @@ export const useDesktopRangePicker = <
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
       if (
-        fieldContainerRef.current?.contains(getActiveElement(document)) ||
+        anchorRef.current?.contains(getActiveElement(document)) ||
         popperRef.current?.contains(getActiveElement(document))
       ) {
         return;
@@ -121,7 +121,6 @@ export const useDesktopRangePicker = <
       formatDensity,
       timezone,
       autoFocus: autoFocus && !props.open,
-      ref: fieldContainerRef,
       ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,
@@ -147,6 +146,7 @@ export const useDesktopRangePicker = <
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,
+    anchorRef,
   });
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
@@ -166,7 +166,7 @@ export const useDesktopRangePicker = <
         role="tooltip"
         placement="bottom-start"
         containerRef={popperRef}
-        anchorEl={fieldContainerRef.current}
+        anchorEl={anchorRef.current}
         onBlur={handleBlur}
         {...actions}
         open={open}
