@@ -178,7 +178,7 @@ export default function ColorTemplate() {
   const [colorScheme, setColorScheme] = React.useState('Category10');
 
   return (
-    <Stack direction="column" spacing={2}>
+    <Stack direction="column" spacing={2} sx={{ maxWidth: 1 }}>
       <ScatterChart
         width={600}
         height={300}

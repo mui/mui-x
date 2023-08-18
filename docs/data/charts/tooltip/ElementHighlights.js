@@ -102,7 +102,7 @@ export default function ElementHighlights() {
   };
 
   return (
-    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+    <Stack direction={{ xs: 'column', xl: 'row' }} spacing={1} sx={{ maxWidth: 1 }}>
       <div>
         <ToggleButtonGroup
           value={chartType}
@@ -171,9 +171,11 @@ export default function ElementHighlights() {
         )}
       </div>
       <Stack
-        direction={{ xs: 'row', sm: 'column' }}
-        justifyContent="center"
+        direction={{ xs: 'row', xl: 'column' }}
         spacing={3}
+        justifyContent="center"
+        flexWrap="wrap"
+        useFlexGap
       >
         <TextField
           select
