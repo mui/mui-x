@@ -52,6 +52,9 @@ export interface GridGetRowsToExportParams<Api extends GridApiCommon = GridApiCo
 export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
   extends GridGetRowsToExportParams<Api> {}
 
+export interface GridPrintGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
+extends GridGetRowsToExportParams<Api> {}
+
 /**
  * The options to apply on the CSV export.
  * @demos
@@ -129,6 +132,12 @@ export interface GridPrintExportOptions extends GridExportOptions {
    * Provide Print specific styles to the print window.
    */
   pageStyle?: string | Function;
+  /**
+   * Function that returns the id of the rows to export in the order they should be exported.
+   * @param {GridPrintGetRowsToExportParams} params With all properties from [[GridPrintGetRowsToExportParams]].
+   * @returns {GridRowId[]} The id of the rows to export.
+   */
+  getRowsToExport?: (params: GridPrintGetRowsToExportParams) => GridRowId[];
 }
 
 /**

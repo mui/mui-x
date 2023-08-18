@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPrintExportOptions } from '../../../models/gridExport';
+import { GridPrintExportOptions, GridPrintGetRowsToExportParams } from '../../../models/gridExport';
+import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridColumnDefinitionsSelector,
@@ -14,7 +15,7 @@ import {
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { getColumnsToExport } from './utils';
+import { getColumnsToExport, defaultGetRowsToExport } from './utils';
 import { mergeStateWithPaginationModel } from '../pagination/useGridPagination';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
@@ -62,6 +63,7 @@ export const useGridPrintExport = (
   const doc = React.useRef<Document | null>(null);
   const previousGridState = React.useRef<GridInitialStateCommunity | null>(null);
   const previousColumnVisibility = React.useRef<{ [key: string]: boolean }>({});
+  const previousRows = React.useRef<GridValidRowModel[]>([]);
 
   React.useEffect(() => {
     doc.current = ownerDocument(apiRef.current.rootElementRef!.current!);
@@ -85,6 +87,20 @@ export const useGridPrintExport = (
         });
 
         apiRef.current.setColumnVisibilityModel(newColumnVisibilityModel);
+        resolve();
+      }),
+    [apiRef],
+  );
+
+  const updateGridRowsForPrint = React.useCallback(
+    (rowsToExport?: (params: GridPrintGetRowsToExportParams<GridApiCommunity>) => GridRowId[]) =>
+      new Promise<void>((resolve) => {
+        const getRowsToExport = rowsToExport ?? defaultGetRowsToExport;
+        const rowsToExportIds = getRowsToExport({ apiRef });
+
+        const newRows = rowsToExportIds.map((id) => apiRef.current.getRow(id));
+
+        apiRef.current.setRows(newRows);
         resolve();
       }),
     [apiRef],
@@ -245,10 +261,12 @@ export const useGridPrintExport = (
       }
 
       apiRef.current.unstable_enableVirtualization();
+      apiRef.current.setRows(previousRows.current);
 
       // Clear local state
       previousGridState.current = null;
       previousColumnVisibility.current = {};
+      previousRows.current = [];
     },
     [apiRef],
   );
@@ -264,6 +282,7 @@ export const useGridPrintExport = (
       previousGridState.current = apiRef.current.exportState();
       // It appends that the visibility model is not exported, especially if columnVisibility is not controlled
       previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
+      previousRows.current = apiRef.current.getSortedRows();
 
       if (props.pagination) {
         const visibleRowCount = gridExpandedRowCountSelector(apiRef);
@@ -280,6 +299,7 @@ export const useGridPrintExport = (
       }
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);
+      await updateGridRowsForPrint(options?.getRowsToExport);
       apiRef.current.unstable_disableVirtualization();
       await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
@@ -310,6 +330,7 @@ export const useGridPrintExport = (
       handlePrintWindowLoad,
       handlePrintWindowAfterPrint,
       updateGridColumnsForPrint,
+      updateGridRowsForPrint,
     ],
   );
 
