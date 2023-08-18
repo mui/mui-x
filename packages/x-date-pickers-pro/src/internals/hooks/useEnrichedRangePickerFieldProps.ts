@@ -95,7 +95,7 @@ export interface UseEnrichedRangePickerFieldPropsParams<
   pickerSlotProps: RangePickerFieldSlotsComponentsProps<TDate> | undefined;
   pickerSlots: UncapitalizeObjectKeys<RangePickerFieldSlotsComponent> | undefined;
   fieldProps: FieldProps;
-  anchorRef: React.Ref<HTMLDivElement>;
+  anchorRef?: React.Ref<HTMLDivElement>;
 }
 
 const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeridiem, TError>({
@@ -196,10 +196,12 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeViewWithMeri
           ...(!readOnly && !fieldProps.disabled && { onClick: openRangeStartSelection }),
           ...(wrapperVariant === 'mobile' && { readOnly: true }),
         };
-        InputProps = {
-          ...resolvedComponentProps?.InputProps,
-          ref: anchorRef,
-        };
+        if (anchorRef) {
+          InputProps = {
+            ...resolvedComponentProps?.InputProps,
+            ref: anchorRef,
+          };
+        }
       } else {
         inputProps = {
           inputRef: endRef,
