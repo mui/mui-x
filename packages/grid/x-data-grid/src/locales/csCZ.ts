@@ -146,7 +146,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   },
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Celkem řádků: ${count}`,
+  footerTotalRows: 'Celkem řádků:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) => {

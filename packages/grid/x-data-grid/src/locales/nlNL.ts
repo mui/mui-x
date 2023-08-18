@@ -127,7 +127,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} rij geselecteerd`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Totaal: ${count}`,
+  footerTotalRows: 'Totaal:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

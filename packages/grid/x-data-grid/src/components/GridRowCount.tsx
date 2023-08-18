@@ -65,7 +65,7 @@ const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(functio
       ownerState={ownerState}
       {...other}
     >
-      {apiRef.current.getLocaleText('footerTotalRows')(text)}
+      {apiRef.current.getLocaleText('footerTotalRows')} {text}
     </GridRowCountRoot>
   );
 });

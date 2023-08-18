@@ -122,7 +122,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => `已選取 ${count.toLocaleString()} 個`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `總數: ${count}`,
+  footerTotalRows: '總數:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

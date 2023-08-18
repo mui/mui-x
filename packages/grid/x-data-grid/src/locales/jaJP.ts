@@ -122,7 +122,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => `${count}行を選択中`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `総行数: ${count}`,
+  footerTotalRows: '総行数:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

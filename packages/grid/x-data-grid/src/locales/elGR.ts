@@ -127,7 +127,7 @@ const elGRGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} επιλεγμένη γραμμή`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Σύνολο Γραμμών: ${count}`,
+  footerTotalRows: 'Σύνολο Γραμμών:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

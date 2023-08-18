@@ -127,7 +127,7 @@ const itITGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} record selezionato`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Record totali: ${count}`,
+  footerTotalRows: 'Record totali:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

@@ -156,7 +156,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
     }),
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Усього рядків: ${count}`,
+  footerTotalRows: 'Усього рядків:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

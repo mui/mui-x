@@ -125,7 +125,7 @@ const viVNGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count.toLocaleString()} hàng đã chọn` : `${count.toLocaleString()} hàng đã chọn`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Tổng: ${count}`,
+  footerTotalRows: 'Tổng:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

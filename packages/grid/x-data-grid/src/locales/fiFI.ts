@@ -127,7 +127,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} rivi valittu`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Rivejä yhteensä: ${count}`,
+  footerTotalRows: 'Rivejä yhteensä:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

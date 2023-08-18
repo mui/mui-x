@@ -125,7 +125,7 @@ const arSDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `تم تحديد ${count.toLocaleString()} من الصفوف` : `تم تحديد صف واحد`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `إجمالي الصفوف: ${count}`,
+  footerTotalRows: 'إجمالي الصفوف:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

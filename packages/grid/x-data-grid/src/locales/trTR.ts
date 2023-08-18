@@ -122,7 +122,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => `${count.toLocaleString()} satır seçildi`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Toplam Satır: ${count}`,
+  footerTotalRows: 'Toplam Satır:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

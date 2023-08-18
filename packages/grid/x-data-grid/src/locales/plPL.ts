@@ -122,7 +122,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => `Liczba wybranych wierszy: ${count.toLocaleString()}`,
 
   // Total row amount footer text
-  footerTotalRows: (count) => `Łączna liczba wierszy: ${count}`,
+  footerTotalRows: 'Łączna liczba wierszy:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
