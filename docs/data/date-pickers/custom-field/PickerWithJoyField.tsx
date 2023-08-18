@@ -66,13 +66,14 @@ type JoyFieldComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 const JoyField = React.forwardRef(
-  (props: JoyFieldProps, inputRef: React.Ref<HTMLInputElement>) => {
+  (props: JoyFieldProps, ref: React.Ref<HTMLInputElement>) => {
     const {
       disabled,
       id,
       label,
       InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
       formControlSx,
+      slotProps,
       ...other
     } = props;
 
@@ -86,15 +87,18 @@ const JoyField = React.forwardRef(
           },
           ...(Array.isArray(formControlSx) ? formControlSx : [formControlSx]),
         ]}
-        ref={containerRef}
+        ref={ref}
       >
         <FormLabel>{label}</FormLabel>
         <Input
+          {...other}
           disabled={disabled}
-          slotProps={{ input: { ref: inputRef } }}
+          slotProps={{
+            ...slotProps,
+            root: { ...slotProps?.root, ref: containerRef },
+          }}
           startDecorator={startAdornment}
           endDecorator={endAdornment}
-          {...other}
         />
       </FormControl>
     );
@@ -127,7 +131,10 @@ const JoySingleInputDateRangeField = React.forwardRef(
       ownerState: props as any,
     });
 
-    const response = useSingleInputDateRangeField<Dayjs, JoyFieldProps>({
+    const { ref: inputRef, ...response } = useSingleInputDateRangeField<
+      Dayjs,
+      JoyFieldProps
+    >({
       props: textFieldProps,
       inputRef: externalInputRef,
     });
@@ -135,15 +142,17 @@ const JoySingleInputDateRangeField = React.forwardRef(
     return (
       <JoyField
         {...response}
+        ref={ref}
+        slotProps={{
+          input: {
+            ref: inputRef,
+          },
+        }}
         endDecorator={
           <IconButton onClick={onAdornmentClick} variant="plain" color="neutral">
             <DateRangeIcon color="action" />
           </IconButton>
         }
-        InputProps={{
-          ...response.InputProps,
-          ref,
-        }}
       />
     );
   },
@@ -250,10 +259,10 @@ const JoyMultiInputDateRangeField = React.forwardRef(
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;
 
-    const { startDate, endDate } = useMultiInputDateRangeField<
-      Dayjs,
-      MultiInputFieldSlotTextFieldProps
-    >({
+    const {
+      startDate: { ref: startRef, ...startDateProps },
+      endDate: { ref: endRef, ...endDateProps },
+    } = useMultiInputDateRangeField<Dayjs, MultiInputFieldSlotTextFieldProps>({
       sharedProps: {
         value,
         defaultValue,
@@ -278,9 +287,23 @@ const JoyMultiInputDateRangeField = React.forwardRef(
 
     return (
       <MultiInputJoyDateRangeFieldRoot ref={ref} className={className}>
-        <JoyField {...startDate} />
+        <JoyField
+          {...startDateProps}
+          slotProps={{
+            input: {
+              ref: startRef,
+            },
+          }}
+        />
         <MultiInputJoyDateRangeFieldSeparator />
-        <JoyField {...endDate} />
+        <JoyField
+          {...endDateProps}
+          slotProps={{
+            input: {
+              ref: endRef,
+            },
+          }}
+        />
       </MultiInputJoyDateRangeFieldRoot>
     );
   },
