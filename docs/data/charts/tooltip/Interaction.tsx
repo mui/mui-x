@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 
@@ -20,11 +21,11 @@ const barChartsParams = {
 };
 export default function Interaction() {
   return (
-    <div>
+    <Box sx={{ maxWidth: 1 }}>
       <Stack direction="column">
         <BarChart {...barChartsParams} tooltip={{ trigger: 'axis' }} />
         <BarChart {...barChartsParams} tooltip={{ trigger: 'item' }} />
       </Stack>
-    </div>
+    </Box>
   );
 }
