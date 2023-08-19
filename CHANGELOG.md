@@ -3,6 +3,124 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.11.2
+
+_Aug 17, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🏎️ Lower the filtering delay in the grid
+- 🌍 Improve Spanish (es-ES) locale on the data grid
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.11.2`
+
+- [DataGrid] Fix `eval` blocked by CSP (#9863) @romgrk
+- [DataGrid] Fix row id bug (#10051) @romgrk
+- [DataGrid] Honor `disableExport` flag in Print Export (#10044) @MBilalShafi
+- [DataGrid] Lower filter debounce delay (#9712) @romgrk
+- [DataGrid] Unhide potential ref binding issue (#9965) @oliviertassinari
+- [l10n] Improve Chinese (zh-CN) and Chinese(traditional) (zh-TW) locales (#9999) @MyNameIsTakenOMG
+- [l10n] Improve Spanish (es-ES) locale (#10037) @Macampu420
+
+#### `@mui/x-data-grid-pro@v6.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@v6.11.2`.
+
+#### `@mui/x-data-grid-premium@v6.11.2` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@v6.11.2`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.11.2`
+
+- [pickers] Fix month switcher RTL (#10003) @alexfauquette
+- [pickers] Follow-up on using device motion reduction preference (#9858) @LukasTy
+- [pickers] Pass the shortcut information in the `onChange` context (#9985) @flaviendelangle
+- [pickers] Replace `Grid` toolbar component with a styled `div` (#10052) @LukasTy
+
+#### `@mui/x-date-pickers-pro@v6.11.2` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@v6.11.2`.
+
+### Docs
+
+- [docs] Add migration guide for the Tree View (#9987) @flaviendelangle
+- [docs] Fix en-US changelog @oliviertassinari
+- [docs] Update column types (#10040) @romgrk
+
+### Core
+
+- [core] Remove unnecessary Box (#9831) @oliviertassinari
+- [core] Set GitHub Action top level permission @oliviertassinari
+- [core] Split the pickers test utils (#9976) @flaviendelangle
+
+## 6.11.1
+
+_Aug 11, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 💫 Add theme augmentation to `@mui/x-tree-view`
+- 📈 Enable charts customization using `slot` and `slotProps` props
+- 🌍 Improve Finnish (fi-FI) and Icelandic (is-IS) locales on the pickers
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@6.11.1`
+
+- [DataGrid] `getCellAggregationResult`: Handle `null` `rowNode` case (#9915) @romgrk
+
+#### `@mui/x-data-grid-pro@6.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-data-grid@6.11.1`.
+
+#### `@mui/x-data-grid-premium@6.11.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+
+Same changes as in `@mui/x-data-grid-pro@6.11.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@6.11.1`
+
+- [fields] Use `numeric` `inputmode` instead of `tel` (#9918) @LukasTy
+- [pickers] Always respect locale when formatting meridiem (#9979) @flaviendelangle
+- [pickers] Call `onChange` when selecting a shortcut with `changeImportance="set"` (#9974) @flaviendelangle
+- [pickers] Refactor `themeAugmentation` `styleOverrides` (#9978) @LukasTy
+- [l10n] Improve Finnish (fi-FI) locale (#9795) @kurkle
+- [l10n] Improve Icelandic (is-IS) locale (#9639) @magnimarels
+
+#### `@mui/x-date-pickers-pro@6.11.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+
+Same changes as in `@mui/x-date-pickers@6.11.1`.
+
+### Charts / `@mui/x-charts@v6.0.0-alpha.7`
+
+- [charts] Fix label and tick alignment (#9952) @LukasTy
+- [charts] Remove not functional component `styleOverrides` (#9996) @LukasTy
+- [charts] Set custom ticks number (#9922) @alexfauquette
+- [charts] Use `slot`/`slotProps` for customization (#9744) @alexfauquette
+- [charts] Extend cheerful fiesta palette (#9980) @noraleonte
+
+### Tree View / `@mui/x-tree-view@v6.0.0-alpha.1`
+
+- [TreeView] Add theme augmentation (#9967) @flaviendelangle
+
+### Docs
+
+- [docs] Clarify the `shouldDisableClock` migration code options (#9920) @LukasTy
+
+### Core
+
+- [core] Port GitHub workflow for ensuring triage label is present (#9924) @DanailH
+- [docs-infra] Fix the import samples in Api pages (#9898) @alexfauquette
+
 ## 6.11.0
 
 _Aug 4, 2023_
@@ -2810,7 +2928,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Changes
 
-- [DateRangePicker] Fix input focused style and mobile behaviour (#6645) @LukasTy
+- [DateRangePicker] Fix input focused style and mobile behavior (#6645) @LukasTy
 - [fields] Update sections when the locale changes (#6649) @flaviendelangle
 - [pickers] Add Ukrainian (uk-UA) locale (#6661) @Dufran
 - [pickers] Allow non-controlled usage of the calendar components (#6643) @flaviendelangle

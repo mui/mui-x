@@ -170,6 +170,11 @@
     }
   ],
   "name": "DateTimeField",
+  "imports": [
+    "import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';",
+    "import { DateTimeField } from '@mui/x-date-pickers';",
+    "import { DateTimeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimeField" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",

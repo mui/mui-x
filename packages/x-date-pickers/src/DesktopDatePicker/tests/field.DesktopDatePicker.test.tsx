@@ -3,12 +3,12 @@ import { fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import {
   createPickerRenderer,
+  buildFieldInteractions,
   getTextbox,
+  expectInputValue,
   expectInputPlaceholder,
   adapterToUse,
-  expectInputValue,
-  buildFieldInteractions,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<DesktopDatePicker /> - Field', () => {

@@ -105,7 +105,7 @@
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -250,6 +250,10 @@
     }
   ],
   "name": "MobileDateRangePicker",
+  "imports": [
+    "import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';",
+    "import { MobileDateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

@@ -104,7 +104,7 @@
     },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -283,6 +283,11 @@
     }
   ],
   "name": "MobileDatePicker",
+  "imports": [
+    "import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';",
+    "import { MobileDatePicker } from '@mui/x-date-pickers';",
+    "import { MobileDatePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDatePicker" },
   "filename": "/packages/x-date-pickers/src/MobileDatePicker/MobileDatePicker.tsx",
   "inheritance": null,

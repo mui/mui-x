@@ -133,7 +133,7 @@
       "typeDescriptions": {}
     },
     "reduceAnimations": {
-      "description": "Disable heavy animations.",
+      "description": "If <code>true</code>, disable heavy animations.",
       "deprecated": "",
       "typeDescriptions": {}
     },

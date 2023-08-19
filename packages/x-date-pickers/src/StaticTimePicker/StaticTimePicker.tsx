@@ -196,6 +196,11 @@ StaticTimePicker.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   */
+  reduceAnimations: PropTypes.bool,
+  /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
    * @param {TimeView} view The clock type of the timeValue.

@@ -154,6 +154,10 @@
     }
   ],
   "name": "SingleInputDateTimeRangeField",
+  "imports": [
+    "import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';",
+    "import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root"],
     "globalClasses": {},

@@ -20,22 +20,12 @@ createTheme({
         // @ts-expect-error invalid MuiChartsXAxis prop
         someRandomProp: true,
       },
-      styleOverrides: {
-        root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiChartsXAxis class key
-        constent: { color: 'red' },
-      },
     },
     MuiChartsYAxis: {
       defaultProps: {
         axisId: 'test',
         // @ts-expect-error invalid MuiChartsYAxis prop
         someRandomProp: true,
-      },
-      styleOverrides: {
-        root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiChartsYAxis class key
-        constent: { color: 'red' },
       },
     },
     MuiChartsAxisHighlight: {

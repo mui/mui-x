@@ -5,6 +5,10 @@
   },
   "slots": [],
   "name": "AreaElement",
+  "imports": [
+    "import { AreaElement } from '@mui/x-charts/LineChart';",
+    "import { AreaElement } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "highlighted", "faded"],
     "globalClasses": {},

@@ -50,20 +50,28 @@ export const mangoFusionPalette: ChartsColorPaletteCallback = (mode) =>
   mode === 'dark' ? mangoFusionPaletteDark : mangoFusionPaletteLight;
 
 export const cheerfulFiestaPaletteDark = [
-  '#0072E6',
-  '#66B2FF',
-  '#FFB017',
-  '#1F94AD',
-  '#FF3143',
-  '#FF6C63',
-];
-export const cheerfulFiestaPaletteLight = [
   '#0059B2',
   '#2E96FF',
-  '#EA8C00',
+  '#FFC24C',
+  '#FF9F0E',
+  '#F38200',
+  '#2ABFDE',
+  '#1F94AD',
+  '#BD2C38',
+  '#FF3143',
+  '#FF8282',
+];
+export const cheerfulFiestaPaletteLight = [
+  '#003A75',
+  '#007FFF',
+  '#FFC24C',
+  '#FF9D09',
+  '#CA6C00',
+  '#127D94',
   '#1F94AD',
   '#C82634',
   '#FF3143',
+  '#FF7E7E',
 ];
 
 export const cheerfulFiestaPalette: ChartsColorPaletteCallback = (mode) =>

@@ -9,14 +9,14 @@ import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   createPickerRenderer,
+  wrapPickerMount,
   adapterToUse,
   expectInputValue,
-  openPicker,
-  wrapPickerMount,
-  getClockTouchEvent,
   expectInputPlaceholder,
+  openPicker,
+  getClockTouchEvent,
   getTextbox,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 

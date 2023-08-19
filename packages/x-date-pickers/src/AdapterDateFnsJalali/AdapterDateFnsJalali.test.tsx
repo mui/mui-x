@@ -1,19 +1,15 @@
 import * as React from 'react';
+import { expect } from 'chai';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
-import {
-  createPickerRenderer,
-  expectInputPlaceholder,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputPlaceholder, expectInputValue } from 'test/utils/pickers';
 import enUS from 'date-fns/locale/en-US';
 import faIR from 'date-fns-jalali/locale/fa-IR';
 import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';
 import { describeJalaliAdapter } from '@mui/x-date-pickers/tests/describeJalaliAdapter';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterFormats } from '@mui/x-date-pickers';
-import { expect } from 'chai';
 
 describe('<AdapterDateFnsJalali />', () => {
   describeJalaliAdapter(AdapterDateFnsJalali, {});

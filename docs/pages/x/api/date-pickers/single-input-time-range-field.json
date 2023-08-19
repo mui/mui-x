@@ -142,6 +142,10 @@
     }
   ],
   "name": "SingleInputTimeRangeField",
+  "imports": [
+    "import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';",
+    "import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSingleInputTimeRangeField" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",

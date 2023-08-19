@@ -90,7 +90,7 @@
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -194,6 +194,10 @@
     }
   ],
   "name": "StaticDateRangePicker",
+  "imports": [
+    "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';",
+    "import { StaticDateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "undefined",

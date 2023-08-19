@@ -70,6 +70,7 @@
         "description": "{ ariaV7?: bool, columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
+    "filterDebounceMs": { "type": { "name": "number" }, "default": "150" },
     "filterMode": {
       "type": { "name": "custom", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -962,6 +963,11 @@
     }
   ],
   "name": "DataGridPro",
+  "imports": [
+    "import { DataGridPro } from '@mui/x-data-grid-pro/DataGridPro';",
+    "import { DataGridPro } from '@mui/x-data-grid-pro';",
+    "import { DataGridPro } from '@mui/x-data-grid-premium';"
+  ],
   "styles": {
     "classes": [
       "actionsCell",

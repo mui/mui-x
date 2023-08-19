@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { MuiPickersAdapter, PickersTimezone } from '@mui/x-date-pickers/models';
-import { getDateOffset } from 'test/utils/pickers-utils';
+import { getDateOffset } from 'test/utils/pickers';
 import { DescribeGregorianAdapterTestSuite } from './describeGregorianAdapter.types';
 import { TEST_DATE_ISO_STRING, TEST_DATE_LOCALE_STRING } from './describeGregorianAdapter.utils';
 

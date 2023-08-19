@@ -2,17 +2,19 @@ import * as React from 'react';
 import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
 import { FieldSection } from '@mui/x-date-pickers/models';
-import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers-utils';
+import { buildFieldInteractions, BuildFieldInteractionsResponse } from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';
 import { testPickerOpenCloseLifeCycle } from './testPickerOpenCloseLifeCycle';
 import { testPickerActionBar } from './testPickerActionBar';
+import { testShortcuts } from './testShortcuts';
 
 const TEST_SUITES: DescribeValueTestSuite<any, any>[] = [
   testControlledUnControlled,
   testPickerOpenCloseLifeCycle,
   testPickerActionBar,
+  testShortcuts,
 ];
 
 function innerDescribeValue<TValue, C extends PickerComponentFamily>(
