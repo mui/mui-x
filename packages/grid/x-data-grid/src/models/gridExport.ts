@@ -53,7 +53,7 @@ export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridAp
   extends GridGetRowsToExportParams<Api> {}
 
 export interface GridPrintGetRowsToExportParams<Api extends GridApiCommon = GridApiCommunity>
-extends GridGetRowsToExportParams<Api> {}
+  extends GridGetRowsToExportParams<Api> {}
 
 /**
  * The options to apply on the CSV export.
