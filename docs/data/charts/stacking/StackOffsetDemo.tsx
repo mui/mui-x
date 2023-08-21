@@ -45,7 +45,7 @@ export default function StackOffsetDemo() {
   const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
 
   return (
-    <Box sx={{ width: 1 }}>
+    <Box sx={{ width: '100%', maxWidth: 600 }}>
       <Stack direction="row">
         <TextField
           sx={{ minWidth: 150, mr: 5 }}
@@ -69,11 +69,7 @@ export default function StackOffsetDemo() {
           labelPlacement="end"
         />
       </Stack>
-      <BarChart
-        // width={600}
-        height={300}
-        series={getSeries({ hasNegativeValue, stackOffset })}
-      />
+      <BarChart height={300} series={getSeries({ hasNegativeValue, stackOffset })} />
     </Box>
   );
 }
