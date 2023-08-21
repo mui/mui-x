@@ -24,6 +24,10 @@ import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue.types';
 import { useDefaultReduceAnimations } from '../hooks/useDefaultReduceAnimations';
 
+interface PickersPopperOwnerState extends PickerPopperProps {
+  placement: PopperPlacementType;
+}
+
 export interface PickersPopperSlotsComponent {
   /**
    * Custom component for the paper rendered inside the desktop picker's Popper.
@@ -51,11 +55,7 @@ export interface PickersPopperSlotsComponentsProps {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
-  desktopPaper?: SlotComponentProps<
-    typeof MuiPaper,
-    {},
-    PickerPopperProps & { placement: PopperPlacementType | undefined }
-  >;
+  desktopPaper?: SlotComponentProps<typeof MuiPaper, {}, PickersPopperOwnerState>;
   /**
    * Props passed down to the desktop [Transition](https://mui.com/material-ui/transitions/) component.
    */
@@ -109,11 +109,11 @@ const PickersPopperPaper = styled(MuiPaper, {
   slot: 'Paper',
   overridesResolver: (_, styles) => styles.paper,
 })<{
-  ownerState: PickerPopperProps & Pick<MuiPopperProps, 'placement'>;
+  ownerState: PickersPopperOwnerState;
 }>(({ ownerState }) => ({
-  transformOrigin: 'top center',
   outline: 0,
-  ...(ownerState.placement === 'top' && {
+  transformOrigin: 'top center',
+  ...(ownerState.placement.includes('top') && {
     transformOrigin: 'bottom center',
   }),
 }));

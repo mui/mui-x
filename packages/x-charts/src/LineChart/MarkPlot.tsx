@@ -27,7 +27,7 @@ export interface MarkPlotProps extends React.SVGAttributes<SVGSVGElement> {
 }
 
 function MarkPlot(props: MarkPlotProps) {
-  const { slots, slotProps } = props;
+  const { slots, slotProps, ...other } = props;
 
   const seriesData = React.useContext(SeriesContext).line;
   const axisData = React.useContext(CartesianContext);
@@ -43,7 +43,7 @@ function MarkPlot(props: MarkPlotProps) {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g {...props}>
+    <g {...other}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.flatMap((seriesId) => {
           const {
