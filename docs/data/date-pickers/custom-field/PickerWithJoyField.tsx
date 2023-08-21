@@ -91,7 +91,6 @@ const JoyField = React.forwardRef(
       >
         <FormLabel>{label}</FormLabel>
         <Input
-          {...other}
           disabled={disabled}
           slotProps={{
             ...slotProps,
@@ -99,6 +98,7 @@ const JoyField = React.forwardRef(
           }}
           startDecorator={startAdornment}
           endDecorator={endAdornment}
+          {...other}
         />
       </FormControl>
     );
