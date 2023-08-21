@@ -39,7 +39,8 @@ const legendPlacement = {
   },
   margin: {
     top: 20,
-    right: 100,
+    right: 150,
+    left: 20,
   },
 } as const;
 const series = [
@@ -182,10 +183,9 @@ export default function ColorTemplate() {
   const [colorScheme, setColorScheme] = React.useState('Category10');
 
   return (
-    <Stack direction="column" spacing={2} sx={{ maxWidth: 1 }}>
+    <Stack direction="column" spacing={2} sx={{ width: '100%', maxWidth: 600 }}>
       <ScatterChart
-        width={600}
-        height={300}
+        height={400}
         series={series}
         yAxis={[{ min: -1.5, max: 1.5 }]}
         colors={categories[colorScheme]}

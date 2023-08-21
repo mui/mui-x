@@ -96,7 +96,6 @@ const ResizableContainer = styled('div', {
   name: 'MuiResponsiveChart',
   slot: 'Container',
 })<{ ownerState: Pick<ResponsiveChartContainerProps, 'width' | 'height'> }>(({ ownerState }) => ({
-  maxWidth: '100%',
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
