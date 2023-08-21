@@ -4,6 +4,7 @@ import { GridCellParams } from './params/gridCellParams';
 import type { GridColDef } from './colDef/gridColDef';
 import type { GridValidRowModel } from './gridRows';
 import type { GridApiCommunity } from './api/gridApiCommunity';
+import { GridColTypeOperator } from './colDef/gridColType';
 
 type ApplyFilterFnLegacy<R extends GridValidRowModel = any, V = any, F = V> = (
   params: GridCellParams<R, V, F>,
@@ -44,7 +45,7 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    * The name of the filter operator.
    * It will be matched with the `operator` property of the filter items.
    */
-  value: string;
+  value: GridColTypeOperator;
   /**
    * The callback that generates a filtering function for a given filter item and column.
    * This function can return `null` to skip filtering for this item and column.
