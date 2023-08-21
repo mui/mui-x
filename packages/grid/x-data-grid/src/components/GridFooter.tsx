@@ -27,14 +27,17 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
       <div />
     );
 
-  const rowCountElement = props.rowCountComponent ? (
+  let rowCountElement = props.rowCountComponent ? (
     <props.rowCountComponent
       rowCount={totalTopLevelRowCount}
       visibleRowCount={visibleTopLevelRowCount}
     />
-  ) : !rootProps.hideFooterRowCount && !rootProps.pagination ? (
-    <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
   ) : null;
+  if (!rowCountElement && !rootProps.hideFooterRowCount && !rootProps.pagination) {
+    rowCountElement = (
+      <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
+    );
+  }
 
   const paginationElement = rootProps.pagination &&
     !rootProps.hideFooterPagination &&
