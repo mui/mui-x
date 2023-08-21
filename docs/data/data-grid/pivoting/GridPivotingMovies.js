@@ -15,7 +15,7 @@ export default function GridPivotingMovies() {
   const data = useMovieData();
   const [pivotModel, setPivotModel] = React.useState({
     rows: ['company'],
-    columns: ['year'],
+    columns: ['year', 'director'],
     values: [
       { field: 'gross', aggFunc: 'sum' },
       { field: 'imdbRating', aggFunc: 'avg' },
