@@ -22,9 +22,13 @@ export const getColumnsToExport = ({
   const columns = gridColumnDefinitionsSelector(apiRef);
 
   if (options.fields) {
-    return options.fields
-      .map((field) => columns.find((column) => column.field === field))
-      .filter((column): column is GridStateColDef => !!column);
+    return options.fields.reduce<GridStateColDef[]>((currentColumns, field) => {
+      const column = columns.find((col) => col.field === field);
+      if (column) {
+        currentColumns.push(column);
+      }
+      return currentColumns;
+    }, []);
   }
 
   const validColumns = options.allColumns ? columns : gridVisibleColumnDefinitionsSelector(apiRef);
