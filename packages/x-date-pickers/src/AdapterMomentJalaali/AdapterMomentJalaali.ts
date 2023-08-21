@@ -1,7 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import defaultJMoment, { Moment } from 'moment-jalaali';
 import { AdapterMoment } from '../AdapterMoment';
-import { AdapterFormats, AdapterOptions, FieldFormatTokenMap, MuiPickersAdapter } from '../models';
+import {
+  AdapterFormats,
+  AdapterOptions,
+  DateBuilderReturnType,
+  FieldFormatTokenMap,
+  MuiPickersAdapter,
+} from '../models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
@@ -138,8 +144,10 @@ export class AdapterMomentJalaali
     return this.moment(value).locale('fa');
   };
 
-  public dateWithTimezone = (value: string | null | undefined): Moment | null => {
-    return this.date(value);
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
+  ): DateBuilderReturnType<T, Moment> => {
+    return <DateBuilderReturnType<T, Moment>>this.date(value);
   };
 
   public getTimezone = (): string => {
