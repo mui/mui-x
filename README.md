@@ -70,7 +70,7 @@ Pro packages:
 - [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro)
 - [`@mui/x-date-pickers-pro`](https://www.npmjs.com/package/@mui/x-date-pickers-pro)
 
-### Premium Plan
+### Premium plan
 
 The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro Plan.
 

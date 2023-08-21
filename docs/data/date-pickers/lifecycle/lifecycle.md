@@ -31,7 +31,7 @@ The example below shows the last value received by `onChange`.
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
-### On range fields <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
 `onChange` is called if the date you are modifying is matching one of the conditions above,

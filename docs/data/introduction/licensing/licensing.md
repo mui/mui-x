@@ -43,7 +43,7 @@ Pro npm packages:
 The features exclusive to the Pro version are marked with the <span class="plan-pro"></span> icon throughout the documentation.
 :::
 
-### Premium Plan <span class="plan-premium"></span>
+### Premium plan <span class="plan-premium"></span>
 
 The Premium version of MUI X covers the most advanced features of the data grid, such as row grouping, Excel export, and aggregation, in addition to everything that's included in the Pro Plan.
 

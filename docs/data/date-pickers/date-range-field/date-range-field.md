@@ -6,7 +6,7 @@ githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Range Field <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+# Date Range Field [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The Date Range Field components let the user select a date range with the keyboard.</p>
 

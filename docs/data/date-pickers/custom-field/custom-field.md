@@ -17,13 +17,13 @@ You can use the `textField` slot to pass custom props to the `TextField`:
 
 {{"demo": "TextFieldSlotProps.js"}}
 
-### Customize the separator of multi input fields <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+### Customize the separator of multi input fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
 
 {{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
 
-### Use single input fields on range pickers <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+### Use single input fields on range pickers [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 You can pass the single input fields to the range picker to use it for keyboard editing:
 

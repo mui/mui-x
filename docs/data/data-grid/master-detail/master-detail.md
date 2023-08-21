@@ -2,7 +2,7 @@
 title: Data Grid - Master detail
 ---
 
-# Data Grid - Master detail <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+# Data Grid - Master detail [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">Expand your rows to display additional information.</p>
 

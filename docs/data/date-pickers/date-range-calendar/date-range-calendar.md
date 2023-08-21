@@ -6,7 +6,7 @@ githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Range Calendar <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+# Date Range Calendar [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The Date Range Calendar lets the user select a range of dates without any input or popper / modal.</p>
 

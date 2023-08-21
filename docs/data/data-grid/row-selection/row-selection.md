@@ -10,7 +10,7 @@ To unselect a row, hold the <kbd class="key">Ctrl</kbd> key and click on it.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 
-## Multiple row selection <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+## Multiple row selection [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 On the `DataGridPro` component, you can select multiple rows in two ways:
 

@@ -2,7 +2,7 @@
 title: Data Grid - Cell selection
 ---
 
-# Data Grid - Cell selection <a title="Premium plan" href="/x/introduction/licensing/#premium-plan"><span class="plan-premium"></span></a>
+# Data Grid - Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Cell selection allows the user to select individual cells or a range of cells.</p>
 

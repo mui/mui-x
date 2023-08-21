@@ -40,7 +40,7 @@ Before using fluid width, note that:
 
 {{"demo": "ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Resizing <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+## Resizing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 By default, `DataGridPro` allows all columns to be resized by dragging the right portion of the column separator.
 

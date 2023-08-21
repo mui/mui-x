@@ -16,7 +16,7 @@ The `DataGrid` can only sort the rows according to one criterion at a time.
 To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
 
-## Multi-sorting <a title="Pro plan" href="/x/introduction/licensing/#pro-plan"><span class="plan-pro"></span></a>
+## Multi-sorting [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The following demo lets you sort the rows according to several criteria at the same time.
 
