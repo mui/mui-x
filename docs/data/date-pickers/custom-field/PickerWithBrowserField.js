@@ -14,11 +14,12 @@ import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } f
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
-const BrowserField = React.forwardRef((props, inputRef) => {
+const BrowserField = React.forwardRef((props, ref) => {
   const {
     disabled,
     id,
     label,
+    inputRef,
     InputProps: { ref: containerRef, startAdornment, endAdornment } = {},
     // extracting `error`, 'focused', and `ownerState` as `input` does not support those props
     error,
@@ -31,7 +32,7 @@ const BrowserField = React.forwardRef((props, inputRef) => {
     <Box
       sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
       id={id}
-      ref={containerRef}
+      ref={containerRef ?? ref}
     >
       {startAdornment}
       <input disabled={disabled} ref={inputRef} {...other} />
@@ -50,7 +51,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     ownerState: props,
   });
 
-  const response = useSingleInputDateRangeField({
+  const { ref: inputRef, ...response } = useSingleInputDateRangeField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
@@ -58,12 +59,13 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   return (
     <BrowserField
       {...response}
+      ref={ref}
       style={{
         minWidth: 300,
       }}
+      inputRef={inputRef}
       InputProps={{
         ...response.InputProps,
-        ref,
         endAdornment: (
           <IconButton onClick={onAdornmentClick}>
             <DateRangeIcon />
@@ -131,7 +133,10 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
     ownerState: { ...props, position: 'end' },
   });
 
-  const { startDate, endDate } = useMultiInputDateRangeField({
+  const {
+    startDate: { ref: startRef, ...startDateProps },
+    endDate: { ref: endRef, ...endDateProps },
+  } = useMultiInputDateRangeField({
     sharedProps: {
       value,
       defaultValue,
@@ -156,9 +161,9 @@ const BrowserMultiInputDateRangeField = React.forwardRef((props, ref) => {
 
   return (
     <Stack ref={ref} spacing={2} direction="row" className={className}>
-      <BrowserField {...startDate} />
+      <BrowserField {...startDateProps} inputRef={startRef} />
       <span> — </span>
-      <BrowserField {...endDate} />
+      <BrowserField {...endDateProps} inputRef={endRef} />
     </Stack>
   );
 });
