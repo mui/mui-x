@@ -368,6 +368,7 @@ PickersDayRaw.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * The date to show.
    */

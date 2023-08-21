@@ -78,7 +78,7 @@
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "referenceDate": {
       "type": { "name": "any" },
@@ -200,6 +200,11 @@
     }
   ],
   "name": "DateCalendar",
+  "imports": [
+    "import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';",
+    "import { DateCalendar } from '@mui/x-date-pickers';",
+    "import { DateCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "viewTransitionContainer"],
     "globalClasses": {},

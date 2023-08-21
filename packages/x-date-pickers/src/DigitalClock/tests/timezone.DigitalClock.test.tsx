@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { DigitalClock } from '@mui/x-date-pickers/DigitalClock';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
-import { getDateOffset } from 'test/utils/pickers-utils';
+import { getDateOffset } from 'test/utils/pickers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 

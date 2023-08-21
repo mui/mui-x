@@ -38,7 +38,9 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>(({ ownerState }) => ({
   overflowY: 'auto',
   width: '100%',
-  scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+  '@media (prefers-reduced-motion: no-preference)': {
+    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+  },
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
 }));
 

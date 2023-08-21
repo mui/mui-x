@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "6.0.0-alpha.6",
+  "version": "6.0.0-alpha.7",
   "description": "The community edition of the charts components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.22.6",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "d3-color": "^3.1.0",
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.2.0",

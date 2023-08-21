@@ -472,7 +472,7 @@ export const useField = <
       return 'text';
     }
 
-    return 'tel';
+    return 'numeric';
   }, [selectedSectionIndexes, state.sections]);
 
   const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);

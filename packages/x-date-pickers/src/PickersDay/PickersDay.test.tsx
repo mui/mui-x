@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { describeConformance, fireEvent, screen } from '@mui/monorepo/test/utils';
 import ButtonBase from '@mui/material/ButtonBase';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers';
 
 describe('<PickersDay />', () => {
   const { render } = createPickerRenderer();

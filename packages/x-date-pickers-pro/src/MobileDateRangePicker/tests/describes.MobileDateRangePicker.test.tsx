@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   describeConformance,
   screen,
@@ -7,16 +8,15 @@ import {
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
+import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 import {
   adapterToUse,
   createPickerRenderer,
+  wrapPickerMount,
+  openPicker,
   expectInputPlaceholder,
   expectInputValue,
-  openPicker,
-  wrapPickerMount,
-} from 'test/utils/pickers-utils';
-import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
-import * as React from 'react';
+} from 'test/utils/pickers';
 
 describe('<MobileDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({

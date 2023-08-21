@@ -2,7 +2,11 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { adapterToUse, getExpectedOnChangeCount } from 'test/utils/pickers-utils';
+import {
+  adapterToUse,
+  getExpectedOnChangeCount,
+  expectPickerChangeHandlerValue,
+} from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
@@ -44,21 +48,9 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
         // Clear the date
         userEvent.mousePress(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(1);
-        if (pickerParams.type === 'date-range') {
-          onChange.lastCall.args[0].forEach((value, index) => {
-            expect(value).to.deep.equal(emptyValue[index]);
-          });
-        } else {
-          expect(onChange.lastCall.args[0]).to.deep.equal(emptyValue);
-        }
+        expectPickerChangeHandlerValue(pickerParams.type, onChange, emptyValue);
         expect(onAccept.callCount).to.equal(1);
-        if (pickerParams.type === 'date-range') {
-          onAccept.lastCall.args[0].forEach((value, index) => {
-            expect(value).to.deep.equal(emptyValue[index]);
-          });
-        } else {
-          expect(onAccept.lastCall.args[0]).to.deep.equal(emptyValue);
-        }
+        expectPickerChangeHandlerValue(pickerParams.type, onAccept, emptyValue);
         expect(onClose.callCount).to.equal(1);
       });
 
@@ -242,27 +234,19 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         userEvent.mousePress(screen.getByText(/today/i));
 
-        const startOfToday =
-          pickerParams.type === 'date'
-            ? adapterToUse.startOfDay(adapterToUse.date())
-            : adapterToUse.date();
+        let startOfToday: any;
+        if (pickerParams.type === 'date') {
+          startOfToday = adapterToUse.startOfDay(adapterToUse.date());
+        } else if (pickerParams.type === 'date-range') {
+          startOfToday = [adapterToUse.date(), adapterToUse.date()];
+        } else {
+          startOfToday = adapterToUse.date();
+        }
 
         expect(onChange.callCount).to.equal(1);
-        if (pickerParams.type === 'date-range') {
-          onChange.lastCall.args[0].forEach((value) => {
-            expect(value).toEqualDateTime(startOfToday);
-          });
-        } else {
-          expect(onChange.lastCall.args[0]).toEqualDateTime(startOfToday);
-        }
+        expectPickerChangeHandlerValue(pickerParams.type, onChange, startOfToday);
         expect(onAccept.callCount).to.equal(1);
-        if (pickerParams.type === 'date-range') {
-          onAccept.lastCall.args[0].forEach((value) => {
-            expect(value).toEqualDateTime(startOfToday);
-          });
-        } else {
-          expect(onAccept.lastCall.args[0]).toEqualDateTime(startOfToday);
-        }
+        expectPickerChangeHandlerValue(pickerParams.type, onAccept, startOfToday);
         expect(onClose.callCount).to.equal(1);
       });
     });

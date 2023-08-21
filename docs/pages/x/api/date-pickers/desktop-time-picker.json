@@ -80,6 +80,10 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "reduceAnimations": {
+      "type": { "name": "bool" },
+      "default": "`@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+    },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -163,7 +167,7 @@
       "class": null,
       "name": "desktopTransition",
       "description": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Grow from '@mui/material'."
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`."
     },
     {
       "class": null,
@@ -260,6 +264,11 @@
     }
   ],
   "name": "DesktopTimePicker",
+  "imports": [
+    "import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';",
+    "import { DesktopTimePicker } from '@mui/x-date-pickers';",
+    "import { DesktopTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopTimePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

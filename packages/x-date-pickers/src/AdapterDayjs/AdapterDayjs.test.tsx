@@ -9,11 +9,11 @@ import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   buildPickerDragInteractions,
-  createPickerRenderer,
+  MockedDataTransfer,
   expectInputPlaceholder,
   expectInputValue,
-  MockedDataTransfer,
-} from 'test/utils/pickers-utils';
+  createPickerRenderer,
+} from 'test/utils/pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import {

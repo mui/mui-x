@@ -14,6 +14,8 @@ export interface PickersShortcutsItem<TValue> {
   getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
 }
 
+export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<unknown>, 'getValue'>;
+
 export type PickerShortcutChangeImportance = 'set' | 'accept';
 
 export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'onChange'> {
@@ -34,7 +36,12 @@ export interface ExportedPickersShortcutProps<TValue> extends Omit<ListProps, 'o
 
 export interface PickersShortcutsProps<TValue> extends ExportedPickersShortcutProps<TValue> {
   isLandscape: boolean;
-  onChange: (newValue: TValue, changeImportance?: PickerShortcutChangeImportance) => void;
+  // TODO v7: Make changeImportance and shortcut mandatory.
+  onChange: (
+    newValue: TValue,
+    changeImportance?: PickerShortcutChangeImportance,
+    shortcut?: PickersShortcutsItemContext,
+  ) => void;
   isValid: (value: TValue) => boolean;
 }
 
@@ -45,13 +52,13 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     return null;
   }
 
-  const resolvedItems = items.map((item) => {
-    const newValue = item.getValue({ isValid });
+  const resolvedItems = items.map(({ getValue, ...item }) => {
+    const newValue = getValue({ isValid });
 
     return {
       label: item.label,
       onClick: () => {
-        onChange(newValue, changeImportance);
+        onChange(newValue, changeImportance, item);
       },
       disabled: !isValid(newValue),
     };
@@ -94,6 +101,7 @@ PickersShortcuts.propTypes = {
    */
   changeImportance: PropTypes.oneOf(['accept', 'set']),
   className: PropTypes.string,
+  component: PropTypes.elementType,
   /**
    * If `true`, compact vertical padding designed for keyboard and mouse input is used for
    * the list and list items.

@@ -1,6 +1,6 @@
 {
   "props": {
-    "debounceMs": { "type": { "name": "number" }, "default": "500" },
+    "debounceMs": { "type": { "name": "number" }, "default": "150" },
     "quickFilterFormatter": {
       "type": { "name": "func" },
       "signature": {
@@ -20,6 +20,12 @@
   },
   "slots": [],
   "name": "GridToolbarQuickFilter",
+  "imports": [
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid/components';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid-pro';",
+    "import { GridToolbarQuickFilter } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/toolbar/GridToolbarQuickFilter.tsx",

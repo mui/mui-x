@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { inputBaseClasses } from '@mui/material/InputBase';
-import { getExpectedOnChangeCount } from 'test/utils/pickers-utils';
+import { getExpectedOnChangeCount } from 'test/utils/pickers';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (

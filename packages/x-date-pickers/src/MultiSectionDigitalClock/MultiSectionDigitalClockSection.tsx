@@ -59,7 +59,9 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     width: 56,
     padding: 0,
     overflow: 'hidden',
-    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    '@media (prefers-reduced-motion: no-preference)': {
+      scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    },
     '&:hover': {
       overflowY: 'auto',
     },
