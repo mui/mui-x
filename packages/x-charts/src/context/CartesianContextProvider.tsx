@@ -228,21 +228,20 @@ function CartesianContextProvider({
 
       if (isBandScaleConfig(axis)) {
         const categoryGapRatio = axis.categoryGapRatio ?? DEFAULT_CATEGORY_GAP_RATIO;
-
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           categoryGapRatio,
           barGapRatio: 0,
           ...axis,
-          scale: scaleBand(axis.data!, range)
+          scale: scaleBand(axis.data!, [range[1], range[0]])
             .paddingInner(categoryGapRatio)
             .paddingOuter(categoryGapRatio / 2),
           ticksNumber: axis.data!.length,
         };
       }
       if (isPointScaleConfig(axis)) {
-        completedXAxis[axis.id] = {
+        completedYAxis[axis.id] = {
           ...axis,
-          scale: scalePoint(axis.data!, range),
+          scale: scalePoint(axis.data!, [range[1], range[0]]),
           ticksNumber: axis.data!.length,
         };
       }
