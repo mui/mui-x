@@ -66,7 +66,7 @@ const scatterChartsParams = {
       label: 'B',
     },
   ],
-  width: 600,
+  // width: 600,
   height: 400,
 };
 
