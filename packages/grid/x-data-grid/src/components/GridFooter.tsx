@@ -27,10 +27,14 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
       <div />
     );
 
-  const rowCountElement =
-    !rootProps.hideFooterRowCount && !rootProps.pagination ? (
-      <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
-    ) : null;
+  const rowCountElement = props.rowCountComponent ? (
+    <props.rowCountComponent
+      rowCount={totalTopLevelRowCount}
+      visibleRowCount={visibleTopLevelRowCount}
+    />
+  ) : !rootProps.hideFooterRowCount && !rootProps.pagination ? (
+    <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
+  ) : null;
 
   const paginationElement = rootProps.pagination &&
     !rootProps.hideFooterPagination &&
@@ -52,6 +56,7 @@ GridFooter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  rowCountComponent: PropTypes.elementType,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
