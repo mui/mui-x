@@ -19,7 +19,6 @@ const barChartsParams = {
     { data: [4, 3, 1, 5, 8], label: 'B' },
     { data: [4, 2, 5, 4, 1], label: 'C' },
   ],
-  // width: 600,
   height: 400,
 };
 const lineChartsParams = {
@@ -29,7 +28,6 @@ const lineChartsParams = {
     { data: [4, 2, 5, 4, 1], label: 'C', area: false, stack: 'total' },
   ],
   xAxis: [{ data: [1, 2, 3, 4, 5], type: 'linear' }],
-  // width: 600,
   height: 400,
 };
 
@@ -66,7 +64,6 @@ const scatterChartsParams = {
       label: 'B',
     },
   ],
-  // width: 600,
   height: 400,
 };
 
@@ -85,7 +82,6 @@ const pieChartsParams = {
       highlighted: { additionalRadius: 10 },
     },
   ],
-  // width: 600,
   height: 400,
   margin: { top: 50, bottom: 50 },
 };
