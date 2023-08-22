@@ -93,10 +93,10 @@ export default function StackOrderDemo() {
 
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', overflow: 'auto' }}>
       <Stack direction="row">
         <TextField
-          sx={{ minWidth: 150, mr: 5 }}
+          sx={{ minWidth: 150, mr: 5, mt: 1 }}
           select
           label="stackOrder"
           value={stackOrder}
@@ -110,6 +110,7 @@ export default function StackOrderDemo() {
         </TextField>
       </Stack>
       <BarChart
+        width={764}
         height={300}
         xAxis={[xAxis]}
         yAxis={[{ min: 0, max: 100 }]}
