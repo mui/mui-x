@@ -74,7 +74,7 @@
     },
     "./*": {
       "types": "./*/index.d.ts",
-      "require": "./*",
+      "require": "./*/index.js",
       "import": "./esm/*/index.js"
     }
   },
