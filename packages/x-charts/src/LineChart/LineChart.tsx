@@ -22,18 +22,25 @@ import {
 import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
 import { ChartsAxisSlotComponentProps, ChartsAxisSlotsComponent } from '../models/axis';
+import {
+  LineHighlightPlot,
+  LineHighlightPlotSlotsComponent,
+  LineHighlightPlotSlotComponentProps,
+} from './LineHighlightPlot';
 
 export interface LineChartSlotsComponent
   extends ChartsAxisSlotsComponent,
     AreaPlotSlotsComponent,
     LinePlotSlotsComponent,
     MarkPlotSlotsComponent,
+    LineHighlightPlotSlotsComponent,
     ChartsLegendSlotsComponent {}
 export interface LineChartSlotComponentProps
   extends ChartsAxisSlotComponentProps,
     AreaPlotSlotComponentProps,
     LinePlotSlotComponentProps,
     MarkPlotSlotComponentProps,
+    LineHighlightPlotSlotComponentProps,
     ChartsLegendSlotComponentProps {}
 
 export interface LineChartProps
@@ -119,9 +126,10 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
         slots={slots}
         slotProps={slotProps}
       />
+      <ChartsAxisHighlight {...axisHighlight} />
+      <LineHighlightPlot slots={slots} slotProps={slotProps} />
       <MarkPlot slots={slots} slotProps={slotProps} />
       <ChartsLegend {...legend} slots={slots} slotProps={slotProps} />
-      <ChartsAxisHighlight {...axisHighlight} />
       <ChartsTooltip {...tooltip} />
       <ChartsClipPath id={clipPathId} />
       {children}
