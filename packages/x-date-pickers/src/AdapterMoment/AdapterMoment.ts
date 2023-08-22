@@ -4,6 +4,7 @@ import {
   AdapterFormats,
   AdapterOptions,
   AdapterUnits,
+  DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
   PickersTimezone,
@@ -200,23 +201,24 @@ export class AdapterMoment implements MuiPickersAdapter<Moment, string> {
     return moment;
   };
 
-  public dateWithTimezone = (
-    value: string | null | undefined,
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
     timezone: PickersTimezone,
-  ): Moment | null => {
+  ): DateBuilderReturnType<T, Moment> => {
+    type R = DateBuilderReturnType<T, Moment>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
     if (timezone === 'UTC') {
-      return this.createUTCDate(value);
+      return <R>this.createUTCDate(value);
     }
 
     if (timezone === 'system' || (timezone === 'default' && !this.hasTimezonePlugin())) {
-      return this.createSystemDate(value);
+      return <R>this.createSystemDate(value);
     }
 
-    return this.createTZDate(value, timezone);
+    return <R>this.createTZDate(value, timezone);
   };
 
   public getTimezone = (value: Moment): string => {

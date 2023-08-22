@@ -24,7 +24,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
 }) => {
   const testDateIso = adapter.date(TEST_DATE_ISO_STRING)!;
   const testDateLastNonDSTDay = adapterTZ.isTimezoneCompatible
-    ? adapterTZ.dateWithTimezone('2022-03-27', 'Europe/Paris')!
+    ? adapterTZ.dateWithTimezone('2022-03-27', 'Europe/Paris')
     : adapterTZ.date('2022-03-27')!;
   const testDateLocale = adapter.date(TEST_DATE_LOCALE_STRING)!;
 
@@ -60,7 +60,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       if (adapter.isTimezoneCompatible) {
         const test = (timezone: PickersTimezone, expectedTimezones: string = timezone) => {
           [adapterTZ, adapterFr].forEach((instance) => {
-            const dateWithZone = instance.dateWithTimezone(TEST_DATE_ISO_STRING, timezone)!;
+            const dateWithZone = instance.dateWithTimezone(TEST_DATE_ISO_STRING, timezone);
             expect(instance.getTimezone(dateWithZone)).to.equal(expectedTimezones);
 
             // Should keep the time of the value in the UTC timezone
@@ -95,7 +95,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       if (adapter.isTimezoneCompatible) {
         const test = (timezone: PickersTimezone) => {
           [adapterTZ, adapterFr].forEach((instance) => {
-            const dateWithZone = instance.dateWithTimezone(TEST_DATE_LOCALE_STRING, timezone)!;
+            const dateWithZone = instance.dateWithTimezone(TEST_DATE_LOCALE_STRING, timezone);
             expect(instance.getTimezone(dateWithZone)).to.equal(timezone);
 
             // Should keep the time of the date in the target timezone
@@ -126,7 +126,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     it('should parse undefined', () => {
       if (adapter.isTimezoneCompatible) {
         const testTodayZone = (timezone: PickersTimezone) => {
-          const dateWithZone = adapterTZ.dateWithTimezone(undefined, timezone)!;
+          const dateWithZone = adapterTZ.dateWithTimezone(undefined, timezone);
           expect(adapterTZ.getTimezone(dateWithZone)).to.equal(timezone);
           expect(adapterTZ.getDiff(dateWithZone, adapterTZ.date(new Date())!)).to.be.lessThan(5);
           expect(Math.abs(adapterTZ.toJsDate(dateWithZone).getTime() - Date.now())).to.be.lessThan(
@@ -140,7 +140,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       } else {
         expect(
           Math.abs(
-            adapterTZ.toJsDate(adapter.dateWithTimezone(undefined, 'system')!).getTime() -
+            adapterTZ.toJsDate(adapter.dateWithTimezone(undefined, 'system')).getTime() -
               Date.now(),
           ),
         ).to.be.lessThan(5);
@@ -173,7 +173,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     if (adapter.isTimezoneCompatible) {
       const test = (timezone: PickersTimezone) => {
         setDefaultTimezone(timezone);
-        const dateWithLocaleTimezone = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system')!;
+        const dateWithLocaleTimezone = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system');
         const dateWithDefaultTimezone = adapter.setTimezone(dateWithLocaleTimezone, 'default');
 
         expect(adapter.getTimezone(dateWithDefaultTimezone)).to.equal(timezone);
@@ -185,11 +185,11 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
       // Reset to the default timezone
       setDefaultTimezone(undefined);
     } else {
-      const systemDate = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system')!;
+      const systemDate = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'system');
       expect(adapter.setTimezone(systemDate, 'default')).toEqualDateTime(systemDate);
       expect(adapter.setTimezone(systemDate, 'system')).toEqualDateTime(systemDate);
 
-      const defaultDate = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'default')!;
+      const defaultDate = adapter.dateWithTimezone(TEST_DATE_ISO_STRING, 'default');
       expect(adapter.setTimezone(systemDate, 'default')).toEqualDateTime(defaultDate);
       expect(adapter.setTimezone(systemDate, 'system')).toEqualDateTime(defaultDate);
     }
@@ -968,7 +968,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
         this.skip();
       }
 
-      const referenceDate = adapterTZ.dateWithTimezone('2022-03-17', 'Europe/Paris')!;
+      const referenceDate = adapterTZ.dateWithTimezone('2022-03-17', 'Europe/Paris');
       const weekArray = adapterTZ.getWeekArray(referenceDate);
       let expectedDate = adapter.startOfWeek(adapter.startOfMonth(referenceDate));
 
@@ -987,7 +987,7 @@ export const testCalculations: DescribeGregorianAdapterTestSuite = ({
     });
 
     it('should respect the locale of the adapter, not the locale of the date', function test() {
-      const dateFr = adapterFr.dateWithTimezone('2022-03-17', 'default')!;
+      const dateFr = adapterFr.dateWithTimezone('2022-03-17', 'default');
       const weekArray = adapter.getWeekArray(dateFr);
 
       if (getLocaleFromDate) {
