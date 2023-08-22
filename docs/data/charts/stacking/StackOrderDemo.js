@@ -94,7 +94,7 @@ export default function StackOrderDemo() {
   return (
     <Box sx={{ width: '100%' }}>
       <TextField
-        sx={{ minWidth: 150, mr: 5 }}
+        sx={{ minWidth: 150, mr: 5, mt: 1 }}
         select
         label="stackOrder"
         value={stackOrder}
@@ -108,12 +108,12 @@ export default function StackOrderDemo() {
       </TextField>
       <Box sx={{ overflow: 'auto', py: 2 }}>
         <BarChart
-          height={300}
           width={700}
+          height={300}
           xAxis={[xAxis]}
           yAxis={[{ min: 0, max: 100 }]}
           series={modifiedSeries}
-          margin={{ top: 50, bottom: 70 }}
+          margin={{ bottom: 70 }}
           sx={{
             [`.${axisClasses.bottom}`]: {
               [`.${axisClasses.tickLabel}`]: {
