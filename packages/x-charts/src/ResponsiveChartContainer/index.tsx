@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { ChartContainer, ChartContainerProps } from '../ChartContainer';
 import { MakeOptional } from '../models/helpers';
 

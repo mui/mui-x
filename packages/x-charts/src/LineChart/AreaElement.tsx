@@ -4,7 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { color as d3Color } from 'd3-color';
 import {

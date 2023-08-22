@@ -3,7 +3,7 @@ import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { InteractionContext } from '../context/InteractionProvider';
 import { getIsFaded, getIsHighlighted } from '../hooks/useInteractionItemProps';
@@ -54,7 +54,7 @@ const PieArcLabelRoot = styled('text', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
-  fill: theme.palette.text.primary,
+  fill: (theme.vars || theme).palette.text.primary,
   textAnchor: 'middle',
 }));
 

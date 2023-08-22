@@ -18,7 +18,7 @@ export const ChartsTooltipTable = styled('table', {
 })(({ theme }) => ({
   borderSpacing: 0,
   '& thead td': {
-    borderBottom: `solid ${theme.palette.divider} 1px`,
+    borderBottom: `solid ${(theme.vars || theme).palette.divider} 1px`,
   },
 }));
 
@@ -39,14 +39,14 @@ export const ChartsTooltipCell = styled('td', {
   slot: 'Cell',
 })(({ theme }) => ({
   verticalAlign: 'middle',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
 
   [`&.${tooltipClasses.labelCell}`]: {
     paddingLeft: theme.spacing(1),
   },
   [`&.${tooltipClasses.valueCell}`]: {
     paddingLeft: theme.spacing(4),
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
   },
 
   'td:first-of-type&': {
@@ -65,7 +65,7 @@ export const ChartsTooltipMark = styled(Box, {
   height: theme.spacing(1),
   borderRadius: '50%',
   backgroundColor: ownerState.color,
-  borderColor: theme.palette.background.paper,
-  border: `solid ${theme.palette.background.paper} ${theme.spacing(0.25)}`,
+  borderColor: (theme.vars || theme).palette.background.paper,
+  border: `solid ${(theme.vars || theme).palette.background.paper} ${theme.spacing(0.25)}`,
   boxSizing: 'content-box',
 }));

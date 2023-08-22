@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { getSymbol } from '../internals/utils';
@@ -61,7 +61,7 @@ const MarkElementPath = styled('path', {
 })<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
   transform: `translate(${ownerState.x}px, ${ownerState.y}px)`,
   transformOrigin: `${ownerState.x}px ${ownerState.y}px`,
-  fill: theme.palette.background.paper,
+  fill: (theme.vars || theme).palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
   '&.MuiMarkElement-highlighted': {

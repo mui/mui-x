@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { useThemeProps, useTheme, Theme, CSSObject, styled } from '@mui/system';
+import { useThemeProps, useTheme, Theme, styled } from '@mui/material/styles';
 import { DrawingArea, DrawingContext } from '../context/DrawingProvider';
 import { AnchorPosition, SizingParams, getSeriesToDisplay } from './utils';
 import { FormattedSeries, SeriesContext } from '../context/SeriesContextProvider';
@@ -165,13 +165,13 @@ export const ChartsLegendLabel = styled('text', {
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
   // Typing should be fixed in v6 (see: https://github.com/mui/material-ui/issues/30678)
-  ...(theme.typography as Record<string, CSSObject>).body1,
+  ...theme.typography.body1,
   color: 'inherit',
   transform: `translate(
       calc(var(--ChartsLegend-itemMarkSize) + var(--ChartsLegend-labelSpacing)),
       calc(0.5 * var(--ChartsLegend-itemMarkSize))
       )`,
-  fill: theme.palette.text.primary,
+  fill: (theme.vars || theme).palette.text.primary,
   dominantBaseline: 'central',
 }));
 

@@ -3,7 +3,7 @@ import { arc as d3Arc, PieArcDatum as D3PieArcDatum } from 'd3-shape';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { InteractionContext } from '../context/InteractionProvider';
 import {
@@ -58,7 +58,7 @@ const PieArcRoot = styled('path', {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc,
 })<{ ownerState: PieArcOwnerState }>(({ ownerState, theme }) => ({
-  stroke: theme.palette.background.paper,
+  stroke: (theme.vars || theme).palette.background.paper,
   strokeWidth: 1,
   strokeLinejoin: 'round',
   fill: ownerState.color,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SxProps, Theme } from '@mui/system';
+import { SxProps, Theme } from '@mui/material/styles';
 import { ItemInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
