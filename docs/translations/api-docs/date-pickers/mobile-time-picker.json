@@ -158,6 +158,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "reduceAnimations": {
+      "description": "If <code>true</code>, disable heavy animations.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "referenceDate": {
       "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
       "deprecated": "",

@@ -66,6 +66,11 @@ export interface UsePickerViewsBaseProps<
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
   /**
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   */
+  reduceAnimations?: boolean;
+  /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
    * @default The closest valid date-time using the validation props, except callbacks such as `shouldDisableDate`.
    */
