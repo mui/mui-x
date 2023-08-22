@@ -75,7 +75,7 @@
     "./*": {
       "types": "./*/index.d.ts",
       "require": "./*",
-      "import": "./esm/*"
+      "import": "./esm/*/index.js"
     }
   },
   "setupFiles": [
