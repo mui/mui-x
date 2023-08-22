@@ -1,12 +1,16 @@
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/system';
+import Box from '@mui/system/Box';
+import { styled } from '@mui/material/styles';
 import { tooltipClasses } from './tooltipClasses';
 
-export const ChartsTooltipPaper = styled(Paper, {
+export const ChartsTooltipPaper = styled('div', {
   name: 'MuiChartsTooltip',
-  slot: 'Table',
-})({});
+  slot: 'Container',
+})(({ theme }) => ({
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  color: (theme.vars || theme).palette.text.primary,
+  transition: theme.transitions.create('box-shadow'),
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
+}));
 
 export const ChartsTooltipTable = styled('table', {
   name: 'MuiChartsTooltip',

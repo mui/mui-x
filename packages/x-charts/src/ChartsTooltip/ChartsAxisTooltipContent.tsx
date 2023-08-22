@@ -55,7 +55,7 @@ export function DefaultChartsAxisContent(props: ChartsAxisContentProps) {
   }
   const axisFormatter = axis.valueFormatter ?? ((v) => v.toLocaleString());
   return (
-    <ChartsTooltipPaper sx={sx} variant="outlined" className={classes.root}>
+    <ChartsTooltipPaper sx={sx} className={classes.root}>
       <ChartsTooltipTable>
         {axisValue != null && !axis.hideTooltip && (
           <thead>
