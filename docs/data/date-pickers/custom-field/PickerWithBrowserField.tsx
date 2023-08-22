@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -67,11 +68,13 @@ const BrowserField = React.forwardRef(
       ...other
     } = props;
 
+    const handleRef = useForkRef(containerRef, ref);
+
     return (
       <Box
         sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
         id={id}
-        ref={containerRef ?? ref}
+        ref={handleRef}
       >
         {startAdornment}
         <input disabled={disabled} ref={inputRef} {...other} />
@@ -138,28 +141,31 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
 
 BrowserSingleInputDateRangeField.fieldType = 'single-input';
 
-function BrowserSingleInputDateRangePicker(props: DateRangePickerProps<Dayjs>) {
-  const [isOpen, setIsOpen] = React.useState(false);
+const BrowserSingleInputDateRangePicker = React.forwardRef(
+  (props: DateRangePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+    const [isOpen, setIsOpen] = React.useState(false);
 
-  const toggleOpen = () => setIsOpen((currentOpen) => !currentOpen);
+    const toggleOpen = () => setIsOpen((currentOpen) => !currentOpen);
 
-  const handleOpen = () => setIsOpen(true);
+    const handleOpen = () => setIsOpen(true);
 
-  const handleClose = () => setIsOpen(false);
+    const handleClose = () => setIsOpen(false);
 
-  return (
-    <DateRangePicker
-      open={isOpen}
-      onClose={handleClose}
-      onOpen={handleOpen}
-      slots={{ field: BrowserSingleInputDateRangeField }}
-      slotProps={{
-        field: { onAdornmentClick: toggleOpen } as any,
-      }}
-      {...props}
-    />
-  );
-}
+    return (
+      <DateRangePicker
+        ref={ref}
+        open={isOpen}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        slots={{ field: BrowserSingleInputDateRangeField }}
+        slotProps={{
+          field: { onAdornmentClick: toggleOpen } as any,
+        }}
+        {...props}
+      />
+    );
+  },
+);
 
 interface BrowserMultiInputDateRangeFieldProps
   extends UseDateRangeFieldProps<Dayjs>,
@@ -243,11 +249,17 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
   },
 ) as BrowserMultiInputDateRangeFieldComponent;
 
-function BrowserDateRangePicker(props: DateRangePickerProps<Dayjs>) {
-  return (
-    <DateRangePicker slots={{ field: BrowserMultiInputDateRangeField }} {...props} />
-  );
-}
+const BrowserDateRangePicker = React.forwardRef(
+  (props: DateRangePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+    return (
+      <DateRangePicker
+        ref={ref}
+        slots={{ field: BrowserMultiInputDateRangeField }}
+        {...props}
+      />
+    );
+  },
+);
 
 interface BrowserDateFieldProps
   extends UseDateFieldProps<Dayjs>,
@@ -258,22 +270,35 @@ interface BrowserDateFieldProps
       DateValidationError
     > {}
 
-function BrowserDateField(props: BrowserDateFieldProps) {
-  const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
+const BrowserDateField = React.forwardRef(
+  (props: BrowserDateFieldProps, ref: React.Ref<HTMLDivElement>) => {
+    const {
+      inputRef: externalInputRef,
+      slots,
+      slotProps,
+      ...textFieldProps
+    } = props;
 
-  const response = useDateField<Dayjs, typeof textFieldProps>({
-    props: textFieldProps,
-    inputRef: externalInputRef,
-  });
+    const { ref: inputRef, ...other } = useDateField<Dayjs, typeof textFieldProps>({
+      props: textFieldProps,
+      inputRef: externalInputRef,
+    });
 
-  return <BrowserField {...response} />;
-}
+    return <BrowserField ref={ref} inputRef={inputRef} {...other} />;
+  },
+);
 
-function BrowserDatePicker(props: DatePickerProps<Dayjs>) {
-  return (
-    <DatePicker slots={{ field: BrowserDateField, ...props.slots }} {...props} />
-  );
-}
+const BrowserDatePicker = React.forwardRef(
+  (props: DatePickerProps<Dayjs>, ref: React.Ref<HTMLDivElement>) => {
+    return (
+      <DatePicker
+        ref={ref}
+        slots={{ field: BrowserDateField, ...props.slots }}
+        {...props}
+      />
+    );
+  },
+);
 
 export default function PickerWithBrowserField() {
   return (

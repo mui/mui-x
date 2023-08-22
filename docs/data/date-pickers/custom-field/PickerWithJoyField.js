@@ -104,7 +104,7 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
 
 JoySingleInputDateRangeField.fieldType = 'single-input';
 
-function JoySingleInputDateRangePicker(props) {
+const JoySingleInputDateRangePicker = React.forwardRef((props, ref) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const toggleOpen = (event) => {
@@ -119,6 +119,7 @@ function JoySingleInputDateRangePicker(props) {
 
   return (
     <DateRangePicker
+      ref={ref}
       open={isOpen}
       onClose={handleClose}
       onOpen={handleOpen}
@@ -129,7 +130,7 @@ function JoySingleInputDateRangePicker(props) {
       {...props}
     />
   );
-}
+});
 
 const MultiInputJoyDateRangeFieldRoot = styled(
   React.forwardRef((props, ref) => (
@@ -238,26 +239,41 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   );
 });
 
-function JoyDateRangePicker(props) {
+const JoyDateRangePicker = React.forwardRef((props, ref) => {
   return (
-    <DateRangePicker slots={{ field: JoyMultiInputDateRangeField }} {...props} />
+    <DateRangePicker
+      ref={ref}
+      slots={{ field: JoyMultiInputDateRangeField }}
+      {...props}
+    />
   );
-}
+});
 
-function JoyDateField(props) {
+const JoyDateField = React.forwardRef((props, ref) => {
   const { inputRef: externalInputRef, slots, slotProps, ...textFieldProps } = props;
 
-  const response = useDateField({
+  const { ref: inputRef, ...other } = useDateField({
     props: textFieldProps,
     inputRef: externalInputRef,
   });
 
-  return <JoyField {...response} />;
-}
+  return (
+    <JoyField
+      ref={ref}
+      slotProps={{
+        input: {
+          ref: inputRef,
+        },
+      }}
+      {...other}
+    />
+  );
+});
 
-function JoyDatePicker(props) {
+const JoyDatePicker = React.forwardRef((props, ref) => {
   return (
     <DatePicker
+      ref={ref}
       {...props}
       slots={{ field: JoyDateField, ...props.slots }}
       slotProps={{
@@ -269,7 +285,7 @@ function JoyDatePicker(props) {
       }}
     />
   );
-}
+});
 
 /**
  * This component is for syncing the MUI docs's mode with this demo.
