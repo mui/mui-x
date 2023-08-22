@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/system';
 import barSeriesFormatter from '../BarChart/formatter';
 import scatterSeriesFormatter from '../ScatterChart/formatter';
 import lineSeriesFormatter from '../LineChart/formatter';

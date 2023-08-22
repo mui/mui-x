@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from 'd3-shape';
 import { getSymbol } from '../internals/utils';

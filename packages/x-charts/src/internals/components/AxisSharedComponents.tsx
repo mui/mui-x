@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled, CSSObject } from '@mui/system';
 import { axisClasses } from '../../ChartsAxis/axisClasses';
 
 export const AxisRoot = styled('g', {
@@ -54,7 +54,8 @@ export const ChartsTickLabel = styled('text', {
   slot: 'TickLabel',
   overridesResolver: (props, styles) => styles.tickLabel,
 })(({ theme }) => ({
-  ...theme.typography.caption,
+  // Typing should be fixed in v6 (see: https://github.com/mui/material-ui/issues/30678)
+  ...(theme.typography as Record<string, CSSObject>).caption,
   fill: theme.palette.text.primary,
 }));
 
@@ -63,6 +64,6 @@ export const ChartsLabel = styled('text', {
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
-  ...theme.typography.body1,
+  ...(theme.typography as Record<string, CSSObject>).body1,
   fill: theme.palette.text.primary,
 }));

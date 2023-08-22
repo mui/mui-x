@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/system';
 import Typography from '@mui/material/Typography';
 import { AxisInteractionData } from '../context/InteractionProvider';
 import { SeriesContext } from '../context/SeriesContextProvider';

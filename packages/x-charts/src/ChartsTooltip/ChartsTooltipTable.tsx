@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 import { tooltipClasses } from './tooltipClasses';
 
 export const ChartsTooltipPaper = styled(Paper, {
