@@ -5,6 +5,7 @@ import {
   GridColumnGroupingModel,
   GridColumnNode,
   GridRowModel,
+  gridStringOrNumberComparator,
   isLeaf,
 } from '@mui/x-data-grid-pro';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -22,6 +23,18 @@ export interface PivotModel {
 function getFieldValue(row: GridRowModel, field: GridColDef['field']) {
   // TODO: valueGetter
   return row[field];
+}
+
+function sortColumnGroups(columnGroups: GridColumnNode[]) {
+  columnGroups.sort((a, b) => {
+    if (isLeaf(a) || isLeaf(b)) {
+      return 0;
+    }
+    if (a.children) {
+      sortColumnGroups(a.children);
+    }
+    return gridStringOrNumberComparator(a.headerName, b.headerName, {} as any, {} as any);
+  });
 }
 
 const getPivotedData = ({
@@ -112,6 +125,8 @@ const getPivotedData = ({
       newRows.push(newRow);
     });
   }
+
+  sortColumnGroups(columnGroupingModel);
 
   function createColumns(columnGroups: GridColumnNode[], depth = 0) {
     columnGroups.forEach((columnGroup) => {
