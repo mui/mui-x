@@ -78,17 +78,16 @@ const getPivotedData = ({
 
       pivotModel.columns.forEach((colGroupField, depth) => {
         const colValue = getFieldValue(row, colGroupField) || '(No value)';
-        const mapKey = String(colValue);
+        columnGroupPath.push(String(colValue));
+        const groupId = columnGroupPath.join('-');
 
-        columnGroupPath.push(mapKey);
-
-        if (!columnGroupingModelLookup[mapKey]) {
+        if (!columnGroupingModelLookup[groupId]) {
           const columnGroup: GridColumnGroupingModel[number] = {
-            groupId: columnGroupPath.join('-'),
+            groupId,
             headerName: colValue,
             children: [],
           };
-          columnGroupingModelLookup[mapKey] = columnGroup;
+          columnGroupingModelLookup[groupId] = columnGroup;
           if (depth === 0) {
             columnGroupingModel.push(columnGroup);
           } else {
