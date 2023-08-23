@@ -50,6 +50,11 @@ export interface LineChartProps
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
+
+  /**
+   * Render the line highlight item if `true`.
+   */
+  disableLineItemHighlight?: boolean;
   /**
    * Overridable component slots.
    * @default {}
@@ -74,6 +79,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     sx,
     tooltip,
     axisHighlight = { x: 'line' },
+    disableLineItemHighlight,
     legend,
     topAxis,
     leftAxis,
@@ -90,7 +96,11 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
   return (
     <ResponsiveChartContainer
       ref={ref}
-      series={series.map((s) => ({ type: 'line', ...s }))}
+      series={series.map((s) => ({
+        renderHighlight: !disableLineItemHighlight,
+        type: 'line',
+        ...s,
+      }))}
       width={width}
       height={height}
       margin={margin}

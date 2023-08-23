@@ -64,9 +64,6 @@ const MarkElementPath = styled('path', {
   fill: theme.palette.background.paper,
   stroke: ownerState.color,
   strokeWidth: 2,
-  '&.MuiMarkElement-highlighted': {
-    fill: ownerState.color,
-  },
 }));
 
 MarkElementPath.propTypes = {

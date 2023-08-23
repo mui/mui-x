@@ -57,8 +57,12 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            renderHighlight,
           } = series[seriesId];
 
+          if (!renderHighlight) {
+            return null;
+          }
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
           const xData = xAxis[xAxisKey].data;
