@@ -17,7 +17,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepick
 
 {{"demo": "CommonlyUsedComponents.js"}}
 
-## Community or Pro Plan?
+## Community or Pro plan?
 
 The Date and Time Pickers are available in two packages:
 
