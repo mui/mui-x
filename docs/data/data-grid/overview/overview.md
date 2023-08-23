@@ -37,7 +37,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 The commercial versions are available in the form of two plans: Pro and Premium.
 
-### Pro Plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+### Pro plan [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The Pro version includes and extends the features available in the MIT version to support more complex use cases. It adds new features like advanced filtering, column pinning, column and row reordering, support for tree data, and virtualization to handle bigger datasets.
 
