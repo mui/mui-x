@@ -32,6 +32,7 @@ export default function GridPivotingMovies() {
     rows: data.rows,
     columns: data.columns,
     pivotModel,
+    apiRef,
   });
 
   return (

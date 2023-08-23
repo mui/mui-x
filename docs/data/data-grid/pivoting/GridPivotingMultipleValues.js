@@ -38,6 +38,7 @@ export default function GridPivotingMultipleValues() {
     rows: initialRows,
     columns: initialColumns,
     pivotModel,
+    apiRef,
   });
 
   return (

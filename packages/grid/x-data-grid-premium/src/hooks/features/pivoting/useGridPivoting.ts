@@ -5,11 +5,13 @@ import {
   GridColumnGroupingModel,
   GridColumnNode,
   GridRowModel,
+  gridFilteredRowsLookupSelector,
   gridStringOrNumberComparator,
   isLeaf,
 } from '@mui/x-data-grid-pro';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
+import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface PivotModel {
   columns: GridColDef['field'][];
@@ -44,10 +46,12 @@ const getPivotedData = ({
   rows,
   // columns,
   pivotModel,
+  apiRef,
 }: {
   rows: GridRowModel[];
   columns: GridColDef[];
   pivotModel: PivotModel;
+  apiRef: React.MutableRefObject<GridApiPremium>;
 }): {
   rows: DataGridPremiumProcessedProps['rows'];
   columns: DataGridPremiumProcessedProps['columns'];
@@ -59,6 +63,7 @@ const getPivotedData = ({
 } => {
   const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
+  const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
 
   pivotModel.rows.forEach((field) => {
     pivotColumns.push({
@@ -89,6 +94,10 @@ const getPivotedData = ({
     });
   } else {
     rows.forEach((row) => {
+      const isRowFiltered = filteredRowsLookup[row.id];
+      if (!isRowFiltered) {
+        return;
+      }
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
 
@@ -175,10 +184,12 @@ export const useGridPivoting = ({
   columns,
   rows,
   pivotModel,
+  apiRef,
 }: {
   rows: GridRowModel[];
   columns: GridColDef[];
   pivotModel: PivotModel;
+  apiRef: React.MutableRefObject<GridApiPremium>;
 }) => {
   const [isPivot, setIsPivot] = React.useState(false);
 
@@ -188,10 +199,11 @@ export const useGridPivoting = ({
         rows,
         columns,
         pivotModel,
+        apiRef,
       });
     }
     return { rows, columns };
-  }, [isPivot, columns, rows, pivotModel]);
+  }, [isPivot, columns, rows, pivotModel, apiRef]);
 
   return {
     isPivot,

@@ -35,6 +35,7 @@ export default function GridPivotingBasic() {
     rows: initialRows,
     columns: initialColumns,
     pivotModel,
+    apiRef,
   });
 
   return (
