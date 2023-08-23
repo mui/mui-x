@@ -19,7 +19,7 @@ export default function InterpolationDemo() {
   const [curveType, setCurveType] = React.useState('linear');
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2, width: 1, maxWidth: 600 }}>
       <TextField
         select
         label="interpolation method"
@@ -39,7 +39,6 @@ export default function InterpolationDemo() {
           { curve: curveType, data: [0, 5, 2, 6, 3, 9.3] },
           { curve: curveType, data: [6, 3, 7, 9.5, 4, 2] },
         ]}
-        width={500}
         height={300}
         margin={{ top: 10, bottom: 30 }}
       />

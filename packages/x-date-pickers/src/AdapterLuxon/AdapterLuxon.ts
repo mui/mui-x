@@ -4,6 +4,7 @@ import {
   AdapterFormats,
   AdapterOptions,
   AdapterUnits,
+  DateBuilderReturnType,
   FieldFormatTokenMap,
   MuiPickersAdapter,
   PickersTimezone,
@@ -165,21 +166,22 @@ export class AdapterLuxon implements MuiPickersAdapter<DateTime, string> {
     return DateTime.fromJSDate(value, { locale: this.locale });
   };
 
-  public dateWithTimezone = (
-    value: string | null | undefined,
+  public dateWithTimezone = <T extends string | null | undefined>(
+    value: T,
     timezone: PickersTimezone,
-  ): DateTime | null => {
+  ): DateBuilderReturnType<T, DateTime> => {
+    type R = DateBuilderReturnType<T, DateTime>;
     if (value === null) {
-      return null;
+      return <R>null;
     }
 
     if (typeof value === 'undefined') {
       // @ts-ignore
-      return DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
+      return <R>DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
     }
 
     // @ts-ignore
-    return DateTime.fromISO(value, { locale: this.locale, zone: timezone });
+    return <R>DateTime.fromISO(value, { locale: this.locale, zone: timezone });
   };
 
   public getTimezone = (value: DateTime): string => {

@@ -195,6 +195,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableDensitySelector: boolean;
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: boolean;
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
