@@ -207,7 +207,7 @@ export default function GridPivotModelEditor({
       if (pivotModel.rows.includes(field)) {
         return false;
       }
-      if (pivotModel.columns.includes(field)) {
+      if (pivotModel.columns.find((col) => col.field === field)) {
         return false;
       }
       if (pivotModel.values.find((obj) => obj.field === field)) {
@@ -230,11 +230,11 @@ export default function GridPivotModelEditor({
       <FieldsSelect
         options={availableFields}
         label="Columns"
-        values={pivotModel.columns}
+        values={pivotModel.columns.map((col) => col.field)}
         onChange={(newColumns) => {
           onPivotModelChange((prevModel) => ({
             ...prevModel,
-            columns: newColumns,
+            columns: newColumns.map((field) => ({ field })),
           }));
         }}
       />

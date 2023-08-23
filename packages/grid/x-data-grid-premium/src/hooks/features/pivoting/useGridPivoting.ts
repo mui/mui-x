@@ -14,7 +14,7 @@ import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface PivotModel {
-  columns: GridColDef['field'][];
+  columns: { field: GridColDef['field'] }[];
   rows: GridColDef['field'][];
   values: {
     field: GridColDef['field'];
@@ -101,7 +101,7 @@ const getPivotedData = ({
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
 
-      pivotModel.columns.forEach((colGroupField, depth) => {
+      pivotModel.columns.forEach(({ field: colGroupField }, depth) => {
         const colValue = getFieldValue(row, colGroupField) || '(No value)';
         columnGroupPath.push(String(colValue));
         const groupId = columnGroupPath.join('-');
