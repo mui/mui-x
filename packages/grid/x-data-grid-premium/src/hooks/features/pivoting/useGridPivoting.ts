@@ -33,6 +33,9 @@ function sortColumnGroups(columnGroups: GridColumnNode[]) {
     if (a.children) {
       sortColumnGroups(a.children);
     }
+    if (b.children) {
+      sortColumnGroups(b.children);
+    }
     return gridStringOrNumberComparator(a.headerName, b.headerName, {} as any, {} as any);
   });
 }
