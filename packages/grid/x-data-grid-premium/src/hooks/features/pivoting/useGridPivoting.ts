@@ -14,7 +14,7 @@ import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface PivotModel {
-  columns: { field: GridColDef['field'] }[];
+  columns: { field: GridColDef['field']; sort?: 'asc' | 'desc' }[];
   rows: GridColDef['field'][];
   values: {
     field: GridColDef['field'];
@@ -27,18 +27,29 @@ function getFieldValue(row: GridRowModel, field: GridColDef['field']) {
   return row[field];
 }
 
-function sortColumnGroups(columnGroups: GridColumnNode[]) {
+function sortColumnGroups(
+  columnGroups: GridColumnNode[],
+  pivotModelColumns: PivotModel['columns'],
+  depth = 0,
+) {
+  if (depth > pivotModelColumns.length - 1) {
+    return;
+  }
+  const sort = pivotModelColumns[depth].sort || 'asc';
   columnGroups.sort((a, b) => {
     if (isLeaf(a) || isLeaf(b)) {
       return 0;
     }
     if (a.children) {
-      sortColumnGroups(a.children);
+      sortColumnGroups(a.children, pivotModelColumns, depth + 1);
     }
     if (b.children) {
-      sortColumnGroups(b.children);
+      sortColumnGroups(b.children, pivotModelColumns, depth + 1);
     }
-    return gridStringOrNumberComparator(a.headerName, b.headerName, {} as any, {} as any);
+    return (
+      (sort === 'asc' ? 1 : -1) *
+      gridStringOrNumberComparator(a.headerName, b.headerName, {} as any, {} as any)
+    );
   });
 }
 
@@ -136,9 +147,9 @@ const getPivotedData = ({
 
       newRows.push(newRow);
     });
-  }
 
-  sortColumnGroups(columnGroupingModel);
+    sortColumnGroups(columnGroupingModel, pivotModel.columns);
+  }
 
   function createColumns(columnGroups: GridColumnNode[], depth = 0) {
     columnGroups.forEach((columnGroup) => {

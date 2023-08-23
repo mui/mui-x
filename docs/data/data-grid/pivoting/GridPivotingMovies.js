@@ -22,9 +22,9 @@ export default function GridPivotingMovies() {
   const [pivotModel, setPivotModel] = React.useState({
     rows: ['company'],
     columns: [
-      { field: 'year' },
-      { field: 'cinematicUniverse' },
-      { field: 'director' },
+      { field: 'year', sort: 'desc' },
+      { field: 'cinematicUniverse', sort: 'asc' },
+      { field: 'director', sort: 'asc' },
     ],
     values: [
       { field: 'gross', aggFunc: 'sum' },
