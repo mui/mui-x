@@ -10,6 +10,7 @@ export const ChartsTooltipPaper = styled('div', {
   color: (theme.vars || theme).palette.text.primary,
   transition: theme.transitions.create('box-shadow'),
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
 }));
 
 export const ChartsTooltipTable = styled('table', {
