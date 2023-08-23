@@ -2,14 +2,11 @@ import * as React from 'react';
 import { useLocalizationContext } from './useUtils';
 import { MuiPickersAdapterContextValue } from '../../LocalizationProvider/LocalizationProvider';
 
-export interface ValidationCommonProps<TError, TValue> {
+interface ValidationCommonProps<TError, TValue> {
   /**
    * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
    * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
    * This can be used to render appropriate form error.
-   *
-   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   *
    * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} reason The reason why the current value is not valid.
