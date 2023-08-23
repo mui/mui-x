@@ -164,7 +164,6 @@ export const ChartsLegendLabel = styled('text', {
   slot: 'Label',
   overridesResolver: (props, styles) => styles.label,
 })(({ theme }) => ({
-  // Typing should be fixed in v6 (see: https://github.com/mui/material-ui/issues/30678)
   ...theme.typography.body1,
   color: 'inherit',
   transform: `translate(
