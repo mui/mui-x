@@ -4,6 +4,8 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { LineChart } from '@mui/x-charts/LineChart';
 
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+
 const curveTypes = [
   'catmullRom',
   'linear',
@@ -15,7 +17,16 @@ const curveTypes = [
   'stepAfter',
 ];
 
-export default function InterpolationDemo() {
+function getExample(curveType) {
+  return `<LineChart
+  series={[
+    { curve: "${curveType}", data: [0, 5, 2, 6, 3, 9.3] },
+    { curve: "${curveType}", data: [6, 3, 7, 9.5, 4, 2] },
+  ]}
+  {/* ... */}
+/>`;
+}
+export default function InterpolationDemoNoSnap() {
   const [curveType, setCurveType] = React.useState('linear');
 
   return (
@@ -42,6 +53,7 @@ export default function InterpolationDemo() {
         height={300}
         margin={{ top: 10, bottom: 30 }}
       />
+      <HighlightedCode code={getExample(curveType)} language="tsx" />
     </Box>
   );
 }
