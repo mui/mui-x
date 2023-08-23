@@ -12,7 +12,13 @@ import { useMovieData } from '@mui/x-data-grid-generator';
 export default function GridPivotingMovies() {
   const apiRef = useGridApiRef();
 
-  const data = useMovieData();
+  const movieData = useMovieData();
+  const data = React.useMemo(() => {
+    return {
+      ...movieData,
+      columns: [...movieData.columns, { field: 'imdbRating', type: 'number' }],
+    };
+  }, [movieData]);
   const [pivotModel, setPivotModel] = React.useState({
     rows: ['company'],
     columns: ['year', 'cinematicUniverse', 'director'],
