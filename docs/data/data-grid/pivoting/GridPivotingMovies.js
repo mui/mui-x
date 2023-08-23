@@ -15,7 +15,7 @@ export default function GridPivotingMovies() {
   const data = useMovieData();
   const [pivotModel, setPivotModel] = React.useState({
     rows: ['company'],
-    columns: ['year', 'director'],
+    columns: ['year', 'cinematicUniverse', 'director'],
     values: [
       { field: 'gross', aggFunc: 'sum' },
       { field: 'imdbRating', aggFunc: 'avg' },
@@ -44,12 +44,13 @@ export default function GridPivotingMovies() {
         />
       )}
 
-      <div style={{ height: 400, width: '100%' }}>
+      <div style={{ height: isPivot ? undefined : 400, width: '100%' }}>
         <DataGridPremium
           key={isPivot.toString()}
           {...props}
           apiRef={apiRef}
           experimentalFeatures={{ columnGrouping: true }}
+          autoHeight={isPivot}
         />
       </div>
     </div>
