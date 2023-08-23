@@ -89,11 +89,11 @@ In the demo below, you can see that the calendar is set to April 2022 on mount:
 
 {{"demo": "ReferenceDateUsingValue.js"}}
 
-When `value` and `defaultValue` contains no valid date, the component will try to find a reference date that passed the validation to initialize its rendering:
+When `value` and `defaultValue` contains no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
 
 {{"demo": "ReferenceDateDefaultBehavior.js"}}
 
-You can override this date using the `referenceDate` prop.
+You can override this date using the `referenceDate` prop:
 
 {{"demo": "ReferenceDateExplicitDateTimePicker.js"}}
 
