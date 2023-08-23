@@ -170,7 +170,7 @@ export interface TreeViewContextValue {
   mapFirstChar: (nodeId: string, firstChar: string) => void;
   unMapFirstChar: (nodeId: string) => void;
   focus: (event: React.SyntheticEvent, nodeId: string) => void;
-  toggleExpansion: (event: React.SyntheticEvent, value?: string) => void;
+  toggleExpansion: (event: React.SyntheticEvent, value: string) => void;
   selectNode: (event: React.SyntheticEvent, nodeId: string, multiple?: boolean) => void;
   selectRange: (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked?: boolean) => void;
   multiSelect: boolean;
