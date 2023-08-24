@@ -1,8 +1,8 @@
 [
   { "name": "getTreeItemUtilityClass", "kind": "Function" },
   { "name": "getTreeViewUtilityClass", "kind": "Function" },
-  { "name": "MultiSelectTreeViewProps", "kind": "Interface" },
-  { "name": "SingleSelectTreeViewProps", "kind": "Interface" },
+  { "name": "MultiSelectTreeViewProps", "kind": "TypeAlias" },
+  { "name": "SingleSelectTreeViewProps", "kind": "TypeAlias" },
   { "name": "TreeItem", "kind": "Variable" },
   { "name": "treeItemClasses", "kind": "Variable" },
   { "name": "TreeItemClasses", "kind": "Interface" },

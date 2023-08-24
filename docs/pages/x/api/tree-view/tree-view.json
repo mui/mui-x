@@ -11,10 +11,7 @@
     },
     "defaultExpandIcon": { "type": { "name": "node" } },
     "defaultParentIcon": { "type": { "name": "node" } },
-    "defaultSelected": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
-      "default": "[]"
-    },
+    "defaultSelected": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" } },
     "disableSelection": { "type": { "name": "bool" } },
     "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
@@ -41,9 +38,7 @@
         "describedArgs": ["event", "nodeIds"]
       }
     },
-    "selected": {
-      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" }
-    },
+    "selected": { "type": { "name": "any" } },
     "sx": {
       "type": {
         "name": "union",

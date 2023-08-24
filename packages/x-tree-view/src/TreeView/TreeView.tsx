@@ -69,7 +69,6 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     multiSelect,
     onNodeSelect,
     onKeyDown,
-
     // Component implementation
     children,
     className,
@@ -187,7 +186,7 @@ TreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+  defaultSelected: PropTypes.any,
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -237,7 +236,7 @@ TreeView.propTypes = {
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+  selected: PropTypes.any,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
