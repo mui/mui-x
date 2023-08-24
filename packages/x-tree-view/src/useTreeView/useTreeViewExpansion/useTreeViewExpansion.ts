@@ -21,8 +21,9 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionProps> = (
     [models.expanded.value],
   );
 
-  const isNodeExpandable = useEventCallback(
+  const isNodeExpandable = React.useCallback(
     (nodeId: string) => instance.nodeMap[nodeId] && instance.nodeMap[nodeId].expandable,
+    [instance],
   );
 
   const toggleNodeExpansion = useEventCallback(

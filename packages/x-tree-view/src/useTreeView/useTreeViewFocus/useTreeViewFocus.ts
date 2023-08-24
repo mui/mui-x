@@ -20,7 +20,10 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusProps, UseTreeView
     setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));
   });
 
-  const isNodeFocused = useEventCallback((nodeId: string) => state.focusedNodeId === nodeId);
+  const isNodeFocused = React.useCallback(
+    (nodeId: string) => state.focusedNodeId === nodeId,
+    [state.focusedNodeId],
+  );
 
   const focusNode = useEventCallback((event: React.SyntheticEvent, nodeId: string | null) => {
     if (nodeId) {
