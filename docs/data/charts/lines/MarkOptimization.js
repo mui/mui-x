@@ -8,7 +8,6 @@ export default function MarkOptimization() {
       series={[
         {
           data: [2, 3, 5.5, 8.5, 1.5, 5, 1, 4, 3, 8],
-          renderHighlight: true,
           showMark: ({ index }) => index % 2 === 0,
         },
       ]}

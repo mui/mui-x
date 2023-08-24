@@ -97,7 +97,7 @@ const LineChart = React.forwardRef(function LineChart(props: LineChartProps, ref
     <ResponsiveChartContainer
       ref={ref}
       series={series.map((s) => ({
-        renderHighlight: !disableLineItemHighlight,
+        disableHighlight: !!disableLineItemHighlight,
         type: 'line',
         ...s,
       }))}
@@ -288,13 +288,13 @@ LineChart.propTypes = {
       ]),
       data: PropTypes.arrayOf(PropTypes.number),
       dataKey: PropTypes.string,
+      disableHighlight: PropTypes.bool,
       highlightScope: PropTypes.shape({
         faded: PropTypes.oneOf(['global', 'none', 'series']),
         highlighted: PropTypes.oneOf(['item', 'none', 'series']),
       }),
       id: PropTypes.string,
       label: PropTypes.string,
-      renderHighlight: PropTypes.bool,
       showMark: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
       stack: PropTypes.string,
       stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),

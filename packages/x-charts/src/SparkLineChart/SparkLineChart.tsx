@@ -136,7 +136,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
           type: plotType,
           data,
           valueFormatter,
-          ...(plotType === 'bar' ? {} : { area, curve, renderHighlight: !!showHighlight }),
+          ...(plotType === 'bar' ? {} : { area, curve, disableHighlight: !showHighlight }),
         },
       ]}
       width={width}

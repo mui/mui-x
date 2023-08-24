@@ -67,8 +67,9 @@ To show mark elements, use `showMark` series property.
 It accepts a boolean or a callback.
 The next example shows how to use it to display only one mark every two data points.
 
-To show a mark only when the value is highlighted, use the series property `renderHighlight`.
-When set to `true`, highlighted values render a specific mark over the default ones.
+When the value is highlighted, an additional mark is rendered over the other ones.
+
+This behavior can be removed with series property `disableHighlight` or at the scale of the line chart with prop `disableLineItemHighlight`.
 
 In this example, you have one mark for every value with an even index.
 The highlighted data has a mark regardless if it has an even or odd index.

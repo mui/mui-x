@@ -63,10 +63,10 @@ export interface LineSeriesType
    */
   showMark?: boolean | ((params: ShowMarkParams) => boolean);
   /**
-   * Render the line highlight item if set to `true`.
+   * Do not render the line highlight item if set to `true`.
    * @default false
    */
-  renderHighlight?: boolean;
+  disableHighlight?: boolean;
 }
 
 /**
