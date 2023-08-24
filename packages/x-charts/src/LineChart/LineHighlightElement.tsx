@@ -48,33 +48,8 @@ const HighlightElement = styled('circle', {
   fill: ownerState.color,
 }));
 
-HighlightElement.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  as: PropTypes.elementType,
-  ownerState: PropTypes.shape({
-    classes: PropTypes.object,
-    color: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-    isFaded: PropTypes.bool.isRequired,
-    isHighlighted: PropTypes.bool.isRequired,
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }).isRequired,
-  sx: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
-    PropTypes.func,
-    PropTypes.object,
-  ]),
-} as any;
-
-export type LineHighlightElementProps = Omit<
-  LineHighlightElementOwnerState,
-  'isFaded' | 'isHighlighted'
-> &
-  React.ComponentPropsWithoutRef<'path'> & {};
+export type LineHighlightElementProps = LineHighlightElementOwnerState &
+  React.ComponentPropsWithoutRef<'circle'> & {};
 
 function LineHighlightElement(props: LineHighlightElementProps) {
   const { x, y, id, classes: innerClasses, color, ...other } = props;
