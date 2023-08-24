@@ -8,7 +8,7 @@ import { TreeViewContext } from './TreeViewContext';
 import { DescendantProvider } from './descendants';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
-import { useTreeView } from '../useTreeView';
+import { useTreeView, UseTreeViewProps } from '../useTreeView';
 
 const useUtilityClasses = (ownerState: TreeViewProps) => {
   const { classes } = ownerState;
@@ -94,7 +94,7 @@ const TreeView = React.forwardRef(function TreeView(
       multiSelect,
       onNodeSelect,
       onKeyDown,
-    },
+    } as UseTreeViewProps,
     ref,
   );
 
