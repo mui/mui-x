@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../models';
+import { TreeViewPlugin } from '../../../models';
 import {
   getFirstNode,
   getLastNode,

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import type { TreeViewItemRange } from '../../TreeView/TreeView.types';
-import { TreeViewPlugin } from '../../models';
+import { TreeViewPlugin } from '../../../models';
+import { TreeViewItemRange } from '../../models';
 import { populateInstance, getNextNode, getFirstNode, getLastNode } from '../useTreeView.utils';
 import {
   UseTreeViewSelectionInstance,

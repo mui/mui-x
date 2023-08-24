@@ -1,4 +1,4 @@
-import type { TreeViewNode } from '../../TreeView/TreeView.types';
+import { TreeViewNode } from '../../models';
 
 export interface UseTreeViewNodesInstance {
   isNodeDisabled: (nodeId: string | null) => nodeId is string;

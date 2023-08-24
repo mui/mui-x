@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { TreeViewItemRange } from '../../TreeView/TreeView.types';
+import type { TreeViewItemRange } from '../../models';
 
 export interface UseTreeViewSelectionInstance {
   isNodeSelected: (nodeId: string) => boolean;

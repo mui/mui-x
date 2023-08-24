@@ -1,10 +1,10 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
-import { TreeViewPlugin } from '../../models';
+import { TreeViewPlugin } from '../../../models';
 import { populateInstance } from '../useTreeView.utils';
 import { UseTreeViewNodesInstance, UseTreeViewNodesProps } from './useTreeViewNodes.types';
-import type { TreeViewNode } from '../../TreeView/TreeView.types';
+import { TreeViewNode } from '../../models';
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesProps> = ({
   instance,

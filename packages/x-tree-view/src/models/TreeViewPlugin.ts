@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TreeViewInstance } from './TreeViewInstance';
 import { TreeViewState } from './TreeViewState';
 import { TreeViewModels } from './TreeViewModel';
-import type { UseTreeViewDefaultizedProps } from '../useTreeView/useTreeView.types';
+import type { UseTreeViewDefaultizedProps } from '../internals/useTreeView/useTreeView.types';
 
 export interface TreeViewPluginParams<TProps extends Partial<UseTreeViewDefaultizedProps<any>>> {
   instance: TreeViewInstance;

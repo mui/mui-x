@@ -1,12 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import {
-  TreeViewInstance,
-  TreeViewPlugin,
-  TreeViewState,
-  TreeViewModel,
-  TreeViewModels,
-} from '../models';
+import { TreeViewInstance, TreeViewPlugin, TreeViewState, TreeViewModels } from '../../models';
 import { useTreeViewNodes } from './useTreeViewNodes';
 import { useTreeViewSelection } from './useTreeViewSelection';
 import { useTreeViewFocus } from './useTreeViewFocus';
@@ -34,10 +28,11 @@ const useTreeViewModels = <Multiple extends boolean>(
   props: UseTreeViewDefaultizedProps<Multiple>,
 ) => {
   const modelsRef = React.useRef<{
-    [modelName: string]: Omit<
-      TreeViewModel<Multiple, keyof UseTreeViewDefaultizedProps<true>>,
-      'value' | 'setValue'
-    >;
+    [modelName: string]: {
+      controlledProp: keyof UseTreeViewDefaultizedProps<true>;
+      defaultProp: keyof UseTreeViewDefaultizedProps<true>;
+      isControlled: boolean;
+    };
   }>({});
 
   const [modelsState, setModelsState] = React.useState<{ [modelName: string]: any }>(() => {
@@ -64,7 +59,6 @@ const useTreeViewModels = <Multiple extends boolean>(
       return [
         modelName,
         {
-          ...model,
           value,
           setValue: (newValue: any) => {
             if (!model.isControlled) {
@@ -174,12 +168,6 @@ export const useTreeView = <Multiple extends boolean | undefined>(
   };
 
   plugins.forEach(runPlugin);
-
-  runPlugin(useTreeViewNodes);
-  runPlugin(useTreeViewExpansion);
-  runPlugin(useTreeViewSelection);
-  runPlugin(useTreeViewFocus);
-  runPlugin(useTreeViewKeyboardNavigation);
 
   const contextValue = {
     focus: instance.focusNode,

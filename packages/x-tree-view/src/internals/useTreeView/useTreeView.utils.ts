@@ -1,4 +1,4 @@
-import { TreeViewInstance } from '../models';
+import { TreeViewInstance } from '../../models';
 
 export const getPreviousNode = (instance: TreeViewInstance, nodeId: string) => {
   const node = instance.nodeMap[nodeId];

@@ -1,3 +1,3 @@
-import type { UseTreeViewFocusState } from '../useTreeView/useTreeViewFocus';
+import type { UseTreeViewFocusState } from '../internals/useTreeView/useTreeViewFocus';
 
 export interface TreeViewState extends UseTreeViewFocusState {}

@@ -8,7 +8,7 @@ import { TreeViewContext } from './TreeViewContext';
 import { DescendantProvider } from './descendants';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
-import { useTreeView } from '../useTreeView';
+import { useTreeView } from '../internals/useTreeView';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
