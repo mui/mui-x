@@ -78,12 +78,9 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             <Element
               key={`${seriesId}`}
               id={seriesId}
-              dataIndex={highlightedIndex}
-              shape="circle"
               color={series[seriesId].color}
               x={x}
               y={y}
-              highlightScope={series[seriesId].highlightScope}
               {...slotProps?.lineHighlight}
             />
           );

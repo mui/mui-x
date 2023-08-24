@@ -1,8 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import { BarPlot } from '../BarChart';
-import { LinePlot, MarkPlot, AreaPlot, markElementClasses } from '../LineChart';
+import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import {
   ResponsiveChartContainer,
   ResponsiveChartContainerProps,
@@ -16,24 +15,23 @@ import { LineSeriesType } from '../models/seriesType/line';
 import { AreaPlotSlotsComponent, AreaPlotSlotComponentProps } from '../LineChart/AreaPlot';
 import { LinePlotSlotsComponent, LinePlotSlotComponentProps } from '../LineChart/LinePlot';
 import { MarkPlotSlotsComponent, MarkPlotSlotComponentProps } from '../LineChart/MarkPlot';
+import {
+  LineHighlightPlotSlotsComponent,
+  LineHighlightPlotSlotComponentProps,
+} from '../LineChart/LineHighlightPlot';
 import { BarPlotSlotsComponent, BarPlotSlotComponentProps } from '../BarChart/BarPlot';
-
-const SparkLineMarkPlot = styled(MarkPlot)({
-  [`& .${markElementClasses.root}`]: {
-    display: 'none',
-    [`&.${markElementClasses.highlighted}`]: { display: 'inherit' },
-  },
-});
 
 export interface SparkLineChartSlotsComponent
   extends AreaPlotSlotsComponent,
     LinePlotSlotsComponent,
     MarkPlotSlotsComponent,
+    LineHighlightPlotSlotsComponent,
     BarPlotSlotsComponent {}
 export interface SparkLineChartSlotComponentProps
   extends AreaPlotSlotComponentProps,
     LinePlotSlotComponentProps,
     MarkPlotSlotComponentProps,
+    LineHighlightPlotSlotComponentProps,
     BarPlotSlotComponentProps {}
 
 export interface SparkLineChartProps
@@ -134,7 +132,12 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
     <ResponsiveChartContainer
       ref={ref}
       series={[
-        { type: plotType, data, valueFormatter, ...(plotType === 'bar' ? {} : { area, curve }) },
+        {
+          type: plotType,
+          data,
+          valueFormatter,
+          ...(plotType === 'bar' ? {} : { area, curve, renderHighlight: !!showHighlight }),
+        },
       ]}
       width={width}
       height={height}
@@ -161,7 +164,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(props: SparkLine
         <React.Fragment>
           <AreaPlot slots={slots} slotProps={slotProps} />
           <LinePlot slots={slots} slotProps={slotProps} />
-          {showHighlight && <SparkLineMarkPlot />}
+          <LineHighlightPlot slots={slots} slotProps={slotProps} />
         </React.Fragment>
       )}
 

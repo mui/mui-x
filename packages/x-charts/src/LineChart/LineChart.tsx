@@ -191,6 +191,10 @@ LineChart.propTypes = {
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
+  /**
+   * Render the line highlight item if `true`.
+   */
+  disableLineItemHighlight: PropTypes.bool,
   height: PropTypes.number,
   /**
    * Indicate which axis to display the left of the charts.
@@ -290,6 +294,8 @@ LineChart.propTypes = {
       }),
       id: PropTypes.string,
       label: PropTypes.string,
+      renderHighlight: PropTypes.bool,
+      showMark: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
       stack: PropTypes.string,
       stackOffset: PropTypes.oneOf(['diverging', 'expand', 'none', 'silhouette', 'wiggle']),
       stackOrder: PropTypes.oneOf([

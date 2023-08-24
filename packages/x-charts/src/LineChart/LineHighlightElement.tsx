@@ -106,19 +106,6 @@ LineHighlightElement.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
-  /**
-   * The index to the element in the series' data array.
-   */
-  dataIndex: PropTypes.number.isRequired,
-  highlightScope: PropTypes.shape({
-    faded: PropTypes.oneOf(['global', 'none', 'series']),
-    highlighted: PropTypes.oneOf(['item', 'none', 'series']),
-  }),
-  /**
-   * The shape of the Highlighter.
-   */
-  shape: PropTypes.oneOf(['circle', 'cross', 'diamond', 'square', 'star', 'triangle', 'wye'])
-    .isRequired,
 } as any;
 
 export { LineHighlightElement };
