@@ -1,33 +1,18 @@
 import { DefaultizedProps } from '../internals/models';
 import type { UseTreeViewExpansionProps } from './useTreeViewExpansion';
 import type { UseTreeViewFocusProps } from './useTreeViewFocus';
-import type {
-  UseTreeViewSelectionProps,
-  UseTreeViewSingleSelectProps,
-  UseTreeViewMultiSelectProps,
-} from './useTreeViewSelection';
+import type { UseTreeViewSelectionProps } from './useTreeViewSelection';
 import type { UseTreeViewKeyboardNavigationProps } from './useTreeViewKeyboardNavigation';
 import type { UseTreeViewNodesProps } from './useTreeViewNodes';
 
-export type UseTreeViewProps = UseTreeViewNodesProps &
+export type UseTreeViewProps<Multiple extends boolean | undefined> = UseTreeViewNodesProps &
   UseTreeViewExpansionProps &
   UseTreeViewFocusProps &
-  UseTreeViewSelectionProps &
+  UseTreeViewSelectionProps<Multiple> &
   UseTreeViewKeyboardNavigationProps;
 
-export type UseSingleSelectTreeViewProps = Omit<
-  UseTreeViewProps,
-  keyof UseTreeViewMultiSelectProps
-> &
-  UseTreeViewSingleSelectProps;
-export type UseMultiSelectTreeViewProps = Omit<
-  UseTreeViewProps,
-  keyof UseSingleSelectTreeViewProps
-> &
-  UseTreeViewMultiSelectProps;
-
-export type UseTreeViewDefaultizedProps = DefaultizedProps<
-  UseTreeViewProps,
+export type UseTreeViewDefaultizedProps<Multiple extends boolean> = DefaultizedProps<
+  UseTreeViewProps<Multiple>,
   | 'defaultExpanded'
   | 'defaultSelected'
   | 'disabledItemsFocusable'

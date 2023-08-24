@@ -2,12 +2,7 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { TreeViewClasses } from './treeViewClasses';
-import {
-  UseTreeViewDefaultizedProps,
-  UseTreeViewProps,
-  UseSingleSelectTreeViewProps,
-  UseMultiSelectTreeViewProps,
-} from '../useTreeView';
+import { UseTreeViewProps } from '../useTreeView';
 
 export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   /**
@@ -51,12 +46,11 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
   sx?: SxProps<Theme>;
 }
 
-export type TreeViewProps = UseTreeViewProps & TreeViewPropsBase;
+export type TreeViewProps<Multiple extends boolean | undefined> = UseTreeViewProps<Multiple> &
+  TreeViewPropsBase;
 
-export type SingleSelectTreeViewProps = UseSingleSelectTreeViewProps & TreeViewPropsBase;
-export type MultiSelectTreeViewProps = UseMultiSelectTreeViewProps & TreeViewPropsBase;
-
-export type TreeViewDefaultizedProps = UseTreeViewDefaultizedProps & TreeViewPropsBase;
+export type SingleSelectTreeViewProps = TreeViewProps<false>;
+export type MultiSelectTreeViewProps = TreeViewProps<true>;
 
 export interface TreeViewNode {
   id: string;

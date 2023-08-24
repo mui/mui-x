@@ -9,64 +9,40 @@ export interface UseTreeViewSelectionInstance {
   rangeSelectToLast: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
 }
 
-interface UseTreeViewSelectionBaseProps {
+type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
+  ? string[]
+  : string | null;
+
+export interface UseTreeViewSelectionProps<Multiple extends boolean | undefined> {
   /**
    * If `true` selection is disabled.
    * @default false
    */
   disableSelection?: boolean;
-}
-
-export interface UseTreeViewSingleSelectProps extends UseTreeViewSelectionBaseProps {
   /**
    * Selected node ids. (Uncontrolled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected?: string | null;
+  defaultSelected?: TreeViewSelectionValue<Multiple>;
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    */
-  selected?: string | null;
+  selected?: TreeViewSelectionValue<Multiple>;
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
-  multiSelect?: false;
+  multiSelect?: Multiple;
   /**
    * Callback fired when tree items are selected/unselected.
    * @param {React.SyntheticEvent} event The event source of the callback
    * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
    * this is an array of strings; when false (default) a string.
    */
-  onNodeSelect?: (event: React.SyntheticEvent, nodeIds: string) => void;
+  onNodeSelect?: (
+    event: React.SyntheticEvent,
+    nodeIds: Exclude<TreeViewSelectionValue<Multiple>, null>,
+  ) => void;
 }
-
-export interface UseTreeViewMultiSelectProps extends UseTreeViewSelectionBaseProps {
-  /**
-   * Selected node ids. (Uncontrolled)
-   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
-   * @default []
-   */
-  defaultSelected?: string[];
-  /**
-   * Selected node ids. (Controlled)
-   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
-   */
-  selected?: string[];
-  /**
-   * If true `ctrl` and `shift` will trigger multiselect.
-   * @default false
-   */
-  multiSelect?: true;
-  /**
-   * Callback fired when tree items are selected/unselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
-   */
-  onNodeSelect?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
-}
-
-export type UseTreeViewSelectionProps = UseTreeViewSingleSelectProps | UseTreeViewMultiSelectProps;

@@ -8,9 +8,11 @@ import { TreeViewContext } from './TreeViewContext';
 import { DescendantProvider } from './descendants';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
-import { useTreeView, UseTreeViewProps } from '../useTreeView';
+import { useTreeView } from '../useTreeView';
 
-const useUtilityClasses = (ownerState: TreeViewProps) => {
+const useUtilityClasses = <Multiple extends boolean | undefined>(
+  ownerState: TreeViewProps<Multiple>,
+) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -24,12 +26,16 @@ const TreeViewRoot = styled('ul', {
   name: 'MuiTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewProps }>({
+})<{ ownerState: TreeViewProps<any> }>({
   padding: 0,
   margin: 0,
   listStyle: 'none',
   outline: 0,
 });
+
+type TreeViewComponent = (<Multiple extends boolean | undefined>(
+  props: TreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
+) => React.JSX.Element) & { propTypes?: any };
 
 /**
  *
@@ -41,11 +47,12 @@ const TreeViewRoot = styled('ul', {
  *
  * - [TreeView API](https://mui.com/material-ui/api/tree-view/)
  */
-const TreeView = React.forwardRef(function TreeView(
-  inProps: TreeViewProps,
+const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | undefined>(
+  inProps: TreeViewProps<Multiple>,
   ref: React.Ref<HTMLUListElement>,
 ) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
+  const ownerState = themeProps as TreeViewProps<any>;
 
   const {
     // Headless implementation
@@ -94,7 +101,7 @@ const TreeView = React.forwardRef(function TreeView(
       multiSelect,
       onNodeSelect,
       onKeyDown,
-    } as UseTreeViewProps,
+    },
     ref,
   );
 
@@ -123,7 +130,7 @@ const TreeView = React.forwardRef(function TreeView(
           aria-multiselectable={multiSelect}
           className={clsx(classes.root, className)}
           tabIndex={0}
-          ownerState={themeProps}
+          ownerState={ownerState}
           {...other}
           {...rootProps}
         >
@@ -132,7 +139,7 @@ const TreeView = React.forwardRef(function TreeView(
       </DescendantProvider>
     </TreeViewContext.Provider>
   );
-});
+}) as TreeViewComponent;
 
 TreeView.propTypes = {
   // ----------------------------- Warning --------------------------------

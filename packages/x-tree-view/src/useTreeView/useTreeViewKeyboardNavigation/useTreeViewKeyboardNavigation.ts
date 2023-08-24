@@ -30,7 +30,7 @@ function findNextFirstChar(firstChars: string[], startIndex: number, char: strin
 }
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
-  UseTreeViewKeyboardNavigationProps & UseTreeViewSelectionProps & UseTreeViewNodesProps
+  UseTreeViewKeyboardNavigationProps & UseTreeViewSelectionProps<any> & UseTreeViewNodesProps
 > = ({ instance, props, state }) => {
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';

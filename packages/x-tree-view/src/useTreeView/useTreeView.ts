@@ -14,7 +14,7 @@ import { useTreeViewExpansion } from './useTreeViewExpansion';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
 import { UseTreeViewDefaultizedProps, UseTreeViewProps } from './useTreeView.types';
 
-const plugins: TreeViewPlugin<UseTreeViewProps>[] = [
+const plugins: TreeViewPlugin<UseTreeViewProps<any>>[] = [
   useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,
@@ -30,9 +30,14 @@ function noopSelection() {
  * Implements the same behavior as `useControlled` but for several models.
  * The controlled models are never stored in the state and the state is only updated if the model is not controlled.
  */
-const useTreeViewModels = (props: UseTreeViewDefaultizedProps) => {
+const useTreeViewModels = <Multiple extends boolean>(
+  props: UseTreeViewDefaultizedProps<Multiple>,
+) => {
   const modelsRef = React.useRef<{
-    [modelName: string]: Omit<TreeViewModel<any>, 'value' | 'setValue'>;
+    [modelName: string]: Omit<
+      TreeViewModel<Multiple, keyof UseTreeViewDefaultizedProps<true>>,
+      'value' | 'setValue'
+    >;
   }>({});
 
   const [modelsState, setModelsState] = React.useState<{ [modelName: string]: any }>(() => {
@@ -72,7 +77,7 @@ const useTreeViewModels = (props: UseTreeViewDefaultizedProps) => {
         },
       ];
     }),
-  ) as unknown as TreeViewModels;
+  ) as unknown as TreeViewModels<Multiple>;
 
   // We know that `modelsRef` do not vary across renders.
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
@@ -122,23 +127,26 @@ const useTreeViewModels = (props: UseTreeViewDefaultizedProps) => {
 const defaultDefaultExpanded: string[] = [];
 const defaultDefaultSelected: string[] = [];
 
-export const useTreeView = (
-  inProps: UseTreeViewProps,
+export const useTreeView = <Multiple extends boolean | undefined>(
+  inProps: UseTreeViewProps<Multiple>,
   ref: React.Ref<HTMLUListElement> | undefined,
 ) => {
-  const props: UseTreeViewDefaultizedProps = {
+  type DefaultProps = UseTreeViewDefaultizedProps<Multiple extends true ? true : false>;
+
+  const props = {
     ...inProps,
     disabledItemsFocusable: inProps.disabledItemsFocusable ?? false,
     disableSelection: inProps.disableSelection ?? false,
     multiSelect: inProps.multiSelect ?? false,
     defaultExpanded: inProps.defaultExpanded ?? defaultDefaultExpanded,
-    defaultSelected: inProps.defaultSelected ?? defaultDefaultSelected,
-  };
+    defaultSelected:
+      inProps.defaultSelected ?? (inProps.multiSelect ? defaultDefaultSelected : null),
+  } as DefaultProps;
 
   const [state, setState] = React.useState<TreeViewState>(() =>
     plugins.reduce((prevState, plugin) => {
       if (plugin.getInitialState) {
-        const response = plugin.getInitialState(props);
+        const response = plugin.getInitialState(props as UseTreeViewDefaultizedProps<any>);
         Object.assign(prevState, response);
       }
 

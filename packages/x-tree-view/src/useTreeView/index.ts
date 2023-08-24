@@ -1,7 +1,2 @@
 export { useTreeView } from './useTreeView';
-export type {
-  UseTreeViewProps,
-  UseTreeViewDefaultizedProps,
-  UseSingleSelectTreeViewProps,
-  UseMultiSelectTreeViewProps,
-} from './useTreeView.types';
+export type { UseTreeViewProps, UseTreeViewDefaultizedProps } from './useTreeView.types';
