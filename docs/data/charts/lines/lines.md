@@ -61,6 +61,20 @@ This property expects one of the following string values, corresponding to the i
 
 {{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline"}}
 
+### Optimization
+
+To show mark elements, use `showMark` series property.
+It accepts a boolean or a callback.
+The next example shows how to use it to display only one mark every two data points.
+
+To show a mark only when the value is highlighted, use the series property `renderHighlight`.
+When set to `true`, highlighted values render a specific mark over the default ones.
+
+In this example, you have one mark for every value with an even index.
+The highlighted data has a mark regardless if it has an even or odd index.
+
+{{"demo": "MarkOptimization.js"}}
+
 ### CSS
 
 Line plots are made of three elements named `LineElement`, `AreaElement`, and `MarkElement`.
