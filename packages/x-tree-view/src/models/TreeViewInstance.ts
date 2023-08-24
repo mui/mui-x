@@ -3,7 +3,7 @@ import type { UseTreeViewFocusInstance } from '../useTreeView/useTreeViewFocus';
 import type { UseTreeViewExpansionInstance } from '../useTreeView/useTreeViewExpansion';
 import type { UseTreeViewNodesInstance } from '../useTreeView/useTreeViewNodes';
 import type { UseTreeViewSelectionInstance } from '../useTreeView/useTreeViewSelection';
-import { UseTreeViewKeyboardNavigationInstance } from '../useTreeView/useTreeViewKeyboardNavigation';
+import type { UseTreeViewKeyboardNavigationInstance } from '../useTreeView/useTreeViewKeyboardNavigation';
 
 export interface TreeViewInstance
   extends UseTreeViewNodesInstance,

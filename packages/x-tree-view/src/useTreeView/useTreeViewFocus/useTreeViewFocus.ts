@@ -9,6 +9,7 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusState> = ({
   props,
   state,
   setState,
+  models,
 }) => {
   const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
     const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
@@ -36,7 +37,9 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusState> = ({
   const handleFocus = (event: React.FocusEvent<HTMLUListElement>) => {
     // if the event bubbled (which is React specific) we don't want to steal focus
     if (event.target === event.currentTarget) {
-      const firstSelected = Array.isArray(state.selected) ? state.selected[0] : state.selected;
+      const firstSelected = Array.isArray(models.selected.value)
+        ? models.selected.value[0]
+        : models.selected.value;
       instance.focusNode(event, firstSelected || instance.getNavigableChildrenIds(null)[0]);
     }
 
@@ -61,4 +64,6 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusState> = ({
   };
 };
 
-useTreeViewFocus.getInitialState = () => ({ focusedNodeId: null });
+useTreeViewFocus.getInitialState = () => ({
+  state: { focusedNodeId: null },
+});

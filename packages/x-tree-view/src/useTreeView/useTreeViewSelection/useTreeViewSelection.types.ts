@@ -8,7 +8,3 @@ export interface UseTreeViewSelectionInstance {
   rangeSelectToFirst: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
   rangeSelectToLast: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
 }
-
-export interface UseTreeViewSelectionState {
-  selected: string | string[] | null;
-}

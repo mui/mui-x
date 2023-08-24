@@ -4,15 +4,14 @@ import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../useTreeView.utils';
 import { UseTreeViewExpansionInstance } from './useTreeViewExpansion.types';
 
-export const useTreeViewExpansion: TreeViewPlugin = ({ instance, props, state, setState }) => {
-  const setExpandedState = (expanded: string[]) =>
-    setState((prevState) => ({ ...prevState, expanded }));
-
+export const useTreeViewExpansion: TreeViewPlugin = ({ instance, props, models }) => {
   const isNodeExpanded = React.useCallback(
     (nodeId: string) => {
-      return Array.isArray(state.expanded) ? state.expanded.indexOf(nodeId) !== -1 : false;
+      return Array.isArray(models.expanded.value)
+        ? models.expanded.value.indexOf(nodeId) !== -1
+        : false;
     },
-    [state.expanded],
+    [models.expanded.value],
   );
 
   const isNodeExpandable = useEventCallback(
@@ -27,17 +26,17 @@ export const useTreeViewExpansion: TreeViewPlugin = ({ instance, props, state, s
 
       let newExpanded: string[];
 
-      if (state.expanded.indexOf(nodeId!) !== -1) {
-        newExpanded = state.expanded.filter((id) => id !== nodeId);
+      if (models.expanded.value.indexOf(nodeId!) !== -1) {
+        newExpanded = models.expanded.value.filter((id) => id !== nodeId);
       } else {
-        newExpanded = [nodeId].concat(state.expanded);
+        newExpanded = [nodeId].concat(models.expanded.value);
       }
 
       if (props.onNodeToggle) {
         props.onNodeToggle(event, newExpanded);
       }
 
-      setExpandedState(newExpanded);
+      models.expanded.setValue(newExpanded);
     },
   );
 
@@ -49,10 +48,10 @@ export const useTreeViewExpansion: TreeViewPlugin = ({ instance, props, state, s
       (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),
     );
 
-    const newExpanded = state.expanded.concat(diff);
+    const newExpanded = models.expanded.value.concat(diff);
 
     if (diff.length > 0) {
-      setExpandedState(newExpanded);
+      models.expanded.setValue(newExpanded);
 
       if (props.onNodeToggle) {
         props.onNodeToggle(event, newExpanded);
@@ -68,6 +67,6 @@ export const useTreeViewExpansion: TreeViewPlugin = ({ instance, props, state, s
   });
 };
 
-useTreeViewExpansion.getInitialState = (props) => ({
-  expanded: props.expanded ?? props.defaultExpanded,
+useTreeViewExpansion.getInitialState = () => ({
+  models: [{ name: 'expanded', controlledProp: 'expanded', defaultProp: 'defaultExpanded' }],
 });

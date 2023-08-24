@@ -1,48 +1,35 @@
 import * as React from 'react';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { MultiSelectTreeViewProps, TreeViewItemRange } from '../../TreeView/TreeView.types';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance, getNextNode, getFirstNode, getLastNode } from '../useTreeView.utils';
-import {
-  UseTreeViewSelectionInstance,
-  UseTreeViewSelectionState,
-} from './useTreeViewSelection.types';
+import { UseTreeViewSelectionInstance } from './useTreeViewSelection.types';
 
-export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionState> = ({
-  instance,
-  props,
-  state,
-  setState,
-}) => {
+export const useTreeViewSelection: TreeViewPlugin = ({ instance, props, models }) => {
   const lastSelectedNode = React.useRef<string | null>(null);
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
 
-  const setSelectedState = (selected: string | string[] | null) =>
-    setState((prevState) => ({ ...prevState, selected }));
-
-  const isNodeSelected = useEventCallback((nodeId: string) =>
-    Array.isArray(state.selected)
-      ? state.selected.indexOf(nodeId) !== -1
-      : state.selected === nodeId,
-  );
+  const isNodeSelected = (nodeId: string) =>
+    Array.isArray(models.selected.value)
+      ? models.selected.value.indexOf(nodeId) !== -1
+      : models.selected.value === nodeId;
 
   const selectNode = (event: React.SyntheticEvent, nodeId: string, multiple = false) => {
     if (nodeId) {
       if (multiple) {
-        if (Array.isArray(state.selected)) {
+        if (Array.isArray(models.selected.value)) {
           let newSelected: string[];
-          if (state.selected.indexOf(nodeId) !== -1) {
-            newSelected = state.selected.filter((id) => id !== nodeId);
+          if (models.selected.value.indexOf(nodeId) !== -1) {
+            newSelected = models.selected.value.filter((id) => id !== nodeId);
           } else {
-            newSelected = [nodeId].concat(state.selected);
+            newSelected = [nodeId].concat(models.selected.value);
           }
 
           if (props.onNodeSelect) {
             (props.onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, newSelected);
           }
 
-          setSelectedState(newSelected);
+          models.selected.setValue(newSelected);
         }
       } else {
         const newSelected = props.multiSelect ? [nodeId] : nodeId;
@@ -51,7 +38,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionState> = (
           props.onNodeSelect(event, newSelected as string & string[]);
         }
 
-        setSelectedState(newSelected);
+        models.selected.setValue(newSelected);
       }
       lastSelectedNode.current = nodeId;
       lastSelectionWasRange.current = false;
@@ -147,7 +134,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionState> = (
   };
 
   const handleRangeArrowSelect = (event: React.SyntheticEvent, nodes: TreeViewItemRange) => {
-    let base = (state.selected as string[]).slice();
+    let base = (models.selected.value as string[]).slice();
     const { start, next, current } = nodes;
 
     if (!next || !current) {
@@ -177,14 +164,14 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionState> = (
       (props.onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, base);
     }
 
-    setSelectedState(base);
+    models.selected.setValue(base);
   };
 
   const handleRangeSelect = (
     event: React.SyntheticEvent,
     nodes: { start: string; end: string },
   ) => {
-    let base = (state.selected as string[]).slice();
+    let base = (models.selected.value as string[]).slice();
     const { start, end } = nodes;
     // If last selection was a range selection ignore nodes that were selected.
     if (lastSelectionWasRange.current) {
@@ -201,7 +188,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionState> = (
       (props.onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, newSelected);
     }
 
-    setSelectedState(newSelected);
+    models.selected.setValue(newSelected);
   };
 
   const selectRange = (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked = false) => {
@@ -250,5 +237,8 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionState> = (
 };
 
 useTreeViewSelection.getInitialState = (props) => ({
-  selected: props.selected ?? props.defaultSelected ?? (props.multiSelect ? [] : null),
+  state: {
+    selected: props.selected ?? props.defaultSelected ?? (props.multiSelect ? [] : null),
+  },
+  models: [{ name: 'selected', controlledProp: 'selected', defaultProp: 'defaultSelected' }],
 });
