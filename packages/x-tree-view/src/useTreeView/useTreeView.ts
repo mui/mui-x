@@ -12,9 +12,9 @@ import { useTreeViewSelection } from './useTreeViewSelection';
 import { useTreeViewFocus } from './useTreeViewFocus';
 import { useTreeViewExpansion } from './useTreeViewExpansion';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
-import { TreeViewDefaultizedProps } from '../TreeView/TreeView.types';
+import { UseTreeViewDefaultizedProps, UseTreeViewProps } from './useTreeView.types';
 
-const plugins: TreeViewPlugin[] = [
+const plugins: TreeViewPlugin<UseTreeViewProps>[] = [
   useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,
@@ -22,7 +22,15 @@ const plugins: TreeViewPlugin[] = [
   useTreeViewKeyboardNavigation,
 ];
 
-const useTreeViewModels = (props: TreeViewDefaultizedProps) => {
+function noopSelection() {
+  return false;
+}
+
+/**
+ * Implements the same behavior as `useControlled` but for several models.
+ * The controlled models are never stored in the state and the state is only updated if the model is not controlled.
+ */
+const useTreeViewModels = (props: UseTreeViewDefaultizedProps) => {
   const modelsRef = React.useRef<{
     [modelName: string]: Omit<TreeViewModel<any>, 'value' | 'setValue'>;
   }>({});
@@ -40,6 +48,8 @@ const useTreeViewModels = (props: TreeViewDefaultizedProps) => {
         initialState[model.name] = props[model.defaultProp];
       });
     });
+
+    return initialState;
   });
 
   const models = Object.fromEntries(
@@ -109,10 +119,22 @@ const useTreeViewModels = (props: TreeViewDefaultizedProps) => {
   return models;
 };
 
+const defaultDefaultExpanded: string[] = [];
+const defaultDefaultSelected: string[] = [];
+
 export const useTreeView = (
-  props: TreeViewDefaultizedProps,
+  inProps: UseTreeViewProps,
   ref: React.Ref<HTMLUListElement> | undefined,
 ) => {
+  const props: UseTreeViewDefaultizedProps = {
+    ...inProps,
+    disabledItemsFocusable: inProps.disabledItemsFocusable ?? false,
+    disableSelection: inProps.disableSelection ?? false,
+    multiSelect: inProps.multiSelect ?? false,
+    defaultExpanded: inProps.defaultExpanded ?? defaultDefaultExpanded,
+    defaultSelected: inProps.defaultSelected ?? defaultDefaultSelected,
+  };
+
   const [state, setState] = React.useState<TreeViewState>(() =>
     plugins.reduce((prevState, plugin) => {
       if (plugin.getInitialState) {
@@ -135,7 +157,7 @@ export const useTreeView = (
     ref: handleRootRef,
   };
 
-  const runPlugin = (plugin: TreeViewPlugin) => {
+  const runPlugin = (plugin: TreeViewPlugin<any>) => {
     const pluginResponse = plugin({ instance, props, state, setState, rootRef, models }) || {};
 
     if (pluginResponse.rootProps) {
@@ -151,5 +173,23 @@ export const useTreeView = (
   runPlugin(useTreeViewFocus);
   runPlugin(useTreeViewKeyboardNavigation);
 
-  return { instance, state, rootProps, ref };
+  const contextValue = {
+    focus: instance.focusNode,
+    toggleExpansion: instance.toggleNodeExpansion,
+    isExpanded: instance.isNodeExpanded,
+    isExpandable: instance.isNodeExpandable,
+    isFocused: instance.isNodeFocused,
+    isSelected: instance.isNodeSelected,
+    isDisabled: instance.isNodeDisabled,
+    selectNode: props.disableSelection ? noopSelection : instance.selectNode,
+    selectRange: props.disableSelection ? noopSelection : instance.selectRange,
+    multiSelect: props.multiSelect,
+    disabledItemsFocusable: props.disabledItemsFocusable,
+    mapFirstChar: instance.mapFirstChar,
+    unMapFirstChar: instance.unMapFirstChar,
+    registerNode: instance.registerNode,
+    unregisterNode: instance.unregisterNode,
+  };
+
+  return { instance, state, rootProps, ref, contextValue };
 };

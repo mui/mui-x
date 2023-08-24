@@ -2,9 +2,13 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../useTreeView.utils';
-import { UseTreeViewFocusInstance, UseTreeViewFocusState } from './useTreeViewFocus.types';
+import {
+  UseTreeViewFocusInstance,
+  UseTreeViewFocusProps,
+  UseTreeViewFocusState,
+} from './useTreeViewFocus.types';
 
-export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusState> = ({
+export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusProps, UseTreeViewFocusState> = ({
   instance,
   props,
   state,

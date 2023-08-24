@@ -7,10 +7,10 @@ import useId from '@mui/utils/useId';
 import { TreeViewContext } from './TreeViewContext';
 import { DescendantProvider } from './descendants';
 import { getTreeViewUtilityClass } from './treeViewClasses';
-import { TreeViewDefaultizedProps, TreeViewProps } from './TreeView.types';
+import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../useTreeView';
 
-const useUtilityClasses = (ownerState: TreeViewDefaultizedProps) => {
+const useUtilityClasses = (ownerState: TreeViewProps) => {
   const { classes } = ownerState;
 
   const slots = {
@@ -24,19 +24,12 @@ const TreeViewRoot = styled('ul', {
   name: 'MuiTreeView',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})<{ ownerState: TreeViewDefaultizedProps }>({
+})<{ ownerState: TreeViewProps }>({
   padding: 0,
   margin: 0,
   listStyle: 'none',
   outline: 0,
 });
-
-function noopSelection() {
-  return false;
-}
-
-const defaultDefaultExpanded: string[] = [];
-const defaultDefaultSelected: string[] = [];
 
 /**
  *
@@ -53,72 +46,75 @@ const TreeView = React.forwardRef(function TreeView(
   ref: React.Ref<HTMLUListElement>,
 ) {
   const themeProps = useThemeProps({ props: inProps, name: 'MuiTreeView' });
-  const props: TreeViewDefaultizedProps = {
-    ...themeProps,
-    disabledItemsFocusable: themeProps.disabledItemsFocusable ?? false,
-    disableSelection: themeProps.disableSelection ?? false,
-    multiSelect: themeProps.multiSelect ?? false,
-    defaultExpanded: themeProps.defaultExpanded ?? defaultDefaultExpanded,
-    defaultSelected: themeProps.defaultSelected ?? defaultDefaultSelected,
-  };
-
-  const { instance, state, rootProps } = useTreeView(props, ref);
 
   const {
+    // Headless implementation
+    disabledItemsFocusable,
+    expanded,
+    defaultExpanded,
+    onNodeToggle,
+    onNodeFocus,
+    onFocus,
+    onBlur,
+    disableSelection,
+    defaultSelected,
+    selected,
+    multiSelect,
+    onNodeSelect,
+    onKeyDown,
+
+    // Component implementation
     children,
     className,
     defaultCollapseIcon,
     defaultEndIcon,
-    defaultExpanded,
     defaultExpandIcon,
     defaultParentIcon,
-    defaultSelected,
-    disabledItemsFocusable,
-    disableSelection,
-    expanded: expandedProp,
     id: idProp,
-    multiSelect,
-    onBlur,
-    onFocus,
-    onKeyDown,
-    onNodeFocus,
-    onNodeSelect,
-    onNodeToggle,
-    selected: selectedProp,
     ...other
-  } = props;
+  } = themeProps;
 
-  const classes = useUtilityClasses(props);
+  const {
+    instance,
+    state,
+    rootProps,
+    contextValue: headlessContextValue,
+  } = useTreeView(
+    {
+      disabledItemsFocusable,
+      expanded,
+      defaultExpanded,
+      onNodeToggle,
+      onNodeFocus,
+      onFocus,
+      onBlur,
+      disableSelection,
+      defaultSelected,
+      selected,
+      multiSelect,
+      onNodeSelect,
+      onKeyDown,
+    },
+    ref,
+  );
+
+  const classes = useUtilityClasses(themeProps);
   const treeId = useId(idProp);
 
   const activeDescendant = instance.nodeMap[state.focusedNodeId!]
     ? instance.nodeMap[state.focusedNodeId!].idAttribute
     : null;
 
+  // TODO: fix this lint error
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  const contextValue = {
+    ...headlessContextValue,
+    icons: { defaultCollapseIcon, defaultExpandIcon, defaultParentIcon, defaultEndIcon },
+    treeId,
+  };
+
   return (
-    <TreeViewContext.Provider
-      // TODO: fix this lint error
-      // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{
-        icons: { defaultCollapseIcon, defaultExpandIcon, defaultParentIcon, defaultEndIcon },
-        focus: instance.focusNode,
-        toggleExpansion: instance.toggleNodeExpansion,
-        isExpanded: instance.isNodeExpanded,
-        isExpandable: instance.isNodeExpandable,
-        isFocused: instance.isNodeFocused,
-        isSelected: instance.isNodeSelected,
-        isDisabled: instance.isNodeDisabled,
-        selectNode: disableSelection ? noopSelection : instance.selectNode,
-        selectRange: disableSelection ? noopSelection : instance.selectRange,
-        multiSelect,
-        disabledItemsFocusable,
-        mapFirstChar: instance.mapFirstChar,
-        unMapFirstChar: instance.unMapFirstChar,
-        registerNode: instance.registerNode,
-        unregisterNode: instance.unregisterNode,
-        treeId,
-      }}
-    >
+    <TreeViewContext.Provider value={contextValue}>
       <DescendantProvider>
         <TreeViewRoot
           role="tree"
@@ -127,7 +123,7 @@ const TreeView = React.forwardRef(function TreeView(
           aria-multiselectable={multiSelect}
           className={clsx(classes.root, className)}
           tabIndex={0}
-          ownerState={props}
+          ownerState={themeProps}
           {...other}
           {...rootProps}
         >

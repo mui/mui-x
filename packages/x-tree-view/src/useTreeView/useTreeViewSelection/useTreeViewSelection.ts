@@ -1,10 +1,18 @@
 import * as React from 'react';
-import { MultiSelectTreeViewProps, TreeViewItemRange } from '../../TreeView/TreeView.types';
+import type { TreeViewItemRange } from '../../TreeView/TreeView.types';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance, getNextNode, getFirstNode, getLastNode } from '../useTreeView.utils';
-import { UseTreeViewSelectionInstance } from './useTreeViewSelection.types';
+import {
+  UseTreeViewSelectionInstance,
+  UseTreeViewSelectionProps,
+  UseTreeViewMultiSelectProps,
+} from './useTreeViewSelection.types';
 
-export const useTreeViewSelection: TreeViewPlugin = ({ instance, props, models }) => {
+export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionProps> = ({
+  instance,
+  props,
+  models,
+}) => {
   const lastSelectedNode = React.useRef<string | null>(null);
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
@@ -26,7 +34,10 @@ export const useTreeViewSelection: TreeViewPlugin = ({ instance, props, models }
           }
 
           if (props.onNodeSelect) {
-            (props.onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, newSelected);
+            (props.onNodeSelect as UseTreeViewMultiSelectProps['onNodeSelect'])!(
+              event,
+              newSelected,
+            );
           }
 
           models.selected.setValue(newSelected);
@@ -161,7 +172,7 @@ export const useTreeViewSelection: TreeViewPlugin = ({ instance, props, models }
     }
 
     if (props.onNodeSelect) {
-      (props.onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, base);
+      (props.onNodeSelect as UseTreeViewMultiSelectProps['onNodeSelect'])!(event, base);
     }
 
     models.selected.setValue(base);
@@ -185,7 +196,7 @@ export const useTreeViewSelection: TreeViewPlugin = ({ instance, props, models }
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
 
     if (props.onNodeSelect) {
-      (props.onNodeSelect as MultiSelectTreeViewProps['onNodeSelect'])!(event, newSelected);
+      (props.onNodeSelect as UseTreeViewMultiSelectProps['onNodeSelect'])!(event, newSelected);
     }
 
     models.selected.setValue(newSelected);

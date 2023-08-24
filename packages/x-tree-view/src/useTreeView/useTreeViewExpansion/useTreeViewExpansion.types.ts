@@ -6,3 +6,23 @@ export interface UseTreeViewExpansionInstance {
   toggleNodeExpansion: (event: React.SyntheticEvent, value: string) => void;
   expandAllSiblings: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
 }
+
+export interface UseTreeViewExpansionProps {
+  /**
+   * Expanded node ids.
+   * Used when the item's expansion are controlled.
+   */
+  expanded?: string[];
+  /**
+   * Expanded node ids.
+   * Used when the item's expansion are not controlled.
+   * @default []
+   */
+  defaultExpanded?: string[];
+  /**
+   * Callback fired when tree items are expanded/collapsed.
+   * @param {React.SyntheticEvent} event The event source of the callback.
+   * @param {array} nodeIds The ids of the expanded nodes.
+   */
+  onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
+}

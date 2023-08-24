@@ -1,5 +1,5 @@
 export { useTreeViewExpansion } from './useTreeViewExpansion';
 export type {
   UseTreeViewExpansionInstance,
-  UseTreeViewExpansionState,
+  UseTreeViewExpansionProps,
 } from './useTreeViewExpansion.types';

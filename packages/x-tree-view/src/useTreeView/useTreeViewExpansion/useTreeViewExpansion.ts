@@ -2,9 +2,16 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../useTreeView.utils';
-import { UseTreeViewExpansionInstance } from './useTreeViewExpansion.types';
+import {
+  UseTreeViewExpansionInstance,
+  UseTreeViewExpansionProps,
+} from './useTreeViewExpansion.types';
 
-export const useTreeViewExpansion: TreeViewPlugin = ({ instance, props, models }) => {
+export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionProps> = ({
+  instance,
+  props,
+  models,
+}) => {
   const isNodeExpanded = React.useCallback(
     (nodeId: string) => {
       return Array.isArray(models.expanded.value)

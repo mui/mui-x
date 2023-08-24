@@ -2,10 +2,14 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin } from '../../models';
 import { populateInstance } from '../useTreeView.utils';
-import { UseTreeViewNodesInstance } from './useTreeViewNodes.types';
+import { UseTreeViewNodesInstance, UseTreeViewNodesProps } from './useTreeViewNodes.types';
 import type { TreeViewNode } from '../../TreeView/TreeView.types';
 
-export const useTreeViewNodes: TreeViewPlugin = ({ instance, props, rootRef }) => {
+export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesProps> = ({
+  instance,
+  props,
+  rootRef,
+}) => {
   const isNodeDisabled = useEventCallback((nodeId: string | null): nodeId is string => {
     if (nodeId == null) {
       return false;

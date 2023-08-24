@@ -1,2 +1,5 @@
 export { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
-export type { UseTreeViewKeyboardNavigationInstance } from './useTreeViewKeyboardNavigation.types';
+export type {
+  UseTreeViewKeyboardNavigationInstance,
+  UseTreeViewKeyboardNavigationProps,
+} from './useTreeViewKeyboardNavigation.types';

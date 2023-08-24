@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { DefaultizedProps } from '../internals/models';
 import { TreeViewClasses } from './treeViewClasses';
+import { UseTreeViewDefaultizedProps, UseTreeViewProps } from '../useTreeView';
 
 export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   /**
@@ -27,12 +27,6 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
    */
   defaultEndIcon?: React.ReactNode;
   /**
-   * Expanded node ids.
-   * Used when the item's expansion are not controlled.
-   * @default []
-   */
-  defaultExpanded?: string[];
-  /**
    * The default icon used to expand the node.
    */
   defaultExpandIcon?: React.ReactNode;
@@ -42,106 +36,19 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
    */
   defaultParentIcon?: React.ReactNode;
   /**
-   * If `true`, will allow focus on disabled items.
-   * @default false
-   */
-  disabledItemsFocusable?: boolean;
-  /**
-   * If `true` selection is disabled.
-   * @default false
-   */
-  disableSelection?: boolean;
-  /**
-   * Expanded node ids.
-   * Used when the item's expansion are controlled.
-   */
-  expanded?: string[];
-  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id?: string;
-  /**
-   * Callback fired when tree items are focused.
-   * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
-   * @param {string} nodeId The id of the node focused.
-   * @param {string} value of the focused node.
-   */
-  onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
-  /**
-   * Callback fired when tree items are expanded/collapsed.
-   * @param {React.SyntheticEvent} event The event source of the callback.
-   * @param {array} nodeIds The ids of the expanded nodes.
-   */
-  onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
 }
 
-export interface MultiSelectTreeViewProps extends TreeViewPropsBase {
-  /**
-   * Selected node ids. (Uncontrolled)
-   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
-   * @default []
-   */
-  defaultSelected?: string[];
-  /**
-   * Selected node ids. (Controlled)
-   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
-   */
-  selected?: string[];
-  /**
-   * If true `ctrl` and `shift` will trigger multiselect.
-   * @default false
-   */
-  multiSelect?: true;
-  /**
-   * Callback fired when tree items are selected/unselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
-   */
-  onNodeSelect?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
-}
+export type TreeViewProps = UseTreeViewProps & TreeViewPropsBase;
 
-export interface SingleSelectTreeViewProps extends TreeViewPropsBase {
-  /**
-   * Selected node ids. (Uncontrolled)
-   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
-   * @default []
-   */
-  defaultSelected?: string | null;
-  /**
-   * Selected node ids. (Controlled)
-   * When `multiSelect` is true this takes an array of strings; when false (default) a string.
-   */
-  selected?: string | null;
-  /**
-   * If true `ctrl` and `shift` will trigger multiselect.
-   * @default false
-   */
-  multiSelect?: false;
-  /**
-   * Callback fired when tree items are selected/unselected.
-   * @param {React.SyntheticEvent} event The event source of the callback
-   * @param {string[] | string} nodeIds Ids of the selected nodes. When `multiSelect` is true
-   * this is an array of strings; when false (default) a string.
-   */
-  onNodeSelect?: (event: React.SyntheticEvent, nodeIds: string) => void;
-}
-
-export type TreeViewProps = SingleSelectTreeViewProps | MultiSelectTreeViewProps;
-
-export type TreeViewDefaultizedProps = DefaultizedProps<
-  TreeViewProps,
-  | 'defaultExpanded'
-  | 'defaultSelected'
-  | 'disabledItemsFocusable'
-  | 'disableSelection'
-  | 'multiSelect'
->;
+export type TreeViewDefaultizedProps = UseTreeViewDefaultizedProps & TreeViewPropsBase;
 
 export interface TreeViewNode {
   id: string;

@@ -1,2 +1,2 @@
 export { useTreeViewNodes } from './useTreeViewNodes';
-export type { UseTreeViewNodesInstance } from './useTreeViewNodes.types';
+export type { UseTreeViewNodesInstance, UseTreeViewNodesProps } from './useTreeViewNodes.types';
