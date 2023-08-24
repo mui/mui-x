@@ -236,9 +236,6 @@ export const useTreeViewSelection: TreeViewPlugin = ({ instance, props, models }
   });
 };
 
-useTreeViewSelection.getInitialState = (props) => ({
-  state: {
-    selected: props.selected ?? props.defaultSelected ?? (props.multiSelect ? [] : null),
-  },
-  models: [{ name: 'selected', controlledProp: 'selected', defaultProp: 'defaultSelected' }],
-});
+useTreeViewSelection.models = [
+  { name: 'selected', controlledProp: 'selected', defaultProp: 'defaultSelected' },
+];

@@ -22,44 +22,29 @@ const plugins: TreeViewPlugin[] = [
   useTreeViewKeyboardNavigation,
 ];
 
-export const useTreeView = (
-  props: TreeViewDefaultizedProps,
-  ref: React.Ref<HTMLUListElement> | undefined,
-) => {
+const useTreeViewModels = (props: TreeViewDefaultizedProps) => {
   const modelsRef = React.useRef<{
     [modelName: string]: Omit<TreeViewModel<any>, 'value' | 'setValue'>;
   }>({});
 
-  const [state, setState] = React.useState<TreeViewState>(() =>
-    plugins.reduce(
-      (prevState, plugin) => {
-        if (plugin.getInitialState) {
-          const response = plugin.getInitialState(props);
-          Object.assign(prevState, response.state);
+  const [modelsState, setModelsState] = React.useState<{ [modelName: string]: any }>(() => {
+    const initialState: typeof modelsState = {};
 
-          response.models?.forEach((model) => {
-            modelsRef.current[model.name] = {
-              controlledProp: model.controlledProp,
-              defaultProp: model.defaultProp,
-              isControlled: props[model.controlledProp] !== undefined,
-            };
-            prevState.$$modelsIfNotControlled[model.name] = props[model.defaultProp];
-          });
-
-          return { ...prevState, ...response.state };
-        }
-
-        return prevState;
-      },
-      { $$modelsIfNotControlled: {} } as TreeViewState,
-    ),
-  );
+    plugins.forEach((plugin) => {
+      plugin.models?.forEach((model) => {
+        modelsRef.current[model.name] = {
+          controlledProp: model.controlledProp,
+          defaultProp: model.defaultProp,
+          isControlled: props[model.controlledProp] !== undefined,
+        };
+        initialState[model.name] = props[model.defaultProp];
+      });
+    });
+  });
 
   const models = Object.fromEntries(
     Object.entries(modelsRef.current).map(([modelName, model]) => {
-      const value = model.isControlled
-        ? props[model.controlledProp]
-        : state.$$modelsIfNotControlled[modelName];
+      const value = model.isControlled ? props[model.controlledProp] : modelsState[modelName];
 
       return [
         modelName,
@@ -68,12 +53,9 @@ export const useTreeView = (
           value,
           setValue: (newValue: any) => {
             if (!model.isControlled) {
-              setState((prevState) => ({
+              setModelsState((prevState) => ({
                 ...prevState,
-                $$modelsIfNotControlled: {
-                  ...prevState.$$modelsIfNotControlled,
-                  [modelName]: newValue,
-                },
+                [modelName]: newValue,
               }));
             }
           },
@@ -123,6 +105,26 @@ export const useTreeView = (
     });
   }
   /* eslint-enable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+
+  return models;
+};
+
+export const useTreeView = (
+  props: TreeViewDefaultizedProps,
+  ref: React.Ref<HTMLUListElement> | undefined,
+) => {
+  const [state, setState] = React.useState<TreeViewState>(() =>
+    plugins.reduce((prevState, plugin) => {
+      if (plugin.getInitialState) {
+        const response = plugin.getInitialState(props);
+        Object.assign(prevState, response);
+      }
+
+      return prevState;
+    }, {} as TreeViewState),
+  );
+
+  const models = useTreeViewModels(props);
 
   const instanceRef = React.useRef<TreeViewInstance>({ nodeMap: {} } as TreeViewInstance);
   const instance = instanceRef.current;

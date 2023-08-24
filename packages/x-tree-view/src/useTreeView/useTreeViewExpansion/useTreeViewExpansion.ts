@@ -67,6 +67,6 @@ export const useTreeViewExpansion: TreeViewPlugin = ({ instance, props, models }
   });
 };
 
-useTreeViewExpansion.getInitialState = () => ({
-  models: [{ name: 'expanded', controlledProp: 'expanded', defaultProp: 'defaultExpanded' }],
-});
+useTreeViewExpansion.models = [
+  { name: 'expanded', controlledProp: 'expanded', defaultProp: 'defaultExpanded' },
+];

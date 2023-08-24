@@ -64,6 +64,4 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusState> = ({
   };
 };
 
-useTreeViewFocus.getInitialState = () => ({
-  state: { focusedNodeId: null },
-});
+useTreeViewFocus.getInitialState = () => ({ focusedNodeId: null });
