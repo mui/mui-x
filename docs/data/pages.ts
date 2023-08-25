@@ -197,6 +197,16 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
       { pathname: '/x/react-date-pickers/base-concepts' },
+
+      {
+        pathname: '/x/react-date-pickers/common-features',
+        subheader: 'Common features',
+        children: [
+          { pathname: '/x/react-date-pickers/validation' },
+          { pathname: '/x/react-date-pickers/lifecycle', title: 'Components lifecycle' },
+          { pathname: '/x/react-date-pickers/shortcuts' },
+        ],
+      },
       {
         pathname: '/x/react-date-pickers/date-pickers',
         title: 'Date components',
@@ -299,8 +309,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],
       },
-      { pathname: '/x/react-date-pickers/lifecycle', title: 'Components lifecycle' },
-      { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
+
       {
         pathname: '/x/react-date-pickers/visual-customization',
         title: 'Visual customization',
@@ -308,7 +317,6 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
           { pathname: '/x/react-date-pickers/custom-layout' },
           { pathname: '/x/react-date-pickers/custom-field' },
-          { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
       { pathname: '/x/react-date-pickers/playground', title: 'Playground' },
