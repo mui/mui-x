@@ -21,7 +21,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - [DataGrid] Allow print export for more than 100 rows (#10045) @MBilalShafi
 - [l10n] Improve Ukrainian (uk-UA) locale (#10076) @mkundos
-- 
+
 #### `@mui/x-data-grid-pro@v6.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@v6.12.0`.
