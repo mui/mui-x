@@ -7,9 +7,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Aug 25, 2023_
 
-We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
+- 📊 Support horizontal bar chart
 - 💫 Improved animations on Android devices
+- 🌍 Improve Ukrainian (uk-UA) locale on the data grid
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
@@ -18,7 +20,8 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 #### `@mui/x-data-grid@v6.12.0`
 
 - [DataGrid] Allow print export for more than 100 rows (#10045) @MBilalShafi
-
+- [l10n] Improve Ukrainian (uk-UA) locale (#10076) @mkundos
+- 
 #### `@mui/x-data-grid-pro@v6.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@v6.12.0`.
@@ -34,6 +37,7 @@ Same changes as in `@mui/x-data-grid-pro@v6.12.0`.
 - [fields] Do not clamp day of month (#9973) @flaviendelangle
 - [pickers] Fix `ownerState` on `desktopPaper` slot props (#10103) @LukasTy
 - [pickers] Fix to `transform-origin` when popper opens to `top` (#10069) @LukasTy
+- [pickers] Fix `YearCalendar` scrolling (#10135) @LukasTy
 - [pickers] Improve the typing of the adapter `dateWithTimezone` method (#10029) @flaviendelangle
 - [pickers] Make `openPickerButton` toggle picker (#10109) @noraleonte
 - [pickers] Update `reduceAnimations` default rule (#9864) @LukasTy
@@ -45,7 +49,7 @@ Same changes as in `@mui/x-date-pickers@v6.12.0`.
 ### Charts / `@mui/x-charts@6.12.0`
 
 - [charts] Fix import issue (#10111) @alexfauquette
-- [charts] Fix slotProps propagation (#10105) @alexfauquette
+- [charts] Fix `slotProps` propagation (#10105) @alexfauquette
 - [charts] Support horizontal bar chart (#9992) @alexfauquette
 
 ### Docs
@@ -60,8 +64,9 @@ Same changes as in `@mui/x-date-pickers@v6.12.0`.
 ### Core
 
 - [core] Bump monorepo (#10129) @LukasTy
-- [core] Document a bit useLazyRef @oliviertassinari
+- [core] Document a bit `useLazyRef` @oliviertassinari
 - [core] Enable strict type checking options in the top-level tsconfig (#9925) @cherniavskii
+- [core] Increase global e2e timeout (#10134) @LukasTy
 - [core] Remove oudated link (#10125) @oliviertassinari
 - [core] Update `no-response` workflow (#10102) @DanailH
 
