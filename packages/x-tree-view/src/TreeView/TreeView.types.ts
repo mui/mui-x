@@ -42,7 +42,10 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
   sx?: SxProps<Theme>;
 }
 
-export type TreeViewProps<Multiple extends boolean | undefined> = UseTreeViewProps<Multiple> &
+export type TreeViewProps<Multiple extends boolean | undefined> = Omit<
+  UseTreeViewProps<Multiple>,
+  'rootRef'
+> &
   TreeViewPropsBase;
 
 export type SingleSelectTreeViewProps = TreeViewProps<false>;

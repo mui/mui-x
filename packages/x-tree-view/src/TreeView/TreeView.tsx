@@ -209,12 +209,6 @@ TreeView.propTypes = {
    * @param {array} nodeIds The ids of the expanded nodes.
    */
   onNodeToggle: PropTypes.func,
-  rootRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.object,
-    }),
-  ]),
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.

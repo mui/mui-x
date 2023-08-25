@@ -15,7 +15,6 @@
     "disabledItemsFocusable": { "type": { "name": "bool" } },
     "disableSelection": { "type": { "name": "bool" } },
     "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
-    "id": { "type": { "name": "string" } },
     "multiSelect": { "type": { "name": "bool" } },
     "onNodeFocus": {
       "type": { "name": "func" },
