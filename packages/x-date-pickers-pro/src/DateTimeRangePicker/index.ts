@@ -5,10 +5,8 @@ export type {
   DateTimeRangePickerSlotsComponentsProps,
 } from './DateTimeRangePicker.types';
 
-export {
-  DateTimeRangePickerTabs,
-  ExportedDateTimeRangePickerTabsProps,
-} from './DateTimeRangePickerTabs';
+export { DateTimeRangePickerTabs } from './DateTimeRangePickerTabs';
+export type { ExportedDateTimeRangePickerTabsProps } from './DateTimeRangePickerTabs';
 
 export {
   getDateTimeRangePickerTabsUtilityClass,

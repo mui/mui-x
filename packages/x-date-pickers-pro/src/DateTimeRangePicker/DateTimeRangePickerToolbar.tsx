@@ -161,6 +161,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
     >
       <DateTimeRangePickerToolbarStart<TDate>
         {...other}
+        // @ts-ignore
         value={start}
         onViewChange={handleStartRangeViewChange}
         toolbarTitle={localeText.start}
@@ -172,6 +173,7 @@ const DateTimeRangePickerToolbar = React.forwardRef(function DateTimeRangePicker
       />
       <DateTimeRangePickerToolbarEnd<TDate>
         {...other}
+        // @ts-ignore
         value={end}
         onViewChange={handleEndRangeViewChange}
         toolbarTitle={localeText.end}
