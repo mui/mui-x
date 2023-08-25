@@ -9,8 +9,9 @@ _Aug 25, 2023_
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
-
+- 💫 Improved animations on Android devices
+- 🐞 Bugfixes
+- 📚 Documentation improvements
 
 ### Data Grid
 
@@ -21,7 +22,6 @@ TODO INSERT HIGHLIGHTS
 #### `@mui/x-data-grid-pro@v6.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-data-grid@v6.12.0`.
-
 
 #### `@mui/x-data-grid-premium@v6.12.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
@@ -41,7 +41,6 @@ Same changes as in `@mui/x-data-grid-pro@v6.12.0`.
 #### `@mui/x-date-pickers-pro@v6.12.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in `@mui/x-date-pickers@v6.12.0`.
-
 
 ### Charts / `@mui/x-charts@6.12.0`
 
