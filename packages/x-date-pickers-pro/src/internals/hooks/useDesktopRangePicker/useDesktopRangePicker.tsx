@@ -70,7 +70,7 @@ export const useDesktopRangePicker = <
   const endFieldRef = React.useRef<FieldRef<RangeFieldSection>>(null);
   const [currentView, setCurrentView] = React.useState<TView | null>(props.view ?? null);
 
-  const slotProps = {
+  const slotProps: TExternalProps['slotProps'] = {
     ...inSlotProps,
     textField: (ownerState) => ({
       ...inSlotProps?.textField,
