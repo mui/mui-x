@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { TreeViewItemRange } from '../../models';
+import type { DefaultizedProps, TreeViewItemRange } from '../../models';
 
 export interface UseTreeViewSelectionInstance {
   isNodeSelected: (nodeId: string) => boolean;
@@ -46,3 +46,8 @@ export interface UseTreeViewSelectionProps<Multiple extends boolean | undefined>
     nodeIds: Exclude<TreeViewSelectionValue<Multiple>, null>,
   ) => void;
 }
+
+export type UseTreeViewSelectionDefaultizedProps<Multiple extends boolean> = DefaultizedProps<
+  UseTreeViewSelectionProps<Multiple>,
+  'disableSelection' | 'defaultSelected' | 'multiSelect'
+>;

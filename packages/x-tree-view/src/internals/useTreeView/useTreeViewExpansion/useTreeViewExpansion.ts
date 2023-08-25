@@ -4,10 +4,10 @@ import { TreeViewPlugin } from '../../../models';
 import { populateInstance } from '../useTreeView.utils';
 import {
   UseTreeViewExpansionInstance,
-  UseTreeViewExpansionProps,
+  UseTreeViewExpansionDefaultizedProps,
 } from './useTreeViewExpansion.types';
 
-export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionProps> = ({
+export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionDefaultizedProps> = ({
   instance,
   props,
   models,

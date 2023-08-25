@@ -8,8 +8,12 @@ import useForkRef from '@mui/utils/useForkRef';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { TreeViewContext } from '../TreeView/TreeViewContext';
-import { DescendantProvider, TreeItemDescendant, useDescendant } from '../TreeView/descendants';
+import { TreeViewContext } from '../internals/TreeViewProvider/TreeViewContext';
+import {
+  DescendantProvider,
+  TreeItemDescendant,
+  useDescendant,
+} from '../internals/TreeViewProvider/DescendantProvider';
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';

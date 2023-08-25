@@ -4,10 +4,10 @@ import { TreeViewItemRange } from '../../models';
 import { populateInstance, getNextNode, getFirstNode, getLastNode } from '../useTreeView.utils';
 import {
   UseTreeViewSelectionInstance,
-  UseTreeViewSelectionProps,
+  UseTreeViewSelectionDefaultizedProps,
 } from './useTreeViewSelection.types';
 
-export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionProps<any>> = ({
+export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionDefaultizedProps<any>> = ({
   instance,
   props,
   models,
@@ -33,7 +33,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionProps<any>
           }
 
           if (props.onNodeSelect) {
-            (props.onNodeSelect as UseTreeViewSelectionProps<true>['onNodeSelect'])!(
+            (props.onNodeSelect as UseTreeViewSelectionDefaultizedProps<true>['onNodeSelect'])!(
               event,
               newSelected,
             );
@@ -171,7 +171,10 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionProps<any>
     }
 
     if (props.onNodeSelect) {
-      (props.onNodeSelect as UseTreeViewSelectionProps<true>['onNodeSelect'])!(event, base);
+      (props.onNodeSelect as UseTreeViewSelectionDefaultizedProps<true>['onNodeSelect'])!(
+        event,
+        base,
+      );
     }
 
     models.selected.setValue(base);
@@ -195,7 +198,10 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionProps<any>
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
 
     if (props.onNodeSelect) {
-      (props.onNodeSelect as UseTreeViewSelectionProps<true>['onNodeSelect'])!(event, newSelected);
+      (props.onNodeSelect as UseTreeViewSelectionDefaultizedProps<true>['onNodeSelect'])!(
+        event,
+        newSelected,
+      );
     }
 
     models.selected.setValue(newSelected);

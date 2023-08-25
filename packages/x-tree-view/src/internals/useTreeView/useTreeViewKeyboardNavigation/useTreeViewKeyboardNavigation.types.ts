@@ -8,3 +8,5 @@ export interface UseTreeViewKeyboardNavigationInstance {
 
 export interface UseTreeViewKeyboardNavigationProps
   extends Pick<React.HTMLAttributes<HTMLUListElement>, 'onKeyDown'> {}
+
+export type UseTreeViewKeyboardNavigationDefaultizedProps = UseTreeViewKeyboardNavigationProps;

@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { TreeViewContext } from './TreeViewContext';
-import { DescendantProvider } from './descendants';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
+import { TreeViewProvider } from '../internals/TreeViewProvider';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -69,17 +68,17 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     onNodeSelect,
     onKeyDown,
     id,
-    // Component implementation
-    children,
-    className,
     defaultCollapseIcon,
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
+    // Component implementation
+    children,
+    className,
     ...other
   } = themeProps;
 
-  const { getRootProps, contextValue: headlessContextValue } = useTreeView({
+  const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
     expanded,
     defaultExpanded,
@@ -99,26 +98,17 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
 
   const classes = useUtilityClasses(themeProps);
 
-  // TODO: fix this lint error
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const contextValue = {
-    ...headlessContextValue,
-    icons: { defaultCollapseIcon, defaultExpandIcon, defaultParentIcon, defaultEndIcon },
-  };
-
   return (
-    <TreeViewContext.Provider value={contextValue}>
-      <DescendantProvider>
-        <TreeViewRoot
-          className={clsx(classes.root, className)}
-          ownerState={ownerState}
-          {...getRootProps()}
-          {...other}
-        >
-          {children}
-        </TreeViewRoot>
-      </DescendantProvider>
-    </TreeViewContext.Provider>
+    <TreeViewProvider value={contextValue}>
+      <TreeViewRoot
+        className={clsx(classes.root, className)}
+        ownerState={ownerState}
+        {...getRootProps()}
+        {...other}
+      >
+        {children}
+      </TreeViewRoot>
+    </TreeViewProvider>
   );
 }) as TreeViewComponent;
 

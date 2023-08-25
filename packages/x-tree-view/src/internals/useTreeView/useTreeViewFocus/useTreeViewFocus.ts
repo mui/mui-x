@@ -4,17 +4,14 @@ import { TreeViewPlugin } from '../../../models';
 import { populateInstance } from '../useTreeView.utils';
 import {
   UseTreeViewFocusInstance,
-  UseTreeViewFocusProps,
+  UseTreeViewFocusDefaultizedProps,
   UseTreeViewFocusState,
 } from './useTreeViewFocus.types';
 
-export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusProps, UseTreeViewFocusState> = ({
-  instance,
-  props,
-  state,
-  setState,
-  models,
-}) => {
+export const useTreeViewFocus: TreeViewPlugin<
+  UseTreeViewFocusDefaultizedProps,
+  UseTreeViewFocusState
+> = ({ instance, props, state, setState, models }) => {
   const setFocusedNodeId = useEventCallback((nodeId: React.SetStateAction<string | null>) => {
     const cleanNodeId = typeof nodeId === 'function' ? nodeId(state.focusedNodeId) : nodeId;
     setState((prevState) => ({ ...prevState, focusedNodeId: cleanNodeId }));

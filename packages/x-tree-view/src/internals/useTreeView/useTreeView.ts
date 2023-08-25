@@ -1,6 +1,5 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-import useId from '@mui/utils/useId';
 import { TreeViewInstance, TreeViewPlugin, TreeViewState, TreeViewModels } from '../../models';
 import { useTreeViewNodes } from './useTreeViewNodes';
 import { useTreeViewSelection } from './useTreeViewSelection';
@@ -8,18 +7,15 @@ import { useTreeViewFocus } from './useTreeViewFocus';
 import { useTreeViewExpansion } from './useTreeViewExpansion';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
 import { UseTreeViewDefaultizedProps, UseTreeViewProps } from './useTreeView.types';
+import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 
-const plugins: TreeViewPlugin<UseTreeViewProps<any>>[] = [
+const plugins: TreeViewPlugin<UseTreeViewDefaultizedProps<any>>[] = [
   useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
 ];
-
-function noopSelection() {
-  return false;
-}
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
@@ -154,15 +150,19 @@ export const useTreeView = <Multiple extends boolean | undefined>(
   const instance = instanceRef.current;
   const rootRef = React.useRef(null);
   const handleRootRef = useForkRef(rootRef, inProps.rootRef);
-  const treeId = useId(props.id);
 
   const rootPropsGetters: (() => React.HTMLAttributes<HTMLUListElement>)[] = [];
+  let contextValue = DEFAULT_TREE_VIEW_CONTEXT_VALUE;
 
   const runPlugin = (plugin: TreeViewPlugin<any>) => {
     const pluginResponse = plugin({ instance, props, state, setState, rootRef, models }) || {};
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);
+    }
+
+    if (pluginResponse.contextValue) {
+      contextValue = pluginResponse.contextValue;
     }
   };
 
@@ -172,7 +172,6 @@ export const useTreeView = <Multiple extends boolean | undefined>(
     const rootProps: React.HTMLAttributes<HTMLUListElement> & { ref: React.Ref<HTMLUListElement> } =
       {
         ref: handleRootRef,
-        id: treeId,
         role: 'tree',
         tabIndex: 0,
       };
@@ -182,25 +181,6 @@ export const useTreeView = <Multiple extends boolean | undefined>(
     });
 
     return rootProps;
-  };
-
-  const contextValue = {
-    treeId,
-    focus: instance.focusNode,
-    toggleExpansion: instance.toggleNodeExpansion,
-    isExpanded: instance.isNodeExpanded,
-    isExpandable: instance.isNodeExpandable,
-    isFocused: instance.isNodeFocused,
-    isSelected: instance.isNodeSelected,
-    isDisabled: instance.isNodeDisabled,
-    selectNode: props.disableSelection ? noopSelection : instance.selectNode,
-    selectRange: props.disableSelection ? noopSelection : instance.selectRange,
-    multiSelect: props.multiSelect,
-    disabledItemsFocusable: props.disabledItemsFocusable,
-    mapFirstChar: instance.mapFirstChar,
-    unMapFirstChar: instance.unMapFirstChar,
-    registerNode: instance.registerNode,
-    unregisterNode: instance.unregisterNode,
   };
 
   return { getRootProps, contextValue };

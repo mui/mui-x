@@ -1,4 +1,4 @@
-import { TreeViewNode } from '../../models';
+import { TreeViewNode, DefaultizedProps } from '../../models';
 
 export interface UseTreeViewNodesInstance {
   isNodeDisabled: (nodeId: string | null) => nodeId is string;
@@ -15,3 +15,8 @@ export interface UseTreeViewNodesProps {
    */
   disabledItemsFocusable?: boolean;
 }
+
+export type UseTreeViewNodesDefaultizedProps = DefaultizedProps<
+  UseTreeViewNodesProps,
+  'disabledItemsFocusable'
+>;

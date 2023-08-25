@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TreeViewContext } from '../TreeView/TreeViewContext';
+import { TreeViewContext } from '../internals/TreeViewProvider/TreeViewContext';
 
 export function useTreeItem(nodeId: string) {
   const {

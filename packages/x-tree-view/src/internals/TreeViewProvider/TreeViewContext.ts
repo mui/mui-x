@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { TreeViewContextValue } from './TreeView.types';
+import { TreeViewContextValue } from './TreeViewProvider.types';
 
-/**
- * @ignore - internal component.
- */
-export const TreeViewContext = React.createContext<TreeViewContextValue>({
+export const DEFAULT_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue = {
   registerNode: () => {},
   unregisterNode: () => {},
   isFocused: () => false,
@@ -27,7 +24,14 @@ export const TreeViewContext = React.createContext<TreeViewContextValue>({
     defaultParentIcon: null,
     defaultEndIcon: null,
   },
-});
+};
+
+/**
+ * @ignore - internal component.
+ */
+export const TreeViewContext = React.createContext<TreeViewContextValue>(
+  DEFAULT_TREE_VIEW_CONTEXT_VALUE,
+);
 
 if (process.env.NODE_ENV !== 'production') {
   TreeViewContext.displayName = 'TreeViewContext';

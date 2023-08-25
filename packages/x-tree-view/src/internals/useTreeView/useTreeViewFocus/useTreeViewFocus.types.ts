@@ -17,6 +17,8 @@ export interface UseTreeViewFocusProps
   onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
 }
 
+export type UseTreeViewFocusDefaultizedProps = UseTreeViewFocusProps;
+
 export interface UseTreeViewFocusState {
   focusedNodeId: string | null;
 }

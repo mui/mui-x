@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DefaultizedProps } from '../../models';
 
 export interface UseTreeViewExpansionInstance {
   isNodeExpanded: (nodeId: string) => boolean;
@@ -26,3 +27,8 @@ export interface UseTreeViewExpansionProps {
    */
   onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
 }
+
+export type UseTreeViewExpansionDefaultizedProps = DefaultizedProps<
+  UseTreeViewExpansionProps,
+  'defaultExpanded'
+>;

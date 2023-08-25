@@ -3,4 +3,5 @@ export type {
   UseTreeViewFocusInstance,
   UseTreeViewFocusState,
   UseTreeViewFocusProps,
+  UseTreeViewFocusDefaultizedProps,
 } from './useTreeViewFocus.types';
