@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { DefaultizedProps } from '../models';
 import type { UseTreeViewExpansionProps } from './useTreeViewExpansion';
 import type { UseTreeViewFocusProps } from './useTreeViewFocus';
@@ -10,7 +11,14 @@ export interface UseTreeViewProps<Multiple extends boolean | undefined>
     UseTreeViewExpansionProps,
     UseTreeViewFocusProps,
     UseTreeViewSelectionProps<Multiple>,
-    UseTreeViewKeyboardNavigationProps {}
+    UseTreeViewKeyboardNavigationProps {
+  rootRef?: React.Ref<HTMLUListElement> | undefined;
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id?: string;
+}
 
 export type UseTreeViewDefaultizedProps<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewProps<Multiple>,

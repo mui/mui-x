@@ -26,7 +26,7 @@ export type TreeViewPlugin<
   TState extends Partial<TreeViewState> = {},
 > = {
   (params: TreeViewPluginParams<TProps>): void | {
-    rootProps?: React.HTMLAttributes<HTMLUListElement>;
+    getRootProps?: () => React.HTMLAttributes<HTMLUListElement>;
   };
   getInitialState?: (props: UseTreeViewDefaultizedProps<any>) => TState;
   models?: TreeViewModelInitializer<TProps>[];

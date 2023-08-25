@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import useId from '@mui/utils/useId';
 import { TreeViewInstance, TreeViewPlugin, TreeViewState, TreeViewModels } from '../../models';
 import { useTreeViewNodes } from './useTreeViewNodes';
 import { useTreeViewSelection } from './useTreeViewSelection';
@@ -123,7 +124,6 @@ const defaultDefaultSelected: string[] = [];
 
 export const useTreeView = <Multiple extends boolean | undefined>(
   inProps: UseTreeViewProps<Multiple>,
-  ref: React.Ref<HTMLUListElement> | undefined,
 ) => {
   type DefaultProps = UseTreeViewDefaultizedProps<Multiple extends true ? true : false>;
 
@@ -153,23 +153,39 @@ export const useTreeView = <Multiple extends boolean | undefined>(
   const instanceRef = React.useRef<TreeViewInstance>({ nodeMap: {} } as TreeViewInstance);
   const instance = instanceRef.current;
   const rootRef = React.useRef(null);
-  const handleRootRef = useForkRef(rootRef, ref);
+  const handleRootRef = useForkRef(rootRef, inProps.rootRef);
+  const treeId = useId(props.id);
 
-  const rootProps: React.HTMLAttributes<HTMLUListElement> & { ref: React.Ref<HTMLUListElement> } = {
-    ref: handleRootRef,
-  };
+  const rootPropsGetters: (() => React.HTMLAttributes<HTMLUListElement>)[] = [];
 
   const runPlugin = (plugin: TreeViewPlugin<any>) => {
     const pluginResponse = plugin({ instance, props, state, setState, rootRef, models }) || {};
 
-    if (pluginResponse.rootProps) {
-      Object.assign(rootProps, pluginResponse.rootProps);
+    if (pluginResponse.getRootProps) {
+      rootPropsGetters.push(pluginResponse.getRootProps);
     }
   };
 
   plugins.forEach(runPlugin);
 
+  const getRootProps = () => {
+    const rootProps: React.HTMLAttributes<HTMLUListElement> & { ref: React.Ref<HTMLUListElement> } =
+      {
+        ref: handleRootRef,
+        id: treeId,
+        role: 'tree',
+        tabIndex: 0,
+      };
+
+    rootPropsGetters.forEach((rootPropsGetter) => {
+      Object.assign(rootProps, rootPropsGetter());
+    });
+
+    return rootProps;
+  };
+
   const contextValue = {
+    treeId,
     focus: instance.focusNode,
     toggleExpansion: instance.toggleNodeExpansion,
     isExpanded: instance.isNodeExpanded,
@@ -187,5 +203,5 @@ export const useTreeView = <Multiple extends boolean | undefined>(
     unregisterNode: instance.unregisterNode,
   };
 
-  return { instance, state, rootProps, ref, contextValue };
+  return { getRootProps, contextValue };
 };

@@ -63,11 +63,16 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusProps, UseTreeView
     }
   };
 
+  const activeDescendant = instance.nodeMap[state.focusedNodeId!]
+    ? instance.nodeMap[state.focusedNodeId!].idAttribute
+    : null;
+
   return {
-    rootProps: {
+    getRootProps: () => ({
       onFocus: handleFocus,
       onBlur: handleBlur,
-    },
+      'aria-activedescendant': activeDescendant ?? undefined,
+    }),
   };
 };
 

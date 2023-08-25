@@ -282,5 +282,5 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     }
   };
 
-  return { rootProps: { onKeyDown: handleKeyDown } };
+  return { getRootProps: () => ({ onKeyDown: handleKeyDown }) };
 };

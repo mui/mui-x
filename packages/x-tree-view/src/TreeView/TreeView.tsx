@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import useId from '@mui/utils/useId';
 import { TreeViewContext } from './TreeViewContext';
 import { DescendantProvider } from './descendants';
 import { getTreeViewUtilityClass } from './treeViewClasses';
@@ -69,6 +68,7 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     multiSelect,
     onNodeSelect,
     onKeyDown,
+    id,
     // Component implementation
     children,
     className,
@@ -76,62 +76,44 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
-    id: idProp,
     ...other
   } = themeProps;
 
-  const {
-    instance,
-    state,
-    rootProps,
-    contextValue: headlessContextValue,
-  } = useTreeView(
-    {
-      disabledItemsFocusable,
-      expanded,
-      defaultExpanded,
-      onNodeToggle,
-      onNodeFocus,
-      onFocus,
-      onBlur,
-      disableSelection,
-      defaultSelected,
-      selected,
-      multiSelect,
-      onNodeSelect,
-      onKeyDown,
-    },
-    ref,
-  );
+  const { getRootProps, contextValue: headlessContextValue } = useTreeView({
+    disabledItemsFocusable,
+    expanded,
+    defaultExpanded,
+    onNodeToggle,
+    onNodeFocus,
+    onFocus,
+    onBlur,
+    disableSelection,
+    defaultSelected,
+    selected,
+    multiSelect,
+    onNodeSelect,
+    onKeyDown,
+    id,
+    rootRef: ref,
+  });
 
   const classes = useUtilityClasses(themeProps);
-  const treeId = useId(idProp);
-
-  const activeDescendant = instance.nodeMap[state.focusedNodeId!]
-    ? instance.nodeMap[state.focusedNodeId!].idAttribute
-    : null;
 
   // TODO: fix this lint error
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const contextValue = {
     ...headlessContextValue,
     icons: { defaultCollapseIcon, defaultExpandIcon, defaultParentIcon, defaultEndIcon },
-    treeId,
   };
 
   return (
     <TreeViewContext.Provider value={contextValue}>
       <DescendantProvider>
         <TreeViewRoot
-          role="tree"
-          id={treeId}
-          aria-activedescendant={activeDescendant ?? undefined}
-          aria-multiselectable={contextValue.multiSelect}
           className={clsx(classes.root, className)}
-          tabIndex={0}
           ownerState={ownerState}
+          {...getRootProps()}
           {...other}
-          {...rootProps}
         >
           {children}
         </TreeViewRoot>
@@ -203,11 +185,6 @@ TreeView.propTypes = {
    */
   expanded: PropTypes.arrayOf(PropTypes.string),
   /**
-   * This prop is used to help implement the accessibility logic.
-   * If you don't provide this prop. It falls back to a randomly generated id.
-   */
-  id: PropTypes.string,
-  /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false
    */
@@ -232,6 +209,12 @@ TreeView.propTypes = {
    * @param {array} nodeIds The ids of the expanded nodes.
    */
   onNodeToggle: PropTypes.func,
+  rootRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
   /**
    * Selected node ids. (Controlled)
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.

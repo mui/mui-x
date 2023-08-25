@@ -244,6 +244,12 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionProps<any>
     rangeSelectToLast,
     rangeSelectToFirst,
   });
+
+  return {
+    getRootProps: () => ({
+      'aria-multiselectable': props.multiSelect,
+    }),
+  };
 };
 
 useTreeViewSelection.models = [

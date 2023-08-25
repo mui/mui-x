@@ -37,11 +37,6 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
    */
   defaultParentIcon?: React.ReactNode;
   /**
-   * This prop is used to help implement the accessibility logic.
-   * If you don't provide this prop. It falls back to a randomly generated id.
-   */
-  id?: string;
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
