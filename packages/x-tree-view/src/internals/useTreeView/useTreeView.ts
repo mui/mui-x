@@ -6,6 +6,7 @@ import { useTreeViewSelection } from './useTreeViewSelection';
 import { useTreeViewFocus } from './useTreeViewFocus';
 import { useTreeViewExpansion } from './useTreeViewExpansion';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
+import { useTreeViewContext } from './useTreeViewContext';
 import { UseTreeViewDefaultizedProps, UseTreeViewProps } from './useTreeView.types';
 import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 
@@ -15,6 +16,7 @@ const plugins: TreeViewPlugin<UseTreeViewDefaultizedProps<any>>[] = [
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
+  useTreeViewContext,
 ];
 
 /**

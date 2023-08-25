@@ -22,14 +22,16 @@ export interface TreeViewModelInitializer<
   defaultProp: keyof TProps;
 }
 
+interface TreeViewResponse {
+  getRootProps?: () => React.HTMLAttributes<HTMLUListElement>;
+  contextValue?: TreeViewContextValue;
+}
+
 export type TreeViewPlugin<
   TProps extends Partial<UseTreeViewDefaultizedProps<any>>,
   TState extends Partial<TreeViewState> = {},
 > = {
-  (params: TreeViewPluginParams<TProps>): void | {
-    getRootProps?: () => React.HTMLAttributes<HTMLUListElement>;
-    contextValue?: TreeViewContextValue;
-  };
+  (params: TreeViewPluginParams<TProps>): void | TreeViewResponse;
   getInitialState?: (props: UseTreeViewDefaultizedProps<any>) => TState;
   models?: TreeViewModelInitializer<TProps>[];
 };
