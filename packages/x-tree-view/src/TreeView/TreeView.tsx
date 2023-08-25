@@ -93,6 +93,10 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     onNodeSelect,
     onKeyDown,
     id,
+    defaultCollapseIcon,
+    defaultEndIcon,
+    defaultExpandIcon,
+    defaultParentIcon,
     rootRef: ref,
   });
 

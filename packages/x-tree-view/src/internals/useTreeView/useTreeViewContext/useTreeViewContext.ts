@@ -13,7 +13,7 @@ export const useTreeViewContext: TreeViewPlugin<
 
   return {
     getRootProps: () => ({
-      id: props.id,
+      id: treeId,
     }),
     contextValue: {
       treeId,
