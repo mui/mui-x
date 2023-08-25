@@ -13,7 +13,14 @@
   { "name": "treeViewClasses", "kind": "Variable" },
   { "name": "TreeViewClasses", "kind": "Interface" },
   { "name": "TreeViewClassKey", "kind": "TypeAlias" },
+  { "name": "TreeViewInstance", "kind": "Interface" },
+  { "name": "TreeViewModel", "kind": "Interface" },
+  { "name": "TreeViewModelInitializer", "kind": "Interface" },
+  { "name": "TreeViewModels", "kind": "Interface" },
+  { "name": "TreeViewPlugin", "kind": "TypeAlias" },
+  { "name": "TreeViewPluginParams", "kind": "Interface" },
   { "name": "TreeViewProps", "kind": "TypeAlias" },
   { "name": "TreeViewPropsBase", "kind": "Interface" },
+  { "name": "TreeViewState", "kind": "Interface" },
   { "name": "useTreeItem", "kind": "Function" }
 ]
