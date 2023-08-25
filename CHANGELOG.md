@@ -67,7 +67,7 @@ Same changes as in `@mui/x-date-pickers@v6.12.0`.
 - [core] Document a bit `useLazyRef` @oliviertassinari
 - [core] Enable strict type checking options in the top-level tsconfig (#9925) @cherniavskii
 - [core] Increase global e2e timeout (#10134) @LukasTy
-- [core] Remove oudated link (#10125) @oliviertassinari
+- [core] Remove outdated link (#10125) @oliviertassinari
 - [core] Update `no-response` workflow (#10102) @DanailH
 
 ## 6.11.2
