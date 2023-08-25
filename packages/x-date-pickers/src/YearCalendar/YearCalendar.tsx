@@ -65,6 +65,8 @@ const YearCalendarRoot = styled('div', {
   padding: '0 4px',
   width: 320,
   maxHeight: 304,
+  // avoid padding increasing width over defined
+  boxSizing: 'border-box',
 });
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
@@ -263,7 +265,6 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       // Button already visible
       return;
     }
-
     scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
   }, [autoFocus]);
 
