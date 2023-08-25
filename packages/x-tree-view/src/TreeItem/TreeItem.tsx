@@ -176,18 +176,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   const {
     icons: contextIcons,
-    focus,
-    isExpanded,
-    isFocused,
-    isSelected,
-    isDisabled,
     multiSelect,
     disabledItemsFocusable,
-    mapFirstChar,
-    unMapFirstChar,
-    registerNode,
-    unregisterNode,
     treeId,
+    instance,
   } = React.useContext(TreeViewContext);
 
   let id: string | undefined;
@@ -212,10 +204,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
   const { index, parentId } = useDescendant(descendant);
 
   const expandable = Boolean(Array.isArray(children) ? children.length : children);
-  const expanded = isExpanded ? isExpanded(nodeId) : false;
-  const focused = isFocused ? isFocused(nodeId) : false;
-  const selected = isSelected ? isSelected(nodeId) : false;
-  const disabled = isDisabled ? isDisabled(nodeId) : false;
+  const expanded = instance ? instance.isNodeExpanded(nodeId) : false;
+  const focused = instance ? instance.isNodeFocused(nodeId) : false;
+  const selected = instance ? instance.isNodeSelected(nodeId) : false;
+  const disabled = instance ? instance.isNodeDisabled(nodeId) : false;
 
   const ownerState: TreeItemOwnerState = {
     ...props,
@@ -246,8 +238,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   React.useEffect(() => {
     // On the first render a node's index will be -1. We want to wait for the real index.
-    if (registerNode && unregisterNode && index !== -1) {
-      registerNode({
+    if (instance && index !== -1) {
+      instance.registerNode({
         id: nodeId,
         idAttribute: id,
         index,
@@ -257,23 +249,26 @@ export const TreeItem = React.forwardRef(function TreeItem(
       });
 
       return () => {
-        unregisterNode(nodeId);
+        instance.unregisterNode(nodeId);
       };
     }
 
     return undefined;
-  }, [registerNode, unregisterNode, parentId, index, nodeId, expandable, disabledProp, id]);
+  }, [instance, parentId, index, nodeId, expandable, disabledProp, id]);
 
   React.useEffect(() => {
-    if (mapFirstChar && unMapFirstChar && label) {
-      mapFirstChar(nodeId, (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase());
+    if (instance && label) {
+      instance.mapFirstChar(
+        nodeId,
+        (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
+      );
 
       return () => {
-        unMapFirstChar(nodeId);
+        instance.unMapFirstChar(nodeId);
       };
     }
     return undefined;
-  }, [mapFirstChar, unMapFirstChar, nodeId, label]);
+  }, [instance, nodeId, label]);
 
   let ariaSelected;
   if (multiSelect) {
@@ -303,8 +298,8 @@ export const TreeItem = React.forwardRef(function TreeItem(
     }
 
     const unfocusable = !disabledItemsFocusable && disabled;
-    if (!focused && event.currentTarget === event.target && !unfocusable) {
-      focus(event, nodeId);
+    if (instance && !focused && event.currentTarget === event.target && !unfocusable) {
+      instance.focusNode(event, nodeId);
     }
   }
 

@@ -2,56 +2,45 @@ import * as React from 'react';
 import { TreeViewContext } from '../internals/TreeViewProvider/TreeViewContext';
 
 export function useTreeItem(nodeId: string) {
-  const {
-    focus,
-    isExpanded,
-    isExpandable,
-    isFocused,
-    isDisabled,
-    isSelected,
-    multiSelect,
-    selectNode,
-    selectRange,
-    toggleExpansion,
-  } = React.useContext(TreeViewContext);
+  const { instance, multiSelect } = React.useContext(TreeViewContext);
 
-  const expandable = isExpandable ? isExpandable(nodeId) : false;
-  const expanded = isExpanded ? isExpanded(nodeId) : false;
-  const focused = isFocused ? isFocused(nodeId) : false;
-  const disabled = isDisabled ? isDisabled(nodeId) : false;
-  const selected = isSelected ? isSelected(nodeId) : false;
+  const expandable = instance ? instance.isNodeExpandable(nodeId) : false;
+  const expanded = instance ? instance.isNodeExpanded(nodeId) : false;
+  const focused = instance ? instance.isNodeFocused(nodeId) : false;
+  const selected = instance ? instance.isNodeSelected(nodeId) : false;
+  const disabled = instance ? instance.isNodeDisabled(nodeId) : false;
 
   const handleExpansion = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!disabled) {
+    if (instance && !disabled) {
       if (!focused) {
-        focus(event, nodeId);
+        instance.focusNode(event, nodeId);
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
       // If already expanded and trying to toggle selection don't close
-      if (expandable && !(multiple && isExpanded(nodeId))) {
-        toggleExpansion(event, nodeId);
+      if (expandable && !(multiple && instance.isNodeExpanded(nodeId))) {
+        instance.toggleNodeExpansion(event, nodeId);
       }
     }
   };
 
   const handleSelection = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!disabled) {
+    if (instance && !disabled) {
       if (!focused) {
-        focus(event, nodeId);
+        instance.focusNode(event, nodeId);
       }
 
       const multiple = multiSelect && (event.shiftKey || event.ctrlKey || event.metaKey);
 
       if (multiple) {
         if (event.shiftKey) {
-          selectRange(event, { end: nodeId });
+          instance.selectRange(event, { end: nodeId });
         } else {
-          selectNode(event, nodeId, true);
+          instance.selectNode(event, nodeId, true);
         }
       } else {
-        selectNode(event, nodeId);
+        instance.selectNode(event, nodeId);
       }
     }
   };

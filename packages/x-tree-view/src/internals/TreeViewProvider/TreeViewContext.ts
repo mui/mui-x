@@ -2,19 +2,7 @@ import * as React from 'react';
 import { TreeViewContextValue } from './TreeViewProvider.types';
 
 export const DEFAULT_TREE_VIEW_CONTEXT_VALUE: TreeViewContextValue = {
-  registerNode: () => {},
-  unregisterNode: () => {},
-  isFocused: () => false,
-  isSelected: () => false,
-  isExpanded: () => false,
-  isExpandable: () => false,
-  isDisabled: () => false,
-  mapFirstChar: () => {},
-  unMapFirstChar: () => {},
-  focus: () => {},
-  toggleExpansion: () => {},
-  selectNode: () => {},
-  selectRange: () => {},
+  instance: null,
   multiSelect: false,
   disabledItemsFocusable: false,
   treeId: undefined,

@@ -163,25 +163,21 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const key = event.key;
 
     // If the tree is empty there will be no focused node
-    if (event.altKey || event.currentTarget !== event.target || !state.focusedNodeId) {
+    if (event.altKey || event.currentTarget !== event.target || state.focusedNodeId == null) {
       return;
     }
 
     const ctrlPressed = event.ctrlKey || event.metaKey;
     switch (key) {
       case ' ':
-        if (
-          !props.disableSelection &&
-          state.focusedNodeId != null &&
-          !instance.isNodeDisabled(state.focusedNodeId)
-        ) {
+        if (!props.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
+          flag = true;
           if (props.multiSelect && event.shiftKey) {
             instance.selectRange(event, { end: state.focusedNodeId });
-            flag = true;
           } else if (props.multiSelect) {
-            flag = instance.selectNode(event, state.focusedNodeId, true);
+            instance.selectNode(event, state.focusedNodeId, true);
           } else {
-            flag = instance.selectNode(event, state.focusedNodeId);
+            instance.selectNode(event, state.focusedNodeId);
           }
         }
         event.stopPropagation();
@@ -191,10 +187,13 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           if (instance.isNodeExpandable(state.focusedNodeId)) {
             instance.toggleNodeExpansion(event, state.focusedNodeId);
             flag = true;
-          } else if (props.multiSelect) {
-            flag = instance.selectNode(event, state.focusedNodeId, true);
-          } else {
-            flag = instance.selectNode(event, state.focusedNodeId);
+          } else if (!props.disableSelection) {
+            flag = true;
+            if (props.multiSelect) {
+              instance.selectNode(event, state.focusedNodeId, true);
+            } else {
+              instance.selectNode(event, state.focusedNodeId);
+            }
           }
         }
         event.stopPropagation();
