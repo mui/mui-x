@@ -266,6 +266,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       // Button already visible
       return;
     }
+
     scrollerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
   }, [autoFocus]);
 
