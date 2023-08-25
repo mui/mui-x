@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
 import { TimeView } from '@mui/x-date-pickers/models';
-import { adapterToUse } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {

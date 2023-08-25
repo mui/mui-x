@@ -59,14 +59,18 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     width: 56,
     padding: 0,
     overflow: 'hidden',
-    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    '@media (prefers-reduced-motion: no-preference)': {
+      scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    },
     '@media (pointer: fine)': {
       '&:hover': {
         overflowY: 'auto',
       },
     },
     '@media (pointer: none), (pointer: coarse)': {
-      overflowY: 'auto',
+      '&:hover': {
+        overflowY: 'auto',
+      },
     },
     '&:not(:first-of-type)': {
       borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,

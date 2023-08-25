@@ -55,6 +55,7 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
+    reduceAnimations,
     onViewChange,
   } = props;
 
@@ -216,6 +217,7 @@ export const useDesktopRangePicker = <
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
       >
         <Layout
           {...layoutProps}

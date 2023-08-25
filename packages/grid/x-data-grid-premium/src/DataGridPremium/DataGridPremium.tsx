@@ -246,6 +246,12 @@ DataGridPremiumRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: PropTypes.bool,
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -291,6 +297,11 @@ DataGridPremiumRaw.propTypes = {
     lazyLoading: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: PropTypes.number,
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.

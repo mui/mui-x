@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date Time Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)🚧
+# Date Time Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🚧
 
 <p class="description">The Date Time Range Picker let the user select a range of dates with an explicit starting and ending time.</p>
 

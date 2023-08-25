@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { screen, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
-import { getClockTouchEvent, getDateOffset, getTimeClockValue } from 'test/utils/pickers-utils';
+import { getClockTouchEvent, getTimeClockValue, getDateOffset } from 'test/utils/pickers';
 
 const TIMEZONE_TO_TEST = ['UTC', 'system', 'America/New_York'];
 
@@ -22,7 +22,7 @@ describe('<TimeClock /> - Timezone', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
-      const expectedDate = adapter.setHours(adapter.dateWithTimezone(undefined, 'default')!, 8);
+      const expectedDate = adapter.setHours(adapter.dateWithTimezone(undefined, 'default'), 8);
 
       // Check the `onChange` value (uses default timezone, e.g: UTC, see TZ env variable)
       const actualDate = onChange.lastCall.firstArg;
@@ -44,7 +44,7 @@ describe('<TimeClock /> - Timezone', () => {
           fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
           const expectedDate = adapter.setHours(
-            adapter.startOfDay(adapter.dateWithTimezone(undefined, timezone)!),
+            adapter.startOfDay(adapter.dateWithTimezone(undefined, timezone)),
             8,
           );
 

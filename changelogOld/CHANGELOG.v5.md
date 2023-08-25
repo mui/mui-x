@@ -427,7 +427,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### Changes
 
-- [DateRangePicker] Fix input focused style and mobile behaviour (#6645) (#6714) @LukasTy
+- [DateRangePicker] Fix input focused style and mobile behavior (#6645) (#6714) @LukasTy
 - [pickers] Add Ukrainian (uk-UA) locale on the date picker (#6661) @Dufran
 
 ### Docs

@@ -181,6 +181,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "filterDebounceMs": {
+      "description": "The milliseconds delay to wait after a keystroke before triggering filtering.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "filterMode": {
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
       "deprecated": "",

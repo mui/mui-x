@@ -186,7 +186,7 @@ SparkLineChart.propTypes = {
   area: PropTypes.bool,
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
-    y: PropTypes.oneOf(['line', 'none']),
+    y: PropTypes.oneOf(['band', 'line', 'none']),
   }),
   children: PropTypes.node,
   className: PropTypes.string,
