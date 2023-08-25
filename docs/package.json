@@ -67,7 +67,7 @@
     "moment": "^2.29.4",
     "moment-hijri": "^2.1.2",
     "moment-timezone": "^0.5.43",
-    "next": "^13.4.17",
+    "next": "^13.4.19",
     "nprogress": "^0.2.0",
     "postcss": "^8.4.27",
     "prismjs": "^1.29.0",
