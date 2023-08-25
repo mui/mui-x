@@ -30,7 +30,7 @@ apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 > The free version of the `DataGrid` is limited to a single row update per `apiRef.current.updateRows` call.
 > Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans.
 
-## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
 
@@ -38,7 +38,7 @@ In addition, the area in which `onRowsScrollEnd` is called can be changed using 
 
 {{"demo": "InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
-## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 :::warning
 This feature is experimental, it needs to be explicitly activated using the `lazyLoading` experimental feature flag.
@@ -76,7 +76,7 @@ In order for filtering and sorting to work you need to set their modes to `serve
 You can find out more information about how to do that on the [server-side filter page](/x/react-data-grid/filtering/server-side/) and on the [server-side sorting page](/x/react-data-grid/sorting/#server-side-sorting).
 :::
 
-## High frequency [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## High frequency [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 Whenever the rows are updated, the data grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the data grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
 

@@ -82,7 +82,7 @@ export default function DimensionsNoSnap() {
           `<ScatterChart`,
           '  {/** ... */}',
           '  legend={{',
-          `    directon: "${props.direction}"`,
+          `    direction: "${props.direction}"`,
           '  }}',
           '  sx={{',
           ...[

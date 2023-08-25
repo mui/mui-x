@@ -2,7 +2,7 @@
 
 <p class="description">Install the necessary packages to start building with MUI X components.</p>
 
-MUI X packages are available through the free MIT-licensed Community Plan, or the commercially-licensed Pro and Premium Plans.
+MUI X packages are available through the free MIT-licensed Community plan, or the commercially-licensed Pro and Premium plans.
 See [the licensing page](/x/introduction/licensing/) for complete details.
 
 ## Peer dependencies
