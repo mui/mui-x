@@ -121,7 +121,7 @@
     "babel-plugin-tester": "^11.0.4",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-plugin-transform-rename-import": "^2.3.0",
-    "chai": "^4.3.7",
+    "chai": "^4.3.8",
     "chai-dom": "^1.11.0",
     "compression-webpack-plugin": "^10.0.0",
     "concurrently": "^8.2.0",
