@@ -9,7 +9,10 @@ export default function DateCalendarReferenceDate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateCalendar']}>
-        <DateCalendar referenceDate={dayjs('2022-04-17')} />
+        <DateCalendar
+          referenceDate={dayjs('2022-04-17')}
+          views={['year', 'month', 'day']}
+        />
       </DemoContainer>
     </LocalizationProvider>
   );

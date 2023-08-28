@@ -1,6 +1,6 @@
 <DemoItem label="No validation: uses today">
-  <DateTimePicker />
+  <DatePicker />
 </DemoItem>
-<DemoItem label="Validation: uses the first day after `maxDate`">
-  <DateTimePicker maxDate={dayjs('2022-04-17')} />
+<DemoItem label="Validation: uses the day of `maxDate`">
+  <DatePicker maxDate={dayjs('2022-04-17')} />
 </DemoItem>
