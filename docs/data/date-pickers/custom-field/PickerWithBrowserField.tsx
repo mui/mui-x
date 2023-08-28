@@ -21,9 +21,11 @@ import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
   unstable_useDateField as useDateField,
   UseDateFieldProps,
+} from '@mui/x-date-pickers/DateField';
+import {
   DateFieldSlotsComponent,
   DateFieldSlotsComponentsProps,
-} from '@mui/x-date-pickers/DateField';
+} from '@mui/x-date-pickers/DateField/DateField.types';
 import { useClearableField } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,

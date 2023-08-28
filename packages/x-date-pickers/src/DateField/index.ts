@@ -5,6 +5,4 @@ export type {
   UseDateFieldComponentProps,
   DateFieldProps,
   UseDateFieldDefaultizedProps,
-  DateFieldSlotsComponent,
-  DateFieldSlotsComponentsProps,
 } from './DateField.types';

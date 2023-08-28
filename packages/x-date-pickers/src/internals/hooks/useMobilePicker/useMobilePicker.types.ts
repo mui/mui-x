@@ -36,6 +36,7 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
    */
   TextField?: React.ElementType<TextFieldProps>;
 }
+
 export interface ExportedUseMobilePickerSlotsComponentsProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,

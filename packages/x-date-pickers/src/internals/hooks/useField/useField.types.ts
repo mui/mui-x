@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import ClearIcon from '@mui/icons-material/Clear';
 import InputAdornment from '@mui/material/InputAdornment';
+import { ClearIcon } from '../../../icons';
 import {
   FieldSectionType,
   FieldSection,
