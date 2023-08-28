@@ -65,6 +65,9 @@ const YearCalendarRoot = styled('div', {
   padding: '0 4px',
   width: 320,
   maxHeight: 304,
+  // avoid padding increasing width over defined
+  boxSizing: 'border-box',
+  position: 'relative',
 });
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => React.JSX.Element) & {
