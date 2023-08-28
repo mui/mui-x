@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { EventHandlers } from '@mui/base/utils';
 import type {
   UseTreeViewExpansionProps,
   UseTreeViewExpansionDefaultizedProps,
