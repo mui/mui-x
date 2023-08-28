@@ -262,7 +262,7 @@ MobileTimePicker.propTypes = {
   reduceAnimations: PropTypes.bool,
   /**
    * The date used to generate the new value when both `value` and `defaultValue` are empty.
-   * @default The closest valid date-time using the validation props, except callbacks such as `shouldDisableDate`.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
    */
   referenceDate: PropTypes.any,
   /**

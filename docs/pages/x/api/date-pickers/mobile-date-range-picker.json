@@ -109,7 +109,7 @@
     },
     "referenceDate": {
       "type": { "name": "any" },
-      "default": "The closest valid date-time using the validation props, except callbacks such as `shouldDisableDate`."
+      "default": "The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`."
     },
     "renderLoading": {
       "type": { "name": "func" },
