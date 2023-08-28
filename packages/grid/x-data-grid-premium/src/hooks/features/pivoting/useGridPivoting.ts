@@ -123,7 +123,7 @@ const getPivotedData = ({
         if (!columnGroupingModelLookup[groupId]) {
           const columnGroup: GridColumnGroupingModel[number] = {
             groupId,
-            headerName: colValue,
+            headerName: String(colValue),
             children: [],
           };
           columnGroupingModelLookup[groupId] = columnGroup;
