@@ -71,10 +71,11 @@ const getPivotedData = ({
   getAggregationPosition: NonNullable<DataGridPremiumProcessedProps['getAggregationPosition']>;
   columnVisibilityModel: NonNullable<DataGridPremiumProcessedProps['columnVisibilityModel']>;
   columnGroupingModel: NonNullable<DataGridPremiumProcessedProps['columnGroupingModel']>;
+  unstable_pivotMode: NonNullable<DataGridPremiumProcessedProps['unstable_pivotMode']>;
 } => {
   const pivotColumns: GridColDef[] = [];
   const columnVisibilityModel: DataGridPremiumProcessedProps['columnVisibilityModel'] = {};
-  const filteredRowsLookup = gridFilteredRowsLookupSelector(apiRef);
+  const filteredRowsLookup = apiRef.current.state ? gridFilteredRowsLookupSelector(apiRef) : null;
 
   pivotModel.rows.forEach((field) => {
     pivotColumns.push({
@@ -105,9 +106,11 @@ const getPivotedData = ({
     });
   } else {
     rows.forEach((row) => {
-      const isRowFiltered = filteredRowsLookup[row.id];
-      if (!isRowFiltered) {
-        return;
+      if (filteredRowsLookup) {
+        const isRowFiltered = filteredRowsLookup[row.id];
+        if (!isRowFiltered) {
+          return;
+        }
       }
       const newRow = { ...row };
       const columnGroupPath: string[] = [];
@@ -188,6 +191,7 @@ const getPivotedData = ({
     getAggregationPosition: () => 'inline',
     columnVisibilityModel,
     columnGroupingModel,
+    unstable_pivotMode: true,
   };
 };
 

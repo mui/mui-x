@@ -130,6 +130,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
    * @default `(pastedText) => { const text = pastedText.replace(/\r?\n$/, ''); return text.split(/\r\n|\n|\r/).map((row) => row.split('\t')); }`
    */
   unstable_splitClipboardPastedText: (text: string) => string[][] | null;
+  unstable_pivotMode: boolean;
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>

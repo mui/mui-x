@@ -1003,6 +1003,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   unstable_onCellSelectionModelChange: PropTypes.func,
+  unstable_pivotMode: PropTypes.bool,
   /**
    * The function is used to split the pasted text into rows and cells.
    * @param {string} text The text pasted from the clipboard.
