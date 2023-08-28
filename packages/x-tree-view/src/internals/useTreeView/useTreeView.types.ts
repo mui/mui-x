@@ -38,7 +38,3 @@ export interface UseTreeViewDefaultizedProps<Multiple extends boolean>
     UseTreeViewContextDefaultizedProps {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
 }
-
-export type UseTreeViewRootPropsGetter = <TOther extends EventHandlers = {}>(
-  otherHandlers?: TOther,
-) => React.HTMLAttributes<HTMLUListElement> & TOther;

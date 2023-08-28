@@ -22,7 +22,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionDefaultize
   );
 
   const isNodeExpandable = React.useCallback(
-    (nodeId: string) => instance.getNode(nodeId) && instance.getNode(nodeId).expandable,
+    (nodeId: string) => !!instance.getNode(nodeId)?.expandable,
     [instance],
   );
 
