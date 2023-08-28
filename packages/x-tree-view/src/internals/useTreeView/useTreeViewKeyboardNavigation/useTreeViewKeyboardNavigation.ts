@@ -15,6 +15,7 @@ import {
 } from './useTreeViewKeyboardNavigation.types';
 import type { UseTreeViewSelectionDefaultizedProps } from '../useTreeViewSelection';
 import { UseTreeViewNodesDefaultizedProps } from '../useTreeViewNodes';
+import { EventHandlers } from '@mui/base/utils';
 
 function isPrintableCharacter(string: string) {
   return string && string.length === 1 && string.match(/\S/);
@@ -158,130 +159,129 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
-    let flag = false;
-    const key = event.key;
+  const createHandleKeyDown =
+    (otherHandlers: EventHandlers) => (event: React.KeyboardEvent<HTMLUListElement>) => {
+      otherHandlers.onKeyDown?.(event);
 
-    // If the tree is empty there will be no focused node
-    if (event.altKey || event.currentTarget !== event.target || state.focusedNodeId == null) {
-      return;
-    }
+      let flag = false;
+      const key = event.key;
 
-    const ctrlPressed = event.ctrlKey || event.metaKey;
-    switch (key) {
-      case ' ':
-        if (!props.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
-          flag = true;
-          if (props.multiSelect && event.shiftKey) {
-            instance.selectRange(event, { end: state.focusedNodeId });
-          } else if (props.multiSelect) {
-            instance.selectNode(event, state.focusedNodeId, true);
-          } else {
-            instance.selectNode(event, state.focusedNodeId);
-          }
-        }
-        event.stopPropagation();
-        break;
-      case 'Enter':
-        if (!instance.isNodeDisabled(state.focusedNodeId)) {
-          if (instance.isNodeExpandable(state.focusedNodeId)) {
-            instance.toggleNodeExpansion(event, state.focusedNodeId);
+      // If the tree is empty there will be no focused node
+      if (event.altKey || event.currentTarget !== event.target || state.focusedNodeId == null) {
+        return;
+      }
+
+      const ctrlPressed = event.ctrlKey || event.metaKey;
+      switch (key) {
+        case ' ':
+          if (!props.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
             flag = true;
-          } else if (!props.disableSelection) {
-            flag = true;
-            if (props.multiSelect) {
+            if (props.multiSelect && event.shiftKey) {
+              instance.selectRange(event, { end: state.focusedNodeId });
+            } else if (props.multiSelect) {
               instance.selectNode(event, state.focusedNodeId, true);
             } else {
               instance.selectNode(event, state.focusedNodeId);
             }
           }
-        }
+          event.stopPropagation();
+          break;
+        case 'Enter':
+          if (!instance.isNodeDisabled(state.focusedNodeId)) {
+            if (instance.isNodeExpandable(state.focusedNodeId)) {
+              instance.toggleNodeExpansion(event, state.focusedNodeId);
+              flag = true;
+            } else if (!props.disableSelection) {
+              flag = true;
+              if (props.multiSelect) {
+                instance.selectNode(event, state.focusedNodeId, true);
+              } else {
+                instance.selectNode(event, state.focusedNodeId);
+              }
+            }
+          }
+          event.stopPropagation();
+          break;
+        case 'ArrowDown':
+          if (props.multiSelect && event.shiftKey && !props.disableSelection) {
+            selectNextNode(event, state.focusedNodeId);
+          }
+          instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
+          flag = true;
+          break;
+        case 'ArrowUp':
+          if (props.multiSelect && event.shiftKey && !props.disableSelection) {
+            selectPreviousNode(event, state.focusedNodeId);
+          }
+          instance.focusNode(event, getPreviousNode(instance, state.focusedNodeId));
+          flag = true;
+          break;
+        case 'ArrowRight':
+          if (isRtl) {
+            flag = handlePreviousArrow(event);
+          } else {
+            flag = handleNextArrow(event);
+          }
+          break;
+        case 'ArrowLeft':
+          if (isRtl) {
+            flag = handleNextArrow(event);
+          } else {
+            flag = handlePreviousArrow(event);
+          }
+          break;
+        case 'Home':
+          if (
+            props.multiSelect &&
+            ctrlPressed &&
+            event.shiftKey &&
+            !props.disableSelection &&
+            !instance.isNodeDisabled(state.focusedNodeId)
+          ) {
+            instance.rangeSelectToFirst(event, state.focusedNodeId);
+          }
+          instance.focusNode(event, getFirstNode(instance));
+          flag = true;
+          break;
+        case 'End':
+          if (
+            props.multiSelect &&
+            ctrlPressed &&
+            event.shiftKey &&
+            !props.disableSelection &&
+            !instance.isNodeDisabled(state.focusedNodeId)
+          ) {
+            instance.rangeSelectToLast(event, state.focusedNodeId);
+          }
+          instance.focusNode(event, getLastNode(instance));
+          flag = true;
+          break;
+        default:
+          if (key === '*') {
+            instance.expandAllSiblings(event, state.focusedNodeId);
+            flag = true;
+          } else if (
+            props.multiSelect &&
+            ctrlPressed &&
+            key.toLowerCase() === 'a' &&
+            !props.disableSelection
+          ) {
+            instance.selectRange(event, {
+              start: getFirstNode(instance),
+              end: getLastNode(instance),
+            });
+            flag = true;
+          } else if (!ctrlPressed && !event.shiftKey && isPrintableCharacter(key)) {
+            focusByFirstCharacter(event, state.focusedNodeId, key);
+            flag = true;
+          }
+      }
+
+      if (flag) {
+        event.preventDefault();
         event.stopPropagation();
-        break;
-      case 'ArrowDown':
-        if (props.multiSelect && event.shiftKey && !props.disableSelection) {
-          selectNextNode(event, state.focusedNodeId);
-        }
-        instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
-        flag = true;
-        break;
-      case 'ArrowUp':
-        if (props.multiSelect && event.shiftKey && !props.disableSelection) {
-          selectPreviousNode(event, state.focusedNodeId);
-        }
-        instance.focusNode(event, getPreviousNode(instance, state.focusedNodeId));
-        flag = true;
-        break;
-      case 'ArrowRight':
-        if (isRtl) {
-          flag = handlePreviousArrow(event);
-        } else {
-          flag = handleNextArrow(event);
-        }
-        break;
-      case 'ArrowLeft':
-        if (isRtl) {
-          flag = handleNextArrow(event);
-        } else {
-          flag = handlePreviousArrow(event);
-        }
-        break;
-      case 'Home':
-        if (
-          props.multiSelect &&
-          ctrlPressed &&
-          event.shiftKey &&
-          !props.disableSelection &&
-          !instance.isNodeDisabled(state.focusedNodeId)
-        ) {
-          instance.rangeSelectToFirst(event, state.focusedNodeId);
-        }
-        instance.focusNode(event, getFirstNode(instance));
-        flag = true;
-        break;
-      case 'End':
-        if (
-          props.multiSelect &&
-          ctrlPressed &&
-          event.shiftKey &&
-          !props.disableSelection &&
-          !instance.isNodeDisabled(state.focusedNodeId)
-        ) {
-          instance.rangeSelectToLast(event, state.focusedNodeId);
-        }
-        instance.focusNode(event, getLastNode(instance));
-        flag = true;
-        break;
-      default:
-        if (key === '*') {
-          instance.expandAllSiblings(event, state.focusedNodeId);
-          flag = true;
-        } else if (
-          props.multiSelect &&
-          ctrlPressed &&
-          key.toLowerCase() === 'a' &&
-          !props.disableSelection
-        ) {
-          instance.selectRange(event, {
-            start: getFirstNode(instance),
-            end: getLastNode(instance),
-          });
-          flag = true;
-        } else if (!ctrlPressed && !event.shiftKey && isPrintableCharacter(key)) {
-          focusByFirstCharacter(event, state.focusedNodeId, key);
-          flag = true;
-        }
-    }
+      }
+    };
 
-    if (flag) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    if (props.onKeyDown) {
-      props.onKeyDown(event);
-    }
-  };
-
-  return { getRootProps: () => ({ onKeyDown: handleKeyDown }) };
+  return { getRootProps: (otherHandlers) => ({ onKeyDown: createHandleKeyDown(otherHandlers) }) };
 };

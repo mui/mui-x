@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { EventHandlers } from '@mui/base/utils';
 import type {
   UseTreeViewExpansionProps,
   UseTreeViewExpansionDefaultizedProps,
@@ -37,3 +38,7 @@ export interface UseTreeViewDefaultizedProps<Multiple extends boolean>
     UseTreeViewContextDefaultizedProps {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
 }
+
+export type UseTreeViewRootPropsGetter = <TOther extends EventHandlers = {}>(
+  otherHandlers?: TOther,
+) => React.HTMLAttributes<HTMLUListElement> & TOther;

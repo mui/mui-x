@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { EventHandlers } from '@mui/base/utils';
 import { TreeViewInstance } from './TreeViewInstance';
 import { TreeViewState } from './TreeViewState';
 import { TreeViewModels } from './TreeViewModel';
@@ -23,7 +24,9 @@ export interface TreeViewModelInitializer<
 }
 
 interface TreeViewResponse {
-  getRootProps?: () => React.HTMLAttributes<HTMLUListElement>;
+  getRootProps?: <TOther extends EventHandlers = {}>(
+    otherHandlers: TOther,
+  ) => React.HTMLAttributes<HTMLUListElement>;
   contextValue?: TreeViewContextValue;
 }
 

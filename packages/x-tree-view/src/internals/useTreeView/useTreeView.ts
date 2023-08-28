@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import { EventHandlers } from '@mui/base/utils';
 import { TreeViewInstance, TreeViewPlugin, TreeViewState, TreeViewModels } from '../../models';
 import { useTreeViewNodes } from './useTreeViewNodes';
 import { useTreeViewSelection } from './useTreeViewSelection';
@@ -35,7 +36,7 @@ const useTreeViewModels = <Multiple extends boolean>(
   }>({});
 
   const [modelsState, setModelsState] = React.useState<{ [modelName: string]: any }>(() => {
-    const initialState: typeof modelsState = {};
+    const initialState: { [modelName: string]: any } = {};
 
     plugins.forEach((plugin) => {
       plugin.models?.forEach((model) => {
@@ -153,7 +154,9 @@ export const useTreeView = <Multiple extends boolean | undefined>(
   const rootRef = React.useRef(null);
   const handleRootRef = useForkRef(rootRef, inProps.rootRef);
 
-  const rootPropsGetters: (() => React.HTMLAttributes<HTMLUListElement>)[] = [];
+  const rootPropsGetters: (<TOther extends EventHandlers = {}>(
+    otherHandlers: TOther,
+  ) => React.HTMLAttributes<HTMLUListElement>)[] = [];
   let contextValue = DEFAULT_TREE_VIEW_CONTEXT_VALUE;
 
   const runPlugin = (plugin: TreeViewPlugin<any>) => {
@@ -170,16 +173,19 @@ export const useTreeView = <Multiple extends boolean | undefined>(
 
   plugins.forEach(runPlugin);
 
-  const getRootProps = () => {
+  const getRootProps = <TOther extends EventHandlers = {}>(
+    otherHandlers: TOther = {} as TOther,
+  ) => {
     const rootProps: React.HTMLAttributes<HTMLUListElement> & { ref: React.Ref<HTMLUListElement> } =
       {
         ref: handleRootRef,
         role: 'tree',
         tabIndex: 0,
+        ...otherHandlers,
       };
 
     rootPropsGetters.forEach((rootPropsGetter) => {
-      Object.assign(rootProps, rootPropsGetter());
+      Object.assign(rootProps, rootPropsGetter(otherHandlers));
     });
 
     return rootProps;

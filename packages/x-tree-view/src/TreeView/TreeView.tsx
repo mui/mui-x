@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/base';
+import composeClasses from '@mui/utils/composeClasses';
+import { useSlotProps } from '@mui/base/utils';
 import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
@@ -59,14 +59,11 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     defaultExpanded,
     onNodeToggle,
     onNodeFocus,
-    onFocus,
-    onBlur,
     disableSelection,
     defaultSelected,
     selected,
     multiSelect,
     onNodeSelect,
-    onKeyDown,
     id,
     defaultCollapseIcon,
     defaultEndIcon,
@@ -74,7 +71,6 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     defaultParentIcon,
     // Component implementation
     children,
-    className,
     ...other
   } = themeProps;
 
@@ -84,14 +80,11 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     defaultExpanded,
     onNodeToggle,
     onNodeFocus,
-    onFocus,
-    onBlur,
     disableSelection,
     defaultSelected,
     selected,
     multiSelect,
     onNodeSelect,
-    onKeyDown,
     id,
     defaultCollapseIcon,
     defaultEndIcon,
@@ -102,16 +95,18 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
 
   const classes = useUtilityClasses(themeProps);
 
+  const rootProps = useSlotProps({
+    elementType: TreeViewRoot,
+    externalSlotProps: {},
+    externalForwardedProps: other,
+    className: classes.root,
+    getSlotProps: getRootProps,
+    ownerState,
+  });
+
   return (
     <TreeViewProvider value={contextValue}>
-      <TreeViewRoot
-        className={clsx(classes.root, className)}
-        ownerState={ownerState}
-        {...getRootProps()}
-        {...other}
-      >
-        {children}
-      </TreeViewRoot>
+      <TreeViewRoot {...rootProps}>{children}</TreeViewRoot>
     </TreeViewProvider>
   );
 }) as TreeViewComponent;

@@ -6,8 +6,7 @@ export interface UseTreeViewFocusInstance {
   setFocusedNodeId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export interface UseTreeViewFocusProps
-  extends Pick<React.HTMLAttributes<HTMLUListElement>, 'onFocus' | 'onBlur'> {
+export interface UseTreeViewFocusProps {
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
