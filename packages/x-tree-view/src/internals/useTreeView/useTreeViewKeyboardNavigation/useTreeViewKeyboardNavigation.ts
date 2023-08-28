@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
+import { EventHandlers } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { TreeViewPlugin } from '../../../models';
 import {
@@ -15,7 +16,6 @@ import {
 } from './useTreeViewKeyboardNavigation.types';
 import type { UseTreeViewSelectionDefaultizedProps } from '../useTreeViewSelection';
 import { UseTreeViewNodesDefaultizedProps } from '../useTreeViewNodes';
-import { EventHandlers } from '@mui/base/utils';
 
 function isPrintableCharacter(string: string) {
   return string && string.length === 1 && string.match(/\S/);
