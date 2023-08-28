@@ -2,7 +2,7 @@
 title: Data Grid - Pivoting
 ---
 
-# Data Grid - Pivoting [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)🚧
+# Data Grid - Pivoting [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🚧
 
 <p class="description">Turn a column values into columns.</p>
 

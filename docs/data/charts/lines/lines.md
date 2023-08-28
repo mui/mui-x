@@ -59,7 +59,10 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
-{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline"}}
+This series property adds the option to control the interpolation of a series.
+Different series could even have different interpolations.
+
+{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 ### CSS
 

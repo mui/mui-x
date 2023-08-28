@@ -37,13 +37,13 @@ A filter item represents a filtering rule and is composed of several elements:
 - `filterItem.field`: the field on which the rule applies.
 - `filterItem.value`: the value to look for.
 - `filterItem.operator`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
-- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): required when multiple filter items are used.
+- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')): required when multiple filter items are used.
 
 :::info
 Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
 :::
 
-#### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 The `logicOperator` tells the data grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
