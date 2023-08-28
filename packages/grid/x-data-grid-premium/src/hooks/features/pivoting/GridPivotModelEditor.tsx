@@ -69,22 +69,19 @@ function FieldsSelect({
   );
 }
 
-function SingleSelect({
-  label,
-  value,
-  onChange,
-  options,
-}: {
+interface SingleSelectProps extends Omit<React.ComponentProps<typeof FormControl>, 'onChange'> {
   label: string;
   value: string;
   onChange: (event: SelectChangeEvent<string>) => void;
   options: string[];
-}) {
+}
+
+function SingleSelect({ label, value, onChange, options, ...props }: SingleSelectProps) {
   const labelId = useId();
   const id = useId();
 
   return (
-    <FormControl sx={{ my: 1, width: 300 }} size="small">
+    <FormControl size="small" {...props}>
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
         labelId={labelId}
@@ -93,6 +90,7 @@ function SingleSelect({
         onChange={onChange}
         input={<OutlinedInput label={label} />}
         renderValue={(selected) => <Chip label={selected} size="small" />}
+        fullWidth
       >
         {options.map((option) => (
           <MenuItem key={option} value={option} dense>
@@ -118,9 +116,9 @@ function ValuesEditor({
   return (
     <div>
       <Typography variant="caption">Values</Typography>
-      {values.map(({ field }, index) => {
+      {values.map(({ field, aggFunc }, index) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }} key={field}>
+          <Box sx={{ display: 'flex', alignItems: 'center', my: 2, gap: '10px' }} key={field}>
             <SingleSelect
               label="Field"
               value={field}
@@ -134,13 +132,28 @@ function ValuesEditor({
                 onChange(newValues);
               }}
               options={[field].concat(options)}
+              sx={{ flex: '0 1 300px' }}
+            />
+            <SingleSelect
+              label="Aggregation"
+              value={aggFunc}
+              onChange={(event) => {
+                const newValues = values.map((value, valIndex) => {
+                  if (valIndex === index) {
+                    return { ...value, aggFunc: event.target.value };
+                  }
+                  return value;
+                });
+                onChange(newValues);
+              }}
+              options={['sum', 'avg', 'min', 'max', 'size']}
+              sx={{ flex: '0 1 100px' }}
             />
             <IconButton
               size="small"
               onClick={() => {
                 onChange(values.filter((_, valIndex) => valIndex !== index));
               }}
-              sx={{ mx: 1 }}
             >
               <DeleteIcon />
             </IconButton>
@@ -149,7 +162,7 @@ function ValuesEditor({
       })}
       {emptyValues.map((value, emptyIndex) => {
         return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }} key={emptyIndex}>
+          <Box sx={{ display: 'flex', alignItems: 'center', my: 2, gap: '10px' }} key={emptyIndex}>
             <SingleSelect
               label="Field"
               value=""
@@ -160,6 +173,7 @@ function ValuesEditor({
                 onChange([...values, { ...value, field: event.target.value }]);
               }}
               options={options}
+              sx={{ flex: '0 1 300px' }}
             />
             <IconButton
               size="small"
@@ -168,7 +182,6 @@ function ValuesEditor({
                   return prevValues.filter((_, index) => index !== emptyIndex);
                 });
               }}
-              sx={{ mx: 1 }}
             >
               <DeleteIcon />
             </IconButton>
