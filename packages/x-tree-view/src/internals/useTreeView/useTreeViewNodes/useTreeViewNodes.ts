@@ -67,22 +67,22 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> 
     const { id, index, parentId, expandable, idAttribute, disabled } = node;
 
     instance.nodeMap[id] = { id, index, parentId, expandable, idAttribute, disabled };
-  });
 
-  const unregisterNode = useEventCallback((nodeId: string) => {
-    const newMap = { ...instance.nodeMap };
-    delete newMap[nodeId];
-    instance.nodeMap = newMap;
+    return () => {
+      const newMap = { ...instance.nodeMap };
+      delete newMap[id];
+      instance.nodeMap = newMap;
 
-    instance.setFocusedNodeId((oldFocusedNodeId) => {
-      if (
-        oldFocusedNodeId === nodeId &&
-        rootRef.current === ownerDocument(rootRef.current).activeElement
-      ) {
-        return instance.getChildrenIds(null)[0];
-      }
-      return oldFocusedNodeId;
-    });
+      instance.setFocusedNodeId((oldFocusedNodeId) => {
+        if (
+          oldFocusedNodeId === id &&
+          rootRef.current === ownerDocument(rootRef.current).activeElement
+        ) {
+          return instance.getChildrenIds(null)[0];
+        }
+        return oldFocusedNodeId;
+      });
+    };
   });
 
   populateInstance<UseTreeViewNodesInstance>(instance, {
@@ -90,6 +90,5 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> 
     getChildrenIds,
     getNavigableChildrenIds,
     registerNode,
-    unregisterNode,
   });
 };

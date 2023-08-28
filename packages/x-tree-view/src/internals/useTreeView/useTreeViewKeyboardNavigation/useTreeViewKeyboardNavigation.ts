@@ -41,17 +41,16 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
 
   const mapFirstChar = useEventCallback((nodeId: string, firstChar: string) => {
     firstCharMap.current[nodeId] = firstChar;
-  });
 
-  const unMapFirstChar = useEventCallback((nodeId: string) => {
-    const newMap = { ...firstCharMap.current };
-    delete newMap[nodeId];
-    firstCharMap.current = newMap;
+    return () => {
+      const newMap = { ...firstCharMap.current };
+      delete newMap[nodeId];
+      firstCharMap.current = newMap;
+    };
   });
 
   populateInstance<UseTreeViewKeyboardNavigationInstance>(instance, {
     mapFirstChar,
-    unMapFirstChar,
   });
 
   const getParent = (nodeId: string) => instance.nodeMap[nodeId].parentId;

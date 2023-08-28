@@ -239,7 +239,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
   React.useEffect(() => {
     // On the first render a node's index will be -1. We want to wait for the real index.
     if (instance && index !== -1) {
-      instance.registerNode({
+      return instance.registerNode({
         id: nodeId,
         idAttribute: id,
         index,
@@ -247,10 +247,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
         expandable,
         disabled: disabledProp,
       });
-
-      return () => {
-        instance.unregisterNode(nodeId);
-      };
     }
 
     return undefined;
@@ -258,14 +254,10 @@ export const TreeItem = React.forwardRef(function TreeItem(
 
   React.useEffect(() => {
     if (instance && label) {
-      instance.mapFirstChar(
+      return instance.mapFirstChar(
         nodeId,
         (contentRef.current?.textContent ?? '').substring(0, 1).toLowerCase(),
       );
-
-      return () => {
-        instance.unMapFirstChar(nodeId);
-      };
     }
     return undefined;
   }, [instance, nodeId, label]);
