@@ -393,7 +393,7 @@ export interface FieldSlotsComponents {
    */
   ClearIcon?: React.ElementType;
   /**
-   * Icon to display inside the clear button.
+   * Component to display on the end input adornment housing the clear button.
    * @default InputAdornment
    */
   InputAdornment?: React.ElementType;

@@ -120,7 +120,7 @@ export const useDesktopPicker = <
   });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
-  let inputAdronmnent = {};
+  let inputAdornmnent = {};
   if (inputAdornmentProps.position !== 'end') {
     inputAdronmnent = {
       [`${inputAdornmentProps.position}Adornment`]: (

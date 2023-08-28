@@ -45,7 +45,7 @@ export interface ExportedUseMobilePickerSlotsComponentsProps<
     React.ElementType<BaseSingleInputFieldProps<TDate | null, TDate, FieldSection, unknown>>,
     {},
     UsePickerProps<TDate | null, any, FieldSection, any, any, any>
-  > & {};
+  >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 

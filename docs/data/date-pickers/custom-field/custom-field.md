@@ -70,7 +70,7 @@ You can also use any other input:
 {{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
 
 :::warning
-You will need to use a _Material UI_ component that supports the `sx` prop as a wrapper to your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the behavior on **focus** and **hover** depends on styles applied via the `sx` prop.
+You will need to use a component that supports the `sx` prop as a wrapper for your input, in order to be able to benefit from the **hover** and **focus** behavior of the clear button. You will have access to the `clearable` and `onClear` props using native HTML elements, but the on **focus** and **hover** behavior depends on styles applied via the `sx` prop.
 :::
 
 ### Using an `Autocomplete`

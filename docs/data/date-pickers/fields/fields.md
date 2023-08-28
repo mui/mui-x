@@ -77,7 +77,7 @@ Please only use it if needed.
 
 ### Clearable behavior
 
-You can use the `clearable` prop to enable the clearing behavior on a field. Aditionally, you can also customize the event handler using the `onClear` callback prop.
+You can use the `clearable` prop to enable the clearing behavior on a field. You can also add an event handler using the `onClear` callback prop.
 
 :::info
 For **multi-input** range fields the clearable behavior is not supported yet.
