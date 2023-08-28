@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
-import { adapterToUse } from 'test/utils/pickers-utils';
+import { adapterToUse } from 'test/utils/pickers';
 import { act } from '@mui/monorepo/test/utils/createRenderer';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 

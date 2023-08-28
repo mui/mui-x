@@ -2,8 +2,11 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { adapterToUse, getExpectedOnChangeCount } from 'test/utils/pickers-utils';
-import { expectPickerChangeHandlerValue } from 'test/utils/pickers/assertions';
+import {
+  adapterToUse,
+  getExpectedOnChangeCount,
+  expectPickerChangeHandlerValue,
+} from 'test/utils/pickers';
 import { DescribeValueTestSuite } from './describeValue.types';
 
 export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (

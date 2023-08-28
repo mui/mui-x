@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers-utils';
+import { createPickerRenderer, getTextbox, expectInputPlaceholder } from 'test/utils/pickers';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,

@@ -16,7 +16,7 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
-} from '../../../../../test/utils/helperFn';
+} from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

@@ -6,7 +6,7 @@ import {
   expectInputPlaceholder,
   expectInputValue,
   getTextbox,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 

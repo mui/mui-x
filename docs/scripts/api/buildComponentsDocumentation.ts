@@ -203,9 +203,16 @@ function findXDemos(
   return pagesMarkdown
     .filter((page) => page.components.includes(componentName))
     .map((page) => {
+      // Titles for paid packages have the structure "Page title <a><span/></a>"
+      // Next line remove the <a/> to avoid nested links and keep the <span/> to show the plan level.
+      // A link can be present when the Pro or Premium icon is added to the h1 of the demo page.
+      let demoPageTitle = page.title
+        .replace(/<a\b[^>]*>/i, '')
+        .replace(/<\/a>/i, '')
+        .replace(/\[(.*)]\((.*)\)/g, '$1');
+
       if (page.pathname.includes('date-pickers')) {
-        let demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
-        demoPageTitle = demoPageTitle.replace(/\[(.*)]\((.*)\)/g, '');
+        demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(demoPageTitle)?.[1] ?? demoPageTitle;
 
         const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
 

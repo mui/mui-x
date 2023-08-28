@@ -125,6 +125,7 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
  */
 const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
   value: filterOperators,
+  apiRef,
   getCellAggregationResult,
 }) =>
   filterOperators!.map((operator) => {
@@ -154,7 +155,7 @@ const getWrappedFilterOperators: ColumnPropertyWrapper<'filterOperators'> = ({
               return null;
             }
             return (value, row, column, api) => {
-              if (getCellAggregationResult(row.id, column.field) != null) {
+              if (getCellAggregationResult(apiRef.current.getRowId(row), column.field) != null) {
                 return true;
               }
               return filterFn(value, row, column, api);
@@ -203,10 +204,7 @@ export const wrapColumnWithAggregationValue = ({
     field: string,
   ): GridAggregationLookup[GridRowId][string] | null => {
     let cellAggregationPosition: GridAggregationPosition | null = null;
-    const rowNode = apiRef.current.getRowNode(id);
-    if (!rowNode) {
-      return null;
-    }
+    const rowNode = apiRef.current.getRowNode(id)!;
 
     if (rowNode.type === 'group') {
       cellAggregationPosition = 'inline';
