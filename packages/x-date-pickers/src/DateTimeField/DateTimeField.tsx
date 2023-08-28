@@ -9,7 +9,7 @@ import {
   DateTimeFieldSlotsComponentsProps,
 } from './DateTimeField.types';
 import { useDateTimeField } from './useDateTimeField';
-import { useClearableField } from '../internals/hooks/useClearableField';
+import { useClearableField } from '../hooks';
 
 type DateTimeFieldComponent = (<TDate>(
   props: DateTimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,

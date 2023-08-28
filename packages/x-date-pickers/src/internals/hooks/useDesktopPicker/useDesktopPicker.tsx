@@ -120,9 +120,10 @@ export const useDesktopPicker = <
   });
 
   // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
-  let inputAdornmnent = {};
-  if (inputAdornmentProps.position !== 'end') {
-    inputAdronmnent = {
+  if (hasUIView) {
+    fieldProps.InputProps = {
+      ...fieldProps.InputProps,
+      ref: containerRef,
       [`${inputAdornmentProps.position}Adornment`]: (
         <InputAdornment {...inputAdornmentProps}>
           <OpenPickerButton {...openPickerButtonProps}>
@@ -130,21 +131,6 @@ export const useDesktopPicker = <
           </OpenPickerButton>
         </InputAdornment>
       ),
-    };
-  } else {
-    inputAdronmnent = {
-      [`${inputAdornmentProps.position}Adornment`]: (
-        <OpenPickerButton {...openPickerButtonProps}>
-          <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
-        </OpenPickerButton>
-      ),
-    };
-  }
-  if (hasUIView) {
-    fieldProps.InputProps = {
-      ...fieldProps.InputProps,
-      ref: containerRef,
-      ...inputAdronmnent,
     };
   }
 
@@ -155,7 +141,6 @@ export const useDesktopPicker = <
     unknown
   >['slots'] = {
     textField: slots.textField,
-    inputAdornment: slots.inputAdornment,
     ...fieldProps.slots,
   };
 

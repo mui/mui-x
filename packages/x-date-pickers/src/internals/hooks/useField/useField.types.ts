@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import InputAdornment from '@mui/material/InputAdornment';
 import { ClearIcon } from '../../../icons';
 import {
   FieldSectionType,
@@ -392,14 +391,8 @@ export interface FieldSlotsComponents {
    * @default ClearIcon
    */
   ClearIcon?: React.ElementType;
-  /**
-   * Component to display on the end input adornment housing the clear button.
-   * @default InputAdornment
-   */
-  InputAdornment?: React.ElementType;
 }
 
 export interface FieldSlotsComponentsProps {
   clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
-  inputAdornment?: SlotComponentProps<typeof InputAdornment, {}, {}>;
 }

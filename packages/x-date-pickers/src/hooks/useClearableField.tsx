@@ -2,11 +2,13 @@ import * as React from 'react';
 
 import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
-import MuiInputAdornment from '@mui/material/InputAdornment';
-import { SxProps } from '@mui/system';
-import { ClearIcon } from '../../icons';
-import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useField.types';
-import { FieldsTextFieldProps } from '../models';
+import InputAdornment from '@mui/material/InputAdornment';
+import { ClearIcon } from '../icons';
+import {
+  FieldSlotsComponents,
+  FieldSlotsComponentsProps,
+  FieldsTextFieldProps,
+} from '../internals';
 
 type UseClearableFieldProps<
   TFieldProps extends FieldsTextFieldProps,
@@ -34,7 +36,7 @@ export const useClearableField = <
   onClear,
   slots,
   slotProps,
-}: UseClearFieldProps<
+}: UseClearableFieldProps<
   TFieldProps,
   TInputProps,
   TFieldSlotsComponents,
@@ -47,22 +49,20 @@ export const useClearableField = <
     ownerState: {},
   });
 
-  const InputAdornment = slots?.inputAdornment ?? MuiInputAdornment;
-  const inputAdornmentProps = useSlotProps({
-    elementType: MuiInputAdornment,
-    externalSlotProps: slotProps?.inputAdornment,
-    ownerState: {},
-  });
-
   const InputProps = {
     ...ForwardedInputProps,
     endAdornment: clearable ? (
-      <InputAdornment {...inputAdornmentProps} position="end">
-        <IconButton className="clearButton" onClick={onClear}>
-          <EndClearIcon fontSize="small" {...endClearIconProps} />
-        </IconButton>
+      <React.Fragment>
+        <InputAdornment
+          position="end"
+          sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
+        >
+          <IconButton className="clearButton" onClick={onClear}>
+            <EndClearIcon fontSize="small" {...endClearIconProps} />
+          </IconButton>
+        </InputAdornment>
         {ForwardedInputProps?.endAdornment}
-      </InputAdornment>
+      </React.Fragment>
     ) : (
       ForwardedInputProps?.endAdornment
     ),

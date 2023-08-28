@@ -295,7 +295,6 @@
   "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": {
     "clearIcon": "Icon to display inside the clear button.",
-    "inputAdornment": "Icon to display inside the clear button.",
     "textField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
   }
 }

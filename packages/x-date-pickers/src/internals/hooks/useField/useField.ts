@@ -510,8 +510,8 @@ export const useField = <
     event.preventDefault();
     onClear?.(event, ...(args as []));
     clearValue();
-    setSelectedSections(0);
     inputRef?.current?.focus();
+    setSelectedSections(0);
   });
 
   return {

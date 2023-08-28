@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { useClearableField } from '@mui/x-date-pickers/internals';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   SingleInputDateRangeFieldProps,
   SingleInputDateRangeFieldSlotsComponentsProps,

@@ -9,7 +9,7 @@ import {
   TimeFieldSlotsComponentsProps,
 } from './TimeField.types';
 import { useTimeField } from './useTimeField';
-import { useClearableField } from '../internals/hooks/useClearableField';
+import { useClearableField } from '../hooks';
 
 type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,

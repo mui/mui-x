@@ -41,7 +41,7 @@ import {
   DateFieldSlotsComponent,
   DateFieldSlotsComponentsProps,
 } from '@mui/x-date-pickers/DateField/DateField.types';
-import { useClearableField } from '@mui/x-date-pickers/internals';
+import { useClearableField } from '@mui/x-date-pickers/hooks';
 import {
   BaseMultiInputFieldProps,
   DateRange,
