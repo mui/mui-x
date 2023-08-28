@@ -3,7 +3,7 @@ import { TreeViewInstance } from './TreeViewInstance';
 import { TreeViewState } from './TreeViewState';
 import { TreeViewModels } from './TreeViewModel';
 import type { UseTreeViewDefaultizedProps } from '../internals/useTreeView/useTreeView.types';
-import { TreeViewContextValue } from '../internals/TreeViewProvider';
+import type { TreeViewContextValue } from '../internals/TreeViewProvider';
 
 export interface TreeViewPluginParams<TProps extends Partial<UseTreeViewDefaultizedProps<any>>> {
   instance: TreeViewInstance;
