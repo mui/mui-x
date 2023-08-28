@@ -11,7 +11,7 @@ export default function ReferenceDateExplicitDateTimePicker() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} sx={{ minWidth: 270 }}>
+      <Stack spacing={2} sx={{ minWidth: 305 }}>
         <DateTimePicker
           value={value}
           onChange={setValue}
