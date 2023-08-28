@@ -43,6 +43,14 @@ export default function QuickFilterOutsideOfGrid() {
           slots={{
             toolbar: MyCustomToolbar,
           }}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [],
+                quickFilterExcludeHiddenColumns: true,
+              },
+            },
+          }}
         />
       </Grid>
     </Grid>
