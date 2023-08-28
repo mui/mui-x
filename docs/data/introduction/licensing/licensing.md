@@ -272,7 +272,7 @@ If you are not eligible to the free trial, you need to [purchase a license](http
 
 ### 2. `Expired package version`
 
-This error indicates that you have installed a version of the software released after the end of your license term.
+This error indicates that you have installed a version of MUI X Pro / Premium released after the end of your license term.
 By default, commercial licenses provide access to new versions released during the first year after the purchase.
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or install an older version of the npm package that is compatible with your license key.
@@ -283,7 +283,7 @@ For example, if you purchase a one-year license today, you will be able to updat
 
 This error indicates that your annual license key is expired.
 
-The annual license works **forever in production** with any version released before your license term ends.
+The annual license works **forever in production** with any version of MUI X Pro / Premium released before your license term ends.
 However, when the term ends, you are not allowed to use the current or older versions in **development**.
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or stop making changes to code depending on MUI X's APIs.
