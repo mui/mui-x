@@ -2,7 +2,7 @@
 export const excludeProps = <TProps extends {}>(props: TProps, excludedProps: string[]): TProps => {
   return Object.keys(props).reduce((acc, key) => {
     if (!excludedProps.includes(key)) {
-      acc[key] = props[key];
+      acc[key as keyof TProps] = props[key as keyof TProps];
     }
     return acc;
   }, {} as TProps);
