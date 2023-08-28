@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export interface UseTreeViewContextProps {
+export interface UseTreeViewContextParameters {
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -26,4 +26,4 @@ export interface UseTreeViewContextProps {
   defaultParentIcon?: React.ReactNode;
 }
 
-export type UseTreeViewContextDefaultizedProps = UseTreeViewContextProps;
+export type UseTreeViewContextDefaultizedParameters = UseTreeViewContextParameters;

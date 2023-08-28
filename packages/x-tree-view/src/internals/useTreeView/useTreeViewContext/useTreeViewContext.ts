@@ -1,13 +1,13 @@
 import useId from '@mui/utils/useId';
 import { TreeViewPlugin } from '../../../models';
-import { UseTreeViewContextDefaultizedProps } from './useTreeViewContext.types';
-import type { UseTreeViewSelectionDefaultizedProps } from '../useTreeViewSelection';
-import type { UseTreeViewNodesDefaultizedProps } from '../useTreeViewNodes';
+import { UseTreeViewContextDefaultizedParameters } from './useTreeViewContext.types';
+import type { UseTreeViewSelectionDefaultizedParameters } from '../useTreeViewSelection';
+import type { UseTreeViewNodesDefaultizedParameters } from '../useTreeViewNodes';
 
 export const useTreeViewContext: TreeViewPlugin<
-  UseTreeViewContextDefaultizedProps &
-    UseTreeViewSelectionDefaultizedProps<any> &
-    UseTreeViewNodesDefaultizedProps
+  UseTreeViewContextDefaultizedParameters &
+    UseTreeViewSelectionDefaultizedParameters<any> &
+    UseTreeViewNodesDefaultizedParameters
 > = ({ instance, props }) => {
   const treeId = useId(props.id);
 

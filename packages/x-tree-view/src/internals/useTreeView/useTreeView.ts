@@ -8,11 +8,16 @@ import { useTreeViewFocus } from './useTreeViewFocus';
 import { useTreeViewExpansion } from './useTreeViewExpansion';
 import { useTreeViewKeyboardNavigation } from './useTreeViewKeyboardNavigation';
 import { useTreeViewContext } from './useTreeViewContext';
-import { UseTreeViewDefaultizedProps, UseTreeViewProps } from './useTreeView.types';
+import {
+  UseTreeViewDefaultizedParameters,
+  UseTreeViewParameters,
+  UseTreeViewReturnValue,
+  UseTreeViewRootSlotProps,
+} from './useTreeView.types';
 import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 import { useTreeViewModels } from './useTreeViewModels';
 
-const plugins: TreeViewPlugin<UseTreeViewDefaultizedProps<any>>[] = [
+const plugins: TreeViewPlugin<UseTreeViewDefaultizedParameters<any>>[] = [
   useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,
@@ -25,9 +30,9 @@ const defaultDefaultExpanded: string[] = [];
 const defaultDefaultSelected: string[] = [];
 
 export const useTreeView = <Multiple extends boolean | undefined>(
-  inProps: UseTreeViewProps<Multiple>,
-) => {
-  type DefaultProps = UseTreeViewDefaultizedProps<Multiple extends true ? true : false>;
+  inProps: UseTreeViewParameters<Multiple>,
+): UseTreeViewReturnValue => {
+  type DefaultProps = UseTreeViewDefaultizedParameters<Multiple extends true ? true : false>;
 
   const props = {
     ...inProps,
@@ -42,14 +47,14 @@ export const useTreeView = <Multiple extends boolean | undefined>(
   const models = useTreeViewModels(plugins, props);
   const instanceRef = React.useRef<TreeViewInstance>({} as TreeViewInstance);
   const instance = instanceRef.current;
-  const rootRef = React.useRef(null);
-  const handleRootRef = useForkRef(rootRef, inProps.rootRef);
+  const innerRootRef = React.useRef(null);
+  const handleRootRef = useForkRef(innerRootRef, inProps.rootRef);
 
   const [state, setState] = React.useState<TreeViewState>(() => {
     const temp = {} as TreeViewState;
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
-        Object.assign(temp, plugin.getInitialState(props as UseTreeViewDefaultizedProps<any>));
+        Object.assign(temp, plugin.getInitialState(props as UseTreeViewDefaultizedParameters<any>));
       }
     });
 
@@ -62,7 +67,8 @@ export const useTreeView = <Multiple extends boolean | undefined>(
   let contextValue = DEFAULT_TREE_VIEW_CONTEXT_VALUE;
 
   const runPlugin = (plugin: TreeViewPlugin<any>) => {
-    const pluginResponse = plugin({ instance, props, state, setState, rootRef, models }) || {};
+    const pluginResponse =
+      plugin({ instance, props, state, setState, rootRef: innerRootRef, models }) || {};
 
     if (pluginResponse.getRootProps) {
       rootPropsGetters.push(pluginResponse.getRootProps);
@@ -78,13 +84,12 @@ export const useTreeView = <Multiple extends boolean | undefined>(
   const getRootProps = <TOther extends EventHandlers = {}>(
     otherHandlers: TOther = {} as TOther,
   ) => {
-    const rootProps: React.HTMLAttributes<HTMLUListElement> & { ref: React.Ref<HTMLUListElement> } =
-      {
-        ref: handleRootRef,
-        role: 'tree',
-        tabIndex: 0,
-        ...otherHandlers,
-      };
+    const rootProps: UseTreeViewRootSlotProps = {
+      role: 'tree',
+      tabIndex: 0,
+      ...otherHandlers,
+      ref: handleRootRef,
+    };
 
     rootPropsGetters.forEach((rootPropsGetter) => {
       Object.assign(rootProps, rootPropsGetter(otherHandlers));
@@ -93,5 +98,5 @@ export const useTreeView = <Multiple extends boolean | undefined>(
     return rootProps;
   };
 
-  return { getRootProps, contextValue };
+  return { getRootProps, rootRef: handleRootRef, contextValue };
 };

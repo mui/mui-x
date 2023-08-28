@@ -1,39 +1,70 @@
 import * as React from 'react';
+import { EventHandlers } from '@mui/base/utils';
 import type {
-  UseTreeViewExpansionProps,
-  UseTreeViewExpansionDefaultizedProps,
+  UseTreeViewExpansionParameters,
+  UseTreeViewExpansionDefaultizedParameters,
 } from './useTreeViewExpansion';
-import type { UseTreeViewFocusProps, UseTreeViewFocusDefaultizedProps } from './useTreeViewFocus';
 import type {
-  UseTreeViewSelectionProps,
-  UseTreeViewSelectionDefaultizedProps,
+  UseTreeViewFocusParameters,
+  UseTreeViewFocusDefaultizedParameters,
+} from './useTreeViewFocus';
+import type {
+  UseTreeViewSelectionParameters,
+  UseTreeViewSelectionDefaultizedParameters,
 } from './useTreeViewSelection';
 import type {
-  UseTreeViewKeyboardNavigationProps,
-  UseTreeViewKeyboardNavigationDefaultizedProps,
+  UseTreeViewKeyboardNavigationParameters,
+  UseTreeViewKeyboardNavigationDefaultizedParameters,
 } from './useTreeViewKeyboardNavigation';
-import type { UseTreeViewNodesProps, UseTreeViewNodesDefaultizedProps } from './useTreeViewNodes';
 import type {
-  UseTreeViewContextProps,
-  UseTreeViewContextDefaultizedProps,
+  UseTreeViewNodesParameters,
+  UseTreeViewNodesDefaultizedParameters,
+} from './useTreeViewNodes';
+import type {
+  UseTreeViewContextParameters,
+  UseTreeViewContextDefaultizedParameters,
 } from './useTreeViewContext';
+import type { TreeViewContextValue } from '../TreeViewProvider';
 
-export interface UseTreeViewProps<Multiple extends boolean | undefined>
-  extends UseTreeViewNodesProps,
-    UseTreeViewExpansionProps,
-    UseTreeViewFocusProps,
-    UseTreeViewSelectionProps<Multiple>,
-    UseTreeViewKeyboardNavigationProps,
-    UseTreeViewContextProps {
+export interface UseTreeViewParameters<Multiple extends boolean | undefined>
+  extends UseTreeViewNodesParameters,
+    UseTreeViewExpansionParameters,
+    UseTreeViewFocusParameters,
+    UseTreeViewSelectionParameters<Multiple>,
+    UseTreeViewKeyboardNavigationParameters,
+    UseTreeViewContextParameters {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
 }
 
-export interface UseTreeViewDefaultizedProps<Multiple extends boolean>
-  extends UseTreeViewNodesDefaultizedProps,
-    UseTreeViewExpansionDefaultizedProps,
-    UseTreeViewFocusDefaultizedProps,
-    UseTreeViewSelectionDefaultizedProps<Multiple>,
-    UseTreeViewKeyboardNavigationDefaultizedProps,
-    UseTreeViewContextDefaultizedProps {
+export interface UseTreeViewDefaultizedParameters<Multiple extends boolean>
+  extends UseTreeViewNodesDefaultizedParameters,
+    UseTreeViewExpansionDefaultizedParameters,
+    UseTreeViewFocusDefaultizedParameters,
+    UseTreeViewSelectionDefaultizedParameters<Multiple>,
+    UseTreeViewKeyboardNavigationDefaultizedParameters,
+    UseTreeViewContextDefaultizedParameters {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
+}
+
+export interface UseTreeViewRootSlotProps
+  extends Pick<
+    React.HTMLAttributes<HTMLUListElement>,
+    | 'onFocus'
+    | 'onBlur'
+    | 'onKeyDown'
+    | 'id'
+    | 'aria-activedescendant'
+    | 'aria-multiselectable'
+    | 'role'
+    | 'tabIndex'
+  > {
+  ref: React.Ref<HTMLUListElement>;
+}
+
+export interface UseTreeViewReturnValue {
+  getRootProps: <TOther extends EventHandlers = {}>(
+    otherHandlers?: TOther,
+  ) => UseTreeViewRootSlotProps;
+  rootRef: React.Ref<HTMLUListElement>;
+  contextValue: TreeViewContextValue;
 }

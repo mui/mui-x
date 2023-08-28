@@ -1,5 +1,5 @@
 export { useTreeViewContext } from './useTreeViewContext';
 export type {
-  UseTreeViewContextProps,
-  UseTreeViewContextDefaultizedProps,
+  UseTreeViewContextParameters,
+  UseTreeViewContextDefaultizedParameters,
 } from './useTreeViewContext.types';

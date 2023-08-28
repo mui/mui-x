@@ -12,10 +12,10 @@ import {
 } from '../useTreeView.utils';
 import {
   UseTreeViewKeyboardNavigationInstance,
-  UseTreeViewKeyboardNavigationDefaultizedProps,
+  UseTreeViewKeyboardNavigationDefaultizedParameters,
 } from './useTreeViewKeyboardNavigation.types';
-import type { UseTreeViewSelectionDefaultizedProps } from '../useTreeViewSelection';
-import { UseTreeViewNodesDefaultizedProps } from '../useTreeViewNodes';
+import type { UseTreeViewSelectionDefaultizedParameters } from '../useTreeViewSelection';
+import { UseTreeViewNodesDefaultizedParameters } from '../useTreeViewNodes';
 
 function isPrintableCharacter(string: string) {
   return string && string.length === 1 && string.match(/\S/);
@@ -31,9 +31,9 @@ function findNextFirstChar(firstChars: string[], startIndex: number, char: strin
 }
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
-  UseTreeViewKeyboardNavigationDefaultizedProps &
-    UseTreeViewSelectionDefaultizedProps<any> &
-    UseTreeViewNodesDefaultizedProps
+  UseTreeViewKeyboardNavigationDefaultizedParameters &
+    UseTreeViewSelectionDefaultizedParameters<any> &
+    UseTreeViewNodesDefaultizedParameters
 > = ({ instance, props, state }) => {
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';

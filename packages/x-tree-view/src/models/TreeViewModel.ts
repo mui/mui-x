@@ -1,13 +1,13 @@
 import * as React from 'react';
-import type { UseTreeViewDefaultizedProps } from '../internals/useTreeView/useTreeView.types';
+import type { UseTreeViewDefaultizedParameters } from '../internals/useTreeView/useTreeView.types';
 
 export interface TreeViewModel<
   Multiple extends boolean,
-  TControlled extends keyof UseTreeViewDefaultizedProps<true>,
+  TControlled extends keyof UseTreeViewDefaultizedParameters<true>,
 > {
-  value: Exclude<UseTreeViewDefaultizedProps<Multiple>[TControlled], undefined>;
+  value: Exclude<UseTreeViewDefaultizedParameters<Multiple>[TControlled], undefined>;
   setValue: React.Dispatch<
-    React.SetStateAction<Exclude<UseTreeViewDefaultizedProps<any>[TControlled], undefined>>
+    React.SetStateAction<Exclude<UseTreeViewDefaultizedParameters<any>[TControlled], undefined>>
   >;
 }
 

@@ -6,7 +6,7 @@ export interface UseTreeViewFocusInstance {
   setFocusedNodeId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export interface UseTreeViewFocusProps {
+export interface UseTreeViewFocusParameters {
   /**
    * Callback fired when tree items are focused.
    * @param {React.SyntheticEvent} event The event source of the callback **Warning**: This is a generic event not a focus event.
@@ -16,7 +16,7 @@ export interface UseTreeViewFocusProps {
   onNodeFocus?: (event: React.SyntheticEvent, nodeId: string) => void;
 }
 
-export type UseTreeViewFocusDefaultizedProps = UseTreeViewFocusProps;
+export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 
 export interface UseTreeViewFocusState {
   focusedNodeId: string | null;

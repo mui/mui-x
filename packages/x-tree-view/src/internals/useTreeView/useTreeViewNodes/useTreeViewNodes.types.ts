@@ -8,7 +8,7 @@ export interface UseTreeViewNodesInstance {
   registerNode: (node: TreeViewNode) => () => void;
 }
 
-export interface UseTreeViewNodesProps {
+export interface UseTreeViewNodesParameters {
   /**
    * If `true`, will allow focus on disabled items.
    * @default false
@@ -16,7 +16,7 @@ export interface UseTreeViewNodesProps {
   disabledItemsFocusable?: boolean;
 }
 
-export type UseTreeViewNodesDefaultizedProps = DefaultizedProps<
-  UseTreeViewNodesProps,
+export type UseTreeViewNodesDefaultizedParameters = DefaultizedProps<
+  UseTreeViewNodesParameters,
   'disabledItemsFocusable'
 >;

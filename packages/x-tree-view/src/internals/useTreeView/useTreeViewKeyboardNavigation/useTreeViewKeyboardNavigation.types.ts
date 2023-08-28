@@ -2,6 +2,7 @@ export interface UseTreeViewKeyboardNavigationInstance {
   mapFirstChar: (nodeId: string, firstChar: string) => () => void;
 }
 
-export interface UseTreeViewKeyboardNavigationProps {}
+export interface UseTreeViewKeyboardNavigationParameters {}
 
-export type UseTreeViewKeyboardNavigationDefaultizedProps = UseTreeViewKeyboardNavigationProps;
+export type UseTreeViewKeyboardNavigationDefaultizedParameters =
+  UseTreeViewKeyboardNavigationParameters;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { TreeViewClasses } from './treeViewClasses';
-import { UseTreeViewProps } from '../internals/useTreeView';
+import { UseTreeViewParameters } from '../internals/useTreeView';
 
 export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   /**
@@ -24,7 +24,7 @@ export interface TreeViewPropsBase extends React.HTMLAttributes<HTMLUListElement
 }
 
 export type TreeViewProps<Multiple extends boolean | undefined> = Omit<
-  UseTreeViewProps<Multiple>,
+  UseTreeViewParameters<Multiple>,
   'rootRef'
 > &
   TreeViewPropsBase;

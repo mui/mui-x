@@ -13,7 +13,7 @@ type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple ext
   ? string[]
   : string | null;
 
-export interface UseTreeViewSelectionProps<Multiple extends boolean | undefined> {
+export interface UseTreeViewSelectionParameters<Multiple extends boolean | undefined> {
   /**
    * If `true` selection is disabled.
    * @default false
@@ -47,7 +47,7 @@ export interface UseTreeViewSelectionProps<Multiple extends boolean | undefined>
   ) => void;
 }
 
-export type UseTreeViewSelectionDefaultizedProps<Multiple extends boolean> = DefaultizedProps<
-  UseTreeViewSelectionProps<Multiple>,
+export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
+  UseTreeViewSelectionParameters<Multiple>,
   'disableSelection' | 'defaultSelected' | 'multiSelect'
 >;

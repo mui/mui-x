@@ -8,7 +8,7 @@ export interface UseTreeViewExpansionInstance {
   expandAllSiblings: (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => void;
 }
 
-export interface UseTreeViewExpansionProps {
+export interface UseTreeViewExpansionParameters {
   /**
    * Expanded node ids.
    * Used when the item's expansion are controlled.
@@ -28,7 +28,7 @@ export interface UseTreeViewExpansionProps {
   onNodeToggle?: (event: React.SyntheticEvent, nodeIds: string[]) => void;
 }
 
-export type UseTreeViewExpansionDefaultizedProps = DefaultizedProps<
-  UseTreeViewExpansionProps,
+export type UseTreeViewExpansionDefaultizedParameters = DefaultizedProps<
+  UseTreeViewExpansionParameters,
   'defaultExpanded'
 >;

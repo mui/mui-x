@@ -4,15 +4,13 @@ import { TreeViewItemRange } from '../../models';
 import { populateInstance, getNextNode, getFirstNode, getLastNode } from '../useTreeView.utils';
 import {
   UseTreeViewSelectionInstance,
-  UseTreeViewSelectionDefaultizedProps,
+  UseTreeViewSelectionDefaultizedParameters,
 } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
-export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionDefaultizedProps<any>> = ({
-  instance,
-  props,
-  models,
-}) => {
+export const useTreeViewSelection: TreeViewPlugin<
+  UseTreeViewSelectionDefaultizedParameters<any>
+> = ({ instance, props, models }) => {
   const lastSelectedNode = React.useRef<string | null>(null);
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
@@ -37,7 +35,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionDefaultize
         }
 
         if (props.onNodeSelect) {
-          (props.onNodeSelect as UseTreeViewSelectionDefaultizedProps<true>['onNodeSelect'])!(
+          (props.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
             event,
             newSelected,
           );
@@ -101,7 +99,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionDefaultize
     }
 
     if (props.onNodeSelect) {
-      (props.onNodeSelect as UseTreeViewSelectionDefaultizedProps<true>['onNodeSelect'])!(
+      (props.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
         event,
         base,
       );
@@ -128,7 +126,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionDefaultize
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
 
     if (props.onNodeSelect) {
-      (props.onNodeSelect as UseTreeViewSelectionDefaultizedProps<true>['onNodeSelect'])!(
+      (props.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
         event,
         newSelected,
       );

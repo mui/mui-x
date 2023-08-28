@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { TreeViewModels, TreeViewPlugin } from '../../models';
-import { UseTreeViewDefaultizedProps } from './useTreeView.types';
+import { UseTreeViewDefaultizedParameters } from './useTreeView.types';
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
  * The controlled models are never stored in the state and the state is only updated if the model is not controlled.
  */
 export const useTreeViewModels = <Multiple extends boolean>(
-  plugins: TreeViewPlugin<UseTreeViewDefaultizedProps<any>>[],
-  props: UseTreeViewDefaultizedProps<Multiple>,
+  plugins: TreeViewPlugin<UseTreeViewDefaultizedParameters<any>>[],
+  props: UseTreeViewDefaultizedParameters<Multiple>,
 ) => {
   const modelsRef = React.useRef<{
     [modelName: string]: {
-      controlledProp: keyof UseTreeViewDefaultizedProps<true>;
-      defaultProp: keyof UseTreeViewDefaultizedProps<true>;
+      controlledProp: keyof UseTreeViewDefaultizedParameters<true>;
+      defaultProp: keyof UseTreeViewDefaultizedParameters<true>;
       isControlled: boolean;
     };
   }>({});

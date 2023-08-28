@@ -1,6 +1,6 @@
 export { useTreeViewSelection } from './useTreeViewSelection';
 export type {
   UseTreeViewSelectionInstance,
-  UseTreeViewSelectionProps,
-  UseTreeViewSelectionDefaultizedProps,
+  UseTreeViewSelectionParameters,
+  UseTreeViewSelectionDefaultizedParameters,
 } from './useTreeViewSelection.types';

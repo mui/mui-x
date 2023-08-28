@@ -3,10 +3,12 @@ import { EventHandlers } from '@mui/base/utils';
 import { TreeViewInstance } from './TreeViewInstance';
 import { TreeViewState } from './TreeViewState';
 import { TreeViewModels } from './TreeViewModel';
-import type { UseTreeViewDefaultizedProps } from '../internals/useTreeView/useTreeView.types';
+import type { UseTreeViewDefaultizedParameters } from '../internals/useTreeView/useTreeView.types';
 import type { TreeViewContextValue } from '../internals/TreeViewProvider';
 
-export interface TreeViewPluginParams<TProps extends Partial<UseTreeViewDefaultizedProps<any>>> {
+export interface TreeViewPluginParams<
+  TProps extends Partial<UseTreeViewDefaultizedParameters<any>>,
+> {
   instance: TreeViewInstance;
   props: TProps;
   state: TreeViewState;
@@ -16,7 +18,7 @@ export interface TreeViewPluginParams<TProps extends Partial<UseTreeViewDefaulti
 }
 
 export interface TreeViewModelInitializer<
-  TProps extends Partial<UseTreeViewDefaultizedProps<any>>,
+  TProps extends Partial<UseTreeViewDefaultizedParameters<any>>,
 > {
   name: string;
   controlledProp: keyof TProps;
@@ -31,10 +33,10 @@ interface TreeViewResponse {
 }
 
 export type TreeViewPlugin<
-  TProps extends Partial<UseTreeViewDefaultizedProps<any>>,
+  TProps extends Partial<UseTreeViewDefaultizedParameters<any>>,
   TState extends Partial<TreeViewState> = {},
 > = {
   (params: TreeViewPluginParams<TProps>): void | TreeViewResponse;
-  getInitialState?: (props: UseTreeViewDefaultizedProps<any>) => TState;
+  getInitialState?: (props: UseTreeViewDefaultizedParameters<any>) => TState;
   models?: TreeViewModelInitializer<TProps>[];
 };

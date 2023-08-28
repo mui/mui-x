@@ -1,6 +1,6 @@
 export { useTreeViewNodes } from './useTreeViewNodes';
 export type {
   UseTreeViewNodesInstance,
-  UseTreeViewNodesProps,
-  UseTreeViewNodesDefaultizedProps,
+  UseTreeViewNodesParameters,
+  UseTreeViewNodesDefaultizedParameters,
 } from './useTreeViewNodes.types';

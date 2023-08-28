@@ -5,11 +5,11 @@ import { TreeViewPlugin } from '../../../models';
 import { populateInstance } from '../useTreeView.utils';
 import {
   UseTreeViewNodesInstance,
-  UseTreeViewNodesDefaultizedProps,
+  UseTreeViewNodesDefaultizedParameters,
 } from './useTreeViewNodes.types';
 import { TreeViewNode } from '../../models';
 
-export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> = ({
+export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedParameters> = ({
   instance,
   props,
   rootRef,
