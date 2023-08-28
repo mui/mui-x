@@ -78,6 +78,7 @@ const pages: MuiPage[] = [
             plan: 'pro',
             newFeature: true,
           },
+          { pathname: '/x/react-data-grid/filtering-recipes', title: 'Recipes' },
         ],
       },
       { pathname: '/x/react-data-grid/pagination' },
