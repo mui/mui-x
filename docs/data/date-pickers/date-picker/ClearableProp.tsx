@@ -33,7 +33,7 @@ export default function ClearableProp() {
       >
         <DemoItem label="DatePicker">
           <DatePicker
-            sx={{ width: '300px' }}
+            sx={{ minWidth: 260 }}
             slotProps={{
               field: { clearable: true, onClear: () => setCleared(true) },
             }}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useSlotProps } from '@mui/base';
+import { useSlotProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import { SxProps } from '@mui/system';
@@ -8,7 +8,7 @@ import { ClearIcon } from '../../icons';
 import { FieldSlotsComponents, FieldSlotsComponentsProps } from './useField/useField.types';
 import { FieldsTextFieldProps } from '../models';
 
-type UseClearFieldProps<
+type UseClearableFieldProps<
   TFieldProps extends FieldsTextFieldProps,
   TInputProps extends { endAdornment?: React.ReactNode } | undefined,
   TFieldSlots extends FieldSlotsComponents,
@@ -68,7 +68,7 @@ export const useClearableField = <
     ),
   };
 
-  const fieldProps = {
+  const fieldProps: TFieldProps = {
     ...forwardedFieldProps,
     sx: {
       '& .clearButton': {
@@ -84,8 +84,9 @@ export const useClearableField = <
           },
         },
       },
-    } as SxProps,
-  } as TFieldProps;
+      ...forwardedFieldProps.sx,
+    },
+  };
 
   return { InputProps, fieldProps };
 };

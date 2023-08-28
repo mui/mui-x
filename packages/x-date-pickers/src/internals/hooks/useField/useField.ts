@@ -505,7 +505,7 @@ export const useField = <
   }));
 
   const handleClearValue = useEventCallback((event: React.MouseEvent, ...args) => {
-    // the click event on the endAdornmnet would propagate to the input and trigger the `handleInputClick` handler.
+    // the click event on the endAdornment would propagate to the input and trigger the `handleInputClick` handler.
     event.stopPropagation();
     event.preventDefault();
     onClear?.(event, ...(args as []));

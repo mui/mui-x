@@ -152,9 +152,9 @@ export function DemoContainer(props: DemoGridProps) {
       };
     }
   } else if (childrenSupportedSections.has('date-time')) {
-    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 290 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 260 } };
   } else {
-    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 290 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 260 } };
   }
 
   return (
