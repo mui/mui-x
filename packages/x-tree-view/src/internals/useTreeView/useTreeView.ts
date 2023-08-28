@@ -39,23 +39,22 @@ export const useTreeView = <Multiple extends boolean | undefined>(
       inProps.defaultSelected ?? (inProps.multiSelect ? defaultDefaultSelected : null),
   } as DefaultProps;
 
-  const [state, setState] = React.useState<TreeViewState>(() =>
-    plugins.reduce((prevState, plugin) => {
-      if (plugin.getInitialState) {
-        const response = plugin.getInitialState(props as UseTreeViewDefaultizedProps<any>);
-        Object.assign(prevState, response);
-      }
-
-      return prevState;
-    }, {} as TreeViewState),
-  );
-
   const models = useTreeViewModels(plugins, props);
-
   const instanceRef = React.useRef<TreeViewInstance>({} as TreeViewInstance);
   const instance = instanceRef.current;
   const rootRef = React.useRef(null);
   const handleRootRef = useForkRef(rootRef, inProps.rootRef);
+
+  const [state, setState] = React.useState<TreeViewState>(() => {
+    const temp = {} as TreeViewState;
+    plugins.forEach((plugin) => {
+      if (plugin.getInitialState) {
+        Object.assign(temp, plugin.getInitialState(props as UseTreeViewDefaultizedProps<any>));
+      }
+    });
+
+    return temp;
+  });
 
   const rootPropsGetters: (<TOther extends EventHandlers = {}>(
     otherHandlers: TOther,
