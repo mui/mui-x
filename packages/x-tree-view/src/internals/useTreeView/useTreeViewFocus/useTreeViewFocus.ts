@@ -58,9 +58,8 @@ export const useTreeViewFocus: TreeViewPlugin<
       setFocusedNodeId(null);
     };
 
-  const activeDescendant = instance.nodeMap[state.focusedNodeId!]
-    ? instance.nodeMap[state.focusedNodeId!].idAttribute
-    : null;
+  const focusedNode = instance.getNode(state.focusedNodeId!);
+  const activeDescendant = focusedNode ? focusedNode.idAttribute : null;
 
   return {
     getRootProps: (otherHandlers) => ({

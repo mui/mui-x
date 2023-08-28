@@ -23,8 +23,8 @@ export const findOrderInTremauxTree = (
     return [nodeAId, nodeBId];
   }
 
-  const nodeA = instance.nodeMap[nodeAId];
-  const nodeB = instance.nodeMap[nodeBId];
+  const nodeA = instance.getNode(nodeAId);
+  const nodeB = instance.getNode(nodeBId);
 
   if (nodeA.parentId === nodeB.id || nodeB.parentId === nodeA.id) {
     return nodeB.parentId === nodeA.id ? [nodeA.id, nodeB.id] : [nodeB.id, nodeA.id];
@@ -48,7 +48,7 @@ export const findOrderInTremauxTree = (
       aAncestorIsCommon = bFamily.indexOf(aAncestor) !== -1;
       continueA = aAncestor !== null;
       if (!aAncestorIsCommon && continueA) {
-        aAncestor = instance.nodeMap[aAncestor!].parentId;
+        aAncestor = instance.getNode(aAncestor!).parentId;
       }
     }
 
@@ -57,7 +57,7 @@ export const findOrderInTremauxTree = (
       bAncestorIsCommon = aFamily.indexOf(bAncestor) !== -1;
       continueB = bAncestor !== null;
       if (!bAncestorIsCommon && continueB) {
-        bAncestor = instance.nodeMap[bAncestor!].parentId;
+        bAncestor = instance.getNode(bAncestor!).parentId;
       }
     }
   }

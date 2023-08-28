@@ -1,9 +1,10 @@
 import { TreeViewNode, DefaultizedProps } from '../../models';
 
 export interface UseTreeViewNodesInstance {
-  isNodeDisabled: (nodeId: string | null) => nodeId is string;
+  getNode: (nodeId: string) => TreeViewNode;
   getChildrenIds: (nodeId: string | null) => string[];
   getNavigableChildrenIds: (nodeId: string | null) => string[];
+  isNodeDisabled: (nodeId: string | null) => nodeId is string;
   registerNode: (node: TreeViewNode) => () => void;
 }
 

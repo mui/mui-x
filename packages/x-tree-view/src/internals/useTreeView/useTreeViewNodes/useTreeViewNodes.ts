@@ -14,13 +14,15 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> 
   props,
   rootRef,
 }) => {
+  const nodeMap = React.useRef<{ [nodeId: string]: TreeViewNode }>({});
+
   const isNodeDisabled = React.useCallback(
     (nodeId: string | null): nodeId is string => {
       if (nodeId == null) {
         return false;
       }
 
-      let node = instance.nodeMap[nodeId];
+      let node = instance.getNode(nodeId);
 
       // This can be called before the node has been added to the node map.
       if (!node) {
@@ -32,7 +34,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> 
       }
 
       while (node.parentId != null) {
-        node = instance.nodeMap[node.parentId];
+        node = instance.getNode(node.parentId);
         if (node.disabled) {
           return true;
         }
@@ -43,12 +45,8 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> 
     [instance],
   );
 
-  // Using Object.keys -> .map to mimic Object.values we should replace with Object.values() once we stop IE11 support.
   const getChildrenIds = useEventCallback((nodeId: string | null) =>
-    Object.keys(instance.nodeMap)
-      .map((key) => {
-        return instance.nodeMap[key];
-      })
+    Object.values(nodeMap.current)
       .filter((node) => node.parentId === nodeId)
       .sort((a, b) => a.index - b.index)
       .map((child) => child.id),
@@ -66,12 +64,12 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> 
   const registerNode = useEventCallback((node: TreeViewNode) => {
     const { id, index, parentId, expandable, idAttribute, disabled } = node;
 
-    instance.nodeMap[id] = { id, index, parentId, expandable, idAttribute, disabled };
+    nodeMap.current[id] = { id, index, parentId, expandable, idAttribute, disabled };
 
     return () => {
-      const newMap = { ...instance.nodeMap };
+      const newMap = { ...nodeMap.current };
       delete newMap[id];
-      instance.nodeMap = newMap;
+      nodeMap.current = newMap;
 
       instance.setFocusedNodeId((oldFocusedNodeId) => {
         if (
@@ -85,10 +83,13 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedProps> 
     };
   });
 
+  const getNode = React.useCallback((nodeId: string) => nodeMap.current[nodeId], []);
+
   populateInstance<UseTreeViewNodesInstance>(instance, {
-    isNodeDisabled,
+    getNode,
     getChildrenIds,
     getNavigableChildrenIds,
+    isNodeDisabled,
     registerNode,
   });
 };

@@ -22,7 +22,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionDefaultize
   );
 
   const isNodeExpandable = React.useCallback(
-    (nodeId: string) => instance.nodeMap[nodeId] && instance.nodeMap[nodeId].expandable,
+    (nodeId: string) => instance.getNode(nodeId) && instance.getNode(nodeId).expandable,
     [instance],
   );
 
@@ -49,8 +49,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionDefaultize
   );
 
   const expandAllSiblings = (event: React.KeyboardEvent<HTMLUListElement>, nodeId: string) => {
-    const map = instance.nodeMap[nodeId];
-    const siblings = instance.getChildrenIds(map.parentId);
+    const node = instance.getNode(nodeId);
+    const siblings = instance.getChildrenIds(node.parentId);
 
     const diff = siblings.filter(
       (child) => instance.isNodeExpandable(child) && !instance.isNodeExpanded(child),

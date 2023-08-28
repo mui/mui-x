@@ -1,7 +1,7 @@
 import { TreeViewInstance } from '../../models';
 
 export const getPreviousNode = (instance: TreeViewInstance, nodeId: string) => {
-  const node = instance.nodeMap[nodeId];
+  const node = instance.getNode(nodeId);
   const siblings = instance.getNavigableChildrenIds(node.parentId);
   const nodeIndex = siblings.indexOf(nodeId);
 
@@ -26,7 +26,7 @@ export const getNextNode = (instance: TreeViewInstance, nodeId: string) => {
     return instance.getNavigableChildrenIds(nodeId)[0];
   }
 
-  let node = instance.nodeMap[nodeId];
+  let node = instance.getNode(nodeId);
   while (node != null) {
     // Try to get next sibling
     const siblings = instance.getNavigableChildrenIds(node.parentId);
@@ -37,7 +37,7 @@ export const getNextNode = (instance: TreeViewInstance, nodeId: string) => {
     }
 
     // If the sibling does not exist, go up a level to the parent and try again.
-    node = instance.nodeMap[node.parentId!];
+    node = instance.getNode(node.parentId!);
   }
 
   return null;

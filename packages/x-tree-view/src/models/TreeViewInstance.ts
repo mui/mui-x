@@ -1,4 +1,3 @@
-import type { TreeViewNode } from '../internals/models';
 import type { UseTreeViewFocusInstance } from '../internals/useTreeView/useTreeViewFocus';
 import type { UseTreeViewExpansionInstance } from '../internals/useTreeView/useTreeViewExpansion';
 import type { UseTreeViewNodesInstance } from '../internals/useTreeView/useTreeViewNodes';
@@ -10,6 +9,4 @@ export interface TreeViewInstance
     UseTreeViewFocusInstance,
     UseTreeViewExpansionInstance,
     UseTreeViewSelectionInstance,
-    UseTreeViewKeyboardNavigationInstance {
-  nodeMap: { [nodeId: string]: TreeViewNode };
-}
+    UseTreeViewKeyboardNavigationInstance {}

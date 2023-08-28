@@ -53,8 +53,6 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     mapFirstChar,
   });
 
-  const getParent = (nodeId: string) => instance.nodeMap[nodeId].parentId;
-
   const handleNextArrow = (event: React.KeyboardEvent<HTMLUListElement>) => {
     if (state.focusedNodeId != null && instance.isNodeExpandable(state.focusedNodeId)) {
       if (instance.isNodeExpanded(state.focusedNodeId)) {
@@ -79,7 +77,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       return true;
     }
 
-    const parent = getParent(state.focusedNodeId);
+    const parent = instance.getNode(state.focusedNodeId).parentId;
     if (parent) {
       instance.focusNode(event, parent);
       return true;
@@ -100,7 +98,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     const firstChars: string[] = [];
     // This really only works since the ids are strings
     Object.keys(firstCharMap.current).forEach((mapNodeId) => {
-      const map = instance.nodeMap[mapNodeId];
+      const map = instance.getNode(mapNodeId);
       const visible = map.parentId ? instance.isNodeExpanded(map.parentId) : true;
       const shouldBeSkipped = props.disabledItemsFocusable
         ? false

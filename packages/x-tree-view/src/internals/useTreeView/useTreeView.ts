@@ -52,7 +52,7 @@ export const useTreeView = <Multiple extends boolean | undefined>(
 
   const models = useTreeViewModels(plugins, props);
 
-  const instanceRef = React.useRef<TreeViewInstance>({ nodeMap: {} } as TreeViewInstance);
+  const instanceRef = React.useRef<TreeViewInstance>({} as TreeViewInstance);
   const instance = instanceRef.current;
   const rootRef = React.useRef(null);
   const handleRootRef = useForkRef(rootRef, inProps.rootRef);
