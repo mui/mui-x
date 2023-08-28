@@ -152,7 +152,7 @@ export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
   onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
   onFocus?: () => void;
   onBlur?: () => void;
   error?: boolean;

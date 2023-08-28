@@ -105,8 +105,14 @@ export const useField = <
     setSelectedSections(sectionIndex);
   };
 
-  const handleInputClick = useEventCallback((...args) => {
-    onClick?.(...(args as []));
+  const handleInputClick = useEventCallback((event: React.MouseEvent, ...args) => {
+    // The click event on the clear button would propagate to the input, trigger this handler and result in a wrong section selection.
+    // We avoid this by checking if the call of `handleInputClick` is actually intended, or a side effect.
+    if (event.isDefaultPrevented()) {
+      return;
+    }
+
+    onClick?.(event, ...(args as []));
     syncSelectionFromDOM();
   });
 
@@ -505,8 +511,6 @@ export const useField = <
   }));
 
   const handleClearValue = useEventCallback((event: React.MouseEvent, ...args) => {
-    // the click event on the endAdornment would propagate to the input and trigger the `handleInputClick` handler.
-    event.stopPropagation();
     event.preventDefault();
     onClear?.(event, ...(args as []));
     clearValue();
