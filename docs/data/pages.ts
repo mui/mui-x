@@ -199,16 +199,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/base-concepts' },
 
       {
-        pathname: '/x/react-date-pickers/common-features',
-        subheader: 'Common features',
-        children: [
-          { pathname: '/x/react-date-pickers/validation' },
-          { pathname: '/x/react-date-pickers/lifecycle', title: 'Components lifecycle' },
-          { pathname: '/x/react-date-pickers/shortcuts' },
-        ],
-      },
-
-      {
         pathname: '/x/react-date-pickers-components',
         subheader: 'Components',
         children: [
@@ -306,6 +296,16 @@ const pages: MuiPage[] = [
             ],
           },
           { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
+        ],
+      },
+
+      {
+        pathname: '/x/react-date-pickers/common-features',
+        subheader: 'Common features',
+        children: [
+          { pathname: '/x/react-date-pickers/validation' },
+          { pathname: '/x/react-date-pickers/lifecycle', title: 'Components lifecycle' },
+          { pathname: '/x/react-date-pickers/shortcuts' },
         ],
       },
 
