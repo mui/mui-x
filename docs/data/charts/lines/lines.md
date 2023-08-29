@@ -1,5 +1,5 @@
 ---
-title: Charts - Lines
+title: React Line chart
 ---
 
 # Charts - Lines
