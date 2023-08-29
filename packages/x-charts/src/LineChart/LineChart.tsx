@@ -191,7 +191,7 @@ LineChart.propTypes = {
   desc: PropTypes.string,
   disableAxisListener: PropTypes.bool,
   /**
-   * Render the line highlight item if `true`.
+   * If `true`, render the line highlight item.
    */
   disableLineItemHighlight: PropTypes.bool,
   height: PropTypes.number,

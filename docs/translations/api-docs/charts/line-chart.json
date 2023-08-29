@@ -12,7 +12,7 @@
       "typeDescriptions": {}
     },
     "disableLineItemHighlight": {
-      "description": "Render the line highlight item if <code>true</code>.",
+      "description": "If <code>true</code>, render the line highlight item.",
       "deprecated": "",
       "typeDescriptions": {}
     },
