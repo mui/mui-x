@@ -9,7 +9,11 @@ import {
   gridStringOrNumberComparator,
   isLeaf,
 } from '@mui/x-data-grid-pro';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import {
+  DataGridPremiumProps,
+  DataGridPremiumProcessedProps,
+} from '../../../models/dataGridPremiumProps';
 import { GridAggregationModel } from '../aggregation';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 
@@ -207,9 +211,11 @@ export const useGridPivoting = ({
   apiRef: React.MutableRefObject<GridApiPremium>;
 }) => {
   const [isPivot, setIsPivot] = React.useState(false);
+  const exportedStateRef = React.useRef<GridInitialStatePremium | null>(null);
 
   const props = React.useMemo(() => {
     if (isPivot) {
+      exportedStateRef.current = apiRef.current.exportState();
       return getPivotedData({
         rows,
         columns,
@@ -217,7 +223,16 @@ export const useGridPivoting = ({
         apiRef,
       });
     }
-    return { rows, columns };
+
+    const nonPivotProps: {
+      rows: DataGridPremiumProps['rows'];
+      columns: DataGridPremiumProps['columns'];
+      initialState?: DataGridPremiumProps['initialState'];
+    } = { rows, columns };
+    if (exportedStateRef.current) {
+      nonPivotProps.initialState = exportedStateRef.current;
+    }
+    return nonPivotProps;
   }, [isPivot, columns, rows, pivotModel, apiRef]);
 
   return {
