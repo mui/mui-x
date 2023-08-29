@@ -67,7 +67,8 @@ To show mark elements, use `showMark` series property.
 It accepts a boolean or a callback.
 The next example shows how to use it to display only one mark every two data points.
 
-When the value is highlighted, an additional mark is rendered over the other ones.
+When a value is highlighted, a mark is rendered for that given value.
+If the charts already have some marks (due to `showMark=true`) the highlight one will be on top of others.
 
 This behavior can be removed with the `disableHighlight` series property or at the root of the line chart with a `disableLineItemHighlight` prop.
 
