@@ -1,4 +1,4 @@
-import { TreeViewInstance, TreeViewPluginSignature, TreeViewUsedInstance } from '../../models';
+import { TreeViewAnyPluginSignature, TreeViewInstance, TreeViewUsedInstance } from '../../models';
 import type { UseTreeViewExpansionSignature } from './useTreeViewExpansion';
 import type { UseTreeViewNodesSignature } from './useTreeViewNodes';
 
@@ -65,7 +65,7 @@ export const getLastNode = (
 export const getFirstNode = (instance: TreeViewInstance<[UseTreeViewNodesSignature]>) =>
   instance.getNavigableChildrenIds(null)[0];
 
-export const populateInstance = <T extends TreeViewPluginSignature<any, any, any, any, any>>(
+export const populateInstance = <T extends TreeViewAnyPluginSignature>(
   instance: TreeViewUsedInstance<T>,
   methods: T['instance'],
 ) => {

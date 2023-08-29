@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TreeViewModels, TreeViewPlugin, TreeViewPluginSignature } from '../../models';
+import { TreeViewAnyPluginSignature, TreeViewModels, TreeViewPlugin } from '../../models';
 import { MergePluginsProperty } from '../models';
 
 /**
@@ -7,7 +7,7 @@ import { MergePluginsProperty } from '../models';
  * The controlled models are never stored in the state and the state is only updated if the model is not controlled.
  */
 export const useTreeViewModels = <
-  TPlugins extends readonly TreeViewPlugin<TreeViewPluginSignature<any, any, any, any, any>>[],
+  TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 >(
   plugins: TPlugins,
   props: MergePluginsProperty<TPlugins, 'defaultizedParams'>,

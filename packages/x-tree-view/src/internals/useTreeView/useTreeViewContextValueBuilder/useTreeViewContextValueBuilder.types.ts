@@ -3,7 +3,7 @@ import { TreeViewPluginSignature } from '../../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
-export interface UseTreeViewContextParameters {
+export interface UseTreeViewContextValueBuilderParameters {
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
@@ -29,11 +29,12 @@ export interface UseTreeViewContextParameters {
   defaultParentIcon?: React.ReactNode;
 }
 
-export type UseTreeViewContextDefaultizedParameters = UseTreeViewContextParameters;
+export type UseTreeViewContextValueBuilderDefaultizedParameters =
+  UseTreeViewContextValueBuilderParameters;
 
-export type UseTreeViewContextSignature = TreeViewPluginSignature<
-  UseTreeViewContextParameters,
-  UseTreeViewContextDefaultizedParameters,
+export type UseTreeViewContextValueBuilderSignature = TreeViewPluginSignature<
+  UseTreeViewContextValueBuilderParameters,
+  UseTreeViewContextValueBuilderDefaultizedParameters,
   {},
   {},
   [UseTreeViewNodesSignature, UseTreeViewSelectionSignature]

@@ -17,17 +17,18 @@ import type {
   UseTreeViewNodesDefaultizedParameters,
 } from './useTreeViewNodes';
 import type {
-  UseTreeViewContextParameters,
-  UseTreeViewContextDefaultizedParameters,
-} from './useTreeViewContext';
+  UseTreeViewContextValueBuilderParameters,
+  UseTreeViewContextValueBuilderDefaultizedParameters,
+} from './useTreeViewContextValueBuilder';
 import type { TreeViewContextValue } from '../TreeViewProvider';
+import { TreeViewAnyPluginSignature } from '../../models';
 
 export interface UseTreeViewParameters<Multiple extends boolean | undefined>
   extends UseTreeViewNodesParameters,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewContextParameters {
+    UseTreeViewContextValueBuilderParameters {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
 }
 
@@ -36,7 +37,7 @@ export interface UseTreeViewDefaultizedParameters<Multiple extends boolean>
     UseTreeViewExpansionDefaultizedParameters,
     UseTreeViewFocusDefaultizedParameters,
     UseTreeViewSelectionDefaultizedParameters<Multiple>,
-    UseTreeViewContextDefaultizedParameters {
+    UseTreeViewContextValueBuilderDefaultizedParameters {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
 }
 
@@ -55,10 +56,10 @@ export interface UseTreeViewRootSlotProps
   ref: React.Ref<HTMLUListElement>;
 }
 
-export interface UseTreeViewReturnValue {
+export interface UseTreeViewReturnValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
   getRootProps: <TOther extends EventHandlers = {}>(
     otherHandlers?: TOther,
   ) => UseTreeViewRootSlotProps;
   rootRef: React.Ref<HTMLUListElement>;
-  contextValue: TreeViewContextValue;
+  contextValue: TreeViewContextValue<TPlugins>;
 }

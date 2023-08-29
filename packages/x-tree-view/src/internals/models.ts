@@ -1,4 +1,4 @@
-import type { TreeViewPlugin, TreeViewPluginSignature } from '../models';
+import type { TreeViewPlugin, TreeViewAnyPluginSignature } from '../models';
 
 export type DefaultizedProps<
   P extends {},
@@ -10,18 +10,18 @@ export type DefaultizedProps<
 
 export type MergePluginsProperty<
   TPlugins extends readonly any[],
-  TProperty extends keyof TreeViewPluginSignature<any, any, any, any, any>,
+  TProperty extends keyof TreeViewAnyPluginSignature,
 > = TPlugins extends readonly [plugin: infer P, ...otherPlugin: infer R]
-  ? P extends TreeViewPluginSignature<any, any, any, any, any>
+  ? P extends TreeViewAnyPluginSignature
     ? P[TProperty] & MergePluginsProperty<R, TProperty>
     : {}
   : {};
 
-export type ConvertPluginsIntoSignature<TPlugins extends readonly any[]> =
+export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
   TPlugins extends readonly [plugin: infer P, ...otherPlugin: infer R]
     ? P extends TreeViewPlugin<infer TSignature>
-      ? [TSignature, ...ConvertPluginsIntoSignature<R>]
-      : ConvertPluginsIntoSignature<R>
+      ? [TSignature, ...ConvertPluginsIntoSignatures<R>]
+      : ConvertPluginsIntoSignatures<R>
     : [];
 
 export interface TreeViewNode {

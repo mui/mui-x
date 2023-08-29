@@ -1,12 +1,10 @@
 import useId from '@mui/utils/useId';
 import { TreeViewInstance, TreeViewPlugin } from '../../../models';
-import { UseTreeViewContextSignature } from './useTreeViewContext.types';
-import type { DefaultPlugins } from '../useTreeView';
+import { UseTreeViewContextValueBuilderSignature } from './useTreeViewContextValueBuilder.types';
 
-export const useTreeViewContext: TreeViewPlugin<UseTreeViewContextSignature> = ({
-  instance,
-  props,
-}) => {
+export const useTreeViewContextValueBuilder: TreeViewPlugin<
+  UseTreeViewContextValueBuilderSignature
+> = ({ instance, props }) => {
   const treeId = useId(props.id);
 
   return {
@@ -15,7 +13,7 @@ export const useTreeViewContext: TreeViewPlugin<UseTreeViewContextSignature> = (
     }),
     contextValue: {
       treeId,
-      instance: instance as TreeViewInstance<DefaultPlugins>,
+      instance: instance as TreeViewInstance<any>,
       multiSelect: props.multiSelect,
       disabledItemsFocusable: props.disabledItemsFocusable,
       icons: {

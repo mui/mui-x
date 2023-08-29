@@ -8,7 +8,6 @@ import useForkRef from '@mui/utils/useForkRef';
 import unsupportedProp from '@mui/utils/unsupportedProp';
 import elementTypeAcceptingRef from '@mui/utils/elementTypeAcceptingRef';
 import { unstable_composeClasses as composeClasses } from '@mui/base';
-import { TreeViewContext } from '../internals/TreeViewProvider/TreeViewContext';
 import {
   DescendantProvider,
   TreeItemDescendant,
@@ -17,6 +16,8 @@ import {
 import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
+import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
+import { DefaultPlugins } from '../internals/useTreeView/useTreeView';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -180,7 +181,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     disabledItemsFocusable,
     treeId,
     instance,
-  } = React.useContext(TreeViewContext);
+  } = useTreeViewContext<DefaultPlugins>();
 
   let id: string | undefined;
   if (idProp != null) {

@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { TreeViewInstance } from '../../models';
-import type { DefaultPlugins } from '../useTreeView/useTreeView';
+import { TreeViewAnyPluginSignature, TreeViewInstance } from '../../models';
 
-export interface TreeViewContextValue {
+export interface TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
   treeId: string | undefined;
-  instance: TreeViewInstance<DefaultPlugins> | null;
+  instance: TreeViewInstance<TPlugins> | null;
   multiSelect: boolean;
   disabledItemsFocusable: boolean;
   icons: {
@@ -15,7 +14,7 @@ export interface TreeViewContextValue {
   };
 }
 
-export interface TreeViewProviderProps {
-  value: TreeViewContextValue;
+export interface TreeViewProviderProps<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
+  value: TreeViewContextValue<TPlugins>;
   children: React.ReactNode;
 }
