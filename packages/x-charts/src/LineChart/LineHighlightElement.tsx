@@ -12,7 +12,7 @@ export interface LineHighlightElementClasses {
 
 export type HighlightElementClassKey = keyof LineHighlightElementClasses;
 
-export interface LineHighlightElementOwnerState {
+interface LineHighlightElementOwnerState {
   id: string;
   color: string;
   x: number;

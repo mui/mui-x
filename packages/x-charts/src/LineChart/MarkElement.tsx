@@ -25,7 +25,7 @@ export interface MarkElementClasses {
 
 export type MarkElementClassKey = keyof MarkElementClasses;
 
-export interface MarkElementOwnerState {
+interface MarkElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;
