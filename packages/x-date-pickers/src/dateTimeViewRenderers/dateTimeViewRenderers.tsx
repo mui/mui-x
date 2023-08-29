@@ -42,6 +42,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
   onFocusedViewChange,
   value,
   defaultValue,
+  referenceDate,
   onChange,
   className,
   classes,
@@ -100,6 +101,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
           onFocusedViewChange={onFocusedViewChange}
           value={value}
           defaultValue={defaultValue}
+          referenceDate={referenceDate}
           onChange={onChange}
           className={className}
           classes={classes}
@@ -144,6 +146,7 @@ export const renderDesktopDateTimeView = <TDate extends unknown>({
               views={views.filter(isInternalTimeView)}
               value={value}
               defaultValue={defaultValue}
+              referenceDate={referenceDate}
               onChange={onChange}
               className={className}
               classes={classes}
