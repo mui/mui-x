@@ -38,6 +38,10 @@ import {
   RangeFieldSection,
   FieldSection,
 } from '@mui/x-date-pickers-pro';
+import type {
+  SingleInputDateRangeFieldSlotsComponent,
+  SingleInputDateRangeFieldSlotsComponentsProps,
+} from '@mui/x-date-pickers-pro/SingleInputDateRangeField/SingleInputDateRangeField.types';
 
 interface BrowserFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -105,15 +109,16 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
     ref: React.Ref<HTMLInputElement>,
   ) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
+    const { color, ...ownerState } = props;
 
     const {
       inputRef: externalInputRef,
       ...textFieldProps
     }: SingleInputDateRangeFieldProps<Dayjs> = useSlotProps({
-      elementType: null as any,
+      elementType: 'input',
       externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
-      ownerState: props as any,
+      ownerState,
     });
 
     const {
@@ -132,8 +137,8 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
       useClearableField<
         {},
         typeof textFieldProps.InputProps,
-        DateFieldSlotsComponent,
-        DateFieldSlotsComponentsProps<Dayjs>
+        SingleInputDateRangeFieldSlotsComponent,
+        SingleInputDateRangeFieldSlotsComponentsProps<Dayjs>
       >({
         onClear,
         clearable,
@@ -146,15 +151,15 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
             </IconButton>
           ),
         },
-        slots: inSlots as any,
-        slotProps: inSlotProps as any,
+        slots: inSlots,
+        slotProps: inSlotProps,
       });
 
     return (
       <BrowserField
         {...processedFieldProps}
         style={{
-          minWidth: 300,
+          width: '100%',
         }}
         InputProps={{ ...ProcessedInputProps, ref }}
       />
@@ -334,6 +339,9 @@ export default function PickerWithBrowserField() {
         <BrowserSingleInputDateRangePicker
           slotProps={{
             field: { clearable: true },
+          }}
+          sx={{
+            width: '100%',
           }}
         />
         <BrowserDateRangePicker />

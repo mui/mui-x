@@ -45,12 +45,13 @@ const BrowserField = React.forwardRef((props, inputRef) => {
 
 const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, onAdornmentClick, ...other } = props;
+  const { color, ...ownerState } = props;
 
   const { inputRef: externalInputRef, ...textFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
-    ownerState: props,
+    ownerState,
   });
 
   const {
@@ -86,7 +87,7 @@ const BrowserSingleInputDateRangeField = React.forwardRef((props, ref) => {
     <BrowserField
       {...processedFieldProps}
       style={{
-        minWidth: 300,
+        width: '100%',
       }}
       InputProps={{ ...ProcessedInputProps, ref }}
     />
@@ -230,6 +231,9 @@ export default function PickerWithBrowserField() {
         <BrowserSingleInputDateRangePicker
           slotProps={{
             field: { clearable: true },
+          }}
+          sx={{
+            width: '100%',
           }}
         />
         <BrowserDateRangePicker />

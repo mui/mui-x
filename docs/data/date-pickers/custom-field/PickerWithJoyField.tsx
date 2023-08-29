@@ -53,6 +53,10 @@ import {
   RangeFieldSection,
   FieldSection,
 } from '@mui/x-date-pickers-pro';
+import type {
+  SingleInputDateRangeFieldSlotsComponent,
+  SingleInputDateRangeFieldSlotsComponentsProps,
+} from '@mui/x-date-pickers-pro/SingleInputDateRangeField/SingleInputDateRangeField.types';
 
 const joyTheme = extendJoyTheme();
 
@@ -147,10 +151,10 @@ const JoySingleInputDateRangeField = React.forwardRef(
     const {
       onClear,
       clearable,
-      slots: rangeSlots,
-      slotProps: rangeSlotProps,
+      slots: inSlots,
+      slotProps: inSlotProps,
       ...fieldProps
-    } = useSingleInputDateRangeField<Dayjs, JoyFieldProps>({
+    } = useSingleInputDateRangeField<Dayjs, typeof textFieldProps>({
       props: textFieldProps,
       inputRef: externalInputRef,
     });
@@ -160,15 +164,15 @@ const JoySingleInputDateRangeField = React.forwardRef(
       useClearableField<
         {},
         typeof textFieldProps.InputProps,
-        DateFieldSlotsComponent,
-        DateFieldSlotsComponentsProps<Dayjs>
+        SingleInputDateRangeFieldSlotsComponent,
+        SingleInputDateRangeFieldSlotsComponentsProps<Dayjs>
       >({
         onClear,
         clearable,
         fieldProps,
         InputProps: fieldProps.InputProps,
-        slots: rangeSlots as any,
-        slotProps: rangeSlotProps as any,
+        slots: inSlots,
+        slotProps: inSlotProps,
       });
 
     return (

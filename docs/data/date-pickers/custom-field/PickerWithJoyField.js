@@ -92,8 +92,8 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   const {
     onClear,
     clearable,
-    slots: rangeSlots,
-    slotProps: rangeSlotProps,
+    slots: inSlots,
+    slotProps: inSlotProps,
     ...fieldProps
   } = useSingleInputDateRangeField({
     props: textFieldProps,
@@ -107,8 +107,8 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
       clearable,
       fieldProps,
       InputProps: fieldProps.InputProps,
-      slots: rangeSlots,
-      slotProps: rangeSlotProps,
+      slots: inSlots,
+      slotProps: inSlotProps,
     });
 
   return (
