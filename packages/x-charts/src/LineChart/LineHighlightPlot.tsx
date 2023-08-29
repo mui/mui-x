@@ -69,7 +69,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
           if (xData === undefined) {
             throw new Error(
-              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+              `Axis of id "${xAxisKey}" should have data property to be able to display a line plot.`,
             );
           }
           const x = xScale(xData[highlightedIndex]);

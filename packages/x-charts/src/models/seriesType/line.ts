@@ -57,9 +57,9 @@ export interface LineSeriesType
   label?: string;
   curve?: CurveType;
   /**
-   * Define which items o the series should display a mark.
+   * Define which items of the series should display a mark.
    * If can be a boolean that applies to all items.
-   * Or a callback that get some item properties and returns true if the item should be displayed.
+   * Or a callback that gets some item properties and returns true if the item should be displayed.
    */
   showMark?: boolean | ((params: ShowMarkParams) => boolean);
   /**
