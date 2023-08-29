@@ -20,18 +20,19 @@ export default function StackedAreaChart() {
       width={500}
       height={300}
       series={[
-        { data: uData, label: 'uv', area: true, stack: 'total' },
-        { data: pData, label: 'pv', area: true, stack: 'total' },
+        { data: uData, label: 'uv', area: true, stack: 'total', showMark: false },
+        { data: pData, label: 'pv', area: true, stack: 'total', showMark: false },
         {
           data: amtData,
           label: 'amt',
           area: true,
           stack: 'total',
+          showMark: false,
         },
       ]}
       xAxis={[{ scaleType: 'point', data: xLabels }]}
       sx={{
-        '.MuiLineElement-root, .MuiMarkElement-root': {
+        '.MuiLineElement-root': {
           display: 'none',
         },
       }}

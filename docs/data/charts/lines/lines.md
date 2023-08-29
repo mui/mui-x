@@ -93,9 +93,6 @@ sx={{
     strokeDasharray: '10 5',
     strokeWidth: 4,
   },
-  '& .MuiMarkElement-root': {
-    display: 'none',
-  },
   '& .MuiAreaElement-series-Germany': {
     fill: "url('#myGradient')",
   },

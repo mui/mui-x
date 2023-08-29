@@ -29,6 +29,7 @@ export default function PercentAreaChart() {
           label: 'a',
           area: true,
           stack: 'total',
+          showMark: false,
         },
         {
           data: getPercents(b),
@@ -36,6 +37,7 @@ export default function PercentAreaChart() {
           label: 'b',
           area: true,
           stack: 'total',
+          showMark: false,
         },
         {
           data: getPercents(c),
@@ -43,6 +45,7 @@ export default function PercentAreaChart() {
           label: 'c',
           area: true,
           stack: 'total',
+          showMark: false,
         },
       ]}
       xAxis={[
@@ -53,11 +56,6 @@ export default function PercentAreaChart() {
           max: time[time.length - 1].getTime(),
         },
       ]}
-      sx={{
-        '.MuiMarkElement-root': {
-          display: 'none',
-        },
-      }}
     />
   );
 }
