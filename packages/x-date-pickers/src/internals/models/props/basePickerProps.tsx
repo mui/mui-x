@@ -15,9 +15,9 @@ export interface BasePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TValue, TDate, TView, any, any>,
   TAdditionalProps extends {},
-> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps, TAdditionalProps> {
+> extends UsePickerBaseProps<TValue, TDate, TView, TError, TExternalProps, TAdditionalProps> {
   /**
    * Class name applied to the root element.
    */
