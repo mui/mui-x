@@ -3,14 +3,16 @@ import { TreeViewPlugin } from '../../../models';
 import { TreeViewItemRange } from '../../models';
 import { populateInstance, getNextNode, getFirstNode, getLastNode } from '../useTreeView.utils';
 import {
-  UseTreeViewSelectionInstance,
   UseTreeViewSelectionDefaultizedParameters,
+  UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
-export const useTreeViewSelection: TreeViewPlugin<
-  UseTreeViewSelectionDefaultizedParameters<any>
-> = ({ instance, props, models }) => {
+export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
+  instance,
+  props,
+  models,
+}) => {
   const lastSelectedNode = React.useRef<string | null>(null);
   const lastSelectionWasRange = React.useRef(false);
   const currentRangeSelection = React.useRef<string[]>([]);
@@ -175,7 +177,7 @@ export const useTreeViewSelection: TreeViewPlugin<
     });
   };
 
-  populateInstance<UseTreeViewSelectionInstance>(instance, {
+  populateInstance<UseTreeViewSelectionSignature>(instance, {
     isNodeSelected,
     selectNode,
     selectRange,

@@ -1,5 +1,8 @@
 import * as React from 'react';
 import type { DefaultizedProps, TreeViewItemRange } from '../../models';
+import { TreeViewPluginSignature } from '../../../models';
+import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewExpansionSignature } from '../useTreeViewExpansion';
 
 export interface UseTreeViewSelectionInstance {
   isNodeSelected: (nodeId: string) => boolean;
@@ -50,4 +53,12 @@ export interface UseTreeViewSelectionParameters<Multiple extends boolean | undef
 export type UseTreeViewSelectionDefaultizedParameters<Multiple extends boolean> = DefaultizedProps<
   UseTreeViewSelectionParameters<Multiple>,
   'disableSelection' | 'defaultSelected' | 'multiSelect'
+>;
+
+export type UseTreeViewSelectionSignature = TreeViewPluginSignature<
+  UseTreeViewSelectionParameters<any>,
+  UseTreeViewSelectionDefaultizedParameters<any>,
+  UseTreeViewSelectionInstance,
+  {},
+  [UseTreeViewNodesSignature, UseTreeViewExpansionSignature, UseTreeViewNodesSignature]
 >;

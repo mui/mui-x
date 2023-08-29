@@ -1,19 +1,21 @@
 import * as React from 'react';
-import { TreeViewModels, TreeViewPlugin } from '../../models';
-import { UseTreeViewDefaultizedParameters } from './useTreeView.types';
+import { TreeViewModels, TreeViewPlugin, TreeViewPluginSignature } from '../../models';
+import { MergePluginsProperty } from '../models';
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
  * The controlled models are never stored in the state and the state is only updated if the model is not controlled.
  */
-export const useTreeViewModels = <Multiple extends boolean>(
-  plugins: TreeViewPlugin<UseTreeViewDefaultizedParameters<any>>[],
-  props: UseTreeViewDefaultizedParameters<Multiple>,
+export const useTreeViewModels = <
+  TPlugins extends readonly TreeViewPlugin<TreeViewPluginSignature<any, any, any, any, any>>[],
+>(
+  plugins: TPlugins,
+  props: MergePluginsProperty<TPlugins, 'defaultizedParams'>,
 ) => {
   const modelsRef = React.useRef<{
     [modelName: string]: {
-      controlledProp: keyof UseTreeViewDefaultizedParameters<true>;
-      defaultProp: keyof UseTreeViewDefaultizedParameters<true>;
+      controlledProp: keyof typeof props;
+      defaultProp: keyof typeof props;
       isControlled: boolean;
     };
   }>({});
@@ -24,11 +26,11 @@ export const useTreeViewModels = <Multiple extends boolean>(
     plugins.forEach((plugin) => {
       plugin.models?.forEach((model) => {
         modelsRef.current[model.name] = {
-          controlledProp: model.controlledProp,
-          defaultProp: model.defaultProp,
-          isControlled: props[model.controlledProp] !== undefined,
+          controlledProp: model.controlledProp as keyof typeof props,
+          defaultProp: model.defaultProp as keyof typeof props,
+          isControlled: props[model.controlledProp as keyof typeof props] !== undefined,
         };
-        initialState[model.name] = props[model.defaultProp];
+        initialState[model.name] = props[model.defaultProp as keyof typeof props];
       });
     });
 
@@ -54,7 +56,7 @@ export const useTreeViewModels = <Multiple extends boolean>(
         },
       ];
     }),
-  ) as unknown as TreeViewModels<Multiple>;
+  ) as unknown as TreeViewModels<any>;
 
   // We know that `modelsRef` do not vary across renders.
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */

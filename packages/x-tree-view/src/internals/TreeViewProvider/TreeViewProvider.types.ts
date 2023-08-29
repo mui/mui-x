@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { TreeViewInstance } from '../../models';
+import type { DefaultPlugins } from '../useTreeView/useTreeView';
 
 export interface TreeViewContextValue {
   treeId: string | undefined;
-  instance: TreeViewInstance | null;
+  instance: TreeViewInstance<DefaultPlugins> | null;
   multiSelect: boolean;
   disabledItemsFocusable: boolean;
   icons: {

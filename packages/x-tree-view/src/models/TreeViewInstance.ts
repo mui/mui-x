@@ -1,12 +1,7 @@
-import type { UseTreeViewFocusInstance } from '../internals/useTreeView/useTreeViewFocus';
-import type { UseTreeViewExpansionInstance } from '../internals/useTreeView/useTreeViewExpansion';
-import type { UseTreeViewNodesInstance } from '../internals/useTreeView/useTreeViewNodes';
-import type { UseTreeViewSelectionInstance } from '../internals/useTreeView/useTreeViewSelection';
-import type { UseTreeViewKeyboardNavigationInstance } from '../internals/useTreeView/useTreeViewKeyboardNavigation';
+import { MergePluginsProperty } from '../internals/models';
+import { TreeViewPluginSignature } from './TreeViewPlugin';
 
-export interface TreeViewInstance
-  extends UseTreeViewNodesInstance,
-    UseTreeViewFocusInstance,
-    UseTreeViewExpansionInstance,
-    UseTreeViewSelectionInstance,
-    UseTreeViewKeyboardNavigationInstance {}
+// TODO: Stop hard-coding plugins
+export type TreeViewInstance<
+  TSignatures extends TreeViewPluginSignature<any, any, any, any, any>[],
+> = MergePluginsProperty<TSignatures, 'instance'>;

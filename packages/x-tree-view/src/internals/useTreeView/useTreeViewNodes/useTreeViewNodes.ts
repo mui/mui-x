@@ -3,13 +3,10 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import { TreeViewPlugin } from '../../../models';
 import { populateInstance } from '../useTreeView.utils';
-import {
-  UseTreeViewNodesInstance,
-  UseTreeViewNodesDefaultizedParameters,
-} from './useTreeViewNodes.types';
+import { UseTreeViewNodesSignature } from './useTreeViewNodes.types';
 import { TreeViewNode } from '../../models';
 
-export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedParameters> = ({
+export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
   props,
   rootRef,
@@ -85,7 +82,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesDefaultizedParamet
 
   const getNode = React.useCallback((nodeId: string) => nodeMap.current[nodeId], []);
 
-  populateInstance<UseTreeViewNodesInstance>(instance, {
+  populateInstance<UseTreeViewNodesSignature>(instance, {
     getNode,
     getChildrenIds,
     getNavigableChildrenIds,

@@ -13,10 +13,6 @@ import type {
   UseTreeViewSelectionDefaultizedParameters,
 } from './useTreeViewSelection';
 import type {
-  UseTreeViewKeyboardNavigationParameters,
-  UseTreeViewKeyboardNavigationDefaultizedParameters,
-} from './useTreeViewKeyboardNavigation';
-import type {
   UseTreeViewNodesParameters,
   UseTreeViewNodesDefaultizedParameters,
 } from './useTreeViewNodes';
@@ -31,7 +27,6 @@ export interface UseTreeViewParameters<Multiple extends boolean | undefined>
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,
     UseTreeViewSelectionParameters<Multiple>,
-    UseTreeViewKeyboardNavigationParameters,
     UseTreeViewContextParameters {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
 }
@@ -41,7 +36,6 @@ export interface UseTreeViewDefaultizedParameters<Multiple extends boolean>
     UseTreeViewExpansionDefaultizedParameters,
     UseTreeViewFocusDefaultizedParameters,
     UseTreeViewSelectionDefaultizedParameters<Multiple>,
-    UseTreeViewKeyboardNavigationDefaultizedParameters,
     UseTreeViewContextDefaultizedParameters {
   rootRef?: React.Ref<HTMLUListElement> | undefined;
 }

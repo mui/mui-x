@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { EventHandlers } from '@mui/base/utils';
-import { TreeViewInstance, TreeViewPlugin, TreeViewState } from '../../models';
+import { TreeViewInstance, TreeViewPlugin } from '../../models';
 import { useTreeViewNodes } from './useTreeViewNodes';
 import { useTreeViewSelection } from './useTreeViewSelection';
 import { useTreeViewFocus } from './useTreeViewFocus';
@@ -16,15 +16,20 @@ import {
 } from './useTreeView.types';
 import { DEFAULT_TREE_VIEW_CONTEXT_VALUE } from '../TreeViewProvider/TreeViewContext';
 import { useTreeViewModels } from './useTreeViewModels';
+import { ConvertPluginsIntoSignature, MergePluginsProperty } from '../models';
 
-const plugins: TreeViewPlugin<UseTreeViewDefaultizedParameters<any>>[] = [
+const plugins = [
   useTreeViewNodes,
   useTreeViewExpansion,
   useTreeViewSelection,
   useTreeViewFocus,
   useTreeViewKeyboardNavigation,
   useTreeViewContext,
-];
+] as const;
+
+export type DefaultPlugins = ConvertPluginsIntoSignature<typeof plugins>;
+
+type TreeViewState = MergePluginsProperty<typeof plugins, 'state'>;
 
 const defaultDefaultExpanded: string[] = [];
 const defaultDefaultSelected: string[] = [];
@@ -44,8 +49,13 @@ export const useTreeView = <Multiple extends boolean | undefined>(
       inProps.defaultSelected ?? (inProps.multiSelect ? defaultDefaultSelected : null),
   } as DefaultProps;
 
-  const models = useTreeViewModels(plugins, props);
-  const instanceRef = React.useRef<TreeViewInstance>({} as TreeViewInstance);
+  const models = useTreeViewModels(
+    plugins,
+    props as MergePluginsProperty<DefaultPlugins, 'defaultizedParams'>,
+  );
+  const instanceRef = React.useRef<TreeViewInstance<DefaultPlugins>>(
+    {} as TreeViewInstance<DefaultPlugins>,
+  );
   const instance = instanceRef.current;
   const innerRootRef = React.useRef(null);
   const handleRootRef = useForkRef(innerRootRef, inProps.rootRef);

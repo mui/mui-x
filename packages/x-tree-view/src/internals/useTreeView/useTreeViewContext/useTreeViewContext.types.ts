@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { TreeViewPluginSignature } from '../../../models';
+import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
+import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
 export interface UseTreeViewContextParameters {
   /**
@@ -27,3 +30,11 @@ export interface UseTreeViewContextParameters {
 }
 
 export type UseTreeViewContextDefaultizedParameters = UseTreeViewContextParameters;
+
+export type UseTreeViewContextSignature = TreeViewPluginSignature<
+  UseTreeViewContextParameters,
+  UseTreeViewContextDefaultizedParameters,
+  {},
+  {},
+  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature]
+>;

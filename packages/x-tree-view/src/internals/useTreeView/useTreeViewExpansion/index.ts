@@ -1,6 +1,6 @@
 export { useTreeViewExpansion } from './useTreeViewExpansion';
 export type {
-  UseTreeViewExpansionInstance,
+  UseTreeViewExpansionSignature,
   UseTreeViewExpansionParameters,
   UseTreeViewExpansionDefaultizedParameters,
 } from './useTreeViewExpansion.types';

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { TreeViewPluginSignature } from '../../../models';
+import type { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 export interface UseTreeViewFocusInstance {
   isNodeFocused: (nodeId: string) => boolean;
@@ -21,3 +23,11 @@ export type UseTreeViewFocusDefaultizedParameters = UseTreeViewFocusParameters;
 export interface UseTreeViewFocusState {
   focusedNodeId: string | null;
 }
+
+export type UseTreeViewFocusSignature = TreeViewPluginSignature<
+  UseTreeViewFocusParameters,
+  UseTreeViewFocusParameters,
+  UseTreeViewFocusInstance,
+  UseTreeViewFocusState,
+  [UseTreeViewNodesSignature]
+>;

@@ -1,4 +1,6 @@
 import { TreeViewNode, DefaultizedProps } from '../../models';
+import { TreeViewPluginSignature } from '../../../models';
+import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 
 export interface UseTreeViewNodesInstance {
   getNode: (nodeId: string) => TreeViewNode;
@@ -19,4 +21,12 @@ export interface UseTreeViewNodesParameters {
 export type UseTreeViewNodesDefaultizedParameters = DefaultizedProps<
   UseTreeViewNodesParameters,
   'disabledItemsFocusable'
+>;
+
+export type UseTreeViewNodesSignature = TreeViewPluginSignature<
+  UseTreeViewNodesParameters,
+  UseTreeViewNodesDefaultizedParameters,
+  UseTreeViewNodesInstance,
+  {},
+  [UseTreeViewFocusSignature]
 >;

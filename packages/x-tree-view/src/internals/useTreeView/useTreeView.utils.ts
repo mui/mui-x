@@ -1,6 +1,11 @@
-import { TreeViewInstance } from '../../models';
+import { TreeViewInstance, TreeViewPluginSignature, TreeViewUsedInstance } from '../../models';
+import type { UseTreeViewExpansionSignature } from './useTreeViewExpansion';
+import type { UseTreeViewNodesSignature } from './useTreeViewNodes';
 
-export const getPreviousNode = (instance: TreeViewInstance, nodeId: string) => {
+export const getPreviousNode = (
+  instance: TreeViewInstance<[UseTreeViewNodesSignature, UseTreeViewExpansionSignature]>,
+  nodeId: string,
+) => {
   const node = instance.getNode(nodeId);
   const siblings = instance.getNavigableChildrenIds(node.parentId);
   const nodeIndex = siblings.indexOf(nodeId);
@@ -20,7 +25,10 @@ export const getPreviousNode = (instance: TreeViewInstance, nodeId: string) => {
   return currentNode;
 };
 
-export const getNextNode = (instance: TreeViewInstance, nodeId: string) => {
+export const getNextNode = (
+  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewNodesSignature]>,
+  nodeId: string,
+) => {
   // If expanded get first child
   if (instance.isNodeExpanded(nodeId) && instance.getNavigableChildrenIds(nodeId).length > 0) {
     return instance.getNavigableChildrenIds(nodeId)[0];
@@ -43,7 +51,9 @@ export const getNextNode = (instance: TreeViewInstance, nodeId: string) => {
   return null;
 };
 
-export const getLastNode = (instance: TreeViewInstance) => {
+export const getLastNode = (
+  instance: TreeViewInstance<[UseTreeViewExpansionSignature, UseTreeViewNodesSignature]>,
+) => {
   let lastNode = instance.getNavigableChildrenIds(null).pop()!;
 
   while (instance.isNodeExpanded(lastNode)) {
@@ -52,12 +62,12 @@ export const getLastNode = (instance: TreeViewInstance) => {
   return lastNode;
 };
 
-export const getFirstNode = (instance: TreeViewInstance) =>
+export const getFirstNode = (instance: TreeViewInstance<[UseTreeViewNodesSignature]>) =>
   instance.getNavigableChildrenIds(null)[0];
 
-export const populateInstance = <M extends Partial<TreeViewInstance>>(
-  instance: TreeViewInstance,
-  methods: M,
+export const populateInstance = <T extends TreeViewPluginSignature<any, any, any, any, any>>(
+  instance: TreeViewUsedInstance<T>,
+  methods: T['instance'],
 ) => {
   Object.assign(instance, methods);
 };

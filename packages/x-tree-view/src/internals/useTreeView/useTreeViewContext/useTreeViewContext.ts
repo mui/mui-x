@@ -1,14 +1,12 @@
 import useId from '@mui/utils/useId';
-import { TreeViewPlugin } from '../../../models';
-import { UseTreeViewContextDefaultizedParameters } from './useTreeViewContext.types';
-import type { UseTreeViewSelectionDefaultizedParameters } from '../useTreeViewSelection';
-import type { UseTreeViewNodesDefaultizedParameters } from '../useTreeViewNodes';
+import { TreeViewInstance, TreeViewPlugin } from '../../../models';
+import { UseTreeViewContextSignature } from './useTreeViewContext.types';
+import type { DefaultPlugins } from '../useTreeView';
 
-export const useTreeViewContext: TreeViewPlugin<
-  UseTreeViewContextDefaultizedParameters &
-    UseTreeViewSelectionDefaultizedParameters<any> &
-    UseTreeViewNodesDefaultizedParameters
-> = ({ instance, props }) => {
+export const useTreeViewContext: TreeViewPlugin<UseTreeViewContextSignature> = ({
+  instance,
+  props,
+}) => {
   const treeId = useId(props.id);
 
   return {
@@ -17,7 +15,7 @@ export const useTreeViewContext: TreeViewPlugin<
     }),
     contextValue: {
       treeId,
-      instance,
+      instance: instance as TreeViewInstance<DefaultPlugins>,
       multiSelect: props.multiSelect,
       disabledItemsFocusable: props.disabledItemsFocusable,
       icons: {

@@ -1,7 +1,6 @@
 export { useTreeViewFocus } from './useTreeViewFocus';
 export type {
-  UseTreeViewFocusInstance,
-  UseTreeViewFocusState,
+  UseTreeViewFocusSignature,
   UseTreeViewFocusParameters,
   UseTreeViewFocusDefaultizedParameters,
 } from './useTreeViewFocus.types';
