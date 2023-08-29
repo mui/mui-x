@@ -727,7 +727,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     const cell = getColumnHeaderCell(0);
-    cell.focus();
+    act(() => cell.focus());
     fireEvent.keyDown(cell, { key: 'ArrowDown' });
   });
 });
