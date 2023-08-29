@@ -50,9 +50,8 @@ export interface LineChartProps
   tooltip?: ChartsTooltipProps;
   axisHighlight?: ChartsAxisHighlightProps;
   legend?: ChartsLegendProps;
-
   /**
-   * Render the line highlight item if `true`.
+   * If `true`, render the line highlight item.
    */
   disableLineItemHighlight?: boolean;
   /**

@@ -69,7 +69,7 @@ The next example shows how to use it to display only one mark every two data poi
 
 When the value is highlighted, an additional mark is rendered over the other ones.
 
-This behavior can be removed with series property `disableHighlight` or at the scale of the line chart with prop `disableLineItemHighlight`.
+This behavior can be removed with the `disableHighlight` series property or at the root of the line chart with a `disableLineItemHighlight` prop.
 
 In this example, you have one mark for every value with an even index.
 The highlighted data has a mark regardless if it has an even or odd index.
