@@ -54,7 +54,7 @@ export interface UseDesktopRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends DesktopRangeOnlyPickerProps<TDate>,
     BasePickerProps<
       DateRange<TDate>,

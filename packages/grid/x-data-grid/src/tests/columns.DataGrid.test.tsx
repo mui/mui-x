@@ -72,6 +72,19 @@ describe('<DataGrid /> - Columns', () => {
     expect(getColumnHeaderCell(0)).to.have.class('MuiDataGrid-columnHeader--numeric');
   });
 
+  it('should not persist valueFormatter on column type change', () => {
+    const { setProps } = render(
+      <TestDataGrid
+        columns={[{ field: 'price', type: 'price', valueFormatter: ({ value }) => `$${value}` }]}
+        rows={[{ id: 0, price: 1 }]}
+      />,
+    );
+    expect(getCell(0, 0).textContent).to.equal('$1');
+
+    setProps({ columns: [{ field: 'price' }] });
+    expect(getCell(0, 0).textContent).to.equal('1');
+  });
+
   it('should not override column properties when changing column type', () => {
     const { setProps } = render(
       <TestDataGrid

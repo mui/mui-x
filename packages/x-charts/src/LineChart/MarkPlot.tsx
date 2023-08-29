@@ -50,7 +50,12 @@ function MarkPlot(props: MarkPlotProps) {
             xAxisKey = defaultXAxisId,
             yAxisKey = defaultYAxisId,
             stackedData,
+            showMark = true,
           } = series[seriesId];
+
+          if (showMark === false) {
+            return null;
+          }
 
           const xScale = getValueToPositionMapper(xAxis[xAxisKey].scale);
           const yScale = yAxis[yAxisKey].scale;
@@ -81,23 +86,34 @@ function MarkPlot(props: MarkPlotProps) {
               return {
                 x: xScale(x),
                 y: yScale(y),
+                position: x,
+                value: y,
                 index,
               };
             })
             .filter(isInRange)
-            .map(({ x, y, index }) => (
-              <Mark
-                key={`${seriesId}-${index}`}
-                id={seriesId}
-                dataIndex={index}
-                shape="circle"
-                color={series[seriesId].color}
-                x={x}
-                y={y}
-                highlightScope={series[seriesId].highlightScope}
-                {...slotProps?.mark}
-              />
-            ));
+            .map(({ x, y, index, position, value }) => {
+              return showMark === true ||
+                showMark({
+                  x,
+                  y,
+                  index,
+                  position,
+                  value,
+                }) ? (
+                <Mark
+                  key={`${seriesId}-${index}`}
+                  id={seriesId}
+                  dataIndex={index}
+                  shape="circle"
+                  color={series[seriesId].color}
+                  x={x}
+                  y={y}
+                  highlightScope={series[seriesId].highlightScope}
+                  {...slotProps?.mark}
+                />
+              ) : null;
+            });
         });
       })}
     </g>

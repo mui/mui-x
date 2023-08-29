@@ -72,6 +72,7 @@ export default function StackedAreas() {
           data: FranceGDPperCapita,
           stack: 'total',
           area: true,
+          showMark: false,
         },
         {
           id: 'Germany',
@@ -79,6 +80,7 @@ export default function StackedAreas() {
           data: GermanyGDPperCapita,
           stack: 'total',
           area: true,
+          showMark: false,
         },
         {
           id: 'United Kingdom',
@@ -86,6 +88,7 @@ export default function StackedAreas() {
           data: UKGDPperCapita,
           stack: 'total',
           area: true,
+          showMark: false,
         },
       ]}
       sx={{
