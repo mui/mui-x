@@ -36,6 +36,10 @@
   },
   "slots": [],
   "name": "ScatterChart",
+  "imports": [
+    "import { ScatterChart } from '@mui/x-charts/ScatterChart';",
+    "import { ScatterChart } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiScatterChart" },
   "filename": "/packages/x-charts/src/ScatterChart/ScatterChart.tsx",
   "demos": "<ul></ul>",

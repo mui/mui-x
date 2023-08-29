@@ -117,13 +117,17 @@
     }
   ],
   "name": "MultiInputDateRangeField",
+  "imports": [
+    "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';",
+    "import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "separator"],
     "globalClasses": {},
     "name": "MuiMultiInputDateRangeField"
   },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiInputDateRangeField" }
   ]

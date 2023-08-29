@@ -89,6 +89,7 @@ export const useGridFilter = (
     | 'slots'
     | 'slotProps'
     | 'disableColumnFilter'
+    | 'disableEval'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -106,7 +107,7 @@ export const useGridFilter = (
       const filterModel = gridFilterModelSelector(state, apiRef.current.instanceId);
       const isRowMatchingFilters =
         props.filterMode === 'client'
-          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef)
+          ? buildAggregatedFilterApplier(props.getRowId, filterModel, apiRef, props.disableEval)
           : null;
 
       const filteringResult = apiRef.current.applyStrategyProcessor('filtering', {
@@ -130,7 +131,7 @@ export const useGridFilter = (
       };
     });
     apiRef.current.publishEvent('filteredRowsSet');
-  }, [apiRef, props.filterMode, props.getRowId]);
+  }, [apiRef, props.filterMode, props.getRowId, props.disableEval]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {

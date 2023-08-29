@@ -3,9 +3,10 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { CurveType } from '@mui/x-charts/models';
 
-const curveTypes: CurveType[] = [
+import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
+
+const curveTypes = [
   'catmullRom',
   'linear',
   'monotoneX',
@@ -16,17 +17,26 @@ const curveTypes: CurveType[] = [
   'stepAfter',
 ];
 
-export default function InterpolationDemo() {
-  const [curveType, setCurveType] = React.useState<CurveType>('linear');
+function getExample(curveType) {
+  return `<LineChart
+  series={[
+    { curve: "${curveType}", data: [0, 5, 2, 6, 3, 9.3] },
+    { curve: "${curveType}", data: [6, 3, 7, 9.5, 4, 2] },
+  ]}
+  {/* ... */}
+/>`;
+}
+export default function InterpolationDemoNoSnap() {
+  const [curveType, setCurveType] = React.useState('linear');
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2, width: 1, maxWidth: 600 }}>
       <TextField
         select
         label="interpolation method"
         value={curveType}
         sx={{ minWidth: 200, mb: 2 }}
-        onChange={(event) => setCurveType(event.target.value as CurveType)}
+        onChange={(event) => setCurveType(event.target.value)}
       >
         {curveTypes.map((curve) => (
           <MenuItem key={curve} value={curve}>
@@ -40,10 +50,10 @@ export default function InterpolationDemo() {
           { curve: curveType, data: [0, 5, 2, 6, 3, 9.3] },
           { curve: curveType, data: [6, 3, 7, 9.5, 4, 2] },
         ]}
-        width={500}
         height={300}
         margin={{ top: 10, bottom: 30 }}
       />
+      <HighlightedCode code={getExample(curveType)} language="tsx" />
     </Box>
   );
 }

@@ -45,6 +45,11 @@
   },
   "slots": [],
   "name": "MonthCalendar",
+  "imports": [
+    "import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';",
+    "import { MonthCalendar } from '@mui/x-date-pickers';",
+    "import { MonthCalendar } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthCalendar" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",

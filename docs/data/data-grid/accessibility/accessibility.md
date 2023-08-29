@@ -78,11 +78,11 @@ Use the `tabIndex` prop passed to the `renderCell` params to determine if the re
 
 ```jsx
 renderCell: (params) => (
-  <Box>
+  <div>
     <Link tabIndex={params.tabIndex} href="/#">
       more info
     </Link>
-  </Box>
+  </div>
 );
 ```
 

@@ -24,6 +24,11 @@
   },
   "slots": [],
   "name": "PickersShortcuts",
+  "imports": [
+    "import { PickersShortcuts } from '@mui/x-date-pickers/PickersShortcuts';",
+    "import { PickersShortcuts } from '@mui/x-date-pickers';",
+    "import { PickersShortcuts } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "padding", "dense", "subheader"],
     "globalClasses": {},

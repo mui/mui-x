@@ -13,6 +13,10 @@
   },
   "slots": [],
   "name": "ChartsTooltip",
+  "imports": [
+    "import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';",
+    "import { ChartsTooltip } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "markCell", "labelCell", "valueCell"],
     "globalClasses": {},

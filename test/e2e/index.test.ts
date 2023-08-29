@@ -94,6 +94,8 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
         // ensure consistent date formatting regardless or environment
         locale: 'en-US',
       });
+      // Circle CI has low-performance CPUs.
+      context.setDefaultTimeout((process.env.CIRCLECI === 'true' ? 4 : 2) * 1000);
       page = await context.newPage();
       // taken from: https://github.com/microsoft/playwright/issues/6347#issuecomment-1085850728
       // Update the Date accordingly in your test pages
@@ -214,7 +216,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
 
         const brand = page.locator('[role="columnheader"][aria-colindex="1"] > [draggable]');
         const year = page.locator('[role="columnheader"][aria-colindex="2"] > [draggable]');
-        await brand.dragTo(year, { timeout: 1000 });
+        await brand.dragTo(year);
 
         expect(
           await page.evaluate(() => document.querySelector('[role="row"]')!.textContent!),
@@ -230,7 +232,7 @@ const fakeNow = new Date('2022-04-17T13:37:11').valueOf();
         const rowColumn1990 = page.locator(
           '[role="row"][data-rowindex="0"] [role="cell"][data-colindex="1"]',
         );
-        await brand.dragTo(rowColumn1990, { timeout: 1000 });
+        await brand.dragTo(rowColumn1990);
 
         expect(await page.locator('[role="row"]').first().textContent()).to.equal('yearbrand');
       });

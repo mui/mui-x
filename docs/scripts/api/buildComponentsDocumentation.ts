@@ -156,8 +156,8 @@ function extractSlots(options: {
  * @example toGithubPath('/home/user/material-ui/packages/Accordion') === '/packages/Accordion'
  * @example toGithubPath('C:\\Development\material-ui\packages\Accordion') === '/packages/Accordion'
  */
-function toGithubPath(filepath: string, workspaceRoot: string): string {
-  return `/${path.relative(workspaceRoot, filepath).replace(/\\/g, '/')}`;
+function toGithubPath(filepath: string): string {
+  return `/${path.relative(process.cwd(), filepath).replace(/\\/g, '/')}`;
 }
 
 function parseComponentSource(src: string, componentObject: { filename: string }): ReactApi {
@@ -203,9 +203,16 @@ function findXDemos(
   return pagesMarkdown
     .filter((page) => page.components.includes(componentName))
     .map((page) => {
+      // Titles for paid packages have the structure "Page title <a><span/></a>"
+      // Next line remove the <a/> to avoid nested links and keep the <span/> to show the plan level.
+      // A link can be present when the Pro or Premium icon is added to the h1 of the demo page.
+      let demoPageTitle = page.title
+        .replace(/<a\b[^>]*>/i, '')
+        .replace(/<\/a>/i, '')
+        .replace(/\[(.*)]\((.*)\)/g, '$1');
+
       if (page.pathname.includes('date-pickers')) {
-        let demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
-        demoPageTitle = demoPageTitle.replace(/\[(.*)]\((.*)\)/g, '');
+        demoPageTitle = /^Date and Time Pickers - (.*)$/.exec(demoPageTitle)?.[1] ?? demoPageTitle;
 
         const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
 
@@ -229,6 +236,59 @@ function findXDemos(
     });
 }
 
+/**
+ * Helper to get the import options
+ * @param name The name of the component
+ * @param filename The filename where its defined (to infer the package)
+ * @returns an array of import command
+ */
+function getComponentImports(name: string, filename: string): string[] {
+  const githubPath = toGithubPath(filename);
+
+  const rootImportPath = githubPath.replace(
+    /\/packages\/(grid\/|)(.+?)?\/src\/.*/,
+    (match, dash, pkg) => `@mui/${pkg}`,
+  );
+
+  const subdirectoryImportPath = githubPath.replace(
+    /\/packages\/(grid\/|)(.+?)?\/src\/([^\\/]+)\/.*/,
+    (match, dash, pkg, directory) => `@mui/${pkg}/${directory}`,
+  );
+
+  const reExportPackage = [rootImportPath];
+
+  // Data Grid
+  if (rootImportPath === '@mui/x-data-grid-pro') {
+    reExportPackage.push('@mui/x-data-grid-premium');
+  }
+  if (rootImportPath === '@mui/x-data-grid') {
+    reExportPackage.push('@mui/x-data-grid-pro');
+    reExportPackage.push('@mui/x-data-grid-premium');
+  }
+
+  // Pickers
+  if (rootImportPath === '@mui/x-date-pickers') {
+    reExportPackage.push('@mui/x-date-pickers-pro');
+  }
+
+  // Charts
+  // if (rootImportPath === '@mui/x-charts') {
+  //   reExportPackage.push('@mui/x-charts-pro');
+  // }
+
+  // Tree View
+  // if (rootImportPath === '@mui/x-tree-view') {
+  //   reExportPackage.push('@mui/x-tree-view-pro');
+  // }
+
+  const imports = [
+    `import { ${name} } from '${subdirectoryImportPath}';`,
+    ...reExportPackage.map((importPath) => `import { ${name} } from '${importPath}';`),
+  ];
+
+  return imports;
+}
+
 const buildComponentDocumentation = async (options: {
   filename: string;
   project: Project;
@@ -244,6 +304,7 @@ const buildComponentDocumentation = async (options: {
   const reactApi = parseComponentSource(src, { filename });
   reactApi.filename = filename; // Some components don't have props
   reactApi.name = path.parse(filename).name;
+  reactApi.imports = getComponentImports(reactApi.name, filename);
   reactApi.EOL = getLineFeed(src);
   reactApi.slots = [];
 
@@ -516,6 +577,7 @@ const buildComponentDocumentation = async (options: {
     ),
     slots: reactApi.slots.sort((slotA, slotB) => (slotA.name > slotB.name ? 1 : -1)),
     name: reactApi.name,
+    imports: reactApi.imports,
     styles: {
       classes: reactApi.styles.classes,
       globalClasses: fromPairs(
@@ -528,7 +590,7 @@ const buildComponentDocumentation = async (options: {
     },
     spread: reactApi.spread,
     forwardsRefTo: reactApi.forwardsRefTo,
-    filename: toGithubPath(reactApi.filename, project.workspaceRoot),
+    filename: toGithubPath(reactApi.filename),
     inheritance: reactApi.inheritance,
     demos: `<ul>${reactApi.demos
       .map((item) => `<li><a href="${item.demoPathname}">${item.demoPageTitle}</a></li>`)

@@ -5,11 +5,11 @@ import { act, userEvent } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
   buildFieldInteractions,
-  createPickerRenderer,
-  expectInputValue,
   getCleanedSelectedContent,
   getTextbox,
-} from 'test/utils/pickers-utils';
+  createPickerRenderer,
+  expectInputValue,
+} from 'test/utils/pickers';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

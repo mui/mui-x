@@ -108,7 +108,7 @@
     },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -213,7 +213,7 @@
       "class": null,
       "name": "desktopTransition",
       "description": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Grow from '@mui/material'."
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`."
     },
     {
       "class": null,
@@ -328,6 +328,11 @@
     }
   ],
   "name": "DatePicker",
+  "imports": [
+    "import { DatePicker } from '@mui/x-date-pickers/DatePicker';",
+    "import { DatePicker } from '@mui/x-date-pickers';",
+    "import { DatePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDatePicker" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
   "inheritance": null,

@@ -97,7 +97,7 @@
     },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -268,6 +268,11 @@
     }
   ],
   "name": "StaticDateTimePicker",
+  "imports": [
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';",
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers';",
+    "import { StaticDateTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/StaticDateTimePicker/StaticDateTimePicker.tsx",
   "inheritance": null,

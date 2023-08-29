@@ -36,6 +36,10 @@
   },
   "slots": [],
   "name": "LineChart",
+  "imports": [
+    "import { LineChart } from '@mui/x-charts/LineChart';",
+    "import { LineChart } from '@mui/x-charts';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLineChart" },
   "filename": "/packages/x-charts/src/LineChart/LineChart.tsx",
   "demos": "<ul></ul>",

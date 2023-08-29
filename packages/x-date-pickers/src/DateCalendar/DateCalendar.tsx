@@ -542,8 +542,8 @@ DateCalendar.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
   /**

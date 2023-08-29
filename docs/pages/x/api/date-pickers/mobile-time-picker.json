@@ -80,6 +80,10 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "reduceAnimations": {
+      "type": { "name": "bool" },
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
+    },
     "selectedSections": {
       "type": {
         "name": "union",
@@ -213,6 +217,11 @@
     }
   ],
   "name": "MobileTimePicker",
+  "imports": [
+    "import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';",
+    "import { MobileTimePicker } from '@mui/x-date-pickers';",
+    "import { MobileTimePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileTimePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

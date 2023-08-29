@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { DataGrid, DataGridProps, GridRowsProp, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { getColumnHeadersTextContent } from '../../../../../test/utils/helperFn';
+import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 

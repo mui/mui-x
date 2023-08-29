@@ -4,7 +4,7 @@ import {
   BuildFieldInteractionsResponse,
   FieldSectionSelector,
   OpenPickerParams,
-} from 'test/utils/pickers-utils';
+} from 'test/utils/pickers';
 import { PickerComponentFamily } from '../describe.types';
 
 interface DescribeValueBaseOptions<TValue, C extends PickerComponentFamily> {

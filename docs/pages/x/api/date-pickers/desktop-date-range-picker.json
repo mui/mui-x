@@ -105,7 +105,7 @@
     "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
-      "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
+      "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
     "renderLoading": {
       "type": { "name": "func" },
@@ -170,7 +170,7 @@
       "class": null,
       "name": "desktopTransition",
       "description": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
-      "default": "Grow from '@mui/material'."
+      "default": "Grow or Fade from '@mui/material' when `reduceAnimations` is `true`."
     },
     {
       "class": null,
@@ -256,12 +256,16 @@
     }
   ],
   "name": "DesktopDateRangePicker",
+  "imports": [
+    "import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';",
+    "import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateRangePicker/DesktopDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DesktopDateRangePicker" }
   ]

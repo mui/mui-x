@@ -54,6 +54,7 @@ export const useDesktopRangePicker = <
     autoFocus,
     disableOpenPicker,
     localeText,
+    reduceAnimations,
   } = props;
 
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
@@ -171,6 +172,7 @@ export const useDesktopRangePicker = <
         slots={slots}
         slotProps={slotProps}
         shouldRestoreFocus={shouldRestoreFocus}
+        reduceAnimations={reduceAnimations}
       >
         <Layout
           {...layoutProps}
