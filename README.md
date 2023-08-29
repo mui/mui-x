@@ -26,21 +26,21 @@ See [Licensing](https://mui.com/x/introduction/licensing/) for details.
 - [Documentation](https://mui.com/x/react-data-grid/)
 - [Installation instructions](https://mui.com/x/react-data-grid/getting-started/#installation)
 
-<img src="https://github.com/mui/mui-x/assets/3165635/c630dcaf-d9e3-446b-a394-23d921435879" width="730" height="432" alt="" />
+<img src="./docs/public/static/x/readme/data-grid.gif" width="730" height="432" alt="" />
 
 ### Date and Time Pickers
 
 - [Documentation](https://mui.com/x/react-date-pickers/)
 - [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation)
 
-<img src="https://github.com/mui/mui-x/assets/3165635/960fc2f4-6e6c-4b49-9305-ff6e167cab0e" width="730" height="467" alt="" />
+<img src="./docs/public/static/x/readme/pickers.gif" width="730" height="467" alt="" />
 
 ### Charts
 
 - [Documentation](https://mui.com/x/react-charts/)
 - [Installation instructions](https://mui.com/x/react-charts/#getting-started)
 
-<img src="https://github.com/mui/mui-x/assets/3165635/b19a5bdd-9ce0-4437-9497-8b31931999e8" width="730" height="453" alt="" />
+<img src="./docs/public/static/x/readme/charts.gif" width="730" height="453" alt="" />
 
 ## MIT vs. commercial licenses
 
