@@ -13,7 +13,7 @@ import {
 } from '../params/gridCellParams';
 import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn, GridSortDirection } from '../gridSortModel';
-import { GridColType, GridNativeColTypes } from './gridColType';
+import { GridColType } from './gridColType';
 import { GridRowParams } from '../params/gridRowParams';
 import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
 import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
