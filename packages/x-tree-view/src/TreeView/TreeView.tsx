@@ -159,7 +159,10 @@ TreeView.propTypes = {
    * When `multiSelect` is true this takes an array of strings; when false (default) a string.
    * @default []
    */
-  defaultSelected: PropTypes.any,
+  defaultSelected: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.string,
+  ]),
   /**
    * If `true`, will allow focus on disabled items.
    * @default false

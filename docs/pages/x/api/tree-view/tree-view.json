@@ -11,7 +11,10 @@
     },
     "defaultExpandIcon": { "type": { "name": "node" } },
     "defaultParentIcon": { "type": { "name": "node" } },
-    "defaultSelected": { "type": { "name": "any" }, "default": "[]" },
+    "defaultSelected": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;string" },
+      "default": "[]"
+    },
     "disabledItemsFocusable": { "type": { "name": "bool" } },
     "disableSelection": { "type": { "name": "bool" } },
     "expanded": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
