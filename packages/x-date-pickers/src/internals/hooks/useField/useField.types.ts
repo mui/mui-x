@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
+import IconButton from '@mui/material/IconButton';
 import { ClearIcon } from '../../../icons';
 import {
   FieldSectionType,
@@ -391,8 +392,14 @@ export interface FieldSlotsComponents {
    * @default ClearIcon
    */
   ClearIcon?: React.ElementType;
+  /**
+   * Button to clear the value.
+   * @default IconButton
+   */
+  ClearButton?: React.ElementType;
 }
 
 export interface FieldSlotsComponentsProps {
   clearIcon?: SlotComponentProps<typeof ClearIcon, {}, {}>;
+  clearButton?: SlotComponentProps<typeof IconButton, {}, {}>;
 }

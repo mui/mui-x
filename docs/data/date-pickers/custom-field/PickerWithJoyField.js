@@ -81,12 +81,13 @@ const JoyField = React.forwardRef((props, inputRef) => {
 
 const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
   const { slots, slotProps, onAdornmentClick, ...other } = props;
+  const { size, color, sx, variant, ...ownerState } = props;
 
   const { inputRef: externalInputRef, ...textFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: 'input',
     externalSlotProps: slotProps?.textField,
     externalForwardedProps: other,
-    ownerState: props,
+    ownerState,
   });
 
   const {
@@ -107,15 +108,20 @@ const JoySingleInputDateRangeField = React.forwardRef((props, ref) => {
       clearable,
       fieldProps,
       InputProps: fieldProps.InputProps,
-      slots: inSlots,
-      slotProps: inSlotProps,
+      slots: { ...inSlots, clearButton: IconButton },
+      slotProps: { ...inSlotProps, clearIcon: { color: 'action' } },
     });
 
   return (
     <JoyField
       {...processedFieldProps}
       endDecorator={
-        <IconButton onClick={onAdornmentClick} variant="plain" color="neutral">
+        <IconButton
+          onClick={onAdornmentClick}
+          variant="plain"
+          color="neutral"
+          sx={{ marginLeft: 2.5 }}
+        >
           <DateRangeIcon color="action" />
         </IconButton>
       }
@@ -147,7 +153,10 @@ function JoySingleInputDateRangePicker(props) {
       onOpen={handleOpen}
       slots={{ field: JoySingleInputDateRangeField }}
       slotProps={{
-        field: { onAdornmentClick: toggleOpen, ...props?.slotProps?.field },
+        field: {
+          onAdornmentClick: toggleOpen,
+          ...props?.slotProps?.field,
+        },
       }}
     />
   );
@@ -200,13 +209,13 @@ const JoyMultiInputDateRangeField = React.forwardRef((props, ref) => {
   } = props;
 
   const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: FormControl,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'start' },
   });
 
   const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
-    elementType: null,
+    elementType: FormControl,
     externalSlotProps: slotProps?.textField,
     ownerState: { ...props, position: 'end' },
   });

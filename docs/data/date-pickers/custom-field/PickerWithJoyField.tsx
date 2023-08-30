@@ -134,6 +134,7 @@ type JoySingleInputDateRangeFieldComponent = ((
 const JoySingleInputDateRangeField = React.forwardRef(
   (props: JoySingleInputDateRangeFieldProps, ref: React.Ref<HTMLInputElement>) => {
     const { slots, slotProps, onAdornmentClick, ...other } = props;
+    const { size, color, sx, variant, ...ownerState } = props;
 
     const {
       inputRef: externalInputRef,
@@ -142,10 +143,10 @@ const JoySingleInputDateRangeField = React.forwardRef(
       Dayjs,
       JoyFieldProps & { inputRef: React.Ref<HTMLInputElement> }
     > = useSlotProps({
-      elementType: null as any,
+      elementType: 'input',
       externalSlotProps: slotProps?.textField,
       externalForwardedProps: other,
-      ownerState: props as any,
+      ownerState,
     });
 
     const {
@@ -171,15 +172,20 @@ const JoySingleInputDateRangeField = React.forwardRef(
         clearable,
         fieldProps,
         InputProps: fieldProps.InputProps,
-        slots: inSlots,
-        slotProps: inSlotProps,
+        slots: { ...inSlots, clearButton: IconButton },
+        slotProps: { ...inSlotProps, clearIcon: { color: 'action' } },
       });
 
     return (
       <JoyField
         {...processedFieldProps}
         endDecorator={
-          <IconButton onClick={onAdornmentClick} variant="plain" color="neutral">
+          <IconButton
+            onClick={onAdornmentClick}
+            variant="plain"
+            color="neutral"
+            sx={{ marginLeft: 2.5 }}
+          >
             <DateRangeIcon color="action" />
           </IconButton>
         }
@@ -212,7 +218,10 @@ function JoySingleInputDateRangePicker(props: DateRangePickerProps<Dayjs>) {
       onOpen={handleOpen}
       slots={{ field: JoySingleInputDateRangeField }}
       slotProps={{
-        field: { onAdornmentClick: toggleOpen, ...props?.slotProps?.field } as any,
+        field: {
+          onAdornmentClick: toggleOpen,
+          ...props?.slotProps?.field,
+        } as any,
       }}
     />
   );
@@ -279,13 +288,13 @@ const JoyMultiInputDateRangeField = React.forwardRef(
     } = props;
 
     const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
-      elementType: null as any,
+      elementType: FormControl,
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'start' },
     }) as MultiInputFieldSlotTextFieldProps;
 
     const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
-      elementType: null as any,
+      elementType: FormControl,
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;

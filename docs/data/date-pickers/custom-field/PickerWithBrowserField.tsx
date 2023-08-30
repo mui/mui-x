@@ -4,6 +4,7 @@ import { useSlotProps } from '@mui/base/utils';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -146,9 +147,11 @@ const BrowserSingleInputDateRangeField = React.forwardRef(
         InputProps: {
           ...fieldProps.InputProps,
           endAdornment: (
-            <IconButton onClick={onAdornmentClick}>
-              <DateRangeIcon />
-            </IconButton>
+            <InputAdornment position="end">
+              <IconButton onClick={onAdornmentClick}>
+                <DateRangeIcon />
+              </IconButton>
+            </InputAdornment>
           ),
         },
         slots: inSlots,
@@ -186,7 +189,10 @@ function BrowserSingleInputDateRangePicker(props: DateRangePickerProps<Dayjs>) {
       onOpen={handleOpen}
       slots={{ field: BrowserSingleInputDateRangeField }}
       slotProps={{
-        field: { onAdornmentClick: toggleOpen, ...props?.slotProps?.field } as any,
+        field: {
+          onAdornmentClick: toggleOpen,
+          ...props?.slotProps?.field,
+        } as any,
       }}
     />
   );
@@ -227,13 +233,13 @@ const BrowserMultiInputDateRangeField = React.forwardRef(
     } = props;
 
     const { inputRef: startInputRef, ...startTextFieldProps } = useSlotProps({
-      elementType: null as any,
+      elementType: 'input',
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'start' },
     }) as MultiInputFieldSlotTextFieldProps;
 
     const { inputRef: endInputRef, ...endTextFieldProps } = useSlotProps({
-      elementType: null as any,
+      elementType: 'input',
       externalSlotProps: slotProps?.textField,
       ownerState: { ...props, position: 'end' },
     }) as MultiInputFieldSlotTextFieldProps;

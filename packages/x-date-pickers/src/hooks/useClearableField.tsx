@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { useSlotProps } from '@mui/base/utils';
-import IconButton from '@mui/material/IconButton';
+import MuiIconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { ClearIcon } from '../icons';
 import {
@@ -42,6 +42,12 @@ export const useClearableField = <
   TFieldSlotsComponents,
   TFieldSlotsComponentsProps
 >) => {
+  const IconButton = slots?.clearButton ?? MuiIconButton;
+  const iconButtonProps = useSlotProps({
+    elementType: MuiIconButton,
+    externalSlotProps: slotProps?.clearButton,
+    ownerState: {},
+  });
   const EndClearIcon = slots?.clearIcon ?? ClearIcon;
   const endClearIconProps = useSlotProps({
     elementType: ClearIcon,
@@ -57,7 +63,7 @@ export const useClearableField = <
           position="end"
           sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
         >
-          <IconButton className="clearButton" onClick={onClear}>
+          <IconButton {...iconButtonProps} className="clearButton" onClick={onClear}>
             <EndClearIcon fontSize="small" {...endClearIconProps} />
           </IconButton>
         </InputAdornment>
