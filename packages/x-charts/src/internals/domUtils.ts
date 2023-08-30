@@ -87,14 +87,16 @@ function camelToMiddleLine(text: string) {
  * @returns CSS styling string
  */
 export const getStyleString = (style: React.CSSProperties) =>
-  Object.keys(style).reduce(
-    (result, s) =>
-      `${result}${camelToMiddleLine(s)}:${autoCompleteStyle(
-        s,
-        (style as Record<string, any>)[s],
-      )};`,
-    '',
-  );
+  Object.keys(style)
+    .sort()
+    .reduce(
+      (result, s) =>
+        `${result}${camelToMiddleLine(s)}:${autoCompleteStyle(
+          s,
+          (style as Record<string, any>)[s],
+        )};`,
+      '',
+    );
 
 /**
  *

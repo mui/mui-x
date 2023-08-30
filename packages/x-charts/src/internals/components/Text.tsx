@@ -21,7 +21,7 @@ export interface TextProps
    * Height of a text line (in `em`).
    */
   lineHeight?: number;
-  dominantBaseline?: 'hanging' | 'middle' | 'auto';
+  dominantBaseline?: 'hanging' | 'central' | 'auto';
   ownerState?: any;
 }
 
@@ -34,7 +34,7 @@ function Text(props: TextProps) {
     x,
     y,
     textAnchor = 'start',
-    dominantBaseline = 'middle',
+    dominantBaseline = 'central',
     lineHeight = 1,
     style,
     width,
@@ -53,11 +53,11 @@ function Text(props: TextProps) {
     case 'hanging':
       startDy = 0;
       break;
-    case 'middle':
+    case 'central':
       startDy = ((wordsByLines.length - 1) / 2) * -lineHeight;
       break;
     default:
-      startDy = wordsByLines.length - 1 * -lineHeight;
+      startDy = (wordsByLines.length - 1) * -lineHeight;
       break;
   }
 

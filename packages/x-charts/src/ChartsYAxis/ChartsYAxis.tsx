@@ -82,7 +82,7 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
       textAnchor: position === 'right' ? 'start' : 'end',
-      dominantBaseline: 'middle',
+      dominantBaseline: 'central',
       style: { fontSize: tickFontSize },
       className: classes.tickLabel,
     } as const,
@@ -93,8 +93,8 @@ function ChartsYAxis(inProps: ChartsYAxisProps) {
     elementType: Label,
     externalSlotProps: slotProps?.axisTickLabel,
     additionalProps: {
-      textAnchor: position === 'right' ? 'start' : 'end',
-      dominantBaseline: 'middle',
+      textAnchor: 'middle',
+      dominantBaseline: 'central',
       style: {
         fontSize: labelFontSize,
         transform: `rotate(${positionSigne * 90}deg)`,
