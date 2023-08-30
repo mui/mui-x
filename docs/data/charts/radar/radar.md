@@ -1,5 +1,5 @@
 ---
-title: Charts - Radar
+title: React Radar chart
 ---
 
 # Charts - Radar 🚧

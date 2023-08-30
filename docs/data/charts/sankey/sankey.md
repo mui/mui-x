@@ -1,5 +1,5 @@
 ---
-title: Charts - Sankey
+title: React Sankey chart
 ---
 
 # Charts - Sankey 🚧

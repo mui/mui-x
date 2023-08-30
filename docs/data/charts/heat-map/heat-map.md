@@ -1,5 +1,5 @@
 ---
-title: Charts - Heat map
+title: React Heat map chart
 ---
 
 # Charts - Heat map 🚧
