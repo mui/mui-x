@@ -9,36 +9,37 @@ interface GetWordsByLinesParams {
    * Style applied to text elements.
    */
   style?: React.SVGAttributes<'text'>['style'];
-
   /**
-   * The max width per lineu.
+   * The max width per line (in px).
    */
   width?: number;
 }
 export interface TextProps
-  extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width'>,
+  extends Omit<React.SVGTextElementAttributes<SVGTextElement>, 'width' | 'ref'>,
     GetWordsByLinesParams {
-  lineHeight?: string;
+  /**
+   * Height of a text line (in `em`).
+   */
+  lineHeight?: number;
+  dominantBaseline?: 'hanging' | 'middle' | 'auto';
+  ownerState?: any;
 }
 
 function getWordsByLines({ style, width, text }: GetWordsByLinesParams) {
-  return [{ text, width: 50 }];
+  return text.split('\n').map((subText) => ({ text: subText, width: 50 }));
 }
+
 function Text(props: TextProps) {
   const {
     x,
     y,
     textAnchor = 'start',
-    // verticalAnchor= 'end',
-    // scaleToFit,
-    // angle,
-    lineHeight = '1em',
-    capHeight,
-    className,
-    // breakAll,
+    dominantBaseline = 'middle',
+    lineHeight = 1,
     style,
     width,
     text,
+    ownerState,
     ...textProps
   } = props;
 
@@ -47,18 +48,18 @@ function Text(props: TextProps) {
     [style, width, text],
   );
 
-  let startDy: number = 0;
-  // switch (verticalAnchor) {
-  //   case 'start':
-  //     startDy = reduceCSSCalc(`calc(${capHeight})`);
-  //     break;
-  //   case 'middle':
-  //     startDy = reduceCSSCalc(`calc(${(wordsByLines.length - 1) / 2} * -${lineHeight} + (${capHeight} / 2))`);
-  //     break;
-  //   default:
-  //     startDy = reduceCSSCalc(`calc(${wordsByLines.length - 1} * -${lineHeight})`);
-  //     break;
-  // }
+  let startDy: number;
+  switch (dominantBaseline) {
+    case 'hanging':
+      startDy = 0;
+      break;
+    case 'middle':
+      startDy = ((wordsByLines.length - 1) / 2) * -lineHeight;
+      break;
+    default:
+      startDy = wordsByLines.length - 1 * -lineHeight;
+      break;
+  }
 
   // const transforms = [];
   // if (scaleToFit) {
@@ -73,10 +74,9 @@ function Text(props: TextProps) {
   // }
 
   return (
-    <text {...textProps} x={x} y={y} textAnchor={textAnchor}>
+    <text {...textProps} x={x} y={y} textAnchor={textAnchor} dominantBaseline={dominantBaseline}>
       {wordsByLines.map((line, index) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <tspan x={x} dy={index === 0 ? startDy : lineHeight} key={index}>
+        <tspan x={x} dy={`${index === 0 ? startDy : lineHeight}em`} key={index}>
           {line.text}
         </tspan>
       ))}

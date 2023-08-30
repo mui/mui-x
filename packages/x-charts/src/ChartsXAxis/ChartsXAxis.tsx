@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { CartesianContext } from '../context/CartesianContextProvider';
@@ -7,13 +8,8 @@ import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 import { ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
-import {
-  ChartsLine,
-  ChartsTick,
-  ChartsTickLabel,
-  ChartsLabel,
-  AxisRoot,
-} from '../internals/components/AxisSharedComponents';
+import { AxisRoot } from '../internals/components/AxisSharedComponents';
+import { Text } from '../internals/components/Text';
 
 const useUtilityClasses = (ownerState: ChartsXAxisProps & { theme: Theme }) => {
   const { classes, position } = ownerState;
@@ -75,10 +71,37 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
     y: positionSigne * (tickFontSize + tickSize + 10),
   };
 
-  const Line = slots?.axisLine ?? ChartsLine;
-  const Tick = slots?.axisTick ?? ChartsTick;
-  const TickLabel = slots?.axisTickLabel ?? ChartsTickLabel;
-  const Label = slots?.axisLabel ?? ChartsLabel;
+  const Line = slots?.axisLine ?? 'line';
+  const Tick = slots?.axisTick ?? 'line';
+  const TickLabel = slots?.axisTickLabel ?? Text;
+  const Label = slots?.axisLabel ?? Text;
+
+  const axisTickLabelProps = useSlotProps({
+    elementType: TickLabel,
+    externalSlotProps: slotProps?.axisTickLabel,
+    additionalProps: {
+      textAnchor: 'middle',
+      dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+      style: { fontSize: tickFontSize },
+      className: classes.tickLabel,
+    } as const,
+    ownerState: {},
+  });
+
+  const axisLabelProps = useSlotProps({
+    elementType: Label,
+    externalSlotProps: slotProps?.axisTickLabel,
+    additionalProps: {
+      textAnchor: 'middle',
+      dominantBaseline: position === 'bottom' ? 'hanging' : 'auto',
+      style: {
+        fontSize: labelFontSize,
+        transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
+      },
+      className: classes.label,
+    } as const,
+    ownerState: {},
+  });
 
   return (
     <AxisRoot
@@ -112,32 +135,15 @@ function ChartsXAxis(inProps: ChartsXAxisProps) {
                 x={xTickLabel}
                 y={yTickLabel}
                 transform-origin={`${xTickLabel}px ${yTickLabel}px`}
-                sx={{
-                  fontSize: tickFontSize,
-                }}
-                className={classes.tickLabel}
-                {...slotProps?.axisTickLabel}
-              >
-                {formattedValue}
-              </TickLabel>
+                {...axisTickLabelProps}
+                text={formattedValue.toString()}
+              />
             )}
           </g>
         );
       })}
 
-      {label && (
-        <Label
-          {...labelRefPoint}
-          sx={{
-            fontSize: labelFontSize,
-            transformOrigin: `${labelRefPoint.x}px ${labelRefPoint.y}px`,
-          }}
-          className={classes.label}
-          {...slotProps?.axisLabel}
-        >
-          {label}
-        </Label>
-      )}
+      {label && <Label {...labelRefPoint} {...axisLabelProps} text={label} />}
     </AxisRoot>
   );
 }
