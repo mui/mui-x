@@ -5,7 +5,7 @@ import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../compon
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { useDataGridProps } from './useDataGridProps';
+import { useDataGridProps, DATA_GRID_PROPS_DEFAULT_VALUES } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { GridValidRowModel } from '../models/gridRows';
 
@@ -36,11 +36,23 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
 interface DataGridComponent {
   <R extends GridValidRowModel = any>(
     props: DataGridProps<R> & React.RefAttributes<HTMLDivElement>,
-  ): JSX.Element;
+  ): React.JSX.Element;
   propTypes?: any;
 }
 
 export const DataGrid = React.memo(DataGridRaw) as DataGridComponent;
+
+/**
+ * Remove at v7
+ * @deprecated
+ */
+export const SUBMIT_FILTER_STROKE_TIME = DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs;
+
+/**
+ * Remove at v7
+ * @deprecated
+ */
+export const SUBMIT_FILTER_DATE_STROKE_TIME = DATA_GRID_PROPS_DEFAULT_VALUES.filterDebounceMs;
 
 DataGridRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -163,6 +175,12 @@ DataGridRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: PropTypes.bool,
+  /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
@@ -182,9 +200,15 @@ DataGridRaw.propTypes = {
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
+    ariaV7: PropTypes.bool,
     columnGrouping: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: PropTypes.number,
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
@@ -222,7 +246,7 @@ DataGridRaw.propTypes = {
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent: PropTypes.func,
   /**

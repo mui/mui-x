@@ -13,5 +13,6 @@ export * from './BarChart';
 export * from './LineChart';
 export * from './PieChart';
 export * from './ScatterChart';
+export * from './SparkLineChart';
 export * from './ChartContainer';
 export * from './ResponsiveChartContainer';

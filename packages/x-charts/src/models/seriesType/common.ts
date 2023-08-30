@@ -1,4 +1,4 @@
-import type { HighlightScope } from '@mui/x-charts/context/HighlightProvider';
+import type { HighlightScope } from '../../context/HighlightProvider';
 import type { StackOffset, StackOrder } from '../../internals/stackSeries';
 
 export type CommonSeriesType<TValue> = {
@@ -13,7 +13,7 @@ export type CommonSeriesType<TValue> = {
   highlightScope?: Partial<HighlightScope>;
 };
 
-export type CommonDefaultizedProps = 'id' | 'valueFormatter';
+export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 
 export type CartesianSeriesType = {
   xAxisKey?: string;

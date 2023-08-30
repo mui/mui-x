@@ -572,7 +572,7 @@ describe('<DataGrid /> - Quick Filter', () => {
     });
   });
 
-  // See https://github.com/mui/mui-x/issues/6783
+  // https://github.com/mui/mui-x/issues/6783
   it('should not override user input when typing', async function test() {
     if (isJSDOM) {
       this.skip();
@@ -606,5 +606,36 @@ describe('<DataGrid /> - Quick Filter', () => {
     fireEvent.change(searchBox, { target: { value: `${searchBoxValue}c` } });
     await sleep(debounceMs * 2);
     expect(searchBox.value).to.equal('abc');
+  });
+
+  // https://github.com/mui/mui-x/issues/9666
+  it('should not fail when the data changes', () => {
+    function getApplyQuickFilterFn(value: any) {
+      if (!value) {
+        return null;
+      }
+      return (params: any) => {
+        return String(params?.value).toLowerCase().includes(String(value).toLowerCase());
+      };
+    }
+
+    const { setProps } = render(
+      <TestCase
+        columns={[
+          {
+            field: 'brand',
+            getApplyQuickFilterFn,
+          },
+        ]}
+        filterModel={{
+          items: [],
+          quickFilterValues: ['adid'],
+        }}
+      />,
+    );
+
+    setProps({
+      rows: [],
+    });
   });
 });

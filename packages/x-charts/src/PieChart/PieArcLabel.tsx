@@ -21,7 +21,7 @@ export interface PieArcLabelClasses {
 
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
-export interface PieArcLabelOwnerState {
+interface PieArcLabelOwnerState {
   id: string;
   dataIndex: number;
   color: string;
@@ -55,7 +55,6 @@ const PieArcLabelRoot = styled('text', {
   overridesResolver: (_, styles) => styles.root,
 })(({ theme }) => ({
   fill: theme.palette.text.primary,
-  alignmentBaseline: 'baseline',
   textAnchor: 'middle',
 }));
 

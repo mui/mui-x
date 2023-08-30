@@ -1,15 +1,21 @@
 {
   "props": {
-    "classes": { "type": { "name": "object" } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
+      },
+      "additionalInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "DayCalendarSkeleton",
+  "imports": [
+    "import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';",
+    "import { DayCalendarSkeleton } from '@mui/x-date-pickers';",
+    "import { DayCalendarSkeleton } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": {
     "classes": ["root", "week", "daySkeleton"],
     "globalClasses": {},

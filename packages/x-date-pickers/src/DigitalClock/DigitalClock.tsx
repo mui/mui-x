@@ -38,7 +38,9 @@ const DigitalClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: DigitalClockProps<any> & { alreadyRendered: boolean } }>(({ ownerState }) => ({
   overflowY: 'auto',
   width: '100%',
-  scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+  '@media (prefers-reduced-motion: no-preference)': {
+    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+  },
   maxHeight: DIGITAL_CLOCK_VIEW_HEIGHT,
 }));
 
@@ -81,7 +83,7 @@ const DigitalClockItem = styled(MenuItem, {
 
 type DigitalClockComponent = (<TDate>(
   props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends unknown>(
   inProps: DigitalClockProps<TDate>,
@@ -268,7 +270,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ...Array.from({ length: Math.ceil((24 * 60) / timeStep) - 1 }, (_, index) =>
         utils.addMinutes(startOfDay, timeStep * (index + 1)),
       ),
-      utils.endOfDay(valueOrReferenceDate),
     ];
   }, [valueOrReferenceDate, timeStep, utils]);
 

@@ -59,7 +59,9 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
     width: 56,
     padding: 0,
     overflow: 'hidden',
-    scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    '@media (prefers-reduced-motion: no-preference)': {
+      scrollBehavior: ownerState.alreadyRendered ? 'smooth' : 'auto',
+    },
     '&:hover': {
       overflowY: 'auto',
     },
@@ -108,7 +110,7 @@ const MultiSectionDigitalClockSectionItem = styled(MenuItem, {
 
 type MultiSectionDigitalClockSectionComponent = <TValue>(
   props: MultiSectionDigitalClockSectionProps<TValue> & React.RefAttributes<HTMLUListElement>,
-) => JSX.Element & { propTypes?: any };
+) => React.JSX.Element & { propTypes?: any };
 
 /**
  * @ignore - internal component.

@@ -56,7 +56,7 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
   /**
    * The callback that generates a filtering function for a given filter item and column.
    * This function can return `null` to skip filtering for this item and column.
-   * This function uses the more performant V7 API.
+   * This function uses the more performant v7 API.
    * @param {GridFilterItem} filterItem The filter item with which we want to filter the column.
    * @param {GridColDef} column The column from which we want to filter the rows.
    * @returns {null | ApplyFilterFnV7} The function to call to check if a row pass this filter item or not.

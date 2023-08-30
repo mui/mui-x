@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The Date Range Picker let the user select a range of dates.</p>
 
@@ -24,6 +24,8 @@ Check-out their documentation page for more information:
 
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

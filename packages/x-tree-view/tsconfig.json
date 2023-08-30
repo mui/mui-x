@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "types": ["react", "mocha", "node"],
+    "noImplicitAny": false
+  },
+  "include": [
+    "src/**/*",
+    "../../test/utils/addChaiAssertions.ts",
+    "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
+    "../../node_modules/@mui/material/themeCssVarsAugmentation"
+  ]
+}

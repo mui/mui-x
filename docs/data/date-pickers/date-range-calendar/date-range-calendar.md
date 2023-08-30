@@ -6,13 +6,15 @@ githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
-# Date Range Calendar [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Date Range Calendar [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The Date Range Calendar lets the user select a range of dates without any input or popper / modal.</p>
 
 ## Basic usage
 
 {{"demo": "BasicDateRangeCalendar.js"}}
+
+## Uncontrolled vs. controlled value
 
 The value of the component can be uncontrolled or controlled.
 

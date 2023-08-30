@@ -9,8 +9,12 @@
       "required": true
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "MarkElement",
+  "imports": [
+    "import { MarkElement } from '@mui/x-charts/LineChart';",
+    "import { MarkElement } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "highlighted", "faded"],
     "globalClasses": {},

@@ -57,6 +57,8 @@ export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   tabbableCell: string | null;
   row?: GridRowModel;
   isLastVisible?: boolean;
+  focusedCellColumnIndexNotInRange?: number;
+  isNotVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -114,6 +116,8 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     firstColumnToRender,
     lastColumnToRender,
     isLastVisible = false,
+    focusedCellColumnIndexNotInRange,
+    isNotVisible,
     focusedCell,
     tabbableCell,
     onClick,
@@ -247,7 +251,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
 
         // User clicked a button from the "actions" column type
         const column = apiRef.current.getColumn(field);
-        if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+        if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
           return;
         }
       }
@@ -277,6 +281,14 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         Object.keys(editRowsState).length > 0);
 
     const editCellState = editRowsState[rowId]?.[column.field] ?? null;
+    let cellIsNotVisible = false;
+
+    if (
+      focusedCellColumnIndexNotInRange !== undefined &&
+      visibleColumns[focusedCellColumnIndexNotInRange].field === column.field
+    ) {
+      cellIsNotVisible = true;
+    }
 
     return (
       <CellComponent
@@ -291,6 +303,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
         colSpan={cellProps.colSpan}
         disableDragEvents={disableDragEvents}
         editCellState={editCellState}
+        isNotVisible={cellIsNotVisible}
         {...slotProps?.cell}
       />
     );
@@ -322,27 +335,39 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
     }
   }
 
-  const style = {
-    ...styleProp,
-    maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
-    minHeight,
-  };
-
-  if (sizes?.spacingTop) {
-    const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
-    style[property] = sizes.spacingTop;
-  }
-
-  if (sizes?.spacingBottom) {
-    const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
-    let propertyValue = style[property];
-    // avoid overriding existing value
-    if (typeof propertyValue !== 'number') {
-      propertyValue = parseInt(propertyValue || '0', 10);
+  const style = React.useMemo(() => {
+    if (isNotVisible) {
+      return {
+        opacity: 0,
+        width: 0,
+        height: 0,
+      };
     }
-    propertyValue += sizes.spacingBottom;
-    style[property] = propertyValue;
-  }
+
+    const rowStyle = {
+      ...styleProp,
+      maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
+      minHeight,
+    };
+
+    if (sizes?.spacingTop) {
+      const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
+      rowStyle[property] = sizes.spacingTop;
+    }
+
+    if (sizes?.spacingBottom) {
+      const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
+      let propertyValue = rowStyle[property];
+      // avoid overriding existing value
+      if (typeof propertyValue !== 'number') {
+        propertyValue = parseInt(propertyValue || '0', 10);
+      }
+      propertyValue += sizes.spacingBottom;
+      rowStyle[property] = propertyValue;
+    }
+
+    return rowStyle;
+  }, [isNotVisible, rowHeight, styleProp, minHeight, sizes, rootProps.rowSpacingType]);
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
 
@@ -366,11 +391,20 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
   }
 
   const rowType = rowNode.type;
-  const cells: JSX.Element[] = [];
+  const cells: React.JSX.Element[] = [];
 
   for (let i = 0; i < renderedColumns.length; i += 1) {
     const column = renderedColumns[i];
-    const indexRelativeToAllColumns = firstColumnToRender + i;
+
+    let indexRelativeToAllColumns = firstColumnToRender + i;
+
+    if (focusedCellColumnIndexNotInRange !== undefined && focusedCell) {
+      if (visibleColumns[focusedCellColumnIndexNotInRange].field === column.field) {
+        indexRelativeToAllColumns = focusedCellColumnIndexNotInRange;
+      } else {
+        indexRelativeToAllColumns -= 1;
+      }
+    }
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
@@ -386,6 +420,7 @@ const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(
           showRightBorder: rootProps.showCellVerticalBorder,
           indexRelativeToAllColumns,
         };
+
         cells.push(getCell(column, cellProps));
       } else {
         const { width } = cellColSpanInfo.cellProps;
@@ -446,12 +481,14 @@ GridRow.propTypes = {
    * If `null`, no cell in this row has focus.
    */
   focusedCell: PropTypes.string,
+  focusedCellColumnIndexNotInRange: PropTypes.number,
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
    */
   index: PropTypes.number.isRequired,
   isLastVisible: PropTypes.bool,
+  isNotVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

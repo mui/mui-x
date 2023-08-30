@@ -189,11 +189,14 @@ Either rename the prop to the newly added, but deprecated `shouldDisableClock` o
 The codemod will take care of renaming the prop to keep the existing functionality but feel free to update to the new `shouldDisableTime` prop on your own.
 
 ```diff
+ // ℹ️ Rename and keep using the deprecated prop
+ // This is the change that the codemod will apply
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
 +  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
  />
 
+ // ✅ Update your code to use the provided date value parameter instead of a number
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
 +  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}

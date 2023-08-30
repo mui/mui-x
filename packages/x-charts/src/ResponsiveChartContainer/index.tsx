@@ -26,8 +26,8 @@ const useChartDimensions = (
     const win = ownerWindow(mainEl);
     const computedStyle = win.getComputedStyle(mainEl);
 
-    const newHeight = parseFloat(computedStyle.height) || 0;
-    const newWidth = parseFloat(computedStyle.width) || 0;
+    const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
+    const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
     setWidth(newWidth);
     setHeight(newHeight);

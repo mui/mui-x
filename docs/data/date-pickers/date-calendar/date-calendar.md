@@ -14,6 +14,8 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "BasicDateCalendar.js"}}
 
+## Uncontrolled vs. controlled value
+
 The value of the component can be uncontrolled or controlled.
 
 {{"demo": "DateCalendarValue.js"}}
@@ -41,6 +43,19 @@ You can customize the enabled views using the `views` prop.
 Views will appear in the order they're included in the `views` array.
 
 {{"demo": "DateCalendarViews.js"}}
+
+## Choose the initial year / month
+
+If `value` or `defaultValue` contains a valid date, this date will be used to choose which month to render in the `day` view and which year to render in the `month` view.
+If both `value` and `defaultValue` contain no valid date, the component will try to find a month and year that satisfies the validation rules.
+
+You can override this date using the `referenceDate`, in the example below the calendar renders April 2022 even though no date is visually selected:
+
+{{"demo": "DateCalendarReferenceDate.js"}}
+
+:::success
+Learn more about the `referenceDate` in the [dedicated doc section](/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
+:::
 
 ## Month and Year Calendar
 
