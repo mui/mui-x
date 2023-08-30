@@ -14,7 +14,7 @@ import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<any>> = ({
   instance,
-  props,
+  params,
   models,
 }) => {
   const lastSelectedNode = React.useRef<string | null>(null);
@@ -27,7 +27,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
       : models.selected.value === nodeId;
 
   const selectNode = (event: React.SyntheticEvent, nodeId: string, multiple = false) => {
-    if (props.disableSelection) {
+    if (params.disableSelection) {
       return;
     }
 
@@ -40,8 +40,8 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
           newSelected = [nodeId].concat(models.selected.value);
         }
 
-        if (props.onNodeSelect) {
-          (props.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
+        if (params.onNodeSelect) {
+          (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
             event,
             newSelected,
           );
@@ -50,10 +50,10 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
         models.selected.setValue(newSelected);
       }
     } else {
-      const newSelected = props.multiSelect ? [nodeId] : nodeId;
+      const newSelected = params.multiSelect ? [nodeId] : nodeId;
 
-      if (props.onNodeSelect) {
-        props.onNodeSelect(event, newSelected as string & string[]);
+      if (params.onNodeSelect) {
+        params.onNodeSelect(event, newSelected as string & string[]);
       }
 
       models.selected.setValue(newSelected);
@@ -104,8 +104,8 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
       currentRangeSelection.current.push(current, next);
     }
 
-    if (props.onNodeSelect) {
-      (props.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
+    if (params.onNodeSelect) {
+      (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
         event,
         base,
       );
@@ -131,8 +131,8 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
     let newSelected = base.concat(range);
     newSelected = newSelected.filter((id, i) => newSelected.indexOf(id) === i);
 
-    if (props.onNodeSelect) {
-      (props.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
+    if (params.onNodeSelect) {
+      (params.onNodeSelect as UseTreeViewSelectionDefaultizedParameters<true>['onNodeSelect'])!(
         event,
         newSelected,
       );
@@ -142,7 +142,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
   };
 
   const selectRange = (event: React.SyntheticEvent, nodes: TreeViewItemRange, stacked = false) => {
-    if (props.disableSelection) {
+    if (params.disableSelection) {
       return;
     }
 
@@ -191,7 +191,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<
 
   return {
     getRootProps: () => ({
-      'aria-multiselectable': props.multiSelect,
+      'aria-multiselectable': params.multiSelect,
     }),
   };
 };

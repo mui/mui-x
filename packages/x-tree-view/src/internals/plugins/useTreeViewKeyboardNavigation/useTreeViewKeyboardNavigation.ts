@@ -27,7 +27,7 @@ function findNextFirstChar(firstChars: string[], startIndex: number, char: strin
 
 export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   UseTreeViewKeyboardNavigationSignature
-> = ({ instance, props, state }) => {
+> = ({ instance, params, state }) => {
   const theme = useTheme();
   const isRtl = theme.direction === 'rtl';
   const firstCharMap = React.useRef<{ [nodeId: string]: string }>({});
@@ -93,7 +93,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
     Object.keys(firstCharMap.current).forEach((mapNodeId) => {
       const map = instance.getNode(mapNodeId);
       const visible = map.parentId ? instance.isNodeExpanded(map.parentId) : true;
-      const shouldBeSkipped = props.disabledItemsFocusable
+      const shouldBeSkipped = params.disabledItemsFocusable
         ? false
         : instance.isNodeDisabled(mapNodeId);
 
@@ -164,11 +164,11 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
       const ctrlPressed = event.ctrlKey || event.metaKey;
       switch (key) {
         case ' ':
-          if (!props.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
+          if (!params.disableSelection && !instance.isNodeDisabled(state.focusedNodeId)) {
             flag = true;
-            if (props.multiSelect && event.shiftKey) {
+            if (params.multiSelect && event.shiftKey) {
               instance.selectRange(event, { end: state.focusedNodeId });
-            } else if (props.multiSelect) {
+            } else if (params.multiSelect) {
               instance.selectNode(event, state.focusedNodeId, true);
             } else {
               instance.selectNode(event, state.focusedNodeId);
@@ -181,9 +181,9 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             if (instance.isNodeExpandable(state.focusedNodeId)) {
               instance.toggleNodeExpansion(event, state.focusedNodeId);
               flag = true;
-            } else if (!props.disableSelection) {
+            } else if (!params.disableSelection) {
               flag = true;
-              if (props.multiSelect) {
+              if (params.multiSelect) {
                 instance.selectNode(event, state.focusedNodeId, true);
               } else {
                 instance.selectNode(event, state.focusedNodeId);
@@ -193,14 +193,14 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           event.stopPropagation();
           break;
         case 'ArrowDown':
-          if (props.multiSelect && event.shiftKey && !props.disableSelection) {
+          if (params.multiSelect && event.shiftKey && !params.disableSelection) {
             selectNextNode(event, state.focusedNodeId);
           }
           instance.focusNode(event, getNextNode(instance, state.focusedNodeId));
           flag = true;
           break;
         case 'ArrowUp':
-          if (props.multiSelect && event.shiftKey && !props.disableSelection) {
+          if (params.multiSelect && event.shiftKey && !params.disableSelection) {
             selectPreviousNode(event, state.focusedNodeId);
           }
           instance.focusNode(event, getPreviousNode(instance, state.focusedNodeId));
@@ -222,10 +222,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           break;
         case 'Home':
           if (
-            props.multiSelect &&
+            params.multiSelect &&
             ctrlPressed &&
             event.shiftKey &&
-            !props.disableSelection &&
+            !params.disableSelection &&
             !instance.isNodeDisabled(state.focusedNodeId)
           ) {
             instance.rangeSelectToFirst(event, state.focusedNodeId);
@@ -235,10 +235,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
           break;
         case 'End':
           if (
-            props.multiSelect &&
+            params.multiSelect &&
             ctrlPressed &&
             event.shiftKey &&
-            !props.disableSelection &&
+            !params.disableSelection &&
             !instance.isNodeDisabled(state.focusedNodeId)
           ) {
             instance.rangeSelectToLast(event, state.focusedNodeId);
@@ -251,10 +251,10 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
             instance.expandAllSiblings(event, state.focusedNodeId);
             flag = true;
           } else if (
-            props.multiSelect &&
+            params.multiSelect &&
             ctrlPressed &&
             key.toLowerCase() === 'a' &&
-            !props.disableSelection
+            !params.disableSelection
           ) {
             instance.selectRange(event, {
               start: getFirstNode(instance),

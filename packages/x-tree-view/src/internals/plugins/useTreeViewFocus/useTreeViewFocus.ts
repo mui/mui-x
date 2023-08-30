@@ -7,7 +7,7 @@ import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
   instance,
-  props,
+  params,
   state,
   setState,
   models,
@@ -26,8 +26,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
     if (nodeId) {
       setFocusedNodeId(nodeId);
 
-      if (props.onNodeFocus) {
-        props.onNodeFocus(event, nodeId);
+      if (params.onNodeFocus) {
+        params.onNodeFocus(event, nodeId);
       }
     }
   });

@@ -7,7 +7,7 @@ import { UseTreeViewNodesSignature } from './useTreeViewNodes.types';
 
 export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   instance,
-  props,
+  params,
   rootRef,
 }) => {
   const nodeMap = React.useRef<{ [nodeId: string]: TreeViewNode }>({});
@@ -51,7 +51,7 @@ export const useTreeViewNodes: TreeViewPlugin<UseTreeViewNodesSignature> = ({
   const getNavigableChildrenIds = (nodeId: string | null) => {
     let childrenIds = instance.getChildrenIds(nodeId);
 
-    if (!props.disabledItemsFocusable) {
+    if (!params.disabledItemsFocusable) {
       childrenIds = childrenIds.filter((node) => !instance.isNodeDisabled(node));
     }
     return childrenIds;

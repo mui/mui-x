@@ -6,7 +6,7 @@ import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
   instance,
-  props,
+  params,
   models,
 }) => {
   const isNodeExpanded = React.useCallback(
@@ -37,8 +37,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
         newExpanded = [nodeId].concat(models.expanded.value);
       }
 
-      if (props.onNodeToggle) {
-        props.onNodeToggle(event, newExpanded);
+      if (params.onNodeToggle) {
+        params.onNodeToggle(event, newExpanded);
       }
 
       models.expanded.setValue(newExpanded);
@@ -58,8 +58,8 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     if (diff.length > 0) {
       models.expanded.setValue(newExpanded);
 
-      if (props.onNodeToggle) {
-        props.onNodeToggle(event, newExpanded);
+      if (params.onNodeToggle) {
+        params.onNodeToggle(event, newExpanded);
       }
     }
   };

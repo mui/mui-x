@@ -4,8 +4,8 @@ import { UseTreeViewContextValueBuilderSignature } from './useTreeViewContextVal
 
 export const useTreeViewContextValueBuilder: TreeViewPlugin<
   UseTreeViewContextValueBuilderSignature
-> = ({ instance, props }) => {
-  const treeId = useId(props.id);
+> = ({ instance, params }) => {
+  const treeId = useId(params.id);
 
   return {
     getRootProps: () => ({
@@ -14,13 +14,13 @@ export const useTreeViewContextValueBuilder: TreeViewPlugin<
     contextValue: {
       treeId,
       instance: instance as TreeViewInstance<any>,
-      multiSelect: props.multiSelect,
-      disabledItemsFocusable: props.disabledItemsFocusable,
+      multiSelect: params.multiSelect,
+      disabledItemsFocusable: params.disabledItemsFocusable,
       icons: {
-        defaultCollapseIcon: props.defaultCollapseIcon,
-        defaultEndIcon: props.defaultEndIcon,
-        defaultExpandIcon: props.defaultExpandIcon,
-        defaultParentIcon: props.defaultParentIcon,
+        defaultCollapseIcon: params.defaultCollapseIcon,
+        defaultEndIcon: params.defaultEndIcon,
+        defaultExpandIcon: params.defaultExpandIcon,
+        defaultParentIcon: params.defaultParentIcon,
       },
     },
   };
