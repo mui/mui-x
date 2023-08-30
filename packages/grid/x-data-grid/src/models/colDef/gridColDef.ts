@@ -327,9 +327,7 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridActionsColDef<R, V, F>
   | GridSingleSelectColDef<R, V, F>;
 
-export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'> & {
-  extendType?: GridNativeColTypes;
-};
+export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'>;
 
 export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridColDef<
   R,
