@@ -74,7 +74,14 @@ function Text(props: TextProps) {
   // }
 
   return (
-    <text {...textProps} x={x} y={y} textAnchor={textAnchor} dominantBaseline={dominantBaseline}>
+    <text
+      {...textProps}
+      x={x}
+      y={y}
+      textAnchor={textAnchor}
+      dominantBaseline={dominantBaseline}
+      style={style}
+    >
       {wordsByLines.map((line, index) => (
         <tspan x={x} dy={`${index === 0 ? startDy : lineHeight}em`} key={index}>
           {line.text}
