@@ -17,7 +17,7 @@ import { TreeItemContent } from './TreeItemContent';
 import { treeItemClasses, getTreeItemUtilityClass } from './treeItemClasses';
 import { TreeItemOwnerState, TreeItemProps } from './TreeItem.types';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultPlugins } from '../internals/useTreeView/useTreeView';
+import { DefaultTreeViewPlugins } from '../internals/plugins';
 
 const useUtilityClasses = (ownerState: TreeItemOwnerState) => {
   const { classes } = ownerState;
@@ -181,7 +181,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     disabledItemsFocusable,
     treeId,
     instance,
-  } = useTreeViewContext<DefaultPlugins>();
+  } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   let id: string | undefined;
   if (idProp != null) {

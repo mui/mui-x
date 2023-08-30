@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TreeViewProviderProps } from './TreeViewProvider.types';
 import { TreeViewContext } from './TreeViewContext';
 import { DescendantProvider } from './DescendantProvider';
-import { TreeViewAnyPluginSignature } from '../../models';
+import { TreeViewAnyPluginSignature } from '../models';
 
 /**
  * Sets up the contexts for the underlying TreeItem components.

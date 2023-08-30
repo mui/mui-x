@@ -1,5 +1,4 @@
-import { TreeViewNode, DefaultizedProps } from '../../models';
-import { TreeViewPluginSignature } from '../../../models';
+import { TreeViewNode, DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewFocusSignature } from '../useTreeViewFocus';
 
 export interface UseTreeViewNodesInstance {
@@ -28,5 +27,6 @@ export type UseTreeViewNodesSignature = TreeViewPluginSignature<
   UseTreeViewNodesDefaultizedParameters,
   UseTreeViewNodesInstance,
   {},
+  never,
   [UseTreeViewFocusSignature]
 >;

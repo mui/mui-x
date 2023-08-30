@@ -2,14 +2,14 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { EventHandlers } from '@mui/base/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../../models';
+import { TreeViewPlugin } from '../../models';
 import {
   getFirstNode,
   getLastNode,
   getNextNode,
   getPreviousNode,
   populateInstance,
-} from '../useTreeView.utils';
+} from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewKeyboardNavigationSignature } from './useTreeViewKeyboardNavigation.types';
 
 function isPrintableCharacter(string: string) {

@@ -1,14 +1,18 @@
 import * as React from 'react';
-import { TreeViewPlugin } from '../../../models';
-import { TreeViewItemRange } from '../../models';
-import { populateInstance, getNextNode, getFirstNode, getLastNode } from '../useTreeView.utils';
+import { TreeViewPlugin, TreeViewItemRange } from '../../models';
+import {
+  populateInstance,
+  getNextNode,
+  getFirstNode,
+  getLastNode,
+} from '../../useTreeView/useTreeView.utils';
 import {
   UseTreeViewSelectionDefaultizedParameters,
   UseTreeViewSelectionSignature,
 } from './useTreeViewSelection.types';
 import { findOrderInTremauxTree } from './useTreeViewSelection.utils';
 
-export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
+export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature<any>> = ({
   instance,
   props,
   models,
@@ -177,7 +181,7 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
     });
   };
 
-  populateInstance<UseTreeViewSelectionSignature>(instance, {
+  populateInstance<UseTreeViewSelectionSignature<any>>(instance, {
     isNodeSelected,
     selectNode,
     selectRange,
@@ -192,6 +196,15 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
   };
 };
 
-useTreeViewSelection.models = [
-  { name: 'selected', controlledProp: 'selected', defaultProp: 'defaultSelected' },
-];
+useTreeViewSelection.models = {
+  selected: { controlledProp: 'selected', defaultProp: 'defaultSelected' },
+};
+
+const defaultDefaultSelected: string[] = [];
+
+useTreeViewSelection.getDefaultizedParams = (params) => ({
+  ...params,
+  disableSelection: params.disableSelection ?? false,
+  multiSelect: params.multiSelect ?? false,
+  defaultSelected: params.defaultSelected ?? (params.multiSelect ? defaultDefaultSelected : null),
+});

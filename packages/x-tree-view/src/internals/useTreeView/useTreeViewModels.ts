@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { TreeViewAnyPluginSignature, TreeViewModels, TreeViewPlugin } from '../../models';
-import { MergePluginsProperty } from '../models';
+import {
+  TreeViewAnyPluginSignature,
+  TreeViewPlugin,
+  ConvertPluginsIntoSignatures,
+  MergePluginsProperty,
+} from '../models';
 
 /**
  * Implements the same behavior as `useControlled` but for several models.
@@ -10,7 +14,7 @@ export const useTreeViewModels = <
   TPlugins extends readonly TreeViewPlugin<TreeViewAnyPluginSignature>[],
 >(
   plugins: TPlugins,
-  props: MergePluginsProperty<TPlugins, 'defaultizedParams'>,
+  props: MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'defaultizedParams'>,
 ) => {
   const modelsRef = React.useRef<{
     [modelName: string]: {
@@ -24,14 +28,16 @@ export const useTreeViewModels = <
     const initialState: { [modelName: string]: any } = {};
 
     plugins.forEach((plugin) => {
-      plugin.models?.forEach((model) => {
-        modelsRef.current[model.name] = {
-          controlledProp: model.controlledProp as keyof typeof props,
-          defaultProp: model.defaultProp as keyof typeof props,
-          isControlled: props[model.controlledProp as keyof typeof props] !== undefined,
-        };
-        initialState[model.name] = props[model.defaultProp as keyof typeof props];
-      });
+      if (plugin.models) {
+        Object.entries(plugin.models).forEach(([modelName, model]) => {
+          modelsRef.current[modelName] = {
+            controlledProp: model.controlledProp as keyof typeof props,
+            defaultProp: model.defaultProp as keyof typeof props,
+            isControlled: props[model.controlledProp as keyof typeof props] !== undefined,
+          };
+          initialState[modelName] = props[model.defaultProp as keyof typeof props];
+        });
+      }
     });
 
     return initialState;
@@ -56,7 +62,7 @@ export const useTreeViewModels = <
         },
       ];
     }),
-  ) as unknown as TreeViewModels<any>;
+  ) as MergePluginsProperty<ConvertPluginsIntoSignatures<TPlugins>, 'models'>;
 
   // We know that `modelsRef` do not vary across renders.
   /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */

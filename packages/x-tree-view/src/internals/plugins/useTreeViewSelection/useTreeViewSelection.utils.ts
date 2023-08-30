@@ -1,4 +1,4 @@
-import { TreeViewInstance } from '../../../models';
+import { TreeViewInstance } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 /**

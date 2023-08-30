@@ -1,7 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { TreeViewPlugin } from '../../../models';
-import { populateInstance } from '../useTreeView.utils';
+import { TreeViewPlugin } from '../../models';
+import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewExpansionSignature } from './useTreeViewExpansion.types';
 
 export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature> = ({
@@ -72,6 +72,16 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
   });
 };
 
-useTreeViewExpansion.models = [
-  { name: 'expanded', controlledProp: 'expanded', defaultProp: 'defaultExpanded' },
-];
+useTreeViewExpansion.models = {
+  expanded: {
+    controlledProp: 'expanded',
+    defaultProp: 'defaultExpanded',
+  },
+};
+
+const defaultDefaultExpanded: string[] = [];
+
+useTreeViewExpansion.getDefaultizedParams = (params) => ({
+  ...params,
+  defaultExpanded: params.defaultExpanded ?? defaultDefaultExpanded,
+});

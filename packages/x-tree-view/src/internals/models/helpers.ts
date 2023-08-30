@@ -1,4 +1,4 @@
-import type { TreeViewPlugin, TreeViewAnyPluginSignature } from '../models';
+import { TreeViewAnyPluginSignature, TreeViewPlugin } from './plugin';
 
 export type DefaultizedProps<
   P extends {},
@@ -23,19 +23,3 @@ export type ConvertPluginsIntoSignatures<TPlugins extends readonly any[]> =
       ? [TSignature, ...ConvertPluginsIntoSignatures<R>]
       : ConvertPluginsIntoSignatures<R>
     : [];
-
-export interface TreeViewNode {
-  id: string;
-  idAttribute: string | undefined;
-  index: number;
-  parentId: string | null;
-  expandable: boolean;
-  disabled: boolean | undefined;
-}
-
-export interface TreeViewItemRange {
-  start?: string | null;
-  end?: string | null;
-  next?: string | null;
-  current?: string;
-}

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { EventHandlers } from '@mui/base/utils';
-import { TreeViewPlugin } from '../../../models';
-import { populateInstance } from '../useTreeView.utils';
+import { TreeViewPlugin } from '../../models';
+import { populateInstance } from '../../useTreeView/useTreeView.utils';
 import { UseTreeViewFocusSignature } from './useTreeViewFocus.types';
 
 export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
@@ -70,3 +70,8 @@ export const useTreeViewFocus: TreeViewPlugin<UseTreeViewFocusSignature> = ({
 };
 
 useTreeViewFocus.getInitialState = () => ({ focusedNodeId: null });
+
+useTreeViewFocus.getDefaultizedParams = (params) => ({
+  ...params,
+  disabledItemsFocusable: params.disabledItemsFocusable ?? false,
+});

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TreeViewAnyPluginSignature, TreeViewInstance } from '../../models';
+import { TreeViewAnyPluginSignature, TreeViewInstance } from '../models';
 
 export interface TreeViewContextValue<TPlugins extends readonly TreeViewAnyPluginSignature[]> {
   treeId: string | undefined;

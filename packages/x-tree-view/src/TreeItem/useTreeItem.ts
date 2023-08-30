@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useTreeViewContext } from '../internals/TreeViewProvider/useTreeViewContext';
-import { DefaultPlugins } from '../internals/useTreeView/useTreeView';
+import { DefaultTreeViewPlugins } from '../internals/plugins';
 
 export function useTreeItem(nodeId: string) {
-  const { instance, multiSelect } = useTreeViewContext<DefaultPlugins>();
+  const { instance, multiSelect } = useTreeViewContext<DefaultTreeViewPlugins>();
 
   const expandable = instance ? instance.isNodeExpandable(nodeId) : false;
   const expanded = instance ? instance.isNodeExpanded(nodeId) : false;

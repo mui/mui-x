@@ -13,17 +13,7 @@
   { "name": "treeViewClasses", "kind": "Variable" },
   { "name": "TreeViewClasses", "kind": "Interface" },
   { "name": "TreeViewClassKey", "kind": "TypeAlias" },
-  { "name": "TreeViewInstance", "kind": "TypeAlias" },
-  { "name": "TreeViewModel", "kind": "Interface" },
-  { "name": "TreeViewModelInitializer", "kind": "Interface" },
-  { "name": "TreeViewModels", "kind": "Interface" },
-  { "name": "TreeViewPlugin", "kind": "TypeAlias" },
-  { "name": "TreeViewPluginParams", "kind": "Interface" },
-  { "name": "TreeViewPluginSignature", "kind": "TypeAlias" },
-  { "name": "TreeViewProps", "kind": "TypeAlias" },
+  { "name": "TreeViewProps", "kind": "Interface" },
   { "name": "TreeViewPropsBase", "kind": "Interface" },
-  { "name": "TreeViewUsedInstance", "kind": "TypeAlias" },
-  { "name": "TreeViewUsedParams", "kind": "TypeAlias" },
-  { "name": "TreeViewUsedState", "kind": "TypeAlias" },
   { "name": "useTreeItem", "kind": "Function" }
 ]

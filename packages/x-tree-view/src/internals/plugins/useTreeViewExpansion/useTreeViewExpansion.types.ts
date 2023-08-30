@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { DefaultizedProps } from '../../models';
-import { TreeViewPluginSignature } from '../../../models';
+import { DefaultizedProps, TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 
 export interface UseTreeViewExpansionInstance {
@@ -40,5 +39,6 @@ export type UseTreeViewExpansionSignature = TreeViewPluginSignature<
   UseTreeViewExpansionDefaultizedParameters,
   UseTreeViewExpansionInstance,
   {},
+  'expanded',
   [UseTreeViewNodesSignature]
 >;

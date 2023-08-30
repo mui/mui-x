@@ -7,6 +7,7 @@ import { getTreeViewUtilityClass } from './treeViewClasses';
 import { TreeViewProps } from './TreeView.types';
 import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
+import { DEFAULT_TREE_VIEW_PLUGINS } from '../internals/plugins';
 
 const useUtilityClasses = <Multiple extends boolean | undefined>(
   ownerState: TreeViewProps<Multiple>,
@@ -72,7 +73,7 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     // Component implementation
     children,
     ...other
-  } = themeProps;
+  } = themeProps as TreeViewProps<any>;
 
   const { getRootProps, contextValue } = useTreeView({
     disabledItemsFocusable,
@@ -90,6 +91,7 @@ const TreeView = React.forwardRef(function TreeView<Multiple extends boolean | u
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
+    plugins: DEFAULT_TREE_VIEW_PLUGINS,
     rootRef: ref,
   });
 
@@ -173,6 +175,11 @@ TreeView.propTypes = {
    * Used when the item's expansion are controlled.
    */
   expanded: PropTypes.arrayOf(PropTypes.string),
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
   /**
    * If true `ctrl` and `shift` will trigger multiselect.
    * @default false

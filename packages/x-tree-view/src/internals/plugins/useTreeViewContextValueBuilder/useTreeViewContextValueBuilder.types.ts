@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TreeViewPluginSignature } from '../../../models';
+import { TreeViewPluginSignature } from '../../models';
 import { UseTreeViewNodesSignature } from '../useTreeViewNodes';
 import { UseTreeViewSelectionSignature } from '../useTreeViewSelection';
 
@@ -37,5 +37,6 @@ export type UseTreeViewContextValueBuilderSignature = TreeViewPluginSignature<
   UseTreeViewContextValueBuilderDefaultizedParameters,
   {},
   {},
-  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature]
+  never,
+  [UseTreeViewNodesSignature, UseTreeViewSelectionSignature<any>]
 >;

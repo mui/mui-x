@@ -1,5 +1,5 @@
 import useId from '@mui/utils/useId';
-import { TreeViewInstance, TreeViewPlugin } from '../../../models';
+import { TreeViewInstance, TreeViewPlugin } from '../../models';
 import { UseTreeViewContextValueBuilderSignature } from './useTreeViewContextValueBuilder.types';
 
 export const useTreeViewContextValueBuilder: TreeViewPlugin<
