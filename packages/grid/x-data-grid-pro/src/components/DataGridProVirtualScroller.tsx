@@ -171,7 +171,7 @@ const VirtualScrollerPinnedRows = styled('div', {
   return {
     position: 'sticky',
     // should be above the no rows overlay
-    zIndex: 5,
+    zIndex: 4,
     backgroundColor: (theme.vars || theme).palette.background.default,
     ...(theme.vars
       ? { backgroundImage: theme.vars.overlays?.[2] }
