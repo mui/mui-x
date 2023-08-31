@@ -95,10 +95,10 @@
     }
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.1",
+    "@types/luxon": "^3.3.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
-    "luxon": "^3.4.0",
+    "luxon": "^3.4.2",
     "moment": "^2.29.4"
   },
   "setupFiles": [
