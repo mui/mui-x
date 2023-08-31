@@ -97,6 +97,10 @@ You can force a specific orientation using the `orientation` prop.
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
 
+:::info
+You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
+:::
+
 ## Choose time view renderer
 
 You can use the `viewRenderers` prop to change the view that is used for rendering a view.
