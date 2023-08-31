@@ -39,7 +39,7 @@ Same changes as in `@mui/x-data-grid-pro@v6.12.1`.
 
 Same changes as in `@mui/x-date-pickers@v6.12.1`.
 
-### Charts / `@mui/x-charts@v__CHARTS_VERSION__`
+### Charts / `@mui/x-charts@6.0.0-alpha.9`
 
 - [charts] Move the line item highligh into a dedicated component (#10117) @alexfauquette
 
@@ -101,7 +101,7 @@ Same changes as in `@mui/x-data-grid-pro@v6.12.0`.
 
 Same changes as in `@mui/x-date-pickers@v6.12.0`.
 
-### Charts / `@mui/x-charts@6.12.0`
+### Charts / `@mui/x-charts@6.0.0-alpha.8`
 
 - [charts] Fix import issue (#10111) @alexfauquette
 - [charts] Fix `slotProps` propagation (#10105) @alexfauquette
