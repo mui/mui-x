@@ -110,4 +110,4 @@ You might be interested in using the [Time Clock](/x/react-date-pickers/time-clo
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
