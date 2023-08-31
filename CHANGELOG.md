@@ -10,6 +10,8 @@ _Aug 31, 2023_
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🏎️ Perf improvement for line charts
+- 🎁 Add `referenceDate` prop on pickers (#9991) @flaviendelangle
+  Find out more about this feature in the [documentation section](https://mui.com/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
 - 🐞 Bugfixes
 - 📚 Documentation improvements
 
