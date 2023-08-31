@@ -11,6 +11,7 @@ import {
   GridColumnResizeParams,
   useGridApiEventHandler,
   useGridApiOptionHandler,
+  useGridApiMethod,
   useGridNativeEventListener,
   useGridLogger,
 } from '@mui/x-data-grid';
@@ -29,6 +30,7 @@ import {
 } from '../../../utils/domUtils';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import { GridColumnResizeApi } from './gridColumnResizeApi';
 
 type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
 
@@ -436,6 +438,19 @@ export const useGridColumnResize = (
     apiRef.current.forceUpdate();
   }, [apiRef]);
 
+  /**
+   * API METHODS
+   */
+
+  const autosizeColumns = React.useCallback<GridColumnResizeApi['autosizeColumns']>((options) => {
+    // XXX: implement
+    console.log(options);
+  }, []);
+
+  /**
+   * EFFECTS
+   */
+
   React.useEffect(() => {
     return () => {
       clearTimeout(stopResizeEventTimeout.current);
@@ -449,6 +464,14 @@ export const useGridColumnResize = (
     'touchstart',
     handleTouchStart,
     { passive: doesSupportTouchActionNone() },
+  );
+
+  useGridApiMethod(
+    apiRef,
+    {
+      autosizeColumns,
+    },
+    'public',
   );
 
   useGridApiEventHandler(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
