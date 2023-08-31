@@ -1,5 +1,5 @@
 ---
-title: Charts - Funnel
+title: React Funnel chart
 ---
 
 # Charts - Funnel 🚧

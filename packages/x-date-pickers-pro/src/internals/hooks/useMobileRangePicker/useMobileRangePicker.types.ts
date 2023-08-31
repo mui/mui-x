@@ -49,7 +49,7 @@ export interface UseMobileRangePickerProps<
   TDate,
   TView extends DateOrTimeViewWithMeridiem,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<any, any, TView, any, any>,
 > extends MobileRangeOnlyPickerProps<TDate>,
     BasePickerProps<
       DateRange<TDate>,
