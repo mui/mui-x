@@ -102,21 +102,32 @@ function SingleSelect({ label, value, onChange, options, ...props }: SingleSelec
   );
 }
 
-function ValuesEditor({
+function FieldsEditor<
+  TFields extends string,
+  TValues extends Array<{ field: string } & Partial<Record<TFields, any>>>,
+>({
   values,
   options,
   onChange,
+  label,
+  fieldsConfig,
 }: {
-  values: PivotModel['values'];
+  values: TValues;
   options: string[];
-  onChange: (values: PivotModel['values']) => void;
+  onChange: (values: TValues) => void;
+  label: string;
+  fieldsConfig: {
+    key: TFields;
+    options: string[];
+  }[];
 }) {
-  const [emptyValues, setEmptyValues] = React.useState<PivotModel['values']>([]);
+  const [emptyValues, setEmptyValues] = React.useState<TValues>([] as any as TValues);
 
   return (
     <div>
-      <Typography variant="caption">Values</Typography>
-      {values.map(({ field, aggFunc }, index) => {
+      <Typography variant="caption">{label}</Typography>
+      {values.map((valueObj, index) => {
+        const field = valueObj.field;
         return (
           <Box sx={{ display: 'flex', alignItems: 'center', my: 2, gap: '10px' }} key={field}>
             <SingleSelect
@@ -128,31 +139,38 @@ function ValuesEditor({
                     return { ...value, field: event.target.value };
                   }
                   return value;
-                });
+                }) as TValues;
                 onChange(newValues);
               }}
               options={[field].concat(options)}
               sx={{ flex: '0 1 300px' }}
             />
-            <SingleSelect
-              label="Aggregation"
-              value={aggFunc}
-              onChange={(event) => {
-                const newValues = values.map((value, valIndex) => {
-                  if (valIndex === index) {
-                    return { ...value, aggFunc: event.target.value };
-                  }
-                  return value;
-                });
-                onChange(newValues);
-              }}
-              options={['sum', 'avg', 'min', 'max', 'size']}
-              sx={{ flex: '0 1 100px' }}
-            />
+            {fieldsConfig.map((fieldConfig) => {
+              const { key } = fieldConfig;
+              return (
+                <SingleSelect
+                  key={key}
+                  label={key}
+                  value={valueObj[key]}
+                  onChange={(event) => {
+                    const newValues = values.map((value, valIndex) => {
+                      if (valIndex === index) {
+                        return { ...value, [key]: event.target.value };
+                      }
+                      return value;
+                    }) as TValues;
+                    onChange(newValues);
+                  }}
+                  options={fieldConfig.options}
+                  sx={{ flex: '0 1 100px' }}
+                />
+              );
+            })}
+
             <IconButton
               size="small"
               onClick={() => {
-                onChange(values.filter((_, valIndex) => valIndex !== index));
+                onChange(values.filter((_, valIndex) => valIndex !== index) as TValues);
               }}
             >
               <DeleteIcon />
@@ -168,9 +186,9 @@ function ValuesEditor({
               value=""
               onChange={(event) => {
                 setEmptyValues((prevValues) => {
-                  return prevValues.filter((_, index) => index !== emptyIndex);
+                  return prevValues.filter((_, index) => index !== emptyIndex) as TValues;
                 });
-                onChange([...values, { ...value, field: event.target.value }]);
+                onChange([...values, { ...value, field: event.target.value }] as TValues);
               }}
               options={options}
               sx={{ flex: '0 1 300px' }}
@@ -179,7 +197,7 @@ function ValuesEditor({
               size="small"
               onClick={() => {
                 setEmptyValues((prevValues) => {
-                  return prevValues.filter((_, index) => index !== emptyIndex);
+                  return prevValues.filter((_, index) => index !== emptyIndex) as TValues;
                 });
               }}
             >
@@ -191,7 +209,7 @@ function ValuesEditor({
       <Button
         onClick={() => {
           setEmptyValues((prevValues) => {
-            return [...prevValues, { field: '', aggFunc: 'sum' }];
+            return [...prevValues, { field: '' }] as TValues;
           });
         }}
         variant="outlined"
@@ -240,18 +258,19 @@ export default function GridPivotModelEditor({
           onPivotModelChange((prevModel) => ({ ...prevModel, rows: newRows }));
         }}
       />
-      <FieldsSelect
+      <FieldsEditor
+        values={pivotModel.columns}
         options={availableFields}
-        label="Columns"
-        values={pivotModel.columns.map((col) => col.field)}
-        onChange={(newColumns) => {
+        onChange={(newValues) => {
           onPivotModelChange((prevModel) => ({
             ...prevModel,
-            columns: newColumns.map((field) => ({ field })),
+            columns: newValues,
           }));
         }}
+        label="Columns"
+        fieldsConfig={[{ key: 'sort', options: ['asc', 'desc'] }]}
       />
-      <ValuesEditor
+      <FieldsEditor
         values={pivotModel.values}
         options={availableFields}
         onChange={(newValues) => {
@@ -260,6 +279,8 @@ export default function GridPivotModelEditor({
             values: newValues,
           }));
         }}
+        label="Values"
+        fieldsConfig={[{ key: 'aggFunc', options: ['sum', 'avg', 'min', 'max', 'size'] }]}
       />
     </div>
   );
