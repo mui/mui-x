@@ -12,9 +12,6 @@ export type AnchorPosition = { horizontal: AnchorX; vertical: AnchorY };
 
 export type SizingParams = {
   direction?: 'row' | 'column';
-  markSize?: number;
-  itemWidth?: number;
-  spacing?: number;
 };
 
 const legendGetter: { [T in ChartSeriesType]: LegendGetter<T> } = {

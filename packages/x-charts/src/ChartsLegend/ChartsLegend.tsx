@@ -15,6 +15,7 @@ import { DefaultizedProps } from '../models/helpers';
 import { LegendParams } from '../models/seriesType/config';
 import { getStringSize } from '../internals/domUtils';
 import { Text } from '../internals/components/Text';
+import { CardinalDirections } from '../models/layout';
 
 export interface ChartsLegendSlotsComponent {
   legend?: React.JSXElementConstructor<LegendRendererProps>;
@@ -26,7 +27,6 @@ export interface ChartsLegendSlotComponentProps {
 
 export type ChartsLegendProps = {
   position?: AnchorPosition;
-  offset?: Partial<{ x: number; y: number }>;
   /**
    * Override or extend the styles applied to the component.
    */
@@ -91,9 +91,6 @@ export const ChartsLegendRoot = styled('g', {
 const defaultProps = {
   position: { horizontal: 'middle', vertical: 'top' },
   direction: 'row',
-  markSize: 20,
-  itemWidth: 100,
-  spacing: 2,
 } as const;
 
 export interface LegendRendererProps
@@ -116,66 +113,173 @@ export interface LegendRendererProps
    * Space between the mark and the label (in px)
    * @default 5
    */
-  labelSpacing?: number;
+  markGap?: number;
+  /**
+   * Space between two legend items (in px)
+   * @default 10
+   */
+  itemGap?: number;
+  /**
+   * Legend padding (in px).
+   * Can either be a single number, or an object with top, left, bottom, right properties.
+   * @default 0
+   */
+  padding?: number | Partial<CardinalDirections<number>>;
 }
 
-function getPosition(
-  seriesToDisplay: LegendParams,
-  direction: LegendRendererProps['direction'],
-  position: LegendRendererProps['position'],
-){
-  
+const getStandardizedPadding = (padding: LegendRendererProps['padding']) => {
+  if (typeof padding === 'number') {
+    return {
+      left: padding,
+      right: padding,
+      top: padding,
+      bottom: padding,
+    };
+  }
+  return {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    ...padding,
+  };
 };
 function DefaultChartsLegend(props: LegendRendererProps) {
   const {
     hidden,
     position,
     direction,
-    offset,
     seriesToDisplay,
     drawingArea,
     classes,
     itemMarkWidth = 20,
     itemMarkHeight = 20,
-    labelSpacing = 5,
+    markGap = 5,
+    itemGap = 10,
+    padding: paddingProps = 10,
   } = props;
 
-  const seriesWithPosition = React.useMemo(() => {
-    let x = drawingArea.left + (offset?.x ?? 0);
-    let y = offset?.y ?? 0;
+  const padding = React.useMemo(() => getStandardizedPadding(paddingProps), [paddingProps]);
 
-    return seriesToDisplay.map(({ label, ...other }) => {
+  const getItemSpace = React.useCallback(
+    (label: string) => {
+      const size = getStringSize(label);
+      const innerSize = {
+        innerWidth: itemMarkWidth + markGap + size.width,
+        innerHeight: Math.max(itemMarkHeight, size.height),
+      };
+
+      return {
+        ...innerSize,
+        outerWidth: innerSize.innerWidth + itemGap,
+        outerHeight: innerSize.innerHeight + itemGap,
+      };
+    },
+    [itemGap, itemMarkHeight, itemMarkWidth, markGap],
+  );
+
+  const totalWidth = drawingArea.left + drawingArea.width + drawingArea.right;
+  const totalHeight = drawingArea.top + drawingArea.height + drawingArea.bottom;
+  const availableWidth = totalWidth - padding.left - padding.right;
+  const availableHeight = totalHeight - padding.top - padding.bottom;
+
+  const seriesWithPosition = React.useMemo(() => {
+    // Start at 0, 0. Will be modified latter by padding and position.
+    let x = 0;
+    let y = 0;
+
+    // max values used to align legend latter.
+    let maxWidth = 0;
+    let maxHeight = 0;
+
+    const seriesWithRawPosition = seriesToDisplay.map(({ label, ...other }) => {
+      const itemSpace = getItemSpace(label);
       const rep = {
         ...other,
         label,
-        size: getStringSize(label),
         positionX: x,
         positionY: y,
       };
 
-      if (x + rep.size.width > drawingArea.left + drawingArea.width) {
-        x = drawingArea.left + (offset?.x ?? 0);
-        y += itemMarkSize + labelSpacing;
-        rep.positionX = x;
-        rep.positionY = y;
+      if (direction === 'row') {
+        if (x + itemSpace.innerWidth > availableWidth) {
+          x = 0;
+          y += itemSpace.outerHeight;
+          rep.positionX = x;
+          rep.positionY = y;
+        }
+        maxWidth = Math.max(maxWidth, x + itemSpace.innerWidth);
+        maxHeight = Math.max(maxHeight, y + itemSpace.innerHeight);
+        x += itemSpace.outerWidth;
       }
 
-      x += itemMarkSize + 3 * labelSpacing + rep.size.width;
+      if (direction === 'column') {
+        if (y + itemSpace.innerHeight > availableHeight) {
+          x = maxWidth + itemGap;
+          y = 0;
+          rep.positionX = x;
+          rep.positionY = y;
+        }
+
+        maxWidth = Math.max(maxWidth, x + itemSpace.innerWidth);
+        maxHeight = Math.max(maxHeight, y + itemSpace.innerHeight);
+        y += itemSpace.outerHeight;
+      }
+
       return rep;
     });
+
+    // Move the legend accroding to padding and position
+    let gapX = 0;
+    let gapY = 0;
+    switch (position.horizontal) {
+      case 'left':
+        gapX = padding.left;
+        break;
+      case 'right':
+        gapX = totalWidth - padding.right - maxWidth;
+        break;
+      default:
+        gapX = (totalWidth - maxWidth) / 2;
+        break;
+    }
+    switch (position.vertical) {
+      case 'top':
+        gapY = padding.top;
+        break;
+      case 'bottom':
+        gapY = totalHeight - padding.bottom - maxHeight;
+        break;
+      default:
+        gapY = (totalHeight - maxHeight) / 2;
+        break;
+    }
+    return seriesWithRawPosition.map((item) => ({
+      ...item,
+      positionX: item.positionX + gapX,
+      positionY: item.positionY + gapY,
+    }));
   }, [
-    drawingArea.left,
-    drawingArea.width,
-    itemMarkSize,
-    labelSpacing,
-    offset?.x,
-    offset?.y,
     seriesToDisplay,
+    position.horizontal,
+    position.vertical,
+    getItemSpace,
+    direction,
+    availableWidth,
+    availableHeight,
+    itemGap,
+    padding.left,
+    padding.right,
+    padding.top,
+    padding.bottom,
+    totalWidth,
+    totalHeight,
   ]);
 
   if (hidden) {
     return null;
   }
+
   return (
     <NoSsr>
       <ChartsLegendRoot className={classes.root}>
@@ -192,7 +296,7 @@ function DefaultChartsLegend(props: LegendRendererProps) {
               dominantBaseline="central"
               textAnchor="start"
               text={label}
-              x={itemMarkWidth + labelSpacing}
+              x={itemMarkWidth + markGap}
               y={itemMarkHeight / 2}
             />
           </g>
@@ -208,7 +312,7 @@ export function ChartsLegend(inProps: ChartsLegendProps) {
     name: 'MuiChartsLegend',
   });
 
-  const { position, direction, offset, hidden, slots, slotProps } = props;
+  const { position, direction, hidden, slots, slotProps } = props;
   const theme = useTheme();
   const classes = useUtilityClasses({ ...props, theme });
 
@@ -224,7 +328,6 @@ export function ChartsLegend(inProps: ChartsLegendProps) {
     additionalProps: {
       position,
       direction,
-      offset,
       classes,
       drawingArea,
       series,
