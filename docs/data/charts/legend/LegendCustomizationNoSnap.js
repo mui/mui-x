@@ -34,14 +34,29 @@ export default function LegendCustomizationNoSnap() {
           options: ['left', 'middle', 'right'],
         },
         {
-          propName: 'offsetX',
+          propName: 'padding',
           knob: 'number',
           defaultValue: 0,
         },
         {
-          propName: 'offsetY',
+          propName: 'markGap',
           knob: 'number',
-          defaultValue: -20,
+          defaultValue: 5,
+        },
+        {
+          propName: 'itemGap',
+          knob: 'number',
+          defaultValue: 10,
+        },
+        {
+          propName: 'itemMarkWidth',
+          knob: 'number',
+          defaultValue: 20,
+        },
+        {
+          propName: 'itemMarkHeight',
+          knob: 'number',
+          defaultValue: 20,
         },
       ]}
       renderDemo={(props) => (
@@ -49,33 +64,49 @@ export default function LegendCustomizationNoSnap() {
           series={[
             {
               type: 'scatter',
-              label: 'var A',
-              data: data.slice(0, 25),
+              label: 'variable\nnumber 1',
+              data: data.slice(0, 10),
             },
             {
               type: 'scatter',
-              label: 'var B',
-              data: data.slice(25),
+              label: 'variable B',
+              data: data.slice(10, 20),
+            },
+            {
+              type: 'scatter',
+              label: 'variable C',
+              data: data.slice(20, 30),
+            },
+            {
+              type: 'scatter',
+              label: 'variable D',
+              data: data.slice(30, 40),
+            },
+            {
+              type: 'scatter',
+              label: 'variable E',
+              data: data.slice(40),
             },
           ]}
-          legend={{
-            direction: props.direction,
-            position: { vertical: props.vertical, horizontal: props.horizontal },
+          slotProps={{
+            legend: {
+              direction: props.direction,
+              position: { vertical: props.vertical, horizontal: props.horizontal },
+              padding: props.padding,
+              markGap: props.markGap,
+              itemGap: props.itemGap,
+              itemMarkWidth: props.itemMarkWidth,
+              itemMarkHeight: props.itemMarkHeight,
+            },
           }}
           margin={{
-            top: 70,
-            bottom: 70,
+            top: 100,
+            bottom: 100,
             left: 100,
             right: 100,
           }}
-          sx={{
-            '--ChartsLegend-rootOffsetX':
-              typeof props.offsetX === 'number' ? `${props.offsetX}px` : undefined,
-            '--ChartsLegend-rootOffsetY':
-              typeof props.offsetY === 'number' ? `${props.offsetY}px` : undefined,
-          }}
           width={400}
-          height={300}
+          height={400}
         />
       )}
       getCode={({ props }) => {
@@ -83,23 +114,19 @@ export default function LegendCustomizationNoSnap() {
           `import { ScatterChart } from '@mui/x-charts/ScatterChart';`,
           '',
           `<ScatterChart`,
-          '  margin={{ top: 70, bottom: 70, left: 100, right:100 }}',
+          '  margin={{ top: 100, bottom: 100, left: 100, right:100 }}',
           '  {/** ... */}',
-          '  legend={{',
-          `    direction: "${props.direction}"`,
-          '    position: {',
-          `      vertical: "${props.vertical}",`,
-          `      horizontal: "${props.horizontal}"`,
-          '    }',
-          '  }}',
-          '  sx={{',
-          ...(typeof props.offsetX === 'number'
-            ? [`    "--ChartsLegend-rootOffsetX": "${props.offsetX}px",`]
-            : []),
-          ...(typeof props.offsetY === 'number'
-            ? [`    "--ChartsLegend-rootOffsetY": "${props.offsetY}px",`]
-            : []),
-          '  }}',
+          `  slotProps={{`,
+          `    legend: {`,
+          `      direction: ${props.direction},`,
+          `      position: { vertical: ${props.vertical}, horizontal: ${props.horizontal} },`,
+          `      padding: ${props.padding},`,
+          `      markGap: ${props.markGap},`,
+          `      itemGap: ${props.itemGap},`,
+          `      itemMarkWidth: ${props.itemMarkWidth},`,
+          `      itemMarkHeight: ${props.itemMarkHeight},`,
+          `    },`,
+          `  }}`,
           '/>',
         ].join('\n');
       }}
