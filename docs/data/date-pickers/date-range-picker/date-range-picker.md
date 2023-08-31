@@ -99,7 +99,7 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
 
 ## Month Range Picker 🚧
 
