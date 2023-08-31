@@ -20,6 +20,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [DataGrid] Add a recipe showing how to render components outside of the grid (#10121) @DanailH
 - [DataGrid] Fix `valueFormatter` being persisted on column type change (#10041) @cherniavskii
 - [DataGrid] Fix error when keyboard navigating an empty grid (#10081) @romgrk
+- [DataGrid] Replace timeout with `useTimeout` (#10179) @romgrk
 
 #### `@mui/x-data-grid-pro@v6.12.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
