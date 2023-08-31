@@ -225,19 +225,12 @@ LineChart.propTypes = {
     classes: PropTypes.object,
     direction: PropTypes.oneOf(['column', 'row']),
     hidden: PropTypes.bool,
-    itemWidth: PropTypes.number,
-    markSize: PropTypes.number,
-    offset: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-    }),
     position: PropTypes.shape({
       horizontal: PropTypes.oneOf(['left', 'middle', 'right']).isRequired,
       vertical: PropTypes.oneOf(['bottom', 'middle', 'top']).isRequired,
     }),
     slotProps: PropTypes.object,
     slots: PropTypes.object,
-    spacing: PropTypes.number,
   }),
   margin: PropTypes.shape({
     bottom: PropTypes.number,
