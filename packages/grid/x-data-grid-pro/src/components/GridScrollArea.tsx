@@ -6,10 +6,7 @@ import {
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
 import { styled } from '@mui/system';
-import {
-  getTotalHeaderHeight,
-  useTimeout,
-} from '@mui/x-data-grid/internals';
+import { getTotalHeaderHeight, useTimeout } from '@mui/x-data-grid/internals';
 import {
   GridEventListener,
   GridScrollParams,
@@ -135,7 +132,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
         });
       });
     },
-    [scrollDirection, apiRef],
+    [scrollDirection, apiRef, timeout],
   );
 
   const handleColumnHeaderDragStart = useEventCallback(() => {

@@ -168,7 +168,7 @@ export const useGridRows = (
 
       run();
     },
-    [props.throttleRowsMs, props.rowCount, props.loading, apiRef],
+    [props.throttleRowsMs, props.rowCount, props.loading, apiRef, timeout],
   );
 
   /**
