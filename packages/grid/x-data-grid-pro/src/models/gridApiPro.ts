@@ -26,8 +26,7 @@ export interface GridApiPro
     GridRowPinningApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
-    GridColumnReorderApi,
-    GridRowProApi {}
+    GridColumnReorderApi {}
 
 export interface GridPrivateApiPro
   extends GridApiPro,

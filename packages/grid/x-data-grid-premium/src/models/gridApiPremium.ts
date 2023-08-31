@@ -31,8 +31,7 @@ export interface GridApiPremium
     GridCellSelectionApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
-    GridColumnReorderApi,
-    GridRowProApi {}
+    GridColumnReorderApi {}
 
 export interface GridPrivateApiPremium
   extends GridApiPremium,
