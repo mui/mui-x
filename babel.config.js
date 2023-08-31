@@ -93,19 +93,15 @@ module.exports = function getBabelConfig(api) {
       ]);
     }
   }
-  if (process.env.NODE_ENV === 'test') {
-    plugins.push([
-      'babel-plugin-module-resolver',
-      {
-        alias: defaultAlias,
-        root: ['./'],
-      },
-    ]);
-  }
 
   return {
     assumptions: {
       noDocumentAll: true,
+      // TODO: Replace "loose" mode with these:
+      // setPublicClassFields: true,
+      // privateFieldsAsProperties: true,
+      // objectRestNoSymbols: true,
+      // setSpreadProperties: true,
     },
     presets,
     plugins,

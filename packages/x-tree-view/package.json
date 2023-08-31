@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.22.11",
-    "@mui/utils": "^5.14.5",
+    "@mui/utils": "^5.14.7",
     "@types/react-transition-group": "^4.4.6",
     "clsx": "^2.0.0",
     "prop-types": "^15.8.1",

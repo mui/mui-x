@@ -17,6 +17,8 @@ import {
   DEFAULT_TREE_VIEW_PLUGINS,
 } from '@mui/x-tree-view/internals/plugins/defaultPlugins';
 import { UseTreeViewExpansionSignature } from '@mui/x-tree-view/internals/plugins/useTreeViewExpansion';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 if (false) {
   console.log(
     'This log is here to make sure the js version has a lint error, otherwise we have a CI error',
@@ -25,11 +27,13 @@ if (false) {
 /* eslint-enable */
 
 interface TreeViewLogExpandedParameters {
-  log?: boolean;
+  areLogsEnabled?: boolean;
+  logMessage?: (message: string) => void;
 }
 
 interface TreeViewLogExpandedDefaultizedParameters {
-  log: boolean;
+  areLogsEnabled: boolean;
+  logMessage?: (message: string) => void;
 }
 
 type TreeViewLogExpandedSignature = TreeViewPluginSignature<
@@ -51,18 +55,19 @@ const useTreeViewLogExpanded: TreeViewPlugin<TreeViewLogExpandedSignature> = ({
   params,
   models,
 }) => {
+  const expandedStr = JSON.stringify(models.expanded.value);
+
   React.useEffect(() => {
-    if (params.log) {
-      const log = console.log;
-      log('Expanded items: ', models.expanded.value);
+    if (params.areLogsEnabled && params.logMessage) {
+      params.logMessage(`Expanded items: ${expandedStr}`);
     }
-  }, [models.expanded.value, params.log]);
+  }, [expandedStr]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 // Sets the default value of this plugin parameters.
 useTreeViewLogExpanded.getDefaultizedParams = (params) => ({
   ...params,
-  log: false,
+  areLogsEnabled: params.areLogsEnabled ?? false,
 });
 
 // This could be exported from the package in the future
@@ -107,7 +112,8 @@ function TreeView<Multiple extends boolean | undefined>(
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
-    log,
+    logMessage,
+    areLogsEnabled,
     // Component implementation
     children,
     ...other
@@ -129,7 +135,8 @@ function TreeView<Multiple extends boolean | undefined>(
     defaultEndIcon,
     defaultExpandIcon,
     defaultParentIcon,
-    log,
+    logMessage,
+    areLogsEnabled,
     plugins,
   });
 
@@ -149,23 +156,37 @@ function TreeView<Multiple extends boolean | undefined>(
 }
 
 export default function HeadlessTreeView() {
+  const [logs, setLogs] = React.useState<string[]>([]);
+
   return (
-    <TreeView
-      log
-      aria-label="file system navigator"
-      defaultCollapseIcon={<ExpandMoreIcon />}
-      defaultExpandIcon={<ChevronRightIcon />}
-      sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
-    >
-      <TreeItem nodeId="1" label="Applications">
-        <TreeItem nodeId="2" label="Calendar" />
-      </TreeItem>
-      <TreeItem nodeId="5" label="Documents">
-        <TreeItem nodeId="10" label="OSS" />
-        <TreeItem nodeId="6" label="MUI">
-          <TreeItem nodeId="8" label="index.js" />
+    <Stack spacing={2}>
+      <TreeView
+        aria-label="file system navigator"
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+        sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
+        areLogsEnabled
+        logMessage={(message) =>
+          setLogs((prev) =>
+            prev[prev.length - 1] === message ? prev : [...prev, message],
+          )
+        }
+      >
+        <TreeItem nodeId="1" label="Applications">
+          <TreeItem nodeId="2" label="Calendar" />
         </TreeItem>
-      </TreeItem>
-    </TreeView>
+        <TreeItem nodeId="5" label="Documents">
+          <TreeItem nodeId="10" label="OSS" />
+          <TreeItem nodeId="6" label="MUI">
+            <TreeItem nodeId="8" label="index.js" />
+          </TreeItem>
+        </TreeItem>
+      </TreeView>
+      <Stack spacing={1}>
+        {logs.map((log, index) => (
+          <Typography key={index}>{log}</Typography>
+        ))}
+      </Stack>
+    </Stack>
   );
 }

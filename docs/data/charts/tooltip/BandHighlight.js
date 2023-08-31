@@ -5,7 +5,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import Stack from '@mui/material/Stack';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 
