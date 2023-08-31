@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["tsconfig.json"],
+  "pipeline": {
+    "typescript": {
+      "dependsOn": ["^typescript"],
+      "outputs": []
+    }
+  }
+}
