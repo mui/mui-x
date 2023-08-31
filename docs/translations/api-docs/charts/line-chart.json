@@ -11,6 +11,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "disableLineItemHighlight": {
+      "description": "If <code>true</code>, render the line highlight item.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "leftAxis": {
       "description": "Indicate which axis to display the left of the charts. Can be a string (the id of the axis) or an object <code>ChartsYAxisProps</code>.",
       "deprecated": "",
