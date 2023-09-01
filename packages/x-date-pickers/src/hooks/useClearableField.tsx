@@ -63,7 +63,12 @@ export const useClearableField = <
           position="end"
           sx={{ marginRight: ForwardedInputProps?.endAdornment ? -1 : -1.5 }}
         >
-          <IconButton {...iconButtonProps} className="clearButton" onClick={onClear}>
+          <IconButton
+            aria-label="clear button"
+            {...iconButtonProps}
+            className="clearButton"
+            onClick={onClear}
+          >
             <EndClearIcon fontSize="small" {...endClearIconProps} />
           </IconButton>
         </InputAdornment>
