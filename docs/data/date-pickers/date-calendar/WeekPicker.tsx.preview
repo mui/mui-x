@@ -1,15 +1,16 @@
 <DateCalendar
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
-  showDaysOutsideCurrentMonth
-  slots={{ day: Day }}
-  slotProps={{
-    day: (ownerState) =>
-      ({
-        selectedDay: value,
-        hoveredDay,
-        onMouseEnter: () => setHoveredDay(ownerState.day),
-        onMouseLeave: () => setHoveredDay(null),
-      } as any),
-  }}
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+    showDaysOutsideCurrentMonth
+    displayWeekNumber
+    slots={{ day: Day }}
+    slotProps={{
+      day: (ownerState) =>
+          ({
+            selectedDay: value,
+            hoveredDay,
+            onMouseEnter: () => setHoveredDay(ownerState.day),
+            onMouseLeave: () => setHoveredDay(null),
+          } as any),
+    }}
 />

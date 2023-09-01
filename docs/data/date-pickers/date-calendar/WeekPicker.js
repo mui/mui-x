@@ -49,21 +49,20 @@ const isInSameWeek = (dayA, dayB) => {
 function Day(props) {
   const { day, selectedDay, hoveredDay, ...other } = props;
 
-  const dayIsBetween =
-    selectedDay == null
+  const dayIsBetween = (target) =>
+    target == null
       ? false
-      : day.isBetween(
-          selectedDay.startOf('week'),
-          selectedDay.endOf('week'),
-          null,
-          '[]',
-        );
+      : day.isBetween(target.startOf('week'), target.endOf('week'), null, '[]');
 
   return (
     <CustomPickersDay
       {...other}
       day={day}
-      sx={dayIsBetween ? { px: 2.5, mx: 0 } : {}}
+      sx={
+        dayIsBetween(selectedDay) || dayIsBetween(hoveredDay)
+          ? { px: 2.5, mx: 0 }
+          : {}
+      }
       selected={false}
       isSelected={isInSameWeek(day, selectedDay)}
       isHovered={isInSameWeek(day, hoveredDay)}
@@ -81,6 +80,7 @@ export default function WeekPicker() {
         value={value}
         onChange={(newValue) => setValue(newValue)}
         showDaysOutsideCurrentMonth
+        displayWeekNumber
         slots={{ day: Day }}
         slotProps={{
           day: (ownerState) => ({

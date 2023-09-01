@@ -259,6 +259,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     isLastVisibleCell,
     ...other
   } = props;
+
   const ownerState = {
     ...props,
     autoFocus,

@@ -52,32 +52,32 @@ const isInSameWeek = (dayA: Dayjs, dayB: Dayjs | null | undefined) => {
 };
 
 function Day(
-  props: PickersDayProps<Dayjs> & {
-    selectedDay?: Dayjs | null;
-    hoveredDay?: Dayjs | null;
-  },
+    props: PickersDayProps<Dayjs> & {
+      selectedDay?: Dayjs | null;
+      hoveredDay?: Dayjs | null;
+    },
 ) {
   const { day, selectedDay, hoveredDay, ...other } = props;
 
-  const dayIsBetween =
-    selectedDay == null
-      ? false
-      : day.isBetween(
-          selectedDay.startOf('week'),
-          selectedDay.endOf('week'),
-          null,
-          '[]',
-        );
+  const dayIsBetween = (target: Dayjs | null | undefined) =>
+      target == null
+          ? false
+          : day.isBetween(
+              target.startOf('week'),
+              target.endOf('week'),
+              null,
+              '[]',
+          );
 
   return (
-    <CustomPickersDay
-      {...other}
-      day={day}
-      sx={dayIsBetween ? { px: 2.5, mx: 0 } : {}}
-      selected={false}
-      isSelected={isInSameWeek(day, selectedDay)}
-      isHovered={isInSameWeek(day, hoveredDay)}
-    />
+      <CustomPickersDay
+          {...other}
+          day={day}
+          sx={(dayIsBetween(selectedDay) || dayIsBetween(hoveredDay)) ? { px: 2.5, mx: 0 } : {}}
+          selected={false}
+          isSelected={isInSameWeek(day, selectedDay)}
+          isHovered={isInSameWeek(day, hoveredDay)}
+      />
   );
 }
 
@@ -86,22 +86,23 @@ export default function WeekPicker() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateCalendar
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-        showDaysOutsideCurrentMonth
-        slots={{ day: Day }}
-        slotProps={{
-          day: (ownerState) =>
-            ({
-              selectedDay: value,
-              hoveredDay,
-              onMouseEnter: () => setHoveredDay(ownerState.day),
-              onMouseLeave: () => setHoveredDay(null),
-            } as any),
-        }}
-      />
-    </LocalizationProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateCalendar
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            showDaysOutsideCurrentMonth
+            displayWeekNumber
+            slots={{ day: Day }}
+            slotProps={{
+              day: (ownerState) =>
+                  ({
+                    selectedDay: value,
+                    hoveredDay,
+                    onMouseEnter: () => setHoveredDay(ownerState.day),
+                    onMouseLeave: () => setHoveredDay(null),
+                  } as any),
+            }}
+        />
+      </LocalizationProvider>
   );
 }
