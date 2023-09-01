@@ -731,6 +731,22 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
+      it('should allow to override the noRows overlay height', () => {
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              rows={[]}
+              autoHeight
+              sx={{ '--DataGrid-noRowsOverlayHeight': '300px' }}
+            />
+          </div>,
+        );
+        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
+          300,
+        );
+      });
+
       it('should render loading overlay the same height as the content', () => {
         const rowHeight = 30;
         render(
