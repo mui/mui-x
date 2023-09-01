@@ -5,9 +5,11 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { isBandScale } from '../internals/isBandScale';
 
+type AxisHighlight = 'none' | 'line' | 'band';
+
 export type ChartsAxisHighlightProps = {
-  x?: 'none' | 'line' | 'band';
-  y?: 'none' | 'line';
+  x?: AxisHighlight;
+  y?: AxisHighlight;
 };
 
 function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
@@ -23,6 +25,7 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
   const { axis } = React.useContext(InteractionContext);
 
   const getXPosition = getValueToPositionMapper(xScale);
+  const getYPosition = getValueToPositionMapper(yScale);
   return (
     <React.Fragment>
       {xAxisHighlight === 'band' && axis.x !== null && isBandScale(xScale) && (
@@ -38,11 +41,24 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
         />
       )}
 
+      {yAxisHighlight === 'band' && axis.y !== null && isBandScale(yScale) && (
+        <path
+          d={`M ${xScale.range()[0]} ${
+            yScale(axis.y.value)! - (yScale.step() - yScale.bandwidth()) / 2
+          } l 0 ${yScale.step()} l ${
+            xScale.range()[1] - xScale.range()[0]
+          } 0 l 0 ${-yScale.step()} Z`}
+          fill="gray"
+          fillOpacity={0.1}
+          style={{ pointerEvents: 'none' }}
+        />
+      )}
+
       {xAxisHighlight === 'line' && axis.x !== null && (
         <path
-          d={`M ${getXPosition(axis.x.value)} ${yScale(yScale.domain()[0])} L ${getXPosition(
+          d={`M ${getXPosition(axis.x.value)} ${yScale.range()[0]} L ${getXPosition(
             axis.x.value,
-          )} ${yScale(yScale.domain().at(-1))}`}
+          )} ${yScale.range()[1]}`}
           stroke="black"
           strokeDasharray="5 2"
           style={{ pointerEvents: 'none' }}
@@ -51,9 +67,9 @@ function ChartsAxisHighlight(props: ChartsAxisHighlightProps) {
 
       {yAxisHighlight === 'line' && axis.y !== null && (
         <path
-          d={`M ${xScale.range()[0]} ${yScale(axis.y.value)} L ${xScale.range()[1]} ${yScale(
-            axis.y.value,
-          )}`}
+          d={`M ${xScale.range()[0]} ${getYPosition(axis.y.value)} L ${
+            xScale.range()[1]
+          } ${getYPosition(axis.y.value)}`}
           stroke="black"
           strokeDasharray="5 2"
           style={{ pointerEvents: 'none' }}
@@ -69,7 +85,7 @@ ChartsAxisHighlight.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   x: PropTypes.oneOf(['band', 'line', 'none']),
-  y: PropTypes.oneOf(['line', 'none']),
+  y: PropTypes.oneOf(['band', 'line', 'none']),
 } as any;
 
 export { ChartsAxisHighlight };

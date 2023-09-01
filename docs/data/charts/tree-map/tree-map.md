@@ -1,5 +1,5 @@
 ---
-title: Charts - Tree map
+title: React Tree map chart
 ---
 
 # Charts - Tree map 🚧

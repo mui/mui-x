@@ -247,6 +247,12 @@ function AppWrapper(props) {
         name: 'Charts',
         versions: [{ text: `v${process.env.CHARTS_VERSION}`, current: true }],
       };
+    } else if (productId === 'x-tree-view') {
+      productIdentifier = {
+        metadata: 'MUI X',
+        name: 'Tree View',
+        versions: [{ text: `v${process.env.TREE_VIEW_VERSION}`, current: true }],
+      };
     }
 
     return {

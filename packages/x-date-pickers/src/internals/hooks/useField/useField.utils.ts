@@ -69,7 +69,7 @@ export const getDaysInWeekStr = <TDate>(
 ) => {
   const elements: TDate[] = [];
 
-  const now = utils.dateWithTimezone(undefined, timezone)!;
+  const now = utils.dateWithTimezone(undefined, timezone);
   const startDate = utils.startOfWeek(now);
   const endDate = utils.endOfWeek(now);
 
@@ -90,7 +90,7 @@ export const getLetterEditingOptions = <TDate>(
 ) => {
   switch (sectionType) {
     case 'month': {
-      return getMonthsInYear(utils, utils.dateWithTimezone(undefined, timezone)!).map((month) =>
+      return getMonthsInYear(utils, utils.dateWithTimezone(undefined, timezone)).map((month) =>
         utils.formatByString(month, format!),
       );
     }
@@ -100,7 +100,7 @@ export const getLetterEditingOptions = <TDate>(
     }
 
     case 'meridiem': {
-      const now = utils.dateWithTimezone(undefined, timezone)!;
+      const now = utils.dateWithTimezone(undefined, timezone);
       return [utils.startOfDay(now), utils.endOfDay(now)].map((date) =>
         utils.formatByString(date, format),
       );
@@ -207,7 +207,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
-        return utils.formatByString(utils.dateWithTimezone(undefined, timezone)!, section.format);
+        return utils.formatByString(utils.dateWithTimezone(undefined, timezone), section.format);
       }
 
       if (delta > 0 || isStart) {
@@ -362,7 +362,7 @@ const getSectionPlaceholder = <TDate>(
     case 'year': {
       return localeText.fieldYearPlaceholder({
         digitAmount: utils.formatByString(
-          utils.dateWithTimezone(undefined, timezone)!,
+          utils.dateWithTimezone(undefined, timezone),
           currentTokenValue,
         ).length,
       });
@@ -425,7 +425,7 @@ const isFourDigitYearFormat = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
   format: string,
-) => utils.formatByString(utils.dateWithTimezone(undefined, timezone)!, format).length === 4;
+) => utils.formatByString(utils.dateWithTimezone(undefined, timezone), format).length === 4;
 
 export const doesSectionFormatHaveLeadingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -438,7 +438,7 @@ export const doesSectionFormatHaveLeadingZeros = <TDate>(
     return false;
   }
 
-  const now = utils.dateWithTimezone(undefined, timezone)!;
+  const now = utils.dateWithTimezone(undefined, timezone);
 
   switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
@@ -702,7 +702,7 @@ export const getSectionsBoundaries = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   timezone: PickersTimezone,
 ): FieldSectionsValueBoundaries<TDate> => {
-  const today = utils.dateWithTimezone(undefined, timezone)!;
+  const today = utils.dateWithTimezone(undefined, timezone);
   const endOfYear = utils.endOfYear(today);
   const endOfDay = utils.endOfDay(today);
 
@@ -910,70 +910,6 @@ export const mergeDateIntoReferenceDate = <TDate>(
     }, referenceDate);
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
-
-export const clampDaySectionIfPossible = <TDate, TSection extends FieldSection>(
-  utils: MuiPickersAdapter<TDate>,
-  timezone: PickersTimezone,
-  sections: TSection[],
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
-) => {
-  // We can only clamp the day value if:
-  // 1. if all the sections are filled (except the week day section which can be empty)
-  // 2. there is a day section
-  const canClamp =
-    sections.every((section) => section.type === 'weekDay' || section.value !== '') &&
-    sections.some((section) => section.type === 'day');
-
-  if (!canClamp) {
-    return null;
-  }
-
-  // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
-  const sectionsForStartOfMonth = sections.map((section) => {
-    if (section.type !== 'day') {
-      return section;
-    }
-
-    const dayBoundaries = sectionsValueBoundaries.day({
-      currentDate: null,
-      format: section.format,
-      contentType: section.contentType,
-    });
-
-    return {
-      ...section,
-      value: cleanDigitSectionValue(utils, timezone, dayBoundaries.minimum, dayBoundaries, section),
-    };
-  });
-
-  const startOfMonth = getDateFromDateSections(utils, sectionsForStartOfMonth);
-
-  // Even the start of the month is invalid, we probably have other invalid sections, the clamping failed.
-  if (startOfMonth == null || !utils.isValid(startOfMonth)) {
-    return null;
-  }
-
-  // The only invalid section was the day of the month, we replace its value with the maximum boundary for the correct month.
-  return sections.map((section) => {
-    if (section.type !== 'day') {
-      return section;
-    }
-
-    const dayBoundaries = sectionsValueBoundaries.day({
-      currentDate: startOfMonth,
-      format: section.format,
-      contentType: section.contentType,
-    });
-    if (Number(section.value) <= dayBoundaries.maximum) {
-      return section;
-    }
-
-    return {
-      ...section,
-      value: dayBoundaries.maximum.toString(),
-    };
-  });
-};
 
 export const getSectionOrder = (
   sections: FieldSectionWithoutPosition[],

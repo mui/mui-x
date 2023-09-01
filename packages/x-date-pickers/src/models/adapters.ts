@@ -196,6 +196,10 @@ export type AdapterOptions<TLocale, TInstance> = {
   locale?: TLocale;
 } & PropertyIfNotNever<'instance', TInstance>;
 
+export type DateBuilderReturnType<T extends string | null | undefined, TDate> = T extends null
+  ? null
+  : TDate;
+
 export interface MuiPickersAdapter<TDate, TLocale = any> {
   /**
    * A boolean confirming that the adapter used is an MUI adapter.
@@ -236,7 +240,10 @@ export interface MuiPickersAdapter<TDate, TLocale = any> {
    * @param {PickersTimezone} timezone The timezone of the date.
    * @returns {TDate | null} The parsed date.
    */
-  dateWithTimezone(value: string | null | undefined, timezone: PickersTimezone): TDate | null;
+  dateWithTimezone<T extends string | null | undefined>(
+    value: T,
+    timezone: PickersTimezone,
+  ): DateBuilderReturnType<T, TDate>;
   /**
    * Extracts the timezone from a date.
    * @template TDate

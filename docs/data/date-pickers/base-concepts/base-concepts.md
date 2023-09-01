@@ -81,6 +81,27 @@ There are many components available, each fitting specific use cases. Use the fo
 
 {{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 
+## Reference date when no value is defined
+
+If `value` or `defaultValue` contains a valid date, this date will be used to initialize the rendered component.
+
+In the demo below, you can see that the calendar is set to April 2022 on mount:
+
+{{"demo": "ReferenceDateUsingValue.js"}}
+
+When `value` and `defaultValue` contains no valid date, the component will try to find a reference date that passes the validation to initialize its rendering:
+
+{{"demo": "ReferenceDateDefaultBehavior.js"}}
+
+You can override this date using the `referenceDate` prop:
+
+{{"demo": "ReferenceDateExplicitDateTimePicker.js"}}
+
+This can also be useful to set the part of the value that will not be selectable in the component.
+For example, in a Time Picker, it allows you to choose the date of your value:
+
+{{"demo": "ReferenceDateExplicitTimePicker.js"}}
+
 ## Accessibility
 
 Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
