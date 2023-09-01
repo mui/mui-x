@@ -26,7 +26,7 @@ export interface LineElementClasses {
 
 export type LineElementClassKey = keyof LineElementClasses;
 
-export interface LineElementOwnerState {
+interface LineElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;

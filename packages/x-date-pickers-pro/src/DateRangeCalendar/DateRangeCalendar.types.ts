@@ -118,6 +118,11 @@ export interface DateRangeCalendarProps<TDate>
    */
   defaultValue?: DateRange<TDate>;
   /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date using the validation props, except callbacks such as `shouldDisableDate`.
+   */
+  referenceDate?: TDate;
+  /**
    * Callback fired when the value changes.
    * @template TDate
    * @param {DateRange<TDate>} value The new value.

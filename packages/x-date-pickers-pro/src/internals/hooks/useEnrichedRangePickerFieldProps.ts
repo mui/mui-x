@@ -56,7 +56,7 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
       BaseMultiInputFieldProps<DateRange<TDate>, TDate, RangeFieldSection, unknown>
     >,
     {},
-    UsePickerProps<DateRange<TDate>, any, RangeFieldSection, any, any, any>
+    UsePickerProps<DateRange<TDate>, TDate, any, RangeFieldSection, any, any, any>
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;

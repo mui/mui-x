@@ -1,5 +1,5 @@
 ---
-title: Charts - Bars
+title: React Bar chart
 ---
 
 # Charts - Bars

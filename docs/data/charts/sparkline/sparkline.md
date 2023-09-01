@@ -1,5 +1,5 @@
 ---
-title: Charts - Sparkline
+title: React Sparkline chart
 ---
 
 # Charts - Sparkline

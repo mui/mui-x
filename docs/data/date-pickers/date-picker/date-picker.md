@@ -96,6 +96,10 @@ You can force a specific orientation using the `orientation` prop:
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
 
+:::info
+You can find more information about the layout customization in the [custom layout page](/x/react-date-pickers/custom-layout/).
+:::
+
 ## Helper text
 
 You can show a helper text with the date format accepted:
