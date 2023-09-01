@@ -50,6 +50,8 @@ const MobileDateTimeRangePicker = React.forwardRef(function MobileDateTimeRangeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    // force true to correctly handle `renderTimeViewClock` as a renderer
+    ampmInClock: true,
     calendars: 1,
     slots: {
       field: MultiInputDateTimeRangeField,
