@@ -315,16 +315,16 @@ const pages: MuiPage[] = [
         subheader: 'Localization',
         children: [
           {
+            pathname: '/x/react-date-pickers/localization',
+            title: 'Translated components',
+          },
+          {
             pathname: '/x/react-date-pickers/adapters-locale',
-            title: 'Date localization',
+            title: 'Date format and localization',
           },
           {
             pathname: '/x/react-date-pickers/timezone',
             title: 'UTC and timezone',
-          },
-          {
-            pathname: '/x/react-date-pickers/localization',
-            title: 'Component localization',
           },
           { pathname: '/x/react-date-pickers/calendar-systems' },
         ],

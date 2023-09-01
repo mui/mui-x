@@ -42,16 +42,6 @@ The Date and Time Pickers currently support the following date libraries:
 - [Luxon](https://moment.github.io/luxon/#/)
 - [Moment.js](https://momentjs.com/)
 
-:::warning
-The Date and Time Pickers are not working well with Luxon macro-token (`D`, `DD`, `T`, `TT`, ...),
-because of [how they are expanded](https://github.com/mui/mui-x/issues/7615).
-
-If your application is using only a single locale, the easiest solution is to manually [provide a format](/x/react-date-pickers/adapters-locale/#custom-formats) that does not contain any macro-token
-(e.g. `M/d/yyyy` instead of `D` for the english locale).
-
-As soon as a solution is found the built-in support will be improved.
-:::
-
 :::info
 If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
 :::
