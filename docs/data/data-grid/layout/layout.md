@@ -31,6 +31,14 @@ This is not recommended for large datasets as row virtualization will not be abl
 
 {{"demo": "AutoHeightGrid.js", "bg": "inline"}}
 
+### No rows height
+
+By default, when the Data Grid has no rows, the rows container takes the height of two rows.
+
+To adjust the height of the rows container, use the `--DataGrid-noRowsOverlayHeight` CSS variable.
+
+{{"demo": "AutoHeightNoRowsGrid.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
