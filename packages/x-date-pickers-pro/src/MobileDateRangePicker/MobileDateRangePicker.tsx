@@ -13,14 +13,14 @@ import { DateRange } from '../internals/models';
 
 type MobileDateRangePickerComponent = (<TDate>(
   props: MobileDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TDate>(
   inProps: MobileDateRangePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   // Props with the default values common to all date time pickers
-  const { className, sx, ...defaultizedProps } = useDateRangePickerDefaultizedProps<
+  const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
     MobileDateRangePickerProps<TDate>
   >(inProps, 'MuiMobileDateRangePicker');
@@ -281,10 +281,15 @@ MobileDateRangePicker.propTypes = {
   rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
+   * If `true`, disable heavy animations.
+   * @default `@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13
    */
   reduceAnimations: PropTypes.bool,
+  /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.any,
   /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.

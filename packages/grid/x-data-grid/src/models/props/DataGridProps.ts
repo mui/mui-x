@@ -43,6 +43,12 @@ export interface GridExperimentalFeatures {
    * Only works if NODE_ENV=test.
    */
   warnIfFocusStateIsNotSynced: boolean;
+  /**
+   * Enables accessibility improvements that will be enabled by default in v7.
+   * If you rely on the v6 ARIA attributes (e.g. for CSS selectors), this might be a breaking change.
+   * @default false
+   */
+  ariaV7: boolean;
 }
 
 /**
@@ -189,6 +195,12 @@ export interface DataGridPropsWithDefaultValues {
    */
   disableDensitySelector: boolean;
   /**
+   * If `true`, `eval()` is not used for performance optimization.
+   * @default false
+   * @ignore - do not document
+   */
+  disableEval: boolean;
+  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -224,6 +236,11 @@ export interface DataGridPropsWithDefaultValues {
    * @default "client"
    */
   filterMode: GridFeatureMode;
+  /**
+   * The milliseconds delay to wait after a keystroke before triggering filtering.
+   * @default 150
+   */
+  filterDebounceMs: number;
   /**
    * Sets the height in pixel of the column headers in the grid.
    * @default 56
@@ -424,7 +441,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Function that returns the element to render in row detail.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {JSX.Element} The row detail element.
+   * @returns {React.JSX.Element} The row detail element.
    */
   getDetailPanelContent?: (params: GridRowParams<R>) => React.ReactNode;
   /**

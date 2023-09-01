@@ -187,7 +187,12 @@
       "typeDescriptions": {}
     },
     "reduceAnimations": {
-      "description": "Disable heavy animations.",
+      "description": "If <code>true</code>, disable heavy animations.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
+    "referenceDate": {
+      "description": "The date used to generate the new value when both <code>value</code> and <code>defaultValue</code> are empty.",
       "deprecated": "",
       "typeDescriptions": {}
     },
@@ -275,6 +280,7 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "actionBar": "Custom component for the action bar, it is placed below the picker views.",
+    "calendarHeader": "Custom component for calendar header.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-calendar-header/\">PickersCalendarHeader</a> component.",
     "day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "field": "Component used to enter the date with the keyboard.",

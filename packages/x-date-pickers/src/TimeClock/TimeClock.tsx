@@ -52,7 +52,7 @@ const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
 
 type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => React.JSX.Element) & { propTypes?: any };
 
 const TIME_CLOCK_DEFAULT_VIEWS: TimeView[] = ['hours', 'minutes'];
 

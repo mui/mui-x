@@ -25,11 +25,17 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     }
   },
-  "slots": {},
+  "slots": [],
   "name": "GridFilterPanel",
+  "imports": [
+    "import { GridFilterPanel } from '@mui/x-data-grid/components';",
+    "import { GridFilterPanel } from '@mui/x-data-grid';",
+    "import { GridFilterPanel } from '@mui/x-data-grid-pro';",
+    "import { GridFilterPanel } from '@mui/x-data-grid-premium';"
+  ],
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDataGrid" },
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterPanel.tsx",

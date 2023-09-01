@@ -1,7 +1,14 @@
 {
-  "props": {},
-  "slots": {},
+  "props": {
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
+  },
+  "slots": [],
   "name": "LineElement",
+  "imports": [
+    "import { LineElement } from '@mui/x-charts/LineChart';",
+    "import { LineElement } from '@mui/x-charts';"
+  ],
   "styles": {
     "classes": ["root", "highlighted", "faded"],
     "globalClasses": {},

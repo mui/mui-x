@@ -289,5 +289,22 @@ export const getTypeScriptProjects = () => {
     }),
   );
 
+  projects.set(
+    'x-tree-view',
+    createProject({
+      name: 'x-tree-view',
+      rootPath: path.join(workspaceRoot, 'packages/x-tree-view'),
+      documentationFolderName: 'tree-view',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
+
   return projects;
 };

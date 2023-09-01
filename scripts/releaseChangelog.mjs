@@ -136,6 +136,7 @@ async function main(argv) {
   const pickersCommits = [];
   const pickersProCommits = [];
   const chartsCommits = [];
+  const treeViewCommits = [];
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
@@ -167,6 +168,9 @@ async function main(argv) {
         break;
       case 'charts':
         chartsCommits.push(commitItem);
+        break;
+      case 'TreeView':
+        treeViewCommits.push(commitItem);
         break;
       case 'docs':
         docsCommits.push(commitItem);
@@ -229,14 +233,14 @@ ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 
 ${logChangelogSection(dataGridCommits)}
 
-#### \`@mui/x-data-grid-pro@v__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+#### \`@mui/x-data-grid-pro@v__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-data-grid@v__VERSION__\`${
     dataGridProCommits.length > 0 ? ', plus:' : '.'
   }
 ${logChangelogSection(dataGridProCommits)}
 
-#### \`@mui/x-data-grid-premium@v__VERSION__\` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link)
+#### \`@mui/x-data-grid-premium@v__VERSION__\` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
 Same changes as in \`@mui/x-data-grid-pro@v__VERSION__\`${
     dataGridPremiumCommits.length > 0 ? ', plus:' : '.'
@@ -248,7 +252,7 @@ ${logChangelogSection(dataGridPremiumCommits)}
 
 ${logChangelogSection(pickersCommits)}
 
-#### \`@mui/x-date-pickers-pro@v__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link)
+#### \`@mui/x-date-pickers-pro@v__VERSION__\` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
 Same changes as in \`@mui/x-date-pickers@v__VERSION__\`${
     pickersProCommits.length > 0 ? ', plus:' : '.'
@@ -258,6 +262,10 @@ ${logChangelogSection(pickersProCommits)}
 ### Charts / \`@mui/x-charts@v__CHARTS_VERSION__\`
 
 ${logChangelogSection(chartsCommits)}
+
+### Tree View / \`@mui/x-tree-view@v__TREE_VIEW_VERSION__\`
+
+${logChangelogSection(treeViewCommits)}
 ${logChangelogSection(codemodCommits, `### \`@mui/x-codemod@v__VERSION__\``)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}

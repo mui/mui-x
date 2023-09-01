@@ -2,7 +2,7 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -84,7 +84,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timeSteps": {
       "type": {
@@ -111,13 +111,20 @@
       }
     }
   },
-  "slots": {
-    "digitalClockSectionItem": {
-      "default": "MenuItem from '@mui/material'",
-      "type": { "name": "elementType" }
+  "slots": [
+    {
+      "class": null,
+      "name": "digitalClockSectionItem",
+      "description": "Component responsible for rendering a single multi section digital clock section item.",
+      "default": "MenuItem from '@mui/material'"
     }
-  },
+  ],
   "name": "MultiSectionDigitalClock",
+  "imports": [
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers';",
+    "import { MultiSectionDigitalClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMultiSectionDigitalClock" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",

@@ -1,5 +1,5 @@
 ---
-title: Charts - Lines
+title: React Line chart
 ---
 
 # Charts - Lines
@@ -17,6 +17,19 @@ By default, those y values will be associated with integers starting from 0 (0, 
 To modify the x values, you should provide a `xAxis` with data property.
 
 {{"demo": "BasicLineChart.js"}}
+
+### Using a dataset
+
+If your data is stored in an array of objects, you can use the `dataset` helper prop.
+It accepts an array of objects such as `dataset={[{x: 1, y: 32}, {x: 2, y: 41}, ...]}`.
+
+You can reuse this data when defining the series and axis, thanks to the `dataKey` property.
+
+For example `xAxis={[{ dataKey: 'x'}]}` or `series={[{ dataKey: 'y'}]}`.
+
+Here is a plot of the evolution of world electricity production by source.
+
+{{"demo": "LineDataset.js"}}
 
 ### Area
 
@@ -46,7 +59,26 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 The interpolation between data points can be customized by the `curve` property.
 This property expects one of the following string values, corresponding to the interpolation method: `'catmullRom'`, `'linear'`, `'monotoneX'`, `'monotoneY'`, `'natural'`, `'step'`, `'stepBefore'`, `'stepAfter'`.
 
-{{"demo": "InterpolationDemo.js", "hideToolbar": true, "bg": "inline"}}
+This series property adds the option to control the interpolation of a series.
+Different series could even have different interpolations.
+
+{{"demo": "InterpolationDemoNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+
+### Optimization
+
+To show mark elements, use `showMark` series property.
+It accepts a boolean or a callback.
+The next example shows how to use it to display only one mark every two data points.
+
+When a value is highlighted, a mark is rendered for that given value.
+If the charts already have some marks (due to `showMark=true`) the highlight one will be on top of others.
+
+This behavior can be removed with the `disableHighlight` series property or at the root of the line chart with a `disableLineItemHighlight` prop.
+
+In this example, you have one mark for every value with an even index.
+The highlighted data has a mark regardless if it has an even or odd index.
+
+{{"demo": "MarkOptimization.js"}}
 
 ### CSS
 
@@ -64,9 +96,6 @@ sx={{
   '& .MuiLineElement-root': {
     strokeDasharray: '10 5',
     strokeWidth: 4,
-  },
-  '& .MuiMarkElement-root': {
-    display: 'none',
   },
   '& .MuiAreaElement-series-Germany': {
     fill: "url('#myGradient')",

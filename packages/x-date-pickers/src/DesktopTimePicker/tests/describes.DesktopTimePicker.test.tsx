@@ -4,12 +4,12 @@ import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   createPickerRenderer,
+  wrapPickerMount,
   adapterToUse,
   expectInputValue,
-  wrapPickerMount,
-  getTextbox,
   expectInputPlaceholder,
-} from 'test/utils/pickers-utils';
+  getTextbox,
+} from 'test/utils/pickers';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { describePicker } from '@mui/x-date-pickers/tests/describePicker';
 

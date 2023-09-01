@@ -126,6 +126,11 @@
       "deprecated": "",
       "typeDescriptions": {}
     },
+    "filterDebounceMs": {
+      "description": "The milliseconds delay to wait after a keystroke before triggering filtering.",
+      "deprecated": "",
+      "typeDescriptions": {}
+    },
     "filterMode": {
       "description": "Filtering can be processed on the server or client-side. Set it to &#39;server&#39; if you would like to handle filtering on the server-side.",
       "deprecated": "",
@@ -149,7 +154,7 @@
       "deprecated": "",
       "typeDescriptions": {
         "params": "With all properties from <a href=\"/x/api/data-grid/grid-row-params/\">GridRowParams</a>.",
-        "JSX.Element": "The row detail element."
+        "React.JSX.Element": "The row detail element."
       }
     },
     "getEstimatedRowHeight": {

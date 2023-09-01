@@ -12,6 +12,7 @@ import {
 import { RangePosition } from '../internals/models/range';
 import { RangeFieldSection } from '../internals/models/fields';
 import { UseMultiInputRangeFieldParams } from '../internals/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { MultiInputRangeFieldClasses } from '../models';
 
 export type UseMultiInputDateTimeRangeFieldParams<
   TDate,
@@ -33,6 +34,10 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps ext
 export interface MultiInputDateTimeRangeFieldProps<TDate>
   extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   autoFocus?: boolean;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: Partial<MultiInputRangeFieldClasses>;
   /**
    * Overridable components.
    * @default {}

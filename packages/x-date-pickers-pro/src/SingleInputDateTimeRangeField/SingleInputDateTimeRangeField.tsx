@@ -8,7 +8,7 @@ import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeF
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any; fieldType?: string };
+) => React.JSX.Element) & { propTypes?: any; fieldType?: string };
 
 const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
   TDate,
@@ -35,8 +35,8 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
   });
 
   // TODO: Remove when mui/material-ui#35088 will be merged
-  textFieldProps.inputProps = { ...textFieldProps.inputProps, ...inputProps };
-  textFieldProps.InputProps = { ...textFieldProps.InputProps, ...InputProps };
+  textFieldProps.inputProps = { ...inputProps, ...textFieldProps.inputProps };
+  textFieldProps.InputProps = { ...InputProps, ...textFieldProps.InputProps };
 
   const {
     ref: inputRef,
@@ -85,6 +85,7 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default 'primary'
    */
   color: PropTypes.oneOf(['error', 'info', 'primary', 'secondary', 'success', 'warning']),
+  component: PropTypes.elementType,
   /**
    * Overridable components.
    * @default {}
@@ -238,10 +239,6 @@ SingleInputDateTimeRangeField.propTypes = {
    * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
-  /**
-   * @ignore
-   */
-  onClick: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.

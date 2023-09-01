@@ -3,7 +3,7 @@
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
-    "classes": { "type": { "name": "object" }, "additionalPropsInfo": { "classes": true } },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -84,7 +84,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -104,13 +104,38 @@
       }
     }
   },
-  "slots": {
-    "leftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
-    "nextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "previousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "rightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
-  },
+  "slots": [
+    {
+      "class": null,
+      "name": "leftArrowIcon",
+      "description": "Icon displayed in the left view switch button.",
+      "default": "ArrowLeft"
+    },
+    {
+      "class": null,
+      "name": "nextIconButton",
+      "description": "Button allowing to switch to the right view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "previousIconButton",
+      "description": "Button allowing to switch to the left view.",
+      "default": "IconButton"
+    },
+    {
+      "class": null,
+      "name": "rightArrowIcon",
+      "description": "Icon displayed in the right view switch button.",
+      "default": "ArrowRight"
+    }
+  ],
   "name": "TimeClock",
+  "imports": [
+    "import { TimeClock } from '@mui/x-date-pickers/TimeClock';",
+    "import { TimeClock } from '@mui/x-date-pickers';",
+    "import { TimeClock } from '@mui/x-date-pickers-pro';"
+  ],
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiTimeClock" },
   "spread": true,
   "forwardsRefTo": "HTMLDivElement",

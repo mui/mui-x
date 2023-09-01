@@ -43,15 +43,15 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const ownerState = rootProps;
 
   React.useLayoutEffect(() => {
-    if (height === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
+    if (height === 'auto' && typeof ResizeObserver === 'undefined') {
       // Fallback for IE
-      apiRef.current.storeDetailPanelHeight(rowId, ref.current.clientHeight);
+      apiRef.current.storeDetailPanelHeight(rowId, ref.current!.clientHeight);
     }
   }, [apiRef, height, rowId]);
 
   React.useLayoutEffect(() => {
     const hasFixedHeight = height !== 'auto';
-    if (!ref.current || hasFixedHeight || typeof ResizeObserver === 'undefined') {
+    if (hasFixedHeight || typeof ResizeObserver === 'undefined') {
       return undefined;
     }
 
@@ -65,7 +65,7 @@ function GridDetailPanel(props: GridDetailPanelProps) {
       apiRef.current.storeDetailPanelHeight(rowId, observedHeight);
     });
 
-    resizeObserver.observe(ref.current);
+    resizeObserver.observe(ref.current!);
 
     return () => resizeObserver.disconnect();
   }, [apiRef, height, rowId]);

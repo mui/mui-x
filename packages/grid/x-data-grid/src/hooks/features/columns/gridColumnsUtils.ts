@@ -8,7 +8,7 @@ import {
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import { GridColumnTypesRecord } from '../../../models';
-import { DEFAULT_GRID_COL_TYPE_KEY } from '../../../colDef';
+import { DEFAULT_GRID_COL_TYPE_KEY, GRID_STRING_COL_DEF } from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -177,7 +177,11 @@ export const hydrateColumnsWidth = (
         computedWidth = 0;
         flexColumns.push(newColumn);
       } else {
-        computedWidth = clamp(newColumn.width!, newColumn.minWidth!, newColumn.maxWidth!);
+        computedWidth = clamp(
+          newColumn.width || GRID_STRING_COL_DEF.width!,
+          newColumn.minWidth || GRID_STRING_COL_DEF.minWidth!,
+          newColumn.maxWidth || GRID_STRING_COL_DEF.maxWidth!,
+        );
       }
 
       widthAllocatedBeforeFlex += computedWidth;
@@ -345,7 +349,6 @@ export const createColumnsState = ({
     // If the column type has changed - merge the existing state with the default column type definition
     if (existingState && existingState.type !== newColumn.type) {
       existingState = {
-        ...existingState,
         ...getDefaultColTypeDef(columnTypes, newColumn.type),
         field,
       };

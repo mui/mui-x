@@ -17,7 +17,6 @@ import {
   PickerPopperProps,
   PickersToolbarButtonProps,
   PickersToolbarProps,
-  ExportedCalendarHeaderProps,
   ExportedPickersToolbarTextProps,
 } from '../internals';
 import { DateOrTimeView } from '../models';
@@ -35,16 +34,19 @@ import {
 import { DesktopDateTimePickerProps } from '../DesktopDateTimePicker';
 import { MobileDateTimePickerProps } from '../MobileDateTimePicker';
 import { StaticDateTimePickerProps } from '../StaticDateTimePicker';
+import { DateTimeFieldProps } from '../DateTimeField';
 
 import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
 import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileTimePickerProps } from '../MobileTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
 import { ExportedDigitalClockProps } from '../DigitalClock';
+import { TimeFieldProps } from '../TimeField';
 import {
   ExportedMultiSectionDigitalClockSectionProps,
   MultiSectionDigitalClockProps,
 } from '../MultiSectionDigitalClock';
+import { ExportedPickersCalendarHeaderProps } from '../PickersCalendarHeader';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps<unknown>;
@@ -53,6 +55,7 @@ export interface PickersComponentsPropsList {
   MuiDateCalendar: DateCalendarProps<unknown>;
   MuiDateField: DateFieldProps<unknown>;
   MuiDatePickerToolbar: DatePickerToolbarProps<unknown>;
+  MuiDateTimeField: DateTimeFieldProps<unknown>;
   MuiDateTimePickerTabs: DateTimePickerTabsProps;
   MuiDateTimePickerToolbar: DateTimePickerToolbarProps<unknown>;
   MuiDayCalendar: DayCalendarProps<unknown>;
@@ -63,7 +66,7 @@ export interface PickersComponentsPropsList {
   MuiMultiSectionDigitalClock: MultiSectionDigitalClockProps<unknown>;
   MuiMultiSectionDigitalClockSection: ExportedMultiSectionDigitalClockSectionProps;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
-  MuiPickersCalendarHeader: ExportedCalendarHeaderProps<unknown>;
+  MuiPickersCalendarHeader: ExportedPickersCalendarHeaderProps<unknown>;
   MuiPickersDay: PickersDayProps<unknown>;
   MuiPickersFadeTransitionGroup: PickersFadeTransitionGroupProps;
   MuiPickersMonth: ExportedPickersMonthProps;
@@ -75,6 +78,7 @@ export interface PickersComponentsPropsList {
   MuiPickersLayout: PickersLayoutProps<unknown, unknown, DateOrTimeView>;
   MuiPickersYear: ExportedPickersYearProps;
   MuiTimeClock: TimeClockProps<unknown>;
+  MuiTimeField: TimeFieldProps<unknown>;
   MuiTimePickerToolbar: TimePickerToolbarProps<unknown>;
   MuiYearCalendar: YearCalendarProps<unknown>;
 

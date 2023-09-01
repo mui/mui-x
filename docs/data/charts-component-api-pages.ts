@@ -15,6 +15,8 @@ export default [
   { pathname: '/x/api/charts/drawing-provider', title: 'DrawingProvider' },
   { pathname: '/x/api/charts/line-chart', title: 'LineChart' },
   { pathname: '/x/api/charts/line-element', title: 'LineElement' },
+  { pathname: '/x/api/charts/line-highlight-element', title: 'LineHighlightElement' },
+  { pathname: '/x/api/charts/line-highlight-plot', title: 'LineHighlightPlot' },
   { pathname: '/x/api/charts/line-plot', title: 'LinePlot' },
   { pathname: '/x/api/charts/mark-element', title: 'MarkElement' },
   { pathname: '/x/api/charts/mark-plot', title: 'MarkPlot' },
@@ -23,4 +25,5 @@ export default [
   { pathname: '/x/api/charts/scatter', title: 'Scatter' },
   { pathname: '/x/api/charts/scatter-chart', title: 'ScatterChart' },
   { pathname: '/x/api/charts/scatter-plot', title: 'ScatterPlot' },
+  { pathname: '/x/api/charts/spark-line-chart', title: 'SparkLineChart' },
 ] as MuiPage[];

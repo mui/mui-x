@@ -1,6 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",
@@ -111,7 +112,7 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
-      "additionalPropsInfo": { "sx": true }
+      "additionalInfo": { "sx": true }
     },
     "timezone": {
       "type": { "name": "string" },
@@ -120,18 +121,38 @@
     "useFlexGap": { "type": { "name": "bool" } },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
-  "slots": {
-    "root": { "default": "MultiInputDateTimeRangeFieldRoot", "type": { "name": "elementType" } },
-    "separator": {
-      "default": "MultiInputDateTimeRangeFieldSeparator",
-      "type": { "name": "elementType" }
+  "slots": [
+    {
+      "class": null,
+      "name": "root",
+      "description": "Element rendered at the root.",
+      "default": "MultiInputDateTimeRangeFieldRoot"
     },
-    "textField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
-  },
+    {
+      "class": null,
+      "name": "separator",
+      "description": "Element rendered between the two inputs.",
+      "default": "MultiInputDateTimeRangeFieldSeparator"
+    },
+    {
+      "class": null,
+      "name": "textField",
+      "description": "Form control with an input to render a date and time.\nIt is rendered twice: once for the start date time and once for the end date time.\nReceives the same props as <code>@mui/material/TextField</code>.",
+      "default": "TextField from '@mui/material'"
+    }
+  ],
   "name": "MultiInputDateTimeRangeField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateTimeRangeField" },
+  "imports": [
+    "import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';",
+    "import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro';"
+  ],
+  "styles": {
+    "classes": ["root", "separator"],
+    "globalClasses": {},
+    "name": "MuiMultiInputDateTimeRangeField"
+  },
   "filename": "/packages/x-date-pickers-pro/src/MultiInputDateTimeRangeField/MultiInputDateTimeRangeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-range-field/\">Date Time Range Field <span class=\"plan-pro\"></span></a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields component</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MultiInputDateTimeRangeField" }
   ]
