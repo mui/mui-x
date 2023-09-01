@@ -1,0 +1,14 @@
+<DatePicker
+  label="Departure"
+  slots={{
+    // Using an svg component
+    openPickerIcon: FlightTakeoffIcon,
+  }}
+/>
+<DatePicker
+  label="New release date"
+  slots={{
+    // Using an img component
+    openPickerIcon: MuiIcon,
+  }}
+/>
