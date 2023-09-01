@@ -5,7 +5,6 @@ import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSel
 import { selectedGridRowsCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
 import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -27,17 +26,14 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
       <div />
     );
 
-  let rowCountElement = props.rowCountComponent ? (
-    <props.rowCountComponent
-      rowCount={totalTopLevelRowCount}
-      visibleRowCount={visibleTopLevelRowCount}
-    />
-  ) : null;
-  if (!rowCountElement && !rootProps.hideFooterRowCount && !rootProps.pagination) {
-    rowCountElement = (
-      <GridRowCount rowCount={totalTopLevelRowCount} visibleRowCount={visibleTopLevelRowCount} />
-    );
-  }
+  const rowCountElement =
+    !rootProps.hideFooterRowCount && !rootProps.pagination ? (
+      <rootProps.slots.footerRowCount
+        {...rootProps.slotProps?.footerRowCount}
+        rowCount={totalTopLevelRowCount}
+        visibleRowCount={visibleTopLevelRowCount}
+      />
+    ) : null;
 
   const paginationElement = rootProps.pagination &&
     !rootProps.hideFooterPagination &&
@@ -59,7 +55,6 @@ GridFooter.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  rowCountComponent: PropTypes.elementType,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
