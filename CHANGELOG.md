@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.12.1
+
+_Aug 31, 2023_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🏎️ Perf improvement for line charts
+- 🎁 Add `referenceDate` prop on pickers (#9991) @flaviendelangle
+  Find out more about this feature in the [documentation section](https://mui.com/x/react-date-pickers/base-concepts/#reference-date-when-no-value-is-defined).
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
+### Data Grid
+
+#### `@mui/x-data-grid@v6.12.1`
+
+- [DataGrid] Add a recipe showing how to render components outside of the grid (#10121) @DanailH
+- [DataGrid] Fix `valueFormatter` being persisted on column type change (#10041) @cherniavskii
+- [DataGrid] Fix error when keyboard navigating an empty grid (#10081) @romgrk
+- [DataGrid] Replace timeout with `useTimeout` (#10179) @romgrk
+
+#### `@mui/x-data-grid-pro@v6.12.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@v6.12.1`.
+
+#### `@mui/x-data-grid-premium@v6.12.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@v6.12.1`.
+
+### Date Pickers
+
+#### `@mui/x-date-pickers@v6.12.1`
+
+- [pickers] Add `referenceDate` on picker components (and `DateRangeCalendar`) (#9991) @flaviendelangle
+
+#### `@mui/x-date-pickers-pro@v6.12.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@v6.12.1`.
+
+### Charts / `@mui/x-charts@6.0.0-alpha.9`
+
+- [charts] Move the line item highligh into a dedicated component (#10117) @alexfauquette
+
+### Docs
+
+- [docs] Add `DemoContainer` and `DemoItem` JSDoc (#10186) @LukasTy
+- [docs] Add link to `custom layout` page (#10184) @LukasTy
+- [docs] Add tree view nav item (#10181) @LukasTy
+- [docs] Fix wrong chart tooltip reference (#10169) @oliviertassinari
+- [docs] Improve chart SEO (#10170) @oliviertassinari
+- [docs] Precise expired license key condition (#10165) @oliviertassinari
+- [docs] Reorganize the page menu (#10139) @alexfauquette
+
+### Core
+
+- [core] Update babel configs (#9713) @romgrk
+- [test] Disable false positive e2e test on webkit (#10187) @LukasTy
+
 ## 6.12.0
 
 _Aug 25, 2023_
@@ -46,7 +104,7 @@ Same changes as in `@mui/x-data-grid-pro@v6.12.0`.
 
 Same changes as in `@mui/x-date-pickers@v6.12.0`.
 
-### Charts / `@mui/x-charts@6.12.0`
+### Charts / `@mui/x-charts@6.0.0-alpha.8`
 
 - [charts] Fix import issue (#10111) @alexfauquette
 - [charts] Fix `slotProps` propagation (#10105) @alexfauquette
