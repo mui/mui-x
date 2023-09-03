@@ -299,7 +299,12 @@ export const useGridPrintExport = (
       }
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);
-      await updateGridRowsForPrint(options?.getRowsToExport);
+
+      const selectedRows = apiRef.current.getSelectedRows();
+      if (selectedRows.size > 0) {
+        await updateGridRowsForPrint(options?.getRowsToExport);
+      }
+
       apiRef.current.unstable_disableVirtualization();
       await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
