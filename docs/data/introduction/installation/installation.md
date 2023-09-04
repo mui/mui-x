@@ -27,4 +27,4 @@ The installation [instructions](/x/react-charts/#getting-started).
 
 ### Tree View
 
-The installation [instructions](/x/react-tree-view/#getting-started).
+The installation [instructions](/x/react-tree-view/getting-started/#installation).
