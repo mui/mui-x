@@ -130,7 +130,7 @@ export const datePickerExamples: PickersSubcomponentType = {
       styledComponents: {
         type: 'warning',
         comments:
-          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
         componentProps: { slotProps: { popper: { disablePortal: true } } },
       },
     },
@@ -147,7 +147,7 @@ export const datePickerExamples: PickersSubcomponentType = {
       styledComponents: {
         type: 'warning',
         comments:
-          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
         componentProps: { slotProps: { popper: { disablePortal: true } } },
       },
     },
@@ -164,7 +164,7 @@ export const datePickerExamples: PickersSubcomponentType = {
       styledComponents: {
         type: 'warning',
         comments:
-          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
         componentProps: { slotProps: { popper: { disablePortal: true } } },
       },
     },
@@ -181,7 +181,7 @@ export const datePickerExamples: PickersSubcomponentType = {
       styledComponents: {
         type: 'warning',
         comments:
-          'You will need to use the `disablePortal` prop from the popper in order to be able to use styled components with the DesktopDatePicker',
+          'You will need to specify the `disablePortal` prop for the popper in order to be able to use `DesktopDatePicker` as a styled component ',
         componentProps: { slotProps: { popper: { disablePortal: true } } },
       },
     },
