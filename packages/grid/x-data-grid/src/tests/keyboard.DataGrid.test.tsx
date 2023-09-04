@@ -715,4 +715,19 @@ describe('<DataGrid /> - Keyboard', () => {
     fireEvent.keyDown(firstCell, { key: 'ArrowDown' });
     expect(virtualScroller.scrollLeft).to.equal(0);
   });
+
+  it('should not throw when moving into an empty grid', async () => {
+    const columns = [{ field: 'id', width: 400 }, { field: 'name' }];
+    const rows = [] as any[];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+
+    const cell = getColumnHeaderCell(0);
+    act(() => cell.focus());
+    fireEvent.keyDown(cell, { key: 'ArrowDown' });
+  });
 });

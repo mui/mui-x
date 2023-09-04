@@ -71,6 +71,10 @@
       "type": { "name": "bool" },
       "default": "`@media(prefers-reduced-motion: reduce)` || `navigator.userAgent` matches Android <10 or iOS <13"
     },
+    "referenceDate": {
+      "type": { "name": "any" },
+      "default": "The closest valid date using the validation props, except callbacks such as `shouldDisableDate`."
+    },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => \"...\"",

@@ -201,6 +201,11 @@ StaticTimePicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
+   * The date used to generate the new value when both `value` and `defaultValue` are empty.
+   * @default The closest valid date-time using the validation props, except callbacks like `shouldDisable<...>`.
+   */
+  referenceDate: PropTypes.any,
+  /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
    * @param {TimeView} view The clock type of the timeValue.

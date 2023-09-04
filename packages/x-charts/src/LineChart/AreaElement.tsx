@@ -26,7 +26,7 @@ export interface AreaElementClasses {
 
 export type AreaElementClassKey = keyof AreaElementClasses;
 
-export interface AreaElementOwnerState {
+interface AreaElementOwnerState {
   id: string;
   color: string;
   isFaded: boolean;

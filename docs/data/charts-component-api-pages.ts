@@ -15,6 +15,8 @@ export default [
   { pathname: '/x/api/charts/drawing-provider', title: 'DrawingProvider' },
   { pathname: '/x/api/charts/line-chart', title: 'LineChart' },
   { pathname: '/x/api/charts/line-element', title: 'LineElement' },
+  { pathname: '/x/api/charts/line-highlight-element', title: 'LineHighlightElement' },
+  { pathname: '/x/api/charts/line-highlight-plot', title: 'LineHighlightPlot' },
   { pathname: '/x/api/charts/line-plot', title: 'LinePlot' },
   { pathname: '/x/api/charts/mark-element', title: 'MarkElement' },
   { pathname: '/x/api/charts/mark-plot', title: 'MarkPlot' },

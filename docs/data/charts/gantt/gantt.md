@@ -1,5 +1,5 @@
 ---
-title: Charts - Gantt
+title: React Gantt chart
 ---
 
 # Charts - Gantt 🚧
