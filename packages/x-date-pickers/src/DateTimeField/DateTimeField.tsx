@@ -238,10 +238,6 @@ DateTimeField.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * @ignore
-   */
-  onClick: PropTypes.func,
-  /**
    * Callback fired when the error associated to the current value changes.
    * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.

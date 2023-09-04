@@ -32,8 +32,8 @@ By default, the export menu displays all the available export formats, according
 
 - [Print](#print-export)
 - [CSV](#csv-export)
-- [Excel](#excel-export) [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan)
-- [Clipboard](#clipboard) [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan) (🚧 Not delivered yet)
+- [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+- [Clipboard](#clipboard) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') (🚧 Not delivered yet)
 
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
@@ -229,7 +229,7 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Excel export [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan)
+## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
@@ -419,7 +419,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-### Excel [`<span class="plan-premium">`](/x/introduction/licensing/#premium-plan)
+### Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 {{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

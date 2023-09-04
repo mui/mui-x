@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 <p class="description">The Date Range Picker let the user select a range of dates.</p>
 
@@ -99,7 +99,7 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
 
 ## Month Range Picker 🚧
 

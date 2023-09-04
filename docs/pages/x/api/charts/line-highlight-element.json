@@ -1,0 +1,13 @@
+{
+  "props": {},
+  "slots": [],
+  "name": "LineHighlightElement",
+  "imports": [
+    "import { LineHighlightElement } from '@mui/x-charts/LineChart';",
+    "import { LineHighlightElement } from '@mui/x-charts';"
+  ],
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiLineHighlightElement" },
+  "filename": "/packages/x-charts/src/LineChart/LineHighlightElement.tsx",
+  "demos": "<ul></ul>",
+  "packages": [{ "packageName": "@mui/x-charts", "componentName": "LineHighlightElement" }]
+}

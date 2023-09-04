@@ -15,7 +15,7 @@ The priority of the data copied to the clipboard is the following, from highest 
 
 {{"demo": "ClipboardCopy.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+## Clipboard paste [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 :::info
 

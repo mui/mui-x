@@ -1,5 +1,5 @@
 ---
-title: Charts - Scatter
+title: React Scatter chart
 ---
 
 # Charts - Scatter
