@@ -418,6 +418,7 @@ const pages: MuiPage[] = [
     title: 'Tree View',
     newFeature: true,
     children: [
+      { pathname: '/x/react-tree-view/getting-started' },
       { pathname: '/x/react-tree-view', title: 'Overview' },
       {
         pathname: '/x/api/tree-view-group',

@@ -18,6 +18,7 @@ See the [Licensing page](https://mui.com/x/introduction/licensing/) for details.
 - [Data Grid](https://mui.com/x/react-data-grid/)
 - [Date and Time Pickers](https://mui.com/x/react-date-pickers/getting-started/)
 - [Charts](https://mui.com/x/react-charts/)
+- [Tree View](https://mui.com/x/react-tree-view/)
 
 ## Installation
 
@@ -32,6 +33,10 @@ Read the Date and Time Pickers [Installation instructions](https://mui.com/x/rea
 ### Charts
 
 Read the Charts [Installation instructions](https://mui.com/x/react-charts/#getting-started) in the MUI X docs.
+
+### Tree View
+
+Read the Charts [Installation instructions](https://mui.com/x/react-tree-view/getting-started/#installation) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 
