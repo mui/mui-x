@@ -1,7 +1,7 @@
 import path from 'path';
 import * as ts from 'typescript';
 import { writePrettifiedFile, resolveExportSpecifier } from './utils';
-import { XTypeScriptProject, XTypeScriptProjects } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XTypeScriptProjects } from '../createXTypeScriptProjects';
 
 interface BuildExportsDocumentationOptions {
   projects: XTypeScriptProjects;

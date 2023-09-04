@@ -9,7 +9,7 @@ import {
   stringifySymbol,
   writePrettifiedFile,
 } from './utils';
-import { XProjectNames, XTypeScriptProjects } from '../getTypeScriptProjects';
+import { XProjectNames, XTypeScriptProjects } from '../createXTypeScriptProjects';
 
 interface BuildEventsDocumentationOptions {
   projects: XTypeScriptProjects;

@@ -7,7 +7,7 @@ import {
   injectPropTypesInFile,
 } from '@mui/monorepo/packages/typescript-to-proptypes';
 import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/monorepo/packages/docs-utilities';
-import { getTypeScriptProjects, XTypeScriptProject } from './getTypeScriptProjects';
+import { createXTypeScriptProjects, XTypeScriptProject } from './createXTypeScriptProjects';
 
 const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
   config: path.join(__dirname, '../../prettier.config.js'),
@@ -121,7 +121,7 @@ async function generateProptypes(project: XTypeScriptProject, sourceFile: string
 }
 
 async function run() {
-  const projects = getTypeScriptProjects();
+  const projects = createXTypeScriptProjects();
 
   const promises = Array.from(projects.values()).flatMap((project) => {
     if (!project.getComponentsWithPropTypes) {

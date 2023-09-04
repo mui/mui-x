@@ -1,5 +1,5 @@
 import path from 'path';
-import { XTypeScriptProject } from '../getTypeScriptProjects';
+import { XTypeScriptProject } from '../createXTypeScriptProjects';
 import type { ReactApi } from './buildComponentsDocumentation';
 import { writePrettifiedFile } from './utils';
 

@@ -3,7 +3,7 @@ import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
 import * as fse from 'fs-extra';
 import * as ts from 'typescript';
-import { XTypeScriptProject, XProjectNames } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XProjectNames } from '../createXTypeScriptProjects';
 
 export type DocumentedInterfaces = Map<string, XProjectNames[]>;
 

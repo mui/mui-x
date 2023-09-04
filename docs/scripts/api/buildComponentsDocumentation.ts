@@ -37,7 +37,7 @@ import {
   getSymbolJSDocTags,
   writePrettifiedFile,
 } from './utils';
-import { XTypeScriptProject, XTypeScriptProjects } from '../getTypeScriptProjects';
+import { XTypeScriptProject, XTypeScriptProjects } from '../createXTypeScriptProjects';
 import saveApiDocPages, { ApiPageType, getPlan } from './saveApiDocPages';
 
 type CoreReactApiProps = CoreReactApi['propsTable'][string];

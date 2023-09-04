@@ -113,7 +113,7 @@ const getComponentPaths =
     return paths;
   };
 
-export const getTypeScriptProjects = () => {
+export const createXTypeScriptProjects = () => {
   const projects: XTypeScriptProjects = new Map();
 
   projects.set(
@@ -187,6 +187,7 @@ export const getTypeScriptProjects = () => {
     createXTypeScriptProject({
       name: 'x-data-grid-generator',
       rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-generator'),
+      entryPointPath: 'src/index.ts',
       documentationFolderName: 'data-grid',
     }),
   );

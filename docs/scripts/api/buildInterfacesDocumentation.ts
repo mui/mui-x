@@ -13,7 +13,11 @@ import {
   resolveExportSpecifier,
   DocumentedInterfaces,
 } from './utils';
-import { XTypeScriptProjects, XTypeScriptProject, XProjectNames } from '../getTypeScriptProjects';
+import {
+  XTypeScriptProjects,
+  XTypeScriptProject,
+  XProjectNames,
+} from '../createXTypeScriptProjects';
 
 interface ParsedObject {
   name: string;
