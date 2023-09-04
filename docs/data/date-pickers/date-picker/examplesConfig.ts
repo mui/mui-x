@@ -1,5 +1,4 @@
 import { StaticDatePicker, StaticDatePickerProps } from '@mui/x-date-pickers/StaticDatePicker';
-import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { PickersSubcomponentType } from 'docsx/src/modules/utils/useCustomizationPlayground';
@@ -205,29 +204,29 @@ export const pickerExamples = [
     componentProps: { ...pickerProps },
     examples: staticDatePickerExamples,
   } as PickerExamplesType<typeof StaticDatePicker, StaticDatePickerProps<Dayjs>>,
-  {
-    name: 'DesktopDatePicker',
-    component: DesktopDatePicker,
-    componentProps: {
-      open: true,
-      reduceAnimations: true,
-      slotProps: {
-        popper: {
-          sx: { zIndex: 1 },
-          disablePortal: true,
-          placement: 'bottom-start',
-          modifiers: [
-            {
-              name: 'flip',
-              options: {
-                fallbackPlacements: ['bottom-start'],
-              },
-            },
-          ],
-        },
-      },
-      ...pickerProps,
-    },
-    examples: datePickerExamples,
-  } as PickerExamplesType<typeof DesktopDatePicker, DesktopDatePickerProps<Dayjs>>,
+  // {
+  //   name: 'DesktopDatePicker',
+  //   component: DesktopDatePicker,
+  //   componentProps: {
+  //     open: true,
+  //     reduceAnimations: true,
+  //     slotProps: {
+  //       popper: {
+  //         sx: { zIndex: 1 },
+  //         disablePortal: true,
+  //         placement: 'bottom-start',
+  //         modifiers: [
+  //           {
+  //             name: 'flip',
+  //             options: {
+  //               fallbackPlacements: ['bottom-start'],
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     },
+  //     ...pickerProps,
+  //   },
+  //   examples: datePickerExamples,
+  // } as PickerExamplesType<typeof DesktopDatePicker, DesktopDatePickerProps<Dayjs>>,
 ];
